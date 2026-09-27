@@ -52,13 +52,13 @@ SPECS = {
 OUT_OF_SCOPE = {
     "cohort_logo_retention": "usa run_analysis (curvas de cohortes: no incluido en esta slice)",
     "cohort_revenue_retention": "usa run_analysis (curvas de cohortes: no incluido en esta slice)",
-    "total_sm_spend": "el gasto de S&M no está en la capa SQL de esta slice (pregunta 2 no lo requiere)",
-    "demand_gen_spend": "el gasto de S&M no está en la capa SQL de esta slice",
-    "sales_capacity_spend": "el gasto de S&M no está en la capa SQL de esta slice",
-    "enablement_spend": "el gasto de S&M no está en la capa SQL de esta slice",
-    "paid_media": "el gasto de S&M no está en la capa SQL de esta slice",
-    "sm_per_new_customer": "el gasto de S&M no está en la capa SQL de esta slice",
-    "sm_per_new_mrr_mm": "el gasto de S&M no está en la capa SQL de esta slice",
+    "total_sm_spend": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "demand_gen_spend": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "sales_capacity_spend": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "enablement_spend": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "paid_media": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "sm_per_new_customer": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
+    "sm_per_new_mrr_mm": "el gasto de S&M se consulta con run_sql sobre mart.sm_monthly (unidad u, nunca COP; techo Direccional)",
 }
 
 DIMS = {"industry": "industry", "vintage": "vintage"}

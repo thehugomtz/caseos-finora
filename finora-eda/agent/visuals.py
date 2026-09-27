@@ -4,6 +4,9 @@ El agente solo pide la intención; la forma y los datos salen de la evidencia.
 """
 from __future__ import annotations
 
+import functools
+import re
+
 INTENTS = {
     "tendencia": "Tendencia de una métrica (línea)",
     "crecimientos": "Crecimientos en unidades distintas (índice base 100)",
@@ -19,6 +22,66 @@ INTENTS = {
 
 class VisualError(ValueError):
     pass
+
+
+AVAILABLE = [("Monto pagado por cliente y mes (amount)", "Disponible"), ("Industria del cliente", "Disponible"),
+             ("Gasto de S&M por mes y rubro", "Disponible, sin unidad documentada")]
+DEFAULT_INTENT = {"mix_within_decomposition": "descomposicion", "vintage_arpa": "descomposicion",
+                  "churn_selection": "intervalo", "ticket_distribution": "distribucion"}
+
+
+def data_gap(missing_ids: list[str]) -> dict:
+    """Visual de lo No evaluable: qué datos existen y cuáles faltan para responder."""
+    from .validator import MISSING
+    filas = [{"dato": d, "estado": e, "campos": ""} for d, e in AVAILABLE]
+    filas += [{"dato": MISSING[m]["nombre"], "estado": "No existe", "campos": ", ".join(MISSING[m].get("campos_necesarios", []))}
+              for m in missing_ids if m in MISSING]
+    return {"tipo": "datos", "filas": filas}
+
+
+@functools.lru_cache(maxsize=1)
+def _cards() -> tuple[dict, dict]:
+    """Tarjetas del workspace de la Fase 1: sus afirmaciones (linaje) y sus gráficas (template)."""
+    import yaml
+    from .config import BRAIN, ROOT
+    cards = yaml.safe_load((BRAIN / "evidence" / "workspace_cards.yaml").read_text(encoding="utf-8"))["cards"]
+    tpl = (ROOT / "templates" / "finora_eda_template.html").read_text(encoding="utf-8")
+    charts = {}
+    for m in re.finditer(r'data-card="([0-9.]+)"', tpl):
+        end = tpl.find('class="foot"', m.end())
+        charts[m.group(1)] = re.findall(r'data-chart="([a-zA-Z]+)"', tpl[m.end():end if end != -1 else None])
+    return cards, charts
+
+
+def workspace_card(evs) -> dict:
+    """Evidencia canónica de la Fase 1: su gráfica ya existe en el workspace y se reutiliza.
+
+    Entre las tarjetas con gráfica elige la que cubre más afirmaciones canónicas de la evidencia; en empate, la de la
+    primera evidencia y después la más específica (con menos afirmaciones).
+    """
+    cids = [(e.params or {}).get("claim_id") for e in evs if e.kind == "canonical"]
+    cards, charts = _cards()
+    best = None
+    for k, v in cards.items():
+        own = v.get("claims") or []
+        cover = [c for c in cids if c in own]
+        if not cover or not charts.get(k):
+            continue
+        rank = (len(cover), -cids.index(cover[0]), -len(own))
+        if best is None or rank > best[0]:
+            best = (rank, k, cover)
+    if not best:
+        raise VisualError(f"Las afirmaciones {cids} de la Fase 1 no tienen una tarjeta con gráfica en el workspace.")
+    _, key, cover = best
+    return {"tipo": "tarjeta", "tarjeta": key, "claim_fase1": cover[0], "cubre": cover}
+
+
+def default_intent(ev) -> str | None:
+    if ev.kind == "analysis":
+        return DEFAULT_INTENT.get(ev.params.get("analysis_id"))
+    if ev.kind in ("metric", "sql"):
+        return "tendencia"
+    return None
 
 
 def _tabla(ev) -> dict:

@@ -80,6 +80,26 @@ class Investigation:
                 "brain_version": brain_version(), "started_ms": self.started_ms, "finished_ms": self.finished_ms,
                 "error": self.error, "events": self.events}
 
+    @classmethod
+    def from_dict(cls, d: dict) -> "Investigation":
+        from .evidence import Evidence
+        inv = cls(pregunta=d["pregunta"], pregunta_id=d.get("pregunta_id"), lente=d.get("lente", "Finanzas"),
+                  playbook_id=d.get("playbook_id", "arpa_decline"))
+        for k in ("id", "status", "encuadre", "hipotesis", "hipotesis_registradas_ms", "claims", "visuals", "log", "paquete",
+                  "narrativa", "composicion_intentos", "notas_agente", "uso", "started_ms", "finished_ms", "error", "modelo"):
+            if k in d:
+                setattr(inv, k, d[k])
+        inv.events = d.get("events", [])
+        inv.budget_used = d.get("presupuesto", {}).get("analisis_usado", 0)
+        inv.tool_calls = d.get("presupuesto", {}).get("llamadas_tools", 0)
+        for e in d.get("evidencia", []):
+            e = dict(e)
+            for k in ("metric_ids", "caveat_ids", "no_comparable"):
+                e[k] = tuple(e.get(k) or ())
+            inv.registry.items[e["id"]] = Evidence(**e)
+        inv.registry._n = sum(1 for k in inv.registry.items if k.startswith("E-"))
+        return inv
+
     def save(self, path=None):
         path = path or (RUNS / f"{self.id}.json")
         path.parent.mkdir(parents=True, exist_ok=True)

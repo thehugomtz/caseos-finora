@@ -1736,10 +1736,92 @@ def load_brain() -> dict:
     return {"metrics": rd("semantic/metrics.yaml")["metrics"],
             "issues": rd("data/known_quality_issues.yaml")["issues"],
             "questions": rd("business/stakeholder_questions.yaml"),
-            "cards": rd("evidence/workspace_cards.yaml")["cards"]}
+            "cards": rd("evidence/workspace_cards.yaml")["cards"],
+            "answers": rd("business/answers.yaml"),
+            "missing": rd("guardrails/missing_data.yaml")["faltantes"]}
+
+
+PLACEHOLDER = re.compile(r"\{\{([a-zA-Z0-9_]+)\}\}")
+
+
+def fill_facts(text: str, facts: dict) -> str:
+    return PLACEHOLDER.sub(lambda mt: str(facts[mt.group(1)]), text)
+
+
+def answer_texts(entry: dict):
+    """Textos redactados de una respuesta (para validarlos y rellenarlos)."""
+    for k in ("titular", "respuesta", "que_pasa", "por_que", "no_sabemos", "visual_titulo"):
+        if isinstance(entry.get(k), str):
+            yield k, entry[k]
+    lec = entry.get("lectura")
+    if isinstance(lec, dict):
+        yield "lectura", lec.get("texto", "")
+    elif isinstance(lec, str):
+        yield "lectura", lec
+    for k in ("sabemos", "no_sabemos"):
+        if isinstance(entry.get(k), list):
+            for i, t in enumerate(entry[k]):
+                yield f"{k}[{i}]", t
+
+
+def validate_answers(brain: dict, claims: list, facts: dict):
+    """La capa de respuestas cumple las mismas reglas que el agente: cifras solo como facts, afirmaciones que
+    existen, gráficas que existen, datos faltantes del catálogo y lenguaje sin causalidad ni calificativos."""
+    from agent.lint import lint_text
+    ans = brain["answers"]
+    claim_ids = {c["id"] for c in claims}
+    missing = {m["id"] for m in brain["missing"]}
+    golden = {g["id"] for g in brain["questions"]["preguntas_doradas"]}
+    tpl = (HERE / "templates" / "finora_eda_template.html").read_text(encoding="utf-8")
+    entries = [("esencial", ans["esencial"])] + [(f"secciones.{k}", v) for k, v in ans["secciones"].items()] + \
+              [(f"preguntas.{k}", v) for k, v in ans["preguntas"].items()]
+    for where, e in entries:
+        for field, text in answer_texts(e):
+            for key in PLACEHOLDER.findall(text):
+                assert key in facts, f"respuesta {where}.{field}: fact desconocido {key}"
+            problems = lint_text(text, allow_explica=bool(e.get("explica")))
+            assert not problems, f"respuesta {where}.{field}: {problems}"
+        for cid in e.get("claims", []):
+            assert cid in claim_ids, f"respuesta {where}: afirmación desconocida {cid}"
+        for mid in e.get("necesitariamos", []):
+            assert mid in missing, f"respuesta {where}: dato faltante desconocido {mid}"
+        if e.get("visual"):
+            assert f'data-chart="{e["visual"]}"' in tpl, f"respuesta {where}: gráfica desconocida {e['visual']}"
+        lec = e.get("lectura")
+        if isinstance(lec, dict):
+            assert f'data-card="{lec["tarjeta"]}"' in tpl, f"respuesta {where}: tarjeta desconocida {lec['tarjeta']}"
+    for sid in ans["secciones"]:
+        assert f'<section class="section" id="{sid}">' in tpl, f"respuesta de sección desconocida {sid}"
+    for qid in list(ans["preguntas"]) + list(ans["esencial"].get("profundizar", [])):
+        assert qid in golden, f"pregunta dorada desconocida {qid}"
+
+
+def render_answers(brain: dict, facts: dict) -> dict:
+    ans, missing = brain["answers"], {m["id"]: m for m in brain["missing"]}
+
+    def one(e: dict) -> dict:
+        out = dict(e)
+        for k in ("titular", "respuesta", "que_pasa", "por_que", "no_sabemos", "visual_titulo"):
+            if isinstance(out.get(k), str):
+                out[k] = fill_facts(out[k], facts)
+        if isinstance(out.get("lectura"), dict):
+            out["lectura"] = {**out["lectura"], "texto": fill_facts(out["lectura"]["texto"], facts)}
+        elif isinstance(out.get("lectura"), str):
+            out["lectura"] = fill_facts(out["lectura"], facts)
+        for k in ("sabemos", "no_sabemos"):
+            if isinstance(out.get(k), list):
+                out[k] = [fill_facts(t, facts) for t in out[k]]
+        if out.get("necesitariamos"):
+            out["necesitariamos"] = [{"id": m, "nombre": missing[m]["nombre"], "campos": missing[m].get("campos_necesarios", [])}
+                                     for m in out["necesitariamos"]]
+        return out
+    return {"esencial": one(ans["esencial"]),
+            "secciones": {k: one(v) for k, v in ans["secciones"].items()},
+            "preguntas": {k: one(v) for k, v in ans["preguntas"].items()}}
 
 
 def validate_brain(brain: dict, claims: list, facts: dict):
+    validate_answers(brain, claims, facts)
     # en YAML, "- texto: más texto" se lee como diccionario; los textos que se muestran deben ser str
     for k, q in enumerate(brain["questions"]["preguntas_para_finora"], 1):
         assert isinstance(q, str), f"pregunta para Finora {k} no es texto (¿falta entrecomillar un ': '?)"
@@ -1846,8 +1928,10 @@ def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
                   "issues": {i["id"]: i for i in brain["issues"]},
                   "golden": brain["questions"]["preguntas_doradas"],
                   "questionsFinora": brain["questions"]["preguntas_para_finora"],
-                  "cards": brain["cards"]}
+                  "cards": brain["cards"],
+                  "missing": {m["id"]: m for m in brain["missing"]}}
     P["investigations"] = load_golden_investigations()
+    P["answers"] = render_answers(brain, facts)
     return jsonable(P)
 
 

@@ -814,6 +814,103 @@
      }
     ]
    }
+  },
+  "V-05": {
+   "id": "V-05",
+   "claim_id": "C-006",
+   "evidence_id": "E-002",
+   "intencion": "descomposicion",
+   "titulo": "El MRR por cliente de la base previa en oct-24 (COP 97,4 mil) se ubica por encima del de ene-22 (COP 92,8 mil), una variación de +5%, y el efecto dentro de las cosechas aporta COP 2,7 mil del cambio del MRR por cliente activo.",
+   "spec": {
+    "tipo": "cascada",
+    "formato": "cop",
+    "pasos": [
+     {
+      "etiqueta": "ene-22",
+      "valor": 92839.01419098144,
+      "tipo": "total"
+     },
+     {
+      "etiqueta": "Composición",
+      "corta": "Comp.",
+      "valor": -37705.98731473553,
+      "tipo": "delta"
+     },
+     {
+      "etiqueta": "Dentro de\ncada cosecha",
+      "corta": "Dentro",
+      "valor": 2678.324035553832,
+      "tipo": "delta"
+     },
+     {
+      "etiqueta": "oct-24",
+      "valor": 57811.35091179977,
+      "tipo": "total"
+     }
+    ]
+   },
+   "auto": true
+  },
+  "V-06": {
+   "id": "V-06",
+   "claim_id": "C-005",
+   "evidence_id": null,
+   "intencion": "datos_faltantes",
+   "titulo": "No es posible determinar si el menor ticket de entrada se asocia con cambios de precios de lista, planes, empaquetamiento o descuentos: el panel no contiene esas tablas.",
+   "spec": {
+    "tipo": "datos",
+    "filas": [
+     {
+      "dato": "Monto pagado por cliente y mes (amount)",
+      "estado": "Disponible",
+      "campos": ""
+     },
+     {
+      "dato": "Industria del cliente",
+      "estado": "Disponible",
+      "campos": ""
+     },
+     {
+      "dato": "Gasto de S&M por mes y rubro",
+      "estado": "Disponible, sin unidad documentada",
+      "campos": ""
+     },
+     {
+      "dato": "Precios de lista, planes y empaquetamiento",
+      "estado": "No existe",
+      "campos": "list_mrr, plan_id"
+     },
+     {
+      "dato": "Descuentos recurrentes y temporales, con su vencimiento",
+      "estado": "No existe",
+      "campos": "recurring_discount, temporary_discount, temporary_discount_end"
+     },
+     {
+      "dato": "Créditos y concesiones no recurrentes",
+      "estado": "No existe",
+      "campos": "credits"
+     },
+     {
+      "dato": "Definición de amount (facturado, cobrado o contratado)",
+      "estado": "No existe",
+      "campos": "amount_definition"
+     }
+    ]
+   },
+   "auto": true
+  },
+  "V-07": {
+   "id": "V-07",
+   "claim_id": "C-008",
+   "evidence_id": "EC-ADQ-04",
+   "intencion": "tarjeta",
+   "titulo": "En la descomposición del cambio del ticket de entrada 2022→2024, el efecto dentro de cada industria explica 97% del cambio, con un intervalo bootstrap de 91–102%, y el ticket de entrada bajó en 6 industrias.",
+   "spec": {
+    "tipo": "tarjeta",
+    "tarjeta": "7.1",
+    "claim_fase1": "C-ADQ-04"
+   },
+   "auto": true
   }
  },
  "evidencia": [
@@ -3782,7 +3879,9 @@
     "claim_ids": [
      "C-008"
     ],
-    "visual_ids": []
+    "visual_ids": [
+     "V-07"
+    ]
    },
    {
     "hipotesis_id": "H2",
@@ -3790,7 +3889,9 @@
      "C-006",
      "C-007"
     ],
-    "visual_ids": []
+    "visual_ids": [
+     "V-05"
+    ]
    },
    {
     "hipotesis_id": "H3",
@@ -3807,7 +3908,9 @@
     "claim_ids": [
      "C-005"
     ],
-    "visual_ids": []
+    "visual_ids": [
+     "V-06"
+    ]
    }
   ],
   "limites_claim_ids": [
@@ -3825,7 +3928,8 @@
  },
  "narrativa": {
   "respuesta_ejecutiva": {
-   "texto": "La caída del MRR por cliente activo, de COP 92,8 mil a COP 57,8 mil, se asocia casi por completo con la composición de entrada: la descomposición por cosecha le asigna 108% del cambio y −8% al efecto dentro de las cosechas. En oct-24 las cosechas 2023 y 2024 son 65% de los activos con MRR por cliente muy inferior, mientras la base previa se mantiene (+5%).",
+   "titular": "La caída se concentra en quién entra, no en la base previa",
+   "texto": "La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65% de los clientes activos con un MRR por cliente por debajo del de la base previa (COP 97,4 mil), que se ubica por encima de su nivel de ene-22.",
    "claim_ids": [
     "C-001",
     "C-003",
@@ -3835,6 +3939,7 @@
   "hallazgos": [
    {
     "hipotesis_id": "H1",
+    "titular": "Las altas entran con ticket menor y dominan la base activa",
     "pregunta": "¿Los clientes nuevos entran pagando menos que los anteriores?",
     "claim_ids": [
      "C-013",
@@ -3847,35 +3952,42 @@
      "V-02",
      "V-03"
     ],
-    "interpretacion": "El descenso sostenido del MRR por cliente activo coincide con la llegada de cosechas que entran pagando menos y que ya concentran 65% de la base activa. Contablemente, la composición de entrada concentra 108% del cambio.",
-    "implicacion": "Si el objetivo es estabilizar el MRR por cliente, convendría revisar el perfil de las altas y su ticket inicial antes que el precio de la base instalada.",
-    "por_que": "Lo sostienen una descomposición por cosecha con evidencia fuerte y hechos observados coherentes entre sí sobre el ticket de entrada y el peso de las cosechas. El límite: `amount` se comporta como monto cobrado y el ticket de entrada de 2022 incluye pagos iniciales grandes."
+    "interpretacion": "El descenso sostenido del MRR por cliente activo coincide con altas que entran a un ticket menor: el promedio de entrada pasó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024. Esas cosechas recientes ya representan 65% de los activos en oct-24.",
+    "implicacion": "Si el ticket de entrada se mantiene en el nivel de 2024, convendría revisar el objetivo de MRR por cliente al planear el mix de adquisición.",
+    "por_que": "Se apoya en la descomposición por cosecha, que asigna 108% del cambio a la composición de entrada, y en el comparativo de tickets de entrada. El límite: el ticket de 2022 incluye pagos iniciales grandes y `amount` se comporta como monto cobrado, no como MRR contractual."
    },
    {
     "hipotesis_id": "H1.1",
+    "titular": "El mix de industrias no explica el menor ticket de entrada",
     "pregunta": "¿El menor ticket de entrada viene de un cambio en el mix de industrias?",
     "claim_ids": [
      "C-008"
     ],
-    "visual_ids": [],
-    "interpretacion": "La vía del mix no se sostiene: el efecto dentro de cada industria explica 97% del cambio del ticket de entrada y la baja es generalizada, en 6 industrias.",
-    "implicacion": "Si el fenómeno es transversal a industrias, podría no rendir segmentar la respuesta comercial por sector.",
-    "por_que": "Se apoya en una descomposición con evidencia fuerte y un intervalo bootstrap de 91–102%, que deja poco espacio al mix; queda fuera del alcance el tamaño de cliente dentro de cada industria."
+    "visual_ids": [
+     "V-07"
+    ],
+    "interpretacion": "El efecto dentro de cada industria explica 97% del cambio del ticket de entrada 2022→2024, y el ticket bajó en 6 industrias. El movimiento es transversal, no un reacomodo entre sectores.",
+    "implicacion": "Si el movimiento es transversal, podría convenir tratarlo como un tema de nivel de entrada general antes que de segmentación sectorial.",
+    "por_que": "Lo sostiene una descomposición con intervalo bootstrap de 91–102% para el efecto dentro de industria. El límite: la descomposición no identifica qué componente del monto se movió dentro de cada industria."
    },
    {
     "hipotesis_id": "H2",
+    "titular": "Señal mixta: la base previa no baja, la cosecha 2022 sí",
     "pregunta": "¿Los clientes que ya estaban pagan menos que antes?",
     "claim_ids": [
      "C-006",
      "C-007"
     ],
-    "visual_ids": [],
-    "interpretacion": "Señal ambigua y dependiente de la ventana: contra ene-22 la base previa queda por encima (+5%), mientras que con base dic-22 el efecto dentro de las cosechas resta COP 5,2 mil, concentrado en la cosecha 2022.",
-    "implicacion": "Si se quiere cerrar esta rama, convendría fijar una ventana de referencia única antes de actuar sobre la base instalada.",
-    "por_que": "Una descomposición con evidencia fuerte apunta en contra y un hecho observado apunta a favor según la base elegida; ambos comparten el límite de que `amount` se comporta como monto cobrado."
+    "visual_ids": [
+     "V-05"
+    ],
+    "interpretacion": "Con base ene-22, el MRR por cliente de la base previa se ubica por encima de su nivel inicial (+5%) y el efecto dentro de las cosechas aporta COP 2,7 mil. Con base dic-22, ese mismo efecto aporta −COP 5,2 mil, concentrado en la cosecha 2022.",
+    "implicacion": "Si el seguimiento se ancla en dic-22, podría convenir monitorear aparte la trayectoria de la cosecha 2022 y de las altas de feb-22.",
+    "por_que": "La dirección depende del periodo base elegido, por lo que el resultado se presenta como señal. El límite: `amount` se comporta como monto cobrado, no como MRR contractual, y la ventana limpia de flujos empieza en mar-22."
    },
    {
     "hipotesis_id": "H3",
+    "titular": "Señal de salida de cuentas grandes, visible solo en medias",
     "pregunta": "¿Se van los clientes de mayor ticket (selección de salida)?",
     "claim_ids": [
      "C-011",
@@ -3884,63 +3996,64 @@
     "visual_ids": [
      "V-04"
     ],
-    "interpretacion": "Hay selección de salida en las medias (razón de 1,5×) pero no en las medianas (1,0×, con intervalo que contiene la paridad): el patrón es consistente con la salida de pocas cuentas grandes, no con una fuga generalizada de clientes de mayor ticket.",
-    "implicacion": "Si la salida se concentra en pocas cuentas grandes, podría rendir más un seguimiento nominal de esas cuentas que un programa amplio de retención.",
-    "por_que": "Se apoya en hechos observados con medidas distintas que apuntan en sentidos opuestos; el límite es que el churn observado incluye pausas y atrasos, con montos extremos concentrados en pocas cuentas."
+    "interpretacion": "La razón de medias entre el monto usual de quienes hacen churn y el de los activos del mes previo es 1,5×, mientras la razón de medianas es 1,0× con un intervalo que contiene la paridad. La brecha de medias coincide con la salida de pocas cuentas grandes.",
+    "implicacion": "Si la salida se concentra en pocas cuentas grandes, podría convenir un seguimiento nominal de esas cuentas antes que una acción sobre el churn agregado.",
+    "por_que": "Ambas medidas provienen del mismo comparativo con intervalos bootstrap. El límite: el churn observado incluye pausas y atrasos, y hay concentración en pocas cuentas."
    },
    {
     "hipotesis_id": "H1.2",
+    "titular": "La rama de precios y descuentos no es evaluable con el panel",
     "pregunta": "¿El menor ticket de entrada viene de precios, planes o descuentos?",
     "claim_ids": [
      "C-005"
     ],
-    "visual_ids": [],
-    "interpretacion": "No evaluable: el panel no contiene las tablas de precios de lista, planes, empaquetamiento ni descuentos, así que esta vía no se puede afirmar ni descartar.",
-    "implicacion": "Si se quiere resolver esta rama, convendría incorporar al panel el catálogo de precios y planes y el registro de descuentos aplicados a cada alta.",
-    "por_que": "Lo sostiene la ausencia documentada de esas tablas en el panel; sin ellas la explicación de precio queda abierta."
+    "visual_ids": [
+     "V-06"
+    ],
+    "interpretacion": "No es posible determinar si el menor ticket de entrada se asocia con precios de lista, planes, empaquetamiento o descuentos: el panel no contiene esas tablas.",
+    "implicacion": "Si se incorporan al panel las tablas de precios de lista, planes y descuentos aplicados, esta rama podría evaluarse.",
+    "por_que": "El estado responde a datos faltantes, no a un resultado nulo: falta la información de precio y plan por cliente en el momento del alta."
    }
   ],
   "limites": [
    {
-    "texto": "No podemos atribuir el menor ticket de entrada a decisiones de precio, plan, empaquetamiento o descuento: esas tablas no están en el panel.",
+    "texto": "No se puede separar un menor nivel contractual de un menor monto cobrado, porque el panel no contiene precios de lista, planes, empaquetamiento ni descuentos.",
     "claim_ids": [
      "C-005"
     ]
    },
    {
-    "texto": "No podemos afirmar que se vayan los clientes de mayor ticket en general: la brecha aparece en medias pero no en medianas y coincide con la salida de pocas cuentas grandes, en un churn observado que incluye pausas y atrasos.",
+    "texto": "No se puede concluir que el cliente típico que se va pague más que el activo típico: la razón de medianas es 1,0× con un intervalo que contiene la paridad.",
     "claim_ids": [
-     "C-012",
-     "C-011"
+     "C-012"
     ]
    },
    {
-    "texto": "El aporte del efecto dentro de las cosechas depende de la base de comparación elegida, por lo que no puede leerse como una magnitud única.",
+    "texto": "El signo del efecto dentro de las cosechas depende del periodo base: con base dic-22 aporta −COP 5,2 mil, de modo que no se puede fijar una dirección única.",
     "claim_ids": [
-     "C-007",
-     "C-006"
+     "C-006",
+     "C-007"
     ]
    }
   ],
   "implicaciones": [
    {
-    "texto": "Si la composición de entrada concentra 108% del cambio, convendría poner el foco de gestión en el perfil y el ticket de las nuevas altas más que en la base instalada.",
+    "texto": "Si la composición de entrada concentra 108% del cambio, convendría anclar el diagnóstico y las metas en el ticket de entrada antes que en la base previa.",
     "claim_ids": [
      "C-001",
-     "C-002"
+     "C-006"
     ]
    },
    {
-    "texto": "Si la baja del ticket de entrada ocurre dentro de cada industria y no por mix, podría ser más útil revisar criterios de captación y condiciones comerciales que reorientar el enfoque sectorial.",
+    "texto": "Si el ticket de entrada bajó en 6 industrias y el efecto dentro de industria explica 97% del cambio, podría convenir revisar la política de entrada de forma transversal.",
     "claim_ids": [
      "C-008"
     ]
    },
    {
-    "texto": "Si la brecha de salida coincide con pocas cuentas grandes, podría priorizarse su seguimiento individual antes de lanzar iniciativas amplias de retención.",
+    "texto": "Si las cosechas 2023 y 2024 concentran 65% de los activos con MRR por cliente de COP 46,3 mil y COP 43,0 mil, convendría seguir su maduración antes de recalibrar el plan de ingresos.",
     "claim_ids": [
-     "C-011",
-     "C-012"
+     "C-003"
     ]
    }
   ],
@@ -3948,20 +4061,14 @@
    "¿El escalón del ticket de entrada a comienzos de 2023 coincide con un cambio en la mezcla de tamaño de cliente, dato que hoy no existe en el panel?",
    "¿Qué parte de la caída del ticket dentro de cada industria corresponde a montos fuera de la grilla de cobro y no a un menor nivel contractual?",
    "¿Las cosechas recientes recuperan MRR por cliente con la madurez, comparando su trayectoria mensual contra la cosecha 2022?",
-   "¿La salida de cuentas grandes se concentra en alguna industria o cosecha específica?"
+   "¿La salida de cuentas grandes se concentra en alguna industria o cosecha específica?",
+   "¿Puede documentarse la semántica de `amount` para distinguir monto cobrado de MRR contractual?"
   ],
   "degradada": false
  },
  "composicion_intentos": [
   {
    "intento": 1,
-   "errores": [
-    "hallazgo 4.por_que: cifras que no están en las afirmaciones citadas ['dos'].",
-    "implicación 2: calificativos sin respaldo en las afirmaciones citadas ['la mayor parte']."
-   ]
-  },
-  {
-   "intento": 2,
    "errores": []
   }
  ],
@@ -4024,26 +4131,17 @@
   },
   "compositor_1": {
    "turnos": 3,
-   "ms": 57005,
-   "costo_equivalente_usd": 0.22172350000000002,
+   "ms": 67198,
+   "costo_equivalente_usd": 0.2708275,
    "tokens_entrada": 4,
-   "tokens_salida": 5582,
-   "cache_lectura": 8427,
-   "cache_escritura": 7794
-  },
-  "compositor_2": {
-   "turnos": 3,
-   "ms": 460539,
-   "costo_equivalente_usd": 0.232421,
-   "tokens_entrada": 4,
-   "tokens_salida": 5764,
-   "cache_lectura": 8542,
-   "cache_escritura": 8403
+   "tokens_salida": 6717,
+   "cache_lectura": 8085,
+   "cache_escritura": 9884
   }
  },
  "modelo": "claude-opus-5",
  "data_version": "sha256:4a799a744543c8d8",
- "brain_version": "sha256:0800d79a9cfcd818",
+ "brain_version": "sha256:ec67ab3ed515f49d",
  "started_ms": 1790539955866,
  "finished_ms": 1790540618630,
  "error": null,
@@ -6528,6 +6626,32 @@
    "tipo": "final",
    "data": {
     "id": "INV-20260927-141235-68ab"
+   }
+  },
+  {
+   "n": 99,
+   "t": 3188523,
+   "tipo": "recomposicion",
+   "data": {
+    "visuales_agregados": 2
+   }
+  },
+  {
+   "n": 100,
+   "t": 3257172,
+   "tipo": "composicion",
+   "data": {
+    "intento": 1,
+    "errores": []
+   }
+  },
+  {
+   "n": 101,
+   "t": 3386595,
+   "tipo": "recomposicion",
+   "data": {
+    "visuales_agregados": 1,
+    "narrativa": "sin cambios"
    }
   }
  ]

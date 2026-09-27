@@ -24,7 +24,7 @@ SERVER = "finora"
 TOOL_NAMES = ["brain_lookup", "search_evidence", "query_metric", "run_sql", "run_analysis",
               "upsert_hypotheses", "propose_claim", "propose_visual"]
 ALLOWED_TOOLS = [f"mcp__{SERVER}__{n}" for n in TOOL_NAMES]
-SQL_TABLES = {"customer_month", "monthly_metrics", "new_customers", "vintage_month", "churn_events"}
+SQL_TABLES = {"customer_month", "monthly_metrics", "new_customers", "vintage_month", "churn_events", "sm_monthly"}
 RO = ToolAnnotations(readOnlyHint=True, maxResultSizeChars=60_000)
 RW = ToolAnnotations(readOnlyHint=False, maxResultSizeChars=60_000)
 

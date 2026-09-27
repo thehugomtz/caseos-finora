@@ -64,6 +64,11 @@ def build(db_path=DB_PATH, verbose: bool = True) -> dict:
             CREATE TABLE mart.monthly_metrics_phase1 AS
             SELECT * FROM read_csv('{_csv("finora_monthly_metrics.csv")}', header = true)""")
         con.execute(f"CREATE VIEW mart.monthly_metrics AS {MONTHLY_SQL}")
+        con.execute("""
+            CREATE VIEW mart.sm_monthly AS
+            SELECT month, paid_media, publicidad_no_web, team, payroll_expenses, travel, software_tools, freelance,
+                   demand_gen_spend, sales_capacity_spend, enablement_spend, total_sm_spend
+            FROM mart.monthly_metrics_phase1""")
         con.execute(f"""
             CREATE VIEW mart.new_customers AS
             WITH n AS (

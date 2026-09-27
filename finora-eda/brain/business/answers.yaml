@@ -1,0 +1,219 @@
+# Capa de respuestas: "respuesta primero, evidencia después, investigación a demanda".
+# Una sola fuente para la portada, las secciones y el buscador. Reglas (el pipeline las valida):
+# - Toda cifra es un {{fact}} del pipeline; no se escriben números a mano (años y meses sí).
+# - Cada respuesta cita afirmaciones verificadas (claims) y declara su nivel de evidencia.
+# - Mismo lenguaje que el agente: sin verbos causales, sin cifras con letras, sin calificativos sin cifra.
+# - visual = gráfica del workspace (data-chart) que demuestra la respuesta; lectura = la microlectura debajo.
+version: 1
+
+esencial:
+  que_pasa: "Finora crece mucho más en clientes ({{active_multiple}}) que en ingreso ({{mrr_multiple}}): el MRR por cliente activo cayó {{arpa_change_abs}}, de {{arpa_start}} a {{arpa_end}}."
+  por_que: "Desde {{step_month}} los clientes nuevos entran con menor ticket en todas las industrias, y esas cosechas ya son {{recent_vintage_customer_share}} de los clientes activos. Los clientes que ya estaban no pagan menos ({{base_arpa_change}})."
+  por_que_estado: Evidencia fuerte
+  no_sabemos: "Si el menor ticket viene de precios, planes o descuentos: esos datos no existen. Por la misma razón no podemos separar contracción de descuento ni estimar el revenue que se deja de capturar."
+  no_sabemos_estado: No evaluable
+  profundizar: [Q2, Q7, Q4]
+
+secciones:
+  data:
+    respuesta: "Las fuentes están completas y son consistentes ({{n_customers}} clientes × {{n_months}} meses, sin duplicados ni faltantes), con advertencias que cambian la lectura: `amount` se comporta como monto cobrado y no como MRR contractual, y los flujos solo son limpios desde mar-22."
+    estado: Hecho observado
+    claims: [C-DAT-02, C-DAT-03, C-RET-02]
+    lectura:
+      tarjeta: "1.3"
+      texto: "Pagos dobles, meses en cero y montos grandes aislados: el patrón de un cobro, no de una suscripción fija."
+  growth:
+    respuesta: "No. Los clientes activos crecieron {{active_multiple}} y el MRR pagado {{mrr_multiple}}: el MRR por cliente activo cayó {{arpa_change_abs}}. La base crece con clientes que pagan menos: las cosechas 2023–24 ya son {{recent_vintage_customer_share}} de los clientes activos y {{recent_vintage_mrr_share}} del MRR."
+    estado: Hecho observado
+    claims: [C-RES-01, C-RES-02, C-MON-04]
+    lectura:
+      tarjeta: "2.1"
+      texto: "La distancia entre la línea de clientes y la de MRR es la caída del MRR por cliente."
+  monetization:
+    respuesta: "Sí. Desde {{step_month}} el cliente nuevo típico entra con menor ticket (mediana {{m0_median_2022}} en 2022 frente a {{m0_median_2024}} en 2024), mientras los clientes que ya estaban no pagan menos ({{base_arpa_change}}). El ingreso por cliente baja por composición: pesan cada vez más las cosechas de menor ticket."
+    estado: Evidencia fuerte
+    claims: [C-ADQ-01, C-ADQ-03, C-MON-01, C-MON-04]
+    lectura:
+      tarjeta: "3.3"
+      texto: "La base previa se mantiene arriba; cada cosecha nueva entra más abajo y ya pesa más en el promedio."
+  sm:
+    respuesta: "El gasto cayó {{sm_drop_abs}} a mediados de 2023 y solo se recuperó en parte ({{sm_chg_22_24}} en 2024 frente a 2022), mientras las altas por mes pasaban de {{new_avg_2022}} a {{new_avg_2024}}. Por cliente nuevo el gasto bajó {{total_sm_per_new_customer_chg_abs}}, pero por unidad de MRR nuevo solo {{total_sm_per_new_mrr_mm_chg_abs}}: cada alta trae menos MRR."
+    estado: Hecho observado
+    claims: [C-INV-01, C-INV-02]
+    lectura:
+      tarjeta: "4.4"
+      texto: "Desde el recorte, el gasto queda por debajo de su nivel de 2022 y las altas por encima del suyo."
+  relationships:
+    respuesta: "No en la dirección esperada. En niveles, los meses con más gasto se asocian con menos altas (S&M total del mismo mes: r = {{r_new_sm_l0}}); en cambios mes a mes no hay relación (|r| máximo {{r_mom_absmax}}). Con {{corr_n_min}}–{{corr_n_levels}} meses y tendencias opuestas, esto no mide el efecto del gasto: dice que estos datos no lo muestran."
+    estado: Direccional
+    claims: [C-INV-03, C-INV-04]
+    lectura:
+      tarjeta: "5.3"
+      texto: "En niveles, las celdas de altas son rojas (direcciones opuestas); en cambios mes a mes quedan cerca de cero."
+  industries:
+    respuesta: "Poco. Retail, la industria de menor ticket, gana participación ({{retail_active_share_2022}} → {{retail_active_share_2024}} de los clientes activos), pero el ticket de entrada bajó en las {{industries_ticket_fell_22_24}} industrias y el MRR por cliente también: el cambio ocurre dentro de cada industria más que entre ellas."
+    estado: Hecho observado
+    claims: [C-RES-07, C-ADQ-05, C-MON-05]
+    lectura:
+      tarjeta: "6.5"
+      texto: "En cada industria, el punto de 2024 queda a la izquierda del de 2022."
+  decomposition:
+    respuesta: "Dentro de las industrias. El {{dec_within_share}} de la caída del ticket promedio entre 2022 y 2024 ocurre dentro de ellas (intervalo bootstrap: {{dec_within_ci}}); el mix de industrias explica {{dec_mix_share}}. Con el mix de 2022, el ticket de 2024 habría sido {{dec_cf}}."
+    estado: Evidencia fuerte
+    claims: [C-ADQ-04]
+    explica: true
+    lectura:
+      tarjeta: "7.1"
+      texto: "La barra del mix apenas se ve junto a la del efecto dentro de las industrias."
+  cohorts:
+    respuesta: "Retienen igual o mejor y monetizan menos. La retención de logos al M1 es {{m1_logo_recent_min}}–{{m1_logo_recent_max}} en 2023–24 frente a {{m1_logo_2022_min}}–{{m1_logo_2022_max}} en 2022, pero las cohortes 2023 siguen por debajo de las de 2022 en MRR por cliente original en M1, M6 y M12."
+    estado: Hecho observado
+    claims: [C-RET-01, C-MON-03]
+    lectura:
+      tarjeta: "8.1"
+      texto: "Las filas recientes son tan oscuras como las de 2022 en los primeros meses: no se van antes."
+  movements:
+    respuesta: "Mucho movimiento bruto para poco cambio neto: se movieron {{gross_movement}} para producir {{net_movement}} de crecimiento ({{gross_net_ratio}}). Una parte es consistente con timing de cobro: el {{churn_back_1m}} de los churns vuelve al mes siguiente y el {{exp_mrr_revert}} del MRR de expansión se revierte. Con estos datos no se puede separar contracción de descuento."
+    estado: Hecho observado
+    claims: [C-RES-04, C-RET-02, C-DAT-03]
+    lectura:
+      tarjeta: "9.1"
+      texto: "Las barras de entradas y salidas son mucho más altas que la línea del cambio neto."
+
+preguntas:
+  Q1:
+    titular: "Los clientes nuevos entran pagando menos."
+    respuesta: "Los clientes activos crecieron {{active_multiple}} y el MRR pagado {{mrr_multiple}}: el MRR por cliente cayó {{arpa_change_abs}}. La brecha coincide con altas de menor ticket (mediana {{m0_median_2022}} en 2022 frente a {{m0_median_2024}} en 2024) que ya son {{recent_vintage_customer_share}} de los clientes activos; los clientes que ya estaban no pagan menos ({{base_arpa_change}})."
+    estado: Evidencia fuerte
+    claims: [C-RES-01, C-RES-02, C-ADQ-01, C-MON-04]
+    visual: growthIndex
+    visual_titulo: "Los clientes activos crecieron {{active_multiple}}; el MRR pagado, {{mrr_multiple}}."
+    lectura: "La línea de clientes se separa de la de MRR: esa distancia es la caída del MRR por cliente."
+    sabemos:
+      - "El MRR por cliente activo pasó de {{arpa_start}} a {{arpa_end}}."
+      - "La mediana del ticket de entrada pasó de {{m0_median_2022}} (2022) a {{m0_median_2024}} (2024), con el escalón en {{step_month}}."
+      - "La base previa pasó de {{base_arpa_start}} a {{base_arpa_end}} por cliente."
+    no_sabemos:
+      - "Qué cambió en {{step_month}}: lista de precios, plan de entrada, descuentos o tipo de cliente."
+    necesitariamos: [precios, descuentos, tamano_cliente]
+    seccion: growth
+    relacionada: Q2
+    palabras_clave: [clientes, crecen, rapido, mrr, ingreso, brecha, crecimiento, proporcional]
+  Q2:
+    titular: "Por composición: las cosechas nuevas entran pagando menos."
+    respuesta: "El MRR por cliente activo cayó de {{arpa_start}} a {{arpa_end}}. Los clientes que entraron desde 2023 lo hicieron con menor ticket y ya son {{recent_vintage_customer_share}} de los clientes activos, mientras la base previa no paga menos ({{base_arpa_change}})."
+    estado: Evidencia fuerte
+    claims: [C-RES-02, C-ADQ-01, C-MON-01, C-MON-04]
+    visual: vintageArpa
+    visual_titulo: "Las cosechas 2023 y 2024 pagan menos por cliente que la base previa."
+    lectura: "La base previa se mantiene arriba; cada cosecha nueva entra más abajo."
+    sabemos:
+      - "La base previa pasó de {{base_arpa_start}} a {{base_arpa_end}} por cliente."
+      - "Las cosechas 2023–24 son {{recent_vintage_customer_share}} de los clientes activos y {{recent_vintage_mrr_share}} del MRR."
+    no_sabemos:
+      - "Si el menor ticket de entrada viene de precios, planes o descuentos."
+    necesitariamos: [precios, descuentos]
+    seccion: monetization
+    investigacion: Q2
+    palabras_clave: [mrr, cliente, disminuyo, bajo, cayo, arpa, promedio, ingreso, por cliente]
+  Q3:
+    titular: "No: la caída ocurre dentro de cada industria."
+    respuesta: "Retail ganó participación en las altas ({{retail_new_share_2022}} en 2022 frente a {{retail_new_share_2023}} en 2023), pero el mix de industrias explica solo {{dec_mix_share}} de la caída del ticket promedio: el {{dec_within_share}} ocurre dentro de las industrias (intervalo bootstrap: {{dec_within_ci}}) y el ticket bajó en las {{industries_ticket_fell_22_24}} industrias."
+    estado: Evidencia fuerte
+    explica: true
+    claims: [C-ADQ-04, C-ADQ-05]
+    visual: decompWaterfall
+    visual_titulo: "El {{dec_within_share}} de la caída del ticket ocurre dentro de las industrias; el mix aporta {{dec_mix_share}}."
+    lectura: "La barra del mix de industrias apenas se ve junto a la del efecto dentro."
+    sabemos:
+      - "Ticket de entrada promedio: {{dec_a0}} en 2022 y {{dec_a1}} en 2024."
+      - "Con el mix de industrias de 2022, el ticket de 2024 habría sido {{dec_cf}}."
+    no_sabemos:
+      - "Qué cambió dentro de cada industria: tamaño del cliente, plan o descuento."
+    necesitariamos: [precios, descuentos, tamano_cliente]
+    seccion: decomposition
+    palabras_clave: [retail, industria, industrias, mix, ticket, caida, explica]
+  Q4:
+    titular: "En estos datos no hay relación positiva observable."
+    respuesta: "Las altas por mes subieron de {{new_avg_2022}} a {{new_avg_2024}} mientras el gasto caía ({{sm_drop_abs}} a mediados de 2023; Paid Media {{pm_drop}}). En niveles, más gasto se asocia con menos altas (r = {{r_new_sm_l0}}) y en cambios mes a mes no hay relación (|r| máximo {{r_mom_absmax}}). Sin atribución por canal no se puede medir el efecto de Paid Media."
+    estado: Direccional
+    claims: [C-INV-01, C-INV-03, C-INV-04]
+    visual: indexOverlay
+    visual_titulo: "Las altas por mes subieron de {{new_avg_2022}} a {{new_avg_2024}} mientras el gasto caía {{sm_drop_abs}}."
+    lectura: "Tras el recorte, el gasto queda por debajo de su nivel de 2022 y las altas por encima del suyo."
+    sabemos:
+      - "El gasto por cliente nuevo bajó {{total_sm_per_new_customer_chg_abs}} entre 2022 y 2024."
+      - "El gasto por unidad de MRR nuevo bajó solo {{total_sm_per_new_mrr_mm_chg_abs}}."
+    no_sabemos:
+      - "Si hubo canales de adquisición fuera del archivo de S&M."
+      - "Cuánto tarda el gasto en reflejarse en altas más allá de los rezagos probados."
+    necesitariamos: [atribucion, funnel]
+    seccion: relationships
+    palabras_clave: [paid, media, gasto, marketing, altas, adquisicion, relacion, s&m, inversion, canal]
+  Q5:
+    titular: "Baja, y una parte no es churn definitivo."
+    respuesta: "El churn mensual observado bajó de {{churn_rate_2022}} en 2022 a {{churn_rate_2024}} en 2024 y las cohortes recientes no se van antes (logos al M1: {{m1_logo_recent_min}}–{{m1_logo_recent_max}}). Pero el {{churn_back_1m}} de los churns vuelve a pagar al mes siguiente: una parte es pausa o atraso, no pérdida."
+    estado: Hecho observado
+    claims: [C-RET-01, C-RET-02]
+    visual: returnBuckets
+    visual_titulo: "El {{churn_back_1m}} de los churns vuelve a pagar al mes siguiente."
+    lectura: "La barra más oscura es la de quienes vuelven a pagar al mes siguiente."
+    sabemos:
+      - "El {{churn_back_any}} de los churns vuelve en algún momento antes de oct-24."
+      - "La base previa conserva el {{base_logo_end}} de sus clientes en oct-24."
+    no_sabemos:
+      - "Si un mes sin pago es una pausa, un atraso o una cancelación."
+      - "Los motivos de churn."
+    necesitariamos: [estado_suscripcion, motivos_churn]
+    seccion: cohorts
+    palabras_clave: [churn, bajas, cancelacion, retencion, cohortes, perdida, abandono, se van]
+  Q6:
+    titular: "Las reactivaciones fueron la mayor entrada de {{lb_to}}."
+    respuesta: "Entre {{lb_from}} y {{lb_to}} el MRR pasó de {{lb_opening_mrr_cop}} a {{lb_closing_mrr_cop}}: entraron {{lb_new_mrr_cop}} de altas, {{lb_expansion_mrr_cop}} de expansión y {{lb_reactivation_mrr_cop}} de reactivación, y salieron {{lb_contraction_abs}} de contracción y {{lb_churn_abs}} de churn."
+    estado: Hecho observado
+    claims: [C-RES-05]
+    visual: bridgeLast
+    visual_titulo: "Entre {{lb_from}} y {{lb_to}} el MRR pasó de {{lb_opening_mrr_cop}} a {{lb_closing_mrr_cop}}."
+    lectura: "La barra de reactivación es la entrada más alta del mes."
+    sabemos:
+      - "El puente del último mes cuadra: el residuo es cero."
+    no_sabemos:
+      - "Si las reactivaciones son clientes que regresan o cobros atrasados."
+    necesitariamos: [estado_suscripcion, semantica_amount]
+    seccion: movements
+    palabras_clave: [ultimo, mes, movio, puente, octubre, mrr, cambio]
+  Q7:
+    titular: "Con estos datos no se puede estimar."
+    respuesta: "Con los datos disponibles vemos cambios en el MRR pagado, pero no podemos distinguir contracción, descuento y cambio de precio: no existen precio de lista, MRR contratado, plan ni descuentos. Por eso no podemos estimar responsablemente cuánto revenue se deja de capturar por decisiones comerciales."
+    estado: No evaluable
+    claims: [C-RET-02, C-DAT-03, C-DAT-04, C-DAT-05]
+    visual: smallAdjust
+    visual_titulo: "Los ajustes pequeños pasaron de {{small_exp_first}} a {{small_exp_last}} de las expansiones."
+    lectura: "Los ajustes pequeños y los montos fuera de la grilla crecen desde 2023: es consistente con descuentos o prorrateos, pero no lo prueba."
+    sabemos:
+      - "El {{churn_back_1m}} de los churns vuelve al mes siguiente ({{churn_mrr_back_1m}} del MRR de churn)."
+      - "El {{exp_mrr_revert}} del MRR de expansión se revierte al mes siguiente."
+      - "Los ajustes pequeños pasaron de {{small_exp_first}} a {{small_exp_last}} de las expansiones ({{small_half_first}} → {{small_half_last}})."
+      - "Los meses-cliente con montos fuera de la grilla pasaron de {{offgrid_2022s2}} a {{offgrid_2024s2}}."
+    no_sabemos:
+      - "Cuánto de una contracción es descuento y cuánto es cambio real del cliente."
+      - "Cuánto revenue se deja de capturar por decisiones comerciales."
+    necesitariamos: [precios, descuentos, creditos, estado_suscripcion, semantica_amount]
+    seccion: movements
+    tarjeta: "9.6"
+    palabras_clave: [descuento, descuentos, contraccion, contrajo, subyacente, capturar, dejando, comercial, comerciales, precio, suscripcion, expansion, cfo, revenue]
+  Q8:
+    titular: "Escenario no disponible."
+    respuesta: "No hay base para simularlo: no existe atribución por canal y ninguna asociación positiva entre gasto y altas es estable en estos datos (en niveles r = {{r_new_sm_l0}}; en cambios mes a mes |r| máximo {{r_mom_absmax}}). Un escenario así sería un pronóstico causal sin identificación."
+    estado: No evaluable
+    claims: [C-INV-03, C-INV-04]
+    visual: corrLevels
+    visual_titulo: "En niveles, más gasto se asocia con menos altas (r = {{r_new_sm_l0}})."
+    lectura: "Las filas de altas son rojas en cada rezago: más gasto coincide con menos altas. Las de MRR nuevo apenas se separan de cero."
+    sabemos:
+      - "Las altas por mes subieron de {{new_avg_2022}} a {{new_avg_2024}} con menos gasto."
+    no_sabemos:
+      - "El efecto de Paid Media sobre las altas."
+    necesitariamos: [atribucion, funnel]
+    seccion: relationships
+    palabras_clave: [si, aumenta, escenario, simular, cuantas, tendriamos, pronostico, paid, media, altas]

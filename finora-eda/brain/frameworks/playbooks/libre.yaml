@@ -1,0 +1,32 @@
+# Playbook libre: para preguntas que no encajan en un playbook específico (arquitectura v1.2 §3.2:
+# "elige un playbook o arma el árbol desde un framework"). El framework es la identidad del puente de MRR.
+version: 1
+id: libre
+aplica_a: ["Cualquier pregunta de negocio que no sea sobre el cambio del MRR por cliente."]
+identidad: >-
+  MRR(t) = MRR(t−1) + nuevo + expansión + reactivación + contracción + churn, y MRR = clientes activos × MRR por
+  cliente. Toda pregunta sobre ingreso se ancla en una parte de esta identidad. Lo que dependa de datos que no existen
+  (precios, descuentos, créditos, estado de suscripción, funnel, atribución) se registra en el nodo datos_faltantes y se
+  cierra con una afirmación No evaluable, junto con lo que sí sabemos.
+minimo_hipotesis: 2
+nodos:
+  - id: resultado
+    pregunta: ¿Qué parte del resultado (clientes, MRR o MRR por cliente) responde la pregunta?
+    evidencia_sugerida: ["query_metric sobre clientes, MRR o MRR por cliente", "search_evidence"]
+  - id: adquisicion
+    pregunta: ¿Qué dicen las altas y el ticket de entrada?
+    evidencia_sugerida: ["query_metric new_customers / entry_ticket", "run_analysis ticket_distribution o mix_within_decomposition"]
+  - id: retencion
+    pregunta: ¿Qué dicen el churn, las reactivaciones y las cohortes?
+    evidencia_sugerida: ["query_metric logo_churn_rate / reactivated_customers", "run_analysis churn_selection", "search_evidence"]
+  - id: monetizacion
+    pregunta: ¿Qué dicen la expansión, la contracción y el MRR por cliente de la base?
+    evidencia_sugerida: ["query_metric expansion_mrr_cop / contraction_mrr_cop", "run_analysis vintage_arpa"]
+  - id: inversion
+    pregunta: ¿Qué dice el gasto comercial frente a la adquisición?
+    evidencia_sugerida: ["search_evidence (hallazgos C-INV)", "run_sql sobre mart.sm_monthly (u, nunca COP)"]
+  - id: datos_faltantes
+    pregunta: ¿Qué parte de la pregunta depende de datos que no existen?
+    nota: Se cierra con una afirmación No evaluable que cita los IDs de datos faltantes.
+firmas_orientativas:
+  datos_faltantes: "Si es cierta: la pregunta necesita campos que no están en el panel. Si es falsa: los datos actuales alcanzan para responderla."

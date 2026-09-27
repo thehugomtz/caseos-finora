@@ -6,11 +6,11 @@ con motivos. Nada llega a la vista sin pasar por aquí.
 from __future__ import annotations
 
 import re
-import unicodedata
 
 import yaml
 
 from .config import BRAIN
+from .lint import causal_hits, norm, number_words, numbers_in, qualifiers, stray_digits  # noqa: F401
 from .render import FORMATS, fmt_value
 
 ORDER = ["Hipótesis", "Direccional", "Hecho observado", "Evidencia fuerte"]
@@ -24,67 +24,9 @@ def _load(rel: str):
     return yaml.safe_load((BRAIN / rel).read_text(encoding="utf-8"))
 
 
-GUARD = _load("guardrails/causal_language_es.yaml")
 MISSING = {m["id"]: m for m in _load("guardrails/missing_data.yaml")["faltantes"]}
 ISSUES = {i["id"]: i for i in _load("data/known_quality_issues.yaml")["issues"]}
-PLAYBOOKS = {"arpa_decline": _load("frameworks/playbooks/arpa_decline.yaml")}
-
-
-def norm(s: str) -> str:
-    s = unicodedata.normalize("NFD", s.lower())
-    return "".join(c for c in s if unicodedata.category(c) != "Mn")
-
-
-PROHIBITED = [norm(w) for w in GUARD["prohibido"]]
-EXPLICA = re.compile(r"\bexplic(a|an|o|aron|ara|aria)\b")
-# Tokens con dígitos que no son cifras medidas: años, meses, semestres, trimestres, tenencias e IDs.
-ALLOWED_DIGITS = [r"\b20\d\d\s?[–-]\s?\d\d\b", r"\b20\d\d\s?[ST][1-4]\b", r"\b20\d\d\b",
-                  r"\b(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)-\d\d\b", r"\bM\d{1,2}\b",
-                  r"\b[HQC]-?\d+(\.\d+)*\b", r"\bS&M\b"]
-
-
-PATTERNS = [re.compile(p) for p in GUARD.get("patrones", [])]
-
-
-# Cifras escritas con letras y calificativos que afirman una proporción sin ligarla a evidencia.
-NUMBER_WORDS = re.compile(r"\b(dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|veinte|"
-                          r"treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|ciento|cientos|mil|millon|"
-                          r"millones|mitad|tercio|tercios|doble|triple|cuadruple)\b")
-QUALIFIERS = re.compile(r"\b(casi todos|casi todas|casi siempre|casi nunca|la mayoria|la mayor parte|la gran mayoria|"
-                        r"siempre|nunca|sin excepcion|practicamente|claramente|sin duda|drasticamente|dramaticamente|masivamente|"
-                        r"(en )?cada (mes|trimestre|semestre|ano)|todos los (meses|trimestres|semestres|anos))\b")
-
-
-def number_words(text: str) -> list[str]:
-    return NUMBER_WORDS.findall(norm(re.sub(r"\{[^}]+\}", " ", text)))
-
-
-def qualifiers(text: str) -> list[str]:
-    return [m.group(0) for m in QUALIFIERS.finditer(norm(re.sub(r"\{[^}]+\}", " ", text)))]
-
-
-def causal_hits(text: str, allow_explica: bool) -> list[str]:
-    t = norm(text)
-    hits = [w for w in PROHIBITED if re.search(r"(?<!\w)" + re.escape(w) + r"(?!\w)", t)]
-    hits += [m.group(0) for p in PATTERNS for m in [p.search(t)] if m and m.group(0) not in hits]
-    if not allow_explica and EXPLICA.search(t):
-        hits.append("explica (solo se permite en afirmaciones de descomposición)")
-    return hits
-
-
-def stray_digits(text: str) -> list[str]:
-    t = re.sub(r"\{[^}]+\}", " ", text)
-    for pat in ALLOWED_DIGITS:
-        t = re.sub(pat, " ", t)
-    return re.findall(r"\d[\d.,]*", t)
-
-
-def numbers_in(text: str) -> list[str]:
-    """Cifras de un texto ya renderizado, sin años ni etiquetas de periodo."""
-    t = text
-    for pat in ALLOWED_DIGITS:
-        t = re.sub(pat, " ", t)
-    return [re.sub(r"[.,]$", "", n) for n in re.findall(r"\d[\d.,]*", t)]
+PLAYBOOKS = {p.stem: yaml.safe_load(p.read_text(encoding="utf-8")) for p in sorted((BRAIN / "frameworks" / "playbooks").glob("*.yaml"))}
 
 
 def rank(state: str) -> int:
@@ -131,6 +73,9 @@ def validate_hypotheses(items: list[dict], playbook_id: str = "arpa_decline") ->
     missing = [nid for nid, n in nodes.items() if n.get("requerido") and nid not in covered]
     if missing:
         errors.append(f"El árbol no cubre la identidad completa: faltan los nodos {missing}.")
+    minimum = pb.get("minimo_hipotesis", 1)
+    if len(items) < minimum:
+        errors.append(f"El playbook {playbook_id} pide al menos {minimum} hipótesis con firma.")
     return errors
 
 
@@ -217,6 +162,17 @@ def validate_claim(c: dict, registry, hypothesis_ids: set[str]) -> dict:
         row = key[key.index("[") + 1:-1] if "[" in key else None
         if row and row.split("|")[0] in ev.no_comparable:
             motivos.append(f"{{{v}}} liga una comparación no comparable ({ref}): su base cae antes de la ventana limpia.")
+            continue
+        # una participación por encima de 100% solo cabe en una descomposición (p. ej. 108% del cambio);
+        # fuera de ella casi siempre es una columna que ya venía en puntos porcentuales
+        try:
+            share_over = (fmt or efmt) in ("pct", "pct0") and abs(float(value)) > 1 and tipo != "descomposicion"
+        except (TypeError, ValueError):
+            share_over = False
+        if share_over:
+            motivos.append(f"{{{v}}} mostraría {fmt_value(value, fmt or efmt)}: una participación mayor a 100% solo cabe en una "
+                           "descomposición. Si la columna ya viene en puntos porcentuales, usa 'num1' y escribe % en la plantilla "
+                           "(o calcula la fracción en SQL); para cambios usa 'pct_signed' y para múltiplos 'x'.")
             continue
         used_ev.append(ev)
         rendered = rendered.replace("{" + v + "}", fmt_value(value, fmt or efmt))
@@ -320,11 +276,12 @@ def validate_composition(doc: dict, claims: dict[str, dict]) -> list[str]:
     if not ra.get("claim_ids"):
         errors.append("respuesta_ejecutiva: debe citar al menos una afirmación.")
     check("respuesta_ejecutiva", ra.get("texto", ""), ra.get("claim_ids", []))
+    check("respuesta_ejecutiva.titular", ra.get("titular", ""), ra.get("claim_ids", []))
     for i, h in enumerate(doc.get("hallazgos", [])):
         ids = h.get("claim_ids", [])
         if not ids:
             errors.append(f"hallazgo {i + 1}: sin afirmaciones.")
-        for fld in ("interpretacion", "implicacion", "por_que"):
+        for fld in ("titular", "interpretacion", "implicacion", "por_que"):
             check(f"hallazgo {i + 1}.{fld}", h.get(fld, ""), ids)
     for i, b in enumerate(doc.get("limites", [])):
         check(f"límite {i + 1}", b.get("texto", ""), b.get("claim_ids", []))

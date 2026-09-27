@@ -16,8 +16,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+import yaml
+
 from agent import semantic
-from agent.config import GOLDEN
+from agent.config import BRAIN, GOLDEN
 from agent.evidence import Evidence, Registry
 from agent.tools import check_sql
 from agent.validator import (PLAYBOOKS, causal_hits, number_words, qualifiers, stray_digits, validate_claim,
@@ -93,6 +95,14 @@ def validator_rules():
     check("Validador · Evidencia fuerte con una sola evidencia se degrada", r["estado"] == "Hecho observado", str(r))
     r = v(plantilla="El YoY fue {v}.", variables={"v": f"{e4.id}.variacion[2023-02]"})
     check("Validador · rechaza ligar una comparación no comparable", not r["aceptada"])
+    e5 = ev(reg, kind="sql", tool="run_sql", result={"valores": {"pct_recuperado[2024]": 4.0, "share[2024]": 1.08},
+                                                     "formatos": {"pct_recuperado[2024]": "num2", "share[2024]": "pct0"}})
+    r = v(plantilla="Vuelve al nivel previo {p} de la contracción.", variables={"p": f"{e5.id}.pct_recuperado[2024]|pct0"})
+    check("Validador · rechaza una participación mayor a 100% fuera de una descomposición", not r["aceptada"], str(r.get("texto")))
+    r = v(plantilla="Vuelve al nivel previo {p}% de la contracción.", variables={"p": f"{e5.id}.pct_recuperado[2024]|num1"})
+    check("Validador · puntos porcentuales con num1 y % se aceptan", r["aceptada"], str(r["motivos"]))
+    r = v(plantilla="La composición explica {s} del cambio.", variables={"s": f"{e5.id}.share[2024]"}, tipo="descomposicion")
+    check("Validador · una descomposición puede asignar más de 100% del cambio", r["aceptada"], str(r["motivos"]))
     r = v(plantilla="No hay precios para separarlo.", estado_propuesto="No evaluable")
     check("Validador · No evaluable exige datos faltantes", not r["aceptada"])
     r = v(plantilla="No hay precios para separarlo.", estado_propuesto="No evaluable", datos_faltantes=["precios"])
@@ -152,7 +162,8 @@ def golden_q2():
     check("Dorada Q2 · 100% de cifras recalculadas desde la evidencia", not mismatch, str(mismatch))
     texts = [c["texto"] for c in accepted]
     n = d["narrativa"]
-    texts += [n["respuesta_ejecutiva"]["texto"]] + [h[k] for h in n["hallazgos"] for k in ("interpretacion", "implicacion", "por_que")]
+    texts += [n["respuesta_ejecutiva"]["texto"], n["respuesta_ejecutiva"].get("titular") or ""]
+    texts += [h.get(k) or "" for h in n["hallazgos"] for k in ("titular", "interpretacion", "implicacion", "por_que")]
     texts += [b["texto"] for b in n["limites"] + n["implicaciones"]]
     bad = [t[:80] for t in texts if causal_hits(t, allow_explica=True)]
     check("Dorada Q2 · cero lenguaje causal", not bad, str(bad))
@@ -164,6 +175,16 @@ def golden_q2():
     check("Dorada Q2 · toda gráfica tiene una afirmación aceptada", not orphan_v, str(orphan_v))
     orphan_c = [c["id"] for c in accepted if c["estado"] != "No evaluable" and not c["apoyo"]]
     check("Dorada Q2 · toda afirmación tiene evidencia", not orphan_c, str(orphan_c))
+    # respuesta primero: titulares para leer en segundos, y toda conclusión con su visual
+    sin_titular = ([] if n["respuesta_ejecutiva"].get("titular") else ["respuesta"]) + [h["hipotesis_id"] for h in n["hallazgos"] if not h.get("titular")]
+    check("Dorada Q2 · respuesta y hallazgos con titular", not sin_titular, str(sin_titular))
+    sin_visual = [h["hipotesis_id"] for h in n["hallazgos"] if not any(v in d["visuals"] for v in h.get("visual_ids") or [])]
+    check("Dorada Q2 · todo hallazgo tiene su gráfica", not sin_visual, str(sin_visual))
+    cards = yaml.safe_load((BRAIN / "evidence" / "workspace_cards.yaml").read_text(encoding="utf-8"))["cards"]
+    forms = {"linea", "barras", "cascada", "puntos", "kpi", "tabla", "datos", "tarjeta"}
+    bad_v = [v["id"] for v in d["visuals"].values() if v["spec"]["tipo"] not in forms or (v["spec"]["tipo"] == "tarjeta" and
+             v["spec"].get("claim_fase1") not in (cards.get(v["spec"]["tarjeta"], {}).get("claims") or []))]
+    check("Dorada Q2 · toda gráfica tiene una forma válida y su tarjeta existe", not bad_v, str(bad_v))
 
 
 def main() -> int:

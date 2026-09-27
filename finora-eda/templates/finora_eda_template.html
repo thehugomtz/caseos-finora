@@ -419,6 +419,90 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
 .dr-claim { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; margin: 8px 0; font-size: 13px; color: var(--ink); }
 .dr-claim .id { font-family: var(--mono); font-size: 10.5px; color: var(--muted); display: block; margin-bottom: 2px; }
 
+/* ---------- respuesta primero ---------- */
+.lede.small { font-size: 13.5px; color: var(--muted); margin-top: 14px; }
+.essential { display: grid; gap: 0; margin: 4px 0 6px; max-width: 900px; border-radius: 18px; overflow: hidden; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.72); box-shadow: var(--shadow-soft); }
+.ess-row { display: grid; grid-template-columns: 190px 1fr; gap: 16px; padding: 14px 18px; align-items: baseline; }
+.ess-row + .ess-row { border-top: 1px solid var(--hair); }
+.ess-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.ess-k b { font-family: var(--font); font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--ink); font-weight: 650; }
+.ess-t { font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.ess-t .meta { margin-left: 8px; }
+.ess-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.ess-links button { all: unset; cursor: pointer; font-size: 13.5px; padding: 6px 11px; border-radius: 10px; background: #fff; border: 1px solid var(--hair); color: var(--ink); }
+.ess-links button:hover, .ess-links button:focus-visible { border-color: rgba(47,109,242,0.45); }
+details.keys-d { margin-top: 18px; }
+details.keys-d > summary { cursor: pointer; font-size: 12.5px; color: var(--muted); list-style: none; }
+details.keys-d > summary::before { content: "▸ "; }
+details.keys-d[open] > summary::before { content: "▾ "; }
+.answer { margin: 6px 0 16px; padding: 18px 22px; border-radius: 18px; max-width: 980px;
+  background: linear-gradient(110deg, rgba(47,109,242,0.08), rgba(255,255,255,0.75) 60%); border: 1px solid rgba(47,109,242,0.18); box-shadow: var(--shadow-soft); }
+.answer-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.answer-t { font-size: 17px; line-height: 1.5; margin: 6px 0 10px; color: var(--ink); letter-spacing: -0.005em; }
+.answer-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.answer-meta a, .answer-meta button { all: unset; cursor: pointer; color: var(--accent); font-size: 12.5px; }
+.answer-meta a:hover, .answer-meta button:hover { text-decoration: underline; }
+.answer + .sec-lede { font-size: 14px; color: var(--muted); }
+.findings.after { margin: 22px 0 0; }
+.grid.method-after { margin-top: 18px; }
+.lectura { margin: 8px 0 2px; padding: 8px 12px; border-radius: 10px; background: rgba(47,109,242,0.06); font-size: 13.5px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+.lectura::before { content: "Lectura"; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); flex: none; }
+.tag.meta { font-size: 10px; font-weight: 500; padding: 1px 7px 1px 3px; gap: 4px; opacity: 0.9; }
+.tag.meta i { width: 12px; height: 12px; font-size: 8px; }
+
+/* ---------- vista de respuesta ---------- */
+.ans-q { font-size: clamp(24px, 2.8vw, 32px); line-height: 1.15; letter-spacing: -0.022em; font-weight: 650; margin: 8px 0 14px; max-width: 900px; }
+.ans-banner { font-size: 13px; color: var(--ink-2); padding: 10px 14px; border-radius: 12px; background: rgba(250,178,25,0.12); border: 1px solid rgba(250,178,25,0.3); margin: 0 0 14px; }
+.ans-main { padding: 22px 24px; border-radius: var(--radius); background: linear-gradient(120deg, rgba(47,109,242,0.10), rgba(122,92,255,0.07) 45%, rgba(255,255,255,0.78)); border: 1px solid rgba(47,109,242,0.2); box-shadow: var(--shadow); }
+.ans-titular { font-size: 22px; line-height: 1.25; font-weight: 650; letter-spacing: -0.015em; margin: 6px 0 8px; }
+.ans-text { font-size: 16px; line-height: 1.55; margin: 0 0 10px; color: var(--ink); }
+.ans-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.ans-visual { margin-top: 16px; padding: 18px 20px 14px; }
+.ans-visual .viz-h { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.card.ans-visual.flat { padding: 0; margin-top: 14px; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.viz-src { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.viz-src a { color: var(--accent); text-decoration: none; }
+.viz-src a:hover { text-decoration: underline; }
+.know { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.know.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.know.one { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
+.know .kb { padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,0.7); border: 1px solid var(--hair); }
+.know h4 { margin: 0 0 8px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.know ul { margin: 0; padding-left: 18px; font-size: 13.8px; }
+.know li { margin: 5px 0; }
+.know li code { font-size: 11px; }
+.claims-list { display: grid; gap: 6px; margin-top: 8px; }
+.claims-list .cl { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: baseline; font-size: 13.8px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.6); border: 1px solid var(--hair); }
+.ans-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 6px; }
+
+/* ---------- investigación: drivers y revelación progresiva ---------- */
+.drivers { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; margin-top: 16px; }
+.driver { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.75); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); }
+.driver .dq { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.driver .dt { font-size: 14.5px; font-weight: 600; line-height: 1.35; margin-top: 6px; }
+.inv-more { all: unset; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 26px auto 0; padding: 11px 18px; border-radius: 12px;
+  background: rgba(255,255,255,0.9); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); font-size: 14px; font-weight: 550; color: var(--ink); width: fit-content; }
+.inv-more:hover, .inv-more:focus-visible { border-color: rgba(47,109,242,0.45); }
+.inv-details[hidden] { display: none; }
+.claim-row .tag { font-size: 10px; font-weight: 500; padding: 1px 7px 1px 3px; }
+.claim-row .tag i { width: 12px; height: 12px; font-size: 8px; }
+.datagap { display: grid; gap: 6px; }
+.datagap .dg { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.65); border: 1px solid var(--hair); font-size: 13.5px; }
+.datagap .dg .ic { font-family: var(--mono); font-weight: 700; }
+.datagap .dg.ok .ic { color: var(--good-ink); } .datagap .dg.no .ic { color: var(--critical-ink); }
+.datagap .dg .cf { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.analyzing .spinner { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); border-right-color: transparent; animation: spin 0.9s linear infinite; margin-right: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- buscador ---------- */
+.pal-item.ask { background: rgba(47,109,242,0.06); }
+.pal-item.ask .t b { font-weight: 600; }
+.pal-grp.sub { padding-top: 14px; }
+.pal-hint { font-size: 13px; color: var(--muted); padding: 10px 12px 2px; }
+.pal-item.sec { padding: 6px 10px; font-size: 13px; color: var(--ink-2); }
+.pal-item .dom { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--hair); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+
 /* ---------- documento de investigación ---------- */
 .invdoc { position: fixed; inset: 0; z-index: 70; overflow-y: auto; background: var(--bg); }
 .invdoc::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
@@ -452,7 +536,7 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
 .hyp .why { grid-column: 2 / 4; font-size: 11.5px; color: var(--muted); }
 .finding { padding: 20px 22px 16px; margin-top: 14px; }
 .finding .fq { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.claim-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; margin: 10px 0 4px; }
+.claim-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; margin: 10px 0 4px; }
 .claim-row .txt { font-size: 16px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; }
 .claim-row .txt.sub { font-size: 14px; font-weight: 500; }
 .claim-row button.lk { all: unset; cursor: pointer; }
@@ -533,6 +617,13 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
   .claim-row { grid-template-columns: 1fr; gap: 4px; }
   .claim-row .tag { justify-self: start; }
   .inv-answer p { font-size: 16px; }
+  .ess-row { grid-template-columns: 1fr; gap: 4px; }
+  .know, .know.two { grid-template-columns: 1fr; }
+  .drivers { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .driver { padding: 12px; }
+  .answer { padding: 14px 16px; }
+  .answer-t { font-size: 15.5px; }
+  .ans-titular { font-size: 19px; }
 }
 @media print {
   .side, .progress, .tbtn, .askline, .palette, .drawer, .scrim { display: none !important; }
@@ -591,7 +682,8 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
   <div class="hero glass">
     <div class="eyebrow">Finora · Fase 1 · Análisis exploratorio</div>
     <h1>Workspace de <span class="g">exploración del negocio</span></h1>
-    <p class="lede">Cómo se comporta el negocio en resultado, adquisición, retención, monetización e inversión comercial, con cada cifra recalculada desde los tres archivos crudos. Esta fase describe y pregunta; todavía no diagnostica los problemas de Finora.</p>
+    <div class="essential" id="essential" aria-label="Lo esencial en 30 segundos"></div>
+    <p class="lede small">Cada cifra se recalcula desde los tres archivos crudos. Esta fase describe y pregunta; todavía no diagnostica los problemas de Finora.</p>
     <div class="chips">
       <span class="chip"><span class="dot"></span>{{window_start}} → {{window_end}} · {{n_months}} meses</span>
       <span class="chip"><span class="dot"></span>{{n_customers}} clientes · {{n_industries}} industrias</span>
@@ -604,6 +696,7 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div><b>02</b>Explicar</div>
       <div><b>03</b>Decidir</div>
     </div>
+    <details class="keys-d"><summary>Cómo leer los estados de cada afirmación</summary>
     <div class="keys">
       <div class="keyrow"><b>Estado de cada afirmación</b>
         <span class="tag hecho"><i>✓</i>Hecho observado</span>
@@ -618,6 +711,7 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
         <span class="tag met"><i>i</i>Método</span><span>explica cómo se calcula</span>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -718,6 +812,7 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
 <section class="section" id="data">
   <div class="kicker"><span class="num">01</span>Calidad de datos y modelo<span class="dom">Cortes y datos</span></div>
   <h2 class="question">¿Qué contienen realmente las fuentes y qué tuvimos que hacerles?</h2>
+  <div class="answer" data-answer="data"></div>
   <p class="sec-lede">Tres archivos, un grano cada uno. El modelo une clientes con industrias, reconstruye una tabla cliente-mes y deriva los movimientos. El gasto de S&amp;M se queda a nivel mes y solo se compara con los resultados; nunca se les atribuye.</p>
 
   <div class="grid">
@@ -865,18 +960,9 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
 <section class="section" id="growth">
   <div class="kicker"><span class="num">02</span>Resultado del negocio<span class="dom">Resultado</span></div>
   <h2 class="question">¿El crecimiento de clientes se traduce en un crecimiento proporcional del ingreso?</h2>
+  <div class="answer" data-answer="growth"></div>
   <p class="sec-lede">La película completa: el stock de clientes activos, los flujos que lo cambian y el MRR pagado en los mismos 34 meses.</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>Los clientes crecieron <b>{{active_multiple}}</b> y el MRR pagado <b>{{mrr_multiple}}</b>: el MRR por cliente activo cayó <b>{{arpa_change_abs}}</b>.</li>
-      <li>Las altas netas fueron positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses (negativas solo en {{net_adds_negative_list}}).</li>
-      <li>El MRR pagado cayó frente al mes anterior en {{mrr_mom_negative_months}} de 33 meses aunque los clientes seguían creciendo (por ejemplo, {{mrr_jun22_change}} en jun-22).</li>
-    </ul></div>
-    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
-      <li>¿El menor ingreso por cliente depende de quién entra o de que los existentes pagan menos? → 03 <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
-      <li>¿Las caídas del MRR son pérdidas reales o timing de pago? → 09 <button class="inv" type="button" data-qid="Q6">Investigar →</button></li>
-    </ul></div>
-  </div>
+  
   <div class="grid">
     <article class="card span-12" id="card-2-1" data-card="2.1">
       <div class="card-top"><span class="card-id">2.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
@@ -906,25 +992,26 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="table-view" hidden></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Los clientes crecieron <b>{{active_multiple}}</b> y el MRR pagado <b>{{mrr_multiple}}</b>: el MRR por cliente activo cayó <b>{{arpa_change_abs}}</b>.</li>
+      <li>Las altas netas fueron positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses (negativas solo en {{net_adds_negative_list}}).</li>
+      <li>El MRR pagado cayó frente al mes anterior en {{mrr_mom_negative_months}} de 33 meses aunque los clientes seguían creciendo (por ejemplo, {{mrr_jun22_change}} en jun-22).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿El menor ingreso por cliente depende de quién entra o de que los existentes pagan menos? → 03 <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
+      <li>¿Las caídas del MRR son pérdidas reales o timing de pago? → 09 <button class="inv" type="button" data-qid="Q6">Investigar →</button></li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 03 TICKET -->
 <section class="section" id="monetization">
   <div class="kicker"><span class="num">03</span>Ticket de entrada y monetización<span class="dom">Adquisición</span></div>
   <h2 class="question">¿Los clientes nuevos entran con otro valor, y es eso lo que mueve el ingreso por cliente?</h2>
+  <div class="answer" data-answer="monetization"></div>
   <p class="sec-lede">Ticket de entrada = primer monto pagado de un cliente nuevo (M0). Se muestra el promedio pedido junto a vistas más robustas, porque las altas de 2022 incluyen primeros pagos grandes.</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>Mediana del ticket de entrada: <b>{{m0_median_2022}}</b> (2022) → {{m0_median_2023}} (2023) → {{m0_median_2024}} (2024). El escalón ocurre en <b>{{step_month}}</b>.</li>
-      <li>Los clientes que ya pagaban en {{window_start}} no pagan menos: su MRR por cliente pasó de {{base_arpa_start}} a {{base_arpa_end}}.</li>
-      <li>Las cosechas 2023–24 pagan menos ({{v2023_arpa_end}} y {{v2024_arpa_end}} en oct-24, frente a {{v2022_arpa_end}} de la cosecha 2022) y son {{recent_vintage_customer_share}} de los clientes activos pero {{recent_vintage_mrr_share}} del MRR.</li>
-    </ul></div>
-    <div class="panel warn glass"><h4>Precauciones</h4><ul>
-      <li>El {{spike_share_2022}} de las altas de 2022 pagó en M0 más de 1,5 veces su segundo mes ({{spike_share_2023}} en 2023): el promedio de 2022 está inflado.</li>
-      <li>El tamaño de la caída depende de la métrica ({{m1_mean_chg_22_24}} a {{m0_mean_chg_22_24}}); la dirección no.</li>
-      <li>Qué cambió en {{step_month}} (lista de precios, empaquetamiento, descuentos, segmento, canal) no es observable.</li>
-    </ul></div>
-  </div>
+  
   <div class="grid">
     <article class="card span-12" id="card-3-1" data-card="3.1">
       <div class="card-top"><span class="card-id">3.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
@@ -961,24 +1048,27 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="foot"><p class="note">Winsorizado = M0 con tope en el P99 conjunto ({{winsor_cap}}). Run-rate temprano = mediana de los montos positivos de los tres primeros meses. M1 incluye ceros de clientes inactivos en su segundo mes.</p><div class="btns"><button class="tbtn how" type="button" data-how="3.4">¿Cómo lo sabemos?</button></div></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Mediana del ticket de entrada: <b>{{m0_median_2022}}</b> (2022) → {{m0_median_2023}} (2023) → {{m0_median_2024}} (2024). El escalón ocurre en <b>{{step_month}}</b>.</li>
+      <li>Los clientes que ya pagaban en {{window_start}} no pagan menos: su MRR por cliente pasó de {{base_arpa_start}} a {{base_arpa_end}}.</li>
+      <li>Las cosechas 2023–24 pagan menos ({{v2023_arpa_end}} y {{v2024_arpa_end}} en oct-24, frente a {{v2022_arpa_end}} de la cosecha 2022) y son {{recent_vintage_customer_share}} de los clientes activos pero {{recent_vintage_mrr_share}} del MRR.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Precauciones</h4><ul>
+      <li>El {{spike_share_2022}} de las altas de 2022 pagó en M0 más de 1,5 veces su segundo mes ({{spike_share_2023}} en 2023): el promedio de 2022 está inflado.</li>
+      <li>El tamaño de la caída depende de la métrica ({{m1_mean_chg_22_24}} a {{m0_mean_chg_22_24}}); la dirección no.</li>
+      <li>Qué cambió en {{step_month}} (lista de precios, empaquetamiento, descuentos, segmento, canal) no es observable.</li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 04 S&M -->
 <section class="section" id="sm">
   <div class="kicker"><span class="num">04</span>Inversión comercial (S&amp;M)<span class="dom">Inversión comercial</span></div>
   <h2 class="question">¿Cómo evolucionó el gasto en S&amp;M y cómo se alinea con la adquisición y el ingreso?</h2>
+  <div class="answer" data-answer="sm"></div>
   <p class="sec-lede">El gasto se muestra en las unidades del archivo (u). Las eficiencias son comparables en el tiempo, pero no son un CAC en pesos.</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>El S&amp;M total cayó <b>{{sm_drop_abs}}</b> de {{sm_peak_month}} ({{sm_peak}}) a {{sm_trough_month}} ({{sm_trough}}), con Paid Media en {{pm_drop}}, y solo se recuperó en parte: el promedio de 2024 está {{sm_chg_22_24}} frente a 2022.</li>
-      <li>Las altas por mes fueron más altas después del recorte ({{new_avg_2023}}–{{new_avg_2024}}) que antes ({{new_avg_2022}} en 2022).</li>
-      <li>El gasto por cliente nuevo cayó <b>{{total_sm_per_new_customer_chg_abs}}</b> (2022 → 2024), pero el gasto por COP 1 millón de MRR nuevo solo <b>{{total_sm_per_new_mrr_mm_chg_abs}}</b>: cada cliente nuevo trae menos MRR.</li>
-    </ul></div>
-    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
-      <li>¿De dónde salió el aumento de altas de 2023 si el gasto bajó? ¿Canales fuera de este archivo? ¿Un precio de entrada menor? <button class="inv" type="button" data-qid="Q4">Investigar →</button></li>
-      <li>¿Team y PayrollExpenses son un mismo costo de personas partido en dos, o dos costos distintos?</li>
-    </ul></div>
-  </div>
+  
   <div class="grid">
     <article class="card span-12" id="card-4-1" data-card="4.1">
       <div class="card-top"><span class="card-id">4.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
@@ -1031,25 +1121,26 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="table-view" hidden></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>El S&amp;M total cayó <b>{{sm_drop_abs}}</b> de {{sm_peak_month}} ({{sm_peak}}) a {{sm_trough_month}} ({{sm_trough}}), con Paid Media en {{pm_drop}}, y solo se recuperó en parte: el promedio de 2024 está {{sm_chg_22_24}} frente a 2022.</li>
+      <li>Las altas por mes fueron más altas después del recorte ({{new_avg_2023}}–{{new_avg_2024}}) que antes ({{new_avg_2022}} en 2022).</li>
+      <li>El gasto por cliente nuevo cayó <b>{{total_sm_per_new_customer_chg_abs}}</b> (2022 → 2024), pero el gasto por COP 1 millón de MRR nuevo solo <b>{{total_sm_per_new_mrr_mm_chg_abs}}</b>: cada cliente nuevo trae menos MRR.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿De dónde salió el aumento de altas de 2023 si el gasto bajó? ¿Canales fuera de este archivo? ¿Un precio de entrada menor? <button class="inv" type="button" data-qid="Q4">Investigar →</button></li>
+      <li>¿Team y PayrollExpenses son un mismo costo de personas partido en dos, o dos costos distintos?</li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 05 RELACIONES -->
 <section class="section" id="relationships">
   <div class="kicker"><span class="num">05</span>Gasto y adquisición<span class="dom">Inversión comercial</span></div>
   <h2 class="question">¿Las altas o el MRR nuevo se mueven con el gasto, en el mismo mes o con rezago?</h2>
+  <div class="answer" data-answer="relationships"></div>
   <p class="sec-lede">Correlación entre el gasto del mes t−k y el resultado del mes t, para k = 0…3. Se muestran niveles y cambios mes a mes, porque las tendencias compartidas pueden crear correlaciones que no dicen nada del movimiento mes a mes.</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>En niveles, los meses con más gasto se asocian con <b>menos</b> altas (S&amp;M total, rezago 0: r = {{r_new_sm_l0}}; rango de {{r_new_levels_min}} a {{r_new_levels_max}} entre gastos y rezagos).</li>
-      <li>Esa relación refleja tendencias opuestas: en cambios mes a mes ninguna correlación alcanza |r| ≥ 0,3 (máximo {{r_mom_absmax}}; menor p = {{r_mom_minp}}).</li>
-      <li>El MRR nuevo no muestra relación con el gasto en ningún rezago (|r| ≤ {{r_mrr_levels_absmax}} en niveles).</li>
-    </ul></div>
-    <div class="panel warn glass"><h4>Precauciones</h4><ul>
-      <li>n = {{corr_n_min}}–{{corr_n_levels}} meses, series autocorrelacionadas y un archivo de gasto construido por asignación.</li>
-      <li>No existe atribución por canal: son asociaciones, nunca efectos.</li>
-      <li>El mes con arrastre (feb-22) se excluye; la sensibilidad que lo incluye está en la vista de datos.</li>
-    </ul></div>
-  </div>
+  
   <div class="controls glass" id="corrControls">
     <div class="ctl"><span>Gasto</span><div class="seg" data-key="spend"><button>Paid Media</button><button>Generación de demanda</button><button aria-pressed="true">S&amp;M total</button></div></div>
     <div class="ctl"><span>Resultado</span><div class="seg" data-key="outcome"><button aria-pressed="true">Altas</button><button>MRR nuevo</button></div></div>
@@ -1087,24 +1178,27 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="table-view" hidden></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>En niveles, los meses con más gasto se asocian con <b>menos</b> altas (S&amp;M total, rezago 0: r = {{r_new_sm_l0}}; rango de {{r_new_levels_min}} a {{r_new_levels_max}} entre gastos y rezagos).</li>
+      <li>Esa relación refleja tendencias opuestas: en cambios mes a mes ninguna correlación alcanza |r| ≥ 0,3 (máximo {{r_mom_absmax}}; menor p = {{r_mom_minp}}).</li>
+      <li>El MRR nuevo no muestra relación con el gasto en ningún rezago (|r| ≤ {{r_mrr_levels_absmax}} en niveles).</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Precauciones</h4><ul>
+      <li>n = {{corr_n_min}}–{{corr_n_levels}} meses, series autocorrelacionadas y un archivo de gasto construido por asignación.</li>
+      <li>No existe atribución por canal: son asociaciones, nunca efectos.</li>
+      <li>El mes con arrastre (feb-22) se excluye; la sensibilidad que lo incluye está en la vista de datos.</li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 06 INDUSTRIAS -->
 <section class="section" id="industries">
   <div class="kicker"><span class="num">06</span>Corte por industria<span class="dom">Cortes y datos</span></div>
   <h2 class="question">¿El crecimiento se está desplazando hacia industrias con distinta monetización?</h2>
+  <div class="answer" data-answer="industries"></div>
   <p class="sec-lede">La industria es la única segmentación disponible. El mix se muestra para el stock (clientes activos, MRR) y para el flujo (altas, MRR nuevo).</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>El mix se movió poco hacia Retail, la industria de menor ticket ({{retail_ticket_2024}} en 2024): {{retail_new_share_2022}} de las altas en 2022, {{retail_new_share_2023}} en 2023 y {{retail_new_share_2024}} en 2024.</li>
-      <li>Restaurantes sigue siendo el mayor bloque de MRR, pero su participación bajó de {{rest_mrr_share_2022}} (dic-22) a {{rest_mrr_share_2024}} (oct-24).</li>
-      <li>El ticket de entrada promedio bajó en <b>las {{industries_ticket_fell_22_24}}</b> industrias entre 2022 y 2024.</li>
-    </ul></div>
-    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
-      <li>¿La caída dentro de cada industria viene de clientes más pequeños, planes más baratos o descuentos? No se puede separar aquí. <button class="inv" type="button" data-qid="Q3">Investigar →</button></li>
-      <li>¿Por qué Salud mantiene su ticket mediano en 2023 mientras las demás bajan?</li>
-    </ul></div>
-  </div>
+  
   <div class="grid">
     <article class="card span-6" id="card-6-1" data-card="6.1">
       <div class="card-top"><span class="card-id">6.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
@@ -1170,45 +1264,27 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="foot"><p class="note">Churn mensual de logos = churn observado ÷ activos del mes anterior, agregado en el año. Contracción y MRR de churn son negativos por convención.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.7">¿Cómo lo sabemos?</button></div></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>El mix se movió poco hacia Retail, la industria de menor ticket ({{retail_ticket_2024}} en 2024): {{retail_new_share_2022}} de las altas en 2022, {{retail_new_share_2023}} en 2023 y {{retail_new_share_2024}} en 2024.</li>
+      <li>Restaurantes sigue siendo el mayor bloque de MRR, pero su participación bajó de {{rest_mrr_share_2022}} (dic-22) a {{rest_mrr_share_2024}} (oct-24).</li>
+      <li>El ticket de entrada promedio bajó en <b>las {{industries_ticket_fell_22_24}}</b> industrias entre 2022 y 2024.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿La caída dentro de cada industria viene de clientes más pequeños, planes más baratos o descuentos? No se puede separar aquí. <button class="inv" type="button" data-qid="Q3">Investigar →</button></li>
+      <li>¿Por qué Salud mantiene su ticket mediano en 2023 mientras las demás bajan?</li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 07 DESCOMPOSICIÓN -->
 <section class="section" id="decomposition">
   <div class="kicker"><span class="num">07</span>Mix vs. efecto dentro de la industria<span class="dom">Adquisición</span></div>
   <h2 class="question">¿Cuánto del cambio en el ticket de los clientes nuevos viene del mix de industrias y cuánto ocurre dentro de cada industria?</h2>
+  <div class="answer" data-answer="decomposition"></div>
   <p class="sec-lede">Si Finora solo hubiera captado más clientes de industrias que pagan menos, el ticket promedio bajaría sin cambios dentro de ninguna industria (mix). Si los clientes de una misma industria empezaran a entrar con menor valor, bajaría aunque el mix fuera constante (efecto dentro).</p>
-  <div class="grid">
-    <article class="card span-12" id="card-7-0" data-card="7.0">
-      <div class="card-top"><span class="card-id">7.0 · MÉTODO</span><span class="tag met"><i>i</i>Método</span></div>
-      <h3>Descomposición de Shapley (punto medio) de un promedio ponderado: exacta, sin residuo</h3>
-      <div class="grid" style="gap:18px;margin-top:6px">
-        <div class="span-7" style="font-size:13.6px;color:var(--ink-2)">
-          <p style="margin:0 0 8px">Ticket de entrada promedio <code>A = Σᵢ sᵢ · aᵢ</code>, donde <code>sᵢ</code> es la participación de la industria i en las altas y <code>aᵢ</code> su ticket promedio. Entre los periodos 0 y 1:</p>
-          <p style="margin:0 0 8px"><code>ΔA = Σᵢ (sᵢ¹ − sᵢ⁰) · (aᵢ⁰ + aᵢ¹)/2</code> <b>mix</b> &nbsp;+&nbsp; <code>Σᵢ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2</code> <b>dentro</b></p>
-          <p style="margin:0">Usar el promedio de ambos periodos como ponderador elimina el término de interacción: los dos efectos suman exactamente el cambio. La versión de Laspeyres (con interacción) se reporta como verificación.</p>
-        </div>
-        <div class="span-5" style="font-size:13.2px;color:var(--ink-2)">
-          <ul style="margin:0;padding-left:18px">
-            <li><b>Periodos:</b> 2022 (mar–dic, n = {{dec_n0}}), 2023, 2024 (ene–oct, n = {{dec_n1}}).</li>
-            <li><b>Incertidumbre:</b> 2.000 remuestreos bootstrap de las altas dentro de cada periodo → intervalos de 90%.</li>
-            <li><b>Robustez:</b> M0 winsorizado en P99 ({{winsor_cap}}); run-rate temprano (mediana de M0–M2 positivos).</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-  </div>
-  <div class="findings" style="margin-top:18px">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>2022 → 2024: ticket de entrada promedio {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}). <b>Dentro de las industrias {{dec_within}} ({{dec_within_share}})</b>; mix {{dec_mix}} ({{dec_mix_share}}). Intervalo de 90% para la parte "dentro": {{dec_within_ci}}.</li>
-      <li>Robusto a valores extremos y a picos del primer mes: la parte "dentro" va de {{dec_within_share_min}} a {{dec_within_share_max}} en las tres variantes.</li>
-      <li>Con el mix de industrias de 2022, el ticket de 2024 habría sido {{dec_cf}} en lugar de {{dec_a1}}.</li>
-      <li>2023 → 2024: cambio de {{dec34_delta}}; intervalo de 90% del efecto dentro: {{dec34_ci}}. Sin cambio medible después del escalón de 2023.</li>
-    </ul></div>
-    <div class="panel warn glass"><h4>Qué puede y qué no puede significar "dentro"</h4><ul>
-      <li>Dentro de la industria no es lo mismo que precio. Agrupa todo lo que mueve el ticket dentro de una industria: mezcla de planes, tamaño del cliente, descuentos, promociones, timing de cobro.</li>
-      <li>La industria es la única segmentación disponible; una más fina podría revelar efectos de mix escondidos dentro de las industrias.</li>
-    </ul></div>
-  </div>
+  
+  
   <div class="grid">
     <article class="card span-6" id="card-7-1" data-card="7.1">
       <div class="card-top"><span class="card-id">7.1</span><span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></div>
@@ -1242,25 +1318,47 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="foot"><p class="note">n/s = no significativo: el cambio total es demasiado pequeño para repartirlo.</p><div class="btns"><button class="tbtn how" type="button" data-how="7.4">¿Cómo lo sabemos?</button></div></div>
     </article>
   </div>
+  <div class="grid method-after">
+    <article class="card span-12" id="card-7-0" data-card="7.0">
+      <div class="card-top"><span class="card-id">7.0 · MÉTODO</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3>Descomposición de Shapley (punto medio) de un promedio ponderado: exacta, sin residuo</h3>
+      <div class="grid" style="gap:18px;margin-top:6px">
+        <div class="span-7" style="font-size:13.6px;color:var(--ink-2)">
+          <p style="margin:0 0 8px">Ticket de entrada promedio <code>A = Σᵢ sᵢ · aᵢ</code>, donde <code>sᵢ</code> es la participación de la industria i en las altas y <code>aᵢ</code> su ticket promedio. Entre los periodos 0 y 1:</p>
+          <p style="margin:0 0 8px"><code>ΔA = Σᵢ (sᵢ¹ − sᵢ⁰) · (aᵢ⁰ + aᵢ¹)/2</code> <b>mix</b> &nbsp;+&nbsp; <code>Σᵢ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2</code> <b>dentro</b></p>
+          <p style="margin:0">Usar el promedio de ambos periodos como ponderador elimina el término de interacción: los dos efectos suman exactamente el cambio. La versión de Laspeyres (con interacción) se reporta como verificación.</p>
+        </div>
+        <div class="span-5" style="font-size:13.2px;color:var(--ink-2)">
+          <ul style="margin:0;padding-left:18px">
+            <li><b>Periodos:</b> 2022 (mar–dic, n = {{dec_n0}}), 2023, 2024 (ene–oct, n = {{dec_n1}}).</li>
+            <li><b>Incertidumbre:</b> 2.000 remuestreos bootstrap de las altas dentro de cada periodo → intervalos de 90%.</li>
+            <li><b>Robustez:</b> M0 winsorizado en P99 ({{winsor_cap}}); run-rate temprano (mediana de M0–M2 positivos).</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>2022 → 2024: ticket de entrada promedio {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}). <b>Dentro de las industrias {{dec_within}} ({{dec_within_share}})</b>; mix {{dec_mix}} ({{dec_mix_share}}). Intervalo de 90% para la parte "dentro": {{dec_within_ci}}.</li>
+      <li>Robusto a valores extremos y a picos del primer mes: la parte "dentro" va de {{dec_within_share_min}} a {{dec_within_share_max}} en las tres variantes.</li>
+      <li>Con el mix de industrias de 2022, el ticket de 2024 habría sido {{dec_cf}} en lugar de {{dec_a1}}.</li>
+      <li>2023 → 2024: cambio de {{dec34_delta}}; intervalo de 90% del efecto dentro: {{dec34_ci}}. Sin cambio medible después del escalón de 2023.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Qué puede y qué no puede significar "dentro"</h4><ul>
+      <li>Dentro de la industria no es lo mismo que precio. Agrupa todo lo que mueve el ticket dentro de una industria: mezcla de planes, tamaño del cliente, descuentos, promociones, timing de cobro.</li>
+      <li>La industria es la única segmentación disponible; una más fina podría revelar efectos de mix escondidos dentro de las industrias.</li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 08 COHORTES -->
 <section class="section" id="cohorts">
   <div class="kicker"><span class="num">08</span>Cohortes<span class="dom">Retención y base</span></div>
   <h2 class="question">¿Las cohortes recientes retienen o monetizan distinto que las anteriores?</h2>
+  <div class="answer" data-answer="cohorts"></div>
   <p class="sec-lede">Cohorte = mes del primer pago positivo. Los clientes activos en {{window_start}} están censurados y se muestran aparte; las altas de feb-22 se marcan. Mₖ solo se calcula con clientes que tienen al menos k meses de historia.</p>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>Las cohortes recientes no se van antes: retención de logos al M1 de <b>{{m1_logo_recent_min}}–{{m1_logo_recent_max}}</b> en los trimestres completos de 2023–24, frente a {{m1_logo_2022_min}}–{{m1_logo_2022_max}} en 2022.</li>
-      <li>La retención de logos al M12 va de {{m12_logo_min}} a {{m12_logo_max}} en las cohortes trimestrales completamente observadas.</li>
-      <li>La retención de ingreso contra M0 es baja por construcción en las cohortes de 2022 (M1 ≤ {{rev_m1_2022_max}}) porque su M0 incluye primeros pagos grandes; en 2023–24, M1 es ≥ {{rev_m1_recent_min}}.</li>
-      <li>Base previa (n = {{base_size}}): el {{base_logo_end}} sigue pagando en oct-24 y conserva el {{base_rev_end}} de su MRR de {{window_start}}.</li>
-    </ul></div>
-    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
-      <li>¿Los picos del primer mes en 2022 son cargos de instalación, prepagos o pagos atrasados?</li>
-      <li>¿Las cohortes de menor ticket expanden después o se quedan en su nivel de entrada? <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
-    </ul></div>
-  </div>
+  
   <div class="controls glass" id="cohortControls">
     <div class="ctl"><span>Métrica</span><div class="seg" data-key="metric"><button aria-pressed="true">Retención de logos</button><button>Retención de ingreso vs M0</button><button>MRR por cliente original</button></div></div>
     <div class="ctl"><span>Cohortes</span><div class="seg" data-key="gran"><button aria-pressed="true">Trimestrales</button><button>Mensuales</button></div></div>
@@ -1305,30 +1403,32 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       <div class="foot"><p class="note">Retención de ingreso = MRR de la cohorte en Mₖ ÷ MRR de esos mismos clientes en M0. "Con expansión" = al menos una expansión entre M1 y M6 (clientes con seis meses de historia).</p><div class="btns"><button class="tbtn how" type="button" data-how="8.4">¿Cómo lo sabemos?</button></div></div>
     </article>
   </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Las cohortes recientes no se van antes: retención de logos al M1 de <b>{{m1_logo_recent_min}}–{{m1_logo_recent_max}}</b> en los trimestres completos de 2023–24, frente a {{m1_logo_2022_min}}–{{m1_logo_2022_max}} en 2022.</li>
+      <li>La retención de logos al M12 va de {{m12_logo_min}} a {{m12_logo_max}} en las cohortes trimestrales completamente observadas.</li>
+      <li>La retención de ingreso contra M0 es baja por construcción en las cohortes de 2022 (M1 ≤ {{rev_m1_2022_max}}) porque su M0 incluye primeros pagos grandes; en 2023–24, M1 es ≥ {{rev_m1_recent_min}}.</li>
+      <li>Base previa (n = {{base_size}}): el {{base_logo_end}} sigue pagando en oct-24 y conserva el {{base_rev_end}} de su MRR de {{window_start}}.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿Los picos del primer mes en 2022 son cargos de instalación, prepagos o pagos atrasados?</li>
+      <li>¿Las cohortes de menor ticket expanden después o se quedan en su nivel de entrada? <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
+    </ul></div>
+  </div>
 </section>
 
 <!-- ======================================================= 09 MOVIMIENTOS -->
 <section class="section" id="movements">
   <div class="kicker"><span class="num">09</span>Movimientos de MRR<span class="dom">Resultado</span></div>
   <h2 class="question">¿Qué mueve el MRR pagado de un mes a otro?</h2>
+  <div class="answer" data-answer="movements"></div>
   <div class="callout warn">
     <div class="ic">!</div>
     <div>
       <p><b>Estas categorías describen movimientos del monto pagado observado.</b> Con los datos actuales no podemos distinguir si una expansión o contracción proviene de uso, plan, pricing, descuento, créditos u otra decisión comercial.</p>
     </div>
   </div>
-  <div class="findings">
-    <div class="panel facts glass"><h4>Lo que muestran los datos</h4><ul>
-      <li>En la ventana, los movimientos brutos suman <b>{{gross_movement}}</b> para producir <b>{{net_movement}}</b> de cambio neto ({{gross_net_ratio}}).</li>
-      <li>El {{churn_back_1m}} de los churns observados ({{churn_mrr_back_1m}} del MRR de churn) vuelve al mes siguiente; el {{churn_back_any}} vuelve en algún momento antes de oct-24.</li>
-      <li>El {{exp_mrr_revert}} del MRR de expansión se revierte al mes siguiente (picos de un mes); el {{con_mrr_post_spike}} del MRR de contracción es el regreso a lo normal después de uno de esos picos.</li>
-      <li>{{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} de altas + {{lb_expansion_mrr_cop}} de expansión + {{lb_reactivation_mrr_cop}} de reactivación − {{lb_contraction_abs}} de contracción − {{lb_churn_abs}} de churn = {{lb_closing_mrr_cop}} (residuo COP {{lb_check}}).</li>
-    </ul></div>
-    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
-      <li>Los ajustes pequeños (menos de 10%) pasaron de {{small_exp_first}} de las expansiones en {{small_half_first}} a {{small_exp_last}} en {{small_half_last}}. ¿Indexación? ¿Descuentos? ¿Uso?</li>
-      <li>¿Un mes sin pago debe contar como churn en la vista del CFO? Es una decisión de definición para la siguiente fase. <button class="inv" type="button" data-qid="Q7">Investigar →</button></li>
-    </ul></div>
-  </div>
+  
   <div class="grid">
     <article class="card span-12" id="card-9-1" data-card="9.1">
       <div class="card-top"><span class="card-id">9.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
@@ -1415,6 +1515,18 @@ code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34,
       </div>
       <div class="foot"><p class="note">Con los datos actuales la brecha comercial es <b>no evaluable</b>. El modelo completo está en la propuesta de arquitectura v1.2, §10. <button class="inv" type="button" data-qid="Q7">Investigar →</button></p><div class="btns"><button class="tbtn how" type="button" data-how="9.6">¿Cómo lo sabemos?</button></div></div>
     </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>En la ventana, los movimientos brutos suman <b>{{gross_movement}}</b> para producir <b>{{net_movement}}</b> de cambio neto ({{gross_net_ratio}}).</li>
+      <li>El {{churn_back_1m}} de los churns observados ({{churn_mrr_back_1m}} del MRR de churn) vuelve al mes siguiente; el {{churn_back_any}} vuelve en algún momento antes de oct-24.</li>
+      <li>El {{exp_mrr_revert}} del MRR de expansión se revierte al mes siguiente (picos de un mes); el {{con_mrr_post_spike}} del MRR de contracción es el regreso a lo normal después de uno de esos picos.</li>
+      <li>{{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} de altas + {{lb_expansion_mrr_cop}} de expansión + {{lb_reactivation_mrr_cop}} de reactivación − {{lb_contraction_abs}} de contracción − {{lb_churn_abs}} de churn = {{lb_closing_mrr_cop}} (residuo COP {{lb_check}}).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>Los ajustes pequeños (menos de 10%) pasaron de {{small_exp_first}} de las expansiones en {{small_half_first}} a {{small_exp_last}} en {{small_half_last}}. ¿Indexación? ¿Descuentos? ¿Uso?</li>
+      <li>¿Un mes sin pago debe contar como churn en la vista del CFO? Es una decisión de definición para la siguiente fase. <button class="inv" type="button" data-qid="Q7">Investigar →</button></li>
+    </ul></div>
   </div>
 </section>
 
