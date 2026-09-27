@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finora EDA Workspace</title>
+<meta name="description" content="Phase 1 exploratory data analysis of Finora: growth, acquisition, monetization, retention and Sales & Marketing, recomputed from the raw files.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f5fa;
+  --surface: #f8fafd;
+  --ink: #0c1322;
+  --ink-2: #444e62;
+  --muted: #7d8699;
+  --faint: #a9b0be;
+  --grid: rgba(12, 19, 34, 0.075);
+  --axis: rgba(12, 19, 34, 0.24);
+  --glass: rgba(255, 255, 255, 0.58);
+  --glass-strong: rgba(255, 255, 255, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --hair: rgba(12, 19, 34, 0.08);
+  --shadow: 0 1px 0 rgba(255,255,255,0.95) inset, 0 18px 40px -22px rgba(30, 46, 90, 0.28), 0 2px 8px -2px rgba(30, 46, 90, 0.06);
+  --shadow-soft: 0 1px 0 rgba(255,255,255,0.9) inset, 0 8px 24px -16px rgba(30, 46, 90, 0.22);
+  --accent: #2f6df2;
+  --accent-2: #7a5cff;
+  --accent-3: #15bfae;
+  --grad: linear-gradient(100deg, #2f6df2 0%, #7a5cff 52%, #15bfae 100%);
+  /* data palette (validated: dataviz six-checks, light surface) */
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --de: #b3bac8;
+  --r150: #b7d3f6; --r250: #86b6ef; --r300: #6da7ec; --r400: #3987e5; --r500: #256abf; --r550: #1c5cab; --r650: #104281; --r700: #0d366b;
+  /* status (reserved meaning, always icon + label) */
+  --good: #0ca30c; --good-ink: #0a6a14; --warning: #fab219; --warning-ink: #8a5700; --serious: #ec835a; --critical: #d03b3b; --critical-ink: #a32626;
+  --radius: 22px;
+  --radius-sm: 14px;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --side: 272px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(1100px 620px at 8% -8%, rgba(110, 150, 255, 0.30), transparent 62%),
+    radial-gradient(900px 540px at 96% 4%, rgba(150, 118, 255, 0.22), transparent 60%),
+    radial-gradient(1000px 760px at 70% 108%, rgba(40, 206, 186, 0.17), transparent 62%),
+    radial-gradient(700px 520px at 18% 78%, rgba(120, 190, 255, 0.14), transparent 60%),
+    var(--bg);
+}
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(rgba(12, 19, 34, 0.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(1200px 800px at 40% 20%, #000 20%, transparent 78%);
+          mask-image: radial-gradient(1200px 800px at 40% 20%, #000 20%, transparent 78%);
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: rgba(47, 109, 242, 0.18); }
+
+/* ---------- glass primitives ---------- */
+.glass, .card {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
+          backdrop-filter: blur(20px) saturate(165%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+/* ---------- progress + sidebar ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--grad); z-index: 60; box-shadow: 0 0 12px rgba(122, 92, 255, 0.45); }
+.side {
+  position: fixed; top: 16px; left: 16px; bottom: 16px; width: var(--side);
+  padding: 22px 14px 18px; display: flex; flex-direction: column; z-index: 40;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 18px; border-bottom: 1px solid var(--hair); }
+.orb { width: 34px; height: 34px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 32% 28%, #ffffff 0 12%, rgba(255,255,255,0) 30%), conic-gradient(from 210deg, #2f6df2, #7a5cff, #15bfae, #2f6df2);
+  box-shadow: 0 6px 18px -6px rgba(90, 90, 255, 0.55), inset 0 0 0 1px rgba(255,255,255,0.6); }
+.brand-name { font-weight: 650; letter-spacing: -0.01em; font-size: 15px; line-height: 1.15; }
+.brand-sub { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.nav { list-style: none; margin: 14px 0 0; padding: 0; overflow-y: auto; flex: 1; }
+.nav a {
+  display: flex; align-items: baseline; gap: 10px; padding: 7px 10px; border-radius: 11px;
+  color: var(--ink-2); font-size: 13.5px; position: relative; transition: background .2s, color .2s;
+}
+.nav a:hover { background: rgba(255, 255, 255, 0.7); text-decoration: none; color: var(--ink); }
+.nav a .n { font-family: var(--mono); font-size: 10.5px; color: var(--faint); width: 18px; flex: none; }
+.nav a.active { color: var(--ink); background: rgba(255, 255, 255, 0.86); box-shadow: var(--shadow-soft); }
+.nav a.active::before { content: ""; position: absolute; left: -2px; top: 9px; bottom: 9px; width: 3px; border-radius: 3px; background: var(--grad); }
+.nav a.active .n { color: var(--accent); }
+.side-foot { border-top: 1px solid var(--hair); padding: 14px 10px 0; font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+.side-foot b { color: var(--ink-2); font-weight: 550; }
+.side-foot .mono { font-family: var(--mono); font-size: 10.5px; }
+
+/* ---------- layout ---------- */
+main { margin-left: calc(var(--side) + 32px); padding: 40px 44px 120px 20px; max-width: 1320px; }
+.section { padding-top: 84px; }
+.section:first-of-type { padding-top: 8px; }
+
+/* ---------- hero ---------- */
+.hero { padding: 38px 40px 34px; position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -120px; top: -140px; width: 420px; height: 420px; border-radius: 50%;
+  background: conic-gradient(from 180deg, rgba(47,109,242,0.20), rgba(122,92,255,0.18), rgba(21,191,174,0.16), rgba(47,109,242,0.20)); filter: blur(40px); pointer-events: none; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.hero h1 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 650; margin: 14px 0 14px; max-width: 900px; }
+.hero h1 .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p.lede { font-size: 16.5px; color: var(--ink-2); max-width: 820px; margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.chip { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72); border: 1px solid var(--glass-border); box-shadow: var(--shadow-soft); }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
+.steps { display: flex; gap: 0; margin-top: 26px; border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); width: fit-content; max-width: 100%; }
+.steps div { padding: 10px 18px; font-size: 13px; color: var(--muted); background: rgba(255, 255, 255, 0.45); display: flex; gap: 10px; align-items: baseline; }
+.steps div + div { border-left: 1px solid var(--hair); }
+.steps div b { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.06em; }
+.steps div.on { color: var(--ink); background: rgba(255, 255, 255, 0.92); font-weight: 550; }
+.steps div.on b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.keyrow { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px; font-size: 12.5px; color: var(--muted); align-items: center; }
+
+/* ---------- section heads ---------- */
+.kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; }
+.kicker .num { font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 13px; }
+.kicker::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, var(--hair), transparent); }
+.question { font-size: clamp(24px, 2.6vw, 33px); line-height: 1.16; letter-spacing: -0.022em; font-weight: 600; margin: 14px 0 10px; max-width: 980px; }
+.sec-lede { color: var(--ink-2); max-width: 900px; margin: 0 0 22px; font-size: 15.5px; }
+.findings { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; margin: 8px 0 26px; }
+.findings .panel { padding: 20px 22px; }
+.panel h4 { margin: 0 0 10px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.panel ul { margin: 0; padding: 0; list-style: none; }
+.panel li { position: relative; padding-left: 22px; margin: 7px 0; font-size: 14.2px; color: var(--ink); }
+.panel li::before { position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 11px; width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center; line-height: 1; }
+.panel.facts li::before { content: "✓"; color: var(--good-ink); background: rgba(12, 163, 12, 0.10); }
+.panel.open li::before { content: "?"; color: var(--accent); background: rgba(47, 109, 242, 0.10); }
+.panel.warn li::before { content: "!"; color: var(--warning-ink); background: rgba(250, 178, 25, 0.20); }
+.panel li b, .num-hi { font-weight: 600; }
+
+/* ---------- grid + cards ---------- */
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; } .span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+.card { padding: 20px 22px 16px; min-width: 0; position: relative; }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.card-id { font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.08em; }
+.card h3 { font-size: 16.5px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; margin: 8px 0 4px; }
+.card .sub { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+.card .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-top: 8px; }
+.card .note { font-size: 12px; color: var(--muted); margin: 0; max-width: 88ch; }
+.card .note b { color: var(--ink-2); font-weight: 550; }
+.tbtn { font: 500 11px var(--mono); letter-spacing: 0.06em; color: var(--ink-2); background: rgba(255, 255, 255, 0.75); border: 1px solid var(--hair); border-radius: 999px; padding: 5px 11px; cursor: pointer; white-space: nowrap; }
+.tbtn:hover { color: var(--ink); border-color: var(--axis); }
+.tbtn[aria-pressed="true"] { color: #fff; background: var(--ink); border-color: var(--ink); }
+.table-view { margin-top: 12px; max-height: 360px; overflow: auto; border-radius: 12px; border: 1px solid var(--hair); background: rgba(255, 255, 255, 0.6); }
+.table-view[hidden] { display: none; }
+
+/* status chips */
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 550; padding: 3px 9px 3px 5px; border-radius: 999px; white-space: nowrap; }
+.tag i { font-style: normal; width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-family: var(--mono); font-weight: 600; }
+.tag.obs { color: var(--good-ink); background: rgba(12, 163, 12, 0.09); } .tag.obs i { background: var(--good); color: #fff; }
+.tag.exp { color: #1f55c9; background: rgba(47, 109, 242, 0.09); } .tag.exp i { background: var(--accent); color: #fff; }
+.tag.cau { color: var(--warning-ink); background: rgba(250, 178, 25, 0.16); } .tag.cau i { background: var(--warning); color: #3a2600; }
+.tag.crit { color: var(--critical-ink); background: rgba(208, 59, 59, 0.09); } .tag.crit i { background: var(--critical); color: #fff; }
+.tag.info { color: var(--ink-2); background: rgba(12, 19, 34, 0.06); } .tag.info i { background: var(--muted); color: #fff; }
+
+/* legends */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 2px; font-size: 12.5px; color: var(--ink-2); min-height: 4px; }
+.legend button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; padding: 2px 0; border-radius: 6px; }
+.legend button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legend button.off { opacity: 0.38; }
+.legend .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.legend .sw.line { height: 2.5px; width: 16px; border-radius: 2px; }
+.legend .sw.dot { width: 9px; height: 9px; border-radius: 50%; }
+.legend .sw.wash { opacity: 0.28; }
+
+/* charts */
+.chart { width: 100%; position: relative; }
+.fv-svg { display: block; overflow: visible; font-family: var(--mono); }
+.fv-svg:focus { outline: none; }
+.fv-svg:focus-visible { outline: 2px solid rgba(47, 109, 242, 0.5); outline-offset: 4px; border-radius: 8px; }
+.fv-grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
+.fv-base { stroke: var(--axis); stroke-width: 1; shape-rendering: crispEdges; }
+.fv-tick { fill: var(--muted); font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.fv-tick.strong { fill: var(--ink-2); font-weight: 600; }
+.fv-lab { fill: var(--ink-2); font-family: var(--font); font-size: 12px; }
+.fv-lab.b { fill: var(--ink); font-weight: 600; }
+.fv-lab.m { fill: var(--muted); font-size: 11px; }
+.fv-axis-title { fill: var(--muted); font-family: var(--font); font-size: 11.5px; }
+.fv-cross { stroke: var(--ink-2); stroke-width: 1; opacity: 0.45; shape-rendering: crispEdges; }
+.fv-shade { fill: rgba(122, 92, 255, 0.07); }
+.fv-shade-lab { fill: #6a55d6; font-size: 10px; letter-spacing: 0.04em; paint-order: stroke; stroke: rgba(255, 255, 255, 0.85); stroke-width: 3px; stroke-linejoin: round; }
+.fv-flag { stroke: var(--muted); stroke-width: 1; opacity: 0.55; shape-rendering: crispEdges; }
+.fv-flag-lab { fill: var(--ink-2); font-size: 10px; paint-order: stroke; stroke: rgba(255, 255, 255, 0.9); stroke-width: 3px; stroke-linejoin: round; }
+.fv-hband { fill: rgba(12, 19, 34, 0.045); }
+.fv-ref { stroke: var(--ink-2); stroke-width: 1; opacity: 0.5; shape-rendering: crispEdges; }
+.fv-trend { stroke: var(--ink); stroke-width: 1.5; opacity: 0.55; fill: none; }
+.fv-leader { stroke: var(--faint); stroke-width: 1; fill: none; }
+.fv-cell-t { font-size: 10.5px; font-variant-numeric: tabular-nums; pointer-events: none; }
+.fv-break { stroke: var(--ink-2); stroke-width: 1.2; fill: none; }
+
+.fv-tip { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; opacity: 0; transition: opacity .12s ease;
+  background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  border: 1px solid rgba(12, 19, 34, 0.08); border-radius: 12px; padding: 10px 12px; min-width: 150px; max-width: 320px;
+  box-shadow: 0 16px 40px -18px rgba(20, 30, 60, 0.35), 0 2px 6px rgba(20, 30, 60, 0.06); }
+.fv-tip.on { opacity: 1; }
+.fv-tip-title { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.fv-tip-row { display: grid; grid-template-columns: 16px auto 1fr; align-items: center; gap: 8px; font-size: 12.5px; margin: 3px 0; }
+.fv-tip-row .v { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fv-tip-row .l { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fv-key { display: block; width: 14px; height: 2.5px; border-radius: 2px; }
+.fv-key.rect { height: 10px; width: 10px; border-radius: 3px; }
+.fv-key.dot { height: 9px; width: 9px; border-radius: 50%; }
+.fv-key.none { background: transparent !important; }
+.fv-tip-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--hair); font-size: 11.5px; color: var(--muted); white-space: normal; }
+
+/* small multiples */
+.mult { display: grid; gap: 14px 22px; }
+.mult .cell { min-width: 0; }
+.mult .cell-t { font-size: 12.5px; font-weight: 600; color: var(--ink); display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.mult .cell-t span { font-weight: 400; color: var(--muted); font-size: 11.5px; font-family: var(--mono); }
+.mult .cell-n { font-size: 11.5px; color: var(--muted); margin: 1px 0 2px; min-height: 16px; }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kpi { padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kpi .lab { font-size: 12.5px; color: var(--ink-2); display: flex; justify-content: space-between; gap: 8px; }
+.kpi .lab span { font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.06em; }
+.kpi .val { font-size: 29px; font-weight: 650; letter-spacing: -0.025em; line-height: 1.15; margin-top: 4px; }
+.kpi .sub2 { font-size: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.kpi .delta { font-family: var(--mono); font-size: 11px; color: var(--ink-2); background: rgba(12, 19, 34, 0.055); padding: 1px 7px; border-radius: 999px; }
+.kpi .spark { height: 38px; margin-top: 8px; }
+
+/* tables */
+table.tbl { width: 100%; border-collapse: collapse; font-size: 12.8px; }
+.tbl th { position: sticky; top: 0; background: rgba(248, 250, 253, 0.97); font: 500 10.5px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--hair); white-space: nowrap; z-index: 1; }
+.tbl td { padding: 7px 10px; border-bottom: 1px solid rgba(12, 19, 34, 0.05); color: var(--ink); vertical-align: top; }
+.tbl td.n, .tbl th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tr:hover td { background: rgba(47, 109, 242, 0.035); }
+.tbl td.dim { color: var(--muted); }
+.tbl tr.sep td { border-top: 1px solid var(--axis); }
+.tbl .pill { display: inline-block; font-size: 10.5px; font-family: var(--mono); padding: 1px 7px; border-radius: 999px; background: rgba(12,19,34,0.06); color: var(--ink-2); }
+.tablewrap { overflow: auto; border-radius: 12px; border: 1px solid var(--hair); background: rgba(255, 255, 255, 0.55); }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; padding: 14px 18px; margin-bottom: 18px; }
+.ctl { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 100%; flex-wrap: wrap; }
+.ctl > span { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; padding: 3px; border-radius: 12px; background: rgba(12, 19, 34, 0.05); border: 1px solid var(--hair); gap: 2px; }
+.seg button { all: unset; cursor: pointer; font-size: 12.5px; color: var(--ink-2); padding: 5px 11px; border-radius: 9px; transition: background .15s, color .15s; white-space: nowrap; }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(12, 19, 34, 0.14); font-weight: 550; }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* stat strip */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 8px 0 4px; }
+.stat { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.62); border: 1px solid var(--hair); }
+.stat .k { font: 500 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.stat .v { font-size: 19px; font-weight: 650; letter-spacing: -0.01em; margin-top: 2px; }
+.stat .s { font-size: 11.5px; color: var(--muted); }
+
+/* callouts */
+.callout { padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start; border-radius: var(--radius-sm); margin-bottom: 18px; }
+.callout.warn { background: linear-gradient(100deg, rgba(250, 178, 25, 0.16), rgba(255, 255, 255, 0.62)); border: 1px solid rgba(250, 178, 25, 0.38); }
+.callout.info { background: linear-gradient(100deg, rgba(47, 109, 242, 0.10), rgba(255, 255, 255, 0.62)); border: 1px solid rgba(47, 109, 242, 0.20); }
+.callout .ic { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-weight: 700; flex: none; font-family: var(--mono); }
+.callout.warn .ic { background: var(--warning); color: #3a2600; }
+.callout.info .ic { background: var(--accent); color: #fff; }
+.callout p { margin: 0; font-size: 14px; }
+.callout .es { margin-top: 6px; font-size: 12.5px; color: var(--ink-2); font-style: italic; }
+.callout .es b { font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); margin-right: 6px; }
+
+/* source cards & model */
+.src h3 { display: flex; align-items: center; gap: 10px; }
+.src .file { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
+.src dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 10px 0 12px; font-size: 13px; }
+.src dt { color: var(--muted); font-size: 12px; }
+.src dd { margin: 0; font-variant-numeric: tabular-nums; }
+.src ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.src li { font-size: 12.8px; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; color: var(--ink-2); }
+.flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.flow .step { flex: 1 1 150px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.66); border: 1px solid var(--hair); position: relative; }
+.flow .step b { display: block; font-size: 13px; }
+.flow .step span { font-size: 12px; color: var(--muted); display: block; margin-top: 3px; }
+.flow .step em { font-style: normal; font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; }
+.layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+.layers div { padding: 12px 14px; border-radius: 14px; border: 1px dashed transparent; background: rgba(255,255,255,0.55); border: 1px solid var(--hair); }
+.layers b { font-size: 13px; } .layers p { margin: 4px 0 0; font-size: 12.3px; color: var(--ink-2); }
+.defs td:first-child { font-family: var(--mono); font-size: 12px; color: var(--ink); white-space: nowrap; }
+
+/* know / suspect / cannot */
+.ksc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.ksc .panel { padding: 22px 22px; }
+.ksc h3 { margin: 0 0 4px; font-size: 18px; letter-spacing: -0.01em; }
+.ksc .panel > p { margin: 0 0 12px; font-size: 12.5px; color: var(--muted); }
+.ksc li { font-size: 13.6px; }
+.panel.cannot li::before { content: "×"; color: var(--critical-ink); background: rgba(208, 59, 59, 0.10); }
+.qlist { counter-reset: q; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; }
+.qlist li { counter-increment: q; position: relative; padding: 12px 14px 12px 46px; border-radius: 14px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--hair); font-size: 13.6px; }
+.qlist li::before { content: counter(q, decimal-leading-zero); position: absolute; left: 14px; top: 12px; font-family: var(--mono); font-size: 11px; font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+footer.repro { margin-top: 70px; padding: 22px 26px; font-size: 12.5px; color: var(--ink-2); }
+footer.repro code, .mono { font-family: var(--mono); font-size: 11.5px; }
+code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34, 0.055); padding: 1px 5px; border-radius: 5px; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  :root { --side: 0px; }
+  .side { position: sticky; top: 0; left: 0; right: 0; bottom: auto; width: auto; height: auto; border-radius: 0 0 18px 18px; padding: 10px 12px; flex-direction: row; align-items: center; gap: 10px; margin: 0; }
+  .brand { border: 0; padding: 0 6px 0 2px; }
+  .brand-sub, .side-foot { display: none; }
+  .side > nav { min-width: 0; flex: 1 1 auto; }
+  .nav { display: flex; margin: 0; overflow-x: auto; gap: 2px; scrollbar-width: none; min-width: 0; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; padding: 6px 10px; font-size: 12.5px; }
+  .nav a.active::before { left: 10px; right: 10px; top: auto; bottom: 1px; width: auto; height: 2px; }
+  main { margin-left: 0; padding: 26px 28px 100px; }
+  html { scroll-padding-top: 70px; }
+}
+@media (max-width: 900px) {
+  .findings { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; }
+  .ksc { grid-template-columns: 1fr; }
+  .qlist { grid-template-columns: 1fr; }
+  .layers { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  main { padding: 18px 16px 80px; }
+  .hero { padding: 26px 20px; }
+  .card { padding: 16px 14px 12px; }
+  .kpis { gap: 10px; }
+  .kpi .val { font-size: 23px; }
+  .brand-name { display: none; }
+  .steps { flex-direction: column; width: 100%; }
+  .steps div + div { border-left: 0; border-top: 1px solid var(--hair); }
+  .controls { padding: 12px; }
+}
+@media print {
+  .side, .progress, .tbtn { display: none !important; }
+  main { margin: 0; padding: 0; max-width: none; }
+  body::before, body::after { display: none; }
+  .card, .glass { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; background: #fff; border: 1px solid #ddd; break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<aside class="side glass" aria-label="Sections">
+  <div class="brand">
+    <div class="orb" aria-hidden="true"></div>
+    <div>
+      <div class="brand-name">Finora · EDA</div>
+      <div class="brand-sub">Exploration workspace</div>
+    </div>
+  </div>
+  <nav>
+    <ul class="nav" id="nav">
+      <li><a href="#snapshot"><span class="n">00</span>Executive snapshot</a></li>
+      <li><a href="#data"><span class="n">01</span>Data quality &amp; model</a></li>
+      <li><a href="#growth"><span class="n">02</span>Growth</a></li>
+      <li><a href="#monetization"><span class="n">03</span>Monetization</a></li>
+      <li><a href="#sm"><span class="n">04</span>Sales &amp; Marketing</a></li>
+      <li><a href="#relationships"><span class="n">05</span>Spend relationships</a></li>
+      <li><a href="#industries"><span class="n">06</span>Industries</a></li>
+      <li><a href="#decomposition"><span class="n">07</span>Mix vs within</a></li>
+      <li><a href="#cohorts"><span class="n">08</span>Cohorts</a></li>
+      <li><a href="#movements"><span class="n">09</span>MRR movements</a></li>
+      <li><a href="#knowledge"><span class="n">10</span>Know · suspect · can't know</a></li>
+    </ul>
+  </nav>
+  <div class="side-foot">
+    <div><b>Window</b> {{window_start}} → {{window_end}}</div>
+    <div><b>Grain</b> customer × month</div>
+    <div><b>Clean flows</b> from Mar-22</div>
+    <div class="mono" style="margin-top:8px">built {{generated}}</div>
+  </div>
+</aside>
+
+<main id="top">
+
+<!-- ======================================================= HERO -->
+<section class="section" id="intro" aria-label="Introduction">
+  <div class="hero glass">
+    <div class="eyebrow">Finora · Phase 1 · Exploratory data analysis</div>
+    <h1>Business Analytics <span class="g">Exploration Workspace</span></h1>
+    <p class="lede">How the business behaves across growth, acquisition, monetization, retention and Sales &amp; Marketing — every number recomputed from the three raw files. This phase describes and asks questions. It does not diagnose Finora's problems yet.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span>{{window_start}} → {{window_end}} · {{n_months}} months</span>
+      <span class="chip"><span class="dot"></span>{{n_customers}} customers · {{n_industries}} industries</span>
+      <span class="chip"><span class="dot"></span>Paid MRR = amount × 10,000 (COP)</span>
+      <span class="chip"><span class="dot"></span>S&amp;M in reported units (u) — scale undocumented</span>
+    </div>
+    <div class="steps" aria-label="Analytical phases">
+      <div class="on"><b>01</b>Understand — this workspace</div>
+      <div><b>02</b>Explain</div>
+      <div><b>03</b>Decide</div>
+    </div>
+    <div class="keyrow">
+      <span class="tag obs"><i>✓</i>Observed</span><span>title states a fact verified in code</span>
+      <span class="tag exp"><i>?</i>Exploring</span><span>title is an open question</span>
+      <span class="tag cau"><i>!</i>Caution</span><span>read with a data caveat</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 00 SNAPSHOT -->
+<section class="section" id="snapshot">
+  <div class="kicker"><span class="num">00</span>Executive EDA snapshot</div>
+  <h2 class="question">What does the business look like — using descriptive facts only?</h2>
+  <p class="sec-lede">Eight numbers and the facts behind them. Nothing here is a diagnosis: each item is either a direct measurement or a computation documented in section 01.</p>
+
+  <div class="kpis">
+    <div class="kpi glass"><div class="lab">Active customers <span>OCT-24</span></div><div class="val">{{active_end}}</div>
+      <div class="sub2"><span class="delta">{{active_multiple}}</span>from {{active_start}} in {{window_start}}</div><div class="spark" data-spark="active"></div></div>
+    <div class="kpi glass"><div class="lab">Paid MRR <span>OCT-24</span></div><div class="val">{{mrr_end}}</div>
+      <div class="sub2"><span class="delta">{{mrr_multiple}}</span>from {{mrr_start}}</div><div class="spark" data-spark="mrr"></div></div>
+    <div class="kpi glass"><div class="lab">MRR per active customer <span>OCT-24</span></div><div class="val">{{arpa_end}}</div>
+      <div class="sub2"><span class="delta">{{arpa_change}}</span>from {{arpa_start}}</div><div class="spark" data-spark="arpa"></div></div>
+    <div class="kpi glass"><div class="lab">New customers / month <span>2024 AVG</span></div><div class="val">{{new_avg_2024}}</div>
+      <div class="sub2"><span class="delta">{{new_growth_multiple}}</span>vs {{new_avg_2022}} in 2022 (Mar–Dec)</div><div class="spark" data-spark="new"></div></div>
+    <div class="kpi glass"><div class="lab">Median entry ticket <span>2024</span></div><div class="val">{{m0_median_2024}}</div>
+      <div class="sub2"><span class="delta">{{m0_median_chg_22_24}}</span>vs {{m0_median_2022}} in 2022</div><div class="spark" data-spark="ticket"></div></div>
+    <div class="kpi glass"><div class="lab">Total S&amp;M / month <span>2024 AVG</span></div><div class="val">{{sm_avg_2024}}</div>
+      <div class="sub2"><span class="delta">{{sm_chg_22_24}}</span>vs {{sm_avg_2022}} in 2022</div><div class="spark" data-spark="sm"></div></div>
+    <div class="kpi glass"><div class="lab">Monthly logo churn (observed) <span>2024</span></div><div class="val">{{churn_rate_2024}}</div>
+      <div class="sub2">vs {{churn_rate_2022}} in 2022 · {{churn_rate_2023}} in 2023</div><div class="spark" data-spark="churn"></div></div>
+    <div class="kpi glass"><div class="lab">Churn events back next month <span>ALL</span></div><div class="val">{{churn_back_1m}}</div>
+      <div class="sub2">of {{churn_events}} observed churn events</div><div class="spark" data-spark="back"></div></div>
+  </div>
+
+  <div class="findings" style="margin-top:22px">
+    <div class="panel facts glass">
+      <h4>Descriptive facts</h4>
+      <ul>
+        <li>Active customers grew <b>{{active_multiple}}</b> ({{active_start}} → {{active_end}}); paid MRR grew <b>{{mrr_multiple}}</b> ({{mrr_start}} → {{mrr_end}}). MRR per active customer moved from {{arpa_start}} to {{arpa_end}} (<b>{{arpa_change}}</b>).</li>
+        <li>New customers per month roughly doubled from 2022 (avg {{new_avg_2022}}) to 2023–24 ({{new_avg_2023}}–{{new_avg_2024}}); New MRR per month did not ({{new_mrr_avg_2022}} → {{new_mrr_avg_2024}}).</li>
+        <li>From <b>{{step_month}}</b> onward, every monthly median entry ticket sits below the 2022 median of {{m0_median_2022}}.</li>
+        <li>Between 2022 and 2024, <b>{{dec_within_share}}</b> of the fall in average entry ticket happened within industries and {{dec_mix_share}} came from industry mix.</li>
+        <li>Total S&amp;M fell {{sm_drop_abs}} between {{sm_peak_month}} and {{sm_trough_month}}; the 2024 average is {{sm_chg_22_24}} vs 2022. New-customer counts did not fall with it.</li>
+        <li>Gross MRR movements ({{gross_movement}}) are {{gross_net_ratio}} the net change ({{net_movement}}); {{churn_back_1m}} of observed churn events return the following month.</li>
+      </ul>
+    </div>
+    <div class="panel open glass">
+      <h4>What this snapshot is not</h4>
+      <ul>
+        <li>Not a diagnosis of the CRO or CFO questions — those come in later phases.</li>
+        <li>No funnel, lead source, attribution, pricing, discount or contract data exists in these files (section 10).</li>
+        <li>S&amp;M is in reported units: trends and ratios are comparable over time, not convertible to COP.</li>
+        <li>Movements describe the observed paid amount, which behaves like monthly collections (section 01).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 01 DATA -->
+<section class="section" id="data">
+  <div class="kicker"><span class="num">01</span>Data quality &amp; model</div>
+  <h2 class="question">What do the sources actually contain — and what had to be done to them?</h2>
+  <p class="sec-lede">Three files, one grain each. The model joins customers to industries, rebuilds a customer-month table and derives movements from it. S&amp;M stays at month grain and is only ever compared with outcomes — never attributed to them.</p>
+
+  <div class="grid">
+    <article class="card src span-4">
+      <div class="card-top"><span class="card-id">SOURCE 1</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3><span class="file">Transactions.csv</span></h3>
+      <p class="sub">Customer × month snapshot — not individual transactions.</p>
+      <dl>
+        <dt>Rows</dt><dd>{{n_rows_tx}} = {{n_customers}} × {{n_months}} (complete panel)</dd>
+        <dt>Keys</dt><dd><code>ID</code> + <code>month</code> · 0 duplicates</dd>
+        <dt>Window</dt><dd>{{window_start}} → {{window_end}}, month-end dates</dd>
+        <dt>Values</dt><dd>0 missing · 0 negative · {{zero_share}} zeros</dd>
+      </dl>
+      <ul>
+        <li><span class="tag info"><i>i</i>Info</span><span>UTF-8 BOM in header; dates stored as text <code>M/D/YYYY</code>.</span></li>
+        <li><span class="tag info"><i>i</i>Info</span><span>Inactive months are explicit zeros ({{zero_rows}} rows).</span></li>
+        <li><span class="tag cau"><i>!</i>Caution</span><span>Amount looks like monthly collections: catch-ups, double payments, periodic payments (chart 1.2).</span></li>
+        <li><span class="tag cau"><i>!</i>Caution</span><span>Left-censored start: 377 customers already paying in {{window_start}}.</span></li>
+      </ul>
+    </article>
+    <article class="card src span-4">
+      <div class="card-top"><span class="card-id">SOURCE 2</span><span class="tag obs"><i>✓</i>Clean after fix</span></div>
+      <h3><span class="file">Industry.csv</span></h3>
+      <p class="sub">One row per customer, one industry each.</p>
+      <dl>
+        <dt>Rows</dt><dd>{{ind_rows_read}} read → {{ind_valid}} valid</dd>
+        <dt>Key</dt><dd><code>"Cliente N"</code> → <code>N</code> · 0 duplicates</dd>
+        <dt>Match</dt><dd>{{id_match_rate}} both ways with Transactions</dd>
+        <dt>Values</dt><dd>{{n_industries}} industries · no spelling variants</dd>
+      </dl>
+      <ul>
+        <li><span class="tag info"><i>i</i>Info</span><span>{{ind_blank_rows}} fully blank trailing row removed.</span></li>
+        <li><span class="tag info"><i>i</i>Info</span><span>Mixed-language headers (<code>ID</code>, <code>Industria</code>); accented labels kept as delivered.</span></li>
+        <li><span class="tag info"><i>i</i>Info</span><span>Only segmentation available — no size, geography or plan.</span></li>
+      </ul>
+    </article>
+    <article class="card src span-4">
+      <div class="card-top"><span class="card-id">SOURCE 3</span><span class="tag crit"><i>!</i>Unit unknown</span></div>
+      <h3><span class="file">S&amp;M_spend.csv</span></h3>
+      <p class="sub">Month × 7 spend components.</p>
+      <dl>
+        <dt>Rows</dt><dd>34 months, aligned 1:1 with Transactions</dd>
+        <dt>Format</dt><dd>text <code>"$1.040"</code>, negatives <code>"-$0.016"</code></dd>
+        <dt>Unit</dt><dd>undocumented — not convertible to COP</dd>
+        <dt>Values</dt><dd>0 missing · 0 duplicate months</dd>
+      </dl>
+      <ul>
+        <li><span class="tag cau"><i>!</i>Caution</span><span><code>Team</code> = exactly 12.0% of total through {{team_fixed_until}} (allocation).</span></li>
+        <li><span class="tag cau"><i>!</i>Caution</span><span><code>Freelance</code> = 0 from {{freelance_zero_from}} (except {{freelance_exceptions}}).</span></li>
+        <li><span class="tag cau"><i>!</i>Caution</span><span><code>PayrollExpenses</code> negative in {{payroll_neg_n}} months.</span></li>
+      </ul>
+    </article>
+
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">1.0 · AUDIT MATRIX</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Every check, every file</h3>
+      <p class="sub">Computed from the raw text before any transformation.</p>
+      <div class="tablewrap" id="auditTable"></div>
+    </article>
+
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">1.1 · MODEL</span><span class="tag info"><i>i</i>Method</span></div>
+      <h3>From raw text to an analytical model</h3>
+      <p class="sub">The same pipeline (<code>finora_eda.py</code>) produces every table, chart and number in this workspace.</p>
+      <div class="flow">
+        <div class="step"><em>01 · PARSE</em><b>Raw text → typed</b><span>BOM, <code>M/D/YYYY</code>, <code>"$x.xxx"</code>, blank rows</span></div>
+        <div class="step"><em>02 · KEY</em><b>"Cliente N" → N</b><span>{{ind_valid}} / {{ind_valid}} IDs matched</span></div>
+        <div class="step"><em>03 · PANEL</em><b>Customer × month</b><span>{{n_rows_tx}} rows · exact micro-unit arithmetic</span></div>
+        <div class="step"><em>04 · FLAGS</em><b>Movements</b><span>new · churn · reactivation · expansion · contraction</span></div>
+        <div class="step"><em>05 · METRICS</em><b>Monthly + S&amp;M</b><span>bridges validated to COP 0.00</span></div>
+        <div class="step"><em>06 · VIEWS</em><b>Cohorts · industries · lags</b><span>decomposition with bootstrap</span></div>
+      </div>
+      <div class="layers">
+        <div><b>Observed</b><p><code>observed_amount</code> exactly as delivered. Never overwritten.</p></div>
+        <div><b>Derived</b><p><code>paid_mrr_cop = amount × 10,000</code>, movement flags, rates, cohorts. Definitions below.</p></div>
+        <div><b>Interpreted</b><p>Only in text, always labelled as a hypothesis — never encoded as a field.</p></div>
+      </div>
+    </article>
+
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">1.2 · LEFT CENSORING</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>{{feb_sig_share}} of Feb-22 “new” customers enter with exactly twice their next payment — vs {{later_sig_share}} in later cohorts</h3>
+      <p class="sub">Share of each monthly cohort whose first observed amount equals 2× the second one.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="entrySignature"></div>
+      <div class="foot"><p class="note">Feb-22 also shows {{feb_new}} “new” customers, {{feb_vs_typical_new}} the 2022 monthly average. Consistent with pre-existing customers returning after a gap in {{window_start}}. <b>Treatment:</b> {{window_start}} is left-censored (no movements); Feb-22 entries are flagged and excluded from acquisition rates, correlations and cohort trends. Clean window for flows: Mar-22 → {{window_end}}.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">1.3 · WHAT IS “AMOUNT”?</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>The amount field behaves like monthly collections, not a contracted MRR</h3>
+      <p class="sub">Four hand-picked customers (COP per month). Grey ticks mark months with zero.</p>
+      <div class="chart" data-chart="examples"></div>
+      <div class="foot"><p class="note"><b>Prevalence:</b> {{multi_sig_rows}} customer-months ({{multi_sig_customers}} customers) equal 2–12× the customer's usual amount; {{churn_back_1m}} of observed churn events return the next month. Illustrations are selected on purpose and are not a sample.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">1.4 · OUTLIERS</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Monthly amounts span {{amount_min_cop}} to {{amount_max_cop}}; {{rows_above_fence}} customer-months exceed the Q3 + 3·IQR fence</h3>
+      <p class="sub">Positive customer-month amounts, COP, logarithmic bins. Median {{amount_p50_cop}} · P99 {{amount_p99_cop}} · fence {{iqr_fence_cop}}.</p>
+      <div class="chart" data-chart="amountHist"></div>
+      <div class="foot"><p class="note">Outliers ({{customers_above_fence}} customers) are kept: they are real observed amounts. Their influence is tested where it matters (winsorised and median variants in sections 03 and 07).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">1.5 · S&amp;M STRUCTURE</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>Until {{team_fixed_until}}, Team is exactly 12.0% of total S&amp;M every month; afterwards it behaves like a fixed cost</h3>
+      <p class="sub">Share of total S&amp;M by component.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smShares"></div>
+      <div class="foot"><p class="note">In {{whole_pct_months}} of 34 months every component is a whole-percent share of the monthly total — consistent with top-down allocation. Before {{team_break}}, components are not independent measurements; after it, PayrollExpenses behaves like a balancing item.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-7">
+      <div class="card-top"><span class="card-id">1.6 · S&amp;M GROUPS</span><span class="tag info"><i>i</i>Method</span></div>
+      <h3>Analytical groupings — nothing is assumed to be “marketing”</h3>
+      <p class="sub">All seven components are kept individually; groups are analytical lenses, not accounting truth.</p>
+      <div class="tablewrap" id="smGroupTable"></div>
+    </article>
+    <article class="card span-5">
+      <div class="card-top"><span class="card-id">1.7 · TOTAL S&amp;M</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>Should any component be excluded from Total S&amp;M?</h3>
+      <p class="sub">Total = sum of all seven. Two technical reasons to test an alternative:</p>
+      <ul style="margin:6px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2)">
+        <li><b>PayrollExpenses</b>: negative in {{payroll_neg_n}} months ({{payroll_neg_list}}), balancing-item behaviour after {{team_break}}, and possible overlap with <code>Team</code>. A sensitivity series <code>total_sm_ex_payroll</code> is provided.</li>
+        <li style="margin-top:6px"><b>Team</b>: definitional break in {{team_break}} (allocated share → independent series). Kept, but trends across the break are not like-for-like.</li>
+        <li style="margin-top:6px"><b>Freelance</b>, <b>SoftwareTools</b>, <b>Travel</b>: may include non-S&amp;M costs; nothing in the data allows splitting them.</li>
+      </ul>
+    </article>
+
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">1.8 · DEFINITIONS</span><span class="tag info"><i>i</i>Method</span></div>
+      <h3>Flags and metrics — descriptions of observed movements, not economic behaviour</h3>
+      <p class="sub">Exact comparisons use integer micro-units (amounts carry at most six decimals). <code>curr</code> = paid MRR in month t, <code>prev</code> = paid MRR in t−1.</p>
+      <div class="tablewrap" id="defsTable"></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 02 GROWTH -->
+<section class="section" id="growth">
+  <div class="kicker"><span class="num">02</span>Growth</div>
+  <h2 class="question">Is customer growth translating into proportional revenue growth?</h2>
+  <p class="sec-lede">The full film: stock of active customers, the flows that change it, and paid MRR over the same 34 months.</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Customers grew <b>{{active_multiple}}</b> and paid MRR <b>{{mrr_multiple}}</b>: revenue per active customer fell <b>{{arpa_change_abs}}</b>.</li>
+      <li>Net customer adds were positive in {{net_adds_positive_months}} of {{months_with_flows}} months (negative only in {{net_adds_negative_list}}).</li>
+      <li>Paid MRR fell month-over-month in {{mrr_mom_negative_months}} of 33 months even though the customer count kept rising (e.g. {{mrr_jun22_change}} in Jun-22).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Open questions</h4><ul>
+      <li>Is the lower revenue per customer about who joins, or existing customers paying less? → 03</li>
+      <li>Are the MRR drops real losses or payment timing? → 09</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">2.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Customers grew {{active_multiple}}, paid MRR {{mrr_multiple}} — MRR per active customer fell {{arpa_change_abs}}</h3>
+      <p class="sub">Index, {{window_start}} = 100.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="growthIndex"></div>
+      <div class="foot"><p class="note">Stocks are not affected by left censoring, so {{window_start}} is a valid base.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-7">
+      <div class="card-top"><span class="card-id">2.2</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Net adds stayed positive in {{net_adds_positive_months}} of {{months_with_flows}} months; entries roughly doubled from 2023</h3>
+      <p class="sub">Customers per month: entries above the line, observed churn below; net adds as a line.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="customerFlows"></div>
+      <div class="foot"><p class="note">Feb-22 (faded) includes suspected left-censoring spillover. Churn here is observed churn — {{churn_back_1m}} of these customers pay again the next month.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-5">
+      <div class="card-top"><span class="card-id">2.3</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3>Paid MRR trends up, but why does it step down in some months?</h3>
+      <p class="sub">Total paid MRR, COP, with trailing 3-month average.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mrrLevel"></div>
+      <div class="foot"><p class="note">Month-to-month moves mix real changes with payment timing (see 09).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 03 MONETIZATION -->
+<section class="section" id="monetization">
+  <div class="kicker"><span class="num">03</span>Monetization</div>
+  <h2 class="question">Are new customers entering at a different value — and is that what moves revenue per customer?</h2>
+  <p class="sec-lede">Entry ticket = the first observed paid amount of a new customer (M0). The requested mean is shown next to more robust views because 2022 entries include one-off large first payments.</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Median entry ticket: <b>{{m0_median_2022}}</b> (2022) → {{m0_median_2023}} (2023) → {{m0_median_2024}} (2024). The step happens in <b>{{step_month}}</b>.</li>
+      <li>Customers already paying in {{window_start}} did not get cheaper: their ARPA moved {{base_arpa_start}} → {{base_arpa_end}}.</li>
+      <li>2023–24 vintages pay less ({{v2023_arpa_end}} / {{v2024_arpa_end}} in Oct-24 vs {{v2022_arpa_end}} for 2022 entrants) and are {{recent_vintage_customer_share}} of active customers but {{recent_vintage_mrr_share}} of MRR.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Read with care</h4><ul>
+      <li>{{spike_share_2022}} of 2022 entrants paid more than 1.5× their second month in M0 ({{spike_share_2023}} in 2023) — the 2022 mean is inflated.</li>
+      <li>The size of the decline depends on the metric ({{m1_mean_chg_22_24}} to {{m0_mean_chg_22_24}}); its direction does not.</li>
+      <li>What changed in {{step_month}} — price list, packaging, discounts, segment, channel — is not observable.</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">3.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>From {{step_month}}, the typical new customer enters lower: median {{m0_median_2022}} in 2022 vs {{m0_median_2024}} in 2024</h3>
+      <p class="sub">New MRR per new customer (mean), median and P25–P75 range of first-month MRR, COP.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="ticketMonthly"></div>
+      <div class="foot"><p class="note">Not computable in {{window_start}} (left-censored); Feb-22 excluded (spillover). Mean spikes in 2022 come from a few large first payments.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">3.2</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Entry tickets moved into lower price bands</h3>
+      <p class="sub">Share of new customers by first-month MRR band (COP), per year.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="priceBands"></div>
+      <div class="foot"><p class="note">2022 = Mar–Dec, 2024 = Jan–Oct.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">3.3</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Earlier customers did not get cheaper — average revenue falls as lower-ticket vintages grow</h3>
+      <p class="sub">MRR per active customer by acquisition vintage, COP.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="vintageArpa"></div>
+      <div class="foot"><p class="note">Vintage = year of first positive month. Base = customers already active in {{window_start}} (true start unknown). Feb-22 entries (flagged) omitted from the chart, kept in the table.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">3.4</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>The size of the decline depends on the metric ({{m1_mean_chg_22_24}} to {{m0_mean_chg_22_24}}); the direction does not</h3>
+      <p class="sub">Entry-ticket metrics by acquisition year (clean window), COP.</p>
+      <div class="tablewrap" id="ticketTable"></div>
+      <div class="foot"><p class="note">Winsorised = M0 capped at the pooled P99 ({{winsor_cap}}). Early run-rate = median of the positive amounts in the first three months (robust to one-off first payments). M1 includes zeros for customers inactive in their second month.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 04 S&M -->
+<section class="section" id="sm">
+  <div class="kicker"><span class="num">04</span>Sales &amp; Marketing</div>
+  <h2 class="question">How did S&amp;M spend evolve — and how does it line up with acquisition and revenue?</h2>
+  <p class="sec-lede">Spend is shown in the units reported in the file (u). Efficiency ratios are therefore comparable over time but are not a CAC in currency.</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Total S&amp;M fell <b>{{sm_drop}}</b> from {{sm_peak_month}} ({{sm_peak}}) to {{sm_trough_month}} ({{sm_trough}}), led by Paid Media ({{pm_drop}}), and recovered only partially: 2024 average {{sm_chg_22_24}} vs 2022.</li>
+      <li>New customers per month were higher after the cut ({{new_avg_2023}}–{{new_avg_2024}}) than before it ({{new_avg_2022}} in 2022).</li>
+      <li>Spend per new customer fell <b>{{total_sm_per_new_customer_chg}}</b> (2022 → 2024) but spend per COP 1M of New MRR only <b>{{total_sm_per_new_mrr_mm_chg}}</b> — each new customer brings less MRR.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Open questions</h4><ul>
+      <li>Where did the 2023 increase in new customers come from if spend fell? Channels outside this file? A cheaper entry price?</li>
+      <li>Is Team + PayrollExpenses one people cost split in two, or two different costs?</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">4.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>S&amp;M fell {{sm_drop_abs}} between {{sm_peak_month}} and {{sm_trough_month}} and recovered only partially</h3>
+      <p class="sub">Total S&amp;M by analytical group, reported units (u) per month.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smStack"></div>
+      <div class="foot"><p class="note">Demand Gen = PaidMedia + PublicidadNoWeb · Sales / Acquisition capacity = Team + PayrollExpenses + Travel · Enablement = SoftwareTools + Freelance.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">4.2</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>Components tell different stories: Freelance disappears, Team turns flat, Payroll goes negative</h3>
+      <p class="sub">Each component on its own scale (u). Colour = analytical group.</p>
+      <div class="chart" data-chart="smComponents"></div>
+      <div class="foot"><p class="note">Independent y-scales: compare shapes, not heights.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">4.3</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3>Do spend and outcomes move together when aligned month by month?</h3>
+      <p class="sub">Left: spend (u). Right: outcomes. Shared time axis; each panel on its own scale. Shaded: {{cut_start}} → {{cut_end}}, the months after the S&amp;M cut.</p>
+      <div class="chart" data-chart="alignedPanels"></div>
+      <div class="foot"><p class="note">Visual alignment only — no attribution. Flows start in Mar-22 (clean window).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">4.4</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Indexed to 2022: new customers rose while spend fell</h3>
+      <p class="sub">Trailing 3-month average, index 2022 (Mar–Dec) average = 100.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="indexOverlay"></div>
+      <div class="foot"><p class="note">One axis, one unit (index). Demand Gen and Paid Media follow Total S&amp;M closely — partly by construction (allocation).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">4.5</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Efficiency by year: cheaper per customer, not per unit of New MRR</h3>
+      <p class="sub">Pooled ratios (sum of spend ÷ sum of outcome), clean months.</p>
+      <div class="tablewrap" id="effTable"></div>
+      <div class="foot"><p class="note">u = reported spend unit. “per COP 1M” = spend per COP 1,000,000 of New MRR.</p></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">4.6</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Spend per new customer fell {{total_sm_per_new_customer_chg_abs}}; spend per COP 1M of New MRR fell only {{total_sm_per_new_mrr_mm_chg_abs}}</h3>
+      <p class="sub">Monthly ratios (bars) and trailing 3-month ratio (line). Reported units (u).</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="efficiency"></div>
+      <div class="foot"><p class="note">Not computed for {{window_start}} (new customers not identifiable) and Feb-22 (spillover). No month in the clean window has a zero denominator. Inverses (new customers or New MRR per unit) are in the table view.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 05 RELATIONSHIPS -->
+<section class="section" id="relationships">
+  <div class="kicker"><span class="num">05</span>Spend relationships</div>
+  <h2 class="question">Do new customers or New MRR move with spend — in the same month or with a lag?</h2>
+  <p class="sec-lede">Correlation between spend in month t−k and the outcome in month t, for k = 0…3. Levels and month-over-month changes are both shown, because shared trends can create correlations that say nothing about month-to-month co-movement.</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>In levels, months with more spend are associated with <b>fewer</b> new customers (Total S&amp;M, lag 0: r = {{r_new_sm_l0}}; range {{r_new_levels_min}} to {{r_new_levels_max}} across spends and lags).</li>
+      <li>That relationship reflects opposite trends: on month-over-month changes no correlation reaches |r| ≥ 0.3 (max {{r_mom_absmax}}; smallest p = {{r_mom_minp}}).</li>
+      <li>New MRR shows no relationship with spend at any lag (|r| ≤ {{r_mrr_levels_absmax}} in levels).</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Read with care</h4><ul>
+      <li>n = {{corr_n_min}}–{{corr_n_levels}} months, autocorrelated series, and a spend file built by allocation.</li>
+      <li>No attribution by channel exists: these are associations, never effects.</li>
+      <li>Spillover month (Feb-22) excluded; the sensitivity including it is in the table view.</li>
+    </ul></div>
+  </div>
+  <div class="controls glass" id="corrControls">
+    <div class="ctl"><span>Spend</span><div class="seg" data-key="spend"><button>Paid Media</button><button>Demand Gen</button><button aria-pressed="true">Total S&amp;M</button></div></div>
+    <div class="ctl"><span>Outcome</span><div class="seg" data-key="outcome"><button aria-pressed="true">New customers</button><button>New MRR</button></div></div>
+    <div class="ctl"><span>Lag</span><div class="seg" data-key="lag"><button aria-pressed="true">0</button><button>1</button><button>2</button><button>3</button></div></div>
+    <div class="ctl"><span>Transform</span><div class="seg" data-key="transform"><button aria-pressed="true">Levels</button><button>MoM change</button></div></div>
+  </div>
+  <div class="grid">
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">5.1 · SCATTER</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3 id="scatterTitle">Relationship observed</h3>
+      <p class="sub" id="scatterSub">Each dot is a month.</p>
+      <div class="stats" id="corrStats"></div>
+      <div class="chart" data-chart="scatter"></div>
+      <div class="foot"><p class="note">Line = ordinary least squares fit, shown only to read direction.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">5.2 · ALIGNED SERIES</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3 id="lagTitle">Aligned series</h3>
+      <p class="sub">Both series standardised (z-score) so they share one axis; spend shifted by the selected lag.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="lagSeries"></div>
+      <div class="foot"><p class="note">z-score = (value − mean) ÷ standard deviation over the plotted window.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">5.3 · MATRIX</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>No positive association between spend and acquisition at any lag</h3>
+      <p class="sub">Pearson r by lag (spend in t−k vs outcome in t). Hover for Spearman ρ, p-value and n.</p>
+      <div class="grid" style="gap:22px">
+        <div class="span-6"><div class="mult"><div class="cell-t">Levels</div></div><div class="chart" data-chart="corrLevels"></div></div>
+        <div class="span-6"><div class="mult"><div class="cell-t">Month-over-month changes</div></div><div class="chart" data-chart="corrMom"></div></div>
+      </div>
+      <div class="foot"><p class="note">Blue = moves together, red = moves in opposite directions, grey ≈ none. With n ≈ 30, |r| below ~0.35 is not distinguishable from zero at the 5% level.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 06 INDUSTRIES -->
+<section class="section" id="industries">
+  <div class="kicker"><span class="num">06</span>Industries</div>
+  <h2 class="question">Is growth shifting toward industries with different monetization?</h2>
+  <p class="sec-lede">Industry is the only segmentation in the data. Mix is shown for the stock (active customers, MRR) and for the flow (new customers, New MRR).</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Mix moved modestly toward Retail — the lowest-ticket industry ({{retail_ticket_2024}} in 2024): {{retail_new_share_2022}} of new customers in 2022, {{retail_new_share_2023}} in 2023, {{retail_new_share_2024}} in 2024.</li>
+      <li>Restaurantes is still the largest MRR block, but its share fell from {{rest_mrr_share_2022}} (Dec-22) to {{rest_mrr_share_2024}} (Oct-24).</li>
+      <li>The average entry ticket fell in <b>all {{industries_ticket_fell_22_24}}</b> industries between 2022 and 2024.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Open questions</h4><ul>
+      <li>Is the decline inside each industry about smaller customers, cheaper plans, or discounts? Not separable here.</li>
+      <li>Why does Salud hold its median ticket through 2023 while others drop?</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">6.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Customer mix by industry</h3>
+      <p class="sub">Share of active customers, monthly.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixActive"></div>
+      <div class="foot"><p class="note">Labels as delivered in Industry.csv.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">6.2</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>MRR mix by industry</h3>
+      <p class="sub">Share of total paid MRR, monthly.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixMrr"></div>
+      <div class="foot"><p class="note">The largest single account (customer {{top_account_id}}, {{top_account_industry}}) pays a median {{top_account_median}} per month — {{top_account_x_median}} the median customer-month.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">6.3</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Mix of new customers by half-year</h3>
+      <p class="sub">Share of new customers.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixNewHalf"></div>
+      <div class="foot"><p class="note">2022 H1 = Mar–Jun; 2024 H2 = Jul–Oct.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">6.4</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Mix of New MRR by half-year</h3>
+      <p class="sub">Share of New MRR.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixNewMrrHalf"></div>
+      <div class="foot"><p class="note">Share of New MRR above share of customers = higher entry ticket.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">6.5</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>The entry ticket fell in every industry between 2022 and 2024</h3>
+      <p class="sub">New MRR per new customer by industry and year, COP. Mean (left) and median (right).</p>
+      <div class="legend"></div>
+      <div class="grid" style="gap:22px">
+        <div class="span-6"><div class="chart" data-chart="ticketIndMean"></div></div>
+        <div class="span-6"><div class="chart" data-chart="ticketIndMedian"></div></div>
+      </div>
+      <div class="foot"><p class="note">2022 = Mar–Dec, 2024 = Jan–Oct. Means are sensitive to a few large first payments; medians are not.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">6.6</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>MRR per active customer by industry</h3>
+      <p class="sub">COP, shared scale. Grey line = company average.</p>
+      <div class="chart" data-chart="arpaIndustry"></div>
+      <div class="foot"><p class="note">Same y-scale in every panel: heights are comparable.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">6.7</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Industry scorecard by year</h3>
+      <p class="sub">Stocks at the last month of each period; flows summed over the clean months of the year.</p>
+      <div class="tablewrap" id="industryTable"></div>
+      <div class="foot"><p class="note">Monthly logo churn = churned customers ÷ active customers in the previous month, pooled over the year. Contraction and churned MRR are negative by convention.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 07 DECOMPOSITION -->
+<section class="section" id="decomposition">
+  <div class="kicker"><span class="num">07</span>Growth decomposition · mix vs within</div>
+  <h2 class="question">How much of the change in new-customer ticket comes from industry mix, and how much happens inside industries?</h2>
+  <p class="sec-lede">If Finora simply acquired more customers from low-paying industries, the average ticket would fall with no change inside any industry (mix). If customers of the same industry started entering lower, it would fall even with a constant mix (within).</p>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">7.0 · METHOD</span><span class="tag info"><i>i</i>Method</span></div>
+      <h3>Shapley (midpoint) decomposition of a weighted average — exact, no residual</h3>
+      <div class="grid" style="gap:18px;margin-top:6px">
+        <div class="span-7" style="font-size:13.6px;color:var(--ink-2)">
+          <p style="margin:0 0 8px">Average entry ticket <code>A = Σᵢ sᵢ · aᵢ</code>, where <code>sᵢ</code> is industry i's share of new customers and <code>aᵢ</code> its average first-month MRR. Between periods 0 and 1:</p>
+          <p style="margin:0 0 8px"><code>ΔA = Σᵢ (sᵢ¹ − sᵢ⁰) · (aᵢ⁰ + aᵢ¹)/2</code> <b>mix</b> &nbsp;+&nbsp; <code>Σᵢ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2</code> <b>within</b></p>
+          <p style="margin:0">Using the average of both periods as weights removes the interaction term, so the two effects add up exactly to the change. A Laspeyres version (with interaction) is reported as a cross-check.</p>
+        </div>
+        <div class="span-5" style="font-size:13.2px;color:var(--ink-2)">
+          <ul style="margin:0;padding-left:18px">
+            <li><b>Periods:</b> 2022 (Mar–Dec, n = {{dec_n0}}), 2023, 2024 (Jan–Oct, n = {{dec_n1}}).</li>
+            <li><b>Uncertainty:</b> 2,000 bootstrap resamples of new customers within each period → 90% intervals.</li>
+            <li><b>Robustness:</b> M0 winsorised at P99 ({{winsor_cap}}); early run-rate (median of positive M0–M2).</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="findings" style="margin-top:18px">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>2022 → 2024: average entry ticket {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}). <b>Within industries {{dec_within}} ({{dec_within_share}})</b>; mix {{dec_mix}} ({{dec_mix_share}}). 90% interval for the within share: {{dec_within_ci}}.</li>
+      <li>Robust to outliers and first-month spikes: within share {{dec_within_share_min}}–{{dec_within_share_max}} across the three variants.</li>
+      <li>Holding 2022's industry mix, 2024's average ticket would have been {{dec_cf}} instead of {{dec_a1}}.</li>
+      <li>2023 → 2024: change of {{dec34_delta}}; within effect 90% interval {{dec34_ci}} — no measurable change after the 2023 step.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>What “within” can and cannot mean</h4><ul>
+      <li>Within-industry ≠ price. It bundles everything that moves the ticket inside an industry: plan mix, customer size, discounts, promotions, billing timing.</li>
+      <li>Industry is the only segmentation available; a finer segmentation could reveal mix effects hidden inside industries.</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">7.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>{{dec_within_share}} of the fall in average entry ticket happened within industries; mix explains {{dec_mix_share}}</h3>
+      <p class="sub">Average first-month MRR of new customers, 2022 → 2024, COP.</p>
+      <div class="chart" data-chart="decompWaterfall"></div>
+      <div class="foot"><p class="note">Mix and within add up exactly to the change (validated in code).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">7.2</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>The within-industry step-down appears in 2023 H1 and persists</h3>
+      <p class="sub">Gap vs 2022 average entry ticket, split into mix and within, by half-year (COP).</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="decompEvolution"></div>
+      <div class="foot"><p class="note">2022 halves are part of the base, so their gap is close to zero by construction. Average ticket: {{evo_2022h2}} in 2022 H2, {{evo_2023h1}} in 2023 H1.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">7.3</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Contribution by industry, 2022 → 2024</h3>
+      <p class="sub">Mix contribution = change in share × average ticket of both periods; within = change in ticket × average share.</p>
+      <div class="tablewrap" id="decompIndTable"></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">7.4</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Robustness: the split holds across metrics and period pairs</h3>
+      <p class="sub">Shapley decomposition for each comparison and variant, with Laspeyres cross-check and bootstrap 90% intervals.</p>
+      <div class="tablewrap" id="decompRobustTable"></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 08 COHORTS -->
+<section class="section" id="cohorts">
+  <div class="kicker"><span class="num">08</span>Cohorts</div>
+  <h2 class="question">Do recent cohorts retain or monetize differently from earlier ones?</h2>
+  <p class="sec-lede">Cohort = month of first positive paid amount. Customers already active in {{window_start}} are left-censored and shown separately; Feb-22 entries are flagged. Mₖ is computed only over customers with at least k months of history.</p>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Recent cohorts do not churn earlier: M1 logo retention <b>{{m1_logo_recent_min}}–{{m1_logo_recent_max}}</b> for full 2023–24 quarters vs {{m1_logo_2022_min}}–{{m1_logo_2022_max}} for 2022.</li>
+      <li>M12 logo retention ranges {{m12_logo_min}}–{{m12_logo_max}} across fully observed quarterly cohorts.</li>
+      <li>Revenue retention from M0 is structurally low for 2022 cohorts (M1 ≤ {{rev_m1_2022_max}}) because M0 includes one-off large first payments; for 2023–24 cohorts M1 is ≥ {{rev_m1_recent_min}}.</li>
+      <li>Left-censored base (n = {{base_size}}): {{base_logo_end}} still paying in Oct-24, holding {{base_rev_end}} of its {{window_start}} MRR.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Open questions</h4><ul>
+      <li>Are the 2022 first-month spikes setup fees, prepayments or catch-ups?</li>
+      <li>Do lower-ticket cohorts expand later, or stay at their entry level?</li>
+    </ul></div>
+  </div>
+  <div class="controls glass" id="cohortControls">
+    <div class="ctl"><span>Metric</span><div class="seg" data-key="metric"><button aria-pressed="true">Logo retention</button><button>Revenue retention vs M0</button><button>MRR per original customer</button></div></div>
+    <div class="ctl"><span>Cohorts</span><div class="seg" data-key="gran"><button aria-pressed="true">Quarterly</button><button>Monthly</button></div></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">8.1</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3 id="cohortHeatTitle">Cohort heatmap</h3>
+      <p class="sub" id="cohortHeatSub">Rows = cohorts, columns = months since first payment (M0 = first month).</p>
+      <div class="legend" id="cohortScale"></div>
+      <div class="chart" data-chart="cohortHeat"></div>
+      <div class="foot"><p class="note">Empty cells = not yet observable. Partial quarters: 2022 Q1 = Mar only, 2024 Q4 = Oct only.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-7">
+      <div class="card-top"><span class="card-id">8.2</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3 id="cohortCurveTitle">Curves by acquisition year</h3>
+      <p class="sub">Tenure curves pooled by year of first payment; cut where fewer than 40 customers are observable.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="cohortCurves"></div>
+      <div class="foot"><p class="note">Pooled over monthly cohorts with right-censoring: later points rely on the earliest cohorts of each year.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-5">
+      <div class="card-top"><span class="card-id">8.3</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>The left-censored base in calendar time</h3>
+      <p class="sub">Customers already active in {{window_start}} (n = {{base_size}}): share still paying and share of Jan-22 MRR retained.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="baseCurves"></div>
+      <div class="foot"><p class="note">True acquisition dates unknown; this is survival since the window opened, not tenure.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">8.4</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Recent cohorts do not churn earlier; they start — and stay — at a lower ticket</h3>
+      <p class="sub">Quarterly cohorts: size, entry ticket, logo and revenue retention at M1 / M3 / M6 / M12, and share expanding within six months.</p>
+      <div class="tablewrap" id="cohortTable"></div>
+      <div class="foot"><p class="note">Revenue retention = cohort MRR at Mₖ ÷ the same customers' MRR at M0. “Expanding” = at least one expansion movement in M1–M6 (customers with six months of history).</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 09 MOVEMENTS -->
+<section class="section" id="movements">
+  <div class="kicker"><span class="num">09</span>MRR movements</div>
+  <h2 class="question">What moves observed paid MRR from one month to the next?</h2>
+  <div class="callout warn">
+    <div class="ic">!</div>
+    <div>
+      <p><b>These categories describe movements in the observed paid amount.</b> With the current data we cannot tell whether an expansion or contraction comes from usage, plan, pricing, discounts, credits or any other commercial decision.</p>
+      <p class="es"><b>ES</b>Estas categorías describen movimientos del monto pagado observado. Con los datos actuales no podemos distinguir si una expansión/contracción proviene de uso, plan, pricing, descuento, créditos u otra decisión comercial.</p>
+    </div>
+  </div>
+  <div class="findings">
+    <div class="panel facts glass"><h4>What the data shows</h4><ul>
+      <li>Over the window, gross movements total <b>{{gross_movement}}</b> to produce <b>{{net_movement}}</b> of net change ({{gross_net_ratio}}).</li>
+      <li>{{churn_back_1m}} of observed churn events ({{churn_mrr_back_1m}} of churned MRR) return the next month; {{churn_back_any}} return at some point before Oct-24.</li>
+      <li>{{exp_mrr_revert}} of Expansion MRR reverts the next month (one-month spikes); {{con_mrr_post_spike}} of Contraction MRR is the return to normal after such a spike.</li>
+      <li>{{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} new + {{lb_expansion_mrr_cop}} expansion + {{lb_reactivation_mrr_cop}} reactivation − {{lb_contraction_abs}} contraction − {{lb_churn_abs}} churn = {{lb_closing_mrr_cop}} (residual COP {{lb_check}}).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Open questions</h4><ul>
+      <li>Small ± adjustments (&lt; 10%) went from {{small_exp_first}} of expansion events in {{small_half_first}} to {{small_exp_last}} in {{small_half_last}}. Indexation? Discounts? Usage?</li>
+      <li>Should a one-month gap count as churn for the CFO view? A definition choice for the next phase.</li>
+    </ul></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12">
+      <div class="card-top"><span class="card-id">9.1</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Gross movements are {{gross_net_ratio}} the net change: {{gross_movement}} moved to produce {{net_movement}} of growth</h3>
+      <p class="sub">Monthly MRR bridge, COP: inflows above the line, outflows below, net change as a line.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="bridgeMonthly"></div>
+      <div class="foot"><p class="note">Bridge identity checked for every month: ΔMRR − (New + Expansion + Reactivation + Contraction + Churn) = COP {{bridge_max_diff}} (max absolute). Feb-22 faded (spillover).</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">9.2</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>{{lb_to}}: reactivations were the largest inflow ({{lb_reactivation_mrr_cop}})</h3>
+      <p class="sub">{{lb_from}} → {{lb_to}} MRR bridge, COP. Axis starts above zero.</p>
+      <div class="chart" data-chart="bridgeLast"></div>
+      <div class="stats" id="lastCheck"></div>
+      <div class="foot"><p class="note">Previous MRR + New + Expansion + Reactivation − Contraction − Churn = Current MRR.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">9.3</span><span class="tag cau"><i>!</i>Caution</span></div>
+      <h3>{{churn_back_1m}} of observed churn events come back the following month</h3>
+      <p class="sub">Churn events by time until the next positive payment, by year of churn.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="returnBuckets"></div>
+      <div class="foot"><p class="note">“Not back by Oct-24” is right-censored: recent events had little time to return.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">9.4</span><span class="tag exp"><i>?</i>Exploring</span></div>
+      <h3>Why are small ± adjustments and off-grid amounts becoming common?</h3>
+      <p class="sub">Share of expansion and contraction events smaller than 10%, and share of active customers paying an amount outside the COP 2,100 grid, by half-year.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smallAdjust"></div>
+      <div class="foot"><p class="note">In 2022, {{grid_2022h2}} of paid amounts were exact multiples of COP 2,100 (e.g. 42,000 · 63,000); {{grid_2024h2}} in 2024 H2. Pattern only — its cause is not in the data.</p><button class="tbtn" aria-pressed="false">Table</button></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6">
+      <div class="card-top"><span class="card-id">9.5</span><span class="tag obs"><i>✓</i>Observed</span></div>
+      <h3>Annual bridges close exactly</h3>
+      <p class="sub">Opening MRR + movements = closing MRR, COP.</p>
+      <div class="tablewrap" id="annualBridgeTable"></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 10 KNOWLEDGE -->
+<section class="section" id="knowledge">
+  <div class="kicker"><span class="num">10</span>What we know · suspect · cannot know</div>
+  <h2 class="question">Where does description end and hypothesis begin?</h2>
+  <p class="sec-lede">The boundary this phase draws before anything is explained or decided.</p>
+  <div class="ksc">
+    <div class="panel facts glass">
+      <h3>What we know</h3><p>Demonstrable directly from the data.</p>
+      <ul>
+        <li>The panel is complete: {{n_customers}} customers × {{n_months}} months, no duplicates, no missing values, every ID has an industry.</li>
+        <li>Active customers {{active_multiple}}, paid MRR {{mrr_multiple}}, MRR per active customer {{arpa_change}} ({{window_start}} → {{window_end}}).</li>
+        <li>New customers per month doubled from 2022 to 2023–24; New MRR per month did not.</li>
+        <li>The entry ticket stepped down from {{step_month}}, in every industry; {{dec_within_share}} of the fall in the average is within industries.</li>
+        <li>Customers active in {{window_start}} kept their ARPA ({{base_arpa_start}} → {{base_arpa_end}}); 2023–24 vintages pay less than 2022 entrants.</li>
+        <li>S&amp;M fell {{sm_drop_abs}} in mid-2023 and averaged {{sm_chg_22_24}} vs 2022 in 2024, while new-customer counts rose.</li>
+        <li>Spend and new customers are negatively correlated in levels and uncorrelated in month-over-month changes (n ≈ 30).</li>
+        <li>Recent cohorts show equal or better early logo retention; observed monthly logo churn went from {{churn_rate_2022}} to {{churn_rate_2024}}.</li>
+        <li>{{churn_back_1m}} of observed churn events return the next month; gross movements are {{gross_net_ratio}} the net change.</li>
+        <li>Every bridge (customer-month, month, year) closes to COP 0.00.</li>
+      </ul>
+    </div>
+    <div class="panel warn glass">
+      <h3>What we suspect</h3><p>Reasonable patterns that need validation with Finora.</p>
+      <ul>
+        <li><code>amount</code> is billed or collected cash per month, not contracted MRR — so churn, reactivation, expansion and contraction include payment timing.</li>
+        <li>Part of the Feb-22 “new” customers (and possibly a few later ones) are pre-existing customers returning after a gap.</li>
+        <li>The {{step_month}} step-down in entry ticket is consistent with a pricing or packaging change, discounting, or smaller customers inside every industry.</li>
+        <li>The rise in new customers while spend fell is consistent with channels outside the S&amp;M file (organic, referrals, partners), effects beyond a 3-month lag, or a lower entry price.</li>
+        <li>The S&amp;M file was built top-down (whole-percent shares of a total); Freelance may have been reclassified into Team in {{team_break}}; PayrollExpenses behaves like a balancing item.</li>
+        <li>The growth of small ± adjustments and off-grid amounts since 2023 is consistent with indexation, discounts, prorations or usage components.</li>
+        <li>2022 first-month spikes may be setup fees or prepayments.</li>
+      </ul>
+    </div>
+    <div class="panel cannot glass">
+      <h3>What we cannot know</h3><p>Not in these files — never filled by assumption.</p>
+      <ul>
+        <li>Funnel stages: New → Working → Engaged → SQL → Demo → Proposal → Won, and conversion between them.</li>
+        <li>Timestamps of entry and exit per stage; speed to lead; response time; deal velocity.</li>
+        <li>Lead source and attribution by channel.</li>
+        <li>SDR / AE owner of each opportunity or customer.</li>
+        <li>Self-serve vs sales-assisted acquisition.</li>
+        <li>Pricing, plans, list vs paid price; contract or subscription value; billing frequency.</li>
+        <li>Discounts, promotions, credits and their dates.</li>
+        <li>Reason codes for churn, downgrade, pause or reactivation.</li>
+        <li>Whether <code>amount</code> is invoiced, collected or contracted; taxes; the unit and scale of S&amp;M.</li>
+        <li>Customer size, geography or any segmentation beyond industry; history before {{window_start}} and after {{window_end}}.</li>
+      </ul>
+    </div>
+  </div>
+
+  <article class="card" style="margin-top:22px">
+    <div class="card-top"><span class="card-id">10.1 · QUESTIONS FOR FINORA</span><span class="tag exp"><i>?</i>Open</span></div>
+    <h3>Questions that emerged from the data</h3>
+    <p class="sub">Answers to these would move items from “suspect” to “know”.</p>
+    <ol class="qlist">
+      <li>What exactly is <code>amount</code>: invoiced, collected or contracted MRR? Are bi-monthly, annual or prepaid plans billed upfront?</li>
+      <li>What changed in {{step_month}}: price list, packaging, a new entry plan, discounts, a new channel or segment?</li>
+      <li>What is the unit of <code>S&amp;M_spend</code>, and how are Team, PayrollExpenses and Freelance defined? Why is Team 12% of the total until {{team_fixed_until}}?</li>
+      <li>Were there acquisition activities outside this file (partners, referrals, organic, events) in H2-2023?</li>
+      <li>Are the negative PayrollExpenses reversals of earlier accruals?</li>
+      <li>Is a zero month followed by a double payment a missed collection, a pause, or a billing cycle?</li>
+      <li>Do Feb-22 entrants have contract start dates before 2022?</li>
+      <li>Which temporary discounts are planned (CFO), and how will they show up in <code>amount</code>?</li>
+    </ol>
+  </article>
+
+  <article class="card" style="margin-top:18px">
+    <div class="card-top"><span class="card-id">10.2 · VERIFIED CLAIMS</span><span class="tag obs"><i>✓</i>Checked in code</span></div>
+    <h3>Every insight-driven title is backed by an assertion in the pipeline</h3>
+    <p class="sub">If the data changes and a statement stops being true, <code>finora_eda.py</code> stops instead of publishing it.</p>
+    <div class="tablewrap" id="claimsTable"></div>
+  </article>
+
+  <footer class="repro glass">
+    <b>Reproducibility.</b> <code>python3 finora_eda.py</code> reads <code>data/raw/</code> and rebuilds this file, <code>finora_analytical_dataset.csv</code>, <code>finora_monthly_metrics.csv</code>, <code>finora_eda_notes.md</code> and <code>supporting/*.csv</code>. Built {{generated}}. Source hashes (SHA-256, first 12): <span id="hashes" class="mono"></span>
+  </footer>
+</section>
+</main>
+
+<script>
+const DATA = /*__DATA__*/null;
+</script>
+<script>
+/*__APP_JS__*/
+</script>
+</body>
+</html>

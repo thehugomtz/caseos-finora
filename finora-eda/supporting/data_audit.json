@@ -1,0 +1,252 @@
+{
+  "transactions": {
+    "file": "Transactions.csv",
+    "sha256": "2dcbe59e9ac497c441f3c019963b11e9848ce4916e5773d257a36f83d953ae95",
+    "bytes": 1302387,
+    "utf8_bom": true,
+    "columns": [
+      "ID",
+      "month",
+      "amount"
+    ],
+    "rows": 66674,
+    "unparseable_id": 0,
+    "unparseable_date": 0,
+    "unparseable_amount": 0,
+    "empty_strings": {
+      "ID": 0,
+      "month": 0,
+      "amount": 0
+    },
+    "date_format": "M/D/YYYY (month-end day, 1- or 2-digit month)",
+    "date_format_violations": 0,
+    "all_dates_month_end": true,
+    "customers": 1961,
+    "months": 34,
+    "first_month": "2022-01",
+    "last_month": "2024-10",
+    "rows_per_customer": {
+      "34": 1961
+    },
+    "balanced_panel": true,
+    "duplicate_customer_month": 0,
+    "duplicate_full_rows": 0,
+    "negative_amounts": 0,
+    "zero_amount_rows": 33703,
+    "positive_amount_rows": 32971,
+    "zero_share": 0.505489,
+    "amount_min_positive": 0.140007,
+    "amount_max": 847.966434,
+    "amount_p50_positive": 5.25,
+    "amount_p99_positive": 32.583062,
+    "amount_p999_positive": 214.2,
+    "iqr_fence_q3_plus_3iqr": 22.72956,
+    "rows_above_iqr_fence": 614,
+    "customers_above_iqr_fence": 130,
+    "decimal_places": {
+      "0": 33721,
+      "1": 8545,
+      "2": 13952,
+      "3": 2890,
+      "4": 675,
+      "5": 867,
+      "6": 6024
+    },
+    "dtypes_raw": {
+      "ID": "text",
+      "month": "text",
+      "amount": "text"
+    },
+    "dtypes_parsed": {
+      "customer_id": "int64",
+      "month": "period[M]",
+      "amount": "float64 (exact at 1e-6)"
+    }
+  },
+  "industry": {
+    "file": "Industry.csv",
+    "sha256": "b4330fc6d7df60429849b3b176746f5389c65931f281308eb8224c8efd440ff5",
+    "bytes": 49402,
+    "utf8_bom": true,
+    "columns": [
+      "ID",
+      "Industria"
+    ],
+    "rows_read": 1962,
+    "blank_rows": 1,
+    "blank_row_positions": [
+      1963
+    ],
+    "rows_valid": 1961,
+    "id_pattern_violations_non_blank": 0,
+    "duplicate_ids": 0,
+    "id_min": 1,
+    "id_max": 1961,
+    "unique_ids": 1961,
+    "ids_contiguous_1_to_n": true,
+    "missing_industry_non_blank": 0,
+    "whitespace_issues": 0,
+    "case_or_accent_variants": 0,
+    "industries": {
+      "Restaurantes": 529,
+      "Producción": 454,
+      "Retail": 428,
+      "Tecnología": 241,
+      "Servicios profesionales": 165,
+      "Salud": 144
+    },
+    "n_industries": 6,
+    "dtypes_raw": {
+      "ID": "text",
+      "Industria": "text"
+    },
+    "dtypes_parsed": {
+      "customer_id": "int64",
+      "industry": "category (text)"
+    }
+  },
+  "sm": {
+    "file": "S&M_spend.csv",
+    "sha256": "41fbb6499f2b0ad4565ccc0e96ec490c72599e15fd46d64086fd98e3443c4c13",
+    "bytes": 2063,
+    "utf8_bom": true,
+    "columns": [
+      "Month",
+      "PaidMedia",
+      "Travel",
+      "PublicidadNoWeb",
+      "Freelance",
+      "SoftwareTools",
+      "Team",
+      "PayrollExpenses"
+    ],
+    "rows": 34,
+    "months": 34,
+    "first_month": "2022-01",
+    "last_month": "2024-10",
+    "duplicate_months": 0,
+    "missing_values": 0,
+    "value_format": "text with '$' prefix, '.' decimal separator, 3 decimals; negatives as '-$0.016'",
+    "unit": "undocumented (no scale factor provided; not convertible to COP)",
+    "components": {
+      "PaidMedia": {
+        "min": 0.4,
+        "max": 1.505,
+        "mean": 1.015588,
+        "zeros": 0,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": []
+      },
+      "Travel": {
+        "min": 0.066,
+        "max": 0.263,
+        "mean": 0.146647,
+        "zeros": 0,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": []
+      },
+      "PublicidadNoWeb": {
+        "min": 0.156,
+        "max": 0.63,
+        "mean": 0.342676,
+        "zeros": 0,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": []
+      },
+      "Freelance": {
+        "min": 0.0,
+        "max": 0.338,
+        "mean": 0.090324,
+        "zeros": 17,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": [
+          "2023-05",
+          "2023-07",
+          "2023-08",
+          "2023-09",
+          "2023-10",
+          "2023-11",
+          "2023-12",
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10"
+        ]
+      },
+      "SoftwareTools": {
+        "min": 0.033,
+        "max": 0.195,
+        "mean": 0.097824,
+        "zeros": 0,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": []
+      },
+      "Team": {
+        "min": 0.24,
+        "max": 0.453,
+        "mean": 0.387353,
+        "zeros": 0,
+        "negatives": 0,
+        "negative_months": [],
+        "zero_months": []
+      },
+      "PayrollExpenses": {
+        "min": -0.053,
+        "max": 0.863,
+        "mean": 0.208353,
+        "zeros": 0,
+        "negatives": 5,
+        "negative_months": [
+          "2023-11",
+          "2023-12",
+          "2024-02",
+          "2024-03",
+          "2024-07"
+        ],
+        "zero_months": []
+      }
+    },
+    "team_share_fixed_12pct_months": 17,
+    "team_share_fixed_until": "2023-05",
+    "team_share_first_break": "2023-06",
+    "whole_percent_share_months": 17,
+    "dtypes_raw": {
+      "Month": "text",
+      "PaidMedia": "text",
+      "Travel": "text",
+      "PublicidadNoWeb": "text",
+      "Freelance": "text",
+      "SoftwareTools": "text",
+      "Team": "text",
+      "PayrollExpenses": "text"
+    },
+    "dtypes_parsed": {
+      "month": "period[M]",
+      "PaidMedia": "float64",
+      "Travel": "float64",
+      "PublicidadNoWeb": "float64",
+      "Freelance": "float64",
+      "SoftwareTools": "float64",
+      "Team": "float64",
+      "PayrollExpenses": "float64"
+    }
+  },
+  "consistency": {
+    "tx_ids_without_industry": [],
+    "industry_ids_without_tx": [],
+    "id_match_rate": 1.0,
+    "sm_months_equal_tx_months": true,
+    "customers_never_positive": 0
+  }
+}
