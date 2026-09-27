@@ -1,0 +1,24 @@
+# Estados epistémicos y reglas que el validador aplica en código (arquitectura v1.2 §5.4).
+# El agente propone un estado; el código confirma el más alto permitido por la evidencia.
+version: 1
+orden: [Hipótesis, Direccional, Hecho observado, Evidencia fuerte]
+estados:
+  Hecho observado: Valor calculado directamente con una métrica del catálogo en su ventana válida, un análisis descriptivo del catálogo o evidencia canónica verificada; recalculable.
+  Evidencia fuerte: Al menos dos evidencias independientes (métodos o variantes) apuntan igual, sin evidencia en contra y con n suficiente.
+  Direccional: Hay señal pero con límites (n pequeño, un solo método, asociación, cálculo ad hoc sin reconciliar). Las asociaciones nunca pasan de aquí.
+  Hipótesis: Plausible y consistente con patrones, sin prueba directa.
+  No evaluable: Requiere datos que no existen (ver missing_data.yaml).
+reglas:
+  - Toda cifra de una afirmación es una variable ligada a una evidencia; no se escriben números a mano.
+  - Las afirmaciones de tipo asociativo tienen techo Direccional.
+  - Evidencia fuerte exige dos o más evidencias de apoyo con método o variante distintos y ninguna en contra.
+  - Un cálculo ad hoc (run_sql) tiene techo Direccional y lleva el marcador Cálculo ad hoc.
+  - No evaluable exige citar los datos faltantes del catálogo.
+  - Una comparación marcada como no comparable no se puede ligar.
+estados_de_hipotesis:
+  Soportada: Al menos una afirmación a favor con estado Hecho observado o Evidencia fuerte, y ninguna en contra de nivel Direccional o superior.
+  No soportada: Al menos una afirmación en contra con estado Hecho observado o Evidencia fuerte.
+  Direccional: Solo hay apoyo direccional, o hay afirmaciones fuertes a favor y en contra (la señal depende de la medida); en ese caso se muestran ambas.
+  No evaluable: Depende de datos faltantes.
+  No evaluada por presupuesto: Quedó pendiente al cerrar la investigación.
+marcadores: [Explorando, Precaución, Cálculo ad hoc]

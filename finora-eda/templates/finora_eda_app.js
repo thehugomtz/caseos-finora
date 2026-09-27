@@ -824,6 +824,10 @@ function dots(el, o) {
   const svg = S("svg", { width: W, height: Hh, viewBox: "0 0 " + W + " " + Hh, class: "fv-svg", role: "img" }, el);
   ticks.forEach(t => { S("line", { x1: X(t), x2: X(t), y1: mt, y2: mt + rows.length * rh, class: t === 0 ? "fv-base" : "fv-grid" }, svg); T(svg, X(t), mt + rows.length * rh + 17, ax.f(t), "fv-tick", "middle"); });
   if (ax.unit) T(svg, labW + pw, mt + rows.length * rh + 33, ax.unit, "fv-unit", "end");
+  if (o.ref !== undefined && o.ref >= ticks[0] && o.ref <= ticks[ticks.length - 1]) {
+    S("line", { x1: X(o.ref), x2: X(o.ref), y1: mt, y2: mt + rows.length * rh, class: "fv-ref" }, svg);
+    if (o.refLabel) T(svg, X(o.ref) + 4, mt + rows.length * rh + 33, o.refLabel, "fv-flag-lab", "start");
+  }
   const hits = [];
   rows.forEach((r, i) => {
     const y = mt + i * rh + rh / 2;
@@ -1842,6 +1846,19 @@ function palDetail(qid) {
   H("span", "mono muted", meta, g.id + " · " + g.dominio);
   meta.appendChild(tagRaw(tp.tag[0], tp.tag[1], tp.tag[2]));
   H("h5", null, d, g.pregunta);
+  if (GOLDEN_INV[qid] || (LIVE && (LIVE.preguntas || []).includes(qid))) {
+    const acts = H("div", "acts", d);
+    if (GOLDEN_INV[qid]) {
+      const bt = H("button", "inv-btn primary", acts, "Ver investigación →");
+      bt.type = "button";
+      bt.addEventListener("click", () => { palClose(true); openInvestigation(GOLDEN_INV[qid], { golden: true }); });
+    }
+    if (LIVE && (LIVE.preguntas || []).includes(qid)) {
+      const bt = H("button", "inv-btn", acts, "Investigar en vivo");
+      bt.type = "button";
+      bt.addEventListener("click", () => { palClose(true); startLive(qid); });
+    }
+  }
   H("p", null, d, tp.intro);
   const links = H("div", "links", d);
   const secs = sections();
@@ -1980,6 +1997,449 @@ function closeDrawer(silent) {
   if (!silent && drawerBack && drawerBack.focus) drawerBack.focus();
 }
 
+/* ================================================================== investigación agentic (vertical slice · pregunta 2) */
+const LIVE = window.FINORA_LIVE || null;
+const GOLDEN_INV = D.investigations || {};
+const HYP_TAG = { "Soportada": ["hecho", "✓"], "No soportada": ["noeval", "✕"], "Direccional": ["direc", "↗"], "No evaluable": ["noeval", "∅"],
+                  "Pendiente": ["explo", "?"], "No evaluada por presupuesto": ["explo", "…"] };
+const hypTag = e => { const d = HYP_TAG[e] || ["met", "i"]; return tagRaw(d[0], d[1], e); };
+const VFMT = { int: f.int, cop: f.cop, cop2: f.cop2, pct: v => f.pct(v), pct0: v => f.pct(v, 0), pct_signed: v => f.pctSigned(v),
+               num1: v => f.num(v, 1), num2: v => f.num(v, 2), x: f.x, idx: f.idx, u: f.u2 };
+const vfmt = (v, k) => (v === null || v === undefined ? "–" : typeof v === "string" ? v : (VFMT[k] || (x => f.num(x, 2)))(v));
+const VKIND = { cop: "cop", cop2: "cop", pct: "pct", pct0: "pct", pct_signed: "pct", int: "int", idx: "idx", num1: "num", num2: "num", u: "u" };
+const PAL = [C.s1, C.s2, C.s3, C.s4, C.s5, C.s6, C.s7, C.s8];
+const STEPS = [["encuadre", "Encuadre"], ["hipotesis", "Hipótesis"], ["evidencia", "Evidencia"], ["validacion", "Validación"],
+               ["composicion", "Composición"], ["publicada", "Publicada"]];
+let INV = null, INV_EV = {}, invOpen = false, invBack = null;
+
+function renderVisual(el, spec) {
+  const fmt = v => vfmt(v, spec.formato), kind = VKIND[spec.formato] || "num";
+  const series = (spec.series || []).map((s, i) => ({ name: s.nombre, values: s.valores, color: PAL[i % PAL.length] }));
+  const lg = el.previousElementSibling && el.previousElementSibling.classList.contains("legend") ? el.previousElementSibling : null;
+  if (lg) {
+    const ci = spec.tipo === "puntos" && spec.referencia !== undefined;
+    const items = ci ? [{ name: "Razón", color: C.s1, kind: "dot" }, { name: "Intervalo de 90%", color: C.de, kind: "line" }]
+                     : series.map(s => ({ name: s.name, color: s.color, kind: spec.tipo === "linea" ? "line" : spec.tipo === "puntos" ? "dot" : "rect" }));
+    if (items.length > 1) legend(null, items, null, lg); else lg.remove();
+  }
+  if (spec.tipo === "linea") return lineChart(el, { labels: spec.x, series: series, fmt: fmt, tickKind: kind, height: 260, includeZero: spec.formato !== "idx" });
+  if (spec.tipo === "barras") {
+    const stacked = !!spec.apiladas;
+    return barChart(el, { labels: spec.x, series: series, stacked: stacked, fmt: fmt, tickKind: kind, height: 260, maxBar: 34,
+                          yMin: stacked ? 0 : undefined, yMax: stacked && spec.formato === "pct" ? 1 : undefined });
+  }
+  if (spec.tipo === "cascada") {
+    let k = 0;
+    return waterfall(el, { height: 280, fmt: f.cop, title: "Descomposición", steps: spec.pasos.map(p => ({ label: p.etiqueta, short: p.corta, value: p.valor,
+      kind: p.tipo === "total" ? "total" : "delta", color: p.tipo === "total" ? C.de : [C.s2, C.s1, C.s3][k++ % 3] })) });
+  }
+  if (spec.tipo === "puntos") {
+    const ci = spec.referencia !== undefined;
+    return dots(el, { rows: spec.filas, fmt: fmt, tickKind: kind, rowTitle: "", ref: spec.referencia,
+                      refLabel: ci ? "= " + fmt(spec.referencia) : null,
+                      series: spec.series.map((s, i) => ({ name: s.nombre, values: s.valores, color: ci ? [C.de, C.s1, C.de][i] || PAL[i] : PAL[i % PAL.length] })) });
+  }
+  if (spec.tipo === "kpi") { el.replaceChildren(); const d = H("div", "stat", el); H("div", "k", d, spec.etiqueta); H("div", "v", d, fmt(spec.valor)); return {}; }
+  if (spec.tipo === "tabla") { el.replaceChildren(); evTable(el, spec.columnas, spec.filas, 40); return {}; }
+  el.textContent = "Visualización no disponible.";
+  return {};
+}
+function evTable(parent, cols, rows, max) {
+  const w = H("div", "tablewrap", parent);
+  table(w, cols.filter(c => c.id !== "_clave").map(c => ({ key: c.id, label: c.nombre, num: !!c.formato && c.formato !== "texto",
+    fmt: v => (typeof v === "string" ? v : vfmt(v, c.formato || "num2")) })), rows.slice(0, max || 60));
+  return w;
+}
+function invSection(parent, n, title) {
+  const h = H("h2", "inv-h2", parent);
+  H("span", "n", h, n);
+  h.append(title);
+}
+function hypList(parent, hyps) {
+  const list = H("div", "hyp-list", parent);
+  hyps.forEach(h => {
+    const row = H("div", "hyp" + (h.padre ? " child" : ""), list);
+    H("span", "id", row, h.id);
+    H("span", "q", row, h.pregunta);
+    row.appendChild(hypTag(h.estado || "Pendiente"));
+    const sig = H("div", "sig", row);
+    H("span", null, sig, "Si es cierta: ");
+    sig.append((h.firma || {}).si_es_cierta || "–");
+    H("span", null, sig, " · Si es falsa: ");
+    sig.append((h.firma || {}).si_es_falsa || "–");
+    H("div", "why", row, (h.estado_motivo ? h.estado_motivo + " · " : "") +
+      (h.agregada_despues_de_evidencia ? "agregada después de ver evidencia" : "registrada antes de ver evidencia"));
+  });
+  return list;
+}
+function claimRow(parent, c, sub) {
+  if (!c) return;
+  const row = H("div", "claim-row", parent);
+  row.appendChild(tagEl(c.estado));
+  const btn = H("button", "lk", row);
+  btn.type = "button";
+  btn.title = "¿Cómo lo sabemos?";
+  rich(H("span", "txt" + (sub ? " sub" : ""), btn), c.texto);
+  btn.addEventListener("click", () => openClaimLineage(c.id, btn));
+}
+function evLabel(e) {
+  if (e.canonical) return "canónica de la Fase 1";
+  if (e.kind === "metric") return ((e.result || {}).label || "métrica") + " · " + ({ month: "mensual", quarter: "trimestral", half: "semestral", year: "anual", total: "total" }[(e.params || {}).grano] || "mensual");
+  if (e.kind === "sql") return "SQL ad hoc";
+  return (e.variant || e.method || "").slice(0, 44);
+}
+function evChips(parent, claims) {
+  const box = H("div", "ev-chips", parent);
+  const seen = new Set();
+  claims.forEach(c => [["apoyo", ""], ["en_contra", " contra"]].forEach(([k, cls]) => (c[k] || []).forEach(eid => {
+    if (seen.has(eid)) return;
+    seen.add(eid);
+    const e = INV_EV[eid];
+    const b = H("button", "ev-chip" + cls, box, eid + (e ? " · " + evLabel(e) : "") + (cls ? " · en contra" : ""));
+    b.type = "button";
+    b.addEventListener("click", () => openEvidenceLineage(eid, b));
+  })));
+}
+
+function openInvestigation(doc, opts) {
+  opts = opts || {};
+  INV = doc;
+  INV_EV = {};
+  (doc.evidencia || []).forEach(e => { INV_EV[e.id] = e; });
+  if (!invOpen) invBack = document.activeElement;
+  invOpen = true;
+  const box = $("invdoc");
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+  box.scrollTop = 0;
+  try { history.replaceState(null, "", "#investigacion/" + (doc.pregunta_id || doc.id)); } catch (e) { /* file:// */ }
+  renderInvestigation(doc, opts);
+  $("invBack").focus();
+}
+function closeInvestigation() {
+  if (!invOpen) return;
+  invOpen = false;
+  $("invdoc").hidden = true;
+  document.body.style.overflow = "";
+  try { history.replaceState(null, "", "#snapshot"); } catch (e) { /* file:// */ }
+  if (invBack && invBack.focus) invBack.focus();
+}
+function setInvTop(doc, statusNode) {
+  $("invKicker").textContent = "Investigación" + (doc.pregunta_id ? " · " + doc.pregunta_id : "") + (doc.lente ? " · lente " + doc.lente : "");
+  const st = $("invStatus");
+  st.replaceChildren();
+  if (statusNode) st.appendChild(statusNode);
+  const lb = $("invLive");
+  lb.hidden = !(LIVE && doc.pregunta_id && (LIVE.preguntas || []).includes(doc.pregunta_id));
+  lb.disabled = false;
+  lb.textContent = "Investigar en vivo";
+  lb.onclick = () => startLive(doc.pregunta_id);
+}
+
+function renderInvestigation(doc, opts) {
+  const b = $("invBody");
+  b.replaceChildren();
+  const pending = [];
+  setInvTop(doc, doc.status === "publicada" ? tagRaw("hecho", "✓", opts.golden ? "Publicada · dorada" : "Publicada")
+                                            : tagRaw("prec", "!", doc.status === "error" ? "Error" : doc.status));
+  H("h1", "inv-q", b, doc.pregunta);
+  if (doc.encuadre) {
+    const p = H("p", "inv-frame", b);
+    p.append("Encuadre: ");
+    H("b", null, p, doc.encuadre.pregunta_analitica);
+    p.append(" · Métricas: " + (doc.encuadre.metricas || []).join(", ") + " · Periodo: " + (doc.encuadre.periodo || "–"));
+  }
+  const claims = doc.claims || {};
+  const acc = Object.values(claims).filter(c => c.aceptada);
+  const meta = H("div", "inv-meta", b);
+  const mi = (k, v) => { const s = H("span", null, meta); H("b", null, s, k + " "); s.append(v); };
+  mi("Evidencias", String((doc.evidencia || []).length));
+  mi("Afirmaciones", acc.length + " aceptadas · " + (Object.keys(claims).length - acc.length) + " rechazadas por el validador");
+  mi("Presupuesto", (doc.presupuesto || {}).analisis_usado + " de 15 análisis");
+  if (doc.hipotesis_registradas_ms !== null && doc.hipotesis_registradas_ms !== undefined) mi("Hipótesis", "registradas antes de la primera evidencia");
+  if (doc.error) mi("Error", doc.error);
+
+  const N = doc.narrativa;
+  if (N) {
+    const ans = H("div", "inv-answer", b);
+    const k = H("div", "k", ans, "Respuesta ejecutiva");
+    const states = [...new Set(N.respuesta_ejecutiva.claim_ids.map(id => (claims[id] || {}).estado).filter(Boolean))];
+    states.forEach(s => k.appendChild(tagEl(s)));
+    rich(H("p", null, ans), N.respuesta_ejecutiva.texto);
+    evChips(ans, N.respuesta_ejecutiva.claim_ids.map(id => claims[id]).filter(Boolean));
+    if (N.degradada) H("div", "muted", ans, "Composición degradada: el texto libre no pasó el validador; se muestran solo afirmaciones validadas.").style.fontSize = "12px";
+  }
+
+  invSection(b, "1", "Cómo descompusimos la pregunta");
+  hypList(b, doc.hipotesis || []);
+
+  if (N) {
+    invSection(b, "2", "Hallazgos");
+    N.hallazgos.forEach((hz, i) => {
+      const card = H("article", "card finding", b);
+      const fq = H("div", "fq", card);
+      H("span", "mono", fq, "Hallazgo " + (i + 1) + " · " + hz.hipotesis_id);
+      const hyp = (doc.hipotesis || []).find(h => h.id === hz.hipotesis_id);
+      if (hyp) fq.appendChild(hypTag(hyp.estado));
+      fq.append(hz.pregunta);
+      hz.claim_ids.forEach((cid, j) => claimRow(card, claims[cid], j > 0));
+      evChips(card, hz.claim_ids.map(id => claims[id]).filter(Boolean));
+      (hz.visual_ids || []).forEach(vid => {
+        const v = (doc.visuals || {})[vid];
+        if (!v) return;
+        const w = H("div", "viz", card);
+        H("div", "viz-t", w, v.titulo);
+        H("div", "legend", w);
+        const el = H("div", "chart", w);
+        pending.push(() => {
+          el._render = () => renderVisual(el, v.spec);
+          el._render();
+          el._ready = true;
+          el._w = Math.round(el.clientWidth);
+          ro.observe(el);
+        });
+      });
+      const prose = H("div", "prose", card);
+      [["Qué significa", hz.interpretacion], ["Implicación", hz.implicacion], ["¿Por qué lo afirmamos?", hz.por_que]].forEach(([k, t]) => {
+        if (!t) return;
+        const p = H("div", null, prose);
+        H("b", null, p, k + ". ");
+        rich(p, t);
+      });
+    });
+    if ((N.limites || []).length) {
+      invSection(b, "3", "Lo que no podemos concluir");
+      const box = H("div", "inv-blocks", b);
+      N.limites.forEach(l => { const d = rich(H("div", "inv-block", box), l.texto); evChips(d, l.claim_ids.map(id => claims[id]).filter(Boolean)); });
+    }
+    if ((N.implicaciones || []).length) {
+      invSection(b, "4", "Implicaciones");
+      const box = H("div", "inv-blocks", b);
+      N.implicaciones.forEach(l => rich(H("div", "inv-block", box), l.texto));
+    }
+    if ((N.proximas_preguntas || []).length) {
+      invSection(b, "5", "Próximas preguntas");
+      const box = H("div", "inv-next", b);
+      N.proximas_preguntas.forEach(q => {
+        const btn = H("button", null, box, q);
+        btn.type = "button";
+        btn.addEventListener("click", () => { palOpen(null, btn); $("palInput").value = q; palList(); });
+      });
+    }
+  }
+  const rejected = Object.values(claims).filter(c => !c.aceptada);
+  invSection(b, "6", "Registro de análisis");
+  H("p", "inv-frame", b, "Todo lo que se ejecutó, incluido lo descartado y lo que el validador rechazó. Es la defensa contra el cherry-picking.");
+  const logRows = (doc.log || []).map(e => ({ n: e.n, t: f.num(e.t / 1000, 1) + " s", tool: e.tool,
+    params: JSON.stringify(e.params).slice(0, 90), res: e.ok ? "ok" : "error", ev: (e.evidencias || []).join(" "),
+    uso: e.ok === false ? (e.error || "").slice(0, 110) : (e.evidencias || []).length ? (e.usada ? "usada" : "descartada") : "–" }));
+  const lw = H("div", "tablewrap", b);
+  const lt = table(lw, [{ key: "n", label: "#", num: true }, { key: "t", label: "Tiempo", num: true }, { key: "tool", label: "Tool" },
+    { key: "params", label: "Parámetros" }, { key: "res", label: "Resultado" }, { key: "ev", label: "Evidencias" }, { key: "uso", label: "Uso o motivo" }], logRows);
+  lt.classList.add("inv-log");
+  if (rejected.length) {
+    H("p", "inv-frame", b, "Afirmaciones que el validador rechazó (" + rejected.length + "):").style.marginTop = "14px";
+    const box = H("div", "inv-blocks", b);
+    rejected.forEach(c => { const d = H("div", "inv-block", box); H("code", null, d, c.id); d.append(" " + (c.plantilla || "") + " → " + (c.motivos || []).join(" · ")); });
+  }
+  const foot = H("div", "inv-foot", b);
+  const u = doc.uso || {};
+  const cost = ["investigador", "compositor_1", "compositor_2"].map(k => (u[k] || {}).costo_equivalente_usd || 0).reduce((a, x) => a + x, 0);
+  foot.textContent = "Modelo " + doc.modelo + " · " + (u.autenticacion || "") + " · datos " + doc.data_version + " · cerebro " + doc.brain_version +
+    " · duración " + (doc.finished_ms && doc.started_ms ? f.num((doc.finished_ms - doc.started_ms) / 1000, 0) + " s" : "–") +
+    (cost ? " · costo equivalente estimado en API: US$ " + f.num(cost, 2) + " (con suscripción no se cobra por token)" : "");
+  requestAnimationFrame(() => pending.forEach(fn => fn()));
+}
+
+/* ---- linaje: afirmación → evidencia → método → consulta → fuente */
+function openDrawerWith(kicker, title, fill, trigger) {
+  palClose(true);
+  drawerBack = trigger || null;
+  $("drId").textContent = kicker;
+  $("drTitle").textContent = title;
+  const body = $("drBody");
+  body.replaceChildren();
+  fill(body);
+  drawerOpen = true;
+  const dr = $("drawer");
+  dr.inert = false;
+  dr.classList.add("on");
+  $("scrim").classList.add("on");
+  body.scrollTop = 0;
+  dr.querySelector("[data-close]").focus();
+}
+function drSec(body, title) { const s = H("div", "dr-sec", body); H("h6", null, s, title); return s; }
+function openClaimLineage(cid, trigger) {
+  const c = INV.claims[cid];
+  openDrawerWith("afirmación " + cid, c.texto || c.plantilla, body => {
+    const s1 = drSec(body, "Estado");
+    const w = H("div", "tags", s1);
+    w.style.justifyContent = "flex-start";
+    w.appendChild(tagEl(c.estado));
+    (c.marcadores || []).forEach(m => w.appendChild(tagEl(m)));
+    H("p", null, s1, "Propuesto por el agente: " + c.estado_propuesto + ". Tipo: " + c.tipo + ".").style.marginTop = "6px";
+    (c.avisos || []).forEach(a => H("p", "muted", s1, "Validador: " + a).style.fontSize = "12px");
+    const s2 = drSec(body, "Plantilla y cifras ligadas");
+    H("div", "dr-pre", s2, c.plantilla);
+    Object.entries(c.variables || {}).forEach(([k, ref]) => {
+      const it = H("div", "dr-item", s2);
+      H("code", null, it, "{" + k + "}");
+      it.append(" ← ");
+      const eid = ref.split(".")[0];
+      const bt = H("button", "ev-chip", it, ref);
+      bt.type = "button";
+      bt.addEventListener("click", () => openEvidenceLineage(eid, bt));
+    });
+    const s3 = drSec(body, "Evidencia");
+    evChips(s3, [c]);
+    const s4 = drSec(body, "Hipótesis");
+    (c.hipotesis || []).forEach(l => {
+      const h = (INV.hipotesis || []).find(x => x.id === l.id);
+      H("div", "dr-item", s4, l.id + " · " + (l.postura === "a_favor" ? "a favor" : "en contra") + (h ? " · " + h.pregunta : ""));
+    });
+    if ((c.caveats || []).length) {
+      const s5 = drSec(body, "Precauciones");
+      c.caveats.forEach(id => { const x = BR.issues[id]; const it = H("div", "dr-item", s5); rich(H("b", null, it), x ? x.titulo : id); if (x) rich(H("span", "f m", it), x.tratamiento); });
+    }
+    if ((c.datos_faltantes || []).length) H("p", null, drSec(body, "Datos que faltan"), c.datos_faltantes.join(", "));
+  }, trigger);
+}
+function openEvidenceLineage(eid, trigger) {
+  const e = INV_EV[eid];
+  if (!e) return;
+  openDrawerWith("evidencia " + eid, e.method + (e.variant ? " · " + e.variant : ""), body => {
+    const tabs = H("div", "dr-tabs", body);
+    const panes = {};
+    ["Evidencia", "Método", "Consulta", "Fuente"].forEach((name, i) => {
+      const bt = H("button", null, tabs, name);
+      bt.type = "button";
+      bt.setAttribute("aria-pressed", String(i === 0));
+      panes[name] = H("div", null, body);
+      panes[name].hidden = i !== 0;
+      bt.addEventListener("click", () => {
+        tabs.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === bt)));
+        Object.entries(panes).forEach(([k, p]) => { p.hidden = k !== name; });
+      });
+    });
+    const r = e.result || {};
+    const p1 = panes["Evidencia"];
+    const s = drSec(p1, "Resumen");
+    H("div", "dr-item", s, "Tool: " + e.tool + " · n: " + (e.n === null || e.n === undefined ? "–" : f.int(e.n)) + (e.marker ? " · " + e.marker : "") +
+      (e.canonical ? " · canónica (Fase 1)" : "") + " · techo: " + e.ceiling);
+    if (r.afirmacion) H("p", null, s, r.afirmacion);
+    if (r.columnas && r.filas) evTable(drSec(p1, "Resultado"), r.columnas, r.filas, 40);
+    if ((e.no_comparable || []).length) H("p", null, drSec(p1, "No comparables"), e.no_comparable.join(", "));
+    const p2 = panes["Método"];
+    H("p", null, drSec(p2, "Método"), e.method + (e.variant ? " · variante: " + e.variant : ""));
+    if (Object.keys(e.robustness || {}).length) H("div", "dr-pre", drSec(p2, "Robustez"), JSON.stringify(e.robustness, null, 1));
+    if ((r.notas || []).length) { const sn = drSec(p2, "Supuestos y notas"); r.notas.forEach(n => H("div", "dr-item", sn, n)); }
+    if ((e.caveat_ids || []).length) { const sc = drSec(p2, "Precauciones"); e.caveat_ids.forEach(id => { const x = BR.issues[id]; rich(H("div", "dr-item", sc), x ? x.titulo : id); }); }
+    const p3 = panes["Consulta"];
+    if (e.query_text) H("div", "dr-pre", drSec(p3, e.kind === "analysis" ? "Análisis con parámetros" : "SQL"), e.query_text);
+    H("div", "dr-pre", drSec(p3, "Parámetros"), JSON.stringify(e.params, null, 1));
+    if (e.code) H("div", "dr-pre", drSec(p3, "Código"), e.code);
+    const p4 = panes["Fuente"];
+    const tables = [...new Set(((e.query_text || "") + " " + (e.code || "")).match(/mart\.\w+/g) || [])];
+    H("p", null, drSec(p4, "Tablas del mart"), tables.length ? tables.join(", ") : (e.canonical ? "Registro de afirmaciones de la Fase 1 (brain/evidence/canonical_findings.yaml)" : "mart.customer_month"));
+    H("p", null, drSec(p4, "Cadena de origen"), "mart ← finora_analytical_dataset.csv (pipeline de la Fase 1, con paridad exacta) ← Transactions.csv + Industry.csv");
+    H("div", "dr-pre", drSec(p4, "Versiones"), "datos " + e.data_version + "\ncerebro " + e.brain_version + "\nresultado " + e.result_hash + "\nhuellas: " +
+      Object.entries(D.meta.hashes).map(x => x[0] + " " + x[1]).join(" · "));
+  }, trigger);
+}
+
+/* ---- modo en vivo (servidor local) */
+let liveES = null;
+function liveShell(qid, pregunta) {
+  const doc = { pregunta_id: qid, pregunta: pregunta, lente: "Finanzas", status: "encuadre" };
+  INV = { claims: {}, hipotesis: [], evidencia: [] };
+  INV_EV = {};
+  if (!invOpen) invBack = document.activeElement;
+  invOpen = true;
+  const box = $("invdoc");
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+  box.scrollTop = 0;
+  setInvTop(doc, tagRaw("explo", "?", "En curso"));
+  $("invLive").disabled = true;
+  $("invLive").textContent = "Investigando…";
+  const b = $("invBody");
+  b.replaceChildren();
+  H("h1", "inv-q", b, pregunta);
+  H("p", "inv-frame", b, "El agente trabaja con las tools de Finora sobre tu sesión de Claude Code. Primero registra hipótesis y firmas; después reúne evidencia; el validador confirma o rechaza cada afirmación.");
+  const steps = H("div", "live-steps", b);
+  steps.id = "liveSteps";
+  STEPS.forEach(([k, lab]) => { const d = H("div", null, steps, lab); d.dataset.k = k; });
+  requestAnimationFrame(() => liveStep("encuadre"));
+  const frame = H("p", "inv-frame", b);
+  frame.id = "liveFrame";
+  invSection(b, "1", "Hipótesis pre-registradas");
+  const hy = H("div", null, b);
+  hy.id = "liveHyp";
+  H("p", "muted", hy, "Esperando el encuadre…");
+  invSection(b, "2", "Afirmaciones aceptadas");
+  const cl = H("div", null, b);
+  cl.id = "liveClaims";
+  invSection(b, "3", "Bitácora en vivo");
+  const feed = H("div", "live-feed", b);
+  feed.id = "liveFeed";
+  feed.setAttribute("aria-live", "polite");
+}
+function liveLine(text, cls) {
+  const feed = $("liveFeed");
+  if (!feed) return;
+  const d = H("div", cls || null, feed, text);
+  d.scrollIntoView({ block: "nearest" });
+}
+function liveStep(k) {
+  const i = STEPS.findIndex(s => s[0] === k);
+  document.querySelectorAll("#liveSteps div").forEach((d, j) => { d.classList.toggle("on", j === i); d.classList.toggle("done", j < i); });
+}
+async function startLive(qid) {
+  if (!LIVE) return;
+  const g = BR.golden.find(x => x.id === qid);
+  let r;
+  try {
+    r = await fetch(LIVE.api + "/investigations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pregunta_id: qid }) });
+  } catch (err) { alert("No se pudo conectar con el servidor local."); return; }
+  if (!r.ok) { const t = await r.json().catch(() => ({})); alert(r.status === 409 ? "Ya hay una investigación en curso." : "Error " + r.status + ": " + (t.detail || "")); return; }
+  const id = (await r.json()).id;
+  liveShell(qid, g ? g.pregunta : qid);
+  if (liveES) liveES.close();
+  liveES = new EventSource(LIVE.api + "/investigations/" + id + "/stream");
+  liveES.onmessage = m => onLiveEvent(JSON.parse(m.data), id);
+  liveES.onerror = () => { if (liveES) liveES.close(); liveES = null; pollLive(id); };
+}
+async function pollLive(id) {
+  for (let k = 0; k < 400; k++) {
+    const d = await fetch(LIVE.api + "/investigations/" + id).then(x => x.json()).catch(() => null);
+    if (d && (d.status === "publicada" || d.status === "error")) { openInvestigation(d); return; }
+    await new Promise(res => setTimeout(res, 2000));
+  }
+}
+function onLiveEvent(ev, id) {
+  const d = ev.data || {}, t = "[" + f.num(ev.t / 1000, 1) + " s] ";
+  if (ev.tipo === "estado") { liveStep(d.estado); liveLine(t + "estado → " + d.estado, "n"); }
+  else if (ev.tipo === "sesion") liveLine(t + "sesión · " + d.autenticacion, "n");
+  else if (ev.tipo === "encuadre") { const fr = $("liveFrame"); fr.replaceChildren(); fr.append("Encuadre: "); H("b", null, fr, d.pregunta_analitica); }
+  else if (ev.tipo === "hipotesis") { const hy = $("liveHyp"); hy.replaceChildren(); hypList(hy, d.hipotesis); }
+  else if (ev.tipo === "tool") liveLine(t + "→ " + d.tool);
+  else if (ev.tipo === "tool_error") liveLine(t + "✗ " + d.tool + ": " + d.error.slice(0, 220), "e");
+  else if (ev.tipo === "evidencia") liveLine(t + "evidencia " + d.id + " · " + d.resumen);
+  else if (ev.tipo === "claim") {
+    liveLine(t + "✓ " + d.id + " [" + d.estado + "] " + d.texto, "c");
+    const row = H("div", "claim-row", $("liveClaims"));
+    row.appendChild(tagEl(d.estado));
+    H("span", "txt sub", row, d.texto);
+  } else if (ev.tipo === "claim_rechazada") liveLine(t + "✗ afirmación rechazada: " + d.motivos.join("; ").slice(0, 260), "e");
+  else if (ev.tipo === "visual") liveLine(t + "visual " + d.id + " (" + d.tipo + ") para " + d.claim_id);
+  else if (ev.tipo === "nota") liveLine(t + "analista: " + d.texto, "n");
+  else if (ev.tipo === "composicion") liveLine(t + "composición, intento " + d.intento + ": " + (d.errores.length ? d.errores.length + " errores del validador" : "aprobada"), d.errores.length ? "e" : "c");
+  else if (ev.tipo === "final") {
+    if (liveES) { liveES.close(); liveES = null; }
+    fetch(LIVE.api + "/investigations/" + id).then(x => x.json()).then(doc => openInvestigation(doc));
+  }
+}
+
 /* ================================================================== controles */
 const isTyping = t => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
 function wireControls() {
@@ -2006,6 +2466,7 @@ function wireControls() {
   document.querySelectorAll("[data-open-palette]").forEach(b => b.addEventListener("click", () => palOpen(null, b)));
   document.querySelectorAll(".inv[data-qid]").forEach(b => b.addEventListener("click", () => palOpen(b.dataset.qid, b)));
   document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => { palClose(); closeDrawer(); }));
+  $("invBack").addEventListener("click", closeInvestigation);
   $("scrim").addEventListener("click", () => { palClose(); closeDrawer(); });
   const inp = $("palInput");
   inp.addEventListener("input", palList);
@@ -2018,6 +2479,7 @@ function wireControls() {
     if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === "k" || e.key === "K")) { e.preventDefault(); if (pal.open) palClose(); else palOpen(); return; }
     if (e.key === "Escape") {
       if (pal.open) { e.preventDefault(); palClose(); } else if (drawerOpen) { e.preventDefault(); closeDrawer(); }
+      else if (invOpen) { e.preventDefault(); closeInvestigation(); }
       return;
     }
     if (e.key === "/" && !pal.open && !drawerOpen && !isTyping(e.target) && !e.metaKey && !e.ctrlKey) { e.preventDefault(); palOpen(); }
@@ -2033,6 +2495,8 @@ function init() {
   updateCorrText();
   document.querySelectorAll("[data-chart]").forEach(mount);
   wireNav();
+  const m = location.hash.match(/^#investigacion\/(Q\d)$/);
+  if (m && GOLDEN_INV[m[1]]) openInvestigation(GOLDEN_INV[m[1]], { golden: true });
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();

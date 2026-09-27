@@ -1763,6 +1763,17 @@ def validate_brain(brain: dict, claims: list, facts: dict):
             assert cl in claim_ids, f"tarjeta {cid}: claim desconocido {cl}"
 
 
+def load_golden_investigations() -> dict:
+    """Investigaciones doradas de la capa agentic (investigations/golden/*.json), embebidas para que el demo corra sin red."""
+    out = {}
+    folder = HERE / "investigations" / "golden"
+    for p in sorted(folder.glob("*.json")) if folder.exists() else []:
+        inv = json.loads(p.read_text(encoding="utf-8"))
+        inv.pop("events", None)
+        out[p.stem] = inv
+    return out
+
+
 def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
     ar, mm, ev, dec, coh, mov, corr, im, ihalf, iyear = (ctx[k] for k in
         ["ar", "mm", "ev", "dec", "coh", "mov", "corr", "im", "ihalf", "iyear"])
@@ -1836,6 +1847,7 @@ def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
                   "golden": brain["questions"]["preguntas_doradas"],
                   "questionsFinora": brain["questions"]["preguntas_para_finora"],
                   "cards": brain["cards"]}
+    P["investigations"] = load_golden_investigations()
     return jsonable(P)
 
 

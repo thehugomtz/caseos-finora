@@ -1,0 +1,39 @@
+# Playbook: ¿por qué cambió el MRR por cliente? (pregunta dorada 2)
+# El árbol es MECE porque se ancla en una identidad contable, no en una lista de ideas.
+version: 1
+id: arpa_decline
+aplica_a: ["¿Por qué disminuyó el MRR por cliente?", "¿Por qué cambió el MRR por cliente activo?"]
+identidad: >-
+  MRR por cliente activo = Σ (participación de cada grupo de clientes × MRR por cliente del grupo).
+  Entre dos fechas, su cambio se reparte sin residuo en tres fuentes: quién entra (composición de entrada),
+  cuánto pagan los que se quedan (efecto dentro) y quién se va (selección de salida).
+metrica_objetivo: mrr_per_active_customer_cop
+nodos:
+  - id: entrada
+    pregunta: ¿Los clientes nuevos entran pagando menos que los anteriores?
+    requerido: true
+    evidencia_sugerida:
+      - "query_metric entry_ticket por año"
+      - "run_analysis ticket_distribution"
+      - "run_analysis vintage_arpa (participación de las cosechas recientes)"
+    hijos:
+      - id: entrada.mix_industria
+        pregunta: ¿El menor ticket de entrada viene de un cambio en el mix de industrias?
+        requerido: true
+        evidencia_sugerida: ["run_analysis mix_within_decomposition (tres variantes)"]
+      - id: entrada.precio
+        pregunta: ¿Viene de precios, planes o descuentos?
+        requerido: true
+        nota: No hay precios, planes ni descuentos en los datos. Se registra como No evaluable, citando qué datos faltan.
+  - id: dentro
+    pregunta: ¿Los clientes que ya estaban pagan menos que antes?
+    requerido: true
+    evidencia_sugerida: ["run_analysis vintage_arpa", "query_metric vintage_arpa por mes"]
+  - id: salida
+    pregunta: ¿Se van los clientes de mayor ticket?
+    requerido: true
+    evidencia_sugerida: ["run_analysis churn_selection"]
+firmas_orientativas:
+  entrada: "Si es cierta: el ticket de entrada baja y las cosechas recientes pagan menos. Si es falsa: el ticket de entrada no cambia."
+  dentro: "Si es cierta: el MRR por cliente de una misma cosecha baja con el tiempo. Si es falsa: se mantiene o sube."
+  salida: "Si es cierta: quienes hacen churn pagaban más que los que se quedan. Si es falsa: pagaban igual o menos."
