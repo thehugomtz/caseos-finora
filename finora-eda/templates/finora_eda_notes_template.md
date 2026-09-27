@@ -1,303 +1,325 @@
-# Finora · Phase 1 EDA — Working notes
+# Finora · Fase 1 · Notas de trabajo del análisis exploratorio
 
-> **Understand first. Explain later. Decide last.**
-> This document describes what the data contains and how it behaves. It does not diagnose the CRO or CFO problems.
+> **Entender primero. Explicar después. Decidir al final.**
+> Este documento describe qué contienen los datos y cómo se comportan. No diagnostica los problemas del CRO ni del CFO.
 
-Generated {{generated}} by `finora_eda.py` · every number below is recomputed from the raw files (no hand-typed figures).
-
----
-
-## 0. Deliverables
-
-| File | What it is |
-|---|---|
-| `finora_eda.html` | Self-contained exploration workspace (no external dependencies except optional Google Fonts; opens offline). |
-| `finora_analytical_dataset.csv` | Customer-month analytical table — {{n_rows_tx}} rows, one per customer and month. |
-| `finora_monthly_metrics.csv` | Company-level monthly metrics: customers, MRR bridge, value, rates, S&M components and groups, efficiency. |
-| `finora_eda_notes.md` | This file: definitions, transformations, assumptions, anomalies, questions, limitations. |
-| `finora_eda.py` | Reproducible pipeline (Python {{py_version}} · pandas {{pandas_version}} · numpy {{numpy_version}} · scipy {{scipy_version}}). |
-| `supporting/*.csv`, `supporting/data_audit.json` | Industry, cohort, correlation, decomposition, bridge and audit tables used by the workspace. |
-| `templates/` | HTML/JS/Markdown templates the pipeline fills. |
-
-Reproduce: `python3 finora_eda.py` (reads `data/raw/`, writes everything above in ~3 seconds).
+Generado el {{generated}} por `finora_eda.py`. Cada cifra se recalcula desde los archivos crudos; ninguna se escribe a mano.
 
 ---
 
-## 1. Source audit
+## 0. Entregables
 
-### 1.1 `Transactions.csv` — a customer × month snapshot, not transactions
-
-| Check | Result |
+| Archivo | Qué es |
 |---|---|
-| Columns | `ID`, `month`, `amount` (UTF-8 with BOM) |
-| Rows | {{n_rows_tx}} = {{n_customers}} customers × {{n_months}} months → **complete balanced panel** |
-| Grain | one row per customer and calendar month (`month` is a month-end date, `M/D/YYYY` text) |
-| Time range | {{window_start}} → {{window_end}} |
-| Duplicates | 0 on (`ID`, `month`); 0 full-row duplicates |
-| Missing / unparseable | 0 |
-| Negative amounts | 0 |
-| Zero amounts | {{zero_rows}} rows ({{zero_share}}) — inactive months are explicit zeros |
-| Positive amounts | {{pos_rows}} rows; range {{amount_min_cop}} – {{amount_max_cop}}; median {{amount_p50_cop}}; P99 {{amount_p99_cop}} |
-| Outliers | {{rows_above_fence}} customer-months ({{customers_above_fence}} customers) above Q3 + 3·IQR ({{iqr_fence_cop}}). Kept. |
-| Precision | up to 6 decimals ({{rows_6_decimals}} rows with 6 decimals) → compared exactly as integer micro-units |
-| Naming | file name says “Transactions” but the grain is a monthly snapshot per customer |
+| `finora_eda.html` | Workspace de exploración autocontenido. Solo usa Google Fonts de forma opcional; abre sin conexión. |
+| `finora_analytical_dataset.csv` | Tabla analítica cliente-mes: {{n_rows_tx}} filas, una por cliente y mes. |
+| `finora_monthly_metrics.csv` | Métricas mensuales de la empresa: clientes, puente de MRR, valor, tasas, rubros y grupos de S&M, eficiencia. |
+| `finora_eda_notes.md` | Este archivo: definiciones, transformaciones, supuestos, anomalías, preguntas y limitaciones. |
+| `finora_eda.py` | Pipeline reproducible (Python {{py_version}} · pandas {{pandas_version}} · numpy {{numpy_version}} · scipy {{scipy_version}}). |
+| `supporting/*.csv`, `supporting/data_audit.json` | Tablas de industrias, cohortes, correlaciones, descomposición, puentes y auditoría que usa el workspace. |
+| `brain/` | Conocimiento del negocio en archivos versionados: catálogo de métricas, problemas de datos conocidos, preguntas doradas, glosario, reglas de lenguaje y linaje de cada tarjeta. `brain/evidence/canonical_findings.yaml` lo genera el pipeline. |
+| `templates/` | Plantillas HTML, JS y Markdown que llena el pipeline. |
+
+Para reproducir: `python3 finora_eda.py` (lee `data/raw/` y `brain/`, y escribe todo lo anterior).
+
+### Cómo leer los estados
+
+Cada afirmación del workspace lleva un estado (eje 1) y, cuando aplica, un marcador (eje 2).
+
+| Estado | Significado |
+|---|---|
+| Hecho observado | Se lee directamente de los datos, sin supuestos. |
+| Evidencia fuerte | Resultado de un método con prueba de robustez (por ejemplo, descomposición con bootstrap y variantes). |
+| Direccional | Patrón consistente, pero con n pequeño o sin identificación causal. |
+| Hipótesis | Lectura razonable que hay que validar con Finora. |
+| No evaluable | No se puede responder con estos archivos. |
+
+Marcadores: **Explorando** (el título es una pregunta abierta), **Precaución** (hay una advertencia sobre el dato) y **Método** (explica cómo se calcula).
+
+---
+
+## 1. Auditoría de las fuentes
+
+### 1.1 `Transactions.csv`: una foto cliente × mes, no transacciones
+
+| Revisión | Resultado |
+|---|---|
+| Columnas | `ID`, `month`, `amount` (UTF-8 con BOM) |
+| Filas | {{n_rows_tx}} = {{n_customers}} clientes × {{n_months}} meses → **panel completo y balanceado** |
+| Grano | una fila por cliente y mes calendario (`month` es una fecha de fin de mes en texto `M/D/AAAA`) |
+| Rango de fechas | {{window_start}} → {{window_end}} |
+| Duplicados | 0 en (`ID`, `month`); 0 filas completas duplicadas |
+| Faltantes o ilegibles | 0 |
+| Montos negativos | 0 |
+| Montos en cero | {{zero_rows}} filas ({{zero_share}}): los meses inactivos vienen como ceros explícitos |
+| Montos positivos | {{pos_rows}} filas; rango {{amount_min_cop}} a {{amount_max_cop}}; mediana {{amount_p50_cop}}; P99 {{amount_p99_cop}} |
+| Valores extremos | {{rows_above_fence}} meses-cliente ({{customers_above_fence}} clientes) por encima de Q3 + 3·RIC ({{iqr_fence_cop}}). Se conservan. |
+| Precisión | hasta 6 decimales ({{rows_6_decimals}} filas con 6 decimales) → se comparan exactamente como micro-unidades enteras |
+| Nombre | el archivo se llama “Transactions”, pero el grano es una foto mensual por cliente |
 
 ### 1.2 `Industry.csv`
 
-| Check | Result |
+| Revisión | Resultado |
 |---|---|
-| Columns | `ID`, `Industria` (UTF-8 with BOM; mixed-language headers) |
-| Rows | {{ind_rows_read}} read → {{ind_blank_rows}} fully blank trailing row removed → {{ind_valid}} |
-| Key | `"Cliente N"` → `N` (regex `^Cliente (\d+)$`); unique; contiguous 1…{{ind_valid}} |
-| Values | {{n_industries}} industries, no case/accent/whitespace variants: Restaurantes, Producción, Retail, Tecnología, Servicios profesionales, Salud |
-| Match with Transactions | {{id_match_rate}} in both directions — no exceptions |
+| Columnas | `ID`, `Industria` (UTF-8 con BOM; encabezados en dos idiomas) |
+| Filas | {{ind_rows_read}} leídas → se elimina {{ind_blank_rows}} fila final completamente vacía → {{ind_valid}} |
+| Llave | `"Cliente N"` → `N` (regex `^Cliente (\d+)$`); única; contigua de 1 a {{ind_valid}} |
+| Valores | {{n_industries}} industrias sin variantes de mayúsculas, acentos ni espacios: Restaurantes, Producción, Retail, Tecnología, Servicios profesionales, Salud |
+| Cruce con Transactions | {{id_match_rate}} en ambos sentidos, sin excepciones |
 
 ### 1.3 `S&M_spend.csv`
 
-| Check | Result |
+| Revisión | Resultado |
 |---|---|
-| Columns | `Month` (`YYYY-MM`) + `PaidMedia`, `Travel`, `PublicidadNoWeb`, `Freelance`, `SoftwareTools`, `Team`, `PayrollExpenses` |
-| Rows | 34 months, identical to the Transactions months; no duplicates or missing values |
-| Format | text with `$` prefix and `.` as decimal separator (`"$1.040"`, `"$0.120"`); negatives as `"-$0.016"` |
-| Unit | **undocumented** — no scale factor was provided, so spend cannot be converted to COP. Kept in reported units (**u**). |
-| Structure | In {{whole_pct_months}} of 34 months every component is a whole-percent share of the monthly total → consistent with top-down allocation |
-| `Team` | exactly 12.0% of total S&M in {{team_fixed_months}} consecutive months (through {{team_fixed_until}}); an independent, slowly rising series from {{team_break}} |
-| `PayrollExpenses` | negative in {{payroll_neg_n}} months ({{payroll_neg_list}}); after {{team_break}} it behaves like a balancing item |
-| `Freelance` | zero from {{freelance_zero_from}} ({{freelance_zero_n}} of the last {{freelance_months_since}} months; exception: {{freelance_exceptions}}) |
-| Level shift | Total S&M {{sm_peak}} ({{sm_peak_month}}) → {{sm_trough}} ({{sm_trough_month}}), {{sm_drop}}; Paid Media {{pm_drop}} |
+| Columnas | `Month` (`AAAA-MM`) + `PaidMedia`, `Travel`, `PublicidadNoWeb`, `Freelance`, `SoftwareTools`, `Team`, `PayrollExpenses` |
+| Filas | 34 meses, idénticos a los de Transactions; sin duplicados ni faltantes |
+| Formato | texto con prefijo `$` y `.` como separador decimal (`"$1.040"`, `"$0.120"`); negativos como `"-$0.016"` |
+| Unidad | **no documentada**: no hay factor de escala, así que el gasto no se puede convertir a COP. Se conserva en unidades reportadas (**u**). |
+| Estructura | En {{whole_pct_months}} de 34 meses cada rubro es un porcentaje entero del total mensual → consistente con una asignación de arriba hacia abajo |
+| `Team` | exactamente 12,0% del S&M total en {{team_fixed_months}} meses consecutivos (hasta {{team_fixed_until}}); desde {{team_break}} es una serie independiente que sube despacio |
+| `PayrollExpenses` | negativo en {{payroll_neg_n}} meses ({{payroll_neg_list}}); después de {{team_break}} se comporta como partida de ajuste |
+| `Freelance` | cero desde {{freelance_zero_from}} ({{freelance_zero_n}} de los últimos {{freelance_months_since}} meses; excepción: {{freelance_exceptions}}) |
+| Cambio de nivel | S&M total {{sm_peak}} ({{sm_peak_month}}) → {{sm_trough}} ({{sm_trough_month}}), {{sm_drop}}; Paid Media {{pm_drop}} |
 
-### 1.4 Consistency across sources
+### 1.4 Consistencia entre fuentes
 
-- Every Transactions `ID` has exactly one industry and vice versa ({{id_match_rate}}).
-- The three files cover the same 34 months ({{window_start}} → {{window_end}}).
-- No customer is ever-zero: every customer has at least one positive month.
+- Cada `ID` de Transactions tiene exactamente una industria, y viceversa ({{id_match_rate}}).
+- Los tres archivos cubren los mismos 34 meses ({{window_start}} → {{window_end}}).
+- Ningún cliente está siempre en cero: todos tienen al menos un mes con pago.
 
 ---
 
-## 2. Transformations
+## 2. Transformaciones
 
-1. **Read raw text** with `utf-8-sig` (removes the BOM) and keep every value as text first, so the audit sees exactly what was delivered. SHA-256 of each input is recorded.
-2. **Industry key**: drop the blank row; extract `N` from `"Cliente N"`; assert uniqueness and full match.
-3. **Transactions**: parse `ID` → int, `month` → monthly period, `amount` → float, then to **integer micro-units** (`round(amount × 1,000,000)`) so equality/ordering comparisons are exact.
-4. **Panel**: pivot to customers × months (complete, no gaps to fill). Derive previous-month MRR, movement flags, movement values, tenure and cohort (definitions in §3).
-5. **COP**: `paid_mrr_cop = observed_amount × 10,000` (1 micro-unit = COP 0.01).
-6. **Monthly metrics**: aggregate flags and movement values per month; add rates, percentiles, rolling averages.
-7. **S&M**: strip `$`, parse signed decimals, keep the 7 components, add analytical groups and totals, join by month.
-8. **Views**: industries, cohorts, lag correlations, mix/within decomposition, bridge and movement diagnostics.
-9. **Validation** (the pipeline stops if any fails):
-   - row-level identity `curr − prev = New + Expansion + Reactivation + Contraction + Churn` for every customer-month;
-   - monthly MRR bridge closes (max |residual| = COP {{bridge_max_diff}}) and customer bridge closes exactly;
-   - annual and last-month bridges close;
-   - total paid MRR = raw amount total × 10,000; active customer-months = positive rows;
-   - industry splits add up to company totals; movement flags are mutually exclusive;
-   - Shapley mix + within = total change (to 1e-6);
-   - the claims registry (§10).
+1. **Leer el texto crudo** con `utf-8-sig` (quita el BOM) y conservar cada valor como texto primero, para que la auditoría vea exactamente lo que llegó. Se registra el SHA-256 de cada archivo.
+2. **Llave de industria**: eliminar la fila vacía; extraer `N` de `"Cliente N"`; verificar unicidad y cruce completo.
+3. **Transactions**: `ID` → entero, `month` → periodo mensual, `amount` → decimal y luego **micro-unidades enteras** (`round(amount × 1.000.000)`), para que las comparaciones de igualdad y orden sean exactas.
+4. **Panel**: pivotear a clientes × meses (completo, sin huecos que rellenar). Derivar MRR del mes anterior, banderas de movimiento, valores de movimiento, antigüedad y cohorte (definiciones en §3).
+5. **COP**: `paid_mrr_cop = observed_amount × 10.000` (1 micro-unidad = COP 0,01).
+6. **Métricas mensuales**: agregar banderas y valores por mes; agregar tasas, percentiles y promedios móviles.
+7. **S&M**: quitar `$`, leer decimales con signo, conservar los 7 rubros, agregar grupos analíticos y totales, unir por mes.
+8. **Vistas**: industrias, cohortes, correlaciones con rezago, descomposición mix/dentro, puentes y diagnóstico de movimientos.
+9. **Validaciones** (el pipeline se detiene si alguna falla):
+   - identidad por fila `actual − anterior = Nuevo + Expansión + Reactivación + Contracción + Churn` en cada mes-cliente;
+   - el puente mensual de MRR cuadra (residuo máximo = COP {{bridge_max_diff}}) y el puente de clientes cuadra exactamente;
+   - los puentes anuales y el del último mes cuadran;
+   - MRR pagado total = suma de montos crudos × 10.000; meses-cliente activos = filas positivas;
+   - los cortes por industria suman los totales de la empresa; las banderas de movimiento son mutuamente excluyentes;
+   - mix + dentro de Shapley = cambio total (a 1e-6);
+   - el registro de afirmaciones (§11);
+   - el brain: cada métrica, problema y afirmación que cita una tarjeta existe.
 
 ---
 
-## 3. Definitions
+## 3. Definiciones
 
-### 3.1 Three layers, kept apart
+### 3.1 Tres capas separadas
 
-| Layer | Content |
+| Capa | Contenido |
 |---|---|
-| **Observed** | `observed_amount` exactly as delivered. Never overwritten. |
-| **Derived** | `paid_mrr_cop` and every flag, rate and aggregate below. Mechanical, documented, reproducible. |
-| **Interpreted** | Only in prose (HTML and this file), always labelled as a hypothesis. Never encoded as a field. |
+| **Observado** | `observed_amount` exactamente como llegó. Nunca se sobrescribe. |
+| **Derivado** | `paid_mrr_cop` y cada bandera, tasa y agregado de abajo. Mecánico, documentado y reproducible. |
+| **Interpretado** | Solo en texto (HTML y este archivo) y siempre marcado como hipótesis. Nunca se codifica como campo. |
 
-> All movement categories describe the **observed paid amount**. With the current data we cannot tell whether an expansion or contraction comes from usage, plan, pricing, discounts, credits or any other commercial decision.
+> **Estas categorías describen movimientos del monto pagado observado.** Con los datos actuales no podemos distinguir si una expansión o contracción proviene de uso, plan, pricing, descuento, créditos u otra decisión comercial.
 
-### 3.2 Customer-month table (`finora_analytical_dataset.csv`)
+### 3.2 Catálogo de métricas (`brain/semantic/metrics.yaml`)
 
-`curr` = paid MRR in month t, `prev` = paid MRR in t−1. Comparisons are exact (micro-units).
+Fuente única de definiciones para el workspace, estas notas y, después, el agente. Ventana completa = {{window_start}} → {{window_end}}; ventana limpia = mar-22 → {{window_end}}.
 
-| Column | Definition |
+| Métrica | Definición | Fórmula | Ventana |
+|---|---|---|---|
+<!--METRICS-->
+
+### 3.3 Tabla cliente-mes (`finora_analytical_dataset.csv`)
+
+`actual` = MRR pagado en el mes t; `anterior` = MRR pagado en t−1. Las comparaciones son exactas (micro-unidades).
+
+| Columna | Definición |
 |---|---|
-| `customer_id` | numeric ID (from `"Cliente N"`) |
-| `industry` | industry as delivered (static per customer) |
-| `month`, `month_index` | calendar month (`YYYY-MM`) and 0…33 |
-| `observed_amount` | raw amount |
-| `paid_mrr_cop` | observed_amount × 10,000 |
-| `active_customer` | 1 if curr > 0 |
-| `previous_month_mrr` | prev (empty in {{window_start}}) |
-| `mrr_change` | curr − prev (empty in {{window_start}}) |
-| `first_positive_month` = `cohort_month` | first month with curr > 0 |
-| `cohort_flag` | `left_censored` (first positive = {{window_start}}), `suspected_spillover` (Feb-22), `clean` |
-| `tenure_month` | months since cohort month (M0 = cohort month); empty before it |
-| `movement_type` | one of: `window_start_active`, `window_start_inactive`, `new`, `expansion`, `contraction`, `flat`, `churn`, `reactivation`, `not_yet_active`, `inactive_after_churn` |
-| `new_customer` | curr > 0 and never > 0 before (not identifiable in {{window_start}}) |
-| `churned_customer` | prev > 0 and curr = 0 (observed churn) |
-| `reactivated_customer` | curr > 0, prev = 0, positive at some earlier month |
-| `expanded_customer` | curr > prev > 0 |
-| `contracted_customer` | 0 < curr < prev |
-| `flat_customer` | curr = prev > 0 |
-| `new_mrr_cop`, `reactivation_mrr_cop` | curr on new / reactivation rows |
-| `expansion_mrr_cop`, `contraction_mrr_cop` | curr − prev on expansion (positive) / contraction (negative) rows |
-| `churned_mrr_cop` | −prev on churn rows (negative) |
-| `months_to_return` | churn rows: months until the next positive month (empty if none by {{window_end}}) |
-| `returned_next_month`, `returned_same_amount_next_month` | churn rows: 1 if positive (at the same amount) in t+1 |
-| `reverts_next_month` | expansion/contraction rows: 1 if amount in t+1 equals prev (one-month spike/dip) |
-| `usual_amount_cop` | the customer's most frequent positive amount (ties → smallest) |
-| `amount_vs_usual_ratio` | curr ÷ usual amount |
-| `multi_month_payment_signature` | k (2…12) when curr = k × usual amount (±0.5%) and the usual amount appears ≥ 3 times; else 0 |
+| `customer_id` | ID numérico (de `"Cliente N"`) |
+| `industry` | industria tal como llegó (fija por cliente) |
+| `month`, `month_index` | mes calendario (`AAAA-MM`) y 0…33 |
+| `observed_amount` | monto crudo |
+| `paid_mrr_cop` | observed_amount × 10.000 |
+| `active_customer` | 1 si actual > 0 |
+| `previous_month_mrr` | anterior (vacío en {{window_start}}) |
+| `mrr_change` | actual − anterior (vacío en {{window_start}}) |
+| `first_positive_month` = `cohort_month` | primer mes con actual > 0 |
+| `cohort_flag` | `left_censored` (primer pago = {{window_start}}), `suspected_spillover` (feb-22), `clean` |
+| `tenure_month` | meses desde el mes de cohorte (M0 = mes de cohorte); vacío antes |
+| `movement_type` | uno de: `window_start_active`, `window_start_inactive`, `new`, `expansion`, `contraction`, `flat`, `churn`, `reactivation`, `not_yet_active`, `inactive_after_churn` |
+| `new_customer` | actual > 0 y nunca > 0 antes (no identificable en {{window_start}}) |
+| `churned_customer` | anterior > 0 y actual = 0 (churn observado) |
+| `reactivated_customer` | actual > 0, anterior = 0 y positivo en algún mes previo |
+| `expanded_customer` | actual > anterior > 0 |
+| `contracted_customer` | 0 < actual < anterior |
+| `flat_customer` | actual = anterior > 0 |
+| `new_mrr_cop`, `reactivation_mrr_cop` | actual en filas de alta / reactivación |
+| `expansion_mrr_cop`, `contraction_mrr_cop` | actual − anterior en filas de expansión (positivo) / contracción (negativo) |
+| `churned_mrr_cop` | −anterior en filas de churn (negativo) |
+| `months_to_return` | filas de churn: meses hasta el siguiente mes con pago (vacío si no vuelve antes de {{window_end}}) |
+| `returned_next_month`, `returned_same_amount_next_month` | filas de churn: 1 si paga en t+1 (con el mismo monto) |
+| `reverts_next_month` | filas de expansión/contracción: 1 si el monto de t+1 es igual al anterior (pico o baja de un mes) |
+| `usual_amount_cop` | el monto positivo más frecuente del cliente (empates → el menor) |
+| `amount_vs_usual_ratio` | actual ÷ monto usual |
+| `multi_month_payment_signature` | k (2…12) cuando actual = k × monto usual (±0,5%) y el monto usual aparece ≥ 3 veces; si no, 0 |
 
-Bridge identity (every row with a previous month): `mrr_change = new + expansion + reactivation + contraction + churned`.
+Identidad del puente (cada fila con mes anterior): `mrr_change = new + expansion + reactivation + contraction + churned`.
 
-### 3.3 Monthly metrics (`finora_monthly_metrics.csv`)
+### 3.4 Métricas mensuales adicionales (`finora_monthly_metrics.csv`)
 
-| Metric | Definition |
+| Métrica | Definición |
 |---|---|
-| Active / New / Churned / Reactivated / Expanded / Contracted / Flat customers | counts of the flags |
-| Net customer adds | New + Reactivated − Churned (= Δ active customers, validated) |
-| Total paid MRR | Σ paid_mrr_cop |
-| New / Expansion / Reactivation / Contraction / Churned MRR | Σ of movement values (contraction and churn negative) |
-| Net MRR change | Σ of the five (= Δ MRR, validated) |
-| MRR per active customer | Total paid MRR ÷ active customers |
-| New MRR per new customer | New MRR ÷ new customers (mean); `median`, `p25`, `p75`, `p90` over the same first amounts |
-| Logo churn rate | churned(t) ÷ active(t−1) |
-| Gross MRR churn / contraction / expansion rate | movement(t) ÷ MRR(t−1) |
-| Reactivation rate | reactivated(t) ÷ dormant pool(t−1) (inactive at t−1 but positive before) |
-| Net MRR retention (existing) | (MRR(t−1) + expansion + contraction + churn) ÷ MRR(t−1) |
-| Quick ratio | (new + expansion + reactivation) ÷ −(contraction + churn) |
-| `window_flag` | `left_censored_start` ({{window_start}}), `suspected_spillover` (Feb-22), `clean` |
-| `*_3m_avg` | trailing 3-month averages (flows only inside the clean window) |
+| Clientes con expansión / contracción / sin cambio | conteos de las banderas |
+| Tasa de churn bruto de MRR / contracción / expansión | movimiento(t) ÷ MRR(t−1) |
+| Tasa de reactivación | reactivados(t) ÷ grupo latente(t−1) (inactivos en t−1 pero con pagos antes) |
+| Retención neta de MRR (existentes) | (MRR(t−1) + expansión + contracción + churn) ÷ MRR(t−1) |
+| Quick ratio | (nuevo + expansión + reactivación) ÷ −(contracción + churn) |
+| `window_flag` | `left_censored_start` ({{window_start}}), `suspected_spillover` (feb-22), `clean` |
+| `*_3m_avg` | promedios móviles de 3 meses (flujos solo dentro de la ventana limpia) |
 
-### 3.4 S&M groupings
+### 3.5 Grupos de S&M
 
-| Group | Components | Rationale (hypothesis, not accounting truth) |
+| Grupo | Rubros | Razón (hipótesis, no verdad contable) |
 |---|---|---|
-| Demand Generation | PaidMedia + PublicidadNoWeb | spend meant to create demand |
-| Sales / Acquisition capacity | Team + PayrollExpenses + Travel | people and field capacity to convert demand |
-| Enablement / Support | SoftwareTools + Freelance | tools and external support |
-| Total S&M | all seven | as delivered |
-| Total S&M ex-Payroll | Total − PayrollExpenses | sensitivity only |
+| Generación de demanda | PaidMedia + PublicidadNoWeb | gasto pensado para crear demanda |
+| Capacidad comercial | Team + PayrollExpenses + Travel | personas y capacidad de campo para convertir la demanda |
+| Habilitación | SoftwareTools + Freelance | herramientas y apoyo externo |
+| S&M total | los siete | tal como llegó |
+| S&M total sin PayrollExpenses | total − PayrollExpenses | solo como sensibilidad |
 
-**Why keep all seven in Total S&M, and when to exclude one.** Nothing proves a component is not S&M, so all are kept. Technical reasons to test an alternative: `PayrollExpenses` has {{payroll_neg_n}} negative months, behaves like a balancing item after {{team_break}} and may overlap `Team` (hence `total_sm_ex_payroll`). `Team` has a definitional break in {{team_break}} (fixed 12% allocation → independent series), so trends across that month are not like-for-like. `Freelance`, `SoftwareTools` and `Travel` may contain non-S&M costs; the data cannot split them.
+**Por qué se conservan los siete rubros en el S&M total, y cuándo conviene excluir uno.** Nada prueba que un rubro no sea S&M, así que se conservan todos. Hay razones técnicas para probar una alternativa: `PayrollExpenses` tiene {{payroll_neg_n}} meses negativos, se comporta como partida de ajuste después de {{team_break}} y puede traslaparse con `Team` (de ahí `total_sm_ex_payroll`). `Team` tiene un quiebre de definición en {{team_break}} (de asignación fija de 12% a serie independiente), así que las tendencias a través de ese mes no son comparables. `Freelance`, `SoftwareTools` y `Travel` pueden incluir costos que no son de S&M; los datos no permiten separarlos.
 
-### 3.5 Efficiency
+### 3.6 Eficiencia
 
-Monthly: spend (u) ÷ new customers, and spend (u) ÷ New MRR in COP millions — for Total S&M, Demand Gen and Paid Media. Trailing-3-month versions use sums over three clean months. Inverses (new customers or New MRR per unit of spend) are provided. Not computed in {{window_start}} (new customers not identifiable) and Feb-22 (spillover); no clean month has a zero denominator. Yearly figures pool sums (Σ spend ÷ Σ outcome).
+Mensual: gasto (u) ÷ altas, y gasto (u) ÷ MRR nuevo en millones de COP, para S&M total, generación de demanda y Paid Media. Las versiones de últimos 3 meses suman tres meses limpios. También se entregan los inversos (altas o MRR nuevo por unidad de gasto). No se calcula en {{window_start}} (altas no identificables) ni en feb-22 (arrastre); ningún mes limpio tiene denominador cero. Las cifras anuales agregan sumas (Σ gasto ÷ Σ resultado).
 
-### 3.6 Lag relationships
+### 3.7 Relaciones con rezago
 
-For spend ∈ {Paid Media, Demand Gen, Total S&M}, outcome ∈ {New customers, New MRR}, lag k ∈ {0,1,2,3}: pairs (spend(t−k), outcome(t)) for outcome months in the clean window (n = {{corr_n_min}}–{{corr_n_levels}}). Pearson r and Spearman ρ with p-values, on levels and on month-over-month changes (both series differenced). Sensitivity including Feb-22 in `supporting/lag_correlations_incl_feb22.csv`. Language is associative only.
+Para gasto ∈ {Paid Media, generación de demanda, S&M total}, resultado ∈ {altas, MRR nuevo} y rezago k ∈ {0, 1, 2, 3}: pares (gasto(t−k), resultado(t)) para los meses de resultado dentro de la ventana limpia (n = {{corr_n_min}}–{{corr_n_levels}}). r de Pearson y ρ de Spearman con valores p, en niveles y en cambios mes a mes (ambas series diferenciadas). La sensibilidad que incluye feb-22 está en `supporting/lag_correlations_incl_feb22.csv`. El lenguaje es solo de asociación.
 
-### 3.7 Mix vs within decomposition
+### 3.8 Descomposición mix vs. efecto dentro
 
-Average entry ticket `A = Σ sᵢ·aᵢ` (sᵢ = industry share of new customers, aᵢ = industry mean first-month MRR). Two-factor **Shapley (midpoint)** decomposition, exact with no residual:
+Ticket de entrada promedio `A = Σ sᵢ·aᵢ` (sᵢ = participación de la industria en las altas; aᵢ = MRR promedio del primer mes en la industria). Descomposición de **Shapley (punto medio)** de dos factores, exacta y sin residuo:
 
 - mix = Σ (sᵢ¹ − sᵢ⁰) · (aᵢ⁰ + aᵢ¹)/2
-- within = Σ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2
+- dentro = Σ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2
 
-Laspeyres (mix at base rates, within at base mix, plus interaction) reported as a cross-check. Uncertainty: 2,000 bootstrap resamples of new customers within each period (seed fixed) → 90% intervals. Variants: M0 (primary), M0 winsorised at pooled P99 ({{winsor_cap}}), early run-rate (median of positive amounts in M0–M2). Periods: 2022 (Mar–Dec), 2023, 2024 (Jan–Oct); half-year evolution vs the 2022 base.
+La versión de Laspeyres (mix a tasas base, dentro con el mix base, más interacción) se reporta como verificación. Incertidumbre: 2.000 remuestreos bootstrap de las altas dentro de cada periodo (semilla fija) → intervalos de 90%. Variantes: M0 (principal), M0 winsorizado en el P99 conjunto ({{winsor_cap}}), run-rate temprano (mediana de los montos positivos en M0–M2). Periodos: 2022 (mar–dic), 2023, 2024 (ene–oct); evolución semestral contra la base 2022.
 
-### 3.8 Cohorts
+### 3.9 Cohortes
 
-Cohort = first positive month. {{window_start}} actives ({{base_size}}) are left-censored and tracked separately in calendar time; Feb-22 entries are flagged. Logo retention at Mₖ = share of the cohort with paid MRR > 0 at tenure k (point-in-time; a customer can return). Revenue retention at Mₖ = cohort MRR at Mₖ ÷ the same customers' MRR at M0. MRR per original customer = cohort MRR at Mₖ ÷ customers observable at Mₖ. Every Mₖ uses only customers with at least k months of history (right-censoring). Quarterly cohorts pool monthly cohorts; 2022 Q1 = Mar only and 2024 Q4 = Oct only.
-
----
-
-## 4. Assumptions (explicit)
-
-1. `amount × 10,000 = COP`, as stated by Finora. Applied without questioning the factor.
-2. A customer is **active** in a month if and only if the paid amount is > 0.
-3. **Left censoring**: customers paying in {{window_start}} may have been acquired earlier; no movement is assigned to {{window_start}}.
-4. **Spillover**: {{feb_sig_share}} of Feb-22 “new” customers pay exactly 2× their second amount (vs {{later_sig_share}} in later cohorts) and Feb-22 has {{feb_vs_typical_new}} the 2022 monthly average of new customers. Feb-22 entries are flagged and excluded from acquisition rates, correlations and cohort trends. Clean window for flows: Mar-22 → {{window_end}}.
-5. **No tolerance** on “flat”: any change in the paid amount counts as expansion or contraction.
-6. **Industry is static** per customer.
-7. **S&M unit unknown**: kept as reported; efficiency ratios are relative over time, not a CAC in COP.
-8. S&M group roles (what Team, Travel, Freelance represent) are hypotheses.
-9. **Outliers are kept**; their influence is tested (winsorised and median variants).
-10. **Right censoring**: churn near {{window_end}} may be temporary; “not back by Oct-24” is censored.
+Cohorte = primer mes con pago. Los {{base_size}} clientes activos en {{window_start}} están censurados a la izquierda y se siguen aparte en tiempo calendario; las altas de feb-22 se marcan. Retención de logos en Mₖ = porcentaje de la cohorte con MRR pagado > 0 en la antigüedad k (foto puntual; un cliente puede volver). Retención de ingreso en Mₖ = MRR de la cohorte en Mₖ ÷ MRR de esos mismos clientes en M0. MRR por cliente original = MRR de la cohorte en Mₖ ÷ clientes observables en Mₖ. Cada Mₖ usa solo clientes con al menos k meses de historia (censura a la derecha). Las cohortes trimestrales agrupan cohortes mensuales; 2022 T1 = solo mar y 2024 T4 = solo oct.
 
 ---
 
-## 5. Anomalies and contra-intuitive patterns (investigated before being reported)
+## 4. Supuestos explícitos
 
-1. **`amount` behaves like monthly collections, not contracted MRR.** {{multi_sig_rows}} customer-months ({{multi_sig_customers}} customers) equal 2–12× the customer's usual amount; {{churn_back_1m}} of {{churn_events}} observed churn events return the next month ({{churn_back_any}} at some point); {{exp_mrr_revert}} of Expansion MRR reverts the next month; {{con_mrr_post_spike}} of Contraction MRR is the normalisation after a one-month spike. Examples in the HTML (customers 14, 40, 516, 637).
-2. **Feb-22 spillover** (assumption 4).
-3. **Entry-ticket step in {{step_month}}**: from {{step_month}} every monthly median entry ticket is below the 2022 median ({{m0_median_2022}}). Mean {{m0_mean_2022}} (2022) → {{m0_mean_2024}} (2024); median {{m0_median_2022}} → {{m0_median_2024}}.
-4. **2022 first-month spikes**: {{spike_share_2022}} of 2022 entrants paid > 1.5× their second month in M0 ({{spike_share_2023}} in 2023, {{spike_share_2024}} in 2024) → the 2022 mean ticket and 2022 M0-based revenue retention are distorted. Robust metrics shrink the decline ({{m1_mean_chg_22_24}} to {{m0_mean_chg_22_24}} depending on the metric) but never reverse it.
-5. **Spend down, acquisition up**: Total S&M fell {{sm_drop_abs}} ({{sm_peak_month}} → {{sm_trough_month}}) while new customers per month went from {{new_avg_2022}} (2022) to {{new_avg_2023}} (2023) and {{new_avg_2024}} (2024).
-6. **Negative level correlation** between spend and new customers (Total S&M, lag 0: r = {{r_new_sm_l0}}); it vanishes on month-over-month changes (max |r| = {{r_mom_absmax}}).
-7. **S&M file built top-down** (whole-percent shares; Team fixed at 12% through {{team_fixed_until}}; Freelance → 0 when Team jumps in {{team_break}}; PayrollExpenses negative).
-8. **Small ± adjustments and off-grid amounts**: expansion events smaller than 10% went from {{small_exp_first}} ({{small_half_first}}) to {{small_exp_last}} ({{small_half_last}}); contractions {{small_con_first}} → {{small_con_last}}. Share of paid amounts on the COP 2,100 grid: {{grid_2022h2}} (2022 H2) → {{grid_2024h2}} (2024 H2).
-9. **Concentration at the top**: the largest account (customer {{top_account_id}}, {{top_account_industry}}) pays a median {{top_account_median}} per month, {{top_account_x_median}} the median customer-month; some customers show periodic large payments (e.g. {{periodic_amount}} roughly once a year).
-10. **Monthly MRR is noisy**: it fell month-over-month in {{mrr_mom_negative_months}} of 33 months (e.g. {{mrr_jun22_change}} in Jun-22) while customers kept growing; gross movements ({{gross_movement}}) are {{gross_net_ratio}} the net change ({{net_movement}}).
-
----
-
-## 6. Descriptive findings by theme
-
-**Growth.** Active customers {{active_start}} → {{active_end}} ({{active_multiple}}); paid MRR {{mrr_start}} → {{mrr_end}} ({{mrr_multiple}}); MRR per active customer {{arpa_start}} → {{arpa_end}} ({{arpa_change}}). Net adds positive in {{net_adds_positive_months}} of {{months_with_flows}} months (negative only in {{net_adds_negative_list}}). Annual net MRR change: 2022 {{ab_net_2022}}, 2023 {{ab_net_2023}}, 2024 {{ab_net_2024}}.
-
-**Monetization.** Customers active in {{window_start}} kept their ARPA ({{base_arpa_start}} → {{base_arpa_end}}). In Oct-24, ARPA by vintage: 2022 {{v2022_arpa_end}}, 2023 {{v2023_arpa_end}}, 2024 {{v2024_arpa_end}}. The 2023–24 vintages are {{recent_vintage_customer_share}} of active customers and {{recent_vintage_mrr_share}} of MRR.
-
-**Sales & Marketing.** Average monthly Total S&M: 2022 {{sm_avg_2022}}, 2023 {{sm_avg_2023}}, 2024 {{sm_avg_2024}} ({{sm_chg_22_24}} vs 2022). Total S&M per new customer: {{cac_sm_2022}} → {{cac_sm_2023}} → {{cac_sm_2024}} ({{total_sm_per_new_customer_chg}}); per COP 1M of New MRR: {{sm_per_mrr_2022}} → {{sm_per_mrr_2023}} → {{sm_per_mrr_2024}} ({{total_sm_per_new_mrr_mm_chg}}).
-
-**Spend relationships.** Levels vs new customers: r from {{r_new_levels_min}} to {{r_new_levels_max}} (all negative). Levels vs New MRR: |r| ≤ {{r_mrr_levels_absmax}}. Month-over-month: |r| ≤ {{r_mom_absmax}}, smallest p = {{r_mom_minp}}. {{n_corr_sig}} of {{n_corr_tests}} tests have p < 0.05 ({{n_corr_false_pos}} expected by chance alone); all {{n_corr_sig}} are negative level correlations with new customers.
-
-**Industries.** Retail's share of new customers: {{retail_new_share_2022}} (2022) → {{retail_new_share_2023}} (2023) → {{retail_new_share_2024}} (2024); Retail entry ticket 2024 {{retail_ticket_2024}}. Restaurantes' MRR share {{rest_mrr_share_2022}} (Dec-22) → {{rest_mrr_share_2024}} (Oct-24). Mean entry ticket fell in {{industries_ticket_fell_22_24}} of 6 industries 2022 → 2024 (median in {{industries_median_fell_22_24}} of 6).
-
-**Mix vs within.** 2022 → 2024 average entry ticket {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}): within {{dec_within}} ({{dec_within_share}}), mix {{dec_mix}} ({{dec_mix_share}}); within share 90% interval {{dec_within_ci}}; {{dec_within_share_min}}–{{dec_within_share_max}} across variants. At 2022 mix, 2024 would be {{dec_cf}}. 2022 → 2023 within share {{dec23_within_share}}. 2023 → 2024: {{dec34_delta}} (within 90% interval {{dec34_ci}}).
-
-**Cohorts.** M1 logo retention: 2022 quarters {{m1_logo_2022_min}}–{{m1_logo_2022_max}}; full 2023–24 quarters {{m1_logo_recent_min}}–{{m1_logo_recent_max}}. M12 logo retention {{m12_logo_min}}–{{m12_logo_max}}. Revenue retention M1: 2022 quarters ≤ {{rev_m1_2022_max}} (M0 spikes); 2023–24 ≥ {{rev_m1_recent_min}}. Left-censored base: {{base_logo_end}} still paying in Oct-24, {{base_rev_end}} of its Jan-22 MRR.
-
-**MRR movements.** {{lb_from}} → {{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} new + {{lb_expansion_mrr_cop}} expansion + {{lb_reactivation_mrr_cop}} reactivation − {{lb_contraction_abs}} contraction − {{lb_churn_abs}} churn = {{lb_closing_mrr_cop}} (residual COP {{lb_check}}). Observed monthly logo churn: {{churn_rate_2022}} (2022), {{churn_rate_2023}} (2023), {{churn_rate_2024}} (2024).
+1. `amount × 10.000 = COP`, como indicó Finora. Se aplica sin cuestionar el factor.
+2. Un cliente está **activo** en un mes si y solo si el monto pagado es > 0.
+3. **Censura a la izquierda**: los clientes que pagan en {{window_start}} pudieron entrar antes; no se asigna ningún movimiento a {{window_start}}.
+4. **Arrastre**: el {{feb_sig_share}} de las altas de feb-22 paga exactamente 2 veces su segundo monto (frente a {{later_sig_share}} en cohortes posteriores) y feb-22 tiene {{feb_vs_typical_new}} el promedio mensual de altas de 2022. Las altas de feb-22 se marcan y se excluyen de tasas de adquisición, correlaciones y tendencias de cohortes. Ventana limpia de flujos: mar-22 → {{window_end}}.
+5. **Sin tolerancia** para "sin cambio": cualquier cambio en el monto pagado cuenta como expansión o contracción.
+6. **La industria es fija** por cliente.
+7. **Unidad de S&M desconocida**: se conserva como viene; las razones de eficiencia son relativas en el tiempo, no un CAC en COP.
+8. El papel de cada grupo de S&M (qué representan Team, Travel y Freelance) es una hipótesis.
+9. **Los valores extremos se conservan**; su influencia se prueba (variantes winsorizadas y medianas).
+10. **Censura a la derecha**: el churn cercano a {{window_end}} puede ser temporal; "sin volver a oct-24" está censurado.
 
 ---
 
-## 7. What we know · suspect · cannot know
+## 5. Anomalías y patrones contraintuitivos (investigados antes de reportarse)
 
-**Know** — the panel is complete and consistent; customers {{active_multiple}} vs MRR {{mrr_multiple}}; new customers per month doubled while New MRR per month did not; the entry ticket stepped down in {{step_month}} in every industry and {{dec_within_share}} of the fall is within industries; the {{window_start}} base kept its ARPA; S&M fell sharply in mid-2023 while acquisition rose; spend and acquisition are not positively associated at any tested lag; recent cohorts retain at least as well early on; {{churn_back_1m}} of observed churn events return the next month; all bridges close.
-
-**Suspect** (to validate) — `amount` is cash collected/billed per month; part of Feb-22 “new” customers are returning pre-existing customers; the {{step_month}} step reflects pricing/packaging/discounting or smaller customers within each industry; acquisition growth in H2-2023 came from channels not in the S&M file, lags beyond three months, or a cheaper entry point; the S&M file was allocated top-down and Freelance was reclassified into Team; small ± adjustments reflect indexation, discounts, prorations or usage components; 2022 first-month spikes are setup fees or prepayments.
-
-**Cannot know** (not in the files; never filled by assumption) — funnel stages (New → Working → Engaged → SQL → Demo → Proposal → Won) and conversion; stage timestamps, speed to lead, response time, deal velocity; lead source and attribution; SDR/AE owner; self-serve vs sales-assisted; pricing, plans, list vs paid price, contract/subscription value, billing frequency; discounts, promotions, credits; churn/downgrade/reactivation reason codes; whether `amount` is invoiced, collected or contracted; S&M unit and allocation rules; customer size or geography; history before {{window_start}} and after {{window_end}}.
-
----
-
-## 8. Questions that emerged (for Finora)
-
-1. What exactly is `amount`: invoiced, collected or contracted MRR? Are bi-monthly, annual or prepaid plans billed upfront?
-2. What changed in {{step_month}}: price list, packaging, a new entry plan, discounts, a new channel or segment?
-3. What is the unit of `S&M_spend`, and how are Team, PayrollExpenses and Freelance defined? Why is Team 12% of the total until {{team_fixed_until}}?
-4. Were there acquisition activities outside this file (partners, referrals, organic, events) in H2-2023?
-5. Are the negative PayrollExpenses reversals of earlier accruals?
-6. Is a zero month followed by a double payment a missed collection, a pause or a billing cycle? Should it count as churn?
-7. Do Feb-22 entrants have contract start dates before 2022?
-8. Which temporary discounts are planned (CFO), and how will they show up in `amount`?
-9. Is there any customer attribute beyond industry (size, plan, city, channel) that could be joined by `ID`?
+1. **`amount` se comporta como cobro mensual, no como MRR contratado.** {{multi_sig_rows}} meses-cliente ({{multi_sig_customers}} clientes) equivalen a 2–12 veces el monto usual del cliente; {{churn_back_1m}} de {{churn_events}} churns observados vuelven al mes siguiente ({{churn_back_any}} en algún momento); el {{exp_mrr_revert}} del MRR de expansión se revierte al mes siguiente; el {{con_mrr_post_spike}} del MRR de contracción es el regreso a lo normal después de un pico de un mes. Ejemplos en el HTML (clientes 14, 40, 516 y 637).
+2. **Arrastre de feb-22** (supuesto 4).
+3. **Escalón del ticket de entrada en {{step_month}}**: desde {{step_month}}, cada mediana mensual del ticket de entrada está por debajo de la mediana de 2022 ({{m0_median_2022}}). Promedio {{m0_mean_2022}} (2022) → {{m0_mean_2024}} (2024); mediana {{m0_median_2022}} → {{m0_median_2024}}.
+4. **Picos del primer mes en 2022**: el {{spike_share_2022}} de las altas de 2022 pagó en M0 más de 1,5 veces su segundo mes ({{spike_share_2023}} en 2023, {{spike_share_2024}} en 2024) → el ticket promedio de 2022 y la retención de ingreso de 2022 basada en M0 están distorsionados. Las métricas robustas achican la caída ({{m1_mean_chg_22_24}} a {{m0_mean_chg_22_24}} según la métrica), pero nunca la invierten.
+5. **Gasto abajo, adquisición arriba**: el S&M total cayó {{sm_drop_abs}} ({{sm_peak_month}} → {{sm_trough_month}}) mientras las altas por mes pasaban de {{new_avg_2022}} (2022) a {{new_avg_2023}} (2023) y {{new_avg_2024}} (2024).
+6. **Correlación negativa en niveles** entre gasto y altas (S&M total, rezago 0: r = {{r_new_sm_l0}}); desaparece en cambios mes a mes (|r| máximo = {{r_mom_absmax}}).
+7. **Archivo de S&M construido de arriba hacia abajo** (participaciones en porcentajes enteros; Team fijo en 12% hasta {{team_fixed_until}}; Freelance → 0 cuando Team salta en {{team_break}}; PayrollExpenses negativo).
+8. **Ajustes pequeños y montos fuera de la grilla**: las expansiones menores a 10% pasaron de {{small_exp_first}} ({{small_half_first}}) a {{small_exp_last}} ({{small_half_last}}); las contracciones, de {{small_con_first}} a {{small_con_last}}. Porcentaje de montos pagados en la grilla de COP 2.100: {{grid_2022h2}} (2022 S2) → {{grid_2024h2}} (2024 S2).
+9. **Concentración arriba**: la cuenta más grande (cliente {{top_account_id}}, {{top_account_industry}}) paga una mediana de {{top_account_median}} al mes, {{top_account_x_median}} la mediana de los meses-cliente; algunos clientes muestran pagos grandes periódicos (por ejemplo, {{periodic_amount}} aproximadamente una vez al año).
+10. **El MRR mensual es ruidoso**: cayó frente al mes anterior en {{mrr_mom_negative_months}} de 33 meses (por ejemplo, {{mrr_jun22_change}} en jun-22) mientras los clientes seguían creciendo; los movimientos brutos ({{gross_movement}}) son {{gross_net_ratio}} el cambio neto ({{net_movement}}).
+11. **Caso CFO: contracción o descuento.** El puente actual no puede distinguir una contracción del cliente de un descuento, ni una expansión real de un descuento que vence. Para separar las tres capas (negocio subyacente, decisión comercial y cobro) se necesitarían seis campos por cliente y mes: `list_mrr`, `recurring_discount`, `temporary_discount`, `temporary_discount_end`, `credits` y `subscription_status` (tarjeta 9.6 del workspace).
 
 ---
 
-## 9. Limitations
+## 6. Hallazgos descriptivos por dominio
 
-- **Short time series.** {{n_months}} months; correlations use n = {{corr_n_min}}–{{corr_n_levels}}. Series are autocorrelated and trending, which inflates level correlations; month-over-month changes are the stricter read.
-- **Multiple testing.** {{n_corr_tests}} correlation tests → about {{n_corr_false_pos}} with p < 0.05 expected by chance.
-- **Semantics of `amount`.** If it is cash rather than contracted MRR, every movement category mixes commercial events with billing timing.
-- **Censoring.** Left (acquisition before {{window_start}} unknown; spillover into Feb-22) and right (recent churn may be temporary; late cohorts have short histories).
-- **Segmentation.** Industry is the only attribute; “within-industry” effects may hide mix effects on unobserved dimensions (size, plan, channel).
-- **S&M data.** Unknown unit, allocation-like construction, definitional break in {{team_break}}, negative payroll months.
-- **No causal identification.** Nothing here separates the effect of spend, price or product from other changes that happened at the same time.
+**Resultado.** Clientes activos {{active_start}} → {{active_end}} ({{active_multiple}}); MRR pagado {{mrr_start}} → {{mrr_end}} ({{mrr_multiple}}); MRR por cliente activo {{arpa_start}} → {{arpa_end}} ({{arpa_change}}). Altas netas positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses (negativas solo en {{net_adds_negative_list}}). Cambio neto anual del MRR: 2022 {{ab_net_2022}}, 2023 {{ab_net_2023}}, 2024 {{ab_net_2024}}.
+
+**Adquisición.** Altas por mes: {{new_avg_2022}} (2022), {{new_avg_2023}} (2023), {{new_avg_2024}} (2024). El ticket de entrada bajó desde {{step_month}}; el {{dec_within_share}} de la caída del promedio ocurre dentro de las industrias.
+
+**Monetización de la base.** Los clientes activos en {{window_start}} conservaron su MRR por cliente ({{base_arpa_start}} → {{base_arpa_end}}). En oct-24, MRR por cliente por cosecha: 2022 {{v2022_arpa_end}}, 2023 {{v2023_arpa_end}}, 2024 {{v2024_arpa_end}}. Las cosechas 2023–24 son {{recent_vintage_customer_share}} de los clientes activos y {{recent_vintage_mrr_share}} del MRR.
+
+**Retención.** Retención de logos al M1: trimestres de 2022 {{m1_logo_2022_min}}–{{m1_logo_2022_max}}; trimestres completos de 2023–24 {{m1_logo_recent_min}}–{{m1_logo_recent_max}}. Retención de logos al M12: {{m12_logo_min}}–{{m12_logo_max}}. Retención de ingreso al M1: trimestres de 2022 ≤ {{rev_m1_2022_max}} (picos en M0); 2023–24 ≥ {{rev_m1_recent_min}}. Base previa: el {{base_logo_end}} sigue pagando en oct-24 y conserva el {{base_rev_end}} de su MRR de ene-22. Churn mensual de logos observado: {{churn_rate_2022}} (2022), {{churn_rate_2023}} (2023), {{churn_rate_2024}} (2024).
+
+**Inversión comercial.** S&M total mensual promedio: 2022 {{sm_avg_2022}}, 2023 {{sm_avg_2023}}, 2024 {{sm_avg_2024}} ({{sm_chg_22_24}} frente a 2022). S&M total por alta: {{cac_sm_2022}} → {{cac_sm_2023}} → {{cac_sm_2024}} ({{total_sm_per_new_customer_chg}}); por COP 1 millón de MRR nuevo: {{sm_per_mrr_2022}} → {{sm_per_mrr_2023}} → {{sm_per_mrr_2024}} ({{total_sm_per_new_mrr_mm_chg}}).
+
+**Gasto y adquisición.** Niveles contra altas: r de {{r_new_levels_min}} a {{r_new_levels_max}} (todas negativas). Niveles contra MRR nuevo: |r| ≤ {{r_mrr_levels_absmax}}. Cambios mes a mes: |r| ≤ {{r_mom_absmax}}, menor p = {{r_mom_minp}}. {{n_corr_sig}} de {{n_corr_tests}} pruebas tienen p < 0,05 ({{n_corr_false_pos}} esperadas solo por azar); las {{n_corr_sig}} son correlaciones negativas en niveles con las altas.
+
+**Industrias.** Participación de Retail en las altas: {{retail_new_share_2022}} (2022) → {{retail_new_share_2023}} (2023) → {{retail_new_share_2024}} (2024); ticket de entrada de Retail en 2024: {{retail_ticket_2024}}. Participación de Restaurantes en el MRR: {{rest_mrr_share_2022}} (dic-22) → {{rest_mrr_share_2024}} (oct-24). El ticket de entrada promedio bajó en {{industries_ticket_fell_22_24}} de 6 industrias entre 2022 y 2024 (la mediana, en {{industries_median_fell_22_24}} de 6); el MRR por cliente activo bajó en {{industries_arpa_fell}} de 6 entre dic-22 y oct-24.
+
+**Mix vs. efecto dentro.** Ticket de entrada promedio 2022 → 2024: {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}). Dentro de las industrias {{dec_within}} ({{dec_within_share}}); mix {{dec_mix}} ({{dec_mix_share}}); intervalo de 90% de la parte "dentro": {{dec_within_ci}}; {{dec_within_share_min}}–{{dec_within_share_max}} entre variantes. Con el mix de 2022, el ticket de 2024 habría sido {{dec_cf}}. Parte "dentro" 2022 → 2023: {{dec23_within_share}}. 2023 → 2024: {{dec34_delta}} (intervalo de 90% del efecto dentro: {{dec34_ci}}).
+
+**Movimientos de MRR.** {{lb_from}} → {{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} de altas + {{lb_expansion_mrr_cop}} de expansión + {{lb_reactivation_mrr_cop}} de reactivación − {{lb_contraction_abs}} de contracción − {{lb_churn_abs}} de churn = {{lb_closing_mrr_cop}} (residuo COP {{lb_check}}).
 
 ---
 
-## 10. Verified claims (assertions in `finora_eda.py`)
+## 7. Lo que sabemos · sospechamos · no podemos saber
 
-Every insight-driven title in the workspace is backed by one of these checks. If the data changes and a statement stops being true, the pipeline stops instead of publishing it.
+**Sabemos**: el panel está completo y es consistente; clientes {{active_multiple}} frente a MRR {{mrr_multiple}}; las altas por mes se duplicaron y el MRR nuevo por mes no; el ticket de entrada bajó en {{step_month}} en todas las industrias y el {{dec_within_share}} de la caída ocurre dentro de ellas; la base de {{window_start}} conservó su MRR por cliente; el S&M cayó con fuerza a mitad de 2023 mientras la adquisición subía; gasto y adquisición no se asocian positivamente en ningún rezago probado; las cohortes recientes retienen igual o mejor al inicio; el {{churn_back_1m}} de los churns observados vuelve al mes siguiente; todos los puentes cuadran.
 
-| Check | Claim | Status |
-|---|---|---|
+**Sospechamos** (por validar): `amount` es el monto cobrado o facturado por mes; parte de las altas de feb-22 son clientes previos que regresan; el escalón de {{step_month}} es consistente con un cambio de precios o empaquetamiento, descuentos o clientes más pequeños dentro de cada industria; el aumento de altas en el segundo semestre de 2023 es consistente con canales fuera del archivo de S&M, rezagos de más de tres meses o un precio de entrada menor; el archivo de S&M se asignó de arriba hacia abajo y Freelance se reclasificó a Team; los ajustes pequeños son consistentes con indexación, descuentos, prorrateos o componentes por uso; los picos del primer mes en 2022 son cargos de instalación o prepagos.
+
+**No podemos saber** (no está en los archivos; nunca se rellena con supuestos): etapas del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won) y su conversión; fechas por etapa, speed to lead, tiempo de respuesta, velocidad de cierre; fuente del lead y atribución; SDR o AE dueño; venta self-serve frente a asistida; precios, planes, precio de lista frente a pagado, valor del contrato o suscripción, frecuencia de facturación; descuentos, promociones y créditos; motivos de churn, downgrade o reactivación; si `amount` es facturado, cobrado o contratado; la unidad y las reglas de asignación del S&M; tamaño o geografía del cliente; la historia antes de {{window_start}} y después de {{window_end}}.
+
+---
+
+## 8. Problemas de datos conocidos (`brain/data/known_quality_issues.yaml`)
+
+| ID | Problema | Estado | Tratamiento |
+|---|---|---|---|
+<!--ISSUES-->
+
+---
+
+## 9. Preguntas que surgieron (para Finora)
+
+Fuente: `brain/business/stakeholder_questions.yaml`.
+
+<!--QUESTIONS-->
+
+---
+
+## 10. Limitaciones
+
+- **Series cortas.** {{n_months}} meses; las correlaciones usan n = {{corr_n_min}}–{{corr_n_levels}}. Las series tienen autocorrelación y tendencia, lo que infla las correlaciones en niveles; los cambios mes a mes son la lectura más estricta.
+- **Pruebas múltiples.** {{n_corr_tests}} pruebas de correlación → cerca de {{n_corr_false_pos}} con p < 0,05 esperadas por azar.
+- **Semántica de `amount`.** Si es cobro y no MRR contratado, cada categoría de movimiento mezcla eventos comerciales con el timing del cobro.
+- **Censura.** A la izquierda (adquisición antes de {{window_start}} desconocida; arrastre hacia feb-22) y a la derecha (el churn reciente puede ser temporal; las cohortes tardías tienen historias cortas).
+- **Segmentación.** La industria es el único atributo; los efectos "dentro de la industria" pueden esconder efectos de mix en dimensiones no observadas (tamaño, plan, canal).
+- **Datos de S&M.** Unidad desconocida, construcción tipo asignación, quiebre de definición en {{team_break}}, meses de nómina negativos.
+- **Sin identificación causal.** Nada aquí separa el efecto del gasto, el precio o el producto de otros cambios que ocurrieron al mismo tiempo.
+
+---
+
+## 11. Afirmaciones verificadas (aserciones en `finora_eda.py`)
+
+Cada título con conclusión del workspace está respaldado por una de estas verificaciones. Si los datos cambian y una afirmación deja de ser cierta, el pipeline se detiene en lugar de publicarla. El registro también se escribe en `brain/evidence/canonical_findings.yaml` con `revision_humana: pendiente`.
+
+| ID | Dominio | Estado | Afirmación | Verificación |
+|---|---|---|---|---|
 <!--CLAIMS-->
 
 ---
 
-## 11. Reproducibility
+## 12. Reproducibilidad
 
-- Command: `python3 finora_eda.py` (optional `--raw-dir`, `--out-dir`).
-- Environment: Python {{py_version}}, pandas {{pandas_version}}, numpy {{numpy_version}}, scipy {{scipy_version}}. Bootstrap seed fixed.
-- Input SHA-256:
+- Comando: `python3 finora_eda.py` (opcional: `--raw-dir`, `--out-dir`).
+- Entorno: Python {{py_version}}, pandas {{pandas_version}}, numpy {{numpy_version}}, scipy {{scipy_version}}, PyYAML. Semilla del bootstrap fija.
+- SHA-256 de las entradas:
   - `Transactions.csv` `{{hash_tx}}`
   - `Industry.csv` `{{hash_ind}}`
   - `S&M_spend.csv` `{{hash_sm}}`

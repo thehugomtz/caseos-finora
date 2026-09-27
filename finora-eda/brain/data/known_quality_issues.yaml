@@ -1,0 +1,83 @@
+# Problemas de calidad e interpretación conocidos.
+# Las cifras NO se escriben aquí: se leen de los facts del pipeline (campo evidencia) para no quedar obsoletas.
+version: 1
+issues:
+  - id: CV-AMOUNT-COBRO
+    titulo: "`amount` se comporta como monto cobrado, no como MRR contractual"
+    estado: Hipótesis
+    descripcion: Hay pagos de 2 a 12 veces el monto usual del cliente, meses en cero seguidos de pagos acumulados y pagos que se revierten al mes siguiente. Los movimientos del puente mezclan cambios del cliente, decisiones comerciales y timing de cobro.
+    evidencia: [multi_sig_rows, multi_sig_customers, churn_back_1m, exp_mrr_revert]
+    afecta: [total_paid_mrr_cop, expansion_mrr_cop, contraction_mrr_cop, churned_customers]
+    tratamiento: Se mantienen las definiciones pedidas y se marca la ambigüedad. El modelo en tres capas (arquitectura §10) es la solución de fondo.
+
+  - id: CV-VENTANA
+    titulo: Ventana limpia de flujos desde mar-22
+    estado: Hecho observado
+    descripcion: Ene-22 está censurado a la izquierda (no sabemos cuándo entraron sus clientes). Feb-22 muestra arrastre de clientes previos que regresan con pagos dobles. Altas, tasas, correlaciones y cohortes usan mar-22 → oct-24.
+    evidencia: [feb_sig_share, later_sig_share, feb_vs_typical_new]
+    afecta: [new_customers, new_mrr_cop, logo_churn_rate, entry_ticket]
+    tratamiento: Ene-22 sin movimientos; feb-22 marcado y excluido de tasas; sombreado común en las gráficas mensuales.
+
+  - id: CV-CHURN-PAUSAS
+    titulo: El churn observado incluye pausas y atrasos
+    estado: Hecho observado
+    descripcion: Una parte grande de los clientes que "hacen churn" vuelve a pagar al mes siguiente, a menudo con un pago acumulado.
+    evidencia: [churn_back_1m, churn_back_any, churn_mrr_back_1m]
+    afecta: [churned_customers, logo_churn_rate, reactivated_customers]
+    tratamiento: Se reporta como churn observado; para proyecciones se necesita churn neto de retornos.
+
+  - id: CV-M0-PICOS-2022
+    titulo: El ticket de entrada de 2022 incluye pagos iniciales grandes
+    estado: Hecho observado
+    descripcion: En 2022, una parte de los clientes nuevos pagó en su primer mes más de 1,5 veces su segundo mes. El promedio de 2022 queda inflado.
+    evidencia: [spike_share_2022, spike_share_2023, spike_share_2024]
+    afecta: [entry_ticket, cohort_revenue_retention, new_mrr_cop]
+    tratamiento: Se muestran variantes robustas (mediana, winsorizado, run-rate temprano).
+
+  - id: CV-OUTLIERS
+    titulo: Montos extremos y concentración en pocas cuentas
+    estado: Hecho observado
+    descripcion: Algunos meses-cliente superan por mucho el límite Q3 + 3·RIC y la mayor cuenta paga decenas de veces la mediana.
+    evidencia: [rows_above_fence, customers_above_fence, top_account_x_median]
+    afecta: [entry_ticket, mrr_per_active_customer_cop]
+    tratamiento: Se conservan (son montos reales) y se prueba su influencia.
+
+  - id: CV-SM-UNIDAD
+    titulo: La unidad del gasto de S&M no está documentada
+    estado: Hecho observado
+    descripcion: Los valores vienen como texto con "$" y tres decimales, sin factor de escala. No se pueden convertir a COP.
+    evidencia: []
+    afecta: [total_sm_spend, sm_per_new_customer, sm_per_new_mrr_mm]
+    tratamiento: Se reportan en unidades (u); las eficiencias son comparables en el tiempo, no un CAC en pesos.
+
+  - id: CV-SM-ASIGNACION
+    titulo: El archivo de S&M parece construido de arriba hacia abajo
+    estado: Hipótesis
+    descripcion: Durante meses cada rubro es un porcentaje entero del total y Team es exactamente 12% del total hasta may-23.
+    evidencia: [whole_pct_months, team_fixed_months, team_fixed_until]
+    afecta: [total_sm_spend, sales_capacity_spend]
+    tratamiento: Los rubros no son mediciones independientes antes de jun-23; se leen como asignación.
+
+  - id: CV-PAYROLL-NEG
+    titulo: PayrollExpenses es negativo en algunos meses
+    estado: Hecho observado
+    descripcion: Después de jun-23 se comporta como partida de ajuste.
+    evidencia: [payroll_neg_n, payroll_neg_list]
+    afecta: [total_sm_spend, sales_capacity_spend]
+    tratamiento: Se incluye en el total y se ofrece la serie de sensibilidad sin Payroll.
+
+  - id: CV-FREELANCE-CERO
+    titulo: Freelance en cero desde may-23
+    estado: Hecho observado
+    descripcion: Coincide con el salto de Team; podría ser una reclasificación.
+    evidencia: [freelance_zero_from, freelance_exceptions]
+    afecta: [enablement_spend]
+    tratamiento: Se conserva; la lectura de reclasificación es hipótesis.
+
+  - id: CV-SIN-FUNNEL
+    titulo: No hay funnel, atribución, precios ni descuentos
+    estado: No evaluable
+    descripcion: Las fuentes no traen etapas del funnel, origen del lead, dueño comercial, precios de lista, descuentos ni motivos de churn.
+    evidencia: []
+    afecta: []
+    tratamiento: Toda hipótesis que los requiera se marca No evaluable.

@@ -72,9 +72,9 @@ SM_SNAKE = {"PaidMedia": "paid_media", "Travel": "travel", "PublicidadNoWeb": "p
             "Freelance": "freelance", "SoftwareTools": "software_tools", "Team": "team",
             "PayrollExpenses": "payroll_expenses"}
 
-INDUSTRY_EN = {"Restaurantes": "Restaurants", "Producción": "Manufacturing / production",
-               "Retail": "Retail", "Tecnología": "Technology",
-               "Servicios profesionales": "Professional services", "Salud": "Health"}
+BRAIN = HERE / "brain"
+MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+MINUS = "−"
 
 
 # ----------------------------------------------------------------------------------
@@ -86,15 +86,19 @@ def ascii_key(s: str) -> str:
 
 
 def month_label(p: pd.Period) -> str:
-    return p.strftime("%b-%y")
+    """Etiqueta de mes en español: ene-22."""
+    p = pd.Period(p, freq="M")
+    return f"{MESES[p.month - 1]}-{p.strftime('%y')}"
 
 
 def half_label(p: pd.Period) -> str:
-    return f"{p.year} H{1 if p.month <= 6 else 2}"
+    """Semestre: 2022 S1."""
+    return f"{p.year} S{1 if p.month <= 6 else 2}"
 
 
 def quarter_label(p: pd.Period) -> str:
-    return f"{p.year} Q{p.quarter}"
+    """Trimestre: 2022 T1."""
+    return f"{p.year} T{p.quarter}"
 
 
 def safe_div(a, b):
@@ -135,29 +139,51 @@ def tidy(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+# ---- formatos es-CO: punto de miles, coma decimal, signo menos tipográfico
+def _n(x, d=0) -> str:
+    s = f"{abs(x):,.{d}f}".replace(",", "§").replace(".", ",").replace("§", ".")
+    return (MINUS if x < 0 and float(s.replace(".", "").replace(",", ".")) != 0 else "") + s
+
+
 def fmt_int(x) -> str:
-    return f"{int(round(x)):,}"
+    return _n(round(x), 0)
+
+
+def fmt_num(x, d=1) -> str:
+    return _n(x, d)
 
 
 def fmt_pct(x, d=1) -> str:
-    return f"{x * 100:.{d}f}%"
+    return _n(x * 100, d) + "%"
+
+
+def fmt_pct_signed(x, d=0) -> str:
+    return ("+" if x >= 0 else "") + fmt_pct(x, d)
 
 
 def fmt_cop(x, d=1) -> str:
-    """Compact COP: COP 97.0M / COP 57.8K."""
+    """Montos en texto con palabras (sin K/M ambiguas): COP 97,0 millones · COP 57,8 mil."""
     a = abs(x)
-    sign = "-" if x < 0 else ""
+    sign = MINUS if x < 0 else ""
     if a >= 1e9:
-        return f"{sign}COP {a / 1e9:.{d}f}B"
+        return f"{sign}COP {_n(a / 1e9, d)} mil millones"
     if a >= 1e6:
-        return f"{sign}COP {a / 1e6:.{d}f}M"
+        return f"{sign}COP {_n(a / 1e6, d)} millones"
     if a >= 1e3:
-        return f"{sign}COP {a / 1e3:.{d}f}K"
-    return f"{sign}COP {a:,.0f}"
+        return f"{sign}COP {_n(a / 1e3, d)} mil"
+    return f"{sign}COP {_n(a, 0)}"
 
 
 def fmt_x(x, d=1) -> str:
-    return f"{x:.{d}f}×"
+    return _n(x, d) + "×"
+
+
+def fmt_u(x, d=2) -> str:
+    return _n(x, d) + " u"
+
+
+def fmt_r(x, d=2) -> str:
+    return ("+" if x >= 0 else MINUS) + _n(abs(x), d)
 
 
 # ----------------------------------------------------------------------------------
@@ -233,7 +259,7 @@ def audit_transactions(r: dict):
         "unparseable_date": int(t.date.isna().sum()),
         "unparseable_amount": int(t.amount.isna().sum()),
         "empty_strings": {c: int((df[c] == "").sum()) for c in df.columns},
-        "date_format": "M/D/YYYY (month-end day, 1- or 2-digit month)",
+        "date_format": "M/D/AAAA (último día del mes; mes con 1 o 2 dígitos)",
         "date_format_violations": int((~fmt_mask).sum()),
         "all_dates_month_end": bool((t.date == t.date + pd.offsets.MonthEnd(0)).all()),
         "customers": int(t.customer_id.nunique()),
@@ -296,8 +322,8 @@ def audit_sm(r: dict):
         "first_month": str(sm.month.min()), "last_month": str(sm.month.max()),
         "duplicate_months": int(sm.month.duplicated().sum()),
         "missing_values": int((df == "").sum().sum()),
-        "value_format": "text with '$' prefix, '.' decimal separator, 3 decimals; negatives as '-$0.016'",
-        "unit": "undocumented (no scale factor provided; not convertible to COP)",
+        "value_format": "texto con prefijo '$', punto decimal y 3 decimales; negativos como '-$0.016'",
+        "unit": "no documentada (sin factor de escala; no convertible a COP)",
         "components": comp,
         "team_share_fixed_12pct_months": int(team_fixed.sum()),
         "team_share_fixed_until": str(sm.loc[team_fixed, "month"].max()),
@@ -562,8 +588,8 @@ def build_monthly(ar: dict, sm: pd.DataFrame, clean_start: int):
 # 4 · Lag relationships (association only, never attribution)
 # ----------------------------------------------------------------------------------
 def lag_correlations(m: pd.DataFrame, clean_start: int, include_spillover: bool = False):
-    spend = {"Paid Media": m.paid_media, "Demand Gen": m.demand_gen_spend, "Total S&M": m.total_sm_spend}
-    outcome = {"New customers": m.new_customers, "New MRR": m.new_mrr_cop}
+    spend = {"Paid Media": m.paid_media, "Generación de demanda": m.demand_gen_spend, "S&M total": m.total_sm_spend}
+    outcome = {"Altas": m.new_customers, "MRR nuevo": m.new_mrr_cop}
     start = 1 if include_spillover else clean_start
     T = len(m)
     rows = []
@@ -774,9 +800,9 @@ def decomposition(nc: pd.DataFrame, order: list[str]):
     out = {"winsor_cap_cop": float(cap)}
     periods = {"2022": clean[clean.year == 2022], "2023": clean[clean.year == 2023], "2024": clean[clean.year == 2024]}
     comparisons = [("2022", "2023"), ("2023", "2024"), ("2022", "2024")]
-    variants = {"m0_cop": "Observed first-month MRR (M0) · primary",
-                "m0_winsor_cop": "M0 winsorised at P99",
-                "early_run_rate_cop": "Early run-rate (median of positive M0–M2)"}
+    variants = {"m0_cop": "Ticket de entrada observado (M0) · principal",
+                "m0_winsor_cop": "M0 winsorizado en P99",
+                "early_run_rate_cop": "Run-rate temprano (mediana de M0–M2 positivos)"}
     main, details, robust = {}, {}, []
     for a, b in comparisons:
         for v, vlabel in variants.items():
@@ -872,7 +898,7 @@ def cohorts(ar: dict, clean_start: int):
         mask = (cy == y) & (first >= clean_start)
         logo, rev, size, arpu = curve(mask, with_arpu=True)
         kmax = int((size > 0).sum())
-        yearly.append({"cohort": f"{y}" + (" (Mar–Dec)" if y == 2022 else (" (Jan–Oct)" if y == 2024 else "")),
+        yearly.append({"cohort": f"{y}" + (" (mar–dic)" if y == 2022 else (" (ene–oct)" if y == 2024 else "")),
                        "size": int(mask.sum()), "logo": logo[:kmax].tolist(), "revenue": rev[:kmax].tolist(),
                        "arpu": arpu[:kmax].tolist(), "observable": size[:kmax].tolist()})
     # separately flagged groups
@@ -927,9 +953,9 @@ def movement_diagnostics(ar: dict, m: pd.DataFrame):
 
     def bucket(g):
         if np.isnan(g):
-            return "Not back by Oct-24"
+            return "Sin volver a oct-24"
         g = int(g)
-        return "1 month" if g == 1 else ("2 months" if g == 2 else ("3–5 months" if g <= 5 else "6+ months"))
+        return "1 mes" if g == 1 else ("2 meses" if g == 2 else ("3–5 meses" if g <= 5 else "6+ meses"))
     ev["return_bucket"] = ev.months_to_return.map(bucket)
     by_year = ev.groupby(["year", "return_bucket"]).size().unstack(fill_value=0)
     exp_rev = ar["exp_mrr"][:, 1:-1]
@@ -1100,8 +1126,10 @@ def main():
 
     facts, raw_facts = build_facts(ctx)
     claims = check_claims(ctx, raw_facts)
-    payload = build_payload(ctx, facts, claims)
-    render_outputs(ctx, payload, facts, claims)
+    brain = load_brain()
+    validate_brain(brain, claims, facts)
+    payload = build_payload(ctx, facts, claims, brain)
+    render_outputs(ctx, payload, facts, claims, brain)
     return ctx
 
 
@@ -1111,14 +1139,16 @@ def main():
 # Hand-picked, clearly labelled illustrations of payment-timing patterns (prevalence is
 # measured separately; these are NOT a representative sample).
 EXAMPLE_CUSTOMERS = [
-    (14, "Double amount in May-22, zero in Jun-22, then back to the prior amount"),
-    (40, "Four empty months, then ~5× the usual amount in Dec-22"),
-    (637, "Payments every other month at ~2× the later monthly amount"),
-    (516, "The same large amount ({amt}) in Apr-22, Apr-23 and Jun-24, little in between"),
+    (14, "Monto doble en may-22, cero en jun-22 y regreso al monto anterior"),
+    (40, "Cuatro meses sin pago y luego ~5 veces el monto usual en dic-22"),
+    (637, "Pagos cada dos meses por ~2 veces el monto mensual posterior"),
+    (516, "El mismo monto grande ({amt}) en abr-22, abr-23 y jun-24, casi nada entre medio"),
 ]
 PRICE_BANDS = [0, 15_000, 30_000, 45_000, 60_000, 75_000, 100_000, 150_000, np.inf]
-PRICE_BAND_LABELS = ["<15K", "15–30K", "30–45K", "45–60K", "60–75K", "75–100K", "100–150K", "≥150K"]
+PRICE_BAND_LABELS = ["<15 mil", "15–30 mil", "30–45 mil", "45–60 mil", "60–75 mil", "75–100 mil", "100–150 mil", "≥150 mil"]
 AMOUNT_BINS = [1e3, 2e3, 5e3, 1e4, 2e4, 5e4, 1e5, 2e5, 5e5, 1e6, 2e6, 5e6, 1e7]
+VINT_BASE, VINT_FEB = "Base previa (activos en ene-22)", "Altas de feb-22 (marcadas)"
+VINT_2022, VINT_2023, VINT_2024 = "Cosecha 2022 (mar–dic)", "Cosecha 2023", "Cosecha 2024"
 
 
 def extra_views(ctx: dict) -> dict:
@@ -1153,8 +1183,8 @@ def extra_views(ctx: dict) -> dict:
     # ARPA by acquisition vintage (calendar time)
     first = ar["first_idx"]
     years = np.array([months[f].year for f in first])
-    groups = {"Base (active Jan-22)": first == 0, "Feb-22 entries (flagged)": first == 1,
-              "2022 (Mar–Dec)": (first >= cs) & (years == 2022), "2023": years == 2023, "2024": years == 2024}
+    groups = {VINT_BASE: first == 0, VINT_FEB: first == 1,
+              VINT_2022: (first >= cs) & (years == 2022), VINT_2023: years == 2023, VINT_2024: years == 2024}
     vrows = []
     for gname, mask in groups.items():
         act = ar["pos"][mask].sum(0)
@@ -1291,7 +1321,7 @@ def build_facts(ctx: dict):
     arpa_chg = last.mrr_per_active_customer_cop / first.mrr_per_active_customer_cop - 1
     put("arpa_start", first.mrr_per_active_customer_cop, fmt_cop(first.mrr_per_active_customer_cop))
     put("arpa_end", last.mrr_per_active_customer_cop, fmt_cop(last.mrr_per_active_customer_cop))
-    put("arpa_change", arpa_chg, fmt_pct(arpa_chg, 0).replace("-", "−"))
+    put("arpa_change", arpa_chg, fmt_pct(arpa_chg, 0))
     put("arpa_change_abs", -arpa_chg, fmt_pct(-arpa_chg, 0))
     nm = mm.iloc[1:]
     neg = nm[nm.net_customer_adds < 0]
@@ -1301,18 +1331,18 @@ def build_facts(ctx: dict):
     put("months_with_flows", len(nm), str(len(nm)))
     for y in ["2022", "2023", "2024"]:
         g = clean[yr == y]
-        put(f"new_avg_{y}", g.new_customers.mean(), f"{g.new_customers.mean():.0f}")
+        put(f"new_avg_{y}", g.new_customers.mean(), fmt_int(g.new_customers.mean()))
         put(f"new_mrr_avg_{y}", g.new_mrr_cop.mean(), fmt_cop(g.new_mrr_cop.mean()))
         put(f"churn_rate_{y}", g.churned_customers.sum() / mm.active_customers.shift(1)[g.index].sum(),
             fmt_pct(g.churned_customers.sum() / mm.active_customers.shift(1)[g.index].sum()))
-        put(f"sm_avg_{y}", g.total_sm_spend.mean(), f"{g.total_sm_spend.mean():.2f} {SPEND_UNIT}")
-        put(f"pm_avg_{y}", g.paid_media.mean(), f"{g.paid_media.mean():.2f} {SPEND_UNIT}")
-        put(f"netadds_avg_{y}", g.net_customer_adds.mean(), f"{g.net_customer_adds.mean():.0f}")
+        put(f"sm_avg_{y}", g.total_sm_spend.mean(), fmt_u(g.total_sm_spend.mean(), 2))
+        put(f"pm_avg_{y}", g.paid_media.mean(), fmt_u(g.paid_media.mean(), 2))
+        put(f"netadds_avg_{y}", g.net_customer_adds.mean(), fmt_int(g.net_customer_adds.mean()))
     put("new_growth_multiple", R["new_avg_2024"] / R["new_avg_2022"], fmt_x(R["new_avg_2024"] / R["new_avg_2022"]))
     jun = mm[mm.month == "2022-06"].iloc[0]
     may = mm[mm.month == "2022-05"].iloc[0]
     put("mrr_jun22_change", jun.total_paid_mrr_cop / may.total_paid_mrr_cop - 1,
-        fmt_pct(jun.total_paid_mrr_cop / may.total_paid_mrr_cop - 1, 0).replace("-", "−"))
+        fmt_pct(jun.total_paid_mrr_cop / may.total_paid_mrr_cop - 1, 0))
     mom = mm.total_paid_mrr_cop.pct_change().iloc[1:]
     put("mrr_mom_negative_months", int((mom < 0).sum()), str(int((mom < 0).sum())))
 
@@ -1330,16 +1360,17 @@ def build_facts(ctx: dict):
     for key, col in [("m0_mean", "m0_mean_cop"), ("m0_median", "m0_median_cop"), ("err_mean", "early_run_rate_mean_cop"),
                      ("m1_mean", "m1_mean_cop"), ("m0_winsor", "m0_winsor_mean_cop")]:
         ch = tb.loc[2024, col] / tb.loc[2022, col] - 1
-        put(f"{key}_chg_22_24", ch, fmt_pct(ch, 0).replace("-", "−"))
+        put(f"{key}_chg_22_24", ch, fmt_pct(ch, 0))
     va = ev["vintage_arpa"]
     def varpa(v, m):
         return float(va[(va.vintage == v) & (va.month == m)].arpa_cop.iloc[0])
-    put("base_arpa_start", varpa("Base (active Jan-22)", str(months[0])), fmt_cop(varpa("Base (active Jan-22)", str(months[0]))))
-    put("base_arpa_end", varpa("Base (active Jan-22)", str(months[-1])), fmt_cop(varpa("Base (active Jan-22)", str(months[-1]))))
-    for v, k in [("2022 (Mar–Dec)", "v2022"), ("2023", "v2023"), ("2024", "v2024")]:
+    put("base_arpa_start", varpa(VINT_BASE, str(months[0])), fmt_cop(varpa(VINT_BASE, str(months[0]))))
+    put("base_arpa_end", varpa(VINT_BASE, str(months[-1])), fmt_cop(varpa(VINT_BASE, str(months[-1]))))
+    put("base_arpa_change", R["base_arpa_end"] / R["base_arpa_start"] - 1, fmt_pct_signed(R["base_arpa_end"] / R["base_arpa_start"] - 1, 0))
+    for v, k in [(VINT_2022, "v2022"), (VINT_2023, "v2023"), (VINT_2024, "v2024")]:
         put(f"{k}_arpa_end", varpa(v, str(months[-1])), fmt_cop(varpa(v, str(months[-1]))))
     oct_ = va[va.month == str(months[-1])].set_index("vintage")
-    recent = oct_.loc[["2023", "2024"]]
+    recent = oct_.loc[[VINT_2023, VINT_2024]]
     put("recent_vintage_customer_share", recent.active_customers.sum() / oct_.active_customers.sum(),
         fmt_pct(recent.active_customers.sum() / oct_.active_customers.sum(), 0))
     put("recent_vintage_mrr_share", recent.mrr_cop.sum() / oct_.mrr_cop.sum(), fmt_pct(recent.mrr_cop.sum() / oct_.mrr_cop.sum(), 0))
@@ -1385,8 +1416,10 @@ def build_facts(ctx: dict):
     put("small_half_first", h0, h0)
     put("small_half_last", h1, h1)
     gh = mov["grid_share_half"]
-    put("grid_2022h2", gh["2022 H2"], fmt_pct(gh["2022 H2"], 0))
-    put("grid_2024h2", gh["2024 H2"], fmt_pct(gh["2024 H2"], 0))
+    put("grid_2022h2", gh["2022 S2"], fmt_pct(gh["2022 S2"], 0))
+    put("grid_2024h2", gh["2024 S2"], fmt_pct(gh["2024 S2"], 0))
+    put("offgrid_2022s2", 1 - gh["2022 S2"], fmt_pct(1 - gh["2022 S2"], 0))
+    put("offgrid_2024s2", 1 - gh["2024 S2"], fmt_pct(1 - gh["2024 S2"], 0))
     put("grid_last", mov["grid_share_monthly"][-1], fmt_pct(mov["grid_share_monthly"][-1], 0))
 
     # S&M
@@ -1401,8 +1434,8 @@ def build_facts(ctx: dict):
     after = [str(m) for m in months if str(m) >= fz[0]]
     exceptions = [m for m in after if m not in fz]
     put("freelance_months_since", len(after), str(len(after)))
-    put("freelance_exceptions", ", ".join(month_label(pd.Period(m)) for m in exceptions) or "none",
-        ", ".join(month_label(pd.Period(m)) for m in exceptions) or "none")
+    put("freelance_exceptions", ", ".join(month_label(pd.Period(m)) for m in exceptions) or "ninguna",
+        ", ".join(month_label(pd.Period(m)) for m in exceptions) or "ninguna")
     pn = comp["PayrollExpenses"]["negative_months"]
     put("payroll_neg_n", len(pn), str(len(pn)))
     put("payroll_neg_list", ", ".join(month_label(pd.Period(m)) for m in pn), ", ".join(month_label(pd.Period(m)) for m in pn))
@@ -1411,39 +1444,39 @@ def build_facts(ctx: dict):
     trough_i = int(s.loc[(s.index > peak_i) & (s.month <= "2023-12"), "total_sm_spend"].idxmin())
     put("sm_peak_month", s.month[peak_i], month_label(pd.Period(s.month[peak_i])))
     put("sm_trough_month", s.month[trough_i], month_label(pd.Period(s.month[trough_i])))
-    put("sm_peak", s.total_sm_spend[peak_i], f"{s.total_sm_spend[peak_i]:.2f} {SPEND_UNIT}")
-    put("sm_trough", s.total_sm_spend[trough_i], f"{s.total_sm_spend[trough_i]:.2f} {SPEND_UNIT}")
+    put("sm_peak", s.total_sm_spend[peak_i], fmt_u(s.total_sm_spend[peak_i], 2))
+    put("sm_trough", s.total_sm_spend[trough_i], fmt_u(s.total_sm_spend[trough_i], 2))
     put("sm_drop", s.total_sm_spend[trough_i] / s.total_sm_spend[peak_i] - 1,
-        fmt_pct(s.total_sm_spend[trough_i] / s.total_sm_spend[peak_i] - 1, 0).replace("-", "−"))
+        fmt_pct(s.total_sm_spend[trough_i] / s.total_sm_spend[peak_i] - 1, 0))
     pm_peak_i = int(s.loc[s.month.str[:4] == "2023", "paid_media"].idxmax())
     pm_trough_i = int(s.loc[(s.index > pm_peak_i) & (s.month <= "2023-12"), "paid_media"].idxmin())
     put("pm_drop", s.paid_media[pm_trough_i] / s.paid_media[pm_peak_i] - 1,
-        fmt_pct(s.paid_media[pm_trough_i] / s.paid_media[pm_peak_i] - 1, 0).replace("-", "−"))
+        fmt_pct(s.paid_media[pm_trough_i] / s.paid_media[pm_peak_i] - 1, 0))
     put("pm_trough_month", s.month[pm_trough_i], month_label(pd.Period(s.month[pm_trough_i])))
-    put("sm_chg_22_24", R["sm_avg_2024"] / R["sm_avg_2022"] - 1, fmt_pct(R["sm_avg_2024"] / R["sm_avg_2022"] - 1, 0).replace("-", "−"))
+    put("sm_chg_22_24", R["sm_avg_2024"] / R["sm_avg_2022"] - 1, fmt_pct(R["sm_avg_2024"] / R["sm_avg_2022"] - 1, 0))
     eb = ev["efficiency_by_year"].set_index("year")
     for y in [2022, 2023, 2024]:
-        put(f"cac_sm_{y}", eb.loc[y, "total_sm_per_new_customer"], f"{eb.loc[y, 'total_sm_per_new_customer']:.3f} {SPEND_UNIT}")
-        put(f"cac_dg_{y}", eb.loc[y, "demand_gen_per_new_customer"], f"{eb.loc[y, 'demand_gen_per_new_customer']:.3f} {SPEND_UNIT}")
-        put(f"cac_pm_{y}", eb.loc[y, "paid_media_per_new_customer"], f"{eb.loc[y, 'paid_media_per_new_customer']:.3f} {SPEND_UNIT}")
-        put(f"sm_per_mrr_{y}", eb.loc[y, "total_sm_per_new_mrr_mm"], f"{eb.loc[y, 'total_sm_per_new_mrr_mm']:.2f} {SPEND_UNIT}")
+        put(f"cac_sm_{y}", eb.loc[y, "total_sm_per_new_customer"], fmt_u(eb.loc[y, "total_sm_per_new_customer"], 3))
+        put(f"cac_dg_{y}", eb.loc[y, "demand_gen_per_new_customer"], fmt_u(eb.loc[y, "demand_gen_per_new_customer"], 3))
+        put(f"cac_pm_{y}", eb.loc[y, "paid_media_per_new_customer"], fmt_u(eb.loc[y, "paid_media_per_new_customer"], 3))
+        put(f"sm_per_mrr_{y}", eb.loc[y, "total_sm_per_new_mrr_mm"], fmt_u(eb.loc[y, "total_sm_per_new_mrr_mm"], 2))
     for k in ["total_sm_per_new_customer", "total_sm_per_new_mrr_mm", "paid_media_per_new_customer", "paid_media_per_new_mrr_mm",
               "demand_gen_per_new_customer", "demand_gen_per_new_mrr_mm"]:
         ch = eb.loc[2024, k] / eb.loc[2022, k] - 1
-        put(f"{k}_chg", ch, fmt_pct(ch, 0).replace("-", "−"))
+        put(f"{k}_chg", ch, fmt_pct(ch, 0))
 
     # relationships
-    lv = corr[(corr["transform"] == "levels") & (corr.outcome == "New customers") & (corr.lag_months == 0)].set_index("spend")
-    for sname, key in [("Paid Media", "pm"), ("Demand Gen", "dg"), ("Total S&M", "sm")]:
-        put(f"r_new_{key}_l0", lv.loc[sname, "pearson_r"], f"{lv.loc[sname, 'pearson_r']:+.2f}".replace("-", "−"))
-    lvl_new = corr[(corr["transform"] == "levels") & (corr.outcome == "New customers")]
-    lvl_mrr = corr[(corr["transform"] == "levels") & (corr.outcome == "New MRR")]
+    lv = corr[(corr["transform"] == "levels") & (corr.outcome == "Altas") & (corr.lag_months == 0)].set_index("spend")
+    for sname, key in [("Paid Media", "pm"), ("Generación de demanda", "dg"), ("S&M total", "sm")]:
+        put(f"r_new_{key}_l0", lv.loc[sname, "pearson_r"], fmt_r(lv.loc[sname, "pearson_r"]))
+    lvl_new = corr[(corr["transform"] == "levels") & (corr.outcome == "Altas")]
+    lvl_mrr = corr[(corr["transform"] == "levels") & (corr.outcome == "MRR nuevo")]
     mom = corr[corr["transform"] == "mom_change"]
-    put("r_new_levels_min", lvl_new.pearson_r.min(), f"{lvl_new.pearson_r.min():+.2f}".replace("-", "−"))
-    put("r_new_levels_max", lvl_new.pearson_r.max(), f"{lvl_new.pearson_r.max():+.2f}".replace("-", "−"))
-    put("r_mrr_levels_absmax", lvl_mrr.pearson_r.abs().max(), f"{lvl_mrr.pearson_r.abs().max():.2f}")
-    put("r_mom_absmax", mom.pearson_r.abs().max(), f"{mom.pearson_r.abs().max():.2f}")
-    put("r_mom_minp", mom.pearson_p.min(), f"{mom.pearson_p.min():.2f}")
+    put("r_new_levels_min", lvl_new.pearson_r.min(), fmt_r(lvl_new.pearson_r.min()))
+    put("r_new_levels_max", lvl_new.pearson_r.max(), fmt_r(lvl_new.pearson_r.max()))
+    put("r_mrr_levels_absmax", lvl_mrr.pearson_r.abs().max(), fmt_num(lvl_mrr.pearson_r.abs().max(), 2))
+    put("r_mom_absmax", mom.pearson_r.abs().max(), fmt_num(mom.pearson_r.abs().max(), 2))
+    put("r_mom_minp", mom.pearson_p.min(), fmt_num(mom.pearson_p.min(), 2))
     put("corr_n_levels", int(corr[corr["transform"] == "levels"].n.max()), str(int(corr[corr["transform"] == "levels"].n.max())))
     put("corr_n_min", int(corr.n.min()), str(int(corr.n.min())))
 
@@ -1457,6 +1490,14 @@ def build_facts(ctx: dict):
     put("retail_ticket_2024", iv(2024, "Retail", "new_mrr_per_new_customer_cop"), fmt_cop(iv(2024, "Retail", "new_mrr_per_new_customer_cop")))
     put("rest_mrr_share_2022", iv(2022, "Restaurantes", "share_mrr_end"), fmt_pct(iv(2022, "Restaurantes", "share_mrr_end"), 0))
     put("rest_mrr_share_2024", iv(2024, "Restaurantes", "share_mrr_end"), fmt_pct(iv(2024, "Restaurantes", "share_mrr_end"), 0))
+    put("retail_active_share_2022", iv(2022, "Retail", "share_active_end"), fmt_pct(iv(2022, "Retail", "share_active_end"), 1))
+    put("retail_active_share_2024", iv(2024, "Retail", "share_active_end"), fmt_pct(iv(2024, "Retail", "share_active_end"), 1))
+    rp = [iv(y, "Restaurantes", "share_new_mrr") + iv(y, "Producción", "share_new_mrr") for y in (2022, 2023, 2024)]
+    put("restprod_new_mrr_min", min(rp), fmt_pct(min(rp), 0))
+    R["rest_is_top_mrr_2024"] = iy[iy.year == 2024].sort_values("share_mrr_end").industry.iloc[-1] == "Restaurantes"
+    arpa_end = iy.pivot(index="industry", columns="year", values="arpa_end_cop")
+    R["industries_arpa_fell"] = int((arpa_end[2024] < arpa_end[2022]).sum())
+    F["industries_arpa_fell"] = str(R["industries_arpa_fell"])
     tick = iy.pivot(index="industry", columns="year", values="new_mrr_per_new_customer_cop")
     R["industries_ticket_fell_22_24"] = int((tick[2024] < tick[2022]).sum())
     F["industries_ticket_fell_22_24"] = str(R["industries_ticket_fell_22_24"])
@@ -1470,10 +1511,10 @@ def build_facts(ctx: dict):
     d = dec["main"]["2022_2024"]
     put("dec_a0", d["A0"], fmt_cop(d["A0"]))
     put("dec_a1", d["A1"], fmt_cop(d["A1"]))
-    put("dec_delta", d["delta"], fmt_cop(d["delta"]).replace("-", "−"))
-    put("dec_delta_pct", d["delta"] / d["A0"], fmt_pct(d["delta"] / d["A0"], 0).replace("-", "−"))
-    put("dec_mix", d["mix"], fmt_cop(d["mix"]).replace("-", "−"))
-    put("dec_within", d["within"], fmt_cop(d["within"]).replace("-", "−"))
+    put("dec_delta", d["delta"], fmt_cop(d["delta"]))
+    put("dec_delta_pct", d["delta"] / d["A0"], fmt_pct(d["delta"] / d["A0"], 0))
+    put("dec_mix", d["mix"], fmt_cop(d["mix"]))
+    put("dec_within", d["within"], fmt_cop(d["within"]))
     put("dec_within_share", d["within_share"], fmt_pct(d["within_share"], 0))
     put("dec_mix_share", d["mix_share"], fmt_pct(d["mix_share"], 0))
     put("dec_within_ci", (d["within_share_ci90_lo"], d["within_share_ci90_hi"]),
@@ -1488,13 +1529,13 @@ def build_facts(ctx: dict):
     d34 = dec["main"]["2023_2024"]
     put("dec34_delta", d34["delta"], fmt_cop(d34["delta"]))
     put("dec34_ci", (d34["within_ci90_lo"], d34["within_ci90_hi"]),
-        f"{fmt_cop(d34['within_ci90_lo'])} to {fmt_cop(d34['within_ci90_hi'])}".replace("-", "−"))
+        f"{fmt_cop(d34['within_ci90_lo'])} a {fmt_cop(d34['within_ci90_hi'])}")
     put("dec_n0", d["n0"], fmt_int(d["n0"]))
     put("dec_n1", d["n1"], fmt_int(d["n1"]))
     put("winsor_cap", dec["winsor_cap_cop"], fmt_cop(dec["winsor_cap_cop"]))
     evo = dec["evolution"].set_index("half")
-    put("evo_2022h2", evo.loc["2022 H2", "mean_m0_cop"], fmt_cop(evo.loc["2022 H2", "mean_m0_cop"]))
-    put("evo_2023h1", evo.loc["2023 H1", "mean_m0_cop"], fmt_cop(evo.loc["2023 H1", "mean_m0_cop"]))
+    put("evo_2022h2", evo.loc["2022 S2", "mean_m0_cop"], fmt_cop(evo.loc["2022 S2", "mean_m0_cop"]))
+    put("evo_2023h1", evo.loc["2023 S1", "mean_m0_cop"], fmt_cop(evo.loc["2023 S1", "mean_m0_cop"]))
 
     # cohorts
     sq = coh["summary"].set_index("cohort")
@@ -1520,9 +1561,9 @@ def build_facts(ctx: dict):
     put("lb_to", lb["to_month"], month_label(pd.Period(lb["to_month"])))
     for k in ["opening_mrr_cop", "closing_mrr_cop", "new_mrr_cop", "expansion_mrr_cop", "reactivation_mrr_cop",
               "contraction_mrr_cop", "churned_mrr_cop", "net_change_cop"]:
-        put(f"lb_{k}", lb[k], fmt_cop(lb[k]).replace("-", "−"))
-    put("lb_check", lb["check_diff_cop"], f"{abs(lb['check_diff_cop']):.2f}")
-    put("bridge_max_diff", float(mm.mrr_bridge_diff_cop.iloc[1:].abs().max()), f"{mm.mrr_bridge_diff_cop.iloc[1:].abs().max():.6f}")
+        put(f"lb_{k}", lb[k], fmt_cop(lb[k]))
+    put("lb_check", lb["check_diff_cop"], fmt_num(abs(lb["check_diff_cop"]), 2))
+    put("bridge_max_diff", float(mm.mrr_bridge_diff_cop.iloc[1:].abs().max()), fmt_num(mm.mrr_bridge_diff_cop.iloc[1:].abs().max(), 2))
     ab = ev["annual_bridge"].set_index("year")
     for y in [2022, 2023, 2024]:
         put(f"ab_net_{y}", ab.loc[y, "net_change_cop"], fmt_cop(ab.loc[y, "net_change_cop"]))
@@ -1535,18 +1576,18 @@ def build_facts(ctx: dict):
         put(key, ctx["raw"][k]["sha256"], ctx["raw"][k]["sha256"])
     n_corr = len(corr)
     put("n_corr_tests", n_corr, str(n_corr))
-    put("n_corr_false_pos", n_corr * 0.05, f"{n_corr * 0.05:.1f}")
+    put("n_corr_false_pos", n_corr * 0.05, fmt_num(n_corr * 0.05, 1))
     sig = corr[corr.pearson_p < 0.05]
     put("n_corr_sig", len(sig), str(len(sig)))
-    put("n_corr_sig_levels_new", int(((corr["transform"] == "levels") & (corr.outcome == "New customers") & (corr.pearson_p < 0.05)).sum()),
-        str(int(((corr["transform"] == "levels") & (corr.outcome == "New customers") & (corr.pearson_p < 0.05)).sum())))
+    put("n_corr_sig_levels_new", int(((corr["transform"] == "levels") & (corr.outcome == "Altas") & (corr.pearson_p < 0.05)).sum()),
+        str(int(((corr["transform"] == "levels") & (corr.outcome == "Altas") & (corr.pearson_p < 0.05)).sum())))
     # largest account by median positive monthly amount
     med_pos = np.array([np.median(ar["cur_cop"][i][ar["pos"][i]]) for i in range(len(ar["ids"]))])
     ti = int(np.argmax(med_pos))
     put("top_account_id", int(ar["ids"][ti]), str(int(ar["ids"][ti])))
     put("top_account_median", float(med_pos[ti]), fmt_cop(float(med_pos[ti])))
     put("top_account_industry", ar["ind"][ti], ar["ind"][ti])
-    put("top_account_x_median", float(med_pos[ti]) / R["amount_p50_cop"], f"{float(med_pos[ti]) / R['amount_p50_cop']:.0f}\u00d7")
+    put("top_account_x_median", float(med_pos[ti]) / R["amount_p50_cop"], fmt_x(float(med_pos[ti]) / R["amount_p50_cop"], 0))
     ex516 = next(e for e in ev["examples"] if e["id"] == 516)
     put("periodic_amount", ex516["amounts_cop"][[str(m) for m in months].index("2022-04")], fmt_cop(ex516["amounts_cop"][[str(m) for m in months].index("2022-04")], 2))
     for k in ["sm_drop", "pm_drop", "total_sm_per_new_customer_chg", "total_sm_per_new_mrr_mm_chg", "sm_chg_22_24"]:
@@ -1558,73 +1599,171 @@ def build_facts(ctx: dict):
     put("cut_end", "2023-12", month_label(pd.Period("2023-12")))
     for k in ["step_month", "team_break", "cut_start", "cut_end", "team_fixed_until", "sm_peak_month", "sm_trough_month"]:
         F[k + "_ym"] = R[k]
-    put("generated", datetime.now().strftime("%Y-%m-%d %H:%M"), datetime.now().strftime("%d %b %Y, %H:%M"))
+    now = datetime.now()
+    put("generated", now.strftime("%Y-%m-%d %H:%M"), f"{now.day} {MESES[now.month - 1]} {now.year}, {now:%H:%M}")
     return F, R
 
 
 def check_claims(ctx: dict, R: dict) -> list[dict]:
-    """Every insight-driven title in the workspace is backed by one of these checks.
-    If the data changes and a statement stops being true, the pipeline stops."""
-    mm, corr, coh, ev, dec = ctx["mm"], ctx["corr"], ctx["coh"], ctx["ev"], ctx["dec"]
+    """Cada título con conclusión del workspace está respaldado por una de estas verificaciones.
+    Si los datos cambian y una afirmación deja de ser cierta, el pipeline se detiene en lugar de publicarla."""
+    corr, coh, ev, dec, iy = ctx["corr"], ctx["coh"], ctx["ev"], ctx["dec"], ctx["iyear"]
     lb = ev["last_bridge"]
     mom = corr[corr["transform"] == "mom_change"]
-    lvl_new = corr[(corr["transform"] == "levels") & (corr.outcome == "New customers") & (corr.lag_months <= 1)]
+    lvl_new = corr[(corr["transform"] == "levels") & (corr.outcome == "Altas") & (corr.lag_months <= 1)]
     r24 = dec["robust"][dec["robust"].comparison == "2022 vs 2024"]
     va = ev["vintage_arpa"]
-    base = va[va.vintage == "Base (active Jan-22)"].arpa_cop
+    base = va[va.vintage == VINT_BASE].arpa_cop
+    base_ok = abs(base.iloc[-1] / base.iloc[0] - 1) < 0.10
+    vint_ok = max(R["v2023_arpa_end"], R["v2024_arpa_end"]) < min(R["v2022_arpa_end"], R["base_arpa_end"])
+    share = lambda y, ind, col: float(iy[(iy.year == y) & (iy.industry == ind)][col].iloc[0])
+    H, E, D = "Hecho observado", "Evidencia fuerte", "Direccional"
     claims = [
-        ("growth_gap", "Active customers grew faster than paid MRR (Jan-22 → Oct-24)",
-         R["active_multiple"] > R["mrr_multiple"] * 1.3),
-        ("arpa_down", "MRR per active customer is lower in Oct-24 than in Jan-22 by more than 30%", R["arpa_change"] < -0.30),
-        ("net_adds_positive", "Net customer adds were negative in exactly one month", R["net_adds_negative_months"] == 1),
-        ("entry_ticket_down", "Median first-month MRR of new customers is lower in 2023 and 2024 than in 2022",
-         R["m0_median_2023"] < R["m0_median_2022"] and R["m0_median_2024"] < R["m0_median_2022"]),
-        ("ticket_all_metrics", "Every ticket metric (M0 mean/median/winsorised, early run-rate, M1) is lower in 2024 than 2022",
-         all(R[k] < 0 for k in ["m0_mean_chg_22_24", "m0_median_chg_22_24", "err_mean_chg_22_24", "m1_mean_chg_22_24", "m0_winsor_chg_22_24"])),
-        ("base_stable", "The left-censored base's ARPA in Oct-24 is within ±10% of Jan-22",
-         abs(base.iloc[-1] / base.iloc[0] - 1) < 0.10),
-        ("vintage_order", "At Oct-24, 2023 and 2024 vintages have lower ARPA than the 2022 vintage and the base",
-         max(R["v2023_arpa_end"], R["v2024_arpa_end"]) < min(R["v2022_arpa_end"], R["base_arpa_end"])),
-        ("within_dominates", "Within-industry effect explains > 80% of the 2022→2024 change in every variant; bootstrap 90% CI lower bound > 50%",
-         (r24.within_share > 0.8).all() and (r24.within_share_ci90_lo > 0.5).all()),
-        ("all_industries_down", "Mean entry ticket fell in all six industries between 2022 and 2024",
-         R["industries_ticket_fell_22_24"] == 6 and R["industries_median_fell_22_24"] == 6),
-        ("no_positive_assoc", "Level correlations of spend vs new customers (lags 0–1) are all negative; no month-over-month correlation reaches |r| ≥ 0.3 or p < 0.05",
-         (lvl_new.pearson_r < 0).all() and (mom.pearson_r.abs() < 0.3).all() and (mom.pearson_p > 0.05).all()),
-        ("sm_cut", "Total S&M fell more than 60% from its 2023 peak to its 2023 trough", R["sm_drop"] < -0.60),
-        ("team_fixed", "Team equals 12.0% of total S&M in every month through May-23",
-         R["team_fixed_months"] == 17 and R["team_fixed_until"] == "2023-05"),
-        ("recent_cohorts_m1", "The lowest M1 logo retention among full 2023–24 quarterly cohorts exceeds the highest among full 2022 quarters",
-         R["m1_logo_recent_min"] > R["m1_logo_2022_max"]),
-        ("ticket_step", "The step month (after which every monthly median entry ticket stays below the 2022 median) falls in Q1-2023",
-         "2023-01" <= R["step_month"] <= "2023-03"),
-        ("cohorts_stay_lower", "MRR per original customer of 2023 cohorts is below that of 2022 cohorts at M1, M6 and M12",
-         all(cy23 < cy22 for cy22, cy23 in [(coh["yearly"][0]["arpu"][k], coh["yearly"][1]["arpu"][k]) for k in (1, 6, 12)])),
-        ("churn_transient", "More than 40% of observed churn events return the next month", R["churn_back_1m"] > 0.40),
-        ("gross_vs_net", "Gross MRR movements exceed 5× the net change over the window", R["gross_net_ratio"] > 5),
-        ("last_react_largest", "In the last month, reactivation is the largest inflow",
-         lb["reactivation_mrr_cop"] > max(lb["new_mrr_cop"], lb["expansion_mrr_cop"])),
-        ("spend_per_customer_down", "Total S&M per new customer is lower in 2024 than 2022 by more than 50%",
-         R["total_sm_per_new_customer_chg"] < -0.50),
-        ("sig_only_negative_levels", "Every correlation with p < 0.05 is a negative level correlation with new customers",
-         bool(((corr.pearson_p >= 0.05) | ((corr["transform"] == "levels") & (corr.outcome == "New customers") & (corr.pearson_r < 0))).all())),
-        ("feb_spillover", "Feb-22 entries show the double-payment signature at > 5× the pooled rate of later cohorts",
-         R["feb_sig_share"] > 5 * R["later_sig_share"]),
+        ("C-RES-01", "growth_gap", "Resultado", H,
+         "Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24.",
+         R["active_multiple"] > R["mrr_multiple"] * 1.3, ["active_multiple", "mrr_multiple"]),
+        ("C-RES-02", "arpa_down", "Resultado", H,
+         "El MRR por cliente activo de oct-24 es más de 30% menor que el de ene-22.",
+         R["arpa_change"] < -0.30, ["arpa_start", "arpa_end", "arpa_change"]),
+        ("C-RES-03", "net_adds_positive", "Resultado", H,
+         "Las altas netas fueron negativas en un solo mes.",
+         R["net_adds_negative_months"] == 1, ["net_adds_negative_list", "net_adds_positive_months"]),
+        ("C-RES-04", "gross_vs_net", "Resultado", H,
+         "Los movimientos brutos de MRR superan 5 veces el cambio neto del periodo.",
+         R["gross_net_ratio"] > 5, ["gross_movement", "net_movement", "gross_net_ratio"]),
+        ("C-RES-05", "last_react_largest", "Resultado", H,
+         "En el último mes, la reactivación fue la mayor entrada de MRR.",
+         lb["reactivation_mrr_cop"] > max(lb["new_mrr_cop"], lb["expansion_mrr_cop"]),
+         ["lb_reactivation_mrr_cop", "lb_new_mrr_cop", "lb_expansion_mrr_cop"]),
+        ("C-RES-06", "rest_mrr_share_down", "Resultado", H,
+         "Restaurantes sigue siendo el mayor bloque de MRR, con menor participación en oct-24 que en dic-22.",
+         R["rest_is_top_mrr_2024"] and R["rest_mrr_share_2024"] < R["rest_mrr_share_2022"],
+         ["rest_mrr_share_2022", "rest_mrr_share_2024"]),
+        ("C-RES-07", "retail_active_share_up", "Resultado", H,
+         "Retail tiene mayor participación en los clientes activos en oct-24 que en dic-22.",
+         R["retail_active_share_2024"] > R["retail_active_share_2022"],
+         ["retail_active_share_2022", "retail_active_share_2024"]),
+        ("C-ADQ-01", "entry_ticket_down", "Adquisición", H,
+         "La mediana del ticket de entrada es menor en 2023 y en 2024 que en 2022.",
+         R["m0_median_2023"] < R["m0_median_2022"] and R["m0_median_2024"] < R["m0_median_2022"],
+         ["m0_median_2022", "m0_median_2023", "m0_median_2024"]),
+        ("C-ADQ-02", "ticket_all_metrics", "Adquisición", H,
+         "Todas las métricas de ticket de entrada (promedio, mediana, winsorizado, run-rate temprano y M1) son menores en 2024 que en 2022.",
+         all(R[k] < 0 for k in ["m0_mean_chg_22_24", "m0_median_chg_22_24", "err_mean_chg_22_24", "m1_mean_chg_22_24", "m0_winsor_chg_22_24"]),
+         ["m0_mean_chg_22_24", "m0_median_chg_22_24", "m1_mean_chg_22_24"]),
+        ("C-ADQ-03", "ticket_step", "Adquisición", H,
+         "El mes del escalón (desde el cual toda mediana mensual del ticket queda bajo la de 2022) cae en el primer trimestre de 2023.",
+         "2023-01" <= R["step_month"] <= "2023-03", ["step_month", "m0_median_2022"]),
+        ("C-ADQ-04", "within_dominates", "Adquisición", E,
+         "El efecto dentro de las industrias explica más de 80% del cambio del ticket 2022→2024 en las tres variantes, y el límite inferior del intervalo bootstrap de 90% supera 50%.",
+         bool((r24.within_share > 0.8).all() and (r24.within_share_ci90_lo > 0.5).all()),
+         ["dec_within_share", "dec_within_ci", "dec_within_share_min", "dec_within_share_max"]),
+        ("C-ADQ-05", "all_industries_down", "Adquisición", H,
+         "El ticket de entrada (promedio y mediana) bajó en las seis industrias entre 2022 y 2024.",
+         R["industries_ticket_fell_22_24"] == 6 and R["industries_median_fell_22_24"] == 6,
+         ["industries_ticket_fell_22_24", "industries_median_fell_22_24"]),
+        ("C-ADQ-06", "restprod_new_mrr_majority", "Adquisición", H,
+         "Restaurantes y Producción aportan más de la mitad del MRR nuevo en cada año.",
+         R["restprod_new_mrr_min"] > 0.5, ["restprod_new_mrr_min"]),
+        ("C-RET-01", "recent_cohorts_m1", "Retención", H,
+         "La menor retención de logos al M1 entre los trimestres completos de 2023–24 supera la mayor entre los trimestres completos de 2022.",
+         R["m1_logo_recent_min"] > R["m1_logo_2022_max"],
+         ["m1_logo_2022_min", "m1_logo_2022_max", "m1_logo_recent_min", "m1_logo_recent_max"]),
+        ("C-RET-02", "churn_transient", "Retención", H,
+         "Más de 40% de los churns observados vuelve a pagar al mes siguiente.",
+         R["churn_back_1m"] > 0.40, ["churn_back_1m", "churn_events"]),
+        ("C-MON-01", "base_stable", "Monetización de la base", H,
+         "El MRR por cliente de la base previa en oct-24 está dentro de ±10% del de ene-22.",
+         base_ok, ["base_arpa_start", "base_arpa_end", "base_arpa_change"]),
+        ("C-MON-02", "vintage_order", "Monetización de la base", H,
+         "En oct-24, las cosechas 2023 y 2024 tienen menor MRR por cliente que la cosecha 2022 y que la base previa.",
+         vint_ok, ["v2022_arpa_end", "v2023_arpa_end", "v2024_arpa_end", "base_arpa_end"]),
+        ("C-MON-03", "cohorts_stay_lower", "Monetización de la base", H,
+         "El MRR por cliente original de las cohortes 2023 está por debajo del de las cohortes 2022 en M1, M6 y M12.",
+         all(c23 < c22 for c22, c23 in [(coh["yearly"][0]["arpu"][k], coh["yearly"][1]["arpu"][k]) for k in (1, 6, 12)]),
+         []),
+        ("C-MON-04", "composition", "Monetización de la base", E,
+         "Los clientes existentes no pagan menos y las cosechas 2023–24, de menor ticket, ya son la mayoría de los clientes activos.",
+         base_ok and vint_ok and R["recent_vintage_customer_share"] > 0.5,
+         ["base_arpa_change", "recent_vintage_customer_share", "recent_vintage_mrr_share"]),
+        ("C-MON-05", "industries_arpa_fell", "Monetización de la base", H,
+         "El MRR por cliente activo bajó en las seis industrias entre dic-22 y oct-24.",
+         R["industries_arpa_fell"] == 6, ["industries_arpa_fell"]),
+        ("C-INV-01", "sm_cut", "Inversión comercial", H,
+         "El S&M total cayó más de 60% entre su pico y su valle de 2023.",
+         R["sm_drop"] < -0.60, ["sm_peak", "sm_trough", "sm_drop"]),
+        ("C-INV-02", "spend_per_customer_down", "Inversión comercial", H,
+         "El S&M total por cliente nuevo es más de 50% menor en 2024 que en 2022.",
+         R["total_sm_per_new_customer_chg"] < -0.50, ["cac_sm_2022", "cac_sm_2024", "total_sm_per_new_customer_chg"]),
+        ("C-INV-03", "no_positive_assoc", "Inversión comercial", D,
+         "Las correlaciones en niveles entre gasto y altas (rezagos 0–1) son todas negativas, y ninguna correlación de cambios mes a mes alcanza |r| ≥ 0,3 ni p < 0,05.",
+         bool((lvl_new.pearson_r < 0).all() and (mom.pearson_r.abs() < 0.3).all() and (mom.pearson_p > 0.05).all()),
+         ["r_new_sm_l0", "r_mom_absmax", "r_mom_minp"]),
+        ("C-INV-04", "sig_only_negative_levels", "Inversión comercial", D,
+         "Toda correlación con p < 0,05 es una correlación negativa en niveles con las altas.",
+         bool(((corr.pearson_p >= 0.05) | ((corr["transform"] == "levels") & (corr.outcome == "Altas") & (corr.pearson_r < 0))).all()),
+         ["n_corr_sig", "n_corr_tests"]),
+        ("C-DAT-01", "team_fixed", "Datos", H,
+         "Team equivale a 12,0% del S&M total en todos los meses hasta may-23.",
+         R["team_fixed_months"] == 17 and R["team_fixed_until"] == "2023-05", ["team_fixed_months", "team_fixed_until"]),
+        ("C-DAT-02", "feb_spillover", "Datos", H,
+         "Las altas de feb-22 muestran la firma de pago doble a más de 5 veces la tasa conjunta de las cohortes posteriores.",
+         R["feb_sig_share"] > 5 * R["later_sig_share"], ["feb_sig_share", "later_sig_share"]),
+        ("C-DAT-03", "exp_revert", "Datos", H,
+         "Más de 25% del MRR de expansión se revierte al mes siguiente.",
+         R["exp_mrr_revert"] > 0.25, ["exp_mrr_revert"]),
+        ("C-DAT-04", "small_adjust_rise", "Datos", H,
+         "Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y el último semestre.",
+         R["small_exp_first"] < 0.15 and R["small_exp_last"] > 0.60, ["small_exp_first", "small_exp_last"]),
+        ("C-DAT-05", "offgrid_rise", "Datos", H,
+         "La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2.",
+         R["offgrid_2024s2"] > R["offgrid_2022s2"], ["offgrid_2022s2", "offgrid_2024s2"]),
     ]
-    out = []
-    for cid, text, ok in claims:
-        ok = bool(ok)
-        out.append({"id": cid, "claim": text, "verified": ok})
+    out = [{"id": cid, "key": key, "dominio": dom, "estado": est, "claim": text, "verified": bool(ok), "evidence": evid}
+           for cid, key, dom, est, text, ok, evid in claims]
     failed = [c for c in out if not c["verified"]]
     if failed:
-        raise AssertionError("Claims no longer supported by the data: " + "; ".join(c["claim"] for c in failed))
+        raise AssertionError("Afirmaciones que los datos ya no sostienen: " + "; ".join(f"{c['id']} {c['claim']}" for c in failed))
     return out
 
 
 # ----------------------------------------------------------------------------------
-# 12 · Payload for the HTML workspace
+# 12 · Business Brain (brain/) y payload del workspace
 # ----------------------------------------------------------------------------------
-def build_payload(ctx: dict, facts: dict, claims: list) -> dict:
+def load_brain() -> dict:
+    import yaml
+    rd = lambda rel: yaml.safe_load((BRAIN / rel).read_text(encoding="utf-8"))
+    return {"metrics": rd("semantic/metrics.yaml")["metrics"],
+            "issues": rd("data/known_quality_issues.yaml")["issues"],
+            "questions": rd("business/stakeholder_questions.yaml"),
+            "cards": rd("evidence/workspace_cards.yaml")["cards"]}
+
+
+def validate_brain(brain: dict, claims: list, facts: dict):
+    # en YAML, "- texto: más texto" se lee como diccionario; los textos que se muestran deben ser str
+    for k, q in enumerate(brain["questions"]["preguntas_para_finora"], 1):
+        assert isinstance(q, str), f"pregunta para Finora {k} no es texto (¿falta entrecomillar un ': '?)"
+    for g in brain["questions"]["preguntas_doradas"]:
+        assert all(isinstance(g[k], str) for k in ("id", "dominio", "pregunta", "tipo")), f"pregunta dorada mal formada: {g}"
+    metric_ids = {m["id"] for m in brain["metrics"]}
+    issue_ids = {i["id"] for i in brain["issues"]}
+    claim_ids = {c["id"] for c in claims}
+    for m in brain["metrics"]:
+        for cv in m.get("caveats", []):
+            assert cv in issue_ids, f"métrica {m['id']}: caveat desconocido {cv}"
+    for i in brain["issues"]:
+        for fk in i.get("evidencia", []):
+            assert fk in facts, f"issue {i['id']}: fact desconocido {fk}"
+    for cid, c in brain["cards"].items():
+        for mid in c.get("metricas", []):
+            assert mid in metric_ids, f"tarjeta {cid}: métrica desconocida {mid}"
+        for cv in c.get("caveats", []):
+            assert cv in issue_ids, f"tarjeta {cid}: caveat desconocido {cv}"
+        for cl in c.get("claims", []):
+            assert cl in claim_ids, f"tarjeta {cid}: claim desconocido {cl}"
+
+
+def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
     ar, mm, ev, dec, coh, mov, corr, im, ihalf, iyear = (ctx[k] for k in
         ["ar", "mm", "ev", "dec", "coh", "mov", "corr", "im", "ihalf", "iyear"])
     order = ctx["order"]
@@ -1640,7 +1779,7 @@ def build_payload(ctx: dict, facts: dict, claims: list) -> dict:
     P["monthly"]["efficiency_status"] = mm.efficiency_status.tolist()
     P["index"] = ev["index_series"]
 
-    P["industry"] = {"order": order, "en": INDUSTRY_EN, "monthly": {}, "half": {}, "year": iyear.to_dict("records")}
+    P["industry"] = {"order": order, "monthly": {}, "half": {}, "year": iyear.to_dict("records")}
     for ind in order:
         g = im[im.industry == ind].sort_values("month_index")
         P["industry"]["monthly"][ind] = {c: g[c].tolist() for c in
@@ -1662,17 +1801,18 @@ def build_payload(ctx: dict, facts: dict, claims: list) -> dict:
                     "summary": coh["summary"].to_dict("records"), "flagged": coh["flagged"]}
     P["corr"] = {"rows": corr.to_dict("records"),
                  "sens": ctx["corr_sens"].to_dict("records"),
-                 "spend": {"Paid Media": mm.paid_media.tolist(), "Demand Gen": mm.demand_gen_spend.tolist(),
-                           "Total S&M": mm.total_sm_spend.tolist()},
-                 "outcome": {"New customers": mm.new_customers.tolist(), "New MRR": mm.new_mrr_cop.tolist()}}
+                 "spend": {"Paid Media": mm.paid_media.tolist(), "Generación de demanda": mm.demand_gen_spend.tolist(),
+                           "S&M total": mm.total_sm_spend.tolist()},
+                 "outcome": {"Altas": mm.new_customers.tolist(), "MRR nuevo": mm.new_mrr_cop.tolist()}}
     P["bridge"] = {"annual": ev["annual_bridge"].to_dict("records"), "last": ev["last_bridge"]}
     by_year = mov["by_year"]
-    buckets = ["1 month", "2 months", "3–5 months", "6+ months", "Not back by Oct-24"]
+    buckets = ["1 mes", "2 meses", "3–5 meses", "6+ meses", "Sin volver a oct-24"]
     by_year = by_year.reindex(columns=buckets, fill_value=0)
     P["movements"] = {"returnBuckets": buckets, "returnYears": [int(y) for y in by_year.index],
                       "returnCounts": by_year.to_numpy().tolist(),
                       "small": mov["small_adjustments"].to_dict("records"),
                       "gridMonthly": list(mov["grid_share_monthly"]),
+                      "gridHalf": [{"half": h, "share": float(v)} for h, v in mov["grid_share_half"].items()],
                       "stats": {k: mov[k] for k in ["n_churn_events", "share_return_1m", "share_return_any",
                                                     "share_churned_mrr_back_1m", "share_expansion_mrr_reverting_1m",
                                                     "share_contraction_mrr_post_spike", "multi_month_signatures",
@@ -1683,18 +1823,37 @@ def build_payload(ctx: dict, facts: dict, claims: list) -> dict:
     va = ev["vintage_arpa"]
     P["vintage"] = {v: {"arpa": g.sort_values("month").arpa_cop.tolist(), "active": g.sort_values("month").active_customers.tolist(),
                         "mrr": g.sort_values("month").mrr_cop.tolist()} for v, g in va.groupby("vintage", sort=False)}
+    P["vintageNames"] = {"base": VINT_BASE, "feb": VINT_FEB, "v2022": VINT_2022, "v2023": VINT_2023, "v2024": VINT_2024}
     P["audit"] = ctx["audit"]
     P["entrySignature"] = ctx["sig_entry"].to_dict("records")
     P["examples"] = ev["examples"]
     P["amountHist"] = ev["amount_hist"]
     P["efficiencyByYear"] = ev["efficiency_by_year"].to_dict("records")
-    P["movements"]["gridHalf"] = [{"half": h, "share": float(v)} for h, v in mov["grid_share_half"].items()]
     P["claims"] = claims
     P["facts"] = facts
+    P["brain"] = {"metrics": {m["id"]: m for m in brain["metrics"]},
+                  "issues": {i["id"]: i for i in brain["issues"]},
+                  "golden": brain["questions"]["preguntas_doradas"],
+                  "questionsFinora": brain["questions"]["preguntas_para_finora"],
+                  "cards": brain["cards"]}
     return jsonable(P)
 
 
-def render_outputs(ctx: dict, payload: dict, facts: dict, claims: list):
+def write_canonical_findings(claims: list, facts: dict, path: Path):
+    """Siembra brain/evidence/canonical_findings.yaml desde el registro de claims (arquitectura §14.6)."""
+    import yaml
+    doc = {"version": 1,
+           "generado_por": "finora_eda.py · check_claims()",
+           "nota": "Archivo generado. Un hallazgo pasa a canónico después de revisión humana.",
+           "hallazgos": [{"id": c["id"], "clave": c["key"], "dominio": c["dominio"], "estado": c["estado"],
+                          "afirmacion": c["claim"], "verificado_en_codigo": c["verified"],
+                          "evidencia": {k: facts[k] for k in c["evidence"]},
+                          "revision_humana": "pendiente"} for c in claims]}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=120), encoding="utf-8")
+
+
+def render_outputs(ctx: dict, payload: dict, facts: dict, claims: list, brain: dict):
     out_dir = ctx["out_dir"]
     tpl_dir = HERE / "templates"
 
@@ -1702,10 +1861,10 @@ def render_outputs(ctx: dict, payload: dict, facts: dict, claims: list):
         def rep(mt):
             key = mt.group(1)
             if key not in facts:
-                raise KeyError(f"template placeholder without fact: {key}")
+                raise KeyError(f"placeholder sin fact: {key}")
             return str(facts[key])
         text = re.sub(r"\{\{([a-zA-Z0-9_]+)\}\}", rep, text)
-        assert "{{" not in text, "unresolved placeholder"
+        assert "{{" not in text, "placeholder sin resolver"
         return text
 
     html = (tpl_dir / "finora_eda_template.html").read_text(encoding="utf-8")
@@ -1723,9 +1882,19 @@ def render_outputs(ctx: dict, payload: dict, facts: dict, claims: list):
 
     notes = (tpl_dir / "finora_eda_notes_template.md").read_text(encoding="utf-8")
     notes = fill(notes)
-    claim_lines = "\n".join(f"| `{c['id']}` | {c['claim'].replace('|', chr(92) + '|')} | {'✅ verified' if c['verified'] else '❌'} |" for c in claims)
-    notes = notes.replace("<!--CLAIMS-->", claim_lines)
+    esc = lambda t: str(t).replace("|", "\\|")
+    claim_lines = "\n".join(f"| `{c['id']}` | {c['dominio']} | {c['estado']} | {esc(c['claim'])} | {'✅ verificado' if c['verified'] else '❌'} |"
+                            for c in claims)
+    metric_lines = "\n".join(f"| {m['nombre']} (`{m['id']}`) | {esc(m['definicion'])} | `{esc(m['formula'])}` | {m['ventana']} |"
+                             for m in brain["metrics"])
+    issue_lines = "\n".join(f"| `{i['id']}` | {esc(i['titulo'])} | {i['estado']} | {esc(i['tratamiento'])} |" for i in brain["issues"])
+    question_lines = "\n".join(f"{k}. {q}" for k, q in enumerate(brain["questions"]["preguntas_para_finora"], 1))
+    for marker in ("<!--CLAIMS-->", "<!--METRICS-->", "<!--ISSUES-->", "<!--QUESTIONS-->"):
+        assert notes.count(marker) == 1, f"marcador {marker} ausente o repetido en las notas"
+    notes = (notes.replace("<!--CLAIMS-->", claim_lines).replace("<!--METRICS-->", metric_lines)
+             .replace("<!--ISSUES-->", issue_lines).replace("<!--QUESTIONS-->", question_lines))
     (out_dir / "finora_eda_notes.md").write_text(notes, encoding="utf-8")
+    write_canonical_findings(claims, facts, BRAIN / "evidence" / "canonical_findings.yaml")
 
 
 if __name__ == "__main__":

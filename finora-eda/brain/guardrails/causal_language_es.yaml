@@ -1,0 +1,33 @@
+# Reglas de lenguaje causal en español. Las usa el validador de claims (arquitectura v1.2 §5.4).
+version: 1
+prohibido:
+  # Verbos y giros que afirman causalidad sin identificación causal.
+  - causó
+  - causa
+  - provocó
+  - provoca
+  - generó
+  - genera
+  - impulsó
+  - impulsa
+  - produjo
+  - gracias a
+  - debido a
+  - por culpa de
+  - hizo que
+  - aumentará
+  - reducirá
+permitido:
+  - se asocia con
+  - se mueve junto con
+  - coincide con
+  - es consistente con
+  - se observa
+explica:
+  regla: "\"Explica\" solo se permite en claims de tipo descomposición y con sentido contable."
+  ejemplo_valido: El cambio de mix explica 3% de la caída del ticket promedio.
+  ejemplo_invalido: El gasto en Paid Media explica el crecimiento de altas.
+escenarios:
+  regla: Un claim de tipo escenario solo acepta fraseo condicional.
+  ejemplo_valido: Manteniendo todo lo demás constante, eliminar estos descuentos sumaría COP X al MRR neto.
+  ejemplo_invalido: Eliminar estos descuentos aumentará el MRR en COP X.

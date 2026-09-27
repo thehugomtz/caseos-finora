@@ -1,0 +1,313 @@
+version: 1
+generado_por: finora_eda.py · check_claims()
+nota: Archivo generado. Un hallazgo pasa a canónico después de revisión humana.
+hallazgos:
+- id: C-RES-01
+  clave: growth_gap
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24.
+  verificado_en_codigo: true
+  evidencia:
+    active_multiple: 4,5×
+    mrr_multiple: 2,8×
+  revision_humana: pendiente
+- id: C-RES-02
+  clave: arpa_down
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: El MRR por cliente activo de oct-24 es más de 30% menor que el de ene-22.
+  verificado_en_codigo: true
+  evidencia:
+    arpa_start: COP 92,8 mil
+    arpa_end: COP 57,8 mil
+    arpa_change: −38%
+  revision_humana: pendiente
+- id: C-RES-03
+  clave: net_adds_positive
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Las altas netas fueron negativas en un solo mes.
+  verificado_en_codigo: true
+  evidencia:
+    net_adds_negative_list: jun-22
+    net_adds_positive_months: '32'
+  revision_humana: pendiente
+- id: C-RES-04
+  clave: gross_vs_net
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Los movimientos brutos de MRR superan 5 veces el cambio neto del periodo.
+  verificado_en_codigo: true
+  evidencia:
+    gross_movement: COP 404 millones
+    net_movement: COP 62 millones
+    gross_net_ratio: 6,5×
+  revision_humana: pendiente
+- id: C-RES-05
+  clave: last_react_largest
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: En el último mes, la reactivación fue la mayor entrada de MRR.
+  verificado_en_codigo: true
+  evidencia:
+    lb_reactivation_mrr_cop: COP 4,5 millones
+    lb_new_mrr_cop: COP 2,2 millones
+    lb_expansion_mrr_cop: COP 2,1 millones
+  revision_humana: pendiente
+- id: C-RES-06
+  clave: rest_mrr_share_down
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Restaurantes sigue siendo el mayor bloque de MRR, con menor participación en oct-24 que en dic-22.
+  verificado_en_codigo: true
+  evidencia:
+    rest_mrr_share_2022: 39%
+    rest_mrr_share_2024: 32%
+  revision_humana: pendiente
+- id: C-RES-07
+  clave: retail_active_share_up
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Retail tiene mayor participación en los clientes activos en oct-24 que en dic-22.
+  verificado_en_codigo: true
+  evidencia:
+    retail_active_share_2022: 16,5%
+    retail_active_share_2024: 21,5%
+  revision_humana: pendiente
+- id: C-ADQ-01
+  clave: entry_ticket_down
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: La mediana del ticket de entrada es menor en 2023 y en 2024 que en 2022.
+  verificado_en_codigo: true
+  evidencia:
+    m0_median_2022: COP 63,0 mil
+    m0_median_2023: COP 36,8 mil
+    m0_median_2024: COP 42,0 mil
+  revision_humana: pendiente
+- id: C-ADQ-02
+  clave: ticket_all_metrics
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: Todas las métricas de ticket de entrada (promedio, mediana, winsorizado, run-rate temprano y M1) son menores
+    en 2024 que en 2022.
+  verificado_en_codigo: true
+  evidencia:
+    m0_mean_chg_22_24: −60%
+    m0_median_chg_22_24: −33%
+    m1_mean_chg_22_24: −18%
+  revision_humana: pendiente
+- id: C-ADQ-03
+  clave: ticket_step
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: El mes del escalón (desde el cual toda mediana mensual del ticket queda bajo la de 2022) cae en el primer trimestre
+    de 2023.
+  verificado_en_codigo: true
+  evidencia:
+    step_month: ene-23
+    m0_median_2022: COP 63,0 mil
+  revision_humana: pendiente
+- id: C-ADQ-04
+  clave: within_dominates
+  dominio: Adquisición
+  estado: Evidencia fuerte
+  afirmacion: El efecto dentro de las industrias explica más de 80% del cambio del ticket 2022→2024 en las tres variantes,
+    y el límite inferior del intervalo bootstrap de 90% supera 50%.
+  verificado_en_codigo: true
+  evidencia:
+    dec_within_share: 97%
+    dec_within_ci: 91–102%
+    dec_within_share_min: 96%
+    dec_within_share_max: 97%
+  revision_humana: pendiente
+- id: C-ADQ-05
+  clave: all_industries_down
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: El ticket de entrada (promedio y mediana) bajó en las seis industrias entre 2022 y 2024.
+  verificado_en_codigo: true
+  evidencia:
+    industries_ticket_fell_22_24: '6'
+    industries_median_fell_22_24: '6'
+  revision_humana: pendiente
+- id: C-ADQ-06
+  clave: restprod_new_mrr_majority
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: Restaurantes y Producción aportan más de la mitad del MRR nuevo en cada año.
+  verificado_en_codigo: true
+  evidencia:
+    restprod_new_mrr_min: 53%
+  revision_humana: pendiente
+- id: C-RET-01
+  clave: recent_cohorts_m1
+  dominio: Retención
+  estado: Hecho observado
+  afirmacion: La menor retención de logos al M1 entre los trimestres completos de 2023–24 supera la mayor entre los trimestres
+    completos de 2022.
+  verificado_en_codigo: true
+  evidencia:
+    m1_logo_2022_min: 89%
+    m1_logo_2022_max: 95%
+    m1_logo_recent_min: 95%
+    m1_logo_recent_max: 98%
+  revision_humana: pendiente
+- id: C-RET-02
+  clave: churn_transient
+  dominio: Retención
+  estado: Hecho observado
+  afirmacion: Más de 40% de los churns observados vuelve a pagar al mes siguiente.
+  verificado_en_codigo: true
+  evidencia:
+    churn_back_1m: 44%
+    churn_events: '751'
+  revision_humana: pendiente
+- id: C-MON-01
+  clave: base_stable
+  dominio: Monetización de la base
+  estado: Hecho observado
+  afirmacion: El MRR por cliente de la base previa en oct-24 está dentro de ±10% del de ene-22.
+  verificado_en_codigo: true
+  evidencia:
+    base_arpa_start: COP 92,8 mil
+    base_arpa_end: COP 97,4 mil
+    base_arpa_change: +5%
+  revision_humana: pendiente
+- id: C-MON-02
+  clave: vintage_order
+  dominio: Monetización de la base
+  estado: Hecho observado
+  afirmacion: En oct-24, las cosechas 2023 y 2024 tienen menor MRR por cliente que la cosecha 2022 y que la base previa.
+  verificado_en_codigo: true
+  evidencia:
+    v2022_arpa_end: COP 65,4 mil
+    v2023_arpa_end: COP 46,3 mil
+    v2024_arpa_end: COP 43,0 mil
+    base_arpa_end: COP 97,4 mil
+  revision_humana: pendiente
+- id: C-MON-03
+  clave: cohorts_stay_lower
+  dominio: Monetización de la base
+  estado: Hecho observado
+  afirmacion: El MRR por cliente original de las cohortes 2023 está por debajo del de las cohortes 2022 en M1, M6 y M12.
+  verificado_en_codigo: true
+  evidencia: {}
+  revision_humana: pendiente
+- id: C-MON-04
+  clave: composition
+  dominio: Monetización de la base
+  estado: Evidencia fuerte
+  afirmacion: Los clientes existentes no pagan menos y las cosechas 2023–24, de menor ticket, ya son la mayoría de los clientes
+    activos.
+  verificado_en_codigo: true
+  evidencia:
+    base_arpa_change: +5%
+    recent_vintage_customer_share: 65%
+    recent_vintage_mrr_share: 50%
+  revision_humana: pendiente
+- id: C-MON-05
+  clave: industries_arpa_fell
+  dominio: Monetización de la base
+  estado: Hecho observado
+  afirmacion: El MRR por cliente activo bajó en las seis industrias entre dic-22 y oct-24.
+  verificado_en_codigo: true
+  evidencia:
+    industries_arpa_fell: '6'
+  revision_humana: pendiente
+- id: C-INV-01
+  clave: sm_cut
+  dominio: Inversión comercial
+  estado: Hecho observado
+  afirmacion: El S&M total cayó más de 60% entre su pico y su valle de 2023.
+  verificado_en_codigo: true
+  evidencia:
+    sm_peak: 3,45 u
+    sm_trough: 1,10 u
+    sm_drop: −68%
+  revision_humana: pendiente
+- id: C-INV-02
+  clave: spend_per_customer_down
+  dominio: Inversión comercial
+  estado: Hecho observado
+  afirmacion: El S&M total por cliente nuevo es más de 50% menor en 2024 que en 2022.
+  verificado_en_codigo: true
+  evidencia:
+    cac_sm_2022: 0,105 u
+    cac_sm_2024: 0,036 u
+    total_sm_per_new_customer_chg: −66%
+  revision_humana: pendiente
+- id: C-INV-03
+  clave: no_positive_assoc
+  dominio: Inversión comercial
+  estado: Direccional
+  afirmacion: Las correlaciones en niveles entre gasto y altas (rezagos 0–1) son todas negativas, y ninguna correlación de
+    cambios mes a mes alcanza |r| ≥ 0,3 ni p < 0,05.
+  verificado_en_codigo: true
+  evidencia:
+    r_new_sm_l0: −0,57
+    r_mom_absmax: 0,27
+    r_mom_minp: 0,14
+  revision_humana: pendiente
+- id: C-INV-04
+  clave: sig_only_negative_levels
+  dominio: Inversión comercial
+  estado: Direccional
+  afirmacion: Toda correlación con p < 0,05 es una correlación negativa en niveles con las altas.
+  verificado_en_codigo: true
+  evidencia:
+    n_corr_sig: '9'
+    n_corr_tests: '48'
+  revision_humana: pendiente
+- id: C-DAT-01
+  clave: team_fixed
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Team equivale a 12,0% del S&M total en todos los meses hasta may-23.
+  verificado_en_codigo: true
+  evidencia:
+    team_fixed_months: '17'
+    team_fixed_until: may-23
+  revision_humana: pendiente
+- id: C-DAT-02
+  clave: feb_spillover
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Las altas de feb-22 muestran la firma de pago doble a más de 5 veces la tasa conjunta de las cohortes posteriores.
+  verificado_en_codigo: true
+  evidencia:
+    feb_sig_share: 30%
+    later_sig_share: 3,0%
+  revision_humana: pendiente
+- id: C-DAT-03
+  clave: exp_revert
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Más de 25% del MRR de expansión se revierte al mes siguiente.
+  verificado_en_codigo: true
+  evidencia:
+    exp_mrr_revert: 29%
+  revision_humana: pendiente
+- id: C-DAT-04
+  clave: small_adjust_rise
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y
+    el último semestre.
+  verificado_en_codigo: true
+  evidencia:
+    small_exp_first: 9%
+    small_exp_last: 75%
+  revision_humana: pendiente
+- id: C-DAT-05
+  clave: offgrid_rise
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en
+    2022 S2.
+  verificado_en_codigo: true
+  evidencia:
+    offgrid_2022s2: 19%
+    offgrid_2024s2: 42%
+  revision_humana: pendiente

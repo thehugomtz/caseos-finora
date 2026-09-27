@@ -1,0 +1,254 @@
+# Catálogo de métricas · fuente única de definiciones para el workspace, las notas y (después) el agente.
+# id = nombre de la columna en finora_monthly_metrics.csv / finora_analytical_dataset.csv cuando existe.
+# ventana: "completa" (ene-22 → oct-24) o "limpia" (mar-22 → oct-24, para flujos y tasas).
+version: 1
+metrics:
+  - id: active_customers
+    nombre: Clientes activos
+    definicion: Clientes con MRR pagado mayor que cero en el mes.
+    formula: "count(cliente) donde paid_mrr_cop > 0"
+    grano: mes
+    unidad: clientes
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → active_customers
+    caveats: [CV-AMOUNT-COBRO]
+
+  - id: new_customers
+    nombre: Altas (clientes nuevos)
+    definicion: Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+    formula: "curr > 0 y ningún mes anterior > 0"
+    grano: mes
+    unidad: clientes
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → new_customer
+    caveats: [CV-VENTANA]
+
+  - id: churned_customers
+    nombre: Churn observado (clientes)
+    definicion: Clientes que pagaban el mes anterior y este mes pagan cero. Es churn observado, no cancelación confirmada.
+    formula: "prev > 0 y curr = 0"
+    grano: mes
+    unidad: clientes
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → churned_customer
+    caveats: [CV-CHURN-PAUSAS, CV-VENTANA]
+
+  - id: reactivated_customers
+    nombre: Reactivaciones
+    definicion: Clientes que vuelven a pagar después de al menos un mes en cero.
+    formula: "curr > 0, prev = 0 y algún mes anterior > 0"
+    grano: mes
+    unidad: clientes
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → reactivated_customer
+    caveats: [CV-CHURN-PAUSAS]
+
+  - id: net_customer_adds
+    nombre: Altas netas
+    definicion: Altas más reactivaciones menos churn observado. Es igual al cambio de clientes activos (validado).
+    formula: "altas + reactivaciones − churn"
+    grano: mes
+    unidad: clientes
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → net_customer_adds
+    caveats: [CV-VENTANA]
+
+  - id: total_paid_mrr_cop
+    nombre: MRR pagado
+    definicion: Suma del monto pagado en el mes, multiplicado por 10.000 para expresarlo en COP. Es monto observado; la lectura "cobrado" es hipótesis.
+    formula: "Σ amount × 10.000"
+    grano: mes
+    unidad: COP
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → total_paid_mrr_cop
+    caveats: [CV-AMOUNT-COBRO]
+
+  - id: new_mrr_cop
+    nombre: MRR nuevo
+    definicion: MRR pagado en su primer mes por los clientes nuevos.
+    formula: "Σ curr en filas de alta"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → new_mrr_cop
+    caveats: [CV-VENTANA, CV-M0-PICOS-2022]
+
+  - id: expansion_mrr_cop
+    nombre: Expansión
+    definicion: Aumento del monto pagado de clientes que ya pagaban (curr > prev > 0).
+    formula: "Σ (curr − prev) en filas de expansión"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → expansion_mrr_cop
+    caveats: [CV-AMOUNT-COBRO]
+
+  - id: reactivation_mrr_cop
+    nombre: MRR de reactivación
+    definicion: Monto pagado por los clientes que se reactivan en el mes.
+    formula: "Σ curr en filas de reactivación"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → reactivation_mrr_cop
+    caveats: [CV-CHURN-PAUSAS]
+
+  - id: contraction_mrr_cop
+    nombre: Contracción
+    definicion: Disminución del monto pagado de clientes que siguen pagando (0 < curr < prev). Negativo por convención.
+    formula: "Σ (curr − prev) en filas de contracción"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → contraction_mrr_cop
+    caveats: [CV-AMOUNT-COBRO]
+
+  - id: churned_mrr_cop
+    nombre: MRR de churn
+    definicion: Monto que dejan de pagar los clientes con churn observado. Negativo por convención.
+    formula: "Σ (−prev) en filas de churn"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_customer_month() → churned_mrr_cop
+    caveats: [CV-CHURN-PAUSAS]
+
+  - id: net_mrr_change_cop
+    nombre: Cambio neto de MRR
+    definicion: Suma de los cinco movimientos. Es igual al cambio del MRR pagado (validado al centavo).
+    formula: "nuevo + expansión + reactivación + contracción + churn"
+    grano: mes
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → net_mrr_change_cop
+    caveats: []
+
+  - id: mrr_per_active_customer_cop
+    nombre: MRR por cliente activo
+    definicion: MRR pagado dividido entre clientes activos.
+    formula: "MRR pagado ÷ clientes activos"
+    grano: mes
+    unidad: COP
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → mrr_per_active_customer_cop
+    caveats: [CV-AMOUNT-COBRO]
+
+  - id: entry_ticket
+    nombre: Ticket de entrada (M0)
+    definicion: MRR pagado por un cliente nuevo en su primer mes. Se reporta como promedio (MRR nuevo ÷ altas), mediana y percentiles.
+    formula: "promedio = MRR nuevo ÷ altas; mediana y P25/P75/P90 sobre los mismos montos"
+    grano: mes o año
+    unidad: COP
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → new_mrr_per_new_customer_cop, median_new_customer_mrr_cop
+    caveats: [CV-M0-PICOS-2022, CV-OUTLIERS]
+
+  - id: logo_churn_rate
+    nombre: Churn mensual observado (logos)
+    definicion: Churn observado del mes dividido entre clientes activos del mes anterior.
+    formula: "churn(t) ÷ activos(t−1)"
+    grano: mes o año (agregado)
+    unidad: porcentaje
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → logo_churn_rate
+    caveats: [CV-CHURN-PAUSAS]
+
+  - id: vintage_arpa
+    nombre: MRR por cliente por cosecha
+    definicion: MRR pagado de los clientes de una cosecha (año de alta) dividido entre los que siguen activos.
+    formula: "MRR de la cosecha ÷ activos de la cosecha"
+    grano: cosecha × mes
+    unidad: COP
+    ventana: completa
+    codigo: finora_eda.py · extra_views() → vintage_arpa
+    caveats: [CV-VENTANA]
+
+  - id: cohort_logo_retention
+    nombre: Retención de logos de la cohorte
+    definicion: Porcentaje de la cohorte con MRR pagado mayor que cero en el mes k desde su primer pago. Solo cuenta clientes con al menos k meses de historia.
+    formula: "activos en Mk ÷ observables en Mk"
+    grano: cohorte × meses desde el alta
+    unidad: porcentaje
+    ventana: limpia
+    codigo: finora_eda.py · cohorts()
+    caveats: [CV-CHURN-PAUSAS]
+
+  - id: cohort_revenue_retention
+    nombre: Retención de ingreso de la cohorte
+    definicion: MRR de la cohorte en el mes k dividido entre el MRR de esos mismos clientes en su primer mes.
+    formula: "MRR en Mk ÷ MRR en M0 (mismos clientes observables)"
+    grano: cohorte × meses desde el alta
+    unidad: porcentaje
+    ventana: limpia
+    codigo: finora_eda.py · cohorts()
+    caveats: [CV-M0-PICOS-2022]
+
+  - id: total_sm_spend
+    nombre: S&M total
+    definicion: Suma de los siete rubros del archivo de gasto, en las unidades reportadas.
+    formula: "PaidMedia + PublicidadNoWeb + Team + PayrollExpenses + Travel + SoftwareTools + Freelance"
+    grano: mes
+    unidad: u (unidades reportadas)
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → total_sm_spend
+    caveats: [CV-SM-UNIDAD, CV-SM-ASIGNACION, CV-PAYROLL-NEG]
+
+  - id: demand_gen_spend
+    nombre: Generación de demanda
+    definicion: PaidMedia + PublicidadNoWeb.
+    formula: "PaidMedia + PublicidadNoWeb"
+    grano: mes
+    unidad: u (unidades reportadas)
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → demand_gen_spend
+    caveats: [CV-SM-UNIDAD]
+
+  - id: sales_capacity_spend
+    nombre: Capacidad comercial
+    definicion: Team + PayrollExpenses + Travel.
+    formula: "Team + PayrollExpenses + Travel"
+    grano: mes
+    unidad: u (unidades reportadas)
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → sales_capacity_spend
+    caveats: [CV-SM-UNIDAD, CV-PAYROLL-NEG]
+
+  - id: enablement_spend
+    nombre: Habilitación
+    definicion: SoftwareTools + Freelance.
+    formula: "SoftwareTools + Freelance"
+    grano: mes
+    unidad: u (unidades reportadas)
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → enablement_spend
+    caveats: [CV-SM-UNIDAD, CV-FREELANCE-CERO]
+
+  - id: paid_media
+    nombre: Paid Media
+    definicion: Rubro PaidMedia tal como viene en el archivo.
+    formula: "PaidMedia"
+    grano: mes
+    unidad: u (unidades reportadas)
+    ventana: completa
+    codigo: finora_eda.py · build_monthly() → paid_media
+    caveats: [CV-SM-UNIDAD]
+
+  - id: sm_per_new_customer
+    nombre: Gasto por cliente nuevo
+    definicion: Gasto del periodo dividido entre las altas del periodo (S&M total, generación de demanda o Paid Media).
+    formula: "gasto ÷ altas; anual = Σ gasto ÷ Σ altas"
+    grano: mes o año
+    unidad: u por cliente
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → total_sm_per_new_customer (y variantes)
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+
+  - id: sm_per_new_mrr_mm
+    nombre: Gasto por COP 1 millón de MRR nuevo
+    definicion: Gasto del periodo dividido entre el MRR nuevo del periodo en millones de COP.
+    formula: "gasto ÷ (MRR nuevo ÷ 1.000.000)"
+    grano: mes o año
+    unidad: u por COP 1 millón
+    ventana: limpia
+    codigo: finora_eda.py · build_monthly() → total_sm_per_new_mrr_mm_cop (y variantes)
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
