@@ -90,14 +90,31 @@ def _add_usage(inv: Investigation, role: str, m: ResultMessage):
                      "cache_lectura": u.get("cache_read_input_tokens"), "cache_escritura": u.get("cache_creation_input_tokens")}
 
 
+def thread_context(ctx: dict | None) -> str:
+    """Contexto de partida cuando se profundiza desde una pieza de narrativa: es contexto, no evidencia."""
+    if not ctx or not (ctx.get("texto") or ctx.get("claim_ids")):
+        return "Contexto del hilo: ninguno (investigación nueva)."
+    canon = [c for c in (ctx.get("claim_ids") or []) if c in CANON]
+    lines = ["Contexto del hilo: el usuario profundiza desde una pieza de su narrativa. Es contexto, no evidencia:",
+             "cualquier cifra que afirmes debe venir de evidencia registrada en esta investigación."]
+    if ctx.get("titulo"):
+        lines.append(f"Pieza: {str(ctx['titulo'])[:300]}")
+    if ctx.get("texto"):
+        lines.append(f"Lo que ya sabemos: {str(ctx['texto'])[:2500]}")
+    if ctx.get("nota"):
+        lines.append(f"Para qué la guardó el usuario: {str(ctx['nota'])[:600]}")
+    if canon:
+        lines.append("Hechos canónicos relacionados (regístralos con search_evidence ids=[...] si los usas): " + ", ".join(canon))
+    return "\n".join(lines)
+
+
 async def investigate(inv: Investigation):
     con = connect_ro()
     server, _ = make_server(inv, con)
     system = (PROMPTS / "investigador.md").read_text(encoding="utf-8").replace("{{BRAIN_CORE}}", brain_core(inv.playbook_id))
     opts = _base_options(system, EFFORT["investigador"], MAX_TURNS, PACKAGE_SCHEMA,
                          mcp_servers={"finora": server}, allowed_tools=ALLOWED_TOOLS)
-    prompt = (f"Pregunta: {inv.pregunta}\nLente: {inv.lente}\nContexto del hilo: ninguno (investigación nueva).\n"
-              "Investiga y entrega el paquete.")
+    prompt = f"Pregunta: {inv.pregunta}\nLente: {inv.lente}\n{thread_context(inv.contexto)}\nInvestiga y entrega el paquete."
     inv.emit("inicio", {"pregunta": inv.pregunta, "modelo": MODEL})
     async for m in query(prompt=prompt, options=opts):
         if isinstance(m, SystemMessage) and m.subtype == "init":

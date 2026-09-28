@@ -22,7 +22,7 @@ Otras formas:
 - `python -m agent recompose <archivo>` vuelve a componer la narrativa y usa el modelo. `python -m agent revisual <archivo>` solo reasigna las gráficas automáticas, sin modelo.
 - Cada corrida queda en `#investigacion/INV-…`; con el servidor, ese enlace la vuelve a abrir.
 - Sin servidor: `finora_eda.html` trae embebidas las respuestas verificadas y la investigación dorada. Ahí Enter lleva a la respuesta verificada más cercana, o dice con honestidad que la pregunta necesita el servidor.
-- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo).
+- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 62 en total).
 
 ## Respuesta primero (iteración de UX del 27-sep-2026)
 
@@ -44,6 +44,38 @@ Reglas que se verifican:
 - Las evaluaciones exigen titular en la respuesta y en cada hallazgo, una gráfica por hallazgo y formas válidas (45 en total).
 - Una pregunta que no se puede contestar con estos datos también tiene respuesta: lo que sí sabemos, lo que no y los campos que harían falta (playbook `libre`, nodo `datos_faltantes`).
 
+## Preparar narrativa (iteración del 28-sep-2026)
+
+Sirve para armar la historia mientras exploras. Guardas lo que te sirve de cada respuesta, sección, tarjeta, hallazgo o investigación. Le dices para qué parte de la historia sirve y por qué. Al final, el agente consolida una presentación en láminas web. Todo texto que escribe el agente pasa por un validador en código antes de mostrarse.
+
+| Paso | Qué haces | Qué hace el sistema |
+|---|---|---|
+| Crear | **✎ Preparar narrativa** en la barra lateral (o `#narrativas`). Pones título, audiencia (CEO, CRO, CFO o Mixta), objetivo y un contexto pegado: un caso, un correo o notas | Guarda la narrativa en `narratives/`, fuera de git |
+| Guardar | **＋ Guardar en narrativa** en una respuesta, o **＋ Narrativa** en secciones, tarjetas, drivers y hallazgos (también desde la paleta). Eliges el papel (Situación, Hallazgo, Implicación, Decisión o Acción) y escribes para qué la guardas | Copia el texto validado, las afirmaciones con su estado y sus cifras, la gráfica y la fuente. Cada cifra va con la etiqueta de qué mide |
+| Profundizar | **Profundizar** en una pieza, o **Investigar** en un hueco o un pendiente | Lanza una investigación en vivo con la pieza como contexto del hilo: sirve de contexto, no de evidencia. Un aviso arriba te regresa a la narrativa |
+| Esqueleto | **Proponer esqueleto** | Propone secciones con su mensaje, preguntas, las piezas que ya sirven, hechos del registro canónico que convendría guardar (**＋ Guardar**) y huecos por investigar. No lleva cifras |
+| Unir | **Unir narrativas** | Junta las piezas de varias narrativas sin duplicar una misma fuente y las ordena por papel. Cada nota conserva el título de su narrativa de origen |
+| Consolidar | **Consolidar presentación** | Arma láminas con papel, título, mensaje, puntos, la gráfica de una pieza, la evidencia citada y notas del presentador. Lo que no tiene piezas queda como pendiente, con la pregunta que habría que investigar. **Imprimir** la guarda en PDF desde el navegador |
+
+Reglas que se verifican en código (`agent/narrative.py`, funciones `validate_story` y `validate_plan`):
+
+- Toda cifra de una lámina debe estar en la evidencia de las piezas que esa lámina cita: su texto, sus afirmaciones, sus cifras y la etiqueta de qué mide. Las notas del usuario orientan el orden y el énfasis, pero no son evidencia.
+- No se admiten cantidades con letras, calificativos sin respaldo, lenguaje causal ni IDs en el texto. "Explica" solo vale si la pieza citada ya lo dice.
+- La gráfica de una lámina tiene que venir de una pieza que esa lámina cita.
+- Implicación, Decisión y Acción van en condicional, salvo que la lámina cite una decisión o una acción que guardó el usuario.
+- Lo que falta no se rellena: queda como pendiente, sin cifras.
+- Si el texto no pasa, el reintento corrige la presentación anterior en lugar de reescribirla, hasta 3 intentos. Si ninguno pasa, se muestran las piezas tal cual y la presentación queda marcada como degradada.
+- Cada una de las 117 cifras del registro canónico lleva su etiqueta de qué mide (`FACT_LABELS` en el pipeline). Si falta alguna, el pipeline se detiene. El compositor recibe cada cifra con su etiqueta, para que no llame "revertido" a un total.
+
+Pruebas del 28-sep-2026 con la narrativa "Caso CFO · qué mide hoy el MRR": 8 piezas y el caso del CFO pegado como contexto.
+
+| Corrida | Intentos | Costo equivalente | Resultado |
+|---|---|---|---|
+| Esqueleto | 1 (63 s) | US$0,21 | 7 secciones, aprobado al primer intento |
+| Presentación 1 | 2 | ≈US$0,22 por intento | Degradada por "cientos", "dos" y "explica". Se endureció el prompt y el reintento pasó a corregir la versión anterior |
+| Presentación 2 | 2 | ≈US$0,22 por intento | Validada, pero una lámina llamó "monto revertido" al movimiento bruto total. Por eso se etiquetaron las cifras del registro |
+| Presentación 3 | 2 (104 s) | US$0,48 | Validada: 8 láminas y 4 pendientes. El primer intento se rechazó por un "3 meses" que solo aparecía en la etiqueta; ahora la etiqueta cuenta como evidencia |
+
 ## Qué hace cada pieza
 
 | Pieza | Archivo | Qué hace |
@@ -56,7 +88,8 @@ Reglas que se verifican:
 | Tools | `agent/tools.py` | 8 tools como servidor MCP en proceso: `brain_lookup`, `search_evidence`, `query_metric`, `run_sql`, `run_analysis`, `upsert_hypotheses`, `propose_claim`, `propose_visual`. |
 | Visuales | `agent/visuals.py` | Gramática visual determinista: intención → forma; el título es el texto validado. Incluye la tabla de datos faltantes y la reutilización de gráficas de tarjetas de la Fase 1. |
 | Agente y compositor | `agent/orchestrator.py`, `agent/prompts/` | Un agente investigador con salida estructurada; un compositor sin tools cuya narrativa pasa por el validador (un reintento; si no, composición sin texto libre). |
-| Servidor | `app/server.py` | Sirve el workspace y la API: `POST /api/investigations`, streaming por SSE, `GET` del documento y de la dorada. Solo 127.0.0.1. |
+| Narrativas | `agent/narrative.py`, `agent/prompts/narrador_plan.md`, `agent/prompts/narrador.md` | Guarda narrativas y piezas, las une, propone el esqueleto y consolida la presentación. Valida cada lámina contra la evidencia que cita y, si no pasa, cae en una presentación hecha solo con las piezas. |
+| Servidor | `app/server.py` | Sirve el workspace y la API: `POST /api/investigations`, streaming por SSE, `GET` del documento y de la dorada, y `/api/narratives` (crear, editar, piezas, unir, esqueleto, consolidar). Solo 127.0.0.1. |
 | Vista | `templates/finora_eda_app.js` | Respuesta primero (portada, secciones, vista de respuesta), buscador con preguntas libres, documento de investigación con revelación progresiva, modo en vivo y panel de linaje (Evidencia · Método · Consulta · Fuente). |
 | Cerebro | `brain/frameworks/playbooks/arpa_decline.yaml`, `brain/guardrails/*` | Playbook MECE anclado en la identidad del MRR por cliente, reglas epistémicas, datos faltantes y léxico causal. |
 
@@ -110,3 +143,5 @@ La duración varía: en la corrida 3 el segundo intento del compositor esperó 4
 - El validador comprueba de dónde sale cada cifra y rechaza participaciones imposibles, pero no entiende unidades en general. Un 1% leído como fracción (100%) todavía pasaría; eso le toca a la pasada crítica.
 - La gramática visual no sabe comparar años desde un SQL ad hoc con más de tres filas por corte, y el agente cae en una tabla (H2 de la corrida 6).
 - Una pregunta libre amplia tarda más que la dorada: la corrida 6 tomó 18 minutos, 17 de ellos del investigador.
+- Preparar narrativa solo aparece con el servidor local: el HTML estático no guarda ni consolida. Profundizar desde una pieza es una investigación en vivo completa y tarda lo mismo (de 5 a 18 minutos). Proponer el esqueleto toma alrededor de un minuto y consolidar, de uno a tres.
+- El validador de láminas comprueba que cada cifra salga de una pieza citada, no que se use con el sentido correcto. La etiqueta de qué mide reduce ese riesgo, pero no lo elimina: eso le toca a la pasada crítica.

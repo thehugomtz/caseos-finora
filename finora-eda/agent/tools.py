@@ -67,7 +67,9 @@ def claves_text(ev, limit=60, only_scalars=False) -> str:
     vals, fmts = ev.result.get("valores", {}), ev.result.get("formatos", {})
     keys = [k for k in vals if not only_scalars or "[" not in k]
     shown = keys[:limit]
-    body = "\n".join(f"  {ev.id}.{k} = {fmt_value(vals[k], fmts.get(k, 'texto'))}" for k in shown)
+    labels = ev.result.get("etiquetas", {})
+    body = "\n".join(f"  {ev.id}.{k} = {fmt_value(vals[k], fmts.get(k, 'texto'))}" + (f"  ({labels[k]})" if k in labels else "")
+                     for k in shown)
     more = f"\n  … y {len(keys) - limit} claves más con el mismo patrón." if len(keys) > limit else ""
     return body + more
 
@@ -188,9 +190,11 @@ def make_server(inv: Investigation, con):
                 method="Afirmación canónica verificada en código (Fase 1)", variant=None,
                 query_text=None, code="finora_eda.py · check_claims() → brain/evidence/canonical_findings.yaml",
                 result={"afirmacion": h["afirmacion"], "valores": dict(h["evidencia"]),
-                        "formatos": {k: "texto" for k in h["evidencia"]},
-                        "columnas": [{"id": "clave", "nombre": "Dato"}, {"id": "valor", "nombre": "Valor"}],
-                        "filas": [{"clave": k, "valor": v} for k, v in h["evidencia"].items()], "notas": []},
+                        "formatos": {k: "texto" for k in h["evidencia"]}, "etiquetas": dict(h.get("etiquetas") or {}),
+                        "columnas": [{"id": "clave", "nombre": "Dato"}, {"id": "que_mide", "nombre": "Qué mide"},
+                                     {"id": "valor", "nombre": "Valor"}],
+                        "filas": [{"clave": k, "que_mide": (h.get("etiquetas") or {}).get(k, ""), "valor": v}
+                                  for k, v in h["evidencia"].items()], "notas": []},
                 ceiling=h["estado"] if h["estado"] in ("Hecho observado", "Evidencia fuerte", "Direccional") else "Hipótesis",
                 canonical=True, fixed_id="EC-" + cid[2:])
             evidence_event(entry, ev, h["afirmacion"])

@@ -14,6 +14,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel
 
+from agent import narrative as nar
 from agent.config import DB_PATH, GOLDEN, ROOT, RUNS
 from agent.orchestrator import run
 from agent.state import Investigation
@@ -22,6 +23,7 @@ from agent.warehouse import build
 GOLDEN_Q = {"Q2": "¿Por qué disminuyó el MRR por cliente?"}
 LIVE: dict[str, Investigation] = {}
 TASKS: set = set()
+BUSY_NARRATIVES: set = set()
 
 
 @asynccontextmanager
@@ -37,12 +39,34 @@ app = FastAPI(title="Finora · workspace agentic (local)", lifespan=lifespan)
 class NewInvestigation(BaseModel):
     pregunta_id: str | None = None
     pregunta: str | None = None
+    contexto: dict | None = None          # pieza de narrativa desde la que se profundiza
+
+
+class NewNarrative(BaseModel):
+    titulo: str
+    audiencia: str | None = None
+    objetivo: str = ""
+    contexto: str = ""
+
+
+class NarrativePatch(BaseModel):
+    titulo: str | None = None
+    audiencia: str | None = None
+    objetivo: str | None = None
+    contexto: str | None = None
+    orden: list[str] | None = None
+    piezas: list[dict] | None = None
+
+
+class MergeNarratives(BaseModel):
+    ids: list[str]
+    titulo: str = ""
 
 
 @app.get("/", response_class=HTMLResponse)
 def workspace():
     html = (ROOT / "finora_eda.html").read_text(encoding="utf-8")
-    flag = '<script>window.FINORA_LIVE = {"api": "/api", "preguntas": ["Q2"], "libre": true};</script>\n'
+    flag = '<script>window.FINORA_LIVE = {"api": "/api", "preguntas": ["Q2"], "libre": true, "narrativas": true};</script>\n'
     return html.replace("<script>\nconst DATA", flag + "<script>\nconst DATA", 1)
 
 
@@ -57,7 +81,14 @@ async def start(body: NewInvestigation):
     if len(q) > 3000:
         raise HTTPException(400, "La pregunta es demasiado larga (máximo 3.000 caracteres).")
     # preguntas libres: el agente elige el playbook en el encuadre (arpa_decline o libre)
-    inv = Investigation(pregunta=q, pregunta_id=qid, playbook_id="arpa_decline" if qid == "Q2" else "libre")
+    ctx = None
+    if body.contexto:
+        c = body.contexto
+        ctx = {"titulo": str(c.get("titulo") or "")[:300], "texto": str(c.get("texto") or "")[:4000],
+               "nota": str(c.get("nota") or "")[:1000],
+               "claim_ids": [str(x)[:40] for x in (c.get("claim_ids") or [])][:20],
+               "narrativa_id": str(c.get("narrativa_id") or "")[:40], "pieza_id": str(c.get("pieza_id") or "")[:10]}
+    inv = Investigation(pregunta=q, pregunta_id=qid, playbook_id="arpa_decline" if qid == "Q2" else "libre", contexto=ctx)
     LIVE[inv.id] = inv
     task = asyncio.create_task(run(inv))
     TASKS.add(task)
@@ -115,3 +146,77 @@ def golden(qid: str):
     if not p.exists():
         raise HTTPException(404, "No hay investigación dorada para esa pregunta.")
     return json.loads(p.read_text(encoding="utf-8"))
+
+
+# ------------------------------------------------------------------ narrativas (preparar narrativa)
+def _nar(fn, *a):
+    try:
+        return fn(*a)
+    except KeyError:
+        raise HTTPException(404, "Narrativa no encontrada.")
+    except nar.NarrativeError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/api/narratives")
+def narratives_list():
+    return nar.list_all()
+
+
+@app.post("/api/narratives")
+def narratives_create(body: NewNarrative):
+    return _nar(nar.create, body.titulo, body.audiencia, body.objetivo, body.contexto)
+
+
+@app.post("/api/narratives/merge")
+def narratives_merge(body: MergeNarratives):
+    return _nar(nar.merge, body.ids, body.titulo)
+
+
+@app.get("/api/narratives/{nid}")
+def narratives_get(nid: str):
+    return _nar(nar.load, nid)
+
+
+@app.patch("/api/narratives/{nid}")
+def narratives_patch(nid: str, body: NarrativePatch):
+    return _nar(nar.update, nid, body.model_dump(exclude_none=True))
+
+
+@app.delete("/api/narratives/{nid}")
+def narratives_delete(nid: str):
+    _nar(nar.delete, nid)
+    return {"ok": True}
+
+
+@app.post("/api/narratives/{nid}/piezas")
+def narratives_add_piece(nid: str, body: dict):
+    return _nar(nar.add_piece, nid, body)
+
+
+@app.delete("/api/narratives/{nid}/piezas/{pid}")
+def narratives_remove_piece(nid: str, pid: str):
+    return _nar(nar.remove_piece, nid, pid)
+
+
+async def _agent_step(nid: str, fn):
+    if nid in BUSY_NARRATIVES:
+        raise HTTPException(409, "El agente ya está trabajando en esta narrativa.")
+    _nar(nar.load, nid)
+    BUSY_NARRATIVES.add(nid)
+    try:
+        return await fn(nid)
+    except nar.NarrativeError as e:
+        raise HTTPException(400, str(e))
+    finally:
+        BUSY_NARRATIVES.discard(nid)
+
+
+@app.post("/api/narratives/{nid}/esqueleto")
+async def narratives_plan(nid: str):
+    return await _agent_step(nid, nar.plan)
+
+
+@app.post("/api/narratives/{nid}/consolidar")
+async def narratives_consolidate(nid: str):
+    return await _agent_step(nid, nar.consolidate)

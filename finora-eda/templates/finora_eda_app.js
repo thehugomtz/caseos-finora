@@ -1820,6 +1820,8 @@ function palList() {
                    : BR.golden.filter(g => g.destacada).sort((a, b) => DOM_ORDER.indexOf(a.dominio) - DOM_ORDER.indexOf(b.dominio));
   group(q ? "Respuestas verificadas relacionadas" : "Preguntas frecuentes del negocio",
         golden.map(g => ({ text: g.pregunta, dom: g.dominio, qid: g.id, go: () => { palClose(true); openAnswer(g.id); } })));
+  if (NARR_ON && !q) group("Narrativa", [{ text: "Preparar narrativa: guarda piezas, profundiza y consolida una presentación", dom: "Asistida por IA",
+                                           go: () => { palClose(true); openStudio(); } }]);
   group("Explorar por sección", sections().filter(s => !q || matches(s.num + " " + s.title + " " + s.q, q))
     .map(s => ({ text: s.num + " · " + s.title, cls: "sec", go: () => { palClose(true); goTo("#" + s.id); } })), "sub");
   if (q) group("Tarjetas", cardsInfo().filter(c => matches(c.key + " " + c.title, q)).slice(0, 8)
@@ -2091,6 +2093,7 @@ function renderAnswers() {
     how.type = "button";
     const sq = el.closest(".section") && el.closest(".section").querySelector(".question");
     how.addEventListener("click", () => openAnswerLineage(Object.assign({}, a, { titular: sq ? sq.textContent.trim() : "" }), how));
+    narButton(meta, () => pieceFromSection(el.dataset.answer, el));
   });
 }
 function phase1ClaimRows(parent, ids) {
@@ -2195,6 +2198,7 @@ function renderAnswerView(b, qid, opts) {
     goTo(a.tarjeta ? "#card-" + a.tarjeta.replace(".", "-") : "#" + sec.id);
   });
   if (LIVE) btn(acts, noEval ? "Investigar más →" : "Investigar en vivo", "", () => startLive(qid === "Q2" ? { pregunta_id: "Q2" } : { pregunta: g.pregunta }, g.pregunta));
+  narButton(acts, () => pieceFromAnswer(qid), "inv-btn", "＋ Guardar en narrativa");
 }
 function openAnswer(qid, opts) {
   opts = opts || {};
@@ -2488,6 +2492,13 @@ function pickMainVisual(doc) {
 function renderInvestigation(b, doc, opts) {
   const claims = doc.claims || {}, N = doc.narrativa;
   if (opts.banner) rich(H("div", "ans-banner", b), opts.banner);
+  if (NARR_ON && doc.contexto && NAR_RE.test(doc.contexto.narrativa_id || "")) {
+    NST.current = doc.contexto.narrativa_id;
+    const bn = H("div", "ans-banner", b, "Profundización desde tu narrativa: guarda aquí lo que te sirva con ＋ Narrativa. ");
+    const back = H("button", "inv", bn, "← Volver a la narrativa");
+    back.type = "button";
+    back.addEventListener("click", () => openStudio(doc.contexto.narrativa_id));
+  }
   H("h1", "ans-q", b, doc.pregunta);
   if (doc.error) H("div", "ans-banner", b, "La investigación terminó con error: " + doc.error);
   if (N) {
@@ -2499,6 +2510,7 @@ function renderInvestigation(b, doc, opts) {
     const lv = H("span", null, meta, "Nivel de evidencia ");
     [...new Set(N.respuesta_ejecutiva.claim_ids.map(id => (claims[id] || {}).estado).filter(Boolean))].forEach(s => { lv.appendChild(metaTag(s)); lv.append(" "); });
     H("span", null, meta, "Investigación del agente · " + Object.values(claims).filter(c => c.aceptada).length + " afirmaciones validadas");
+    narButton(meta, () => pieceFromInvAnswer(doc));
     if (N.degradada) H("span", null, meta, "· composición sin texto libre");
     const hz = N.hallazgos || [];
     if (hz.length) {
@@ -2510,6 +2522,7 @@ function renderInvestigation(b, doc, opts) {
         if (hyp) d.appendChild(hypTag(hyp.estado, true));
         rich(H("div", "dt", d), h.titular || (c0 ? c0.texto : ""));
         H("div", "dq", d, h.pregunta);
+        narButton(d, () => pieceFromFinding(doc, h), "inv nar-driver");
       });
     }
     const vmain = pickMainVisual(doc);
@@ -2602,6 +2615,7 @@ function renderDetails(b, doc, mainId) {
         H("b", null, p, k + ". ");
         rich(p, t);
       });
+      narButton(card, () => pieceFromFinding(doc, hz), "inv", "＋ Guardar este hallazgo en la narrativa");
     });
     if ((N.limites || []).length) {
       invSection(b, "3", "Lo que no podemos concluir");
@@ -2733,6 +2747,504 @@ function openEvidenceLineage(eid, trigger) {
   }, trigger);
 }
 
+/* ================================================================== preparar narrativa (piezas, esqueleto, presentación) */
+const NARR_ON = !!(LIVE && LIVE.narrativas);
+const ROLES = ["Situación", "Hallazgo", "Implicación", "Decisión", "Acción"];
+const AUDS = ["Mixta", "CEO", "CRO", "CFO"];
+const NST = { list: [], current: null, doc: null };
+const cut = (x, n) => (x.length > n ? x.slice(0, n).replace(/[\s,;:]+\S*$/, "") + "…" : x);
+const NAR_RE = /^NAR-[0-9]{8}-[0-9]{6}-[0-9a-f]{4}$/;
+
+async function napi(path, opts) {
+  const r = await fetch(LIVE.api + "/narratives" + (path || ""), Object.assign({ headers: { "Content-Type": "application/json" } }, opts || {}));
+  if (!r.ok) {
+    const t = await r.json().catch(() => ({}));
+    throw new Error(typeof t.detail === "string" ? t.detail : "Error " + r.status);
+  }
+  return r.json();
+}
+const post = body => ({ method: "POST", body: JSON.stringify(body || {}) });
+const patch = body => ({ method: "PATCH", body: JSON.stringify(body) });
+function toast(msg) {
+  const t = H("div", "toast", document.body, msg);
+  requestAnimationFrame(() => t.classList.add("on"));
+  setTimeout(() => { t.classList.remove("on"); setTimeout(() => t.remove(), 300); }, 2600);
+}
+const stateTag = s => (!s ? null : EST[s] ? metaTag(s) : hypTag(s, true));
+const tagLabel = el => (el ? Array.from(el.childNodes).filter(x => x.nodeType === 3).map(x => x.textContent).join("").trim() : "");
+
+/* ---- piezas: fragmentos validados con su evidencia (texto, afirmaciones con cifras, gráfica e IDs) */
+function canonClaims(ids) {
+  return (ids || []).map(id => D.claims.find(c => c.id === id)).filter(Boolean).map(c => ({
+    id: c.id, texto: c.claim, estado: c.estado,
+    cifras: Object.fromEntries((c.evidence || []).map(k => [(c.etiquetas || {})[k] || k, String(FACT[k])])) }));
+}
+function cardVisual(key) {
+  const card = document.querySelector('main .card[data-card="' + key + '"]');
+  const ch = card && card.querySelector(".chart[data-chart]");
+  return ch ? { tipo: "workspace", chart: ch.dataset.chart, tarjeta: key, titulo: (card.querySelector("h3") || {}).textContent || "" } : null;
+}
+function pieceFromAnswer(qid) {
+  const a = ANS.preguntas[qid], g = BR.golden.find(x => x.id === qid);
+  return { tipo: "respuesta", titulo: g ? g.pregunta : qid, texto: a.titular + " " + a.respuesta, estado: a.estado,
+           afirmaciones: canonClaims(a.claims), fuente: { kind: "respuesta", ref: qid },
+           visual: a.visual ? { tipo: "workspace", chart: a.visual, titulo: a.visual_titulo || a.titular } : null };
+}
+function pieceFromSection(sid, el) {
+  const a = ANS.secciones[sid], sq = el.closest(".section") && el.closest(".section").querySelector(".question");
+  return { tipo: "seccion", titulo: sq ? sq.textContent.trim() : sid, texto: a.respuesta, estado: a.estado,
+           afirmaciones: canonClaims(a.claims), fuente: { kind: "seccion", ref: sid },
+           visual: a.lectura ? cardVisual(a.lectura.tarjeta) : null };
+}
+function pieceFromCard(card) {
+  const key = card.dataset.card, info = BR.cards[key] || {}, lect = card.querySelector(".lectura");
+  return { tipo: "tarjeta", titulo: ((card.querySelector("h3") || {}).textContent || key).trim(),
+           texto: [lect ? lect.textContent.trim() : "", info.muestra || ""].filter(Boolean).join(" "),
+           estado: tagLabel(card.querySelector(".card-top .tag")), afirmaciones: canonClaims(info.claims),
+           fuente: { kind: "tarjeta", ref: key }, visual: cardVisual(key) };
+}
+function pieceFromClaim(id) {
+  const c = D.claims.find(x => x.id === id);
+  const key = Object.keys(BR.cards).find(k => (BR.cards[k].claims || []).includes(id) && cardVisual(k));
+  return { tipo: "afirmacion", titulo: c.claim, texto: c.claim, estado: c.estado, afirmaciones: canonClaims([id]),
+           fuente: { kind: "afirmacion", ref: id }, visual: key ? cardVisual(key) : null };
+}
+function invVisual(doc, vid) {
+  const v = (doc.visuals || {})[vid];
+  if (!v) return null;
+  if (v.spec.tipo === "tarjeta") { const cv = cardVisual(v.spec.tarjeta); return cv ? Object.assign(cv, { titulo: v.titulo }) : null; }
+  return { tipo: "spec", spec: v.spec, titulo: v.titulo };
+}
+const invClaims = (doc, ids) => (ids || []).map(id => (doc.claims || {})[id]).filter(Boolean)
+  .map(c => ({ id: c.id, texto: c.texto, estado: c.estado, cifras: {} }));
+function pieceFromInvAnswer(doc) {
+  const ra = doc.narrativa.respuesta_ejecutiva, vm = pickMainVisual(doc), cl = invClaims(doc, ra.claim_ids);
+  return { tipo: "respuesta_inv", titulo: doc.pregunta.slice(0, 280), texto: (ra.titular ? ra.titular + ". " : "") + ra.texto,
+           estado: cl.length ? cl[0].estado : "", afirmaciones: cl, fuente: { kind: "investigacion", ref: doc.id },
+           visual: vm ? invVisual(doc, vm.id) : null };
+}
+function pieceFromFinding(doc, hz) {
+  const hyp = (doc.hipotesis || []).find(h => h.id === hz.hipotesis_id);
+  return { tipo: "hallazgo", titulo: hz.titular || hz.pregunta, texto: [hz.interpretacion, hz.implicacion].filter(Boolean).join(" "),
+           estado: hyp ? hyp.estado : "", afirmaciones: invClaims(doc, hz.claim_ids),
+           fuente: { kind: "investigacion", ref: doc.id, hallazgo: hz.hipotesis_id },
+           visual: (hz.visual_ids || []).length ? invVisual(doc, hz.visual_ids[0]) : null };
+}
+function narButton(parent, makePiece, cls, label) {
+  if (!NARR_ON) return null;
+  const b = H("button", cls || "inv", parent, label || "＋ Narrativa");
+  b.type = "button";
+  b.title = "Guardar en una narrativa";
+  b.addEventListener("click", e => { e.stopPropagation(); saveToNarrative(makePiece, b); });
+  return b;
+}
+
+/* ---- guardar una pieza: narrativa, papel en la historia y para qué sirve */
+function roleButtons(parent, initial, onPick) {
+  const box = H("div", "nar-roles", parent);
+  ROLES.forEach(r => {
+    const b = H("button", "nar-pill" + (r === initial ? " on" : ""), box, r);
+    b.type = "button";
+    b.addEventListener("click", () => { box.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); onPick(r); });
+  });
+  return box;
+}
+async function saveToNarrative(makePiece, trigger) {
+  try { NST.list = await napi(""); } catch (e) { alert("No se pudo leer las narrativas: " + e.message); return; }
+  const piece = makePiece();
+  let rol = piece.tipo === "nota" ? "Decisión" : "Hallazgo";
+  openDrawerWith("guardar en narrativa", piece.titulo, body => {
+    const f = H("div", "nar-form", body);
+    const s1 = drSec(f, "Narrativa");
+    const sel = H("select", "nar-in", s1);
+    NST.list.forEach(n => { const o = H("option", null, sel, n.titulo + " · " + n.piezas + " piezas"); o.value = n.id; });
+    H("option", null, sel, "＋ Nueva narrativa…").value = "__new";
+    sel.value = NST.list.some(n => n.id === NST.current) ? NST.current : NST.list.length ? NST.list[0].id : "__new";
+    const nt = H("input", "nar-in", s1);
+    nt.placeholder = "Título de la nueva narrativa (p. ej. Caso CFO)";
+    nt.hidden = sel.value !== "__new";
+    sel.addEventListener("change", () => { nt.hidden = sel.value !== "__new"; if (!nt.hidden) nt.focus(); });
+    roleButtons(drSec(f, "Papel en la historia"), rol, r => { rol = r; });
+    const nota = H("textarea", "nar-in", drSec(f, "¿Para qué sirve? ¿Qué explica después?"));
+    nota.rows = 3;
+    nota.placeholder = "Ej.: explica por qué no podemos leer el puente de MRR como comportamiento del cliente.";
+    const pv = drSec(f, "Qué se guarda");
+    const top = H("div", "tags", pv);
+    top.style.justifyContent = "flex-start";
+    const st = stateTag(piece.estado);
+    if (st) top.appendChild(st);
+    H("span", "muted", top, (piece.afirmaciones || []).length + " afirmaciones verificadas · " + (piece.visual ? "con gráfica" : "sin gráfica"));
+    rich(H("p", null, pv), (piece.texto || "").slice(0, 420) + ((piece.texto || "").length > 420 ? "…" : ""));
+    const go = btn(f, "Guardar pieza", "primary", async () => {
+      go.disabled = true;
+      try {
+        let nid = sel.value;
+        if (nid === "__new") {
+          if (!nt.value.trim()) { nt.focus(); go.disabled = false; return; }
+          nid = (await napi("", post({ titulo: nt.value.trim() }))).id;
+        }
+        const doc = await napi("/" + nid + "/piezas", post(Object.assign({}, piece, { rol: rol, nota: nota.value })));
+        NST.current = nid;
+        NST.doc = doc;
+        closeDrawer(true);
+        toast("Guardado en «" + doc.titulo + "» como " + rol);
+      } catch (e) { alert(e.message); go.disabled = false; }
+    });
+  }, trigger);
+}
+
+/* ---- sección "Preparar narrativa" */
+async function openStudio(nid) {
+  const b = showDoc("Preparar narrativa", tagRaw("explo", "✎", "Narrativa asistida por IA"));
+  H("p", "muted", b, "Cargando narrativas…");
+  try {
+    NST.list = await napi("");
+    if (nid && NAR_RE.test(nid)) NST.current = nid;
+    if (!NST.list.some(n => n.id === NST.current)) NST.current = NST.list.length ? NST.list[0].id : null;
+    NST.doc = NST.current ? await napi("/" + NST.current) : null;
+  } catch (e) { b.replaceChildren(); H("p", null, b, "No se pudo abrir: " + e.message); return; }
+  setHash(NST.current ? "#narrativa/" + NST.current : "#narrativas");
+  renderStudio(b);
+}
+async function refreshStudio() {
+  NST.list = await napi("");
+  NST.doc = NST.current ? await napi("/" + NST.current) : null;
+  renderStudio($("invBody"));
+}
+function busyLine(parent, text) {
+  const k = H("div", "answer-k analyzing nar-busy", parent);
+  H("span", "spinner", k);
+  k.append(text);
+  return k;
+}
+function renderStudio(b) {
+  b.replaceChildren();
+  H("h1", "ans-q", b, "Preparar narrativa");
+  H("p", "inv-frame", b, "Guarda piezas desde cualquier parte del workspace con ＋ Narrativa, profundiza con el agente y consolida una presentación. " +
+    "El agente solo usa lo que guardaste: cada cifra de una lámina viene de una pieza citada, y lo que falta queda como pendiente.");
+  const bar = H("div", "nar-bar", b);
+  NST.list.forEach(n => {
+    const c = H("button", "nar-chip" + (n.id === NST.current ? " on" : ""), bar, n.titulo + " · " + n.piezas);
+    c.type = "button";
+    c.addEventListener("click", () => openStudio(n.id));
+  });
+  btn(bar, "＋ Nueva narrativa", "", () => newNarrativeForm());
+  if (NST.list.length >= 2) btn(bar, "Unir narrativas", "", () => mergeForm());
+  const d = NST.doc;
+  if (!d) {
+    H("p", null, b, "Todavía no hay narrativas. Crea una, o usa ＋ Narrativa en una respuesta, una tarjeta o un hallazgo.");
+    return;
+  }
+  // encabezado
+  const head = H("div", "ans-main nar-head", b);
+  const g1 = H("div", "nar-grid", head);
+  const f = (lab, el) => { const w = H("label", "nar-field", g1); H("span", null, w, lab); w.appendChild(el); return el; };
+  const ti = f("Título", H("input", "nar-in")); ti.value = d.titulo;
+  const au = f("Audiencia", H("select", "nar-in")); AUDS.forEach(a => { H("option", null, au, a).value = a; }); au.value = d.audiencia || "Mixta";
+  const ob = f("Objetivo", H("input", "nar-in")); ob.value = d.objetivo || ""; ob.placeholder = "Qué tiene que entender o decidir la audiencia";
+  const cl = H("label", "nar-field wide", head);
+  H("span", null, cl, "Contexto");
+  const cx = H("textarea", "nar-in", cl);
+  cx.rows = 4;
+  cx.value = d.contexto || "";
+  cx.placeholder = "Contexto completo (opcional): pega el caso, un correo o tus notas. El agente propone el esqueleto de la historia a partir de aquí.";
+  const acts = H("div", "ans-actions", head);
+  btn(acts, "Guardar cambios", "", async () => {
+    try { NST.doc = await napi("/" + d.id, patch({ titulo: ti.value, audiencia: au.value, objetivo: ob.value, contexto: cx.value })); toast("Narrativa guardada"); refreshStudio(); }
+    catch (e) { alert(e.message); }
+  });
+  const sk = btn(acts, d.esqueleto ? "Rehacer esqueleto con el agente" : "Proponer esqueleto con el agente", "primary", async () => {
+    sk.disabled = true;
+    const line = busyLine(head, "El agente arma el esqueleto de la historia… (cerca de un minuto)");
+    try {
+      await napi("/" + d.id, patch({ titulo: ti.value, audiencia: au.value, objetivo: ob.value, contexto: cx.value }));
+      NST.doc = await napi("/" + d.id + "/esqueleto", post());
+      renderStudio(b);
+    } catch (e) { line.remove(); sk.disabled = false; alert(e.message); }
+  });
+  const del = btn(acts, "Borrar narrativa", "", async () => {
+    if (!confirm("¿Borrar la narrativa «" + d.titulo + "» y sus piezas? No se puede deshacer.")) return;
+    try { await napi("/" + d.id, { method: "DELETE" }); NST.current = null; openStudio(); } catch (e) { alert(e.message); }
+  });
+  del.classList.add("danger");
+  if (d.esqueleto) renderSkeleton(b, d);
+  // piezas
+  const hp = H("h2", "inv-h2", b, "Piezas guardadas (" + d.piezas.length + ")");
+  hp.id = "narPieces";
+  const tools = H("div", "ans-actions", b);
+  btn(tools, "＋ Hechos verificados", "", () => factsPicker());
+  btn(tools, "＋ Nota o decisión", "", () => noteForm());
+  if (!d.piezas.length) H("p", "muted", b, "Aún no hay piezas. Usa ＋ Narrativa en cualquier respuesta, sección, tarjeta o hallazgo.");
+  const list = H("div", "nar-list", b);
+  d.piezas.forEach((p, i) => renderPiece(list, d, p, i));
+  // presentación
+  const fin = H("div", "ans-main nar-final", b);
+  H("div", "answer-k", fin, "Presentación");
+  H("p", "ans-text", fin, d.presentacion
+    ? "Hay una presentación consolidada" + (d.presentacion.degradada ? " sin texto libre (el agente no pasó el validador)." : " y validada.") + " Puedes verla o volver a consolidarla con las piezas actuales."
+    : "Cuando tengas las piezas, el agente arma las láminas con ellas. Tarda de uno a tres minutos y usa tu plan.");
+  const fa = H("div", "ans-actions", fin);
+  if (d.presentacion) btn(fa, "Ver presentación →", "primary", () => openDeck(d.id));
+  const cb = btn(fa, d.presentacion ? "Volver a consolidar" : "Consolidar presentación", d.presentacion ? "" : "primary", async () => {
+    cb.disabled = true;
+    const line = busyLine(fin, "El agente arma la presentación con tus piezas… (de uno a tres minutos)");
+    try { NST.doc = await napi("/" + d.id + "/consolidar", post()); openDeck(d.id); }
+    catch (e) { line.remove(); cb.disabled = false; alert(e.message); }
+  });
+  if (!d.piezas.some(p => p.tipo !== "nota")) cb.disabled = true;
+}
+function renderPiece(list, d, p, i) {
+  const row = H("article", "nar-piece", list);
+  const top = H("div", "nar-ptop", row);
+  const rs = H("select", "nar-role", top);
+  ROLES.forEach(r => { H("option", null, rs, r).value = r; });
+  rs.value = p.rol;
+  rs.addEventListener("change", async () => { try { NST.doc = await napi("/" + d.id, patch({ piezas: [{ id: p.id, rol: rs.value }] })); } catch (e) { alert(e.message); } });
+  const st = stateTag(p.estado);
+  if (st) top.appendChild(st);
+  H("span", "mono muted", top, { respuesta: "respuesta", seccion: "sección", tarjeta: "tarjeta", hallazgo: "hallazgo", respuesta_inv: "investigación", afirmacion: "hecho verificado", nota: "nota tuya" }[p.tipo] || p.tipo);
+  H("span", "sp", top);
+  const mv = (dir) => async () => {
+    const ids = d.piezas.map(x => x.id), j = i + dir;
+    if (j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+    try { NST.doc = await napi("/" + d.id, patch({ orden: ids })); renderStudio($("invBody")); } catch (e) { alert(e.message); }
+  };
+  const up = btn(top, "↑", "nar-mini", mv(-1)); up.title = "Subir";
+  const dn = btn(top, "↓", "nar-mini", mv(1)); dn.title = "Bajar";
+  const rm = btn(top, "Quitar", "nar-mini", async () => {
+    if (!confirm("¿Quitar esta pieza de la narrativa?")) return;
+    try { NST.doc = await napi("/" + d.id + "/piezas/" + p.id, { method: "DELETE" }); refreshStudio(); } catch (e) { alert(e.message); }
+  });
+  rm.title = "Quitar de la narrativa";
+  rich(H("div", "nar-ptitle", row), p.titulo);
+  if (p.texto && p.texto !== p.titulo) rich(H("p", "nar-ptext", row), p.texto.length > 360 ? p.texto.slice(0, 360) + "…" : p.texto);
+  const meta = H("div", "nar-pmeta", row);
+  if ((p.afirmaciones || []).length) H("span", null, meta, p.afirmaciones.length + " afirmaciones verificadas");
+  if (p.visual) H("span", null, meta, "con gráfica");
+  if (p.fuente && p.fuente.kind) { const o = btn(meta, "Abrir fuente", "inv", () => openPieceSource(p)); o.classList.remove("inv-btn"); }
+  const nota = H("textarea", "nar-in nar-note", row);
+  nota.rows = 2;
+  nota.value = p.nota || "";
+  nota.placeholder = "¿Para qué sirve en la historia? ¿Qué explica después?";
+  nota.addEventListener("change", async () => { try { NST.doc = await napi("/" + d.id, patch({ piezas: [{ id: p.id, nota: nota.value }] })); toast("Nota guardada"); } catch (e) { alert(e.message); } });
+  if (p.tipo !== "nota" && LIVE && LIVE.libre) {
+    const dp = H("div", "nar-deep", row);
+    const q = H("input", "nar-in", dp);
+    q.placeholder = "Profundizar: ¿qué quieres preguntar a partir de esta pieza?";
+    const go = btn(dp, "Investigar", "", () => { if (q.value.trim()) deepen(p, q.value.trim()); else q.focus(); });
+    q.addEventListener("keydown", e => { if (e.key === "Enter") go.click(); });
+  }
+}
+function renderSkeleton(b, d) {
+  const sk = d.esqueleto;
+  H("h2", "inv-h2", b, "Esqueleto de la historia");
+  if (sk.resumen) rich(H("p", "inv-frame", b), sk.resumen);
+  const box = H("div", "nar-sk", b);
+  const pieceById = Object.fromEntries(d.piezas.map(p => [p.id, p]));
+  sk.secciones.forEach(s => {
+    const c = H("div", "nar-sec", box);
+    H("span", "nar-pill on", c, s.rol);
+    rich(H("div", "nar-ptitle", c), s.mensaje);
+    if ((s.preguntas || []).length) { const ul = H("ul", "nar-q", c); s.preguntas.forEach(q => rich(H("li", null, ul), q)); }
+    if ((s.piezas || []).length) {
+      const m = H("div", "nar-pmeta", c, "Piezas que ya sirven: ");
+      m.append(s.piezas.map(id => (pieceById[id] ? cut(pieceById[id].titulo, 70) : id)).join(" · "));
+    }
+    (s.afirmaciones || []).forEach(id => {
+      const cl = D.claims.find(x => x.id === id);
+      if (!cl) return;
+      const r = H("div", "nar-suggest", c);
+      r.appendChild(metaTag(cl.estado));
+      rich(H("span", null, r), cl.claim);
+      const have = d.piezas.some(p => p.fuente && p.fuente.kind === "afirmacion" && p.fuente.ref === id);
+      if (have) H("span", "mono muted", r, "ya guardado");
+      else btn(r, "＋ Guardar", "nar-mini", async () => {
+        try { NST.doc = await napi("/" + d.id + "/piezas", post(Object.assign(pieceFromClaim(id), { rol: s.rol, nota: "Sugerido por el esqueleto: " + s.mensaje }))); refreshStudio(); }
+        catch (e) { alert(e.message); }
+      });
+    });
+    (s.huecos || []).forEach(q => {
+      const r = H("div", "nar-gap", c);
+      H("span", "mono", r, "hueco");
+      rich(H("span", null, r), q);
+      if (LIVE && LIVE.libre) btn(r, "Investigar", "nar-mini", () => startLive({ pregunta: q, contexto: {
+        titulo: s.mensaje, texto: ((d.objetivo || "") + " " + (d.contexto || "")).slice(0, 3000),
+        nota: "Hueco del esqueleto (" + s.rol + ")", claim_ids: s.afirmaciones || [], narrativa_id: d.id } }, q));
+    });
+  });
+}
+function deepen(p, q) {
+  const canon = (p.afirmaciones || []).map(a => a.id).filter(id => /^C-[A-Z]{3}-\d{2}$/.test(id));
+  const texto = [p.texto].concat((p.afirmaciones || []).map(a => a.texto)).join(" ").slice(0, 3800);
+  startLive({ pregunta: q, contexto: { titulo: p.titulo, texto: texto, nota: p.nota || "", claim_ids: canon, narrativa_id: NST.current, pieza_id: p.id } }, q);
+}
+async function openPieceSource(p) {
+  const f = p.fuente || {};
+  if (f.kind === "respuesta") return openAnswer(f.ref);
+  if (f.kind === "seccion") { closeInvestigation(); return goTo("#" + f.ref); }
+  if (f.kind === "tarjeta") { closeInvestigation(); return goTo("#card-" + String(f.ref).replace(".", "-")); }
+  if (f.kind === "afirmacion") { const c = D.claims.find(x => x.id === f.ref); if (c) openAnswerLineage({ titular: c.claim, estado: c.estado, claims: [c.id] }, null); return; }
+  if (f.kind === "investigacion") {
+    const g = Object.values(GOLDEN_INV).find(x => x.id === f.ref);
+    if (g) return openInvestigation(g, { golden: true });
+    const d = await fetch(LIVE.api + "/investigations/" + f.ref).then(r => (r.ok ? r.json() : null)).catch(() => null);
+    if (d) openInvestigation(d); else alert("No encontré esa investigación en este servidor.");
+  }
+}
+function newNarrativeForm() {
+  openDrawerWith("nueva narrativa", "Nueva narrativa", body => {
+    const f = H("div", "nar-form", body);
+    const t = H("input", "nar-in", drSec(f, "Título"));
+    t.placeholder = "Ej.: Caso CFO · qué mide hoy el MRR";
+    const a = H("select", "nar-in", drSec(f, "Audiencia"));
+    AUDS.forEach(x => { H("option", null, a, x).value = x; });
+    const o = H("input", "nar-in", drSec(f, "Objetivo (opcional)"));
+    o.placeholder = "Qué tiene que entender o decidir la audiencia";
+    const c = H("textarea", "nar-in", drSec(f, "Contexto completo (opcional)"));
+    c.rows = 6;
+    c.placeholder = "Pega el caso, un correo o tus notas. Luego el agente puede proponer el esqueleto de la historia.";
+    const go = btn(f, "Crear narrativa", "primary", async () => {
+      if (!t.value.trim()) { t.focus(); return; }
+      go.disabled = true;
+      try { const d = await napi("", post({ titulo: t.value, audiencia: a.value, objetivo: o.value, contexto: c.value })); closeDrawer(true); openStudio(d.id); }
+      catch (e) { alert(e.message); go.disabled = false; }
+    });
+    setTimeout(() => t.focus(), 0);
+  }, null);
+}
+function mergeForm() {
+  openDrawerWith("unir narrativas", "Unir narrativas", body => {
+    const f = H("div", "nar-form", body);
+    H("p", null, drSec(f, "Cómo funciona"), "Crea una narrativa nueva con todas las piezas, sin duplicar la misma fuente y en el orden de la historia. Las originales no cambian.");
+    const s = drSec(f, "Narrativas");
+    const checks = NST.list.map(n => { const l = H("label", "nar-check", s); const c = H("input", null, l); c.type = "checkbox"; c.value = n.id; l.append(" " + n.titulo + " · " + n.piezas + " piezas"); return c; });
+    const t = H("input", "nar-in", drSec(f, "Título de la narrativa unida"));
+    t.placeholder = "Ej.: Historia para CEO, CRO y CFO";
+    const go = btn(f, "Unir", "primary", async () => {
+      const ids = checks.filter(c => c.checked).map(c => c.value);
+      if (ids.length < 2) { alert("Elige al menos dos narrativas."); return; }
+      go.disabled = true;
+      try { const d = await napi("/merge", post({ ids: ids, titulo: t.value })); closeDrawer(true); openStudio(d.id); }
+      catch (e) { alert(e.message); go.disabled = false; }
+    });
+  }, null);
+}
+function factsPicker() {
+  const d = NST.doc;
+  let rol = "Hallazgo";
+  openDrawerWith("hechos verificados", "Agregar hechos verificados", body => {
+    const f = H("div", "nar-form", body);
+    roleButtons(drSec(f, "Papel en la historia"), rol, r => { rol = r; });
+    const q = H("input", "nar-in", drSec(f, "Buscar"));
+    q.placeholder = "churn, ticket, altas, cobro…";
+    const list = H("div", "nar-facts", f);
+    const draw = () => {
+      list.replaceChildren();
+      const t = normTxt(q.value.trim());
+      D.claims.filter(c => !t || matches(c.claim + " " + c.dominio + " " + c.id, t)).forEach(c => {
+        const r = H("div", "nar-suggest", list);
+        r.appendChild(metaTag(c.estado));
+        rich(H("span", null, r), c.claim);
+        const have = d.piezas.some(p => p.fuente && p.fuente.kind === "afirmacion" && p.fuente.ref === c.id);
+        if (have) { H("span", "mono muted", r, "ya está"); return; }
+        const b = btn(r, "＋", "nar-mini", async () => {
+          b.disabled = true;
+          try { NST.doc = await napi("/" + d.id + "/piezas", post(Object.assign(pieceFromClaim(c.id), { rol: rol, nota: "" }))); b.textContent = "✓"; toast("Agregado como " + rol); renderStudio($("invBody")); }
+          catch (e) { alert(e.message); b.disabled = false; }
+        });
+      });
+    };
+    q.addEventListener("input", draw);
+    draw();
+  }, null);
+}
+function noteForm() {
+  const d = NST.doc;
+  let rol = "Decisión";
+  openDrawerWith("nota o decisión", "Nota o decisión propia", body => {
+    const f = H("div", "nar-form", body);
+    H("p", null, drSec(f, "Qué es"), "Una idea tuya (una decisión, una acción, una transición). Orienta la historia, pero no cuenta como evidencia: el agente no saca cifras de aquí.");
+    roleButtons(drSec(f, "Papel en la historia"), rol, r => { rol = r; });
+    const t = H("input", "nar-in", drSec(f, "Enunciado"));
+    t.placeholder = "Ej.: Registrar los descuentos temporales antes de lanzarlos";
+    const n = H("textarea", "nar-in", drSec(f, "Por qué o para qué"));
+    n.rows = 3;
+    const go = btn(f, "Guardar nota", "primary", async () => {
+      if (!t.value.trim()) { t.focus(); return; }
+      go.disabled = true;
+      try { NST.doc = await napi("/" + d.id + "/piezas", post({ tipo: "nota", rol: rol, titulo: t.value, texto: "", nota: n.value })); closeDrawer(true); refreshStudio(); }
+      catch (e) { alert(e.message); go.disabled = false; }
+    });
+  }, null);
+}
+
+/* ---- presentación en láminas web */
+async function openDeck(nid) {
+  let d = NST.doc && NST.doc.id === nid ? NST.doc : null;
+  if (!d) { try { d = await napi("/" + nid); } catch (e) { alert(e.message); return; } }
+  NST.doc = d;
+  NST.current = d.id;
+  const deck = d.presentacion;
+  if (!deck) return openStudio(nid);
+  const b = showDoc("Presentación · " + d.titulo, deck.degradada ? tagRaw("prec", "!", "Sin texto libre") : tagRaw("hecho", "✓", "Validada"));
+  setHash("#presentacion/" + d.id);
+  const tools = H("div", "ans-actions deck-tools", b);
+  btn(tools, "← Volver a la narrativa", "", () => openStudio(d.id));
+  btn(tools, "Imprimir o guardar PDF", "", () => { document.body.classList.add("print-deck"); window.print(); setTimeout(() => document.body.classList.remove("print-deck"), 800); });
+  H("h1", "deck-title", b, deck.titulo);
+  if (deck.subtitulo) rich(H("p", "deck-sub", b), deck.subtitulo);
+  const pieces = Object.fromEntries(d.piezas.map(p => [p.id, p]));
+  deck.laminas.forEach((s, i) => {
+    const sl = H("section", "slide", b);
+    const hd = H("div", "slide-head", sl);
+    H("span", "nar-pill on", hd, s.rol);
+    H("span", "mono muted", hd, (i + 1) + " / " + deck.laminas.length);
+    rich(H("h2", "slide-t", sl), s.titulo);
+    rich(H("p", "slide-m", sl), s.mensaje);
+    const grid = H("div", "slide-grid" + (s.visual ? "" : " solo"), sl);
+    if ((s.puntos || []).length) { const ul = H("ul", "slide-pts", grid); s.puntos.forEach(t => rich(H("li", null, ul), t)); }
+    const vp = s.visual && pieces[s.visual];
+    if (vp && vp.visual) {
+      const v = vp.visual, box = H("div", "slide-viz", grid);
+      if (v.tipo === "workspace") { const card = mountChart(box, v.chart); const h = H("div", "viz-h"); rich(h, v.titulo || ""); card.prepend(h); }
+      else if (v.spec) visualCard(box, { titulo: v.titulo || "", spec: v.spec }, true);
+    }
+    const ev = H("div", "slide-ev", sl);
+    H("span", "mono muted", ev, "Evidencia:");
+    (s.piezas || []).forEach(id => {
+      const p = pieces[id];
+      if (!p) return;
+      const c = H("button", "ev-chip", ev, cut(p.titulo, 70));
+      c.type = "button";
+      c.title = p.estado || "";
+      c.addEventListener("click", () => openPieceSource(p));
+    });
+    if (s.notas) { const det = H("details", "slide-notes", sl); H("summary", null, det, "Notas del presentador"); rich(H("p", null, det), s.notas); }
+  });
+  if ((deck.pendientes || []).length) {
+    H("h2", "inv-h2", b, "Pendientes: lo que la historia necesita y aún no tiene evidencia");
+    const box = H("div", "inv-blocks deck-pend", b);
+    deck.pendientes.forEach(q => {
+      const r = H("div", "inv-block", box);
+      H("span", "nar-pill on", r, q.rol);
+      rich(H("span", null, r), " " + q.que_falta);
+      if (q.pregunta && LIVE && LIVE.libre) btn(r, "Investigar: " + cut(q.pregunta, 160), "nar-mini", () => startLive({ pregunta: q.pregunta, contexto: {
+        titulo: q.que_falta, texto: ((d.objetivo || "") + " " + (d.contexto || "")).slice(0, 3000), nota: "Pendiente de la presentación (" + q.rol + ")", claim_ids: [], narrativa_id: d.id } }, q.pregunta));
+    });
+  }
+  const foot = H("div", "inv-foot", b);
+  const tries = (deck.intentos || []).length;
+  const own = (deck.uso || {}).costo_equivalente_usd || 0;
+  const all = Object.values(d.uso || {}).reduce((a, x) => a + ((x && x.costo_equivalente_usd) || 0), 0);
+  foot.textContent = (deck.degradada ? "El texto libre no pasó el validador en " + tries + " intentos: se muestran las piezas tal cual. "
+    : "Validada: cada cifra de cada lámina está en las piezas que cita" + (tries > 1 ? " (aprobada en el intento " + tries + ")" : "") + ". ") +
+    "Generada " + new Date(deck.generado_ms).toLocaleString("es-CO") +
+    (own ? " · costo equivalente en API de esta presentación: US$ " + f.num(own, 2) : "") +
+    (all ? " · de la narrativa completa: US$ " + f.num(all, 2) + " (con suscripción no se cobra por token)" : "");
+  $("invBack").focus();
+}
+
 /* ================================================================== controles */
 const isTyping = t => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
 function wireControls() {
@@ -2786,6 +3298,23 @@ function init() {
   buildSparks();
   renderAnswers();
   wireControls();
+  if (NARR_ON) {
+    // acceso a "Preparar narrativa" y "＋ Narrativa" en cada tarjeta (después de wireControls: no son botones de datos)
+    const ab = document.querySelector(".side .askbtn");
+    if (ab) {
+      const nb = document.createElement("button");
+      nb.type = "button";
+      nb.className = "askbtn nar-entry";
+      H("span", "spark-ic", nb, "✎");
+      H("span", "lbl", nb, "Preparar narrativa");
+      nb.addEventListener("click", () => openStudio());
+      ab.after(nb);
+    }
+    document.querySelectorAll("main .card[data-card] .foot .btns").forEach(bt => {
+      const card = bt.closest(".card");
+      narButton(bt, () => pieceFromCard(card), "tbtn nar", "＋ Narrativa");
+    });
+  }
   updateCorrText();
   document.querySelectorAll("[data-chart]").forEach(mount);
   wireNav();
@@ -2794,6 +3323,11 @@ function init() {
   if (m && m[1] === "investigacion" && GOLDEN_INV[m[2]]) openInvestigation(GOLDEN_INV[m[2]], { golden: true });
   else if (m && m[1] === "respuesta" && (ANS.preguntas || {})[m[2]]) openAnswer(m[2]);
   else if (run && LIVE) fetch(LIVE.api + "/investigations/" + run[1]).then(r => (r.ok ? r.json() : null)).then(d => { if (d) openInvestigation(d); }).catch(() => {});
+  else if (NARR_ON) {
+    const nr = location.hash.match(/^#(narrativa|presentacion)\/(NAR-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);
+    if (location.hash === "#narrativas") openStudio();
+    else if (nr) (nr[1] === "presentacion" ? openDeck(nr[2]) : openStudio(nr[2]));
+  }
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();

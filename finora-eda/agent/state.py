@@ -23,6 +23,7 @@ class Investigation:
     pregunta_id: str | None = None
     lente: str = "Finanzas"
     playbook_id: str = "arpa_decline"
+    contexto: dict | None = None                     # pieza de narrativa desde la que se profundiza
     id: str = field(default_factory=lambda: "INV-" + time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:4])
     status: str = "encuadre"
     registry: Registry = field(default_factory=Registry)
@@ -70,7 +71,7 @@ class Investigation:
     # ---------------------------------------------------------------- serialización
     def to_dict(self) -> dict:
         return {"id": self.id, "pregunta": self.pregunta, "pregunta_id": self.pregunta_id, "lente": self.lente,
-                "playbook_id": self.playbook_id, "status": self.status, "encuadre": self.encuadre,
+                "playbook_id": self.playbook_id, "contexto": self.contexto, "status": self.status, "encuadre": self.encuadre,
                 "hipotesis": self.hipotesis, "hipotesis_registradas_ms": self.hipotesis_registradas_ms,
                 "claims": self.claims, "visuals": self.visuals, "evidencia": self.registry.to_list(),
                 "log": self.log, "paquete": self.paquete, "narrativa": self.narrativa,
@@ -84,7 +85,7 @@ class Investigation:
     def from_dict(cls, d: dict) -> "Investigation":
         from .evidence import Evidence
         inv = cls(pregunta=d["pregunta"], pregunta_id=d.get("pregunta_id"), lente=d.get("lente", "Finanzas"),
-                  playbook_id=d.get("playbook_id", "arpa_decline"))
+                  playbook_id=d.get("playbook_id", "arpa_decline"), contexto=d.get("contexto"))
         for k in ("id", "status", "encuadre", "hipotesis", "hipotesis_registradas_ms", "claims", "visuals", "log", "paquete",
                   "narrativa", "composicion_intentos", "notas_agente", "uso", "started_ms", "finished_ms", "error", "modelo"):
             if k in d:

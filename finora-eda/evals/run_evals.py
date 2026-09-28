@@ -187,8 +187,72 @@ def golden_q2():
     check("Dorada Q2 · toda gráfica tiene una forma válida y su tarjeta existe", not bad_v, str(bad_v))
 
 
+def narrative_rules():
+    from agent import narrative as nar
+    from agent.orchestrator import thread_context
+    nar.NARRATIVES = Path(tempfile.mkdtemp())
+    d = nar.create("Caso CFO", "CFO", "Separar comportamiento de decisiones")
+    ok_piece = {"tipo": "afirmacion", "rol": "Hallazgo", "titulo": "Idas y vueltas", "texto": "Más de 20% se revierte.",
+                "estado": "Hecho observado", "afirmaciones": [{"id": "C-DAT-06", "texto": "Más de 20%…", "estado": "Hecho observado",
+                                                            "cifras": {"rt_share": "25,3%"}}],
+                "visual": {"tipo": "workspace", "chart": "bridgeMonthly", "titulo": "Puente"}, "fuente": {"kind": "afirmacion", "ref": "C-DAT-06"}}
+    d = nar.add_piece(d["id"], ok_piece)
+    d = nar.add_piece(d["id"], {"tipo": "nota", "rol": "Decisión", "titulo": "Registrar descuentos antes de lanzarlos", "nota": "gobierno"})
+    try:
+        nar.add_piece(d["id"], {**ok_piece, "rol": "Conclusión"})
+        bad_role = False
+    except nar.NarrativeError:
+        bad_role = True
+    check("Narrativa · rechaza papeles fuera de Situación → Acción", bad_role)
+    d = nar.update(d["id"], {"orden": ["P-02", "P-01"], "piezas": [{"id": "P-01", "nota": "explica el ruido"}]})
+    check("Narrativa · reordena y edita notas", [x["id"] for x in d["piezas"]] == ["P-02", "P-01"] and d["piezas"][1]["nota"] == "explica el ruido")
+    d2 = nar.create("Caso CRO", "CRO")
+    nar.add_piece(d2["id"], ok_piece)
+    m = nar.merge([d["id"], d2["id"]], "Historia")
+    check("Narrativa · unir no duplica la misma fuente y ordena por papel",
+          [x["rol"] for x in m["piezas"]] == ["Hallazgo", "Decisión"] and len(m["piezas"]) == 2, str([x["rol"] for x in m["piezas"]]))
+    pieces = {x["id"]: x for x in m["piezas"]}
+    good = {"titulo": "Qué mide hoy el MRR", "subtitulo": "", "pendientes": [], "laminas": [
+        {"rol": "Hallazgo", "titulo": "Una cuarta parte se deshace: 25,3% vuelve al mes siguiente", "mensaje": "El monto mezcla cobro con negocio.",
+         "puntos": [], "piezas": ["P-01"], "visual": "P-01", "notas": ""},
+        {"rol": "Decisión", "titulo": "Registrar los descuentos antes de lanzarlos", "mensaje": "Registrar cada descuento temporal con su vencimiento.",
+         "puntos": [], "piezas": ["P-02"], "visual": "", "notas": ""}]}
+    check("Narrativa · una presentación respaldada pasa el validador", not nar.validate_story(good, pieces), str(nar.validate_story(good, pieces)))
+    bad = {**good, "laminas": [{"rol": "Implicación", "titulo": "El 40% del churn es cobro", "mensaje": "Esto provocó errores.", "puntos": [],
+                                "piezas": ["P-01"], "visual": "P-02", "notas": ""}]}
+    errs = nar.validate_story(bad, pieces)
+    check("Narrativa · rechaza cifras que no están en las piezas citadas", any("cifras" in e for e in errs))
+    check("Narrativa · rechaza lenguaje causal en las láminas", any("causal" in e for e in errs))
+    check("Narrativa · la gráfica debe venir de una pieza citada con gráfica", any("gráfica" in e for e in errs))
+    check("Narrativa · implicaciones sin decisión del usuario van en condicional", any("condicional" in e for e in errs))
+    nota_only = {**good, "laminas": [{**good["laminas"][1], "titulo": "Registrar el 25,3% del cobro"}]}
+    check("Narrativa · las notas del usuario no cuentan como evidencia de cifras", any("cifras" in e for e in nar.validate_story(nota_only, pieces)))
+    durable = {"id": "P-09", "tipo": "afirmacion", "rol": "Hallazgo", "titulo": "Churn observado vs durable", "texto": "", "nota": "",
+               "afirmaciones": [{"id": "C-RET-03", "texto": "El churn durable es menor.", "estado": "Hecho observado",
+                                 "cifras": {"churn_dur3_2022": "0,98%"}}], "fuente": {"kind": "afirmacion", "ref": "C-RET-03"}}
+    lab_ok = {**good, "laminas": [{"rol": "Hallazgo", "titulo": "Solo 0,98% se va y no vuelve a pagar en 3 meses",
+                                   "mensaje": "El churn durable es menor.", "puntos": [], "piezas": ["P-09"], "visual": "", "notas": ""}]}
+    lab_bad = {**good, "laminas": [{**lab_ok["laminas"][0], "titulo": "Solo 0,98% se va y no vuelve a pagar en 6 meses"}]}
+    check("Narrativa · la etiqueta de qué mide la cifra cuenta como evidencia (3 meses), otro horizonte no",
+          not nar.validate_story(lab_ok, {"P-09": durable}) and any("cifras" in e for e in nar.validate_story(lab_bad, {"P-09": durable})),
+          str(nar.validate_story(lab_ok, {"P-09": durable})))
+    plan_ok = {"resumen": "El monto pagado mezcla fenómenos.", "secciones": [{"rol": "Hallazgo", "mensaje": "El monto no es MRR",
+               "preguntas": ["¿Qué parte se deshace?"], "piezas": ["P-01"], "afirmaciones": ["C-DAT-06"], "huecos": ["¿Qué es amount?"]}]}
+    check("Narrativa · un esqueleto sin cifras y con IDs válidos pasa", not nar.validate_plan(plan_ok, set(pieces)), str(nar.validate_plan(plan_ok, set(pieces))))
+    plan_bad = {"resumen": "", "secciones": [{"rol": "Hallazgo", "mensaje": "El 25% se deshace", "preguntas": [], "piezas": ["P-09"],
+                                              "afirmaciones": ["C-XXX-99"], "huecos": []}]}
+    errs = nar.validate_plan(plan_bad, set(pieces))
+    check("Narrativa · el esqueleto no lleva cifras ni IDs inventados", len(errs) >= 3, str(errs))
+    fb = nar.fallback_deck(m)
+    check("Narrativa · respaldo: una lámina por pieza (incluidas las decisiones del usuario) y pendientes solo donde no hay piezas",
+          len(fb["laminas"]) == 2 and {q["rol"] for q in fb["pendientes"]} == {"Situación", "Implicación", "Acción"}, str(fb["pendientes"]))
+    ctx = thread_context({"titulo": "x", "texto": "y", "claim_ids": ["C-DAT-06", "C-FAKE-01"]})
+    check("Narrativa · el contexto del hilo es contexto, no evidencia, y solo pasa IDs canónicos",
+          "no evidencia" in ctx and "C-DAT-06" in ctx and "C-FAKE-01" not in ctx)
+
+
 def main() -> int:
-    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2):
+    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules):
         try:
             fn()
         except Exception as e:  # noqa: BLE001

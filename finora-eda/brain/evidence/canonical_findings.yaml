@@ -11,6 +11,9 @@ hallazgos:
   evidencia:
     active_multiple: 4,5×
     mrr_multiple: 2,8×
+  etiquetas:
+    active_multiple: Clientes activos oct-24 / ene-22 (veces)
+    mrr_multiple: MRR pagado oct-24 / ene-22 (veces)
   revision_humana: pendiente
 - id: C-RES-02
   clave: arpa_down
@@ -22,6 +25,10 @@ hallazgos:
     arpa_start: COP 92,8 mil
     arpa_end: COP 57,8 mil
     arpa_change: −38%
+  etiquetas:
+    arpa_start: MRR por cliente activo, ene-22
+    arpa_end: MRR por cliente activo, oct-24
+    arpa_change: Cambio del MRR por cliente activo, ene-22 a oct-24
   revision_humana: pendiente
 - id: C-RES-03
   clave: net_adds_positive
@@ -32,6 +39,9 @@ hallazgos:
   evidencia:
     net_adds_negative_list: jun-22
     net_adds_positive_months: '32'
+  etiquetas:
+    net_adds_negative_list: Meses con altas netas negativas
+    net_adds_positive_months: Meses con altas netas positivas (de 33)
   revision_humana: pendiente
 - id: C-RES-04
   clave: gross_vs_net
@@ -43,6 +53,10 @@ hallazgos:
     gross_movement: COP 404 millones
     net_movement: COP 62 millones
     gross_net_ratio: 6,5×
+  etiquetas:
+    gross_movement: Movimiento bruto de MRR del periodo (entradas más salidas)
+    net_movement: Cambio neto de MRR del periodo
+    gross_net_ratio: Movimiento bruto / cambio neto (veces)
   revision_humana: pendiente
 - id: C-RES-05
   clave: last_react_largest
@@ -54,6 +68,10 @@ hallazgos:
     lb_reactivation_mrr_cop: COP 4,5 millones
     lb_new_mrr_cop: COP 2,2 millones
     lb_expansion_mrr_cop: COP 2,1 millones
+  etiquetas:
+    lb_reactivation_mrr_cop: MRR de reactivación del último mes (oct-24)
+    lb_new_mrr_cop: MRR nuevo del último mes (oct-24)
+    lb_expansion_mrr_cop: MRR de expansión del último mes (oct-24)
   revision_humana: pendiente
 - id: C-RES-06
   clave: rest_mrr_share_down
@@ -64,6 +82,9 @@ hallazgos:
   evidencia:
     rest_mrr_share_2022: 39%
     rest_mrr_share_2024: 32%
+  etiquetas:
+    rest_mrr_share_2022: Participación de Restaurantes en el MRR, dic-22
+    rest_mrr_share_2024: Participación de Restaurantes en el MRR, oct-24
   revision_humana: pendiente
 - id: C-RES-07
   clave: retail_active_share_up
@@ -74,6 +95,9 @@ hallazgos:
   evidencia:
     retail_active_share_2022: 16,5%
     retail_active_share_2024: 21,5%
+  etiquetas:
+    retail_active_share_2022: Participación de Retail en los clientes activos, dic-22
+    retail_active_share_2024: Participación de Retail en los clientes activos, oct-24
   revision_humana: pendiente
 - id: C-ADQ-01
   clave: entry_ticket_down
@@ -85,6 +109,10 @@ hallazgos:
     m0_median_2022: COP 63,0 mil
     m0_median_2023: COP 36,8 mil
     m0_median_2024: COP 42,0 mil
+  etiquetas:
+    m0_median_2022: Mediana del primer pago de las altas, 2022 (mar–dic)
+    m0_median_2023: Mediana del primer pago de las altas, 2023
+    m0_median_2024: Mediana del primer pago de las altas, 2024 (ene–oct)
   revision_humana: pendiente
 - id: C-ADQ-02
   clave: ticket_all_metrics
@@ -97,6 +125,10 @@ hallazgos:
     m0_mean_chg_22_24: −60%
     m0_median_chg_22_24: −33%
     m1_mean_chg_22_24: −18%
+  etiquetas:
+    m0_mean_chg_22_24: Cambio del primer pago promedio de las altas, 2022 a 2024
+    m0_median_chg_22_24: Cambio de la mediana del primer pago de las altas, 2022 a 2024
+    m1_mean_chg_22_24: Cambio del pago promedio del segundo mes (M1) de las altas, 2022 a 2024
   revision_humana: pendiente
 - id: C-ADQ-03
   clave: ticket_step
@@ -108,6 +140,9 @@ hallazgos:
   evidencia:
     step_month: ene-23
     m0_median_2022: COP 63,0 mil
+  etiquetas:
+    step_month: Mes del escalón del ticket de entrada
+    m0_median_2022: Mediana del primer pago de las altas, 2022 (mar–dic)
   revision_humana: pendiente
 - id: C-ADQ-04
   clave: within_dominates
@@ -121,6 +156,11 @@ hallazgos:
     dec_within_ci: 91–102%
     dec_within_share_min: 96%
     dec_within_share_max: 97%
+  etiquetas:
+    dec_within_share: Parte del cambio del ticket de entrada 2022→2024 que ocurre dentro de las industrias
+    dec_within_ci: Intervalo bootstrap de 90% de la parte dentro de las industrias
+    dec_within_share_min: 'Parte dentro de las industrias: mínimo entre variantes'
+    dec_within_share_max: 'Parte dentro de las industrias: máximo entre variantes'
   revision_humana: pendiente
 - id: C-ADQ-05
   clave: all_industries_down
@@ -131,6 +171,9 @@ hallazgos:
   evidencia:
     industries_ticket_fell_22_24: '6'
     industries_median_fell_22_24: '6'
+  etiquetas:
+    industries_ticket_fell_22_24: Industrias donde bajó el ticket de entrada promedio, 2022 a 2024 (de 6)
+    industries_median_fell_22_24: Industrias donde bajó la mediana del ticket de entrada, 2022 a 2024 (de 6)
   revision_humana: pendiente
 - id: C-ADQ-06
   clave: restprod_new_mrr_majority
@@ -140,6 +183,8 @@ hallazgos:
   verificado_en_codigo: true
   evidencia:
     restprod_new_mrr_min: 53%
+  etiquetas:
+    restprod_new_mrr_min: Participación mínima anual de Restaurantes más Producción en el MRR nuevo
   revision_humana: pendiente
 - id: C-RET-01
   clave: recent_cohorts_m1
@@ -153,6 +198,11 @@ hallazgos:
     m1_logo_2022_max: 95%
     m1_logo_recent_min: 95%
     m1_logo_recent_max: 98%
+  etiquetas:
+    m1_logo_2022_min: Retención de logos al M1, trimestres de 2022 (mínimo)
+    m1_logo_2022_max: Retención de logos al M1, trimestres de 2022 (máximo)
+    m1_logo_recent_min: Retención de logos al M1, trimestres completos de 2023–24 (mínimo)
+    m1_logo_recent_max: Retención de logos al M1, trimestres completos de 2023–24 (máximo)
   revision_humana: pendiente
 - id: C-RET-02
   clave: churn_transient
@@ -163,6 +213,9 @@ hallazgos:
   evidencia:
     churn_back_1m: 44%
     churn_events: '751'
+  etiquetas:
+    churn_back_1m: Churns observados que vuelven a pagar al mes siguiente
+    churn_events: Eventos de churn observado (mar-22 a oct-24)
   revision_humana: pendiente
 - id: C-MON-01
   clave: base_stable
@@ -174,6 +227,10 @@ hallazgos:
     base_arpa_start: COP 92,8 mil
     base_arpa_end: COP 97,4 mil
     base_arpa_change: +5%
+  etiquetas:
+    base_arpa_start: MRR por cliente de la base previa (activos en ene-22), ene-22
+    base_arpa_end: MRR por cliente de la base previa (activos en ene-22), oct-24
+    base_arpa_change: Cambio del MRR por cliente de la base previa, ene-22 a oct-24
   revision_humana: pendiente
 - id: C-MON-02
   clave: vintage_order
@@ -186,6 +243,11 @@ hallazgos:
     v2023_arpa_end: COP 46,3 mil
     v2024_arpa_end: COP 43,0 mil
     base_arpa_end: COP 97,4 mil
+  etiquetas:
+    v2022_arpa_end: MRR por cliente de la cosecha 2022, oct-24
+    v2023_arpa_end: MRR por cliente de la cosecha 2023, oct-24
+    v2024_arpa_end: MRR por cliente de la cosecha 2024, oct-24
+    base_arpa_end: MRR por cliente de la base previa (activos en ene-22), oct-24
   revision_humana: pendiente
 - id: C-MON-03
   clave: cohorts_stay_lower
@@ -194,6 +256,7 @@ hallazgos:
   afirmacion: El MRR por cliente original de las cohortes 2023 está por debajo del de las cohortes 2022 en M1, M6 y M12.
   verificado_en_codigo: true
   evidencia: {}
+  etiquetas: {}
   revision_humana: pendiente
 - id: C-MON-04
   clave: composition
@@ -206,6 +269,10 @@ hallazgos:
     base_arpa_change: +5%
     recent_vintage_customer_share: 65%
     recent_vintage_mrr_share: 50%
+  etiquetas:
+    base_arpa_change: Cambio del MRR por cliente de la base previa, ene-22 a oct-24
+    recent_vintage_customer_share: Participación de las cosechas 2023–24 en los clientes activos, oct-24
+    recent_vintage_mrr_share: Participación de las cosechas 2023–24 en el MRR, oct-24
   revision_humana: pendiente
 - id: C-MON-05
   clave: industries_arpa_fell
@@ -215,6 +282,8 @@ hallazgos:
   verificado_en_codigo: true
   evidencia:
     industries_arpa_fell: '6'
+  etiquetas:
+    industries_arpa_fell: Industrias donde bajó el MRR por cliente activo, dic-22 a oct-24 (de 6)
   revision_humana: pendiente
 - id: C-INV-01
   clave: sm_cut
@@ -226,6 +295,10 @@ hallazgos:
     sm_peak: 3,45 u
     sm_trough: 1,10 u
     sm_drop: −68%
+  etiquetas:
+    sm_peak: S&M total en su pico, may-23 (unidad reportada, sin escala en COP)
+    sm_trough: S&M total en su valle, ago-23 (unidad reportada)
+    sm_drop: Caída del S&M total de pico a valle
   revision_humana: pendiente
 - id: C-INV-02
   clave: spend_per_customer_down
@@ -237,6 +310,10 @@ hallazgos:
     cac_sm_2022: 0,105 u
     cac_sm_2024: 0,036 u
     total_sm_per_new_customer_chg: −66%
+  etiquetas:
+    cac_sm_2022: S&M total por alta, 2022 (unidad reportada)
+    cac_sm_2024: S&M total por alta, 2024 (unidad reportada)
+    total_sm_per_new_customer_chg: Cambio del S&M total por alta, 2022 a 2024
   revision_humana: pendiente
 - id: C-INV-03
   clave: no_positive_assoc
@@ -249,6 +326,10 @@ hallazgos:
     r_new_sm_l0: −0,57
     r_mom_absmax: 0,27
     r_mom_minp: 0,14
+  etiquetas:
+    r_new_sm_l0: Correlación en niveles entre S&M total y altas del mismo mes (r de Pearson)
+    r_mom_absmax: Mayor |r| en cambios mes a mes entre gasto y resultados
+    r_mom_minp: Menor valor p en cambios mes a mes
   revision_humana: pendiente
 - id: C-INV-04
   clave: sig_only_negative_levels
@@ -259,6 +340,9 @@ hallazgos:
   evidencia:
     n_corr_sig: '9'
     n_corr_tests: '48'
+  etiquetas:
+    n_corr_sig: Correlaciones con p < 0,05
+    n_corr_tests: Pruebas de correlación hechas
   revision_humana: pendiente
 - id: C-DAT-01
   clave: team_fixed
@@ -269,6 +353,9 @@ hallazgos:
   evidencia:
     team_fixed_months: '17'
     team_fixed_until: may-23
+  etiquetas:
+    team_fixed_months: Meses en que Team es exactamente 12% del S&M total
+    team_fixed_until: Último mes con Team fijo en 12%
   revision_humana: pendiente
 - id: C-DAT-02
   clave: feb_spillover
@@ -279,6 +366,9 @@ hallazgos:
   evidencia:
     feb_sig_share: 30%
     later_sig_share: 3,0%
+  etiquetas:
+    feb_sig_share: Altas de feb-22 cuyo primer pago es el doble del segundo
+    later_sig_share: Misma proporción en cohortes posteriores (mediana)
   revision_humana: pendiente
 - id: C-DAT-03
   clave: exp_revert
@@ -288,6 +378,8 @@ hallazgos:
   verificado_en_codigo: true
   evidencia:
     exp_mrr_revert: 29%
+  etiquetas:
+    exp_mrr_revert: MRR de expansión que se revierte al mes siguiente
   revision_humana: pendiente
 - id: C-DAT-04
   clave: small_adjust_rise
@@ -299,6 +391,9 @@ hallazgos:
   evidencia:
     small_exp_first: 9%
     small_exp_last: 75%
+  etiquetas:
+    small_exp_first: Expansiones menores a 10%, primer semestre (2022 S1)
+    small_exp_last: Expansiones menores a 10%, último semestre (2024 S2)
   revision_humana: pendiente
 - id: C-DAT-05
   clave: offgrid_rise
@@ -310,6 +405,9 @@ hallazgos:
   evidencia:
     offgrid_2022s2: 19%
     offgrid_2024s2: 42%
+  etiquetas:
+    offgrid_2022s2: Meses-cliente activos con monto fuera de la grilla de COP 2.100, 2022 S2
+    offgrid_2024s2: Meses-cliente activos con monto fuera de la grilla de COP 2.100, 2024 S2
   revision_humana: pendiente
 - id: C-ADQ-07
   clave: growth_below_2022_median
@@ -327,6 +425,15 @@ hallazgos:
     adq_below_2023: 41,7
     adq_below_2024: 43,8
     adq_below_share_increase: 107%
+  etiquetas:
+    adq_rr_median_2022: 'Mediana 2022 del run-rate inicial (M0–M2) de las altas: corte entre ticket alto y bajo'
+    adq_above_2022: Altas por mes con run-rate inicial igual o mayor a la mediana 2022, en 2022
+    adq_above_2023: Altas por mes con run-rate inicial igual o mayor a la mediana 2022, en 2023
+    adq_above_2024: Altas por mes con run-rate inicial igual o mayor a la mediana 2022, en 2024
+    adq_below_2022: Altas por mes con run-rate inicial menor a la mediana 2022, en 2022
+    adq_below_2023: Altas por mes con run-rate inicial menor a la mediana 2022, en 2023
+    adq_below_2024: Altas por mes con run-rate inicial menor a la mediana 2022, en 2024
+    adq_below_share_increase: Parte del aumento de altas por mes 2022→2024 que corresponde a ticket bajo
   revision_humana: pendiente
 - id: C-RES-08
   clave: growth_from_new_customers
@@ -342,6 +449,13 @@ hallazgos:
     ga_new_end: COP 68,0 millones
     ga_base_survivors: 79%
     ga_base_survivor_ratio: 1,08×
+  etiquetas:
+    ga_total_start: Monto pagado total, ene-22
+    ga_total_end: Monto pagado total, oct-24
+    ga_base_end: Monto pagado en oct-24 por los clientes activos en ene-22
+    ga_new_end: Monto pagado en oct-24 por los clientes que empezaron después de ene-22
+    ga_base_survivors: Clientes activos en ene-22 que siguen pagando en oct-24
+    ga_base_survivor_ratio: Monto oct-24 / ene-22 de esos clientes que siguen pagando (veces)
   revision_humana: pendiente
 - id: C-DAT-06
   clave: one_month_round_trips
@@ -353,6 +467,9 @@ hallazgos:
   evidencia:
     rt_gross: COP 282,8 millones
     rt_share: 25,3%
+  etiquetas:
+    rt_gross: Movimiento bruto total del monto pagado sin altas, mar-22 a sep-24 (no es lo revertido)
+    rt_share: Parte de ese movimiento bruto que vuelve exacto al nivel previo al mes siguiente
   revision_humana: pendiente
 - id: C-RET-03
   clave: durable_churn_flat
@@ -368,6 +485,13 @@ hallazgos:
     churn_dur3_2022: 0,98%
     churn_dur3_2023: 1,09%
     churn_dur3_2024: 0,96%
+  etiquetas:
+    churn_obs_2022: Churn observado mensual de logos, 2022 (mar–dic)
+    churn_obs_2023: Churn observado mensual de logos, 2023
+    churn_obs_2024: Churn observado mensual de logos, 2024 (ene–jul)
+    churn_dur3_2022: Churn mensual que no vuelve a pagar en 3 meses, 2022
+    churn_dur3_2023: Churn mensual que no vuelve a pagar en 3 meses, 2023
+    churn_dur3_2024: Churn mensual que no vuelve a pagar en 3 meses, 2024 (ene–jul)
   revision_humana: pendiente
 - id: C-DAT-07
   clave: retroactive_adjustments
@@ -383,6 +507,13 @@ hallazgos:
     retro_exp_share_2024: 8,3%
     retro_net_2023: COP 477,25 mil
     retro_net_2024: COP 490,54 mil
+  etiquetas:
+    retro_events: Eventos de ajuste sincronizado con cobro retroactivo exacto
+    retro_customers: Clientes con ese ajuste
+    retro_exp_share_2023: Tramo de subida de esos ajustes como parte de la expansión de 2023
+    retro_exp_share_2024: Tramo de subida de esos ajustes como parte de la expansión de 2024
+    retro_net_2023: Aumento mensual neto que persiste por esos ajustes, 2023
+    retro_net_2024: Aumento mensual neto que persiste por esos ajustes, 2024
   revision_humana: pendiente
 - id: C-DAT-08
   clave: catchup_returns
@@ -394,6 +525,10 @@ hallazgos:
     catchup_returns: '144'
     catchup_n: '445'
     catchup_share: 32%
+  etiquetas:
+    catchup_returns: Retornos que pagan exactamente los meses pendientes
+    catchup_n: Retornos después de uno o más meses sin pago
+    catchup_share: Parte de los retornos que liquidan exactamente los meses pendientes
   revision_humana: pendiente
 - id: C-DAT-09
   clave: jun22_event
@@ -406,6 +541,10 @@ hallazgos:
     jun22_churn: '60'
     churn_month_median: '22'
     jun22_back_next: 72%
+  etiquetas:
+    jun22_churn: Churns observados en jun-22
+    churn_month_median: Mediana mensual de churns observados (mar-22 a oct-24)
+    jun22_back_next: Churns de jun-22 que vuelven a pagar al mes siguiente
   revision_humana: pendiente
 - id: C-ADQ-08
   clave: value_lags_count
@@ -423,6 +562,15 @@ hallazgos:
     val_rr_23_24: +3%
     val_usual_23_24: +0%
     val_m1to3_23_24: +8%
+  etiquetas:
+    cnt_22_24: Cambio de las altas por mes, 2022 a 2024
+    val_rr_22_24: Cambio del valor inicial incorporado por mes (run-rate M0–M2), 2022 a 2024
+    val_usual_22_24: Cambio del valor inicial incorporado por mes (monto habitual), 2022 a 2024
+    val_m1to3_22_24: Cambio del valor inicial incorporado por mes (mediana M1–M3), 2022 a 2024
+    cnt_23_24: Cambio de las altas por mes, 2023 a 2024
+    val_rr_23_24: Cambio del valor inicial incorporado por mes (run-rate M0–M2), 2023 a 2024
+    val_usual_23_24: Cambio del valor inicial incorporado por mes (monto habitual), 2023 a 2024
+    val_m1to3_23_24: Cambio del valor inicial incorporado por mes (mediana M1–M3), 2023 a 2024
   revision_humana: pendiente
 - id: C-RET-04
   clave: low_ticket_retention_m12
@@ -436,6 +584,11 @@ hallazgos:
     ret12_high_2023: 88%
     ret12_n_low: '347'
     ret12_n_high: '112'
+  etiquetas:
+    ret12_low_2023: Retención de logos al M12, altas de 2023 con ticket bajo (bajo la mediana 2022)
+    ret12_high_2023: Retención de logos al M12, altas de 2023 con ticket alto
+    ret12_n_low: Altas de 2023 con ticket bajo observables al M13
+    ret12_n_high: Altas de 2023 con ticket alto observables al M13
   revision_humana: pendiente
 - id: C-ADQ-09
   clave: acquisition_plateau
@@ -450,4 +603,10 @@ hallazgos:
     plateau_slope: +0,47
     plateau_lo: −0,40
     plateau_hi: +1,33
+  etiquetas:
+    new_2022_pm: Altas por mes, 2022 (mar–dic)
+    new_2324_pm: Altas por mes, ene-23 a oct-24
+    plateau_slope: Pendiente de las altas por mes desde ene-23 (cambio por mes)
+    plateau_lo: Límite inferior del intervalo de 95% de esa pendiente
+    plateau_hi: Límite superior del intervalo de 95% de esa pendiente
   revision_humana: pendiente
