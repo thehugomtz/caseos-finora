@@ -208,7 +208,34 @@ function yAxis(svg, o, ticks, fmt, ml, mt, pw, ph, Y) {
     T(svg, ml - 8, y + 3.5, fmt(t), "fv-tick" + (o.ref && Math.abs(o.ref.value - t) < 1e-9 ? " strong" : ""), "end");
   });
 }
-function xAxis(svg, labels, X, mt, ph, pw, mode) {
+function xWrap(labels, pw) {
+  // pocas categorías con nombres largos: cada etiqueta en hasta tres líneas, sin saltarse ninguna
+  const n = labels.length;
+  if (!n || n > 8 || labels.every(isMonth)) return null;
+  const per = pw / n - 6;
+  if (Math.max(...labels.map(l => measure(l))) <= per) return null;
+  return labels.map(l => {
+    const lines = [];
+    String(l).split(/\s+/).forEach(w => {
+      const t = lines.length ? lines[lines.length - 1] + " " + w : w;
+      if (lines.length && measure(t) <= per) lines[lines.length - 1] = t; else lines.push(w);
+    });
+    if (lines.length > 3) { lines.length = 3; lines[2] += "…"; }
+    return lines;
+  }).map((lines, i, all) => {
+    // si una palabra sola no cabe en su espacio, las etiquetas vecinas se alternan en altura para no encimarse
+    const tight = all.some(ls => ls.some(l => measure(l) > per));
+    return tight && i % 2 ? [""].concat(lines) : lines;
+  });
+}
+function xAxis(svg, labels, X, mt, ph, pw, mode, wrapped) {
+  if (wrapped) {
+    wrapped.forEach((lines, i) => {
+      const t = T(svg, X(i), mt + ph + 17, "", "fv-tick", "middle");
+      lines.forEach((ln, k) => { const ts = S("tspan", { x: X(i), dy: k ? 12 : 0 }, t); ts.textContent = ln || " "; });
+    });
+    return;
+  }
   xTickList(labels, pw, mode).forEach(t => {
     T(svg, X(t.i), mt + ph + 17, t.text, "fv-tick" + (t.strong ? " strong" : ""), "middle");
   });
@@ -458,8 +485,10 @@ function barChart(el, o) {
   const ml = Math.max(...ticks.map(t => measure(tf(t)))) + 14;
   const mr = mini ? 6 : 12;
   const mt = unit || (mini && o.ref && o.ref.label) || (o.shades && o.shades.some(s => s.label) && !mini) ? 20 : 10;
-  const mb = 26;
-  const pw = Math.max(40, W - ml - mr), ph = Hh - mt - mb;
+  const pw = Math.max(40, W - ml - mr);
+  const wrapped = xWrap(labels, pw);
+  const mb = 26 + (wrapped ? (Math.max(...wrapped.map(l => l.length)) - 1) * 12 : 0);
+  const ph = Hh - mt - mb;
   const step = pw / n;
   const X = i => ml + (i + 0.5) * step;
   const Y = v => mt + ph - (v - lo) / (hi - lo) * ph;
@@ -473,7 +502,7 @@ function barChart(el, o) {
   winDraw(svg, win, X, step / 2, ml, mt, ph, mini);
   shadesDraw(svg, o.shades, X, step / 2, mt, ph, mini);
   yAxis(svg, o, ticks, tf, ml, mt, pw, ph, Y);
-  xAxis(svg, labels, X, mt, ph, pw, "band");
+  xAxis(svg, labels, X, mt, ph, pw, "band", wrapped);
   const wash = S("rect", { class: "fv-hband", y: mt, height: ph, width: step, visibility: "hidden" }, svg);
   const dim = new Set(o.dim || []);
   const g = S("g", null, svg);
@@ -2963,9 +2992,11 @@ async function openCaseQuestion(qid) {
   openCaseQueue(qid);
 }
 function caseMainVisual(doc, rc) {
-  const vis = Object.values(doc.visuals || {}).filter(v => v && v.spec && v.spec.tipo !== "datos");
-  const ids = new Set((rc.respuesta.claim_ids || []).concat(rc.hechos_observados || []));
-  return vis.find(v => (rc.respuesta.claim_ids || []).includes(v.claim_id)) || vis.find(v => ids.has(v.claim_id)) || vis[0] || null;
+  // la gráfica de la respuesta: la de su primera afirmación (en el orden de la respuesta) que tenga una forma
+  const vis = Object.values(doc.visuals || {}).filter(v => v && v.spec && !["datos", "tabla"].includes(v.spec.tipo));
+  const order = (rc.respuesta.claim_ids || []).concat(rc.hechos_observados || []);
+  for (const cid of order) { const v = vis.find(x => x.claim_id === cid); if (v) return v; }
+  return null;
 }
 function openCaseAnswer(doc, blockedId) {
   const qid = doc ? doc.caso_id : blockedId, q = CQ[qid];
@@ -3015,7 +3046,17 @@ function renderCaseAnswer(b, q, rc, doc) {
   const hb = H("div", "claims-list cq-facts", b);
   if (blocked) (rc.hechos_de_datos || []).forEach(t => rich(H("div", "cl", hb), t));
   else if ((rc.hechos_observados || []).length) {
-    rc.hechos_observados.forEach(id => claimRow(hb, claims[id]));
+    hb.classList.add("cq-ideas");
+    const vis = Object.values((doc && doc.visuals) || {});
+    rc.hechos_observados.forEach(id => {
+      const c = claims[id];
+      if (!c) return;
+      const card = H("div", "cq-idea", hb);
+      claimRow(card, c);
+      const v = vis.find(x => x.claim_id === id);
+      if (v && vmain && v.id === vmain.id) H("div", "viz-src", card, "↑ Su gráfica es la de la respuesta.");
+      else if (v) { const w = visualCard(card, v, false); const t = w.querySelector(".viz-t"); if (t) t.remove(); }
+    });
     evChips(b, rc.hechos_observados.map(id => claims[id]).filter(Boolean));
   } else H("p", "muted", hb, "Esta investigación no registró hechos observados: lo que encontró es direccional o no evaluable.");
 
@@ -3107,9 +3148,12 @@ function pieceFromCase(q, rc, doc) {
   const ids = blocked ? [] : [...new Set((rc.respuesta.claim_ids || []).concat(rc.hechos_observados || [],
     ...(rc.interpretacion_permitida || []).map(i => i.claim_ids || [])))].slice(0, 12);
   const v = doc ? caseMainVisual(doc, rc) : null;
+  const ideas = blocked ? [] : [...(rc.respuesta.claim_ids || []), ...(rc.hechos_observados || []), ...(rc.interpretacion_permitida || []).flatMap(i => i.claim_ids || []),
+                               ...(rc.hipotesis || []).flatMap(h => h.claim_ids || []), ...(rc.no_podemos_concluir || []).flatMap(i => i.claim_ids || [])];
   return { tipo: "respuesta_caso", titulo: q.id + " · " + q.pregunta, texto: parts.filter(Boolean).join(" "),
            estado: (rc.estados || [])[0] || (blocked ? "No evaluable" : ""), afirmaciones: blocked ? [] : invClaims(doc, ids),
-           fuente: { kind: "caso", ref: q.id, run: doc ? doc.id : null }, visual: v ? invVisual(doc, v.id) : null };
+           fuente: { kind: "caso", ref: q.id, run: doc ? doc.id : null }, visual: v ? invVisual(doc, v.id) : null,
+           visuales: doc ? ideaVisuals(doc, ideas) : [] };
 }
 
 /* ================================================================== preparar narrativa (piezas, esqueleto, presentación) */
@@ -3152,7 +3196,7 @@ function cardVisual(key) {
 function pieceFromAnswer(qid) {
   const a = ANS.preguntas[qid], g = BR.golden.find(x => x.id === qid);
   return { tipo: "respuesta", titulo: g ? g.pregunta : qid, texto: a.titular + " " + a.respuesta, estado: a.estado,
-           afirmaciones: canonClaims(a.claims), fuente: { kind: "respuesta", ref: qid },
+           afirmaciones: canonClaims(a.claims), fuente: { kind: "respuesta", ref: qid }, visuales: canonVisuals(a.claims),
            visual: a.visual ? { tipo: "workspace", chart: a.visual, titulo: a.visual_titulo || a.titular } : null };
 }
 function pieceFromSection(sid, el) {
@@ -3170,9 +3214,8 @@ function pieceFromCard(card) {
 }
 function pieceFromClaim(id) {
   const c = D.claims.find(x => x.id === id);
-  const key = Object.keys(BR.cards).find(k => (BR.cards[k].claims || []).includes(id) && cardVisual(k));
   return { tipo: "afirmacion", titulo: c.claim, texto: c.claim, estado: c.estado, afirmaciones: canonClaims([id]),
-           fuente: { kind: "afirmacion", ref: id }, visual: key ? cardVisual(key) : null };
+           fuente: { kind: "afirmacion", ref: id }, visual: canonVisual(id) };
 }
 function invVisual(doc, vid) {
   const v = (doc.visuals || {})[vid];
@@ -3180,19 +3223,41 @@ function invVisual(doc, vid) {
   if (v.spec.tipo === "tarjeta") { const cv = cardVisual(v.spec.tarjeta); return cv ? Object.assign(cv, { titulo: v.titulo }) : null; }
   return { tipo: "spec", spec: v.spec, titulo: v.titulo };
 }
+function ideaVisuals(doc, claimIds) {
+  // una gráfica por idea: la de cada afirmación citada que tenga gráfica, sin repetir la misma gráfica
+  const out = [], seen = new Set(), vis = Object.values(doc.visuals || {});
+  [...new Set(claimIds)].forEach(cid => {
+    const v = vis.find(x => x.claim_id === cid);
+    if (!v || seen.has(v.id)) return;
+    seen.add(v.id);
+    const pv = invVisual(doc, v.id);
+    if (pv) out.push(Object.assign({ id: v.id, claim_id: cid, claim: ((doc.claims || {})[cid] || {}).texto || v.titulo }, pv));
+  });
+  return out.slice(0, 14);
+}
+function canonVisual(id) {
+  // hallazgo verificado de la Fase 1: su gráfica propia o la de su tarjeta del workspace
+  const c = D.claims.find(x => x.id === id);
+  if (!c) return null;
+  if (c.grafica) return { id: id, claim_id: id, claim: c.claim, tipo: "spec", spec: c.grafica, titulo: c.claim };
+  const key = Object.keys(BR.cards).find(k => (BR.cards[k].claims || []).includes(id) && cardVisual(k));
+  return key ? Object.assign({ id: id, claim_id: id, claim: c.claim }, cardVisual(key), { titulo: c.claim }) : null;
+}
+const canonVisuals = ids => (ids || []).map(canonVisual).filter(Boolean);
 const invClaims = (doc, ids) => (ids || []).map(id => (doc.claims || {})[id]).filter(Boolean)
   .map(c => ({ id: c.id, texto: c.texto, estado: c.estado, cifras: {} }));
 function pieceFromInvAnswer(doc) {
   const ra = doc.narrativa.respuesta_ejecutiva, vm = pickMainVisual(doc), cl = invClaims(doc, ra.claim_ids);
+  const ids = ra.claim_ids.concat(...(doc.narrativa.hallazgos || []).map(h => h.claim_ids || []), ...(doc.narrativa.limites || []).map(l => l.claim_ids || []));
   return { tipo: "respuesta_inv", titulo: doc.pregunta.slice(0, 280), texto: (ra.titular ? ra.titular + ". " : "") + ra.texto,
            estado: cl.length ? cl[0].estado : "", afirmaciones: cl, fuente: { kind: "investigacion", ref: doc.id },
-           visual: vm ? invVisual(doc, vm.id) : null };
+           visual: vm ? invVisual(doc, vm.id) : null, visuales: ideaVisuals(doc, ids) };
 }
 function pieceFromFinding(doc, hz) {
   const hyp = (doc.hipotesis || []).find(h => h.id === hz.hipotesis_id);
   return { tipo: "hallazgo", titulo: hz.titular || hz.pregunta, texto: [hz.interpretacion, hz.implicacion].filter(Boolean).join(" "),
            estado: hyp ? hyp.estado : "", afirmaciones: invClaims(doc, hz.claim_ids),
-           fuente: { kind: "investigacion", ref: doc.id, hallazgo: hz.hipotesis_id },
+           fuente: { kind: "investigacion", ref: doc.id, hallazgo: hz.hipotesis_id }, visuales: ideaVisuals(doc, hz.claim_ids || []),
            visual: (hz.visual_ids || []).length ? invVisual(doc, hz.visual_ids[0]) : null };
 }
 function narButton(parent, makePiece, cls, label) {
@@ -3546,6 +3611,13 @@ function noteForm() {
 }
 
 /* ---- presentación en láminas web */
+function pieceVisual(pieces, ref) {
+  // "P-01/V-03": la gráfica de una idea de la pieza; "P-01": su gráfica principal
+  const [pid, vid] = String(ref || "").split("/");
+  const p = pieces[pid];
+  if (!p) return null;
+  return vid ? (p.visuales || []).find(x => x.id === vid) || null : p.visual || null;
+}
 async function openDeck(nid) {
   let d = NST.doc && NST.doc.id === nid ? NST.doc : null;
   if (!d) { try { d = await napi("/" + nid); } catch (e) { alert(e.message); return; } }
@@ -3568,11 +3640,11 @@ async function openDeck(nid) {
     H("span", "mono muted", hd, (i + 1) + " / " + deck.laminas.length);
     rich(H("h2", "slide-t", sl), s.titulo);
     rich(H("p", "slide-m", sl), s.mensaje);
-    const grid = H("div", "slide-grid" + (s.visual ? "" : " solo"), sl);
+    const v = pieceVisual(pieces, s.visual);
+    const grid = H("div", "slide-grid" + (v ? "" : " solo"), sl);
     if ((s.puntos || []).length) { const ul = H("ul", "slide-pts", grid); s.puntos.forEach(t => rich(H("li", null, ul), t)); }
-    const vp = s.visual && pieces[s.visual];
-    if (vp && vp.visual) {
-      const v = vp.visual, box = H("div", "slide-viz", grid);
+    if (v) {
+      const box = H("div", "slide-viz", grid);
       if (v.tipo === "workspace") { const card = mountChart(box, v.chart); const h = H("div", "viz-h"); rich(h, v.titulo || ""); card.prepend(h); }
       else if (v.spec) visualCard(box, { titulo: v.titulo || "", spec: v.spec }, true);
     }

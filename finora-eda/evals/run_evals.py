@@ -388,8 +388,65 @@ def case_flow():
             orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR = saved
 
 
+def visual_rules():
+    """Una gráfica por idea: hallazgos con gráfica propia, formas derivadas de las cifras y una gráfica por lámina."""
+    from agent import narrative as nar
+    from agent import visuals
+    from agent.state import Investigation
+    canon = yaml.safe_load((BRAIN / "evidence" / "canonical_findings.yaml").read_text(encoding="utf-8"))["hallazgos"]
+    g = {h["id"]: h["grafica"] for h in canon if h.get("grafica")}
+    ok = all(v["tipo"] in ("barras", "linea", "puntos", "kpi") and all(len(sr["valores"]) == len(v["x"]) for sr in v["series"]) for v in g.values())
+    check("Gráficas · los hallazgos verificados sin tarjeta tienen su gráfica propia y bien formada",
+          ok and {"C-DAT-06", "C-RET-03", "C-DAT-07", "C-ADQ-02", "C-ADQ-07", "C-RES-08"} <= set(g), str(sorted(g)))
+    reg = Registry()
+    ec = reg.add(kind="canonical", tool="search_evidence", params={"claim_id": "C-RET-03"}, method="canónica",
+                 result={"valores": {"churn_obs_2022": "3,52%"}, "formatos": {}, "columnas": [], "filas": []}, fixed_id="EC-RET-03")
+    spec = visuals.build(ec, "detalle")
+    check("Gráficas · evidencia canónica pedida como tabla usa la gráfica de su hallazgo",
+          spec["tipo"] == "barras" and spec.get("claim_fase1") == "C-RET-03" and len(spec["series"]) == 2, str(spec)[:200])
+
+    d = json.loads((GOLDEN / "Q2.json").read_text(encoding="utf-8"))
+    inv = Investigation.from_dict(d)
+    sq = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional", marker="Cálculo ad hoc",
+                          result={"columnas": [{"id": "tipo", "nombre": "tipo"}, {"id": "grupos", "nombre": "grupos"}, {"id": "eventos", "nombre": "eventos"}],
+                                  "filas": [{"tipo": "bajas", "grupos": 19, "eventos": 124}, {"tipo": "subidas", "grupos": 20, "eventos": 72}],
+                                  "valores": {"grupos[bajas]": 19.0, "eventos[bajas]": 124.0, "grupos[subidas]": 20.0, "eventos[subidas]": 72.0},
+                                  "formatos": {}})
+    sh = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional",
+                          result={"columnas": [], "filas": [], "valores": {"pct_persiste[1]": 90.6, "pct_cesa[1]": 7.9, "pct_revierte[1]": 1.5},
+                                  "formatos": {}})
+    piv = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b} {c} {d}", "variables": {
+        "a": f"{sq.id}.grupos[bajas]|int", "b": f"{sq.id}.eventos[bajas]|int", "c": f"{sq.id}.grupos[subidas]|int", "d": f"{sq.id}.eventos[subidas]|int"}}, inv.registry)
+    comp = visuals.claim_visual({"estado": "Direccional", "plantilla": "{p}% sigue, {c}% cesa y {r}% vuelve", "variables": {
+        "p": f"{sh.id}.pct_persiste[1]|num1", "c": f"{sh.id}.pct_cesa[1]|num1", "r": f"{sh.id}.pct_revierte[1]|num1"}}, inv.registry)
+    check("Gráficas · cifras con cortes → barras por corte; partes de un todo → barra al 100%",
+          piv and piv["x"] == ["bajas", "subidas"] and len(piv["series"]) == 2 and comp and comp.get("apiladas")
+          and abs(sum(sr["valores"][0] for sr in comp["series"]) - 1) < 1e-9, f"{piv} {comp}")
+    mixed = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b}", "variables": {
+        "a": f"{sq.id}.grupos[bajas]|int", "b": f"{sh.id}.pct_cesa[1]|num1"}}, inv.registry)
+    check("Gráficas · cifras que no miden lo mismo no se grafican juntas", mixed is None, str(mixed))
+
+    pieces = {"P-01": {"id": "P-01", "tipo": "respuesta_caso", "rol": "Hallazgo", "texto": "", "afirmaciones": [], "visual": {"tipo": "spec", "spec": {"tipo": "linea"}, "titulo": "Activos de 377 a 1.678"},
+                       "visuales": [{"id": "V-01", "claim": "Los activos pasaron de 377 a 1.678.", "tipo": "spec", "spec": {"tipo": "linea", "k": 1}},
+                                    {"id": "V-02", "claim": "25,3% del movimiento vuelve al nivel previo.", "tipo": "spec", "spec": {"tipo": "barras", "k": 2}},
+                                    {"id": "V-03", "claim": "De 751 churns, 44% vuelve al mes siguiente.", "tipo": "spec", "spec": {"tipo": "barras", "k": 3}}]}}
+    deck = {"laminas": [{"titulo": "Parte del movimiento vuelve", "mensaje": "25,3% vuelve al nivel previo.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "El churn no es salida", "mensaje": "44% vuelve al mes siguiente.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "Otra vez el movimiento", "mensaje": "El 25,3% se repite.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "Algo sin cifras de esas", "mensaje": "El 12% de otra cosa.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"}]}
+    got = [s["visual"] for s in nar.assign_visuals(deck, pieces)["laminas"]]
+    check("Gráficas · cada lámina recibe la gráfica de su idea, sin repetir y sin forzar una que no habla de lo mismo",
+          got == ["P-01/V-02", "P-01/V-03", "", ""], str(got))
+    errs = nar.validate_story({"titulo": "", "subtitulo": "", "pendientes": [], "laminas": [
+        {"rol": "Hallazgo", "titulo": "x", "mensaje": "y", "puntos": [], "piezas": ["P-01"], "visual": "P-01/V-09", "notas": ""}]}, pieces)
+    check("Gráficas · la lámina solo puede usar una gráfica de una pieza que cita", any("gráfica" in m for m in errs), str(errs))
+    kept = nar._check_piece({"tipo": "respuesta_caso", "rol": "Hallazgo", "titulo": "t", "texto": "x",
+                             "visuales": [{"id": "V-01", "claim": "c", "tipo": "spec", "spec": {"tipo": "barras"}}, {"id": "../x"}, "no"]})
+    check("Gráficas · la pieza guarda sus gráficas por idea y descarta las mal formadas", [v["id"] for v in kept["visuales"]] == ["V-01"], str(kept["visuales"]))
+
+
 def main() -> int:
-    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules, case_rules, case_flow):
+    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules, case_rules, case_flow, visual_rules):
         try:
             fn()
         except Exception as e:  # noqa: BLE001

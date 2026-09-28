@@ -445,7 +445,8 @@ def make_server(inv: Investigation, con):
     # ------------------------------------------------------------------ propose_visual
     @tool("propose_visual", "Pide la visualización de una afirmación aceptada. La forma la decide la gramática visual "
           "según la intención: " + "; ".join(f"{k} = {v}" for k, v in visuals.INTENTS.items()) + ". El título es el "
-          "texto validado de la afirmación.",
+          "texto validado de la afirmación. La evidencia canónica (EC-…) usa la gráfica propia de su hallazgo de la "
+          "Fase 1 o la de su tarjeta; las afirmaciones sin gráfica pedida reciben la de su idea al cerrar.",
           {"type": "object", "properties": {"claim_id": {"type": "string"},
                                             "intencion": {"type": "string", "enum": list(visuals.INTENTS)},
                                             "evidence_id": {"type": "string"}},

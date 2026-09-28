@@ -154,59 +154,68 @@ def _check_package(inv: Investigation) -> list[str]:
     return notes
 
 
+def _next_visual_id(inv: Investigation) -> str:
+    n = max([int(k[2:]) for k in inv.visuals if k[2:].isdigit()] + [0]) + 1
+    return f"V-{n:02d}"
+
+
 def _auto_visuals(inv: Investigation) -> int:
-    """Toda conclusión con su visual: la gramática visual asigna una gráfica a cada hallazgo que no la tenga.
+    """Una gráfica por idea, decidida por el código (gramática visual determinista).
 
-    Determinista: toma la primera afirmación del hallazgo que admite una forma y que no tiene ya gráfica en otro
-    hallazgo (sin duplicar). La evidencia del agente usa su intención por defecto; la canónica de la Fase 1 reutiliza
-    la gráfica de su tarjeta del workspace; lo No evaluable se muestra como la tabla de datos disponibles contra
-    faltantes. Si todas sus afirmaciones ya tienen gráfica, el hallazgo remite a la existente. El título es el texto
-    validado de la afirmación.
+    0. Tablas que pidió el agente: si la idea tiene una forma (la gráfica propia del hallazgo de la Fase 1, la de su
+       tarjeta o la de sus cifras), se muestra esa; la tabla sigue en el linaje de la evidencia.
+    1. Cada afirmación aceptada sin gráfica recibe la de su idea, derivada de las cifras que liga
+       (visuals.claim_visual); si su idea no tiene una forma clara, se queda sin gráfica en vez de una tabla suelta.
+    2. Cada hallazgo muestra la gráfica de su primera afirmación que no esté ya en otro hallazgo.
+    El título es siempre el texto validado de la afirmación.
     """
-    def pick_for(c):
-        if c.get("estado") == "No evaluable":
-            return None, "datos_faltantes", visuals.data_gap(c.get("datos_faltantes") or [])
-        evs = [inv.registry.get(eid) for eid in c.get("apoyo", [])]
-        for ev in evs:
-            intent = visuals.default_intent(ev) if ev else None
-            if intent:
-                try:
-                    return ev.id, intent, visuals.build(ev, intent)
-                except visuals.VisualError:
-                    continue
-        canon = [ev for ev in evs if ev and ev.kind == "canonical"]
-        if canon:
+    for v in inv.visuals.values():
+        c = inv.claims.get(v["claim_id"]) or {}
+        old = v.get("spec") or {}
+        if old.get("tipo") in ("linea", "barras") and not v.get("auto") and c.get("aceptada") and v.get("forma_pedida") != "tabla":
+            # la afirmación compara varias métricas y la gráfica pedida muestra solo una: se muestran todas
+            new = visuals.claim_visual(c, inv.registry)
+            if new and new.get("tipo") in ("linea", "barras") and len(new.get("series", [])) > len(old.get("series", [])) \
+                    and all(sr.get("nombre") for sr in new["series"]):
+                v["spec"], v["forma_pedida"] = new, f"{old['tipo']} de una serie"
+            continue
+        if old.get("tipo") != "tabla" and v.get("forma_pedida") != "tabla":
+            continue
+        ev = inv.registry.get(v.get("evidence_id") or "")
+        spec = None
+        if ev is not None and ev.kind == "canonical":
             try:
-                return canon[0].id, "tarjeta", visuals.workspace_card(canon)
+                spec = visuals.canonical_visual([ev])
             except visuals.VisualError:
-                pass
-        return None
-
+                spec = None
+        spec = spec or (visuals.claim_visual(c, inv.registry) if c.get("aceptada") else None)
+        if spec and spec.get("tipo") not in ("tabla", "datos"):
+            v["spec"], v["forma_pedida"] = spec, "tabla"
     added = 0
-    for hz in (inv.paquete or {}).get("hallazgos", []):
+    have = {v["claim_id"] for v in inv.visuals.values()}
+    for cid, c in inv.claims.items():
+        if not c.get("aceptada") or cid in have:
+            continue
+        spec = visuals.claim_visual(c, inv.registry)
+        if not spec:
+            continue
+        vid = _next_visual_id(inv)
+        inv.visuals[vid] = {"id": vid, "claim_id": cid, "evidence_id": (c.get("apoyo") or [None])[0], "intencion": "idea",
+                            "titulo": c["texto"], "spec": spec, "auto": True}
+        added += 1
+    by_claim = {}
+    for k, v in inv.visuals.items():
+        by_claim.setdefault(v["claim_id"], k)
+    hallazgos = (inv.paquete or {}).get("hallazgos", [])
+    used = {vid for hz in hallazgos for vid in hz.get("visual_ids") or []}
+    for hz in hallazgos:
         if hz.get("visual_ids"):
             continue
-        by_claim = {v["claim_id"]: k for k, v in inv.visuals.items()}
-        pick = None
-        for cid in hz["claim_ids"]:
-            c = inv.claims[cid]
-            if cid in by_claim:
-                continue
-            got = pick_for(c)
-            if got:
-                pick = (c,) + got
-                break
+        cands = [by_claim[c] for c in hz["claim_ids"] if c in by_claim]
+        pick = next((x for x in cands if x not in used), cands[0] if cands else None)
         if pick:
-            c, eid, intent, spec = pick
-            vid = f"V-{len(inv.visuals) + 1:02d}"
-            inv.visuals[vid] = {"id": vid, "claim_id": c["id"], "evidence_id": eid, "intencion": intent,
-                                "titulo": c["texto"], "spec": spec, "auto": True}
-            hz["visual_ids"] = [vid]
-            added += 1
-        else:
-            reuse = next((by_claim[cid] for cid in hz["claim_ids"] if cid in by_claim), None)
-            if reuse:
-                hz["visual_ids"] = [reuse]
+            hz["visual_ids"] = [pick]
+            used.add(pick)
     return added
 
 
@@ -291,7 +300,8 @@ def revisual(path) -> Investigation:
     """Reasigna las gráficas automáticas de una investigación guardada con la gramática visual vigente.
 
     Determinista y sin modelo: no toca hipótesis, evidencia, afirmaciones ni el texto de la narrativa; solo las
-    gráficas que asignó `_auto_visuals` y los visual_ids de los hallazgos que las usan.
+    gráficas que asignó `_auto_visuals`, las tablas pedidas sobre evidencia canónica (pasan a la gráfica de su
+    hallazgo) y los visual_ids de los hallazgos que las usan.
     """
     from pathlib import Path
     path = Path(path)

@@ -14,7 +14,7 @@ Reglas (un validador en código las revisa):
 - Las notas del usuario orientan el orden y el énfasis, pero no son evidencia: no saques cifras de ellas.
 - Implicaciones, decisiones y acciones van en condicional (si…, convendría…, proponemos…), salvo que la lámina cite una pieza de decisión o de acción que guardó el usuario.
 - No escribas IDs (P-01, C-ADQ-07, E-001) en el texto.
-- "visual": el ID de una pieza citada que tenga gráfica, o vacío.
+- "visual": el ID de la gráfica que muestra la idea de la lámina, tomado de "graficas" de una pieza citada (por ejemplo P-01/V-03), o vacío. Cada gráfica muestra una afirmación: elige la que dice lo mismo que la lámina y no repitas una gráfica en dos láminas. El código revisa la elección: si la gráfica no comparte cifras con la lámina, la cambia por la que sí o deja la lámina sin gráfica.
 - Si una parte de la historia no tiene piezas que la sostengan, no la inventes: agrégala a "pendientes" con qué falta y la pregunta que habría que investigar.
 
 Estilo:

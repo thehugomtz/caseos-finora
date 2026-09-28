@@ -130,6 +130,14 @@ def _check_piece(p: dict) -> dict:
                                       "estado": _clean(a.get("estado"), 40), "cifras": cifras})
     if piece["visual"] and len(json.dumps(piece["visual"])) > 60000:
         piece["visual"] = None
+    piece["visuales"] = []                              # una gráfica por idea (afirmación) de la pieza
+    for v in (p.get("visuales") or [])[:14]:
+        if not isinstance(v, dict) or not re.fullmatch(r"[A-Za-z0-9.-]{1,24}", str(v.get("id", ""))):
+            continue
+        item = {k: v[k] for k in ("id", "claim_id", "tipo", "spec", "chart", "tarjeta") if k in v}
+        item.update(claim=_clean(v.get("claim"), 1200), titulo=_clean(v.get("titulo"), 600))
+        if len(json.dumps(item)) <= 60000 and item["id"] not in {x["id"] for x in piece["visuales"]}:
+            piece["visuales"].append(item)
     return piece
 
 
@@ -208,6 +216,7 @@ def evidence_text(p: dict) -> str:
     if p["tipo"] == "nota":
         return ""
     parts = [p.get("texto", ""), (p.get("visual") or {}).get("titulo", "")]
+    parts += [v.get("claim") or v.get("titulo") or "" for v in p.get("visuales") or []]
     lab = _labels()
     for a in p.get("afirmaciones", []):
         parts.append(a.get("texto", ""))
@@ -220,12 +229,29 @@ def _labels() -> dict:
     return {k: lab for h in CANON.values() for k, lab in (h.get("etiquetas") or {}).items()}
 
 
+def _graphs(p: dict) -> list[dict]:
+    """Gráficas de una pieza para el compositor: 'P-01/V-03' muestra una idea; 'P-01' es la principal."""
+    out = [{"id": f"{p['id']}/{v['id']}", "muestra": (v.get("claim") or v.get("titulo") or "")[:240]} for v in p.get("visuales") or []]
+    if p.get("visual") and not out:
+        out.append({"id": p["id"], "muestra": (p["visual"].get("titulo") or p.get("titulo") or "")[:240]})
+    return out
+
+
+def visual_of(p: dict, ref: str) -> dict | None:
+    pid, _, vid = str(ref or "").partition("/")
+    if not p or pid != p.get("id"):
+        return None
+    if vid:
+        return next((v for v in p.get("visuales") or [] if v.get("id") == vid), None)
+    return p.get("visual")
+
+
 def _brief(doc: dict, with_evidence: bool) -> dict:
     pieces = []
     for p in doc["piezas"]:
         item = {"id": p["id"], "tipo": p["tipo"], "papel": p["rol"], "titulo": p["titulo"], "estado": p.get("estado"),
                 "nota_del_usuario": p.get("nota", ""), "texto": p.get("texto", "")[:1500],
-                "tiene_grafica": bool(p.get("visual"))}
+                "graficas": _graphs(p)}
         if with_evidence:
             lab = _labels()
             item["afirmaciones"] = [{"texto": a["texto"], "estado": a["estado"],
@@ -289,8 +315,9 @@ def validate_story(deck: dict, pieces: dict[str, dict]) -> list[str]:
         bad = [x for x in ids if x not in pieces]
         if bad or not ids:
             errors.append(f"lámina {i}: cita piezas inexistentes o ninguna {bad}.")
-        if s.get("visual") and (s["visual"] not in ids or not pieces.get(s["visual"], {}).get("visual")):
-            errors.append(f"lámina {i}: la gráfica debe venir de una pieza citada que tenga gráfica.")
+        vref = s.get("visual") or ""
+        if vref and (vref.split("/")[0] not in ids or not visual_of(pieces.get(vref.split("/")[0], {}), vref)):
+            errors.append(f"lámina {i}: la gráfica debe ser una de las gráficas de una pieza que la lámina cita (P-01/V-03).")
         for fld in ("titulo", "mensaje", "notas"):
             check(f"lámina {i}.{fld}", s.get(fld, ""), ids)
         for j, b in enumerate(s.get("puntos", []), start=1):
@@ -304,6 +331,74 @@ def validate_story(deck: dict, pieces: dict[str, dict]) -> list[str]:
         if stray_digits(q.get("que_falta", "")) or stray_digits(q.get("pregunta", "")):
             errors.append(f"pendiente {i}: no lleva cifras.")
     return errors
+
+
+STOP = set("para como donde entre desde hasta sobre cada este esta estos estas pero porque cuando mientras tambien "
+           "solo sigue mismo misma menos puede pueden tiene tienen".split())
+
+
+def _words(text: str) -> set[str]:
+    return {w for w in re.findall(r"[a-zñ]{5,}", norm(text or ""))} - STOP
+
+
+def _signature(v: dict) -> str:
+    """La misma gráfica aunque venga de dos piezas distintas."""
+    if v.get("chart") or v.get("tipo") == "workspace":
+        return "chart:" + str(v.get("chart") or v.get("tarjeta"))
+    return "spec:" + json.dumps(v.get("spec"), sort_keys=True, ensure_ascii=False)[:6000]
+
+
+def assign_visuals(deck: dict, pieces: dict[str, dict]) -> dict:
+    """Cada lámina muestra la gráfica de su propia idea, sin repetir una gráfica entre láminas.
+
+    Candidatas: las gráficas de las piezas que la lámina cita (una por afirmación). Puntaje: cifras compartidas entre
+    la lámina y la afirmación que la gráfica muestra, más palabras en común; la elección del agente solo desempata.
+    Una lámina con cifras necesita al menos una cifra en común con su gráfica; si ninguna habla de lo mismo, la lámina
+    queda sin gráfica: mejor sin gráfica que con la de otra idea.
+    """
+    opts = {}
+    for pid, p in pieces.items():
+        cited = {a.get("id"): a for a in p.get("afirmaciones") or []}
+        for v in p.get("visuales") or []:
+            a = cited.get(v.get("claim_id")) or {}     # la afirmación que muestra, con sus cifras verificadas
+            text = " ".join([v.get("claim") or v.get("titulo") or "", a.get("texto", "")] + [str(x) for x in (a.get("cifras") or {}).values()])
+            opts[f"{pid}/{v['id']}"] = (pid, text, _signature(v))
+        main = p.get("visual")
+        if main and _signature(main) not in {o[2] for o in opts.values() if o[0] == pid}:
+            # pieza de una sola idea: su gráfica se compara con toda su evidencia; si la pieza trae gráficas por idea,
+            # la principal solo con su propio título (si no, ganaría láminas de otras ideas de la misma pieza)
+            text = main.get("titulo") or "" if p.get("visuales") else " ".join([main.get("titulo") or "", evidence_text(p)])
+            opts[pid] = (pid, text, _signature(main))
+    cands = []
+    for i, s in enumerate(deck.get("laminas", [])):
+        text = " ".join([s.get("titulo", ""), s.get("mensaje", "")] + list(s.get("puntos") or []))
+        nums, words = set(numbers_in(text)), _words(text)
+        for ref, (pid, otext, _) in opts.items():
+            if pid not in (s.get("piezas") or []):
+                continue
+            shared = len(nums & set(numbers_in(otext)))
+            ow = _words(otext)
+            jac = len(words & ow) / max(1, len(words | ow))
+            if (nums and not shared) or (not nums and jac < 0.12):
+                continue
+            cands.append((3 * shared + 3 * jac + (0.5 if ref == s.get("visual") else 0), i, ref))
+    chosen, used = {}, set()
+    for _, i, ref in sorted(cands, key=lambda c: -c[0]):
+        if i not in chosen and opts[ref][2] not in used:
+            chosen[i] = ref
+            used.add(opts[ref][2])
+    for i, s in enumerate(deck.get("laminas", [])):
+        s["visual"] = chosen.get(i, "")
+    return deck
+
+
+def refresh_visuals(nid: str) -> dict:
+    """Vuelve a asignar las gráficas de una presentación ya consolidada (sin modelo, no toca el texto)."""
+    doc = load(nid)
+    if doc.get("presentacion"):
+        assign_visuals(doc["presentacion"], {p["id"]: p for p in doc["piezas"]})
+        doc["presentacion"]["graficas_ms"] = _now()
+    return save(doc)
 
 
 def fallback_deck(doc: dict) -> dict:
@@ -379,6 +474,7 @@ async def consolidate(nid: str) -> dict:
         errors = validate_story(deck or {}, pieces) if deck else ["sin salida estructurada"]
         intentos.append({"intento": attempt, "errores": errors})
         if not errors:
+            assign_visuals(deck, pieces)
             doc["presentacion"] = {**deck, "degradada": False, "intentos": intentos, "generado_ms": _now(), "uso": _total(usos)}
             return save(doc)
         prompt = base
@@ -386,5 +482,5 @@ async def consolidate(nid: str) -> dict:
             prompt += "\n\nTu presentación anterior (JSON):\n" + json.dumps(deck, ensure_ascii=False, indent=1)
         prompt += ("\n\nNo pasó el validador. Devuélvela completa cambiando solo lo necesario para corregir estos puntos "
                    "(no reescribas lo que ya estaba bien):\n- " + "\n- ".join(errors))
-    doc["presentacion"] = {**fallback_deck(doc), "intentos": intentos, "generado_ms": _now(), "uso": _total(usos)}
+    doc["presentacion"] = {**assign_visuals(fallback_deck(doc), pieces), "intentos": intentos, "generado_ms": _now(), "uso": _total(usos)}
     return save(doc)

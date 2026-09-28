@@ -1126,6 +1126,10 @@ def main():
 
     facts, raw_facts = build_facts(ctx)
     claims = check_claims(ctx, raw_facts)
+    charts = claim_charts(ctx, raw_facts)
+    for c in claims:
+        if c["id"] in charts:
+            c["grafica"] = charts[c["id"]]
     brain = load_brain()
     validate_brain(brain, claims, facts)
     payload = build_payload(ctx, facts, claims, brain)
@@ -2078,6 +2082,69 @@ def check_claims(ctx: dict, R: dict) -> list[dict]:
 
 
 # ----------------------------------------------------------------------------------
+# 11b · La gráfica de cada hallazgo (una idea, una forma)
+# ----------------------------------------------------------------------------------
+CHART_TYPES = {"barras", "linea", "puntos", "kpi"}
+CHART_FORMATS = {"int", "cop", "cop2", "pct", "pct0", "pct_signed", "num1", "num2", "x", "idx"}
+
+
+def claim_charts(ctx: dict, R: dict) -> dict:
+    """Gráfica propia de los hallazgos que no tienen una tarjeta que los muestre, con la forma de su idea: partes de
+    un todo (barra al 100%), dos medidas en el tiempo (barras agrupadas), cambios por medida, una serie mensual.
+
+    Sale de los mismos números crudos que verifica check_claims, así que la gráfica y la afirmación no pueden
+    contradecirse. La usan el agente (evidencia canónica) y las piezas de narrativa.
+    """
+    yrs = ["2022", "2023", "2024"]
+    mm = ctx["mm"]
+    clean = mm[mm.window_flag == "clean"]
+    share_of_total = lambda part, total_name, rest_name, x: {   # noqa: E731
+        "tipo": "barras", "apiladas": True, "x": x, "formato": "pct",
+        "series": [{"nombre": total_name, "valores": part}, {"nombre": rest_name, "valores": [1 - v for v in part]}]}
+    back = round(R["jun22_back_next"] * R["jun22_churn"])
+    charts = {
+        "C-ADQ-02": {"tipo": "barras", "x": ["Promedio", "Mediana", "Winsorizado", "Run-rate temprano", "Segundo mes (M1)"],
+                     "formato": "pct_signed",
+                     "series": [{"nombre": "Cambio del ticket de entrada, 2022 → 2024", "valores": [R[k] for k in (
+                         "m0_mean_chg_22_24", "m0_median_chg_22_24", "m0_winsor_chg_22_24", "err_mean_chg_22_24", "m1_mean_chg_22_24")]}]},
+        "C-ADQ-07": {"tipo": "barras", "apiladas": True, "x": yrs, "formato": "num1",
+                     "series": [{"nombre": "Run-rate inicial bajo la mediana de 2022", "valores": [R[f"adq_below_{y}"] for y in yrs]},
+                                {"nombre": "Igual o sobre la mediana de 2022", "valores": [R[f"adq_above_{y}"] for y in yrs]}]},
+        "C-ADQ-08": {"tipo": "barras", "formato": "pct_signed",
+                     "x": ["Altas por mes", "Valor · run-rate M0–M2", "Valor · monto usual", "Valor · M1–M3"],
+                     "series": [{"nombre": "2022 → 2024", "valores": [R[k] for k in ("cnt_22_24", "val_rr_22_24", "val_usual_22_24", "val_m1to3_22_24")]},
+                                {"nombre": "2023 → 2024", "valores": [R[k] for k in ("cnt_23_24", "val_rr_23_24", "val_usual_23_24", "val_m1to3_23_24")]}]},
+        "C-ADQ-09": {"tipo": "linea", "formato": "int", "x": [month_label(m) for m in clean.month],
+                     "series": [{"nombre": "Altas por mes", "valores": [int(v) for v in clean.new_customers]}]},
+        "C-RES-08": {"tipo": "barras", "apiladas": True, "x": [month_label(mm.month.iloc[0]), month_label(mm.month.iloc[-1])], "formato": "cop",
+                     "series": [{"nombre": "Clientes activos en ene-22", "valores": [R["ga_total_start"], R["ga_base_end"]]},
+                                {"nombre": "Clientes que empezaron a pagar después", "valores": [0.0, R["ga_new_end"]]}]},
+        "C-DAT-03": share_of_total([R["exp_mrr_revert"]], "Se revierte al mes siguiente", "Se mantiene", ["MRR de expansión"]),
+        "C-DAT-06": share_of_total([R["rt_share"]], "Vuelve exacto al nivel previo al mes siguiente", "Resto del movimiento",
+                                   ["Movimiento bruto sin altas, mar-22 a sep-24"]),
+        "C-DAT-07": share_of_total([R["retro_exp_share_2023"], R["retro_exp_share_2024"]], "Tramo de subida con cobro retroactivo exacto",
+                                   "Resto de la expansión", ["2023", "2024"]),
+        "C-DAT-08": share_of_total([R["catchup_share"]], "Liquidan exactamente los meses pendientes", "Otros retornos",
+                                   ["Retornos después de meses sin pago"]),
+        "C-DAT-09": {"tipo": "barras", "apiladas": True, "x": ["jun-22", "Mediana mensual"], "formato": "num1",
+                     "series": [{"nombre": "Volvieron a pagar al mes siguiente", "valores": [back, 0]},
+                                {"nombre": "No volvieron al mes siguiente", "valores": [R["jun22_churn"] - back, 0]},
+                                {"nombre": "Churns en un mes típico", "valores": [0, R["churn_month_median"]]}]},
+        "C-RET-03": {"tipo": "barras", "x": yrs, "formato": "pct",
+                     "series": [{"nombre": "Churn observado", "valores": [R[f"churn_obs_{y}"] for y in yrs]},
+                                {"nombre": "Churn que no vuelve a pagar en 3 meses", "valores": [R[f"churn_dur3_{y}"] for y in yrs]}]},
+        "C-RET-04": {"tipo": "barras", "x": ["Altas bajo la mediana de 2022", "Altas sobre la mediana de 2022"], "formato": "pct",
+                     "series": [{"nombre": "Retención de logos al M12, cohortes 2023", "valores": [R["ret12_low_2023"], R["ret12_high_2023"]]}]},
+    }
+    for cid, c in charts.items():   # forma válida: tipo, formato y una cifra finita por categoría
+        assert c["tipo"] in CHART_TYPES and c["formato"] in CHART_FORMATS, f"gráfica de {cid} mal formada"
+        for sr in c["series"]:
+            assert len(sr["valores"]) == len(c["x"]) and all(np.isfinite(float(v)) for v in sr["valores"]), f"gráfica de {cid}: {sr['nombre']}"
+            sr["valores"] = [float(v) for v in sr["valores"]]
+    return charts
+
+
+# ----------------------------------------------------------------------------------
 # 12 · Business Brain (brain/) y payload del workspace
 # ----------------------------------------------------------------------------------
 def load_brain() -> dict:
@@ -2312,7 +2379,7 @@ def write_canonical_findings(claims: list, facts: dict, path: Path):
            "hallazgos": [{"id": c["id"], "clave": c["key"], "dominio": c["dominio"], "estado": c["estado"],
                           "afirmacion": c["claim"], "verificado_en_codigo": c["verified"],
                           "evidencia": {k: facts[k] for k in c["evidence"]},
-                          "etiquetas": c["etiquetas"],
+                          "etiquetas": c["etiquetas"], **({"grafica": c["grafica"]} if c.get("grafica") else {}),
                           "revision_humana": "pendiente"} for c in claims]}
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=120), encoding="utf-8")

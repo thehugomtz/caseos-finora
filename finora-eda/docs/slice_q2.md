@@ -22,7 +22,7 @@ Otras formas:
 - `python -m agent recompose <archivo>` vuelve a componer la narrativa y usa el modelo. `python -m agent revisual <archivo>` solo reasigna las gráficas automáticas, sin modelo.
 - Cada corrida queda en `#investigacion/INV-…`; con el servidor, ese enlace la vuelve a abrir.
 - Sin servidor: `finora_eda.html` trae embebidas las respuestas verificadas y la investigación dorada. Ahí Enter lleva a la respuesta verificada más cercana, o dice con honestidad que la pregunta necesita el servidor.
-- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 82 en total).
+- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 89 en total).
 
 ## Respuesta primero (iteración de UX del 27-sep-2026)
 
@@ -121,6 +121,26 @@ Cada respuesta se guarda como pieza en Preparar narrativa con **＋ Guardar en n
 
 Pruebas (sin modelo): 21 evaluaciones nuevas. Incluyen una respuesta de muestra sobre las afirmaciones reales de la dorada, cada rechazo del validador, el efecto derivado de las hipótesis, el respaldo, las bloqueadas y un flujo completo con el agente y el compositor simulados. No se corrió ninguna pregunta W con el modelo; una corrida en vivo toma entre 5 y 18 minutos y cuesta alrededor de US$1,3 a 1,8 de equivalente en API.
 
+## Una gráfica por idea (iteración del 28-sep-2026)
+
+Al consolidar una presentación con las respuestas de W0 y W1 salió el mismo problema en casi todas las láminas: siete de once repetían la línea de clientes activos, y otras tres la misma tabla. Había dos causas. Cada pieza guardaba una sola gráfica, así que toda lámina que citaba la pieza la repetía. Además, los hechos verificados de la Fase 1 solo tenían una tabla de cifras sueltas ("Dato · Qué mide · Valor"). Ahora el código decide una gráfica por idea:
+
+| Capa | Qué cambió |
+|---|---|
+| Pipeline | 12 hallazgos verificados que no tenían una tarjeta que los mostrara tienen su gráfica propia (`claim_charts` en `finora_eda.py`, campo `grafica` en `canonical_findings.yaml`). Se construye con los mismos números crudos que verifica `check_claims`, así que la gráfica no puede contradecir a la afirmación. La forma sigue a la idea: parte de un todo (C-DAT-06, C-DAT-07, C-DAT-08), dos medidas por año (C-RET-03), cambio por medida (C-ADQ-02, C-ADQ-08), crecimiento por segmento (C-ADQ-07, C-RES-08) o serie mensual (C-ADQ-09). |
+| Gramática visual | La evidencia canónica usa la gráfica de su hallazgo o la de su tarjeta del workspace, nunca una tabla; la tabla sigue en el linaje. `claim_visual` deriva la forma de las cifras que liga cada afirmación: barra al 100% si son partes de un todo, barras por corte (filas × columnas), una serie por métrica y periodo, o la forma del análisis del catálogo (cascada, intervalo). Si las cifras no miden lo mismo, no se grafican juntas. |
+| Cierre de la investigación | Cada afirmación aceptada recibe la gráfica de su idea. Una tabla que pidió el agente pasa a gráfica cuando la idea tiene una forma clara. Una gráfica de una sola serie pasa a varias cuando la afirmación compara varias métricas. `python -m agent revisual` aplica todo esto a corridas guardadas, sin modelo. |
+| Piezas | Una pieza guarda sus gráficas por idea (`visuales`, una por afirmación), además de la principal. |
+| Presentación | El compositor ve las gráficas de cada pieza (`P-01/V-03`) y propone una por lámina. El código decide (`assign_visuals`): la gráfica que comparte más cifras (y palabras) con la lámina, sin repetir una gráfica en dos láminas. Una lámina con cifras que no comparte ninguna con sus gráficas queda sin gráfica: mejor sin gráfica que con la de otra idea. |
+| Respuesta del caso | Cada hecho observado se muestra con su propia gráfica. |
+| Gráficas | Las etiquetas de pocas categorías con nombres largos se parten en líneas (y se alternan en altura si hace falta), en lugar de desaparecer. |
+
+La migración se hizo sin modelo:
+
+- Se volvieron a graficar W0, W1, la pregunta libre del 28-sep y la dorada Q2.
+- Se reconstruyeron las gráficas de las piezas de las dos narrativas y se reasignaron sus presentaciones sin cambiar el texto.
+- En "Exploración General", las láminas 2 a 10 muestran nueve gráficas distintas, cada una de su idea. La portada y la implicación quedan sin gráfica.
+
 ## Qué hace cada pieza
 
 | Pieza | Archivo | Qué hace |
@@ -131,7 +151,7 @@ Pruebas (sin modelo): 21 evaluaciones nuevas. Incluyen una respuesta de muestra 
 | Evidencia | `agent/evidence.py` | Registro inmutable: parámetros, consulta, resultado, hash y versiones de datos y cerebro. Lo escriben las tools, nunca el agente. |
 | Validador | `agent/validator.py` | Cifras solo ligadas a evidencia; rechaza cifras a mano o con letras, calificativos sin cifra y lenguaje causal; confirma o degrada estados; deriva el estado de cada hipótesis. |
 | Tools | `agent/tools.py` | 8 tools como servidor MCP en proceso: `brain_lookup`, `search_evidence`, `query_metric`, `run_sql`, `run_analysis`, `upsert_hypotheses`, `propose_claim`, `propose_visual`. |
-| Visuales | `agent/visuals.py` | Gramática visual determinista: intención → forma; el título es el texto validado. Incluye la tabla de datos faltantes y la reutilización de gráficas de tarjetas de la Fase 1. |
+| Visuales | `agent/visuals.py` | Gramática visual determinista: intención → forma; el título es el texto validado. Incluye la tabla de datos faltantes, la gráfica propia de cada hallazgo verificado o la de su tarjeta de la Fase 1, y `claim_visual`, que deriva la forma de las cifras que liga cada afirmación. |
 | Agente y compositor | `agent/orchestrator.py`, `agent/prompts/` | Un agente investigador con salida estructurada; un compositor sin tools cuya narrativa pasa por el validador (un reintento; si no, composición sin texto libre). |
 | Narrativas | `agent/narrative.py`, `agent/prompts/narrador_plan.md`, `agent/prompts/narrador.md` | Guarda narrativas y piezas, las une, propone el esqueleto y consolida la presentación. Valida cada lámina contra la evidencia que cita y, si no pasa, cae en una presentación hecha solo con las piezas. |
 | Preguntas del caso | `brain/business/case_questions.yaml`, `agent/caso.py`, `agent/prompts/caso.md` | Cola W0–W7 del brief v0.3: contexto para el investigador, compositor de siete partes con su validador, respaldo sin texto libre y respuestas deterministas de las bloqueadas. |

@@ -5,6 +5,7 @@ El agente solo pide la intención; la forma y los datos salen de la evidencia.
 from __future__ import annotations
 
 import functools
+import math
 import re
 
 INTENTS = {
@@ -76,10 +77,41 @@ def workspace_card(evs) -> dict:
     return {"tipo": "tarjeta", "tarjeta": key, "claim_fase1": cover[0], "cubre": cover}
 
 
+@functools.lru_cache(maxsize=1)
+def _canon() -> dict:
+    import yaml
+    from .config import BRAIN
+    return {h["id"]: h for h in yaml.safe_load((BRAIN / "evidence" / "canonical_findings.yaml").read_text(encoding="utf-8"))["hallazgos"]}
+
+
+def canonical_visual(evs) -> dict:
+    """Evidencia canónica de la Fase 1: la gráfica propia del hallazgo (su idea) o, si no tiene, la de su tarjeta del
+    workspace. Nunca una tabla de cifras sueltas."""
+    for e in evs:
+        cid = (e.params or {}).get("claim_id")
+        g = (_canon().get(cid) or {}).get("grafica") if e.kind == "canonical" else None
+        if g:
+            return {**g, "claim_fase1": cid}
+    return workspace_card(evs)
+
+
+PERIOD = re.compile(r"^20\d\d(-\d\d|\s?[ST][1-4])?$")
+
+
+def _periodic(ev) -> bool:
+    """Un resultado que se puede leer en el tiempo: al menos tres filas y la primera columna son periodos."""
+    r = ev.result or {}
+    cols = r.get("columnas") or []
+    rows = r.get("filas") or []
+    return len(rows) >= 3 and bool(cols) and all(PERIOD.match(str(f.get(cols[0]["id"], ""))) for f in rows)
+
+
 def default_intent(ev) -> str | None:
     if ev.kind == "analysis":
         return DEFAULT_INTENT.get(ev.params.get("analysis_id"))
-    if ev.kind in ("metric", "sql"):
+    if ev.kind == "metric":
+        return "tendencia"
+    if ev.kind == "sql" and _periodic(ev):
         return "tendencia"
     return None
 
@@ -93,6 +125,13 @@ def build(ev, intent: str) -> dict:
     if intent not in INTENTS:
         raise VisualError(f"Intención '{intent}' inválida. Opciones: {list(INTENTS)}.")
     r, kind = ev.result, ev.kind
+    if kind == "canonical":   # la idea ya tiene su gráfica en la Fase 1; la tabla sigue en el linaje
+        try:
+            return canonical_visual([ev])
+        except VisualError:
+            if intent == "detalle":
+                return _tabla(ev)
+            raise
     if intent == "detalle":
         return _tabla(ev)
     if kind == "metric":
@@ -103,7 +142,7 @@ def build(ev, intent: str) -> dict:
               "churn_selection": _from_churn, "ticket_distribution": _from_ticket}.get(aid)
         if fn:
             return fn(ev, intent)
-    if kind == "sql" and intent == "tendencia":
+    if kind == "sql" and intent == "tendencia" and _periodic(ev):
         cols = [c["id"] for c in r.get("columnas", [])]
         num = [c for c in cols[1:] if all(isinstance(f.get(c), (int, float)) or f.get(c) is None for f in r["filas"])]
         if num:
@@ -219,3 +258,121 @@ def _from_ticket(ev, intent):
         return {"tipo": "puntos", "filas": years, "formato": "cop",
                 "series": [{"nombre": n, "valores": [f[k] for f in filas]} for k, n in (("p25", "P25"), ("mediana", "Mediana"), ("p75", "P75"))]}
     raise VisualError("La distribución del ticket admite 'distribucion', 'comparacion' o 'detalle'.")
+
+
+
+# ---------------------------------------------------------------------------- la gráfica de una idea
+def _is_num(v) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(float(v))
+
+
+def _label(key: str) -> tuple[str, str | None]:
+    """'pct_baja_persiste[28581]' → ('baja persiste', None); 'eventos_ambiguos[bajas]' → ('eventos ambiguos', 'bajas')."""
+    col, row = (key.split("[", 1) + [""])[:2]
+    row = row.rstrip("]") or None
+    if row and re.fullmatch(r"[\d.]+", row) and not PERIOD.match(row):   # índice de fila, no un periodo
+        row = None
+    col = re.sub(r"^(pct|n|num|share|porc|total)_", "", col)
+    return col.replace("_", " ").strip(), row
+
+
+def claim_visual(c: dict, registry) -> dict | None:
+    """La gráfica de una afirmación, derivada de las cifras que liga (el código elige la forma, no el agente):
+
+    1. No evaluable → tabla de datos disponibles contra faltantes.
+    2. Si liga sobre todo cifras de hallazgos de la Fase 1 → la gráfica propia de ese hallazgo o de su tarjeta.
+       Si liga un análisis del catálogo → la forma de ese análisis.
+    3. Métricas por periodo → una serie por métrica (barras si son pocos periodos, línea si son muchos).
+    4. Participaciones de un mismo todo → barra apilada al 100%.
+    5. Cifras del mismo tipo de una misma evidencia → barras (filas × columnas si hay cortes).
+    6. Si nada de eso aplica, ninguna: una tabla de cifras sueltas no es una idea.
+    """
+    if c.get("estado") == "No evaluable":
+        return data_gap(c.get("datos_faltantes") or [])
+    tpl = c.get("plantilla") or ""
+    binds = []
+    for var, ref in (c.get("variables") or {}).items():
+        ref0, fmt = (str(ref).split("|", 1) + [None])[:2]
+        try:
+            ev, key, value, efmt = registry.resolve(ref0)
+        except KeyError:
+            continue
+        binds.append({"var": var, "ev": ev, "key": key, "value": value, "fmt": fmt or efmt,
+                      "pp": ("{" + var + "}%") in tpl})
+    canon = [b for b in binds if b["ev"].kind == "canonical"]
+    num = [b for b in binds if b["ev"].kind != "canonical" and _is_num(b["value"])]
+    if canon and len(canon) >= len(num):
+        weight = {}
+        for b in canon:
+            weight[b["ev"].id] = weight.get(b["ev"].id, 0) + 1
+        for eid in sorted(weight, key=lambda k: -weight[k]):
+            try:
+                return canonical_visual([registry.get(eid)])
+            except VisualError:
+                continue
+    if not num:
+        sup = [registry.get(e) for e in c.get("apoyo") or []]
+        can = [e for e in sup if e is not None and e.kind == "canonical"]
+        if can:
+            try:
+                return canonical_visual(can)
+            except VisualError:
+                return None
+        return None
+    # 2b · un análisis del catálogo ya tiene su forma (cascada, intervalo, distribución)
+    for b in num:
+        it = default_intent(b["ev"]) if b["ev"].kind == "analysis" else None
+        if it:
+            try:
+                return build(b["ev"], it)
+            except VisualError:
+                pass
+    # 3 · métricas por periodo (p. ej. expansión frente a reactivación por año)
+    per = [b for b in num if b["ev"].kind == "metric" and PERIOD.match(_label(b["key"])[1] or "")]
+    if len({b["ev"].id for b in per}) >= 2 and len({b["fmt"] for b in per}) == 1:
+        from .render import period_label
+        xs = sorted({_label(b["key"])[1] for b in per})
+        series = []
+        for eid in dict.fromkeys(b["ev"].id for b in per):
+            ev = registry.get(eid)
+            vals = {_label(b["key"])[1]: b["value"] for b in per if b["ev"].id == eid}
+            series.append({"nombre": (ev.result or {}).get("label") or eid, "valores": [vals.get(x) for x in xs]})
+        return {"tipo": "barras" if len(xs) <= 6 else "linea", "x": [period_label(x) for x in xs], "series": series,
+                "formato": per[0]["fmt"] or "num2"}
+    # 4 · participaciones (en fracción o en puntos porcentuales con % en la plantilla)
+    shares = [b for b in num if b["fmt"] in ("pct", "pct0") or b["pp"]]
+    if shares and len({b["ev"].id for b in shares}) == 1:
+        vals = [b["value"] / 100 if b["pp"] else b["value"] for b in shares]
+        tot = sum(vals)
+        if all(0 <= v <= 1 for v in vals) and (len(vals) == 1 or 0.97 <= tot <= 1.03):
+            series = [{"nombre": _label(b["key"])[0], "valores": [v]} for b, v in zip(shares, vals)]
+            if len(vals) == 1:
+                series.append({"nombre": "Resto", "valores": [1 - vals[0]]})
+            return {"tipo": "barras", "apiladas": True, "x": [""], "series": series, "formato": "pct"}
+    # 5 · cifras del mismo tipo de una misma evidencia
+    groups = {}
+    for b in num:
+        g = groups.setdefault((b["ev"].id, b["fmt"]), {})
+        g.setdefault(b["key"], b)                        # la misma cifra ligada dos veces cuenta una vez
+    best = list(max(groups.values(), key=len).values())
+    vals = [abs(b["value"]) for b in best if b["value"]]
+    if len(best) < 2 or len(best) > 8 or (vals and max(vals) / min(vals) > 100):
+        return None
+    ev = best[0]["ev"]
+    from .render import period_label
+    labels = [_label(b["key"]) for b in best]
+    rows = list(dict.fromkeys(r for _, r in labels if r))
+    cols = list(dict.fromkeys(cl for cl, _ in labels))
+    name = lambda cl: (ev.result or {}).get("label") or cl if cl == "valor" else cl   # noqa: E731
+    xlab = lambda r: period_label(r) if PERIOD.match(r) else r                        # noqa: E731
+    fmt = best[0]["fmt"] if best[0]["fmt"] in ("int", "cop", "cop2", "pct", "pct0", "num1", "num2", "x") else "num2"
+    if rows and len(rows) * len(cols) == len(best):
+        return {"tipo": "barras", "x": [xlab(r) for r in rows], "formato": fmt,
+                "series": [{"nombre": name(cl), "valores": [next(b["value"] for b, (c2, r2) in zip(best, labels) if c2 == cl and r2 == r)
+                                                            for r in rows]} for cl in cols]}
+    # sin cortes, solo si miden lo mismo: las etiquetas comparten una palabra (p. ej. "clientes", "meses")
+    toks = [{w for w in cl.split() if len(w) >= 4} for cl, _ in labels]
+    if not set.intersection(*toks):
+        return None
+    return {"tipo": "barras", "x": [cl + (f" · {r}" if r else "") for cl, r in labels], "formato": fmt,
+            "series": [{"nombre": "", "valores": [b["value"] for b in best]}]}

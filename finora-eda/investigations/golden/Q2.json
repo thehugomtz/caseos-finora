@@ -4,6 +4,8 @@
  "pregunta_id": "Q2",
  "lente": "Finanzas",
  "playbook_id": "arpa_decline",
+ "contexto": null,
+ "caso_id": null,
  "status": "publicada",
  "encuadre": {
   "pregunta_analitica": "¿Qué fuentes explican contablemente la caída del MRR por cliente activo entre ene-22 y oct-24: la composición de entrada (quién entra), el efecto dentro de las cosechas (cuánto pagan los que se quedan) o la selección de salida (quién se va)?",
@@ -817,35 +819,31 @@
   },
   "V-05": {
    "id": "V-05",
-   "claim_id": "C-006",
-   "evidence_id": "E-002",
-   "intencion": "descomposicion",
-   "titulo": "El MRR por cliente de la base previa en oct-24 (COP 97,4 mil) se ubica por encima del de ene-22 (COP 92,8 mil), una variación de +5%, y el efecto dentro de las cosechas aporta COP 2,7 mil del cambio del MRR por cliente activo.",
+   "claim_id": "C-002",
+   "evidence_id": "E-006",
+   "intencion": "idea",
+   "titulo": "El ticket de entrada promedio de las altas bajó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024, y la mediana pasó de COP 63,0 mil a COP 42,0 mil.",
    "spec": {
-    "tipo": "cascada",
+    "tipo": "barras",
+    "x": [
+     "2022",
+     "2024"
+    ],
     "formato": "cop",
-    "pasos": [
+    "series": [
      {
-      "etiqueta": "ene-22",
-      "valor": 92839.01419098144,
-      "tipo": "total"
+      "nombre": "Ticket de entrada (M0)",
+      "valores": [
+       128694.73080882353,
+       50841.90861010831
+      ]
      },
      {
-      "etiqueta": "Composición",
-      "corta": "Comp.",
-      "valor": -37705.98731473553,
-      "tipo": "delta"
-     },
-     {
-      "etiqueta": "Dentro de\ncada cosecha",
-      "corta": "Dentro",
-      "valor": 2678.324035553832,
-      "tipo": "delta"
-     },
-     {
-      "etiqueta": "oct-24",
-      "valor": 57811.35091179977,
-      "tipo": "total"
+      "nombre": "mediana",
+      "valores": [
+       63000.0,
+       42000.0
+      ]
      }
     ]
    },
@@ -855,7 +853,7 @@
    "id": "V-06",
    "claim_id": "C-005",
    "evidence_id": null,
-   "intencion": "datos_faltantes",
+   "intencion": "idea",
    "titulo": "No es posible determinar si el menor ticket de entrada se asocia con cambios de precios de lista, planes, empaquetamiento o descuentos: el panel no contiene esas tablas.",
    "spec": {
     "tipo": "datos",
@@ -901,14 +899,133 @@
   },
   "V-07": {
    "id": "V-07",
+   "claim_id": "C-006",
+   "evidence_id": "EC-MON-01",
+   "intencion": "idea",
+   "titulo": "El MRR por cliente de la base previa en oct-24 (COP 97,4 mil) se ubica por encima del de ene-22 (COP 92,8 mil), una variación de +5%, y el efecto dentro de las cosechas aporta COP 2,7 mil del cambio del MRR por cliente activo.",
+   "spec": {
+    "tipo": "tarjeta",
+    "tarjeta": "8.3",
+    "claim_fase1": "C-MON-01",
+    "cubre": [
+     "C-MON-01"
+    ]
+   },
+   "auto": true
+  },
+  "V-08": {
+   "id": "V-08",
+   "claim_id": "C-007",
+   "evidence_id": "E-003",
+   "intencion": "idea",
+   "titulo": "Con base dic-22, el efecto dentro de las cosechas aporta −COP 5,2 mil del cambio del MRR por cliente activo (16% del total), concentrado en la cosecha 2022 (−COP 3,7 mil) y en las altas de feb-22 (−COP 1,6 mil).",
+   "spec": {
+    "tipo": "cascada",
+    "formato": "cop",
+    "pasos": [
+     {
+      "etiqueta": "dic-22",
+      "valor": 89543.71829268293,
+      "tipo": "total"
+     },
+     {
+      "etiqueta": "Composición",
+      "corta": "Comp.",
+      "valor": -26550.904842566866,
+      "tipo": "delta"
+     },
+     {
+      "etiqueta": "Dentro de\ncada cosecha",
+      "corta": "Dentro",
+      "valor": -5181.462538316295,
+      "tipo": "delta"
+     },
+     {
+      "etiqueta": "oct-24",
+      "valor": 57811.35091179977,
+      "tipo": "total"
+     }
+    ]
+   },
+   "auto": true
+  },
+  "V-09": {
+   "id": "V-09",
    "claim_id": "C-008",
    "evidence_id": "EC-ADQ-04",
-   "intencion": "tarjeta",
+   "intencion": "idea",
    "titulo": "En la descomposición del cambio del ticket de entrada 2022→2024, el efecto dentro de cada industria explica 97% del cambio, con un intervalo bootstrap de 91–102%, y el ticket de entrada bajó en 6 industrias.",
    "spec": {
     "tipo": "tarjeta",
     "tarjeta": "7.1",
-    "claim_fase1": "C-ADQ-04"
+    "claim_fase1": "C-ADQ-04",
+    "cubre": [
+     "C-ADQ-04"
+    ]
+   },
+   "auto": true
+  },
+  "V-10": {
+   "id": "V-10",
+   "claim_id": "C-012",
+   "evidence_id": "E-001",
+   "intencion": "idea",
+   "titulo": "La razón de medianas entre el monto usual de quienes hacen churn y el de los activos del mes previo es 1,0× en el periodo completo, con un intervalo bootstrap entre 1,0× y 1,2× que contiene la paridad, de modo que la brecha de medias coincide con la salida de pocas cuentas grandes.",
+   "spec": {
+    "tipo": "puntos",
+    "filas": [
+     "2022 · medias",
+     "2022 · medianas",
+     "2023 · medias",
+     "2023 · medianas",
+     "2024 · medias",
+     "2024 · medianas",
+     "total · medias",
+     "total · medianas"
+    ],
+    "formato": "num2",
+    "referencia": 1.0,
+    "series": [
+     {
+      "nombre": "IC 90% inferior",
+      "valores": [
+       1.2634790795200008,
+       0.87876,
+       1.178530933374979,
+       0.7761115001327191,
+       1.095458963426737,
+       0.9654208351271151,
+       1.3104627355800427,
+       0.966042846185038
+      ]
+     },
+     {
+      "nombre": "Razón",
+      "valores": [
+       1.696338280232295,
+       1.0,
+       1.5770772720964885,
+       0.9695267189897904,
+       1.373072530255609,
+       1.1112046013740944,
+       1.5490242541706507,
+       1.0409724208594457
+      ]
+     },
+     {
+      "nombre": "IC 90% superior",
+      "valores": [
+       2.224080525675505,
+       1.124964583333333,
+       2.034690726227998,
+       1.1631226077499652,
+       1.7079014682480618,
+       1.2624007474082342,
+       1.7983999176874217,
+       1.153745014943061
+      ]
+     }
+    ]
    },
    "auto": true
   }
@@ -3880,7 +3997,7 @@
      "C-008"
     ],
     "visual_ids": [
-     "V-07"
+     "V-09"
     ]
    },
    {
@@ -3890,7 +4007,7 @@
      "C-007"
     ],
     "visual_ids": [
-     "V-05"
+     "V-07"
     ]
    },
    {
@@ -3964,7 +4081,7 @@
      "C-008"
     ],
     "visual_ids": [
-     "V-07"
+     "V-09"
     ],
     "interpretacion": "El efecto dentro de cada industria explica 97% del cambio del ticket de entrada 2022→2024, y el ticket bajó en 6 industrias. El movimiento es transversal, no un reacomodo entre sectores.",
     "implicacion": "Si el movimiento es transversal, podría convenir tratarlo como un tema de nivel de entrada general antes que de segmentación sectorial.",
@@ -3979,7 +4096,7 @@
      "C-007"
     ],
     "visual_ids": [
-     "V-05"
+     "V-07"
     ],
     "interpretacion": "Con base ene-22, el MRR por cliente de la base previa se ubica por encima de su nivel inicial (+5%) y el efecto dentro de las cosechas aporta COP 2,7 mil. Con base dic-22, ese mismo efecto aporta −COP 5,2 mil, concentrado en la cosecha 2022.",
     "implicacion": "Si el seguimiento se ancla en dic-22, podría convenir monitorear aparte la trayectoria de la cosecha 2022 y de las altas de feb-22.",
@@ -4066,6 +4183,7 @@
   ],
   "degradada": false
  },
+ "respuesta_caso": null,
  "composicion_intentos": [
   {
    "intento": 1,
@@ -4141,7 +4259,7 @@
  },
  "modelo": "claude-opus-5",
  "data_version": "sha256:4a799a744543c8d8",
- "brain_version": "sha256:ec67ab3ed515f49d",
+ "brain_version": "sha256:d87e62466354e64a",
  "started_ms": 1790539955866,
  "finished_ms": 1790540618630,
  "error": null,
@@ -6651,6 +6769,24 @@
    "tipo": "recomposicion",
    "data": {
     "visuales_agregados": 1,
+    "narrativa": "sin cambios"
+   }
+  },
+  {
+   "n": 102,
+   "t": 96936884,
+   "tipo": "recomposicion",
+   "data": {
+    "visuales_reasignados": 6,
+    "narrativa": "sin cambios"
+   }
+  },
+  {
+   "n": 103,
+   "t": 97200045,
+   "tipo": "recomposicion",
+   "data": {
+    "visuales_reasignados": 6,
     "narrativa": "sin cambios"
    }
   }

@@ -129,6 +129,23 @@ hallazgos:
     m0_mean_chg_22_24: Cambio del primer pago promedio de las altas, 2022 a 2024
     m0_median_chg_22_24: Cambio de la mediana del primer pago de las altas, 2022 a 2024
     m1_mean_chg_22_24: Cambio del pago promedio del segundo mes (M1) de las altas, 2022 a 2024
+  grafica:
+    tipo: barras
+    x:
+    - Promedio
+    - Mediana
+    - Winsorizado
+    - Run-rate temprano
+    - Segundo mes (M1)
+    formato: pct_signed
+    series:
+    - nombre: Cambio del ticket de entrada, 2022 → 2024
+      valores:
+      - -0.6049418007203875
+      - -0.33333333333333337
+      - -0.5125863798144088
+      - -0.48037809551425426
+      - -0.1783926076015293
   revision_humana: pendiente
 - id: C-ADQ-03
   clave: ticket_step
@@ -380,6 +397,19 @@ hallazgos:
     exp_mrr_revert: 29%
   etiquetas:
     exp_mrr_revert: MRR de expansión que se revierte al mes siguiente
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - MRR de expansión
+    formato: pct
+    series:
+    - nombre: Se revierte al mes siguiente
+      valores:
+      - 0.2925602061079387
+    - nombre: Se mantiene
+      valores:
+      - 0.7074397938920614
   revision_humana: pendiente
 - id: C-DAT-04
   clave: small_adjust_rise
@@ -434,6 +464,25 @@ hallazgos:
     adq_below_2023: Altas por mes con run-rate inicial menor a la mediana 2022, en 2023
     adq_below_2024: Altas por mes con run-rate inicial menor a la mediana 2022, en 2024
     adq_below_share_increase: Parte del aumento de altas por mes 2022→2024 que corresponde a ticket bajo
+  grafica:
+    tipo: barras
+    apiladas: true
+    x: &id001
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: Run-rate inicial bajo la mediana de 2022
+      valores:
+      - 13.5
+      - 41.666666666666664
+      - 43.8
+    - nombre: Igual o sobre la mediana de 2022
+      valores:
+      - 13.7
+      - 12.5
+      - 11.6
   revision_humana: pendiente
 - id: C-RES-08
   clave: growth_from_new_customers
@@ -456,6 +505,22 @@ hallazgos:
     ga_new_end: Monto pagado en oct-24 por los clientes que empezaron después de ene-22
     ga_base_survivors: Clientes activos en ene-22 que siguen pagando en oct-24
     ga_base_survivor_ratio: Monto oct-24 / ene-22 de esos clientes que siguen pagando (veces)
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - ene-22
+    - oct-24
+    formato: cop
+    series:
+    - nombre: Clientes activos en ene-22
+      valores:
+      - 35000308.35
+      - 29021572.65
+    - nombre: Clientes que empezaron a pagar después
+      valores:
+      - 0.0
+      - 67985874.18
   revision_humana: pendiente
 - id: C-DAT-06
   clave: one_month_round_trips
@@ -470,6 +535,19 @@ hallazgos:
   etiquetas:
     rt_gross: Movimiento bruto total del monto pagado sin altas, mar-22 a sep-24 (no es lo revertido)
     rt_share: Parte de ese movimiento bruto que vuelve exacto al nivel previo al mes siguiente
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
   revision_humana: pendiente
 - id: C-RET-03
   clave: durable_churn_flat
@@ -492,6 +570,21 @@ hallazgos:
     churn_dur3_2022: Churn mensual que no vuelve a pagar en 3 meses, 2022
     churn_dur3_2023: Churn mensual que no vuelve a pagar en 3 meses, 2023
     churn_dur3_2024: Churn mensual que no vuelve a pagar en 3 meses, 2024 (ene–jul)
+  grafica:
+    tipo: barras
+    x: *id001
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
   revision_humana: pendiente
 - id: C-DAT-07
   clave: retroactive_adjustments
@@ -514,6 +607,22 @@ hallazgos:
     retro_exp_share_2024: Tramo de subida de esos ajustes como parte de la expansión de 2024
     retro_net_2023: Aumento mensual neto que persiste por esos ajustes, 2023
     retro_net_2024: Aumento mensual neto que persiste por esos ajustes, 2024
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Tramo de subida con cobro retroactivo exacto
+      valores:
+      - 0.08537936689506388
+      - 0.08286568820750435
+    - nombre: Resto de la expansión
+      valores:
+      - 0.9146206331049361
+      - 0.9171343117924956
   revision_humana: pendiente
 - id: C-DAT-08
   clave: catchup_returns
@@ -529,6 +638,19 @@ hallazgos:
     catchup_returns: Retornos que pagan exactamente los meses pendientes
     catchup_n: Retornos después de uno o más meses sin pago
     catchup_share: Parte de los retornos que liquidan exactamente los meses pendientes
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - Retornos después de meses sin pago
+    formato: pct
+    series:
+    - nombre: Liquidan exactamente los meses pendientes
+      valores:
+      - 0.3235955056179775
+    - nombre: Otros retornos
+      valores:
+      - 0.6764044943820224
   revision_humana: pendiente
 - id: C-DAT-09
   clave: jun22_event
@@ -545,6 +667,26 @@ hallazgos:
     jun22_churn: Churns observados en jun-22
     churn_month_median: Mediana mensual de churns observados (mar-22 a oct-24)
     jun22_back_next: Churns de jun-22 que vuelven a pagar al mes siguiente
+  grafica:
+    tipo: barras
+    apiladas: true
+    x:
+    - jun-22
+    - Mediana mensual
+    formato: num1
+    series:
+    - nombre: Volvieron a pagar al mes siguiente
+      valores:
+      - 43.0
+      - 0.0
+    - nombre: No volvieron al mes siguiente
+      valores:
+      - 17.0
+      - 0.0
+    - nombre: Churns en un mes típico
+      valores:
+      - 0.0
+      - 22.5
   revision_humana: pendiente
 - id: C-ADQ-08
   clave: value_lags_count
@@ -571,6 +713,27 @@ hallazgos:
     val_rr_23_24: Cambio del valor inicial incorporado por mes (run-rate M0–M2), 2023 a 2024
     val_usual_23_24: Cambio del valor inicial incorporado por mes (monto habitual), 2023 a 2024
     val_m1to3_23_24: Cambio del valor inicial incorporado por mes (mediana M1–M3), 2023 a 2024
+  grafica:
+    tipo: barras
+    formato: pct_signed
+    x:
+    - Altas por mes
+    - Valor · run-rate M0–M2
+    - Valor · monto usual
+    - Valor · M1–M3
+    series:
+    - nombre: 2022 → 2024
+      valores:
+      - 1.0367647058823528
+      - 0.058347555459938194
+      - 0.16941922852264213
+      - 0.5964484358601063
+    - nombre: 2023 → 2024
+      valores:
+      - 0.022769230769230875
+      - 0.03437563744822669
+      - 0.002303686708192476
+      - 0.07674540909389393
   revision_humana: pendiente
 - id: C-RET-04
   clave: low_ticket_retention_m12
@@ -589,6 +752,17 @@ hallazgos:
     ret12_high_2023: Retención de logos al M12, altas de 2023 con ticket alto
     ret12_n_low: Altas de 2023 con ticket bajo observables al M13
     ret12_n_high: Altas de 2023 con ticket alto observables al M13
+  grafica:
+    tipo: barras
+    x:
+    - Altas bajo la mediana de 2022
+    - Altas sobre la mediana de 2022
+    formato: pct
+    series:
+    - nombre: Retención de logos al M12, cohortes 2023
+      valores:
+      - 0.8876080691642652
+      - 0.8839285714285714
   revision_humana: pendiente
 - id: C-ADQ-09
   clave: acquisition_plateau
@@ -609,4 +783,75 @@ hallazgos:
     plateau_slope: Pendiente de las altas por mes desde ene-23 (cambio por mes)
     plateau_lo: Límite inferior del intervalo de 95% de esa pendiente
     plateau_hi: Límite superior del intervalo de 95% de esa pendiente
+  grafica:
+    tipo: linea
+    formato: int
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas por mes
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
   revision_humana: pendiente
