@@ -14,7 +14,7 @@ import shutil
 from claude_agent_sdk import (AssistantMessage, ClaudeAgentOptions, ResultMessage, SystemMessage, TextBlock,
                               query)
 
-from . import visuals
+from . import caso, visuals
 from .config import EFFORT, GOLDEN, MAX_TURNS, MODEL, PROMPTS, RUNS
 from .state import Investigation, now_ms
 from .tools import ALLOWED_TOOLS, CANON, METRICS, make_server
@@ -114,7 +114,8 @@ async def investigate(inv: Investigation):
     system = (PROMPTS / "investigador.md").read_text(encoding="utf-8").replace("{{BRAIN_CORE}}", brain_core(inv.playbook_id))
     opts = _base_options(system, EFFORT["investigador"], MAX_TURNS, PACKAGE_SCHEMA,
                          mcp_servers={"finora": server}, allowed_tools=ALLOWED_TOOLS)
-    prompt = f"Pregunta: {inv.pregunta}\nLente: {inv.lente}\n{thread_context(inv.contexto)}\nInvestiga y entrega el paquete."
+    ctx = caso.case_prompt(inv.caso_id) if inv.caso_id else thread_context(inv.contexto)
+    prompt = f"Pregunta: {inv.pregunta}\nLente: {inv.lente}\n{ctx}\nInvestiga y entrega el paquete."
     inv.emit("inicio", {"pregunta": inv.pregunta, "modelo": MODEL})
     async for m in query(prompt=prompt, options=opts):
         if isinstance(m, SystemMessage) and m.subtype == "init":
@@ -265,7 +266,10 @@ async def run(inv: Investigation, save_golden: bool = False) -> Investigation:
             entry["usada"] = any(e in used for e in entry["evidencias"])
         inv.emit("hipotesis", {"hipotesis": inv.hipotesis})
         inv.set_status("composicion")
-        inv.narrativa = await compose(inv)
+        if inv.caso_id:   # pregunta del caso: siete partes obligatorias en lugar de la narrativa de investigación
+            inv.respuesta_caso = await caso.compose_case(inv)
+        else:
+            inv.narrativa = await compose(inv)
         inv.finished_ms = now_ms()
         inv.set_status("publicada")
         inv.emit("final", {"id": inv.id})
@@ -275,7 +279,9 @@ async def run(inv: Investigation, save_golden: bool = False) -> Investigation:
         inv.set_status("error")
         inv.emit("final", {"id": inv.id, "error": inv.error})
     path = inv.save()
-    if save_golden and inv.status == "publicada" and inv.pregunta_id:
+    if inv.caso_id and inv.status == "publicada":
+        caso.save_answer(inv, path)
+    if save_golden and inv.status == "publicada" and inv.pregunta_id and not inv.caso_id:
         GOLDEN.mkdir(parents=True, exist_ok=True)
         shutil.copy(path, GOLDEN / f"{inv.pregunta_id}.json")
     return inv

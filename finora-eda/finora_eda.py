@@ -2172,6 +2172,9 @@ def render_answers(brain: dict, facts: dict) -> dict:
 
 def validate_brain(brain: dict, claims: list, facts: dict):
     validate_answers(brain, claims, facts)
+    from agent import caso
+    problems = caso.check_questions({c["id"] for c in claims}, {m["id"] for m in brain["missing"]})
+    assert not problems, "preguntas del caso (brain/business/case_questions.yaml): " + "; ".join(problems)
     # en YAML, "- texto: más texto" se lee como diccionario; los textos que se muestran deben ser str
     for k, q in enumerate(brain["questions"]["preguntas_para_finora"], 1):
         assert isinstance(q, str), f"pregunta para Finora {k} no es texto (¿falta entrecomillar un ': '?)"
@@ -2204,6 +2207,20 @@ def load_golden_investigations() -> dict:
         inv.pop("events", None)
         out[p.stem] = inv
     return out
+
+
+def load_case() -> dict:
+    """Preguntas del caso (W0–W7): la cola, las respuestas deterministas de las bloqueadas y las respuestas publicadas
+    (investigations/caso/W*.json), embebidas para que la cola se navegue sin servidor."""
+    from agent import caso
+    answers = {}
+    for qid in caso.ORDER:
+        d = caso.load_answer(qid)
+        if d and d.get("respuesta_caso"):
+            answers[qid] = {k: v for k, v in d.items() if k != "events"}
+    return {"fuente": caso.DOC["fuente"], "escala": caso.DOC["escala"], "orden": caso.DOC["orden_de_trabajo"],
+            "preguntas": caso.DOC["preguntas"], "respuestas": answers,
+            "bloqueadas": {q["id"]: caso.blocked_answer(q) for q in caso.DOC["preguntas"] if not caso.can_investigate(q["id"])}}
 
 
 def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
@@ -2282,6 +2299,7 @@ def build_payload(ctx: dict, facts: dict, claims: list, brain: dict) -> dict:
                   "missing": {m["id"]: m for m in brain["missing"]}}
     P["investigations"] = load_golden_investigations()
     P["answers"] = render_answers(brain, facts)
+    P["caso"] = load_case()
     return jsonable(P)
 
 

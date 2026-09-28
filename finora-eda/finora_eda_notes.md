@@ -3,7 +3,7 @@
 > **Entender primero. Explicar después. Decidir al final.**
 > Este documento describe qué contienen los datos y cómo se comportan. No diagnostica los problemas del CRO ni del CFO.
 
-Generado el 28 sep 2026, 15:29 por `finora_eda.py`. Cada cifra se recalcula desde los archivos crudos; ninguna se escribe a mano.
+Generado el 28 sep 2026, 16:11 por `finora_eda.py`. Cada cifra se recalcula desde los archivos crudos; ninguna se escribe a mano.
 
 ---
 

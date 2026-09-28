@@ -14,6 +14,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel
 
+from agent import caso
 from agent import narrative as nar
 from agent.config import DB_PATH, GOLDEN, ROOT, RUNS
 from agent.orchestrator import run
@@ -66,7 +67,7 @@ class MergeNarratives(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 def workspace():
     html = (ROOT / "finora_eda.html").read_text(encoding="utf-8")
-    flag = '<script>window.FINORA_LIVE = {"api": "/api", "preguntas": ["Q2"], "libre": true, "narrativas": true};</script>\n'
+    flag = '<script>window.FINORA_LIVE = {"api": "/api", "preguntas": ["Q2"], "libre": true, "narrativas": true, "caso": true};</script>\n'
     return html.replace("<script>\nconst DATA", flag + "<script>\nconst DATA", 1)
 
 
@@ -74,6 +75,13 @@ def workspace():
 async def start(body: NewInvestigation):
     if any(i.status not in ("publicada", "error") for i in LIVE.values()):
         raise HTTPException(409, "Ya hay una investigación en curso; espera a que termine.")
+    if body.pregunta_id in caso.QUESTIONS:
+        # pregunta del caso: las bloqueadas no se investigan (no hay sustituto válido); su respuesta dice qué falta
+        cq = caso.QUESTIONS[body.pregunta_id]
+        if not caso.can_investigate(body.pregunta_id):
+            raise HTTPException(409, f"{body.pregunta_id} está bloqueada: no se investiga con sustitutos. Abre la pregunta para ver qué evidencia falta.")
+        inv = Investigation(pregunta=cq["pregunta"], pregunta_id=cq["id"], caso_id=cq["id"], playbook_id="libre", lente=caso.lens(cq))
+        return _launch(inv)
     qid = body.pregunta_id if body.pregunta_id in GOLDEN_Q else None
     q = GOLDEN_Q[qid] if qid else (body.pregunta or "").strip()
     if not q:
@@ -89,6 +97,10 @@ async def start(body: NewInvestigation):
                "claim_ids": [str(x)[:40] for x in (c.get("claim_ids") or [])][:20],
                "narrativa_id": str(c.get("narrativa_id") or "")[:40], "pieza_id": str(c.get("pieza_id") or "")[:10]}
     inv = Investigation(pregunta=q, pregunta_id=qid, playbook_id="arpa_decline" if qid == "Q2" else "libre", contexto=ctx)
+    return _launch(inv)
+
+
+def _launch(inv: Investigation) -> dict:
     LIVE[inv.id] = inv
     task = asyncio.create_task(run(inv))
     TASKS.add(task)
@@ -138,6 +150,24 @@ async def stream(inv_id: str):
 
     return StreamingResponse(events(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+# ------------------------------------------------------------------ preguntas del caso (W0–W7)
+@app.get("/api/caso")
+def caso_list():
+    return {"preguntas": caso.statuses(LIVE)}
+
+
+@app.get("/api/caso/{qid}")
+def caso_get(qid: str):
+    if qid not in caso.QUESTIONS:
+        raise HTTPException(404, "Pregunta del caso desconocida.")
+    if not caso.can_investigate(qid):
+        return {"caso_id": qid, "bloqueada": True, "respuesta_caso": caso.blocked_answer(caso.QUESTIONS[qid])}
+    d = caso.load_answer(qid)
+    if not d:
+        raise HTTPException(404, "Esta pregunta todavía no tiene respuesta.")
+    return d
 
 
 @app.get("/api/golden/{qid}")

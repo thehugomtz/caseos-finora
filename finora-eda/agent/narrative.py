@@ -21,7 +21,7 @@ from .tools import CANON
 NARRATIVES = ROOT / "narratives"
 ROLES = ["Situación", "Hallazgo", "Implicación", "Decisión", "Acción"]
 AUDIENCES = ["CEO", "CRO", "CFO", "Mixta"]
-PIECE_TYPES = ["respuesta", "seccion", "tarjeta", "hallazgo", "respuesta_inv", "afirmacion", "nota"]
+PIECE_TYPES = ["respuesta", "seccion", "tarjeta", "hallazgo", "respuesta_inv", "respuesta_caso", "afirmacion", "nota"]
 ID_RE = re.compile(r"^NAR-\d{8}-\d{6}-[0-9a-f]{4}$")
 MAX_TEXT = 4000
 

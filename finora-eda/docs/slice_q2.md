@@ -18,11 +18,11 @@ Abre `http://127.0.0.1:8765` y pulsa ⌘K. Elige una pregunta frecuente para ver
 
 Otras formas:
 
-- Terminal: `.venv/bin/python -m agent Q2` (con `--golden` la guarda como investigación dorada).
+- Terminal: `.venv/bin/python -m agent Q2` (con `--golden` la guarda como investigación dorada), o `.venv/bin/python -m agent W2` para una pregunta del caso (W6 y W7 imprimen qué falta).
 - `python -m agent recompose <archivo>` vuelve a componer la narrativa y usa el modelo. `python -m agent revisual <archivo>` solo reasigna las gráficas automáticas, sin modelo.
 - Cada corrida queda en `#investigacion/INV-…`; con el servidor, ese enlace la vuelve a abrir.
 - Sin servidor: `finora_eda.html` trae embebidas las respuestas verificadas y la investigación dorada. Ahí Enter lleva a la respuesta verificada más cercana, o dice con honestidad que la pregunta necesita el servidor.
-- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 62 en total).
+- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 82 en total).
 
 ## Respuesta primero (iteración de UX del 27-sep-2026)
 
@@ -76,6 +76,51 @@ Pruebas del 28-sep-2026 con la narrativa "Caso CFO · qué mide hoy el MRR": 8 p
 | Presentación 2 | 2 | ≈US$0,22 por intento | Validada, pero una lámina llamó "monto revertido" al movimiento bruto total. Por eso se etiquetaron las cifras del registro |
 | Presentación 3 | 2 (104 s) | US$0,48 | Validada: 8 láminas y 4 pendientes. El primer intento se rechazó por un "3 meses" que solo aparecía en la etiqueta; ahora la etiqueta cuenta como evidencia |
 
+## Preguntas del caso (iteración del 28-sep-2026)
+
+La cola de investigación del caso sale del workplan W0–W7 del brief de trabajo v0.3 (Alegra · Investigación y workplan, sección 08), que es la fuente de verdad. Vive en `brain/business/case_questions.yaml` y se abre con **Preguntas del caso** en la barra lateral, con `#caso` o desde la paleta. El buscador libre (⌘K y Enter) sigue igual como modo de exploración adicional. No cambió la lógica analítica: el mismo agente, las mismas tools y el mismo validador de afirmaciones.
+
+| Pregunta | Prioridad | Hipótesis | Capacidad con los datos actuales |
+|---|---|---|---|
+| W0 · ¿Qué podemos nombrar y comparar válidamente? | P0 · puerta | HG | Respondible (condicionada) |
+| W1 · ¿El monto identifica los escenarios del CFO? | P1 · conceptual | HIF | Respondible (prueba lógica) |
+| W2 · ¿Qué cambió en los primeros pagadores observados? | P1 · evidencia acotada | HO1 | Parcial |
+| W3 · ¿Dónde se concentra el cambio del monto observado? | P1 · evidencia acotada | HO3 | Parcial |
+| W4 · ¿La industria concentra el cambio observado? | P2 · condicionada | HO2 | Parcial, si W2 o W3 muestran un cambio material |
+| W5 · ¿Cambió la economía posterior de los nuevos pagadores? | P2 · condicionada | HO4 | Parcial, si el aporte posterior cambia la lectura |
+| W6 · ¿Qué evidencia mínima distinguiría las explicaciones del CRO? | Brecha crítica | HC1–HC3 | Bloqueada |
+| W7 · ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? | Brecha crítica | HF1–HF3 | Bloqueada |
+
+Cada tarjeta muestra el ID, la prioridad, la pregunta, la hipótesis asociada, por qué importa, la capacidad de respuesta (impacto × capacidad, como en el brief), el estado, la evidencia faltante cuando aplica, de qué depende y el CTA. En el detalle están el método, el entregable, el criterio de cierre, los límites del brief, los sustitutos inválidos y los hechos ya verificados que el agente reutilizará.
+
+Estados:
+
+- **Bloqueada**: la capacidad es cero (W6 y W7). No se investiga: el servidor rechaza la corrida con 409 y la interfaz no la ofrece. **Investigar: ver qué falta** abre una respuesta determinista, sin corrida del agente y sin datos de pagos. Explica, por cada explicación del CRO o del CFO, qué comparación la distinguiría, la evidencia mínima, los datos que faltan (con sus campos del catálogo), la fuente potencial, qué conclusión queda bloqueada y cuál sería el sustituto inválido.
+- **Pendiente**: se puede investigar y todavía no tiene respuesta. Si depende de otra pregunta sin respuesta, la tarjeta lo dice, pero no lo impide.
+- **Investigando**: hay una corrida en curso. **Ver la investigación en vivo** se vuelve a enganchar al stream.
+- **Respondida**: hay una respuesta publicada en `investigations/caso/<W>.json`, que el pipeline embebe en el HTML.
+
+Al investigar W0–W5, el agente recibe la pregunta del caso como contexto (no como evidencia): la hipótesis y lo que la distingue, el alcance permitido, el método y el criterio de cierre del brief, lo que no se puede concluir, los sustitutos inválidos y los hechos canónicos relacionados. Registra la hipótesis del caso y su rival antes de mirar datos. Al cerrar, el compositor del caso (`agent/prompts/caso.md`) entrega siete partes obligatorias:
+
+1. Respuesta: titular y texto, con sus afirmaciones.
+2. Hechos observados: solo afirmaciones con estado Hecho observado o Evidencia fuerte, con el texto que validó el código.
+3. Interpretación permitida, dentro del alcance de la pregunta.
+4. Qué no podemos concluir: límites de la corrida más los del brief.
+5. Hipótesis fortalecidas o debilitadas: el efecto lo deriva el código del estado de cada hipótesis (Soportada → fortalecida, No soportada → debilitada, Direccional → señal direccional).
+6. Preguntas que siguen abiertas.
+7. Siguiente pregunta recomendada: un ID de la cola o una pregunta propia.
+
+Reglas que se verifican en código (`agent/caso.py`, `validate_case_answer`):
+
+- Cada cifra debe estar en las afirmaciones que cita ese bloque. Tampoco se admiten cantidades con letras, calificativos sin respaldo, lenguaje causal ni IDs de afirmaciones o evidencia en el texto.
+- Sustitutos inválidos por pregunta: por ejemplo, conversión o leads en W2, descuento o etiquetas contractuales en W3. No pueden aparecer en la respuesta, en la interpretación, en la lectura de las hipótesis ni en los hechos citados; solo en lo que no podemos concluir.
+- Cada lectura de hipótesis cita afirmaciones ligadas a esa hipótesis. La siguiente pregunta tiene que ser otra de la cola.
+- Si la respuesta no pasa, el reintento corrige la anterior, hasta 3 intentos. Si ninguno pasa, queda una respuesta sin texto libre: afirmaciones validadas, el alcance del brief y el orden del brief. Se marca como compuesta sin texto libre.
+
+Cada respuesta se guarda como pieza en Preparar narrativa con **＋ Guardar en narrativa** (tipo `respuesta_caso`); las bloqueadas también. Esta iteración no genera deck ni narrativa final.
+
+Pruebas (sin modelo): 21 evaluaciones nuevas. Incluyen una respuesta de muestra sobre las afirmaciones reales de la dorada, cada rechazo del validador, el efecto derivado de las hipótesis, el respaldo, las bloqueadas y un flujo completo con el agente y el compositor simulados. No se corrió ninguna pregunta W con el modelo; una corrida en vivo toma entre 5 y 18 minutos y cuesta alrededor de US$1,3 a 1,8 de equivalente en API.
+
 ## Qué hace cada pieza
 
 | Pieza | Archivo | Qué hace |
@@ -89,7 +134,8 @@ Pruebas del 28-sep-2026 con la narrativa "Caso CFO · qué mide hoy el MRR": 8 p
 | Visuales | `agent/visuals.py` | Gramática visual determinista: intención → forma; el título es el texto validado. Incluye la tabla de datos faltantes y la reutilización de gráficas de tarjetas de la Fase 1. |
 | Agente y compositor | `agent/orchestrator.py`, `agent/prompts/` | Un agente investigador con salida estructurada; un compositor sin tools cuya narrativa pasa por el validador (un reintento; si no, composición sin texto libre). |
 | Narrativas | `agent/narrative.py`, `agent/prompts/narrador_plan.md`, `agent/prompts/narrador.md` | Guarda narrativas y piezas, las une, propone el esqueleto y consolida la presentación. Valida cada lámina contra la evidencia que cita y, si no pasa, cae en una presentación hecha solo con las piezas. |
-| Servidor | `app/server.py` | Sirve el workspace y la API: `POST /api/investigations`, streaming por SSE, `GET` del documento y de la dorada, y `/api/narratives` (crear, editar, piezas, unir, esqueleto, consolidar). Solo 127.0.0.1. |
+| Preguntas del caso | `brain/business/case_questions.yaml`, `agent/caso.py`, `agent/prompts/caso.md` | Cola W0–W7 del brief v0.3: contexto para el investigador, compositor de siete partes con su validador, respaldo sin texto libre y respuestas deterministas de las bloqueadas. |
+| Servidor | `app/server.py` | Sirve el workspace y la API: `POST /api/investigations` (acepta W0–W5 y rechaza las bloqueadas), streaming por SSE, `GET` del documento y de la dorada, `/api/caso` (estado de la cola y respuesta de cada pregunta) y `/api/narratives` (crear, editar, piezas, unir, esqueleto, consolidar). Solo 127.0.0.1. |
 | Vista | `templates/finora_eda_app.js` | Respuesta primero (portada, secciones, vista de respuesta), buscador con preguntas libres, documento de investigación con revelación progresiva, modo en vivo y panel de linaje (Evidencia · Método · Consulta · Fuente). |
 | Cerebro | `brain/frameworks/playbooks/arpa_decline.yaml`, `brain/guardrails/*` | Playbook MECE anclado en la identidad del MRR por cliente, reglas epistémicas, datos faltantes y léxico causal. |
 
@@ -143,5 +189,7 @@ La duración varía: en la corrida 3 el segundo intento del compositor esperó 4
 - El validador comprueba de dónde sale cada cifra y rechaza participaciones imposibles, pero no entiende unidades en general. Un 1% leído como fracción (100%) todavía pasaría; eso le toca a la pasada crítica.
 - La gramática visual no sabe comparar años desde un SQL ad hoc con más de tres filas por corte, y el agente cae en una tabla (H2 de la corrida 6).
 - Una pregunta libre amplia tarda más que la dorada: la corrida 6 tomó 18 minutos, 17 de ellos del investigador.
+- Las preguntas del caso W0–W5 solo se investigan con el servidor local. Sin él, la cola muestra las bloqueadas y las respuestas ya publicadas. El servidor corre una investigación a la vez: si hay una en curso, Investigar espera.
+- Los sustitutos inválidos se detectan por términos. Un sustituto dicho con otras palabras pasaría: eso le toca a la pasada crítica.
 - Preparar narrativa solo aparece con el servidor local: el HTML estático no guarda ni consolida. Profundizar desde una pieza es una investigación en vivo completa y tarda lo mismo (de 5 a 18 minutos). Proponer el esqueleto toma alrededor de un minuto y consolidar, de uno a tres.
 - El validador de láminas comprueba que cada cifra salga de una pieza citada, no que se use con el sentido correcto. La etiqueta de qué mide reduce ese riesgo, pero no lo elimina: eso le toca a la pasada crítica.

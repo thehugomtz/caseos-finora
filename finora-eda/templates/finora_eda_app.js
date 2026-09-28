@@ -1820,6 +1820,12 @@ function palList() {
                    : BR.golden.filter(g => g.destacada).sort((a, b) => DOM_ORDER.indexOf(a.dominio) - DOM_ORDER.indexOf(b.dominio));
   group(q ? "Respuestas verificadas relacionadas" : "Preguntas frecuentes del negocio",
         golden.map(g => ({ text: g.pregunta, dom: g.dominio, qid: g.id, go: () => { palClose(true); openAnswer(g.id); } })));
+  const cqs = CASO.preguntas || [];
+  if (cqs.length) group("Preguntas del caso", !q
+    ? [{ lead: "W0–W7", text: "Cola de investigación del caso: prioridad, capacidad de respuesta y estado", dom: "Brief v0.3",
+         go: () => { palClose(true); openCaseQueue(); } }]
+    : cqs.filter(x => matches(x.id + " " + x.pregunta + " " + x.hipotesis.map(h => h.id + " " + h.texto).join(" "), q)).slice(0, 4)
+        .map(x => ({ lead: x.id, text: x.pregunta, dom: CSTATUS[caseStatus(x.id)][2], go: () => { palClose(true); openCaseQuestion(x.id); } })));
   if (NARR_ON && !q) group("Narrativa", [{ text: "Preparar narrativa: guarda piezas, profundiza y consolida una presentación", dom: "Asistida por IA",
                                            go: () => { palClose(true); openStudio(); } }]);
   group("Explorar por sección", sections().filter(s => !q || matches(s.num + " " + s.title + " " + s.q, q))
@@ -1992,6 +1998,7 @@ function showDoc(kicker, statusNode) {
 }
 function closeInvestigation() {
   if (!invOpen) return;
+  clearTimeout(CST.timer);
   invOpen = false;
   $("invdoc").hidden = true;
   document.body.style.overflow = "";
@@ -2266,7 +2273,7 @@ function staticAnswer(text, routes) {
   $("invBack").focus();
 }
 let liveES = null;
-async function startLive(body, pregunta, routes) {
+async function startLive(body, pregunta, routes, caseQ) {
   if (!LIVE) return;
   let r;
   try {
@@ -2278,17 +2285,22 @@ async function startLive(body, pregunta, routes) {
     return;
   }
   const id = (await r.json()).id;
-  liveShell(pregunta, routes || routeQuestion(pregunta));
+  attachLive(id, pregunta, caseQ, routes);
+}
+function attachLive(id, pregunta, caseQ, routes) {
+  // también sirve para volver a una corrida en curso: el stream reenvía los eventos desde el inicio
+  if (!id) return;
+  liveShell(pregunta, caseQ ? [] : routes || routeQuestion(pregunta), caseQ);
   if (liveES) liveES.close();
   liveES = new EventSource(LIVE.api + "/investigations/" + id + "/stream");
   liveES.onmessage = m => onLiveEvent(JSON.parse(m.data), id);
   liveES.onerror = () => { if (liveES) liveES.close(); liveES = null; pollLive(id); };
 }
-function liveShell(pregunta, routes) {
+function liveShell(pregunta, routes, caseQ) {
   INV = { claims: {}, hipotesis: [], evidencia: [] };
   INV_EV = {};
-  const b = showDoc("Analizando tu pregunta", tagRaw("explo", "?", "En curso"));
-  setHash("#analizando");
+  const b = showDoc(caseQ ? "Investigando " + caseQ.id : "Analizando tu pregunta", tagRaw("explo", "?", "En curso"));
+  setHash(caseQ ? "#caso/" + caseQ.id : "#analizando");
   const lb = $("invLive");
   lb.hidden = false;
   lb.disabled = true;
@@ -2301,11 +2313,18 @@ function liveShell(pregunta, routes) {
   steps.id = "liveSteps";
   STEPS.forEach(([key, lab]) => { const d = H("div", null, steps, lab); d.dataset.k = key; });
   requestAnimationFrame(() => liveStep("encuadre"));
-  H("p", "inv-frame", b, "El agente trabaja con las herramientas de Finora sobre tu sesión de Claude Code: primero registra hipótesis y qué esperaría ver, después reúne evidencia, y el validador acepta o rechaza cada afirmación. Suele tardar entre 3 y 10 minutos.");
+  H("p", "inv-frame", b, "El agente trabaja con las herramientas de Finora sobre tu sesión de Claude Code: primero registra hipótesis y qué esperaría ver, después reúne evidencia, y el validador acepta o rechaza cada afirmación. " +
+    (caseQ ? "Las corridas medidas tardaron entre 5 y 18 minutos." : "Suele tardar entre 3 y 10 minutos."));
   const frame = H("p", "inv-frame", b);
   frame.id = "liveFrame";
   const best = routes && routes[0];
-  if (best && best.score >= 3 && (ANS.preguntas || {})[best.id]) {
+  if (caseQ) {
+    const box = H("div", "ans-main", b);
+    box.style.marginTop = "6px";
+    H("div", "answer-k", box, "Pregunta del caso " + caseQ.id + " · " + caseQ.prioridad_etiqueta);
+    caseQ.hipotesis.forEach(h => { const pp = H("p", "cq-h", box); H("b", null, pp, h.id + " "); rich(pp, h.texto); });
+    rich(H("p", "muted", box), "Al terminar llega en siete partes: respuesta, hechos observados, interpretación permitida, qué no podemos concluir, hipótesis fortalecidas o debilitadas, preguntas abiertas y siguiente pregunta recomendada. Un validador revisa cada parte en código.");
+  } else if (best && best.score >= 3 && (ANS.preguntas || {})[best.id]) {
     const a = ANS.preguntas[best.id];
     const box = H("div", "ans-main", b);
     box.style.marginTop = "6px";
@@ -2471,6 +2490,7 @@ function evChips(parent, claims) {
 /* ---- investigación: respuesta primero y "cómo llegamos" a demanda */
 function openInvestigation(doc, opts) {
   opts = opts || {};
+  if (doc && doc.caso_id && CQ[doc.caso_id]) return openCaseAnswer(doc);
   INV = doc;
   INV_EV = {};
   (doc.evidencia || []).forEach(e => { INV_EV[e.id] = e; });
@@ -2745,6 +2765,351 @@ function openEvidenceLineage(eid, trigger) {
     H("div", "dr-pre", drSec(p4, "Versiones"), "datos " + e.data_version + "\ncerebro " + e.brain_version + "\nresultado " + e.result_hash + "\nhuellas: " +
       Object.entries(D.meta.hashes).map(x => x[0] + " " + x[1]).join(" · "));
   }, trigger);
+}
+
+/* ================================================================== preguntas del caso (workplan W0–W7 del brief v0.3) */
+const CASO = D.caso || { preguntas: [], bloqueadas: {}, respuestas: {} };
+const CQ = {};
+(CASO.preguntas || []).forEach(q => { CQ[q.id] = q; });
+const CASE_ON = !!(LIVE && LIVE.caso);
+const CST = { rows: {}, filter: "todas", timer: null, focus: null };
+const CSTATUS = { pendiente: ["explo", "○", "Pendiente"], investigando: ["direc", "◐", "Investigando"],
+                  respondida: ["hecho", "✓", "Respondida"], bloqueada: ["noeval", "⊘", "Bloqueada"] };
+const CAPLAB = { respondible: "Respondible", parcial: "Parcial", bloqueada: "Bloqueada" };
+const EFFECT_TAG = { "fortalecida": ["hecho", "↑"], "debilitada": ["noeval", "↓"], "señal direccional": ["direc", "↗"],
+                     "no evaluable": ["noeval", "∅"], "sin evaluar": ["explo", "…"], "sigue abierta": ["explo", "○"] };
+const caseTag = st => { const d = CSTATUS[st] || CSTATUS.pendiente; const t = tagRaw(d[0], d[1], d[2]); t.classList.add("meta"); return t; };
+const effectTag = e => { const d = EFFECT_TAG[e] || ["met", "i"]; const t = tagRaw(d[0], d[1], e); t.classList.add("meta"); return t; };
+const onCaseView = () => invOpen && /^#caso(\/|$)/.test(location.hash);
+
+function caseStatus(qid) {
+  const q = CQ[qid];
+  if (!q) return "pendiente";
+  if (q.capacidad_nivel === "bloqueada") return "bloqueada";
+  if (CST.rows[qid]) return CST.rows[qid].estado;
+  return (CASO.respuestas || {})[qid] ? "respondida" : "pendiente";
+}
+function caseAnswerMeta(qid) {
+  const r = (CST.rows[qid] || {}).respuesta, e = (CASO.respuestas || {})[qid];
+  if (r) return { finished: r.finished_ms, degradada: r.degradada };
+  if (e) return { finished: e.finished_ms, degradada: ((e.respuesta_caso || {}).degradada) };
+  return null;
+}
+async function refreshCaseStatus() {
+  if (!CASE_ON) return false;
+  try {
+    const d = await fetch(LIVE.api + "/caso").then(r => r.json());
+    CST.rows = {};
+    (d.preguntas || []).forEach(r => { CST.rows[r.id] = r; });
+    return true;
+  } catch (e) { return false; }
+}
+function missingList(parent, items) {
+  const ul = H("ul", "cq-miss", parent);
+  items.forEach(e => {
+    const li = H("li", null, ul);
+    rich(H("span", null, li), e.dato);
+    (e.catalogo || []).forEach(x => {
+      const campos = typeof x === "string" ? ((MISSING[x] || {}).campos_necesarios || []) : (x.campos || []);
+      campos.forEach(cf => { li.append(" "); H("code", null, li, cf); });
+    });
+    H("span", "muted", li, " · fuente: " + e.fuente);
+  });
+  return ul;
+}
+
+/* ---- la cola */
+async function openCaseQueue(focusId) {
+  const b = showDoc("Preguntas del caso", tagRaw("explo", "W", "Workplan W0–W7 · brief v0.3"));
+  setHash("#caso");
+  CST.focus = focusId || null;
+  H("p", "muted", b, "Cargando la cola…");
+  await refreshCaseStatus();
+  b.replaceChildren();
+  renderCaseQueue(b);
+  $("invBack").focus();
+  scheduleCasePoll();
+}
+function rerenderQueue() {
+  const box = $("invdoc"), sc = box.scrollTop, b = $("invBody");
+  b.replaceChildren();
+  renderCaseQueue(b);
+  box.scrollTop = sc;
+}
+function scheduleCasePoll() {
+  clearTimeout(CST.timer);
+  if (!CASE_ON || !Object.values(CST.rows).some(r => r.estado === "investigando")) return;
+  CST.timer = setTimeout(async () => {
+    if (!onCaseView() || location.hash !== "#caso" || $("invKicker").textContent !== "Preguntas del caso") return;
+    const before = JSON.stringify(Object.values(CST.rows).map(r => r.estado));
+    await refreshCaseStatus();
+    if (JSON.stringify(Object.values(CST.rows).map(r => r.estado)) !== before && $("invKicker").textContent === "Preguntas del caso") rerenderQueue();
+    scheduleCasePoll();
+  }, 5000);
+}
+function renderCaseQueue(b) {
+  const qs = CASO.preguntas || [];
+  H("h1", "ans-q", b, "Preguntas del caso");
+  rich(H("p", "muted cq-lede", b), "La cola del workplan W0–W7 del brief de trabajo v0.3. Cada pregunta dice qué hipótesis contrasta, por qué importa y cuánto pueden responder los datos actuales. Al investigarla, el agente devuelve siete partes obligatorias que un validador revisa en código. Las bloqueadas no se investigan con sustitutos: explican qué evidencia falta. El buscador libre (⌘K) sigue disponible para explorar.");
+  const counts = {};
+  qs.forEach(q => { const st = caseStatus(q.id); counts[st] = (counts[st] || 0) + 1; });
+  const bar = H("div", "cq-filter", b);
+  [["todas", "Todas", qs.length], ["pendiente", "Pendientes"], ["investigando", "Investigando"], ["respondida", "Respondidas"], ["bloqueada", "Bloqueadas"]]
+    .forEach(([k, lab, n]) => {
+      const c = H("button", "nar-chip" + (CST.filter === k ? " on" : ""), bar, lab + " · " + (n !== undefined ? n : counts[k] || 0));
+      c.type = "button";
+      c.setAttribute("aria-pressed", String(CST.filter === k));
+      c.addEventListener("click", () => { CST.filter = k; rerenderQueue(); });
+    });
+  if (CASO.orden) rich(H("p", "inv-frame", b), "Orden de trabajo del brief: " + CASO.orden);
+  const list = H("div", "cq-list", b);
+  const shown = qs.filter(q => CST.filter === "todas" || caseStatus(q.id) === CST.filter);
+  if (!shown.length) H("p", "muted", list, "No hay preguntas con ese estado.");
+  shown.forEach(q => caseCard(list, q));
+  if (CASO.escala) {
+    const sc = H("details", "cq-scale", b);
+    H("summary", null, sc, "Cómo se prioriza");
+    [CASO.escala.impacto, CASO.escala.capacidad, CASO.escala.regla].forEach(t => { if (t) rich(H("p", null, sc), t); });
+  }
+  H("div", "inv-foot", b, "Fuente: " + (CASO.fuente || "brief de trabajo") + ".");
+  if (CST.focus) {
+    const el = $("cq-" + CST.focus);
+    if (el) { el.classList.add("focus"); requestAnimationFrame(() => el.scrollIntoView({ block: "center" })); }
+    CST.focus = null;
+  }
+}
+function caseCard(parent, q) {
+  const st = caseStatus(q.id), row = CST.rows[q.id] || {};
+  const c = H("article", "cq-card" + (st === "bloqueada" ? " blocked" : ""), parent);
+  c.id = "cq-" + q.id;
+  const top = H("div", "cq-top", c);
+  H("span", "cq-id", top, q.id);
+  H("span", "cq-pri", top, q.prioridad_etiqueta);
+  H("span", "cq-front", top, q.frente);
+  H("span", "sp", top);
+  top.appendChild(caseTag(st));
+  rich(H("h3", "cq-q", c), q.pregunta);
+  const grid = H("div", "cq-grid", c);
+  const cell = (k, fill) => { const d = H("div", "cq-cell", grid); H("div", "cq-k", d, k); fill(d); return d; };
+  cell("Hipótesis asociada", d => q.hipotesis.forEach(h => { const p = H("p", "cq-h", d); H("b", null, p, h.id + " "); rich(p, h.texto); }));
+  cell("Por qué importa", d => rich(H("p", null, d), q.por_que_importa));
+  cell("Capacidad con los datos actuales", d => {
+    const m = H("div", "cq-cap", d);
+    const meter = H("span", "cq-meter c" + q.capacidad, m);
+    meter.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 3; i++) H("i", i < q.capacidad ? "on" : null, meter);
+    H("b", null, m, CAPLAB[q.capacidad_nivel] + " · capacidad " + q.capacidad + " de 3");
+    H("span", "muted", m, "· impacto " + q.impacto + " × capacidad " + q.capacidad + " = " + q.impacto * q.capacidad);
+    rich(H("p", null, d), q.capacidad_texto);
+    if (q.condicion) rich(H("p", "muted", d), "Condición: " + q.condicion);
+  });
+  if ((q.evidencia_faltante || []).length) {
+    cell(st === "bloqueada" ? "Evidencia faltante · bloquea la pregunta" : "Evidencia faltante · limita la respuesta", d => missingList(d, q.evidencia_faltante));
+  }
+  const det = H("details", "cq-more", c);
+  H("summary", null, det, "Método, criterio de cierre y límites del brief");
+  [["Método", q.metodo], ["Entregable del brief", q.entregable], ["Criterio de cierre", q.criterio_cierre],
+   ["Depende de", (q.depende_de || []).join(", ") || "nada: puede empezar ya"]].forEach(([k, t]) => {
+    const p = H("p", null, det);
+    H("b", null, p, k + ". ");
+    rich(p, t);
+  });
+  const lim = H("p", null, det);
+  H("b", null, lim, "No se puede concluir. ");
+  lim.append(q.no_concluir.join(" "));
+  if ((q.proxies_invalidos || []).length) {
+    const px = H("p", null, det);
+    H("b", null, px, "Sustitutos inválidos. ");
+    px.append(q.proxies_invalidos.map(x => x.terminos + ": " + x.por_que).join(" "));
+  }
+  if ((q.afirmaciones_relacionadas || []).length) {
+    const rel = H("div", null, det);
+    H("b", null, H("p", null, rel), "Hechos ya verificados que el agente reutilizará");
+    phase1ClaimRows(rel, q.afirmaciones_relacionadas);
+  }
+  const acts = H("div", "cq-acts", c);
+  caseActions(acts, q, st, row);
+}
+function caseActions(acts, q, st, row) {
+  const meta = caseAnswerMeta(q.id);
+  if (st === "bloqueada") btn(acts, "Investigar: ver qué falta", "primary", () => openCaseQuestion(q.id));
+  else if (st === "investigando") btn(acts, "Ver la investigación en vivo", "primary", () => attachLive(row.en_curso, q.pregunta, q));
+  else {
+    const answered = st === "respondida";
+    if (answered) btn(acts, "Ver respuesta", "primary", () => openCaseQuestion(q.id));
+    if (CASE_ON) btn(acts, answered ? "Volver a investigar" : "Investigar", answered ? "" : "primary", () => investigateCase(q.id));
+    else if (!answered) H("span", "muted cq-note", acts, "Investigar necesita el servidor local: el agente corre con tu sesión de Claude Code.");
+  }
+  const deps = (q.depende_de || []).filter(x => CQ[x] && CQ[x].capacidad_nivel !== "bloqueada" && caseStatus(x) !== "respondida");
+  if (deps.length && st === "pendiente") H("span", "muted cq-note", acts, "Depende de " + deps.join(" y ") + (deps.length > 1 ? ", que todavía no tienen respuesta." : ", que todavía no tiene respuesta."));
+  if (meta && meta.finished) H("span", "muted cq-note", acts, "Respondida el " + new Date(meta.finished).toLocaleString("es-CO") + (meta.degradada ? " · compuesta sin texto libre" : ""));
+  if (row.ultimo_error) H("span", "muted cq-note", acts, "El último intento terminó con error: " + String(row.ultimo_error).slice(0, 160));
+}
+function investigateCase(qid) {
+  const q = CQ[qid];
+  if (!q || !CASE_ON || q.capacidad_nivel === "bloqueada") return;
+  startLive({ pregunta_id: qid }, q.pregunta, [], q);
+}
+
+/* ---- una pregunta: respuesta de siete partes, o qué falta si está bloqueada */
+async function openCaseQuestion(qid) {
+  const q = CQ[qid];
+  if (!q) return openCaseQueue();
+  if (q.capacidad_nivel === "bloqueada") return openCaseAnswer(null, qid);
+  let doc = null;
+  if (CASE_ON) doc = await fetch(LIVE.api + "/caso/" + qid).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  if (!doc) doc = (CASO.respuestas || {})[qid] || null;
+  if (doc) return openCaseAnswer(doc);
+  openCaseQueue(qid);
+}
+function caseMainVisual(doc, rc) {
+  const vis = Object.values(doc.visuals || {}).filter(v => v && v.spec && v.spec.tipo !== "datos");
+  const ids = new Set((rc.respuesta.claim_ids || []).concat(rc.hechos_observados || []));
+  return vis.find(v => (rc.respuesta.claim_ids || []).includes(v.claim_id)) || vis.find(v => ids.has(v.claim_id)) || vis[0] || null;
+}
+function openCaseAnswer(doc, blockedId) {
+  const qid = doc ? doc.caso_id : blockedId, q = CQ[qid];
+  if (!q) return openCaseQueue();
+  const rc = doc ? doc.respuesta_caso : (CASO.bloqueadas || {})[qid];
+  if (doc) { INV = doc; INV_EV = {}; (doc.evidencia || []).forEach(e => { INV_EV[e.id] = e; }); }
+  const st = blockedId ? "bloqueada" : doc && doc.status === "publicada" && rc ? "respondida" : "pendiente";
+  const b = showDoc("Pregunta del caso · " + qid, caseTag(st));
+  setHash("#caso/" + qid);
+  if (CASE_ON && !blockedId) liveButton(rc ? "Volver a investigar" : "Investigar", () => investigateCase(qid));
+  renderCaseAnswer(b, q, rc, doc);
+  $("invBack").focus();
+}
+function renderCaseAnswer(b, q, rc, doc) {
+  const blocked = !!(rc && rc.bloqueada), claims = (doc && doc.claims) || {};
+  const nav = H("div", "cq-nav", b);
+  btn(nav, "← Cola de preguntas", "", () => openCaseQueue(q.id));
+  H("span", "cq-id", nav, q.id);
+  H("span", "cq-pri", nav, q.prioridad_etiqueta);
+  if (blocked) rich(H("div", "ans-banner", b), "Pregunta bloqueada: no se investiga con sustitutos. Esta respuesta no usa datos de pagos para contestarla: explica qué evidencia falta, qué distinguiría cada explicación y dónde podría estar.");
+  H("h1", "ans-q", b, q.pregunta);
+  const hl = H("p", "cq-hline", b);
+  H("b", null, hl, "Hipótesis del caso: ");
+  hl.append(q.hipotesis.map(h => h.id).join(" · ") + " · capacidad " + q.capacidad + " de 3 (" + CAPLAB[q.capacidad_nivel].toLowerCase() + ")");
+  if (doc && doc.error) H("div", "ans-banner", b, "La investigación terminó con error: " + doc.error);
+  if (!rc) {
+    H("p", "muted", b, "Esta corrida no alcanzó a componer la respuesta.");
+    if (doc) caseDetails(b, doc);
+    return;
+  }
+  const main = H("div", "ans-main", b);
+  H("div", "answer-k", main, "1 · Respuesta");
+  if (rc.respuesta.titular) rich(H("div", "ans-titular", main), rc.respuesta.titular);
+  rich(H("p", "ans-text", main), rc.respuesta.texto);
+  const meta = H("div", "ans-meta", main);
+  const lv = H("span", null, meta, "Nivel de evidencia ");
+  (rc.estados || []).forEach(s => { lv.appendChild(metaTag(s)); lv.append(" "); });
+  H("span", null, meta, blocked ? "Respuesta del brief: sin corrida del agente" : "Investigación del agente · " + Object.values(claims).filter(c => c.aceptada).length + " afirmaciones validadas");
+  if (rc.degradada) H("span", null, meta, "· compuesta sin texto libre: el compositor no pasó el validador");
+  narButton(meta, () => pieceFromCase(q, rc, doc), "inv-btn", "＋ Guardar en narrativa");
+  const vmain = doc ? caseMainVisual(doc, rc) : null;
+  if (vmain) visualCard(b, vmain, true).id = "invMainVisual";
+
+  invSection(b, "2", "Hechos observados");
+  H("p", "inv-frame", b, blocked ? "Lo que sí registran los datos actuales. No contesta la pregunta: dice por qué no se puede contestar con ellos."
+                                 : "Afirmaciones con estado Hecho observado o Evidencia fuerte, tal como las validó el código.");
+  const hb = H("div", "claims-list cq-facts", b);
+  if (blocked) (rc.hechos_de_datos || []).forEach(t => rich(H("div", "cl", hb), t));
+  else if ((rc.hechos_observados || []).length) {
+    rc.hechos_observados.forEach(id => claimRow(hb, claims[id]));
+    evChips(b, rc.hechos_observados.map(id => claims[id]).filter(Boolean));
+  } else H("p", "muted", hb, "Esta investigación no registró hechos observados: lo que encontró es direccional o no evaluable.");
+
+  invSection(b, "3", "Interpretación permitida");
+  H("p", "inv-frame", b, "Lo que esos hechos permiten decir dentro del alcance de la pregunta.");
+  const ib = H("div", "inv-blocks", b);
+  (rc.interpretacion_permitida || []).forEach(it => {
+    const d = rich(H("div", "inv-block", ib), it.texto);
+    const sts = [...new Set((it.claim_ids || []).map(id => (claims[id] || {}).estado).filter(Boolean))];
+    if (sts.length) { const w = H("span", "cq-state", d); sts.forEach(s => w.appendChild(metaTag(s))); }
+  });
+
+  invSection(b, "4", "Qué no podemos concluir");
+  const nb = H("div", "inv-blocks", b);
+  (rc.no_podemos_concluir || []).forEach(it => rich(H("div", "inv-block", nb), it.texto));
+  (rc.limites_del_brief || []).forEach(t => { const d = H("div", "inv-block brief", nb); H("span", "cq-src", d, "Brief"); rich(d, t); });
+
+  invSection(b, "5", "Hipótesis fortalecidas o debilitadas");
+  H("p", "inv-frame", b, blocked ? "Ninguna se fortalece ni se debilita: siguen abiertas hasta tener evidencia que las distinga."
+                                 : "El efecto lo deriva el código del estado de cada hipótesis; el agente solo escribe la lectura.");
+  const hlist = H("div", "hyp-list", b);
+  (rc.hipotesis || []).forEach(h => {
+    const row = H("div", "hyp" + (h.padre ? " child" : ""), hlist);
+    H("span", "id", row, h.hipotesis_id);
+    rich(H("span", "q", row), h.pregunta);
+    row.appendChild(effectTag(h.efecto));
+    if (h.lectura) rich(H("div", "sig", row), h.lectura);
+    const why = [h.hipotesis_caso && h.hipotesis_caso !== h.hipotesis_id ? "Hipótesis del caso: " + h.hipotesis_caso : "",
+                 h.estado && !blocked ? "Estado: " + h.estado : "", h.motivo || ""].filter(Boolean).join(" · ");
+    if (why) H("div", "why", row, why);
+  });
+
+  invSection(b, "6", "Preguntas que siguen abiertas");
+  const ul = H("ul", "cq-open", b);
+  (rc.preguntas_abiertas || []).forEach(t => rich(H("li", null, ul), t));
+
+  invSection(b, "7", "Siguiente pregunta recomendada");
+  const sp = rc.siguiente_pregunta || {};
+  const nx = H("div", "cq-next", b);
+  if (sp.id) H("span", "cq-id", nx, sp.id);
+  rich(H("div", "cq-next-q", nx), sp.pregunta || "–");
+  if (sp.por_que) rich(H("p", "muted", nx), sp.por_que);
+  if (sp.id && CQ[sp.id]) btn(nx, "Ir a " + sp.id + " →", "primary", () => openCaseQuestion(sp.id));
+
+  if (blocked) {
+    invSection(b, "", "Evidencia mínima que la desbloquearía");
+    H("p", "inv-frame", b, "Una fila por explicación: qué comparación la distinguiría, qué evidencia hace falta, dónde podría estar y qué conclusión queda bloqueada mientras no exista. No es un diseño de captura.");
+    caseMatrix(b, rc.matriz || []);
+    if ((rc.evidencia_faltante || []).length) { H("h4", "cq-k", b, "Resumen de lo que falta").style.marginTop = "18px"; missingList(b, rc.evidencia_faltante); }
+  }
+  if (doc) caseDetails(b, doc);
+}
+function caseMatrix(parent, rows) {
+  const box = H("div", "cq-matrix", parent);
+  rows.forEach(r => {
+    const d = H("div", "cq-mrow", box);
+    const h = H("div", "mh", d);
+    H("b", null, h, r.hipotesis);
+    rich(H("span", null, h), r.pregunta);
+    const dl = H("dl", null, d);
+    const item = (k, fill) => { H("dt", null, dl, k); fill(H("dd", null, dl)); };
+    item("Comparación que la distinguiría", x => rich(x, r.comparacion));
+    item("Evidencia mínima", x => rich(x, r.evidencia_minima));
+    if ((r.catalogo || []).length) item("Datos que faltan", x => r.catalogo.forEach(m => {
+      x.append((x.childNodes.length ? " · " : "") + m.nombre + " ");
+      (m.campos || []).forEach(cf => { H("code", null, x, cf); x.append(" "); });
+    }));
+    item("Fuente potencial", x => rich(x, r.fuente));
+    item("Queda bloqueado", x => rich(x, r.bloqueada));
+    if (r.proxy_invalido) item("Sustituto inválido", x => rich(x, r.proxy_invalido));
+  });
+}
+function caseDetails(b, doc) {
+  const more = H("button", "inv-more", b, "Ver cómo llegamos a esta respuesta ↓");
+  more.type = "button";
+  const det = H("div", "inv-details", b);
+  det.hidden = true;
+  let built = false;
+  more.addEventListener("click", () => {
+    det.hidden = !det.hidden;
+    more.textContent = det.hidden ? "Ver cómo llegamos a esta respuesta ↓" : "Ocultar cómo llegamos ↑";
+    if (!det.hidden && !built) { built = true; renderDetails(det, doc, null); }
+  });
+}
+function pieceFromCase(q, rc, doc) {
+  const blocked = !!rc.bloqueada;
+  const parts = [rc.respuesta.titular ? rc.respuesta.titular + "." : "", rc.respuesta.texto].concat((rc.interpretacion_permitida || []).map(i => i.texto));
+  if (blocked) parts.push("Evidencia que falta: " + (rc.evidencia_faltante || []).map(e => e.dato + " (" + e.fuente + ")").join("; ") + ".");
+  const ids = blocked ? [] : [...new Set((rc.respuesta.claim_ids || []).concat(rc.hechos_observados || [],
+    ...(rc.interpretacion_permitida || []).map(i => i.claim_ids || [])))].slice(0, 12);
+  const v = doc ? caseMainVisual(doc, rc) : null;
+  return { tipo: "respuesta_caso", titulo: q.id + " · " + q.pregunta, texto: parts.filter(Boolean).join(" "),
+           estado: (rc.estados || [])[0] || (blocked ? "No evaluable" : ""), afirmaciones: blocked ? [] : invClaims(doc, ids),
+           fuente: { kind: "caso", ref: q.id, run: doc ? doc.id : null }, visual: v ? invVisual(doc, v.id) : null };
 }
 
 /* ================================================================== preparar narrativa (piezas, esqueleto, presentación) */
@@ -3082,6 +3447,7 @@ function deepen(p, q) {
 async function openPieceSource(p) {
   const f = p.fuente || {};
   if (f.kind === "respuesta") return openAnswer(f.ref);
+  if (f.kind === "caso") return openCaseQuestion(f.ref);
   if (f.kind === "seccion") { closeInvestigation(); return goTo("#" + f.ref); }
   if (f.kind === "tarjeta") { closeInvestigation(); return goTo("#card-" + String(f.ref).replace(".", "-")); }
   if (f.kind === "afirmacion") { const c = D.claims.find(x => x.id === f.ref); if (c) openAnswerLineage({ titular: c.claim, estado: c.estado, claims: [c.id] }, null); return; }
@@ -3298,6 +3664,18 @@ function init() {
   buildSparks();
   renderAnswers();
   wireControls();
+  const askb = document.querySelector(".side .askbtn");
+  if (askb && (CASO.preguntas || []).length) {
+    // la cola del caso: también sin servidor (bloqueadas y respuestas embebidas)
+    const cb = document.createElement("button");
+    cb.type = "button";
+    cb.className = "askbtn case-entry";
+    H("span", "spark-ic", cb, "W");
+    H("span", "lbl", cb, "Preguntas del caso");
+    cb.setAttribute("aria-label", "Preguntas del caso: cola de investigación W0–W7");
+    cb.addEventListener("click", () => openCaseQueue());
+    askb.after(cb);
+  }
   if (NARR_ON) {
     // acceso a "Preparar narrativa" y "＋ Narrativa" en cada tarjeta (después de wireControls: no son botones de datos)
     const ab = document.querySelector(".side .askbtn");
@@ -3308,7 +3686,7 @@ function init() {
       H("span", "spark-ic", nb, "✎");
       H("span", "lbl", nb, "Preparar narrativa");
       nb.addEventListener("click", () => openStudio());
-      ab.after(nb);
+      (document.querySelector(".side .case-entry") || ab).after(nb);
     }
     document.querySelectorAll("main .card[data-card] .foot .btns").forEach(bt => {
       const card = bt.closest(".card");
@@ -3320,8 +3698,10 @@ function init() {
   wireNav();
   const m = location.hash.match(/^#(investigacion|respuesta)\/(Q\d)$/);
   const run = location.hash.match(/^#investigacion\/(INV-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);
+  const cr = location.hash.match(/^#caso(?:\/(W\d))?$/);
   if (m && m[1] === "investigacion" && GOLDEN_INV[m[2]]) openInvestigation(GOLDEN_INV[m[2]], { golden: true });
   else if (m && m[1] === "respuesta" && (ANS.preguntas || {})[m[2]]) openAnswer(m[2]);
+  else if (cr) (cr[1] ? openCaseQuestion(cr[1]) : openCaseQueue());
   else if (run && LIVE) fetch(LIVE.api + "/investigations/" + run[1]).then(r => (r.ok ? r.json() : null)).then(d => { if (d) openInvestigation(d); }).catch(() => {});
   else if (NARR_ON) {
     const nr = location.hash.match(/^#(narrativa|presentacion)\/(NAR-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);

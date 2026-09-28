@@ -251,8 +251,145 @@ def narrative_rules():
           "no evidencia" in ctx and "C-DAT-06" in ctx and "C-FAKE-01" not in ctx)
 
 
+def case_sample():
+    """Respuesta de siete partes de muestra sobre las afirmaciones reales de la dorada Q2 (como si fuera W3)."""
+    d = json.loads((GOLDEN / "Q2.json").read_text(encoding="utf-8"))
+    doc = {"respuesta": {"titular": "El cambio se concentra en la entrada de cosechas de menor ticket",
+                         "texto": "Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil; la base "
+                                  "previa no paga menos. Las cosechas 2023 y 2024 ya concentran 65% de los clientes activos.",
+                         "claim_ids": ["C-001", "C-003", "C-006"]},
+           "hechos_observados": ["C-001", "C-002", "C-003", "C-006"],
+           "interpretacion_permitida": [{"texto": "El cambio del monto observado coincide con la entrada de clientes que pagan "
+                                                  "menos, no con una caída de la base previa.", "claim_ids": ["C-001", "C-006"]}],
+           "no_podemos_concluir": [{"texto": "Si el menor ticket de entrada se asocia con precios, planes o descuentos: el panel "
+                                             "no los registra.", "claim_ids": ["C-005"]}],
+           "hipotesis": [{"hipotesis_id": "H1", "hipotesis_caso": "HO3", "lectura": "La entrada concentra el cambio del monto observado.",
+                          "claim_ids": ["C-001", "C-002"]},
+                         {"hipotesis_id": "H2", "hipotesis_caso": "rival", "lectura": "La base previa no paga menos que en ene-22.",
+                          "claim_ids": ["C-006"]}],
+           "preguntas_abiertas": ["¿Qué parte del movimiento corresponde a retornos y cuál a ausencias?",
+                                  "¿Las cosechas recientes recuperan monto con la madurez?"],
+           "siguiente_pregunta": {"id": "W4", "pregunta": "", "por_que": "Conviene ver si alguna industria concentra el cambio antes de mirar cohortes."}}
+    return d, doc
+
+
+def case_rules():
+    from agent import caso
+    from agent.state import Investigation
+    canon = {h["id"] for h in yaml.safe_load((BRAIN / "evidence" / "canonical_findings.yaml").read_text(encoding="utf-8"))["hallazgos"]}
+    check("Caso · el catálogo W0–W7 del brief pasa su validación (IDs, capacidades, hechos y datos faltantes)",
+          not caso.check_questions(canon), str(caso.check_questions(canon)))
+    lv = {q: caso.QUESTIONS[q]["capacidad_nivel"] for q in caso.ORDER}
+    check("Caso · W6 y W7 son brechas críticas bloqueadas; W0–W5 se pueden investigar",
+          [q for q in caso.ORDER if not caso.can_investigate(q)] == ["W6", "W7"] and lv["W2"] == "parcial", str(lv))
+    b = caso.blocked_answer(caso.QUESTIONS["W6"])
+    rows_ok = all(r["evidencia_minima"] and r["fuente"] and r["bloqueada"] for r in b["matriz"])
+    txt = " ".join([b["respuesta"]["titular"], b["respuesta"]["texto"]] + b["hechos_de_datos"] + [i["texto"] for i in b["interpretacion_permitida"]])
+    check("Caso · una bloqueada responde qué falta y dónde, sin cifras ni afirmaciones de pagos",
+          rows_ok and len(b["matriz"]) >= 4 and not b["respuesta"]["claim_ids"] and not stray_digits(caso._strip_ids(txt))
+          and all(h["efecto"] == "sigue abierta" for h in b["hipotesis"]), txt[:200])
+    ctx = caso.case_prompt("W2")
+    check("Caso · el contexto de la pregunta es contexto, no evidencia, y nombra la hipótesis y sus sustitutos inválidos",
+          "no evidencia" in ctx and "HO1" in ctx and "conversión" in ctx and "C-ADQ-07" in ctx)
+
+    d, doc = case_sample()
+    q = caso.QUESTIONS["W3"]
+    errs = caso.validate_case_answer(doc, d["claims"], d["hipotesis"], q)
+    check("Caso · una respuesta de siete partes respaldada pasa el validador", not errs, str(errs))
+
+    def bad(mut):
+        x = json.loads(json.dumps(doc))
+        mut(x)
+        return caso.validate_case_answer(x, d["claims"], d["hipotesis"], q)
+    e = bad(lambda x: x["interpretacion_permitida"][0].update(texto="La caída coincide con descuentos de entrada."))
+    check("Caso · rechaza un sustituto inválido de la pregunta en la interpretación (W3: descuentos)", any("sustituto" in m for m in e), str(e))
+    e = bad(lambda x: x["respuesta"].update(texto=x["respuesta"]["texto"] + " El 40% viene de retail."))
+    check("Caso · rechaza cifras que no están en las afirmaciones citadas", any("cifras" in m for m in e), str(e))
+    e = bad(lambda x: x["hechos_observados"].append("C-005"))
+    check("Caso · en hechos observados solo caben Hecho observado o Evidencia fuerte", any("C-005" in m for m in e), str(e))
+    e = bad(lambda x: x["hipotesis"].append({"hipotesis_id": "H9", "hipotesis_caso": "HO9", "lectura": "x", "claim_ids": []}))
+    check("Caso · la lectura de hipótesis solo usa hipótesis del árbol y del caso", any("H9" in m for m in e), str(e))
+    e = bad(lambda x: x["hipotesis"][1].update(claim_ids=["C-002"]))
+    check("Caso · una lectura de hipótesis solo cita afirmaciones ligadas a esa hipótesis", any("ligadas" in m for m in e), str(e))
+    e = bad(lambda x: x["siguiente_pregunta"].update(id="W3"))
+    e2 = bad(lambda x: x["siguiente_pregunta"].update(id="W9"))
+    check("Caso · la siguiente pregunta es otra de la cola (o una pregunta propia)", bool(e) and bool(e2), str(e + e2))
+    e = bad(lambda x: x.update(preguntas_abiertas=["¿Qué pasa con las 3 cohortes?"]))
+    check("Caso · las preguntas abiertas no llevan cifras", any("pregunta abierta" in m for m in e), str(e))
+    e = bad(lambda x: x["respuesta"].update(texto=x["respuesta"]["texto"] + " Ver C-001."))
+    check("Caso · los textos no citan IDs de afirmaciones", any("IDs" in m for m in e), str(e))
+    e = bad(lambda x: x.update(interpretacion_permitida=[], no_podemos_concluir=[]))
+    check("Caso · la interpretación permitida y lo que no podemos concluir son obligatorios",
+          any("interpretacion_permitida" in m for m in e) and any("no_podemos_concluir" in m for m in e), str(e))
+
+    inv = Investigation.from_dict(d)
+    inv.caso_id = "W3"
+    fin = caso.finalize(doc, inv, q, [], False)
+    eff = {h["hipotesis_id"]: h["efecto"] for h in fin["hipotesis"]}
+    check("Caso · el efecto sobre cada hipótesis lo deriva el código de su estado",
+          eff == {"H1": "fortalecida", "H1.1": "debilitada", "H1.2": "no evaluable", "H2": "señal direccional", "H3": "señal direccional"}, str(eff))
+    check("Caso · la respuesta final trae los límites del brief y la siguiente pregunta completa",
+          fin["limites_del_brief"] == q["no_concluir"] and fin["siguiente_pregunta"]["pregunta"] == caso.QUESTIONS["W4"]["pregunta"])
+    fb = caso.fallback(inv, q, [{"intento": 1, "errores": ["x"]}])
+    txt = " ".join([fb["respuesta"]["texto"]] + [i["texto"] for i in fb["interpretacion_permitida"]])
+    check("Caso · respaldo sin texto libre: siete partes, sin sustitutos inválidos y marcado como degradado",
+          fb["degradada"] and fb["hechos_observados"] and fb["preguntas_abiertas"] and fb["siguiente_pregunta"]["id"] == "W4"
+          and not caso.veto_hits(txt, caso._vetoes(q)), str(fb["interpretacion_permitida"]))
+
+
+def case_flow():
+    """Flujo completo sin modelo: investigación simulada (estado de la dorada) → compositor del caso simulado →
+    respuesta publicada y guardada como vigente. Prueba la plomería y el reintento, no al modelo."""
+    import anyio
+    import claude_agent_sdk
+
+    from agent import caso, orchestrator, state
+    from agent.state import Investigation
+    d, doc = case_sample()
+    outputs, calls = [], {"n": 0}
+
+    async def fake_investigate(inv):
+        src = Investigation.from_dict(d)
+        for k in ("registry", "encuadre", "hipotesis", "hipotesis_registradas_ms", "claims", "visuals", "log", "paquete"):
+            setattr(inv, k, getattr(src, k))
+
+    def fake_query(prompt, options):
+        async def gen():
+            calls["n"] += 1
+            yield claude_agent_sdk.ResultMessage(subtype="success", duration_ms=1, duration_api_ms=1, is_error=False, num_turns=1,
+                                                 session_id="eval", total_cost_usd=0.0, usage={}, structured_output=outputs.pop(0))
+        return gen()
+
+    saved = (orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR)
+    bad = json.loads(json.dumps(doc))
+    bad["interpretacion_permitida"][0]["texto"] = "La caída coincide con descuentos de entrada."
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            orchestrator.investigate, claude_agent_sdk.query = fake_investigate, fake_query
+            state.RUNS, caso.CASE_DIR = Path(tmp) / "runs", Path(tmp) / "caso"
+            outputs[:] = [bad, doc]
+            inv = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            anyio.run(orchestrator.run, inv)
+            rc = inv.respuesta_caso or {}
+            saved_ok = (caso.CASE_DIR / "W3.json").exists()
+            st = {r["id"]: r["estado"] for r in caso.statuses({})}
+            check("Caso · flujo sin modelo: la respuesta se publica, se guarda como vigente y la cola la marca respondida",
+                  inv.status == "publicada" and saved_ok and st["W3"] == "respondida" and inv.narrativa is None, inv.error or str(st))
+            check("Caso · flujo sin modelo: el reintento corrige lo que el validador rechazó (un sustituto inválido)",
+                  calls["n"] == 2 and not rc.get("degradada") and len(rc.get("intentos", [])) == 2
+                  and any("sustituto" in e for e in rc["intentos"][0]["errores"]), str(rc.get("intentos")))
+            outputs[:] = [bad, bad, bad]
+            inv2 = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            anyio.run(orchestrator.run, inv2)
+            check("Caso · flujo sin modelo: tres rechazos dejan la respuesta sin texto libre, marcada y completa",
+                  inv2.status == "publicada" and inv2.respuesta_caso["degradada"] and inv2.respuesta_caso["hechos_observados"]
+                  and inv2.respuesta_caso["siguiente_pregunta"]["id"], str(inv2.respuesta_caso and inv2.respuesta_caso.get("intentos")))
+        finally:
+            orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR = saved
+
+
 def main() -> int:
-    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules):
+    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules, case_rules, case_flow):
         try:
             fn()
         except Exception as e:  # noqa: BLE001

@@ -24,6 +24,7 @@ class Investigation:
     lente: str = "Finanzas"
     playbook_id: str = "arpa_decline"
     contexto: dict | None = None                     # pieza de narrativa desde la que se profundiza
+    caso_id: str | None = None                       # pregunta del caso (W0–W5) que responde esta investigación
     id: str = field(default_factory=lambda: "INV-" + time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:4])
     status: str = "encuadre"
     registry: Registry = field(default_factory=Registry)
@@ -38,6 +39,7 @@ class Investigation:
     tool_calls: int = 0
     paquete: dict | None = None
     narrativa: dict | None = None
+    respuesta_caso: dict | None = None               # siete partes de la pregunta del caso
     composicion_intentos: list = field(default_factory=list)
     notas_agente: list = field(default_factory=list)
     uso: dict = field(default_factory=dict)
@@ -71,10 +73,11 @@ class Investigation:
     # ---------------------------------------------------------------- serialización
     def to_dict(self) -> dict:
         return {"id": self.id, "pregunta": self.pregunta, "pregunta_id": self.pregunta_id, "lente": self.lente,
-                "playbook_id": self.playbook_id, "contexto": self.contexto, "status": self.status, "encuadre": self.encuadre,
+                "playbook_id": self.playbook_id, "contexto": self.contexto, "caso_id": self.caso_id, "status": self.status,
+                "encuadre": self.encuadre,
                 "hipotesis": self.hipotesis, "hipotesis_registradas_ms": self.hipotesis_registradas_ms,
                 "claims": self.claims, "visuals": self.visuals, "evidencia": self.registry.to_list(),
-                "log": self.log, "paquete": self.paquete, "narrativa": self.narrativa,
+                "log": self.log, "paquete": self.paquete, "narrativa": self.narrativa, "respuesta_caso": self.respuesta_caso,
                 "composicion_intentos": self.composicion_intentos, "notas_agente": self.notas_agente,
                 "presupuesto": {"analisis_usado": self.budget_used, "llamadas_tools": self.tool_calls},
                 "uso": self.uso, "modelo": self.modelo, "data_version": data_version(),
@@ -85,9 +88,9 @@ class Investigation:
     def from_dict(cls, d: dict) -> "Investigation":
         from .evidence import Evidence
         inv = cls(pregunta=d["pregunta"], pregunta_id=d.get("pregunta_id"), lente=d.get("lente", "Finanzas"),
-                  playbook_id=d.get("playbook_id", "arpa_decline"), contexto=d.get("contexto"))
+                  playbook_id=d.get("playbook_id", "arpa_decline"), contexto=d.get("contexto"), caso_id=d.get("caso_id"))
         for k in ("id", "status", "encuadre", "hipotesis", "hipotesis_registradas_ms", "claims", "visuals", "log", "paquete",
-                  "narrativa", "composicion_intentos", "notas_agente", "uso", "started_ms", "finished_ms", "error", "modelo"):
+                  "narrativa", "respuesta_caso", "composicion_intentos", "notas_agente", "uso", "started_ms", "finished_ms", "error", "modelo"):
             if k in d:
                 setattr(inv, k, d[k])
         inv.events = d.get("events", [])

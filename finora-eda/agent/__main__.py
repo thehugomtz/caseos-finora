@@ -2,6 +2,7 @@
 
     .venv/bin/python -m agent Q2            # pregunta dorada 2
     .venv/bin/python -m agent Q2 --golden   # además la guarda como investigación dorada embebible
+    .venv/bin/python -m agent W2            # pregunta del caso (W0–W5; W6 y W7 están bloqueadas)
     .venv/bin/python -m agent "¿…?"         # pregunta libre
     .venv/bin/python -m agent recompose investigations/golden/Q2.json   # gráficas automáticas + narrativa nueva (usa el modelo)
     .venv/bin/python -m agent revisual investigations/runs/INV-….json   # solo reasigna gráficas automáticas (sin modelo)
@@ -12,6 +13,7 @@ import argparse
 
 import anyio
 
+from . import caso
 from .config import DB_PATH
 from .orchestrator import run
 from .state import Investigation
@@ -43,7 +45,17 @@ def _line(ev: dict) -> str | None:
 async def main(pregunta: str, golden: bool, rebuild: bool):
     if rebuild or not DB_PATH.exists():
         build()
-    inv = Investigation(pregunta=GOLDEN_Q.get(pregunta, pregunta), pregunta_id=pregunta if pregunta in GOLDEN_Q else None)
+    if pregunta in caso.QUESTIONS:
+        q = caso.QUESTIONS[pregunta]
+        if not caso.can_investigate(pregunta):
+            b = caso.blocked_answer(q)
+            print(f"{pregunta} está bloqueada: no se investiga con sustitutos.\n{b['respuesta']['texto']}")
+            for r in b["matriz"]:
+                print(f"- {r['hipotesis']}: {r['evidencia_minima']} Fuente: {r['fuente']}.")
+            return
+        inv = Investigation(pregunta=q["pregunta"], pregunta_id=pregunta, caso_id=pregunta, playbook_id="libre", lente=caso.lens(q))
+    else:
+        inv = Investigation(pregunta=GOLDEN_Q.get(pregunta, pregunta), pregunta_id=pregunta if pregunta in GOLDEN_Q else None)
     seen = 0
 
     async def printer():
@@ -64,6 +76,11 @@ async def main(pregunta: str, golden: bool, rebuild: bool):
     print(f"\nInvestigación {inv.id} · {inv.status} · guardada en investigations/runs/{inv.id}.json")
     if inv.narrativa:
         print("\nRespuesta ejecutiva:", inv.narrativa["respuesta_ejecutiva"]["texto"])
+    if inv.respuesta_caso:
+        rc = inv.respuesta_caso
+        print("\nRespuesta:", rc["respuesta"].get("titular"), "·", rc["respuesta"]["texto"], "· degradada" if rc["degradada"] else "")
+        print("Hipótesis:", " · ".join(f"{h['hipotesis_id']} {h['efecto']}" for h in rc["hipotesis"]))
+        print("Siguiente:", rc["siguiente_pregunta"].get("id") or rc["siguiente_pregunta"].get("pregunta"))
     u = inv.uso
     print("Uso:", u.get("autenticacion"), "·", {k: v for k, v in u.items() if k != "autenticacion"})
 
@@ -88,7 +105,7 @@ if __name__ == "__main__":
             for v in inv.visuals.values()))
         raise SystemExit(0)
     ap = argparse.ArgumentParser(description="Investigación agentic de Finora")
-    ap.add_argument("pregunta", help="Q2 o una pregunta en texto")
+    ap.add_argument("pregunta", help="Q2, una pregunta del caso (W0–W5) o una pregunta en texto")
     ap.add_argument("--golden", action="store_true", help="guardar como investigación dorada")
     ap.add_argument("--rebuild", action="store_true", help="reconstruir la capa SQL antes de investigar")
     a = ap.parse_args()

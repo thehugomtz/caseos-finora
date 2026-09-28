@@ -1,0 +1,467 @@
+# Preguntas del caso: el workplan W0–W7 como cola de investigación.
+# Fuente de verdad: "Alegra · Investigación y workplan · v0.3" (28-sep-2026), secciones 04–08.
+# Reglas (el pipeline y el agente las validan):
+# - capacidad = C del brief (0 a 3); capacidad_nivel: respondible (C=3), parcial (C=2), bloqueada (C=0).
+# - Una pregunta bloqueada no se investiga: no hay proxy válido. Su respuesta explica qué evidencia falta y dónde podría estar.
+# - proxies_invalidos: lo que, en esta pregunta, sería responder con un sustituto inválido. El validador rechaza esos
+#   términos en la respuesta y en la interpretación; solo caben en "Qué no podemos concluir". patron = regex sobre texto
+#   en minúsculas y sin tildes.
+# - afirmaciones_relacionadas: hechos canónicos ya verificados que el agente puede reutilizar (contexto, no respuesta).
+# - catalogo: IDs de brain/guardrails/missing_data.yaml.
+version: 1
+fuente: "Alegra · Investigación y workplan · v0.3 (28-sep-2026) · sección 08 · Workplan analítico priorizado"
+escala:
+  impacto: "Impacto (I): 3 puede cambiar la respuesta central o invalidar una conclusión; 2 enfoca o modifica un argumento de apoyo; 1 es contexto que rara vez cambia la tesis."
+  capacidad: "Capacidad (C): 3 respuesta directa con información disponible o prueba lógica desde el enunciado; 2 respuesta condicionada o parcial, bajo supuestos verificables; 1 indicio contextual débil; 0 falta evidencia indispensable."
+  regla: "Prioridad = impacto × capacidad. Es una ayuda ordinal, no un valor económico. Una capacidad 0 no vuelve irrelevante la pregunta: la separa como brecha crítica."
+orden_de_trabajo: "Primero W0. Después W1, W2 y W3. Las brechas W6 y W7 se preparan sin fingir un diagnóstico. W4 y W5 solo si cambian el foco de la respuesta."
+
+preguntas:
+  - id: W0
+    prioridad: P0
+    prioridad_etiqueta: "P0 · puerta · primero"
+    frente: "CRO y CFO"
+    pregunta: "¿Qué podemos nombrar y comparar válidamente?"
+    hipotesis:
+      - id: HG
+        texto: "La interpretación y la cobertura permiten comparar montos y primeras apariciones sin distorsiones materiales."
+        discrimina: "Diccionario y controles existentes consistentes, frente a contradicciones de grano, escala, fechas, ceros, joins o historia."
+        alcance: "Es la puerta de interpretación. Si no se sostiene, se limita el vocabulario y el análisis; no se sigue como si hubiera un MRR validado."
+    por_que_importa: "Desbloquea o recorta W2–W5. Hay alta incertidumbre semántica sobre el monto: fijar qué se puede nombrar elimina trabajo mal definido antes de construir precisión sobre él."
+    impacto: 3
+    capacidad: 3
+    capacidad_nivel: respondible
+    capacidad_texto: "Capacidad condicionada: identifica qué controles o definiciones faltan con materiales existentes y resultados previos. Si la semántica exige confirmar una fuente ausente, esa subpregunta pasa a brecha crítica."
+    metodo: "Recuperar el diccionario y los controles existentes; auditar solo contradicciones materiales de grano, fechas, cobertura, IDs, ceros y negativos, join, moneda y escala. Revisar si Team y Payroll se solapan solo si se activa S&M."
+    entregable: "Ficha: afirmación · definición · fuente · confirmado o pendiente · etiqueta permitida."
+    criterio_cierre: "Si no se confirma la recurrencia, se usa monto observado; si no se confirma la historia, primera aparición observada. Si falta cobertura material, se detiene esa comparación."
+    depende_de: []
+    no_concluir:
+      - "Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado."
+      - "Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada."
+      - "Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación."
+    proxies_invalidos: []
+    evidencia_faltante:
+      - dato: "Definición de amount: facturado, cobrado o contratado, y si los planes no mensuales se cobran por adelantado"
+        catalogo: [semantica_amount]
+        fuente: "Finanzas y Billing de Finora"
+    afirmaciones_relacionadas: [C-DAT-02, C-DAT-03, C-DAT-06, C-DAT-07, C-DAT-08, C-DAT-09, C-RET-02, C-DAT-01]
+    siguiente: W1
+
+  - id: W1
+    prioridad: P1
+    prioridad_etiqueta: "P1 · investigación conceptual"
+    frente: "CFO"
+    pregunta: "¿El monto identifica los escenarios del CFO?"
+    hipotesis:
+      - id: HIF
+        texto: "Al menos un par de escenarios relevantes del CFO es indistinguible con el modelo de cliente + mes + monto."
+        discrimina: "Historias económicas alternativas compatibles con la misma observación: si existe al menos un contraejemplo relevante, la observación no identifica esa distinción."
+        alcance: "Es una prueba lógica de observabilidad, fuera de las ramas económicas. No es un diseño de solución ni una inferencia de descuentos históricos."
+    por_que_importa: "Responde un punto explícito del CFO con material existente y puede cerrar la discusión sobre qué se puede inferir del monto solo. No requiere encontrar descuentos históricos."
+    impacto: 3
+    capacidad: 3
+    capacidad_nivel: respondible
+    capacidad_texto: "Prueba lógica respondible con el enunciado y el modelo de datos descrito. Una simulación no demuestra qué ocurrió en el histórico."
+    metodo: "Plantear historias económicas alternativas compatibles con la misma observación, con los supuestos del caso: contracción frente a descuento, suscripción que crece con un descuento que la compensa, fin de un descuento frente a expansión y cambios compensados. No diseñar tablas nuevas."
+    entregable: "Tabla: observación · historia A · historia B · diferencia que importa · evidencia que faltaría para distinguirlas."
+    criterio_cierre: "Si hay al menos un contraejemplo relevante, la observación no identifica esa distinción. Si campos adicionales existentes resuelven el caso, se actualiza el framing. No se extrapola a descuentos históricos."
+    escenarios_del_caso:
+      - "Un cliente que pagaba un monto y ahora paga menos: ¿contrajo su suscripción o recibió un descuento?"
+      - "Una suscripción que crece mientras un descuento de la misma magnitud mantiene igual lo que paga."
+      - "El fin de un descuento temporal: ¿cuenta como expansión?"
+    depende_de: []
+    no_concluir:
+      - "Que hubo descuentos en el histórico: el caso habla de introducirlos."
+      - "Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó."
+    proxies_invalidos:
+      - patron: "\\bhubo descuentos\\b|\\bdescuentos historicos\\b|\\bse aplicaron descuentos\\b|\\bdescuentos aplicados en el historico\\b"
+        terminos: "hubo descuentos, descuentos históricos"
+        por_que: "No se extrapola a descuentos históricos: no hay evidencia de que existieran."
+    evidencia_faltante:
+      - dato: "Precio de lista, plan y valor contratado por cliente y mes"
+        catalogo: [precios]
+        fuente: "Billing y Finanzas"
+      - dato: "Descuentos recurrentes y temporales, con su vencimiento"
+        catalogo: [descuentos]
+        fuente: "Billing y documentación comercial"
+    afirmaciones_relacionadas: [C-DAT-04, C-DAT-05, C-DAT-06, C-DAT-07, C-DAT-03]
+    siguiente: W2
+
+  - id: W2
+    prioridad: P1
+    prioridad_etiqueta: "P1 · evidencia acotada"
+    frente: "CRO"
+    pregunta: "¿Qué cambió en los primeros pagadores observados?"
+    hipotesis:
+      - id: HO1
+        texto: "Los primeros pagadores observados muestran un cambio entre periodos comparables."
+        discrimina: "Un cambio sostenido en periodos completos, frente a estabilidad o diferencias explicadas por cobertura o identidad."
+        alcance: "Describe pagadores. No verifica la brecha respecto de leads ni el hito de adquisición del CRO."
+    por_que_importa: "Da contenido empírico al resultado pagado que el CRO sí puede observar, sin resolver causas. La capacidad es parcial respecto de la adquisición real."
+    impacto: 3
+    capacidad: 2
+    capacidad_nivel: parcial
+    capacidad_texto: "Respuesta parcial: describe primeras apariciones y aporte inicial de quienes pagan. No observa entradas, leads ni quién no compró."
+    metodo: "Reutilizar las series de primeras apariciones y aporte inicial; elegir la comparación que justifica la cobertura; separar nivel, cambio absoluto y relativo. Verificar otra comparación razonable solo si la conclusión depende de la ventana."
+    entregable: "Tabla: periodo · primeros pagadores observados · aporte inicial · cobertura · cambio."
+    criterio_cierre: "Si el resultado cambia por historia, IDs o meses parciales, se corrige o limita antes de interpretar. Aunque aumente o caiga, no se afirma conversión de leads."
+    depende_de: [W0]
+    no_concluir:
+      - "Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró."
+      - "Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar)."
+    proxies_invalidos:
+      - patron: "\\bconversion(es)?\\b|\\bconvierten?\\b|\\bconvirtio\\b|\\bconvirtieron\\b"
+        terminos: "conversión, convertir"
+        por_que: "Los pagos no incluyen a quien no compró: no miden conversión."
+      - patron: "\\bleads?\\b|\\bprospectos?\\b"
+        terminos: "leads, prospectos"
+        por_que: "Transactions no observa leads ni entradas."
+      - patron: "\\bfunnel\\b|\\bembudo\\b"
+        terminos: "funnel, embudo"
+        por_que: "No hay etapas del funnel en los datos."
+    evidencia_faltante:
+      - dato: "Universo de entradas y etapas del funnel con fechas"
+        catalogo: [funnel]
+        fuente: "CRM y producto"
+    afirmaciones_relacionadas: [C-ADQ-07, C-ADQ-08, C-ADQ-09, C-ADQ-01, C-ADQ-02, C-ADQ-03]
+    siguiente: W3
+
+  - id: W3
+    prioridad: P1
+    prioridad_etiqueta: "P1 · evidencia acotada"
+    frente: "CFO"
+    pregunta: "¿Dónde se concentra el cambio del monto observado?"
+    hipotesis:
+      - id: HO3
+        texto: "El cambio del monto observado se concentra en entrada, ausencia, retorno o cambio dentro de pagadores continuos."
+        discrimina: "Contribuciones que concilian con el total; comprobar si los netos esconden movimientos opuestos."
+        alcance: "Puente descriptivo de pagos: localiza qué preguntar, no resuelve la causalidad del CFO."
+    por_que_importa: "Da foco económico y distingue la entrada de la base observada. Permite localizar contribuciones, condicionado a la semántica y la cobertura; no asigna causas económicas."
+    impacto: 3
+    capacidad: 2
+    capacidad_nivel: parcial
+    capacidad_texto: "Respuesta parcial: compara poblaciones de pago observadas. No identifica entrantes, salientes ni continuos contractuales, ni suscripción, precio o descuento reales."
+    metodo: "Comparar poblaciones observadas de pago; separar primera aparición de retorno si la historia lo permite; cambios de continuos y ausencias. Conciliar al total y no ocultar compensaciones entre contribuciones."
+    entregable: "Tabla: componente observado · aporte al cambio · soporte · supuesto · diferencia de conciliación."
+    criterio_cierre: "Si las contribuciones no concilian, no se interpreta. Si se mezclan recurrente y cobro, se limita a monto observado. No se clasifican descuentos por el tamaño del salto."
+    depende_de: [W0]
+    no_concluir:
+      - "Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada."
+      - "Descuentos a partir del tamaño de un salto del monto."
+      - "Una lectura del puente si las contribuciones no concilian con el total."
+    proxies_invalidos:
+      - patron: "\\bdescuentos?\\b"
+        terminos: "descuento"
+        por_que: "No hay descuentos en los datos: no se clasifican por el tamaño del salto."
+      - patron: "\\bcontractual(es)?\\b|\\bcancelacion(es)?\\b|\\bcancelaron\\b|\\bcancelo\\b"
+        terminos: "contractual, cancelación"
+        por_que: "Sin vigencia de suscripción no hay etiquetas contractuales."
+    evidencia_faltante:
+      - dato: "Estado y vigencia de la suscripción (activa, pausada, cancelada)"
+        catalogo: [estado_suscripcion]
+        fuente: "Billing"
+      - dato: "Definición de amount (facturado, cobrado o contratado)"
+        catalogo: [semantica_amount]
+        fuente: "Finanzas y Billing"
+    afirmaciones_relacionadas: [C-RES-08, C-RES-04, C-RES-05, C-DAT-06, C-RET-03, C-DAT-07, C-MON-01, C-MON-04]
+    siguiente: W4
+
+  - id: W4
+    prioridad: P2
+    prioridad_etiqueta: "P2 · ampliación condicionada"
+    frente: "CRO y CFO"
+    pregunta: "¿La industria concentra el cambio observado?"
+    hipotesis:
+      - id: HO2
+        texto: "El cambio observado se concentra en un subconjunto de industrias o componentes de pago."
+        discrimina: "Contribuciones concentradas con bases suficientes, frente a un cambio difundido, una categoría sin industria o un error de join."
+        alcance: "Prioriza preguntas de seguimiento; no identifica causa, canal ni fase. La materialidad se explicita con la escala observada."
+    por_que_importa: "Puede enfocar la historia y las preguntas de seguimiento. Se activa después de observar un cambio material en W2 o W3."
+    impacto: 2
+    capacidad: 2
+    capacidad_nivel: parcial
+    capacidad_texto: "Respuesta parcial: localiza contribuciones de pagos y clientes observados si el join conserva el total. No prueba causa industrial ni desempeño de adquisición sin denominador de demanda."
+    condicion: "Depende de W2 y W3, y de que el cambio sea material."
+    metodo: "Desagregar solo el resultado o componente relevante; conservar la categoría sin industria; mostrar bases y contribuciones absolutas. No usar porcentajes de contribución engañosos si el cambio neto es cercano a cero."
+    entregable: "Tabla: industria · base · cambio observado · aporte · cobertura. Debe volver al total."
+    criterio_cierre: "Si la cobertura explica el patrón, se corrige. Si no hay concentración clara, se cierra sin clusterizar para fabricar un segmento."
+    depende_de: [W2, W3]
+    no_concluir:
+      - "Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto de canal o ruta."
+      - "Un segmento fabricado por clustering cuando no hay concentración clara."
+    proxies_invalidos:
+      - patron: "\\bcanal(es)?\\b"
+        terminos: "canal"
+        por_que: "No hay atribución por canal en los datos."
+      - patron: "\\bleads?\\b|\\bconversion(es)?\\b"
+        terminos: "leads, conversión"
+        por_que: "La industria de quienes pagan no es el mix de la demanda."
+    evidencia_faltante:
+      - dato: "Fuente del lead y atribución por canal"
+        catalogo: [atribucion]
+        fuente: "CRM"
+    afirmaciones_relacionadas: [C-ADQ-04, C-ADQ-05, C-ADQ-06, C-RES-06, C-RES-07, C-MON-05]
+    siguiente: W5
+
+  - id: W5
+    prioridad: P2
+    prioridad_etiqueta: "P2 · ampliación condicionada"
+    frente: "CRO y CFO"
+    pregunta: "¿Cambió la economía posterior de los nuevos pagadores?"
+    hipotesis:
+      - id: HO4
+        texto: "Las cohortes de primeros pagadores difieren en aporte posterior a igual edad desde el primer pago."
+        discrimina: "Diferencias persistentes en seguimiento comparable, frente a estabilidad o inmadurez."
+        alcance: "Economía posterior al pago; no prueba la calidad del universo de leads. Solo se activa si HO1 a HO3 la vuelven material."
+    por_que_importa: "Decide si hace falta matizar el argumento de adquisición con la economía de los pagadores."
+    impacto: 2
+    capacidad: 2
+    capacidad_nivel: parcial
+    capacidad_texto: "Respuesta parcial: compara cohortes desde la primera transacción a la misma edad y con seguimiento común. Las celdas sin seguimiento quedan ausentes."
+    condicion: "Solo si el aporte posterior altera la lectura de W2 o W3."
+    metodo: "Comparar cohortes desde la primera transacción a la misma edad y con seguimiento común; pagadores y monto observados. Analizar solo cohortes o segmentos que cambien la respuesta."
+    entregable: "Tabla: cohorte · seguimiento disponible · aporte y continuidad de pago por edad · base."
+    criterio_cierre: "Si no hay ventana comparable, se declara no respondible. Una diferencia posterior no se convierte en prueba de calidad de leads ni de retención contractual."
+    depende_de: [W2, W3]
+    no_concluir:
+      - "La calidad de los leads a partir de lo que pasa después del pago."
+      - "Retención contractual a partir de la continuidad de pago."
+    proxies_invalidos:
+      - patron: "\\bleads?\\b|\\bprospectos?\\b"
+        terminos: "leads, prospectos"
+        por_que: "Una diferencia posterior al pago no prueba la calidad de los leads."
+      - patron: "\\bcontractual(es)?\\b"
+        terminos: "contractual"
+        por_que: "La continuidad de pago no es retención contractual."
+    evidencia_faltante:
+      - dato: "Estado y vigencia de la suscripción"
+        catalogo: [estado_suscripcion]
+        fuente: "Billing"
+    afirmaciones_relacionadas: [C-MON-02, C-MON-03, C-RET-01, C-RET-04, C-RET-03]
+    siguiente: W6
+
+  - id: W6
+    prioridad: BC
+    prioridad_etiqueta: "Brecha crítica · preparar después de W0"
+    frente: "CRO"
+    pregunta: "¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?"
+    hipotesis:
+      - id: HC1
+        texto: "El crecimiento real del universo de entradas fue menor al sugerido por New."
+      - id: HC2a
+        texto: "El mix de perfiles y vías iniciales explica la menor adquisición agregada."
+      - id: HC2b
+        texto: "La mayor proporción de entradas jóvenes explica el desfase."
+      - id: HC3a/b
+        texto: "La brecha inicial de adquisición se recupera (retraso) o persiste (déficit) con más seguimiento."
+      - id: HC3q/s/p/o
+        texto: "Mecanismos rivales dentro de la respuesta: demanda, atención, proceso posterior o producto, y oferta o alternativa."
+    por_que_importa: "Mantiene la respuesta al CRO honesta y comprobable: las ramas centrales del CRO no se observan en pagos, y un análisis fácil de pagos no reemplaza la pregunta central."
+    impacto: 3
+    capacidad: 0
+    capacidad_nivel: bloqueada
+    capacidad_texto: "Falta evidencia indispensable: no hay universo de entradas, fechas de entrada, no convertidos ni recorridos. Ningún gráfico de pagos es prueba de conversión del funnel."
+    metodo: "Especificar una solicitud acotada: universo único y momento de entrada, señales al ingreso, hitos, resultado y estado, fechas de atención y ruta efectiva cuando aplique. Vincular cada evidencia a la comparación de HC1, HC2 o HC3. No diseñar un sistema de captura."
+    entregable: "Matriz: hipótesis · comparación A/B · evidencia mínima · fuente potencial · qué conclusión queda bloqueada."
+    criterio_cierre: "Si no se obtiene la evidencia, no se ejecuta un cálculo sustituto. Si se obtiene, se reevalúa la capacidad y se prioriza mix y maduración antes de atribuir calidad o proceso."
+    depende_de: [W0]
+    no_concluir:
+      - "Conversión del funnel o conversión final a partir de pagos: solo se observa a quienes pagaron."
+      - "Cantidad de entradas a partir del gasto de S&M: el gasto no mide entradas ni permite estimarlas."
+      - "Mix de la demanda a partir de la industria de quienes pagan."
+      - "Fecha de entrada o maduración a partir de cohortes desde el primer pago."
+    proxies_invalidos: []
+    bloqueo:
+      respuesta_titular: "No se puede responder con los datos actuales: faltan las entradas y sus recorridos"
+      respuesta_texto: "Transactions, Industry y S&M spend no observan el universo de entradas, su momento ni su recorrido comercial. Esta pregunta no se investiga con sustitutos: abajo está la evidencia mínima que distinguiría cada explicación del CRO y dónde podría estar."
+      hechos_de_datos:
+        - "Transactions registra solo clientes con transacciones: primera aparición, monto inicial e industria. No registra entradas, leads ni a quien no compró."
+        - "Industry registra la industria de quienes pagan; no representa la composición de toda la demanda."
+        - "S&M spend registra niveles y composición del gasto agregado; no mide entradas, calidad de leads ni atribución por canal."
+      interpretacion_permitida:
+        - "Los análisis de pagos (W2 a W5) describen a los pagadores observados y ayudan a decidir qué preguntar; no verifican la brecha respecto de las entradas."
+        - "Cada explicación del CRO queda abierta con confianza empírica baja hasta tener evidencia que las distinga."
+      matriz:
+        - hipotesis: HC1
+          pregunta: "¿El crecimiento real del universo fue menor al sugerido por New?"
+          comparacion: "El total de entradas únicas crece menos que New, frente a un total que crece en la proporción esperada."
+          evidencia_minima: "Entradas únicas de producto y ventas en periodos comparables, con identidad compartida y momento de ingreso; stock y duplicados resueltos."
+          catalogo: [funnel, atribucion]
+          fuente: "CRM y producto (self-serve)"
+          bloqueada: "La magnitud real de la premisa de más volumen arriba del funnel."
+          proxy_invalido: "El gasto de S&M no mide entradas ni permite estimarlas."
+        - hipotesis: HC2a
+          pregunta: "¿El mix de perfiles y vías iniciales explica la menor adquisición agregada?"
+          comparacion: "Pesos nuevos con respuestas históricas reproducen el desfase, frente a un residual que persiste dentro de los grupos."
+          evidencia_minima: "Perfil y vía inicial para todas las entradas, y adquisición por edad en periodos comparables, con los mismos grupos."
+          catalogo: [atribucion, tamano_cliente]
+          fuente: "CRM (atributos al ingreso) con vínculo al pago"
+          bloqueada: "Si el cambio de mix de la demanda se asocia con la menor adquisición."
+          proxy_invalido: "La industria de quienes pagan solo localiza resultados; no es el mix del universo."
+        - hipotesis: HC2b
+          pregunta: "¿La mayor proporción de entradas jóvenes explica el desfase?"
+          comparacion: "A igual edad la adquisición es comparable, frente a una menor adquisición también a igual edad y perfil."
+          evidencia_minima: "Momento de entrada, fecha de observación e historial de adquisición; cohortes previas y actuales con tramos de edad comparables."
+          catalogo: [funnel]
+          fuente: "CRM y producto"
+          bloqueada: "Si el desfase es maduración o un déficit que no se explica por tiempo."
+          proxy_invalido: "Las cohortes desde el primer pago describen el comportamiento posterior al pago; no sustituyen cohortes desde la entrada."
+        - hipotesis: HC3a/b
+          pregunta: "¿La brecha inicial se recupera o persiste con más seguimiento?"
+          comparacion: "Recuperación posterior dentro de la ventana disponible, frente a una brecha que persiste en tramos posteriores comparables."
+          evidencia_minima: "Historias de todas las entradas, incluidas abiertas y no convertidas, y momento del resultado; censura documentada."
+          catalogo: [funnel]
+          fuente: "CRM y producto, con vínculo al pago"
+          bloqueada: "Retraso frente a déficit persistente dentro de la ventana observable."
+          proxy_invalido: "No se estima una conversión final solo con quienes ganaron."
+        - hipotesis: HC3q
+          pregunta: "¿Empeoraron las señales de ajuste o intención al ingreso?"
+          comparacion: "Con criterios constantes, señales al ingreso peores en los grupos afectados, frente a señales estables."
+          evidencia_minima: "Atributos capturados antes del tratamiento, reglas de calificación y desenlaces comparables."
+          catalogo: [funnel, atribucion]
+          fuente: "CRM (calificación)"
+          bloqueada: "Si la calidad de la demanda se asocia con la menor respuesta."
+          proxy_invalido: "Un residual no demuestra calidad; no se usan solo juicios retrospectivos de Sales."
+        - hipotesis: HC3s
+          pregunta: "¿El deterioro coincide con más demora de atención?"
+          comparacion: "Deterioro junto con más demora dentro de una demanda comparable, frente a demoras estables donde cae la respuesta."
+          evidencia_minima: "Ingreso, asignación, primer intento o contacto, carga y seguimiento."
+          catalogo: [funnel]
+          fuente: "CRM (actividad comercial)"
+          bloqueada: "Si la demora de atención se asocia con la menor respuesta."
+          proxy_invalido: "Una asociación no prueba efecto: la priorización comercial selecciona a quién se atiende antes."
+        - hipotesis: HC3p
+          pregunta: "¿La menor respuesta se localiza después de un punto del recorrido?"
+          comparacion: "Pérdida localizada después de un punto con avance previo comparable, frente a estabilidad posterior."
+          evidencia_minima: "Eventos y pérdidas después de SQL para quienes transitan SQL; hitos de producto para self-serve."
+          catalogo: [funnel]
+          fuente: "CRM y producto"
+          bloqueada: "En qué parte del recorrido se localiza la pérdida."
+          proxy_invalido: "Localizar después de SQL no explica por qué; no se inventan pasos saltados."
+        - hipotesis: HC3o
+          pregunta: "¿Cambios de oferta o alternativas afectan la elección?"
+          comparacion: "Cambios fechados de condiciones o alternativas con señales y atención comparables, frente a oferta estable."
+          evidencia_minima: "Cambios fechados de condiciones; razones de no compra corroboradas con evidencia de clientes; exposición comparable."
+          catalogo: [precios]
+          fuente: "CRM (motivos de pérdida) y registro de cambios de oferta"
+          bloqueada: "Si la oferta o las alternativas se asocian con la elección. Contingente: solo si señales internas lo justifican."
+          proxy_invalido: "No se inicia una investigación general de mercado."
+    evidencia_faltante:
+      - dato: "Universo de entradas con identidad, fecha y vía de ingreso"
+        catalogo: [funnel, atribucion]
+        fuente: "CRM y producto"
+      - dato: "Señales al ingreso, hitos, resultado y estado, fechas de atención y ruta efectiva"
+        catalogo: [funnel]
+        fuente: "CRM y producto, con vínculo al pago"
+    afirmaciones_relacionadas: []
+    siguiente: W7
+
+  - id: W7
+    prioridad: BC
+    prioridad_etiqueta: "Brecha crítica · después de W0 y W1"
+    frente: "CFO"
+    pregunta: "¿Qué distinguiría los componentes del valor y la pertenencia recurrente?"
+    hipotesis:
+      - id: HF1a/b
+        texto: "Entrantes: cambió su aporte antes de descuentos, o descuentos de entrada explican parte de su aporte neto."
+      - id: HF2a/b
+        texto: "Salientes: la reducción se concentra en salidas reales, o descuentos previos explican la diferencia entre bruto y neto que desaparece."
+      - id: HF3a/b/c
+        texto: "Continuos: el valor antes de descuentos cambia por configuración o uso, o por tarifa; o descuentos compensan cambios netos."
+    por_que_importa: "Enfoca la evolución del razonamiento del CFO sin diseñarla todavía: saber quién entra, sale o permanece no identifica qué cambió por suscripción, tarifa o descuento."
+    impacto: 3
+    capacidad: 0
+    capacidad_nivel: bloqueada
+    capacidad_texto: "Falta evidencia indispensable: no hay vigencia, características de suscripción, tarifas ni descuentos. El monto puede describirse; sus componentes no."
+    metodo: "Precisar la evidencia de vigencia, características de suscripción, tarifas y descuentos aplicables; identificar si el histórico realmente contiene descuentos. No definir un esquema físico ni reglas finales de MRR."
+    entregable: "Matriz: distinción requerida · ambigüedad actual · evidencia mínima · escenario que resolvería."
+    criterio_cierre: "Sin componentes explícitos, la prueba conceptual se mantiene separada de la cuantificación real. Si el histórico no tuvo descuentos, se retira toda hipótesis que los trate como causa histórica."
+    depende_de: [W0, W1]
+    no_concluir:
+      - "Salida real a partir de la ausencia de pago: no convertir ese proxy en churn."
+      - "Ausencia de descuentos a partir de la ausencia de campos: no probar ausencia por falta de dato."
+      - "Expansión real a partir de una diferencia de monto entre continuos."
+      - "Inicio o fin de un descuento a partir del patrón de pagos solo."
+    proxies_invalidos: []
+    bloqueo:
+      respuesta_titular: "No se puede responder con los datos actuales: faltan vigencia, tarifa y descuento"
+      respuesta_texto: "El histórico tiene cliente, mes y monto. No registra la vigencia de la suscripción, sus características, la tarifa ni los descuentos aplicables. Esta pregunta no se investiga con sustitutos: abajo está la evidencia mínima que separaría cada componente y dónde podría estar."
+      hechos_de_datos:
+        - "Transactions registra un monto por cliente y mes; no registra plan, precio de lista, valor contratado ni descuento."
+        - "No hay estado ni vigencia de la suscripción: un mes sin pago no distingue salida, pausa, atraso o descuento total."
+        - "El enunciado habla de introducir descuentos temporales; no hay evidencia de que existieran en el histórico."
+      interpretacion_permitida:
+        - "El puente de pagos (W3) localiza contribuciones observadas; no identifica entrantes, salientes ni continuos contractuales."
+        - "La prueba de identificabilidad (W1) dice qué distinciones no se pueden hacer con el monto solo; no cuantifica componentes reales."
+      matriz:
+        - hipotesis: HF1a
+          pregunta: "¿Cambió el aporte antes de descuentos que incorporan los entrantes?"
+          comparacion: "Aporte bruto de entrada distinto, frente a bruto estable con neto distinto por descuento o por cobro."
+          evidencia_minima: "Pertenencia recurrente y primera entrada frente a retorno; condiciones de suscripción y tarifa al incorporarse, con periodo consistente."
+          catalogo: [precios, estado_suscripcion]
+          fuente: "Billing y Finanzas"
+          bloqueada: "Si cambió el valor bruto de entrada o solo el neto."
+          proxy_invalido: "W2 y W3 solo localizan lo observado; no elevan la capacidad de esta pregunta."
+        - hipotesis: HF1b
+          pregunta: "¿Descuentos de entrada explican parte del aporte neto de los entrantes?"
+          comparacion: "Descuentos explícitos aplicables a entrantes, frente a ausencia de descuentos documentada."
+          evidencia_minima: "Evidencia explícita de descuentos y condiciones comparables; primero, confirmar si existían en los periodos históricos."
+          catalogo: [descuentos]
+          fuente: "Billing y documentación comercial"
+          bloqueada: "Si existió un componente de descuento de entrada."
+          proxy_invalido: "La ausencia de campos no prueba ausencia de descuento."
+        - hipotesis: HF2a
+          pregunta: "¿La reducción del aporte se concentra en salidas reales?"
+          comparacion: "Baja de relación confirmada, frente a una cuenta vigente con pago ausente."
+          evidencia_minima: "Confirmación de vigencia y fin de relación, condiciones anteriores y contexto de factura o cobro."
+          catalogo: [estado_suscripcion, motivos_churn]
+          fuente: "Billing"
+          bloqueada: "Churn real frente a pausa, atraso o cambio de identidad."
+          proxy_invalido: "La ausencia de pago no prueba el fin de la vigencia."
+        - hipotesis: HF2b
+          pregunta: "¿Descuentos previos explican la diferencia entre bruto y neto que desaparece?"
+          comparacion: "Salientes con descuento vigente antes de salir, frente a salientes sin descuento aplicable."
+          evidencia_minima: "Condiciones de descuento vigentes antes de la salida y su vínculo con la relación que termina."
+          catalogo: [descuentos, estado_suscripcion]
+          fuente: "Billing"
+          bloqueada: "Qué parte del neto perdido era descuento."
+          proxy_invalido: "Una conciliación conceptual comprueba que no hay doble conteo; no demuestra una cifra histórica."
+        - hipotesis: HF3a
+          pregunta: "¿Cambia el valor antes de descuentos por configuración o uso?"
+          comparacion: "Configuración distinta con tarifa comparable, frente a configuración estable."
+          evidencia_minima: "Características y uso, y condiciones de tarifa en ambos cortes, con su fecha."
+          catalogo: [precios]
+          fuente: "Producto y Billing"
+          bloqueada: "Si hubo expansión real por configuración."
+          proxy_invalido: "Una diferencia de monto entre continuos no identifica expansión real."
+        - hipotesis: HF3b
+          pregunta: "¿Cambia el valor antes de descuentos por tarifa?"
+          comparacion: "Tarifa distinta con configuración comparable, frente a tarifa estable."
+          evidencia_minima: "Condiciones tarifarias efectivas, características de la suscripción y su contexto temporal."
+          catalogo: [precios]
+          fuente: "Billing y Finanzas"
+          bloqueada: "Si hubo un cambio de pricing."
+          proxy_invalido: "Uso y tarifa pueden coincidir: no se separan sin una convención de valoración."
+        - hipotesis: HF3c
+          pregunta: "¿Descuentos compensan o explican cambios netos entre continuos?"
+          comparacion: "Descuento que cambia con bruto estable, frente a cambios de bruto o de cobro sin descuento."
+          evidencia_minima: "Descuentos explícitos y vigencias efectivas en ambos cortes, junto al valor bruto; distinguir extensión de fin real."
+          catalogo: [descuentos]
+          fuente: "Billing"
+          bloqueada: "Si el fin de un descuento se lee como expansión."
+          proxy_invalido: "No se identifica inicio o fin de un descuento por el patrón de pagos solo."
+    evidencia_faltante:
+      - dato: "Vigencia y estado de la suscripción"
+        catalogo: [estado_suscripcion]
+        fuente: "Billing"
+      - dato: "Características de la suscripción, tarifa y precio de lista"
+        catalogo: [precios]
+        fuente: "Billing y Finanzas"
+      - dato: "Descuentos aplicables con su vigencia"
+        catalogo: [descuentos]
+        fuente: "Billing y documentación comercial"
+    afirmaciones_relacionadas: []
+    siguiente_libre:
+      pregunta: "Síntesis W9: ¿qué cambió en la respuesta y qué sigue abierto?"
+      por_que: "El brief cierra con una síntesis que separa lo observado, lo compatible, lo debilitado y lo no identificable. No es un deck ni una recomendación final."
