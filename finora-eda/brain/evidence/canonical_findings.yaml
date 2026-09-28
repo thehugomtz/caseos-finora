@@ -311,3 +311,143 @@ hallazgos:
     offgrid_2022s2: 19%
     offgrid_2024s2: 42%
   revision_humana: pendiente
+- id: C-ADQ-07
+  clave: growth_below_2022_median
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana
+    de 2022; por encima de esa mediana, las altas por mes no aumentaron.
+  verificado_en_codigo: true
+  evidencia:
+    adq_rr_median_2022: COP 60,9 mil
+    adq_above_2022: 13,7
+    adq_above_2023: 12,5
+    adq_above_2024: 11,6
+    adq_below_2022: 13,5
+    adq_below_2023: 41,7
+    adq_below_2024: 43,8
+    adq_below_share_increase: 107%
+  revision_humana: pendiente
+- id: C-RES-08
+  clave: growth_from_new_customers
+  dominio: Resultado
+  estado: Hecho observado
+  afirmacion: Todo el aumento del monto pagado entre ene-22 y oct-24 proviene de clientes que empezaron a pagar después de
+    ene-22; los clientes activos en ene-22 terminan con menos monto que al inicio.
+  verificado_en_codigo: true
+  evidencia:
+    ga_total_start: COP 35,0 millones
+    ga_total_end: COP 97,0 millones
+    ga_base_end: COP 29,0 millones
+    ga_new_end: COP 68,0 millones
+    ga_base_survivors: 79%
+    ga_base_survivor_ratio: 1,08×
+  revision_humana: pendiente
+- id: C-DAT-06
+  clave: one_month_round_trips
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente
+    al nivel previo al mes siguiente.
+  verificado_en_codigo: true
+  evidencia:
+    rt_gross: COP 282,8 millones
+    rt_share: 25,3%
+  revision_humana: pendiente
+- id: C-RET-03
+  clave: durable_churn_flat
+  dominio: Retención
+  estado: Hecho observado
+  afirmacion: El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses
+    cambió menos de 0,3 puntos.
+  verificado_en_codigo: true
+  evidencia:
+    churn_obs_2022: 3,52%
+    churn_obs_2023: 2,24%
+    churn_obs_2024: 2,04%
+    churn_dur3_2022: 0,98%
+    churn_dur3_2023: 1,09%
+    churn_dur3_2024: 0,96%
+  revision_humana: pendiente
+- id: C-DAT-07
+  clave: retroactive_adjustments
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: 'Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un
+    porcentaje y al mes siguiente queda en ese porcentaje.'
+  verificado_en_codigo: true
+  evidencia:
+    retro_events: '260'
+    retro_customers: '249'
+    retro_exp_share_2023: 8,5%
+    retro_exp_share_2024: 8,3%
+    retro_net_2023: COP 477,25 mil
+    retro_net_2024: COP 490,54 mil
+  revision_humana: pendiente
+- id: C-DAT-08
+  clave: catchup_returns
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: Más de 25% de los retornos después de meses sin pago liquidan exactamente los meses pendientes (±1%).
+  verificado_en_codigo: true
+  evidencia:
+    catchup_returns: '144'
+    catchup_n: '445'
+    catchup_share: 32%
+  revision_humana: pendiente
+- id: C-DAT-09
+  clave: jun22_event
+  dominio: Datos
+  estado: Hecho observado
+  afirmacion: En jun-22 los churns observados fueron más del doble de la mediana mensual y más de 70% volvió a pagar al mes
+    siguiente.
+  verificado_en_codigo: true
+  evidencia:
+    jun22_churn: '60'
+    churn_month_median: '22'
+    jun22_back_next: 72%
+  revision_humana: pendiente
+- id: C-ADQ-08
+  clave: value_lags_count
+  dominio: Adquisición
+  estado: Hecho observado
+  afirmacion: El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones
+    probadas, y entre 2023 y 2024 cambió menos de 10% en todas.
+  verificado_en_codigo: true
+  evidencia:
+    cnt_22_24: +104%
+    val_rr_22_24: +6%
+    val_usual_22_24: +17%
+    val_m1to3_22_24: +60%
+    cnt_23_24: +2%
+    val_rr_23_24: +3%
+    val_usual_23_24: +0%
+    val_m1to3_23_24: +8%
+  revision_humana: pendiente
+- id: C-RET-04
+  clave: low_ticket_retention_m12
+  dominio: Retención
+  estado: Direccional
+  afirmacion: En las cohortes de 2023, la retención de logos al M12 de las altas bajo la mediana de 2022 está a menos de 5
+    puntos de la de las altas por encima.
+  verificado_en_codigo: true
+  evidencia:
+    ret12_low_2023: 89%
+    ret12_high_2023: 88%
+    ret12_n_low: '347'
+    ret12_n_high: '112'
+  revision_humana: pendiente
+- id: C-ADQ-09
+  clave: acquisition_plateau
+  dominio: Adquisición
+  estado: Direccional
+  afirmacion: Las altas por mes se duplicaron con un escalón a inicios de 2023 y desde ene-23 no muestran una tendencia distinguible
+    de cero.
+  verificado_en_codigo: true
+  evidencia:
+    new_2022_pm: 27,2
+    new_2324_pm: 54,7
+    plateau_slope: +0,47
+    plateau_lo: −0,40
+    plateau_hi: +1,33
+  revision_humana: pendiente

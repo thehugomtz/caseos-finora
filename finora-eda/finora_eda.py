@@ -1272,6 +1272,148 @@ def extra_views(ctx: dict) -> dict:
 
 
 # ----------------------------------------------------------------------------------
+# 10b · Verified findings (analytical verification, sep-2026)
+# ----------------------------------------------------------------------------------
+def verification_views(ar: dict, clean_start: int) -> dict:
+    """Raw numbers behind the findings confirmed in the verification phase.
+
+    Everything runs on the exact micro-unit panel; each block states its definition and window. The sensitivity
+    tests (thresholds, bases, tolerances, horizons, windows) are in docs/evidence_pack.py.
+    """
+    A, first, eb = ar["A"], ar["first_idx"], ar["ever_before"]
+    n, T = A.shape
+    months = [str(m) for m in ar["months"]]
+    yr = np.array([m[:4] for m in months])
+    cop = A * (SCALE_TO_COP / MICRO)
+    years = ("2022", "2023", "2024")
+    flow_months = {y: sum(1 for t in range(clean_start, T) if yr[t] == y) for y in years}
+    V = {}
+
+    # 1 · new customers by entry level. Early run-rate = median of the positive amounts in M0-M2
+    #     (robust to first-month spikes and one-month gaps); cut = 2022 median (splits 2022 in half).
+    ids = np.where(first >= clean_start)[0]
+    rr = np.array([np.median(seg[seg > 0]) for seg in (cop[i, first[i]:first[i] + 3] for i in ids)])
+    cy = yr[first[ids]]
+    med22 = float(np.median(rr[cy == "2022"]))
+    V["adq_rr_median_2022"] = med22
+    for y in years:
+        V[f"adq_above_{y}"] = float(((rr >= med22) & (cy == y)).sum() / flow_months[y])
+        V[f"adq_below_{y}"] = float(((rr < med22) & (cy == y)).sum() / flow_months[y])
+    increase = (V["adq_above_2024"] + V["adq_below_2024"]) - (V["adq_above_2022"] + V["adq_below_2022"])
+    V["adq_below_share_increase"] = (V["adq_below_2024"] - V["adq_below_2022"]) / increase
+
+    # 2 · value incorporated per month under three normalizations vs the number of new customers
+    def per_month(values, last_t):
+        out = {}
+        for y in years:
+            ts = [t for t in range(clean_start, last_t + 1) if yr[t] == y]
+            out[y] = values[np.isin(first[ids], ts)].sum() / len(ts)
+        return out
+    m13 = np.array([np.median(seg[seg > 0]) if (seg > 0).any() else 0.0
+                    for seg in (cop[i, first[i] + 1:first[i] + 4] for i in ids)])      # M1-M3, excludes M0
+    vals = {"rr": per_month(rr, T - 1), "usual": per_month(ar["usual"][ids] * (SCALE_TO_COP / MICRO), T - 1),
+            "m1to3": per_month(m13, T - 4)}                                           # M3 observable: until jul-24
+    cnt = per_month(np.ones(ids.size), T - 1)
+    V["cnt_22_24"], V["cnt_23_24"] = cnt["2024"] / cnt["2022"] - 1, cnt["2024"] / cnt["2023"] - 1
+    for k, d in vals.items():
+        V[f"val_{k}_22_24"], V[f"val_{k}_23_24"] = d["2024"] / d["2022"] - 1, d["2024"] / d["2023"] - 1
+
+    # 3 · growth accounting ene-22 -> oct-24: customers active in ene-22 vs everyone who started later
+    base = first == 0
+    V["ga_total_start"], V["ga_total_end"] = float(cop[:, 0].sum()), float(cop[:, -1].sum())
+    V["ga_base_end"], V["ga_new_end"] = float(cop[base, -1].sum()), float(cop[~base, -1].sum())
+    surv = base & (A[:, -1] > 0)
+    V["ga_base_survivors"] = float(surv.sum() / base.sum())
+    V["ga_base_survivor_ratio"] = float(cop[surv, -1].sum() / cop[surv, 0].sum())
+
+    # 4 · one-month round trips: movement at t (no new customers) whose level returns exactly to t-1 in t+1,
+    #     or that is the return leg of such a deviation. Window mar-22..sep-24 (t+1 observable).
+    gross = rt = 0.0
+    for t in range(clean_start, T - 1):
+        a0, a1 = A[:, t - 1], A[:, t]
+        mv = (a0 != a1) & ((a0 > 0) | eb[:, t])
+        v = np.abs(a1 - a0) * (SCALE_TO_COP / MICRO)
+        back = A[:, t + 1] == a0
+        leg2 = ((A[:, t] == A[:, t - 2]) & (A[:, t - 1] != A[:, t - 2])) if t - 1 >= clean_start else np.zeros(n, bool)
+        gross += v[mv].sum()
+        rt += v[mv & (back | leg2)].sum()
+    V["rt_gross"], V["rt_share"] = float(gross), float(rt / gross)
+
+    # 5 · observed vs durable churn (no payment in the next 3 months); events with 3 months of future only
+    h = 3
+    for y in years:
+        ts = [t for t in range(clean_start, T - h) if yr[t] == y]
+        den = sum(int((A[:, t - 1] > 0).sum()) for t in ts)
+        evs = dur = 0
+        for t in ts:
+            c = (A[:, t - 1] > 0) & (A[:, t] == 0)
+            evs += int(c.sum())
+            dur += int((c & ~(A[:, t + 1:t + 1 + h] > 0).any(axis=1)).sum())
+        V[f"churn_obs_{y}"], V[f"churn_dur3_{y}"] = evs / den, dur / den
+
+    # 6 · returns that settle exactly the unpaid months: back after g months paying (g + 1) x the prior amount
+    returns = settle = 0
+    per_month_churn = []
+    for t in range(clean_start, T):
+        c = np.flatnonzero((A[:, t - 1] > 0) & (A[:, t] == 0))
+        per_month_churn.append(c.size)
+        for i in c:
+            nxt = np.flatnonzero(A[i, t + 1:] > 0)
+            if nxt.size == 0:
+                continue
+            g = int(nxt[0]) + 1
+            returns += 1
+            settle += abs(int(A[i, t + g]) - (g + 1) * int(A[i, t - 1])) <= 0.01 * (g + 1) * int(A[i, t - 1])
+    V["catchup_n"], V["catchup_returns"], V["catchup_share"] = returns, int(settle), settle / returns
+    tj = months.index("2022-06")
+    cj = (A[:, tj - 1] > 0) & (A[:, tj] == 0)
+    V["jun22_churn"], V["churn_month_median"] = int(cj.sum()), float(np.median(per_month_churn))
+    V["jun22_back_next"] = float((A[cj, tj + 1] > 0).mean())
+
+    # 7 · synchronized adjustments with exact retroactive billing: the amount rises k·x (k = 2..6) and the
+    #     next month settles at +x, which then persists (tolerance 0.05 pp per step)
+    events, custs = 0, set()
+    up = {y: 0.0 for y in years}
+    net = {y: 0.0 for y in years}
+    for t in range(clean_start, T - 1):
+        p, a, nx = A[:, t - 1].astype(float), A[:, t].astype(float), A[:, t + 1].astype(float)
+        ok = (p > 0) & (a > 0) & (nx > 0) & (a != p)
+        persists = (A[:, t + 2] == A[:, t + 1]) if t + 2 < T else np.ones(n, bool)
+        hit = np.zeros(n, bool)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            r1, r2 = a / p - 1, nx / p - 1
+            for k in (2, 3, 4, 5, 6):
+                hit |= ok & persists & (r2 >= 0.001) & (np.abs(r1 - k * r2) <= 0.0005 * k)
+        events += int(hit.sum())
+        custs.update(np.flatnonzero(hit).tolist())
+        up[yr[t]] += float(((a - p)[hit]).sum()) * (SCALE_TO_COP / MICRO)
+        net[yr[t]] += float(((nx - p)[hit]).sum()) * (SCALE_TO_COP / MICRO)
+    V["retro_events"], V["retro_customers"] = events, len(custs)
+    for y in ("2023", "2024"):
+        exp_y = ar["exp_mrr"][:, [t for t in range(clean_start, T) if yr[t] == y]].sum()
+        V[f"retro_exp_share_{y}"], V[f"retro_net_{y}"] = up[y] / exp_y, net[y]
+
+    # 8 · 2023 cohorts: logo retention at M12 below vs above the 2022 median (cohorts with M13 observable)
+    sel = (cy == "2023") & (first[ids] + 13 <= T - 1)
+    act12 = np.array([A[i, first[i] + 12] > 0 for i in ids[sel]])
+    low = rr[sel] < med22
+    V["ret12_low_2023"], V["ret12_high_2023"] = float(act12[low].mean()), float(act12[~low].mean())
+    V["ret12_n_low"], V["ret12_n_high"] = int(low.sum()), int((~low).sum())
+
+    # 9 · acquisition plateau: monthly new customers since ene-23, OLS slope with 95% interval
+    ts = [t for t in range(clean_start, T) if yr[t] >= "2023"]
+    y_ = np.array([(first == t).sum() for t in ts], dtype=float)
+    X = np.c_[np.ones(len(ts)), np.arange(len(ts), dtype=float)]
+    b = np.linalg.lstsq(X, y_, rcond=None)[0]
+    res = y_ - X @ b
+    se = float(np.sqrt(res @ res / (len(ts) - 2) * np.linalg.inv(X.T @ X)[1, 1]))
+    V["plateau_slope"], V["plateau_lo"], V["plateau_hi"] = float(b[1]), float(b[1] - 1.96 * se), float(b[1] + 1.96 * se)
+    V["new_2022_pm"] = float(((first >= clean_start) & (yr[first] == "2022")).sum() / flow_months["2022"])
+    V["new_2324_pm"] = float(y_.mean())
+    return V
+
+
+# ----------------------------------------------------------------------------------
 # 11 · Facts (formatted numbers used in the HTML/notes) and verified claims
 # ----------------------------------------------------------------------------------
 def build_facts(ctx: dict):
@@ -1599,6 +1741,38 @@ def build_facts(ctx: dict):
     put("cut_end", "2023-12", month_label(pd.Period("2023-12")))
     for k in ["step_month", "team_break", "cut_start", "cut_end", "team_fixed_until", "sm_peak_month", "sm_trough_month"]:
         F[k + "_ym"] = R[k]
+
+    # verified findings (analytical verification, sep-2026)
+    vv = verification_views(ar, ctx["clean_start"])
+    put("adq_rr_median_2022", vv["adq_rr_median_2022"], fmt_cop(vv["adq_rr_median_2022"]))
+    for y in ("2022", "2023", "2024"):
+        put(f"adq_above_{y}", vv[f"adq_above_{y}"], fmt_num(vv[f"adq_above_{y}"], 1))
+        put(f"adq_below_{y}", vv[f"adq_below_{y}"], fmt_num(vv[f"adq_below_{y}"], 1))
+        put(f"churn_obs_{y}", vv[f"churn_obs_{y}"], fmt_pct(vv[f"churn_obs_{y}"], 2))
+        put(f"churn_dur3_{y}", vv[f"churn_dur3_{y}"], fmt_pct(vv[f"churn_dur3_{y}"], 2))
+    put("adq_below_share_increase", vv["adq_below_share_increase"], fmt_pct(vv["adq_below_share_increase"], 0))
+    for k in ("cnt_22_24", "cnt_23_24", "val_rr_22_24", "val_rr_23_24", "val_usual_22_24", "val_usual_23_24",
+              "val_m1to3_22_24", "val_m1to3_23_24"):
+        put(k, vv[k], fmt_pct_signed(vv[k], 0))
+    for k in ("ga_total_start", "ga_total_end", "ga_base_end", "ga_new_end", "rt_gross"):
+        put(k, vv[k], fmt_cop(vv[k]))
+    put("ga_base_survivors", vv["ga_base_survivors"], fmt_pct(vv["ga_base_survivors"], 0))
+    put("ga_base_survivor_ratio", vv["ga_base_survivor_ratio"], fmt_x(vv["ga_base_survivor_ratio"], 2))
+    put("rt_share", vv["rt_share"], fmt_pct(vv["rt_share"], 1))
+    for k in ("catchup_n", "catchup_returns", "jun22_churn", "retro_events", "retro_customers", "ret12_n_low", "ret12_n_high"):
+        put(k, vv[k], fmt_int(vv[k]))
+    put("catchup_share", vv["catchup_share"], fmt_pct(vv["catchup_share"], 0))
+    put("churn_month_median", vv["churn_month_median"], fmt_num(vv["churn_month_median"], 0))
+    put("jun22_back_next", vv["jun22_back_next"], fmt_pct(vv["jun22_back_next"], 0))
+    for y in ("2023", "2024"):
+        put(f"retro_exp_share_{y}", vv[f"retro_exp_share_{y}"], fmt_pct(vv[f"retro_exp_share_{y}"], 1))
+        put(f"retro_net_{y}", vv[f"retro_net_{y}"], fmt_cop(vv[f"retro_net_{y}"], 2))
+    put("ret12_low_2023", vv["ret12_low_2023"], fmt_pct(vv["ret12_low_2023"], 0))
+    put("ret12_high_2023", vv["ret12_high_2023"], fmt_pct(vv["ret12_high_2023"], 0))
+    put("new_2022_pm", vv["new_2022_pm"], fmt_num(vv["new_2022_pm"], 1))
+    put("new_2324_pm", vv["new_2324_pm"], fmt_num(vv["new_2324_pm"], 1))
+    for k in ("plateau_slope", "plateau_lo", "plateau_hi"):
+        put(k, vv[k], fmt_r(vv[k], 2))
     now = datetime.now()
     put("generated", now.strftime("%Y-%m-%d %H:%M"), f"{now.day} {MESES[now.month - 1]} {now.year}, {now:%H:%M}")
     return F, R
@@ -1718,6 +1892,56 @@ def check_claims(ctx: dict, R: dict) -> list[dict]:
         ("C-DAT-05", "offgrid_rise", "Datos", H,
          "La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2.",
          R["offgrid_2024s2"] > R["offgrid_2022s2"], ["offgrid_2022s2", "offgrid_2024s2"]),
+        # verificación analítica (sep-2026): definiciones en verification_views(), sensibilidad en docs/evidence_pack.py
+        ("C-ADQ-07", "growth_below_2022_median", "Adquisición", H,
+         "El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana "
+         "de 2022; por encima de esa mediana, las altas por mes no aumentaron.",
+         R["adq_below_share_increase"] >= 0.9 and R["adq_above_2024"] <= R["adq_above_2022"],
+         ["adq_rr_median_2022", "adq_above_2022", "adq_above_2023", "adq_above_2024", "adq_below_2022", "adq_below_2023",
+          "adq_below_2024", "adq_below_share_increase"]),
+        ("C-RES-08", "growth_from_new_customers", "Resultado", H,
+         "Todo el aumento del monto pagado entre ene-22 y oct-24 proviene de clientes que empezaron a pagar después de "
+         "ene-22; los clientes activos en ene-22 terminan con menos monto que al inicio.",
+         R["ga_new_end"] > R["ga_total_end"] - R["ga_total_start"] and R["ga_base_end"] < R["ga_total_start"],
+         ["ga_total_start", "ga_total_end", "ga_base_end", "ga_new_end", "ga_base_survivors", "ga_base_survivor_ratio"]),
+        ("C-DAT-06", "one_month_round_trips", "Datos", H,
+         "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte "
+         "exactamente al nivel previo al mes siguiente.",
+         R["rt_share"] > 0.20, ["rt_gross", "rt_share"]),
+        ("C-RET-03", "durable_churn_flat", "Retención", H,
+         "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres "
+         "meses cambió menos de 0,3 puntos.",
+         R["churn_obs_2022"] - R["churn_obs_2024"] > 0.01 and abs(R["churn_dur3_2024"] - R["churn_dur3_2022"]) < 0.003,
+         ["churn_obs_2022", "churn_obs_2023", "churn_obs_2024", "churn_dur3_2022", "churn_dur3_2023", "churn_dur3_2024"]),
+        ("C-DAT-07", "retroactive_adjustments", "Datos", H,
+         "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un "
+         "porcentaje y al mes siguiente queda en ese porcentaje.",
+         R["retro_customers"] > 200,
+         ["retro_events", "retro_customers", "retro_exp_share_2023", "retro_exp_share_2024", "retro_net_2023", "retro_net_2024"]),
+        ("C-DAT-08", "catchup_returns", "Datos", H,
+         "Más de 25% de los retornos después de meses sin pago liquidan exactamente los meses pendientes (±1%).",
+         R["catchup_share"] > 0.25, ["catchup_returns", "catchup_n", "catchup_share"]),
+        ("C-DAT-09", "jun22_event", "Datos", H,
+         "En jun-22 los churns observados fueron más del doble de la mediana mensual y más de 70% volvió a pagar al mes siguiente.",
+         R["jun22_churn"] > 2 * R["churn_month_median"] and R["jun22_back_next"] > 0.70,
+         ["jun22_churn", "churn_month_median", "jun22_back_next"]),
+        ("C-ADQ-08", "value_lags_count", "Adquisición", H,
+         "El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones "
+         "probadas, y entre 2023 y 2024 cambió menos de 10% en todas.",
+         all(R[f"val_{k}_22_24"] < R["cnt_22_24"] for k in ("rr", "usual", "m1to3"))
+         and all(abs(R[f"val_{k}_23_24"]) < 0.10 for k in ("rr", "usual", "m1to3")),
+         ["cnt_22_24", "val_rr_22_24", "val_usual_22_24", "val_m1to3_22_24", "cnt_23_24", "val_rr_23_24",
+          "val_usual_23_24", "val_m1to3_23_24"]),
+        ("C-RET-04", "low_ticket_retention_m12", "Retención", D,
+         "En las cohortes de 2023, la retención de logos al M12 de las altas bajo la mediana de 2022 está a menos de "
+         "5 puntos de la de las altas por encima.",
+         abs(R["ret12_low_2023"] - R["ret12_high_2023"]) < 0.05,
+         ["ret12_low_2023", "ret12_high_2023", "ret12_n_low", "ret12_n_high"]),
+        ("C-ADQ-09", "acquisition_plateau", "Adquisición", D,
+         "Las altas por mes se duplicaron con un escalón a inicios de 2023 y desde ene-23 no muestran una tendencia "
+         "distinguible de cero.",
+         R["new_2324_pm"] > 1.8 * R["new_2022_pm"] and R["plateau_lo"] < 0 < R["plateau_hi"],
+         ["new_2022_pm", "new_2324_pm", "plateau_slope", "plateau_lo", "plateau_hi"]),
     ]
     out = [{"id": cid, "key": key, "dominio": dom, "estado": est, "claim": text, "verified": bool(ok), "evidence": evid}
            for cid, key, dom, est, text, ok, evid in claims]

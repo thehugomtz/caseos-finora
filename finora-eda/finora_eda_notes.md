@@ -3,7 +3,7 @@
 > **Entender primero. Explicar después. Decidir al final.**
 > Este documento describe qué contienen los datos y cómo se comportan. No diagnostica los problemas del CRO ni del CFO.
 
-Generado el 27 sep 2026, 15:38 por `finora_eda.py`. Cada cifra se recalcula desde los archivos crudos; ninguna se escribe a mano.
+Generado el 28 sep 2026, 12:49 por `finora_eda.py`. Cada cifra se recalcula desde los archivos crudos; ninguna se escribe a mano.
 
 ---
 
@@ -381,6 +381,16 @@ Cada título con conclusión del workspace está respaldado por una de estas ver
 | `C-DAT-03` | Datos | Hecho observado | Más de 25% del MRR de expansión se revierte al mes siguiente. | ✅ verificado |
 | `C-DAT-04` | Datos | Hecho observado | Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y el último semestre. | ✅ verificado |
 | `C-DAT-05` | Datos | Hecho observado | La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2. | ✅ verificado |
+| `C-ADQ-07` | Adquisición | Hecho observado | El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana de 2022; por encima de esa mediana, las altas por mes no aumentaron. | ✅ verificado |
+| `C-RES-08` | Resultado | Hecho observado | Todo el aumento del monto pagado entre ene-22 y oct-24 proviene de clientes que empezaron a pagar después de ene-22; los clientes activos en ene-22 terminan con menos monto que al inicio. | ✅ verificado |
+| `C-DAT-06` | Datos | Hecho observado | Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente. | ✅ verificado |
+| `C-RET-03` | Retención | Hecho observado | El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos. | ✅ verificado |
+| `C-DAT-07` | Datos | Hecho observado | Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje. | ✅ verificado |
+| `C-DAT-08` | Datos | Hecho observado | Más de 25% de los retornos después de meses sin pago liquidan exactamente los meses pendientes (±1%). | ✅ verificado |
+| `C-DAT-09` | Datos | Hecho observado | En jun-22 los churns observados fueron más del doble de la mediana mensual y más de 70% volvió a pagar al mes siguiente. | ✅ verificado |
+| `C-ADQ-08` | Adquisición | Hecho observado | El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones probadas, y entre 2023 y 2024 cambió menos de 10% en todas. | ✅ verificado |
+| `C-RET-04` | Retención | Direccional | En las cohortes de 2023, la retención de logos al M12 de las altas bajo la mediana de 2022 está a menos de 5 puntos de la de las altas por encima. | ✅ verificado |
+| `C-ADQ-09` | Adquisición | Direccional | Las altas por mes se duplicaron con un escalón a inicios de 2023 y desde ene-23 no muestran una tendencia distinguible de cero. | ✅ verificado |
 
 ---
 
