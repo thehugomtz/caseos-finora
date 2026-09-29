@@ -184,6 +184,15 @@ def _auto_visuals(inv: Investigation) -> int:
     for v in inv.visuals.values():
         c = inv.claims.get(v["claim_id"]) or {}
         old = v.get("spec") or {}
+        if v.get("intencion") == "dispersion" and v.get("ejes"):
+            ev = inv.registry.get(v.get("evidence_id") or "")
+            try:   # ejes explícitos (del agente o de una redibujada): se reconstruye con la gramática vigente
+                v["spec"] = visuals.build(ev, "dispersion", v["ejes"]) if ev is not None else old
+            except visuals.VisualError:
+                pass
+            continue
+        if v.get("principal"):
+            continue   # la gráfica que pidió el usuario se muestra tal como la pidió el agente: no se reduce
         if old.get("tipo") in ("linea", "barras") and not v.get("auto") and c.get("aceptada") and v.get("forma_pedida") != "tabla":
             # la afirmación compara varias métricas y la gráfica pedida muestra solo una: se muestran todas
             new = visuals.claim_visual(c, inv.registry)

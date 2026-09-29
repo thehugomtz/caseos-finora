@@ -693,7 +693,11 @@ function scatter(el, o) {
   const Hh = o.height || 320;
   const pts = o.points.filter(p => ok(p.x) && ok(p.y));
   const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
-  const padX = (Math.max(...xs) - Math.min(...xs)) * 0.06 || 1, padY = (Math.max(...ys) - Math.min(...ys)) * 0.08 || 1;
+  const bub = !!o.bubbles && pts.some(p => ok(p.size));
+  const smax = bub ? Math.max(...pts.map(p => (ok(p.size) ? p.size : 0))) || 1 : 1;
+  const rad = p => (bub ? 7 + Math.sqrt(Math.max(0, p.size || 0) / smax) * 21 : 5.2);   // área proporcional al tamaño
+  const spanX = Math.max(...xs) - Math.min(...xs), spanY = Math.max(...ys) - Math.min(...ys);
+  const padX = spanX * (bub ? 0.16 : 0.06) || Math.abs(xs[0] || 1) * 0.1 || 1, padY = spanY * (bub ? 0.22 : 0.08) || Math.abs(ys[0] || 1) * 0.1 || 1;
   const xt = niceTicks(Math.min(...xs) - padX, Math.max(...xs) + padX, 5);
   const yt = niceTicks(Math.min(...ys) - padY, Math.max(...ys) + padY, 5);
   const xa = axisFmt(o.xKind || "num", xt), ya = axisFmt(o.yKind || "num", yt);
@@ -707,7 +711,7 @@ function scatter(el, o) {
   xt.forEach(t => { S("line", { x1: X(t), x2: X(t), y1: mt, y2: mt + ph, class: t === 0 ? "fv-base" : "fv-grid" }, svg); T(svg, X(t), mt + ph + 16, xa.f(t), "fv-tick", "middle"); });
   if (o.xTitle) T(svg, ml + pw / 2, Hh - 6, o.xTitle + (xa.unit ? " · " + xa.unit : ""), "fv-axis-title", "middle");
   if (o.yTitle) T(svg, 0, 11, o.yTitle + (ya.unit ? " · " + ya.unit : ""), "fv-axis-title", "start");
-  if (pts.length >= 3) {
+  if (pts.length >= 3 && !bub && o.trend !== false) {
     const mx = xs.reduce((a, b) => a + b, 0) / xs.length, my = ys.reduce((a, b) => a + b, 0) / ys.length;
     let sxy = 0, sxx = 0;
     pts.forEach(p => { sxy += (p.x - mx) * (p.y - my); sxx += (p.x - mx) * (p.x - mx); });
@@ -715,35 +719,40 @@ function scatter(el, o) {
     const x0 = Math.min(...xs), x1 = Math.max(...xs);
     S("path", { d: "M" + X(x0) + "," + Y(a + b * x0) + " L" + X(x1) + "," + Y(a + b * x1), class: "fv-trend" }, svg);
   }
-  pts.forEach(p => S("circle", { cx: X(p.x), cy: Y(p.y), r: 5.2, fill: p.color || o.color || C.s1, "fill-opacity": 0.82, stroke: C.surface, "stroke-width": 2 }, svg));
+  pts.map((p, i) => i).sort((a, b) => rad(pts[b]) - rad(pts[a])).forEach(i => {   // las grandes atrás
+    const p = pts[i];
+    S("circle", { cx: X(p.x), cy: Y(p.y), r: rad(p), fill: p.color || o.color || C.s1, "fill-opacity": bub ? 0.55 : 0.82, stroke: C.surface, "stroke-width": 2 }, svg);
+  });
+  if (o.labels) pts.forEach(p => T(svg, X(p.x), Y(p.y) - rad(p) - 5, p.label, "fv-lab", "middle"));
   const ring = S("circle", { r: 9, fill: "none", stroke: C.ink, "stroke-width": 1.4, visibility: "hidden" }, svg);
   let cur = -1;
   function show(i, evt) {
     cur = i;
     const p = pts[i];
-    ring.setAttribute("cx", X(p.x)); ring.setAttribute("cy", Y(p.y)); ring.setAttribute("visibility", "visible");
+    ring.setAttribute("cx", X(p.x)); ring.setAttribute("cy", Y(p.y)); ring.setAttribute("r", rad(p) + 3.5); ring.setAttribute("visibility", "visible");
     let cx, cy;
     if (evt) { cx = evt.clientX; cy = evt.clientY; } else { const r = svg.getBoundingClientRect(); cx = r.left + X(p.x); cy = r.top + Y(p.y); }
     tipShow(cx, cy, p.label, [
       { color: o.color || C.s1, kind: "dot", label: o.xName || "x", value: (o.xFmt || f.num)(p.x) },
       { kind: "none", label: o.yName || "y", value: (o.yFmt || f.num)(p.y) },
-    ], p.note || null);
+    ].concat(bub ? [{ kind: "none", label: o.sizeName || "tamaño", value: (o.sizeFmt || f.num)(p.size) }] : []), p.note || null);
   }
   function hide() { cur = -1; ring.setAttribute("visibility", "hidden"); tipHide(); }
   const hit = S("rect", { x: ml, y: mt, width: pw, height: ph, fill: "transparent" }, svg);
   const move = e => {
     const r = svg.getBoundingClientRect();
     const px = e.clientX - r.left, py = e.clientY - r.top;
-    let best = -1, bd = 32 * 32;
-    pts.forEach((p, i) => { const d = (X(p.x) - px) ** 2 + (Y(p.y) - py) ** 2; if (d < bd) { bd = d; best = i; } });
+    let best = -1, bd = Infinity;
+    pts.forEach((p, i) => { const d = (X(p.x) - px) ** 2 + (Y(p.y) - py) ** 2; if (d < Math.max(32, rad(p) + 6) ** 2 && d < bd) { bd = d; best = i; } });
     if (best >= 0) show(best, e); else hide();
   };
   hit.addEventListener("pointermove", move);
   hit.addEventListener("pointerdown", move);
   hit.addEventListener("pointerleave", hide);
   keyboard(svg, pts.length, show, hide, () => cur);
-  return { table: { cols: [{ key: "l", label: "Mes del resultado" }, { key: "x", label: o.xName || "x", num: true }, { key: "y", label: o.yName || "y", num: true }],
-    rows: pts.map(p => ({ l: p.label, x: (o.xFmt || f.num)(p.x), y: (o.yFmt || f.num)(p.y) })) } };
+  return { table: { cols: [{ key: "l", label: o.labelName || "Mes del resultado" }, { key: "x", label: o.xName || "x", num: true }, { key: "y", label: o.yName || "y", num: true }]
+    .concat(bub ? [{ key: "s", label: o.sizeName || "tamaño", num: true }] : []),
+    rows: pts.map(p => ({ l: p.label, x: (o.xFmt || f.num)(p.x), y: (o.yFmt || f.num)(p.y), s: bub ? (o.sizeFmt || f.num)(p.size) : "" })) } };
 }
 
 /* ------------------------------------------------------------------ MAPA DE CALOR */
@@ -1989,10 +1998,10 @@ const HYP_TAG = { "Soportada": ["hecho", "✓"], "No soportada": ["noeval", "✕
                   "Pendiente": ["explo", "?"], "No evaluada por presupuesto": ["explo", "…"] };
 const hypTag = (e, meta) => { const d = HYP_TAG[e] || ["met", "i"]; const t = tagRaw(d[0], d[1], e); if (meta) t.classList.add("meta"); return t; };
 const metaTag = label => { const t = tagEl(label); t.classList.add("meta"); return t; };
-const VFMT = { int: f.int, cop: f.cop, cop2: f.cop2, pct: v => f.pct(v), pct0: v => f.pct(v, 0), pct_signed: v => f.pctSigned(v),
+const VFMT = { int: f.int, cop: f.cop, cop2: f.cop2, pct: v => f.pct(v), pct0: v => f.pct(v, 0), pct2: v => f.pct(v, 2), pct_signed: v => f.pctSigned(v),
                num1: v => f.num(v, 1), num2: v => f.num(v, 2), x: f.x, idx: f.idx, u: f.u2 };
 const vfmt = (v, k) => (v === null || v === undefined ? "–" : typeof v === "string" ? v : (VFMT[k] || (x => f.num(x, 2)))(v));
-const VKIND = { cop: "cop", cop2: "cop", pct: "pct", pct0: "pct", pct_signed: "pct", int: "int", idx: "idx", num1: "num", num2: "num", u: "u" };
+const VKIND = { cop: "cop", cop2: "cop", pct: "pct", pct0: "pct", pct2: "pct", pct_signed: "pct", int: "int", idx: "idx", num1: "num", num2: "num", u: "u" };
 const PAL = [C.s1, C.s2, C.s3, C.s4, C.s5, C.s6, C.s7, C.s8];
 const STEPS = [["encuadre", "Entendiendo la pregunta"], ["hipotesis", "Planteando hipótesis"], ["evidencia", "Buscando evidencia"],
                ["validacion", "Evaluando hipótesis"], ["composicion", "Generando respuesta"], ["publicada", "Respuesta lista"]];
@@ -2528,6 +2537,15 @@ function renderVisual(el, spec) {
     });
     return {};
   }
+  if (spec.tipo === "dispersion") {
+    const ex = spec.ejes || {}, fx = v => vfmt(v, ex.x.formato), fy = v => vfmt(v, ex.y.formato);
+    const fs = ex.tamano ? v => vfmt(v, ex.tamano.formato) : null;
+    if (lg) { lg.replaceChildren(); if (ex.tamano) H("span", "muted", lg, "Tamaño de la burbuja: " + ex.tamano.nombre); }
+    return scatter(el, { points: spec.puntos.map(p => ({ x: p.x, y: p.y, size: p.tam, label: p.etiqueta })), bubbles: !!ex.tamano, labels: true, trend: false,
+      xFmt: fx, yFmt: fy, sizeFmt: fs, xKind: VKIND[ex.x.formato] || "num", yKind: VKIND[ex.y.formato] || "num",
+      xName: ex.x.nombre, yName: ex.y.nombre, sizeName: ex.tamano && ex.tamano.nombre, xTitle: ex.x.nombre, yTitle: ex.y.nombre,
+      labelName: spec.etiqueta || "Punto", color: C.s1, height: 360 });
+  }
   if (spec.tipo === "kpi") { el.replaceChildren(); const d = H("div", "stat", el); H("div", "k", d, spec.etiqueta); H("div", "v", d, fmt(spec.valor)); return {}; }
   if (spec.tipo === "tabla") { el.replaceChildren(); evTable(el, spec.columnas, spec.filas, 40); return {}; }
   el.textContent = "Visualización no disponible.";
@@ -2605,10 +2623,17 @@ function openInvestigation(doc, opts) {
   renderInvestigation(b, doc, opts);
   $("invBack").focus();
 }
+function recompositionNote(b, doc) {
+  // si las gráficas se rehicieron después de la corrida (sin modelo), se dice arriba y con sus límites
+  const rec = (doc.events || []).filter(e => e.tipo === "recomposicion" && e.data && e.data.nota).pop();
+  if (rec) rich(H("div", "ans-banner", b), rec.data.nota);
+}
 function pickMainVisual(doc) {
   const N = doc.narrativa || {}, vis = doc.visuals || {};
   const exec = new Set((N.respuesta_ejecutiva || {}).claim_ids || []);
   const all = Object.values(vis).filter(v => v && v.spec && v.spec.tipo !== "datos");
+  const asked = all.find(v => v.principal);
+  if (asked) return asked;
   const inOrder = (N.hallazgos || []).map(h => (h.visual_ids || []).map(id => vis[id])).flat().filter(v => v && v.spec && v.spec.tipo !== "datos");
   return all.find(v => exec.has(v.claim_id)) || inOrder[0] || all[0] || null;
 }
@@ -2624,6 +2649,7 @@ function renderInvestigation(b, doc, opts) {
   }
   H("h1", "ans-q", b, doc.pregunta);
   if (doc.error) H("div", "ans-banner", b, "La investigación terminó con error: " + doc.error);
+  recompositionNote(b, doc);
   if (N) {
     const main = H("div", "ans-main", b);
     H("div", "answer-k", main, "Respuesta ejecutiva");
@@ -3068,6 +3094,7 @@ async function openCaseQuestion(qid) {
 function caseMainVisual(doc, rc) {
   // la gráfica de la respuesta: la de su primera afirmación (en el orden de la respuesta) que tenga una forma
   const vis = Object.values(doc.visuals || {}).filter(v => v && v.spec && !["datos", "tabla"].includes(v.spec.tipo));
+  if (vis.find(v => v.principal)) return vis.find(v => v.principal);
   const order = (rc.respuesta.claim_ids || []).concat(rc.hechos_observados || []);
   for (const cid of order) { const v = vis.find(x => x.claim_id === cid); if (v) return v; }
   return null;
@@ -3096,6 +3123,7 @@ function renderCaseAnswer(b, q, rc, doc) {
   H("b", null, hl, "Hipótesis del caso: ");
   hl.append(q.hipotesis.map(h => h.id).join(" · ") + " · capacidad " + q.capacidad + " de 3 (" + CAPLAB[q.capacidad_nivel].toLowerCase() + ")");
   if (doc && doc.error) H("div", "ans-banner", b, "La investigación terminó con error: " + doc.error);
+  if (doc) recompositionNote(b, doc);
   if (!rc) {
     H("p", "muted", b, "Esta corrida no alcanzó a componer la respuesta.");
     if (doc) caseDetails(b, doc);

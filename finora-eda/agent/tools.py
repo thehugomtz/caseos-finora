@@ -446,10 +446,18 @@ def make_server(inv: Investigation, con):
     @tool("propose_visual", "Pide la visualización de una afirmación aceptada. La forma la decide la gramática visual "
           "según la intención: " + "; ".join(f"{k} = {v}" for k, v in visuals.INTENTS.items()) + ". El título es el "
           "texto validado de la afirmación. La evidencia canónica (EC-…) usa la gráfica propia de su hallazgo de la "
-          "Fase 1 o la de su tarjeta; las afirmaciones sin gráfica pedida reciben la de su idea al cerrar.",
+          "Fase 1 o la de su tarjeta; las afirmaciones sin gráfica pedida reciben la de su idea al cerrar. Para "
+          "'dispersion' usa una evidencia con una fila por punto (p. ej. una por industria) y di en 'ejes' qué columna va "
+          "en x, en y, en el tamaño de la burbuja (opcional) y cuál es la etiqueta; puedes dar nombres legibles "
+          "(nombre_x, nombre_y, nombre_tamano). Si el usuario pidió una gráfica concreta, márcala con principal=true.",
           {"type": "object", "properties": {"claim_id": {"type": "string"},
                                             "intencion": {"type": "string", "enum": list(visuals.INTENTS)},
-                                            "evidence_id": {"type": "string"}},
+                                            "evidence_id": {"type": "string"},
+                                            "ejes": {"type": "object", "additionalProperties": False, "properties": {
+                                                "x": {"type": "string"}, "y": {"type": "string"}, "tamano": {"type": "string"},
+                                                "etiqueta": {"type": "string"}, "nombre_x": {"type": "string"},
+                                                "nombre_y": {"type": "string"}, "nombre_tamano": {"type": "string"}}},
+                                            "principal": {"type": "boolean"}},
            "required": ["claim_id", "intencion", "evidence_id"], "additionalProperties": False}, annotations=RW)
     async def propose_visual(args):
         entry = start("propose_visual", args)
@@ -460,12 +468,13 @@ def make_server(inv: Investigation, con):
             return fail(entry, f"{args['evidence_id']} no es evidencia de {args['claim_id']}. Usa una de {c['apoyo'] + c['en_contra']}.")
         ev = inv.registry.get(args["evidence_id"])
         try:
-            spec = visuals.build(ev, args["intencion"])
+            spec = visuals.build(ev, args["intencion"], args.get("ejes"))
         except visuals.VisualError as e:
             return fail(entry, str(e))
-        vid = f"V-{len(inv.visuals) + 1:02d}"
+        vid = f"V-{max([int(k[2:]) for k in inv.visuals if k[2:].isdigit()] + [0]) + 1:02d}"
         inv.visuals[vid] = {"id": vid, "claim_id": c["id"], "evidence_id": ev.id, "intencion": args["intencion"],
-                            "titulo": c["texto"], "spec": spec}
+                            "titulo": c["texto"], "spec": spec, **({"ejes": args["ejes"]} if args.get("ejes") else {}),
+                            **({"principal": True} if args.get("principal") else {})}
         inv.emit("visual", {"id": vid, "claim_id": c["id"], "tipo": spec["tipo"]})
         entry["ok"], entry["resumen"] = True, f"{vid} · {spec['tipo']}"
         return _ok(f"{vid} creada · forma {spec['tipo']} · título: {c['texto']}")

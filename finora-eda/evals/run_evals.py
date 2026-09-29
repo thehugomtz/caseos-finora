@@ -449,6 +449,40 @@ def visual_rules():
     errs = nar.validate_story({"titulo": "", "subtitulo": "", "pendientes": [], "laminas": [
         {"rol": "Hallazgo", "titulo": "x", "mensaje": "y", "puntos": [], "piezas": ["P-01"], "visual": "P-01/V-09", "notas": ""}]}, pieces)
     check("Gráficas · la lámina solo puede usar una gráfica de una pieza que cita", any("gráfica" in m for m in errs), str(errs))
+    seg = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional",
+                           result={"columnas": [{"id": "industry", "nombre": "industry", "formato": "texto"}, {"id": "ticket_cop", "nombre": "t", "formato": "num2"},
+                                                {"id": "churn_pct", "nombre": "c", "formato": "num2"}, {"id": "clientes", "nombre": "n", "formato": "int"}],
+                                   "filas": [{"industry": "Retail", "ticket_cop": 26250.0, "churn_pct": 2.14, "clientes": 360},
+                                             {"industry": "Salud", "ticket_cop": 52500.0, "churn_pct": 2.02, "clientes": 124},
+                                             {"industry": "Producción", "ticket_cop": 39900.0, "churn_pct": 1.74, "clientes": 389}],
+                                   "valores": {"ticket_cop[Retail]": 26250.0, "churn_pct[Retail]": 2.14, "ticket_cop[Salud]": 52500.0,
+                                               "churn_pct[Salud]": 2.02, "ticket_cop[Producción]": 39900.0, "churn_pct[Producción]": 1.74},
+                                   "formatos": {"ticket_cop[Retail]": "cop", "churn_pct[Retail]": "num2", "ticket_cop[Salud]": "cop",
+                                                "churn_pct[Salud]": "num2", "ticket_cop[Producción]": "cop", "churn_pct[Producción]": "num2"}})
+    sp = visuals.build(seg, "dispersion", {"x": "ticket_cop", "y": "churn_pct", "tamano": "clientes", "etiqueta": "industry"})
+    check("Gráficas · la dispersión pone una burbuja por fila, con el churn en puntos pasado a % y el ticket en COP",
+          sp["tipo"] == "dispersion" and len(sp["puntos"]) == 3 and sp["ejes"]["y"]["formato"] == "pct2" and sp["ejes"]["x"]["formato"] == "cop"
+          and abs(sp["puntos"][0]["y"] - 0.0214) < 1e-9 and sp["puntos"][0]["tam"] == 360, str(sp)[:300])
+    bad = []
+    for ejes in ({"x": "no_existe", "y": "churn_pct"}, {"x": "industry", "y": "churn_pct"}):
+        try:
+            visuals.build(seg, "dispersion", ejes)
+            bad.append(ejes)
+        except visuals.VisualError:
+            pass
+    check("Gráficas · la dispersión rechaza columnas que no existen o no son numéricas", not bad, str(bad))
+    auto = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b} {c} {d} {e} {f}", "variables": {
+        "a": f"{seg.id}.ticket_cop[Retail]|cop", "b": f"{seg.id}.churn_pct[Retail]", "c": f"{seg.id}.ticket_cop[Salud]|cop",
+        "d": f"{seg.id}.churn_pct[Salud]", "e": f"{seg.id}.ticket_cop[Producción]|cop", "f": f"{seg.id}.churn_pct[Producción]"}}, inv.registry)
+    check("Gráficas · una idea con dos medidas por segmento se dibuja como dispersión", auto and auto["tipo"] == "dispersion", str(auto)[:200])
+    from agent.orchestrator import _auto_visuals
+    inv.visuals = {"V-01": {"id": "V-01", "claim_id": "C-001", "evidence_id": seg.id, "intencion": "detalle", "titulo": "x",
+                            "spec": {"tipo": "tabla"}, "principal": True},
+                   "V-02": {"id": "V-02", "claim_id": "C-002", "evidence_id": seg.id, "intencion": "dispersion", "titulo": "y",
+                            "spec": {"tipo": "barras"}, "ejes": {"x": "ticket_cop", "y": "churn_pct"}}}
+    _auto_visuals(inv)
+    check("Gráficas · la gráfica que pidió el usuario no se reduce y la dispersión con ejes se reconstruye",
+          inv.visuals["V-01"]["spec"]["tipo"] == "tabla" and inv.visuals["V-02"]["spec"]["tipo"] == "dispersion", str({k: v["spec"]["tipo"] for k, v in inv.visuals.items()}))
     kept = nar._check_piece({"tipo": "respuesta_caso", "rol": "Hallazgo", "titulo": "t", "texto": "x",
                              "visuales": [{"id": "V-01", "claim": "c", "tipo": "spec", "spec": {"tipo": "barras"}}, {"id": "../x"}, "no"]})
     check("Gráficas · la pieza guarda sus gráficas por idea y descarta las mal formadas", [v["id"] for v in kept["visuales"]] == ["V-01"], str(kept["visuales"]))

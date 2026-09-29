@@ -17,6 +17,7 @@ INTENTS = {
     "intervalo": "Estimación con intervalo (puntos con rango)",
     "distribucion": "Distribución (barras por banda)",
     "cifra": "Una cifra (tarjeta KPI)",
+    "dispersion": "Relación entre dos medidas por segmento (dispersión; burbujas si hay una tercera medida de tamaño)",
     "detalle": "Detalle (tabla)",
 }
 
@@ -121,10 +122,12 @@ def _tabla(ev) -> dict:
     return {"tipo": "tabla", "columnas": r.get("columnas", []), "filas": r.get("filas", [])}
 
 
-def build(ev, intent: str) -> dict:
+def build(ev, intent: str, ejes: dict | None = None) -> dict:
     if intent not in INTENTS:
         raise VisualError(f"Intención '{intent}' inválida. Opciones: {list(INTENTS)}.")
     r, kind = ev.result, ev.kind
+    if intent == "dispersion":
+        return dispersion(ev, ejes)
     if kind == "canonical":   # la idea ya tiene su gráfica en la Fase 1; la tabla sigue en el linaje
         try:
             return canonical_visual([ev])
@@ -349,6 +352,20 @@ def claim_visual(c: dict, registry) -> dict | None:
             if len(vals) == 1:
                 series.append({"nombre": "Resto", "valores": [1 - vals[0]]})
             return {"tipo": "barras", "apiladas": True, "x": [""], "series": series, "formato": "pct"}
+    # 4b · dos o tres medidas distintas sobre los mismos segmentos (tres o más) de una evidencia → dispersión
+    cells = {}
+    for b in num:
+        col, row = _label(b["key"])
+        if row and not PERIOD.match(row):
+            cells.setdefault(b["ev"].id, {}).setdefault(b["key"].split("[", 1)[0], {})[b["key"].split("[", 1)[1].rstrip("]")] = b
+    for eid, bycol in cells.items():
+        names = list(bycol)
+        common = set.intersection(*(set(bycol[c]) for c in names)) if names else set()
+        if 2 <= len(names) <= 3 and len(common) >= 3 and len({bycol[c][next(iter(common))]["fmt"] for c in names}) >= 2:
+            try:
+                return dispersion(registry.get(eid), dict(zip(("x", "y", "tamano"), names)))
+            except VisualError:
+                pass
     # 5 · cifras del mismo tipo de una misma evidencia
     groups = {}
     for b in num:
@@ -376,3 +393,71 @@ def claim_visual(c: dict, registry) -> dict | None:
         return None
     return {"tipo": "barras", "x": [cl + (f" · {r}" if r else "") for cl, r in labels], "formato": fmt,
             "series": [{"nombre": "", "valores": [b["value"] for b in best]}]}
+
+
+
+# ---------------------------------------------------------------------------- dispersión (y burbujas)
+def _axis(col: str, vals: list[float], fmt: str | None) -> tuple[list[float], str]:
+    """Formato de un eje: puntos porcentuales (p. ej. churn_pct = 1,84) pasan a fracción para mostrarse como %."""
+    name = col.lower()
+    if re.search(r"pct|porc|share|tasa|rate", name) and vals and max(abs(v) for v in vals) <= 100 and max(abs(v) for v in vals) > 1:
+        return [v / 100 for v in vals], "pct2"
+    if re.search(r"pct|porc|share|tasa|rate", name) and vals and max(abs(v) for v in vals) <= 1:
+        return vals, "pct2"
+    if fmt in ("cop", "cop2", "pct", "pct0", "int", "x"):
+        return vals, fmt
+    if re.search(r"cop|mrr|ticket|monto|arpa", name):
+        return vals, "cop"
+    if all(float(v).is_integer() for v in vals):
+        return vals, "int"
+    return vals, fmt if fmt in ("num1", "num2") else "num2"
+
+
+def _axis_name(col: str) -> str:
+    """'churn_obs_2024_pct' → 'churn obs 2024' (sin la unidad, que ya muestra el eje)."""
+    words = [w for w in col.split("_") if w.lower() not in ("cop", "pct", "porc")]
+    return " ".join(words) or col
+
+
+def dispersion(ev, ejes: dict | None = None) -> dict:
+    """Una fila por punto (segmento): x e y numéricas, tamaño opcional (burbujas) y una etiqueta por punto.
+
+    Los ejes vienen de las columnas de una sola evidencia, así que cada punto es una fila registrada. Sin ejes
+    explícitos: la primera columna de texto es la etiqueta y las primeras numéricas son x, y y tamaño.
+    """
+    r = ev.result or {}
+    cols = r.get("columnas") or []
+    rows = r.get("filas") or []
+    ids = [c["id"] for c in cols]
+    numeric = [c for c in ids if rows and all(_is_num(f.get(c)) for f in rows)]
+    text = [c for c in ids if c not in numeric]
+    ejes = {k: v for k, v in dict(ejes or {}).items() if v}
+    ejes.setdefault("etiqueta", text[0] if text else None)
+    free = [c for c in numeric if c not in [ejes.get(k) for k in ("x", "y", "tamano")]]
+    for k in ("x", "y", "tamano"):
+        if not ejes.get(k) and free and (k != "tamano" or len(numeric) >= 3):
+            ejes[k] = free.pop(0)
+    for k in ("x", "y", "tamano", "etiqueta"):
+        if ejes.get(k) and ejes[k] not in ids:
+            raise VisualError(f"La columna '{ejes[k]}' ({k}) no existe en {ev.id}. Columnas: {ids}.")
+    if not ejes.get("x") or not ejes.get("y"):
+        raise VisualError(f"La dispersión necesita dos columnas numéricas en {ev.id} (una fila por punto). Arma una consulta con una fila "
+                          "por segmento y una columna por eje (run_sql).")
+    for k in ("x", "y", "tamano"):
+        if ejes.get(k) and ejes[k] not in numeric:
+            raise VisualError(f"La columna '{ejes[k]}' ({k}) no es numérica en todas las filas de {ev.id}.")
+    if len(rows) < 3:
+        raise VisualError("Una dispersión necesita al menos tres puntos.")
+    if ejes.get("tamano") and any(float(f[ejes["tamano"]]) < 0 for f in rows):
+        raise VisualError("El tamaño de la burbuja no puede ser negativo.")
+    fmts = {c.get("id"): c.get("formato") for c in cols}
+    axes, pts = {}, [{"etiqueta": str(f.get(ejes["etiqueta"])) if ejes.get("etiqueta") else str(i + 1)} for i, f in enumerate(rows)]
+    for k, key in (("x", "x"), ("y", "y"), ("tamano", "tam")):
+        col = ejes.get(k)
+        if not col:
+            continue
+        vals, fmt = _axis(col, [float(f[col]) for f in rows], fmts.get(col))
+        axes[k] = {"columna": col, "nombre": str(ejes.get(f"nombre_{k}") or _axis_name(col))[:80], "formato": fmt}
+        for p, val in zip(pts, vals):
+            p[key] = val
+    return {"tipo": "dispersion", "puntos": pts, "ejes": axes, "etiqueta": (ejes.get("etiqueta") or "punto").replace("_", " ")}

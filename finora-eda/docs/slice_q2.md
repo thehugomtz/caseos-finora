@@ -22,7 +22,7 @@ Otras formas:
 - `python -m agent recompose <archivo>` vuelve a componer la narrativa y usa el modelo. `python -m agent revisual <archivo>` solo reasigna las gráficas automáticas, sin modelo.
 - Cada corrida queda en `#investigacion/INV-…`; con el servidor, ese enlace la vuelve a abrir.
 - Sin servidor: `finora_eda.html` trae embebidas las respuestas verificadas y la investigación dorada. Ahí Enter lleva a la respuesta verificada más cercana, o dice con honestidad que la pregunta necesita el servidor.
-- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 90 en total).
+- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 94 en total).
 
 ## Respuesta primero (iteración de UX del 27-sep-2026)
 
@@ -140,6 +140,15 @@ La migración se hizo sin modelo:
 - Se volvieron a graficar W0, W1, la pregunta libre del 28-sep y la dorada Q2.
 - Se reconstruyeron las gráficas de las piezas de las dos narrativas y se reasignaron sus presentaciones sin cambiar el texto.
 - En "Exploración General", las láminas 2 a 10 muestran nueve gráficas distintas, cada una de su idea. La portada y la implicación quedan sin gráfica.
+
+### Dispersión con burbujas (28-sep-2026)
+
+Se pidió una pregunta libre con una dispersión por industria (ticket en X, churn en Y, clientes como tamaño) y la gráfica no salió. El agente calculó la tabla exacta (una fila por industria con los tres ejes), pero la gramática no tenía esa forma y `propose_visual` solo acepta formas del catálogo, así que la mostró como tabla y lo dejó escrito. Después, la regla de convertir tablas en la gráfica de su idea redujo esa tabla a barras de churn.
+
+- Nueva forma `dispersion`: una fila de una sola evidencia por punto. `propose_visual` recibe `ejes` (x, y, tamaño opcional, etiqueta y nombres legibles). El churn en puntos porcentuales se muestra como %, y el ticket en COP. Se dibuja con burbujas de área proporcional al tamaño, una etiqueta directa por punto y sin línea de tendencia.
+- `claim_visual` dibuja una dispersión cuando una afirmación liga dos o tres medidas distintas sobre tres o más segmentos.
+- `principal=true` marca la gráfica que pidió el usuario: es la principal de la vista y el código nunca la reduce. Una dispersión con ejes explícitos se reconstruye con la gramática vigente.
+- La corrida `INV-20260928-184103-bbe2` se redibujó sin modelo con la tabla que ya tenía (`E-009`). La vista avisa arriba que la gráfica se rehízo después y que el límite "la dispersión no forma parte de la gramática" quedó desactualizado.
 
 ## Qué hace cada pieza
 
