@@ -1,0 +1,261 @@
+id: R-005
+type: research
+research_question: ¿La industria concentra el cambio observado?
+case_question: ¿La industria concentra el cambio observado?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W4
+why_it_matters: Puede enfocar la historia y las preguntas de seguimiento. Se activa después de observar un cambio
+  material en W2 o W3.
+short_answer: 'La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria
+  no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y
+  oct-24 y el ticket de entrada promedio bajó en 6 industrias entre 2022 y 2024, con el efecto dentro de las industrias
+  explicando 97% del cambio del ticket. En 2024 el rango de churn observado entre extremos es estrecho.'
+headline: 'La industria no concentra el cambio: el patrón aparece difundido'
+answer_states:
+- Hecho observado
+- Evidencia fuerte
+findings:
+- F-020
+- F-011
+- F-052
+what_is_established:
+- El patrón coincide con la base activa y con las altas a la vez, lo que es consistente con un movimiento difundido
+  entre industrias más que con un subconjunto que lo concentre.
+- Como señal direccional, la lectura de concentración en una sola industria no se sostiene al cambiar la fecha base,
+  y en escala de pesos el aporte se reparte entre las 6 industrias con el mismo signo.
+- La retención observada no separa industrias en 2024, por lo que priorizar seguimiento por industria en salidas
+  aporta poco frente a otras segmentaciones.
+what_is_contested: []
+what_remains_unknown:
+- 'No podemos fijar la magnitud del aporte de Restaurantes: la participación de 52% depende de la base dic-22 y
+  cambia al mover la base a jun-22, donde la mayor pasa a Producción con 31%.'
+- Las cifras de monto se apoyan en un campo que se comporta como monto cobrado y no como MRR contractual, y el ticket
+  de entrada de 2022 incluye pagos iniciales grandes.
+- 'La cobertura del corte quedó sin verificación de estado suficiente: la ausencia de categoría sin industria y
+  la amplitud de las bases por industria se mantienen como señal direccional.'
+- El churn observado incluye pausas y atrasos, y no hay atribución por canal, etapas de funnel, precios, descuentos
+  ni motivos de churn; la industria de quienes pagan tampoco informa el mix de la demanda ni sirve para leer leads
+  o conversión.
+cannot_claim:
+- 'Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto
+  de canal o ruta.'
+- Un segmento fabricado por clustering cuando no hay concentración clara.
+alternative_explanations: []
+case_implication: El patrón coincide con la base activa y con las altas a la vez, lo que es consistente con un movimiento
+  difundido entre industrias más que con un subconjunto que lo concentre.
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-019
+  alias: HO2
+  question: ¿El cambio observado se concentra en un subconjunto de industrias con base suficiente?
+  state: No soportada
+  effect: debilitada
+  reading: 'La concentración en un subconjunto de industrias no se sostiene: cambia con la fecha base y el aporte
+    en pesos se reparte entre las 6 industrias.'
+- id: null
+  alias: rival
+  question: ¿El cambio está difundido en todas las industrias, de modo que la industria no es el eje que lo concentra?
+  state: Soportada
+  effect: fortalecida
+  reading: 'El cambio aparece difundido: el MRR por cliente activo bajó en 6 industrias y el ticket de entrada promedio
+    bajó en 6 industrias.'
+- id: null
+  alias: rival
+  question: ¿El patrón se explica por cobertura del corte por industria (categoría sin industria, bases pequeñas
+    o pérdida de total al desagregar)?
+  state: No evaluada por presupuesto
+  effect: sin evaluar
+  reading: La cobertura del corte por industria quedó sin evaluar, con señal direccional de que no hay clientes
+    activos sin industria en oct-24 y de bases amplias.
+- id: H-019
+  alias: HO2
+  question: ¿La concentración por industria aparece en la adquisición (altas y ticket de entrada)?
+  state: No soportada
+  effect: debilitada
+  reading: En las altas, el descenso del ticket de entrada ocurre dentro de las industrias y no en el mix entre
+    ellas, aunque el volumen de MRR nuevo se reparte de forma desigual.
+- id: H-019
+  alias: HO2
+  question: ¿La concentración por industria aparece en la monetización de la base (MRR por cliente activo por industria)?
+  state: No soportada
+  effect: debilitada
+  reading: La monetización de la base baja en 6 industrias, con magnitudes dispersas que van de −14% a −47%.
+- id: H-019
+  alias: HO2
+  question: ¿La concentración por industria aparece en la retención (churn observado por industria)?
+  state: No soportada
+  effect: debilitada
+  reading: 'La retención no distingue industrias: en 2024 el rango entre extremos es estrecho y el churn observado
+    se homogeneizó.'
+- id: null
+  alias: ''
+  question: ¿Se puede atribuir el cambio a una causa industrial, a un canal o a una fase del recorrido a partir
+    de este corte?
+  state: No evaluable
+  effect: no evaluable
+  reading: Este corte no permite identificar un mecanismo industrial ni una fase del recorrido, por falta de atribución,
+    funnel, precios, descuentos y motivos de churn.
+affected_claims: []
+suggested_action: El descenso aparece tanto en la base activa como en el ticket de entrada dentro de las industrias,
+  así que conviene mirar la economía posterior de las altas antes que abrir otro corte transversal.
+next_question: W5
+new_questions:
+- ¿El pico del monto pagado de Restaurantes en dic-22 corresponde a cobros retroactivos o a pagos de varios meses,
+  y cómo cambia la lectura al usar el monto usual por cliente-mes?
+- ¿La caída del MRR por cliente activo dentro de cada industria aparece en las cosechas de alta recientes, en los
+  clientes que ya estaban, o en ambos?
+- ¿Alguna segmentación alternativa, como tamaño de cuenta o banda de ticket, agrupa mejor la caída que la industria?
+- ¿Cómo se comporta la contribución por industria medida en trimestres consecutivos en lugar de fechas base puntuales?
+handoff_to_cos:
+  summary: 'La industria no concentra el cambio: el patrón aparece difundido'
+  recommended_next: ¿Cambió la economía posterior de los nuevos pagadores?
+visuals:
+- id: V-01
+  title: 'La magnitud de la caída del MRR por cliente activo entre dic-22 y oct-24 es dispersa entre industrias:
+    va de −14% en Salud y −16% en Tecnología a −47% en Servicios profesionales y −46% en Restaurantes.'
+  spec:
+    tipo: barras
+    x:
+    - Salud
+    - Tecnología
+    - Servicios profesionales
+    - Restaurantes
+    formato: num2
+    series:
+    - nombre: arpa var pct
+      valores:
+      - -0.1441
+      - -0.1554
+      - -0.4659
+      - -0.4558
+  claim: C-008
+- id: V-02
+  title: Entre dic-22 y oct-24 el MRR por cliente activo pasó de COP 89,5 mil a COP 57,8 mil, y al repartir ese
+    cambio entre industrias el efecto dentro de cada industria explica 95% y el mix entre industrias explica 5%.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ''
+    series:
+    - nombre: dentro total
+      valores:
+      - 0.9479
+    - nombre: mix total
+      valores:
+      - 0.0521
+    formato: pct
+  claim: C-001
+- id: V-03
+  title: 'La concentración en una sola industria no resiste el cambio de fecha base: con base dic-22 la mayor participación
+    en el cambio del MRR por cliente activo es Restaurantes con 52%, y con base jun-22 la mayor pasa a Producción
+    con 31%, mientras Restaurantes queda en 19%.'
+  spec:
+    tipo: barras
+    x:
+    - jun22pag_Producción
+    - jun22pag_Restaurantes
+    formato: pct0
+    series:
+    - nombre: contrib arpa
+      valores:
+      - 0.3068
+      - 0.1863
+  claim: C-005
+- id: V-05
+  title: 'En 2024 la industria con menor churn observado mensual, Producción, registra 1,7% y la de mayor, Tecnología,
+    2,2%: el rango entre extremos es estrecho y ninguna industria destaca por salidas.'
+  spec:
+    tipo: barras
+    x:
+    - '2024'
+    series:
+    - nombre: Churn mensual de logos
+      valores:
+      - 0.017373380447585393
+    - nombre: Churn mensual de logos
+      valores:
+      - 0.02161547212741752
+    formato: pct
+  claim: C-023
+- id: V-06
+  title: Con base dic-22, Restaurantes concentra 52% del cambio del MRR por cliente activo hasta oct-24, sobre una
+    base de 196 clientes activos en dic-22 y 459 en oct-24.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ''
+    series:
+    - nombre: contrib arpa
+      valores:
+      - 0.523
+    - nombre: Resto
+      valores:
+      - 0.477
+    formato: pct
+  claim: C-002
+- id: V-07
+  title: 'El corte por industria conserva el total: hay 6 categorías de industria y 0 clientes activos sin industria
+    en oct-24.'
+  spec:
+    tipo: barras
+    x:
+    - Restaurantes
+    formato: int
+    series:
+    - nombre: categorias industria
+      valores:
+      - 6.0
+    - nombre: activos sin industria oct24
+      valores:
+      - 0.0
+  claim: C-004
+- id: V-08
+  title: Con base jun-22, ninguna industria supera 31% de participación en el cambio del MRR por cliente activo
+    hasta oct-24, y al medirlo con el monto usual por cliente-mes el máximo queda en 29%.
+  spec:
+    tipo: barras
+    x:
+    - jun22pag_Producción
+    - jun22usu_Producción
+    formato: pct0
+    series:
+    - nombre: max industria
+      valores:
+      - 0.3068
+      - 0.2944
+  claim: C-006
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-173716-b824
+  path: investigations/caso/W4.json
+  modelo: claude-opus-5
+  finished_ms: 1790639179400
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-173716-b824
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W4.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-014
+- H-019
+- F-020
+- F-011
+- F-052
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W4.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-173716-b824
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

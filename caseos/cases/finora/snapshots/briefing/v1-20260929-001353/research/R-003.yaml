@@ -1,0 +1,386 @@
+id: R-003
+type: research
+research_question: ¿Qué cambió en los primeros pagadores observados?
+case_question: ¿Qué cambió en los primeros pagadores observados?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W2
+why_it_matters: Da contenido empírico al resultado pagado que el CRO sí puede observar, sin resolver causas. La
+  capacidad es parcial respecto de la adquisición real.
+short_answer: 'Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras
+  apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la
+  ventana mar–oct. El volumen y el valor inicial incorporado no se mueven a la misma velocidad: el MRR nuevo por
+  mes quedó por debajo del de 2022.'
+headline: Más primeras apariciones de pago, con un primer pago menor
+answer_states:
+- Hecho observado
+- Evidencia fuerte
+findings:
+- F-042
+- F-043
+- F-044
+- F-030
+- F-045
+- F-046
+what_is_established:
+- 'El menor primer pago de las altas no se limita al promedio: coincide con un nivel más bajo a lo largo de la distribución
+  del primer pago entre 2022 y 2024.'
+- El aumento de primeras apariciones se concentra en el tramo de menor valor inicial, mientras el tramo de run-rate
+  inicial igual o mayor al corte de 2022 se mantiene en un nivel parecido.
+- Como señal, el cambio tiene forma de escalón desde inicios de 2023 y no de mes aislado; el tramo posterior no
+  muestra una tendencia definida.
+what_is_contested: []
+what_remains_unknown:
+- 'La magnitud del cambio depende de la medida elegida: promedio, mediana y pago del segundo mes se mueven en proporciones
+  distintas, y el promedio de 2022 incluye pagos iniciales grandes.'
+- Los montos extremos y la concentración en pocas cuentas pueden mover los niveles del primer pago, por lo que el
+  nivel exacto observado es frágil.
+- La forma de escalón se presenta como señal direccional; el tramo posterior no permite afirmar continuidad ni reversión
+  del nivel alcanzado.
+- Sin etapas con fechas, atribución, estado de la suscripción ni una definición documentada del monto, no se puede
+  leer este cambio como conversión de leads ni ubicarlo en un funnel.
+cannot_claim:
+- 'Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.'
+- Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por
+  acordar).
+alternative_explanations: []
+case_implication: 'El menor primer pago de las altas no se limita al promedio: coincide con un nivel más bajo a
+  lo largo de la distribución del primer pago entre 2022 y 2024.'
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-018
+  alias: HO1
+  question: ¿Las primeras apariciones de pago muestran un cambio sostenido entre periodos completos comparables,
+    en volumen y en aporte inicial?
+  state: Soportada
+  effect: fortalecida
+  reading: Las primeras apariciones de pago por mes suben y la mediana de su primer pago baja entre periodos comparables,
+    y el resultado persiste con la ventana mar–oct igualada.
+- id: H-018
+  alias: HO1
+  question: ¿El cambio del aporte inicial por primera aparición aparece en el nivel del ticket de entrada y en su
+    distribución, no solo en el promedio?
+  state: Soportada
+  effect: fortalecida
+  reading: El primer pago de las altas es menor en 2024 que en 2022 en cuartil inferior, mediana, cuartil superior
+    y percentil alto.
+- id: H-018
+  alias: HO1
+  question: ¿El volumen de primeras apariciones y el valor inicial que incorporan se mueven a la misma velocidad
+    entre años?
+  state: Soportada
+  effect: fortalecida
+  reading: El volumen de altas por mes crece en mayor proporción que el valor inicial incorporado, con MRR nuevo
+    por mes más bajo y aumento concentrado en el tramo de menor run-rate inicial.
+- id: null
+  alias: rival
+  question: ¿El cambio observado en los primeros pagadores se explica por cobertura de ventana, meses parciales
+    o artefactos de identidad del monto, más que por un cambio sostenido?
+  state: Direccional
+  effect: señal direccional
+  reading: Al igualar la ventana mar–oct el cambio se mantiene, aunque su magnitud varía según la medida del monto
+    y el promedio de 2022 incluye pagos iniciales grandes.
+- id: null
+  alias: ''
+  question: ¿Podemos afirmar que la primera aparición de pago equivale al hito de adquisición del CRO y que su cambio
+    informa la conversión de prospectos?
+  state: No evaluable
+  effect: no evaluable
+  reading: Faltan etapas con fechas, atribución, estado de la suscripción y una definición documentada del monto,
+    así que esta lectura no es evaluable con los datos observados.
+affected_claims: []
+suggested_action: El menor primer pago de las altas pide ubicar dónde se concentra el cambio del monto antes de
+  ampliar a industria o economía posterior.
+next_question: W3
+new_questions:
+- ¿Qué definición del hito de adquisición (primer pago, contrato ganado o suscripción activa) acuerda el equipo
+  comercial?
+- ¿Los nuevos pagadores de menor aporte inicial sostienen su monto en los meses siguientes al primero?
+- ¿En qué industrias se concentra el tramo de menor aporte inicial de las nuevas altas?
+- ¿El escalón de inicios de 2023 coincide con un cambio en la operación comercial o en la forma de registrar el
+  primer cobro?
+handoff_to_cos:
+  summary: Más primeras apariciones de pago, con un primer pago menor
+  recommended_next: ¿Dónde se concentra el cambio del monto observado?
+visuals:
+- id: V-01
+  title: 'El primer pago de los nuevos pagadores es menor en 2024 que en 2022 a lo largo de la distribución: cuartil
+    inferior de COP 37,8 mil a COP 25,2 mil, mediana de COP 63,0 mil a COP 42,0 mil, cuartil superior de COP 94,5
+    mil a COP 60,9 mil y percentil alto de COP 189,0 mil a COP 84,0 mil.'
+  spec:
+    tipo: barras
+    apiladas: false
+    x:
+    - <15 mil
+    - 15–30 mil
+    - 30–45 mil
+    - 45–60 mil
+    - 60–75 mil
+    - 75–100 mil
+    - 100–150 mil
+    - ≥150 mil
+    formato: pct
+    series:
+    - nombre: '2022'
+      valores:
+      - 0.09191176470588236
+      - 0.10294117647058823
+      - 0.16911764705882354
+      - 0.06985294117647059
+      - 0.20588235294117646
+      - 0.11764705882352941
+      - 0.10661764705882353
+      - 0.13602941176470587
+    - nombre: '2023'
+      valores:
+      - 0.18615384615384614
+      - 0.20615384615384616
+      - 0.24153846153846154
+      - 0.12615384615384614
+      - 0.08615384615384615
+      - 0.07692307692307693
+      - 0.055384615384615386
+      - 0.021538461538461538
+    - nombre: '2024'
+      valores:
+      - 0.10288808664259928
+      - 0.2111913357400722
+      - 0.2527075812274368
+      - 0.17689530685920576
+      - 0.10649819494584838
+      - 0.0740072202166065
+      - 0.04693140794223827
+      - 0.02888086642599278
+  claim: C-006
+- id: V-02
+  title: 'El volumen de primeras apariciones y el valor inicial que incorporan no se mueven a la misma velocidad:
+    entre 2022 y 2024 las altas por mes cambiaron +104% frente a +6%, +17% y +60% del valor inicial incorporado
+    por mes según la normalización usada, y el MRR nuevo por mes pasó de COP 3,5 millones a COP 2,8 millones.'
+  spec:
+    tipo: barras
+    formato: pct_signed
+    x:
+    - Altas por mes
+    - Valor · run-rate M0–M2
+    - Valor · monto usual
+    - Valor · M1–M3
+    series:
+    - nombre: 2022 → 2024
+      valores:
+      - 1.0367647058823528
+      - 0.058347555459938194
+      - 0.16941922852264213
+      - 0.5964484358601063
+    - nombre: 2023 → 2024
+      valores:
+      - 0.022769230769230875
+      - 0.03437563744822669
+      - 0.002303686708192476
+      - 0.07674540909389393
+    claim_fase1: C-ADQ-08
+  claim: C-007
+- id: V-03
+  title: Entre 2022 (mar–dic) y 2024 (ene–oct), las primeras apariciones de pago pasaron de 27 a 55 clientes por
+    mes, mientras la mediana de su primer pago pasó de COP 63,0 mil a COP 42,0 mil.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2024'
+    formato: int
+    series:
+    - nombre: promedio mensual
+      valores:
+      - 27.2
+      - 55.4
+  claim: C-001
+- id: V-04
+  title: 'El aumento de primeras apariciones se concentra en el tramo de menor valor inicial: las altas por mes
+    con run-rate inicial bajo la mediana de 2022 (COP 60,9 mil) pasaron de 13,5 a 43,8, mientras las de run-rate
+    igual o mayor a ese corte pasaron de 13,7 a 11,6.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: Run-rate inicial bajo la mediana de 2022
+      valores:
+      - 13.5
+      - 41.666666666666664
+      - 43.8
+    - nombre: Igual o sobre la mediana de 2022
+      valores:
+      - 13.7
+      - 12.5
+      - 11.6
+    claim_fase1: C-ADQ-07
+  claim: C-008
+- id: V-05
+  title: 'El cambio en los primeros pagadores tiene forma de escalón y no de mes aislado: las altas por mes pasaron
+    de 27,2 a 54,7 entre 2022 y el tramo ene-23 a oct-24, con una pendiente posterior cuyo intervalo de confianza
+    incluye cero (de −0,40 a +1,33 por mes), y desde ene-23 toda mediana mensual del primer pago queda bajo la de
+    2022.'
+  spec:
+    tipo: linea
+    formato: int
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas por mes
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
+    claim_fase1: C-ADQ-09
+  claim: C-005
+- id: V-06
+  title: 'La magnitud del cambio sí depende de la medida elegida: el primer pago promedio de las altas cambió −60%
+    entre 2022 y 2024, la mediana −33% y el pago del segundo mes (M1) −18%, y el promedio de 2022 incluye pagos
+    iniciales grandes.'
+  spec:
+    tipo: barras
+    x:
+    - Promedio
+    - Mediana
+    - Winsorizado
+    - Run-rate temprano
+    - Segundo mes (M1)
+    formato: pct_signed
+    series:
+    - nombre: Cambio del ticket de entrada, 2022 → 2024
+      valores:
+      - -0.6049418007203875
+      - -0.33333333333333337
+      - -0.5125863798144088
+      - -0.48037809551425426
+      - -0.1783926076015293
+    claim_fase1: C-ADQ-02
+  claim: C-010
+- id: V-07
+  title: 'No se puede establecer que la primera aparición de pago sea el hito de adquisición ni leer su cambio como
+    conversión de prospectos: los datos observan solo a quien pagó, sin etapas con fechas, sin fuente del lead,
+    sin estado de la suscripción y sin una definición documentada del monto.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Etapas del funnel con fechas de entrada y salida
+      estado: No existe
+      campos: stage, stage_entered_at, stage_exited_at
+    - dato: Fuente del lead y atribución por canal
+      estado: No existe
+      campos: lead_source, channel
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-011
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-172434-32ff
+  path: investigations/caso/W2.json
+  modelo: claude-opus-5
+  finished_ms: 1790638125364
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-172434-32ff
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W2.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-012
+- H-018
+- F-042
+- F-043
+- F-044
+- F-030
+- F-045
+- F-046
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W2.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-172434-32ff
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

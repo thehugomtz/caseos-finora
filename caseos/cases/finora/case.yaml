@@ -18,34 +18,84 @@ language:
   avoid_unnecessary_jargon: true
   structured_language: es
   observed:
-    register: conversacional, directo; mezcla español con términos de negocio en inglés
-    technical_level: analítico
-    formality: tú
+    register: Conversacional y directo, informal («jaja»); piensa en láminas, columnas y bloques de deck; español
+      con términos de negocio en inglés.
+    technical_level: 'Analítico / de negocio: maneja frameworks de Growth (AAARRR, CAC, LTV, UCM), ToFu/BoFu y roles
+      comerciales (SDR, AE, KAM).'
+    formality: Tú; informal; tolera coloquialismos; sin rodeos.
     preserved_terms:
-    - leads
-    - funnel
-    - MRR
-    - churn
-    - self-serve
-    - SQL directo
-    - post-SQL
-    - New
-    - primer pagador observado
-    - monto observado
-    - MECE
-    - impacto × capacidad
-    - CRO
-    - CFO
+    - entrada directa a SQL
+    - Paid Media
+    - Métricas Clave
+    - low tickets
+    - CRM
+    - Analítica Digital
+    - Decision Making
+    - Análisis Adhoc
+    - pricing introductorio
+    - descuentos temporales
+    - contracción
+    - expansión
+    - Propuesta de Modelo de datos
+    - CEO
+    - Overview
+    - Growth
+    - Revenue
+    - insights
+    - salud
+    - Inversión en Marketing
+    - Generación de Demanda
+    - ToFu
+    - BoFu
+    - Team
+    - Habilitación
+    - Assisted
+    - Self Service
+    - Executive
+    - Canal de adquisición
+    - Digital
+    - KAM
+    - Funnel Propuesto
+    - máquina de leads
+    - capacidad comercial instalada
+    - Técnica
+    - foros
+    - dashboards
+    - Análisis Ad hoc
+    - Mecanismo Propuesto
+    - Implicaciones Multidisciplinarias
     notes:
     - Perfil inicial derivado del brief v0.3 (sección «Lo tuyo») y de las notas del proyecto.
+    introduced_terms:
+    - term: regla de fase
+      plain: todavía no se construye, pero sí es parte del caso
+      at: '2026-09-29T00:01:59-06:00'
+    - term: proxy
+      plain: dato indirecto que usamos en lugar del que no tenemos
+      at: '2026-09-29T00:01:59-06:00'
+    - term: storyline provisional
+      plain: el orden de la historia con el que trabajamos mientras tanto; no fija hallazgos
+      at: '2026-09-29T00:09:41-06:00'
+    - term: M0
+      plain: el primer mes pagado de cada cliente nuevo, como lo trae mart.new_customers
+      at: '2026-09-29T00:09:41-06:00'
+    - term: run-rate temprano
+      plain: el ritmo de pago de los primeros meses de un cliente nuevo, como lo calcula mart.new_customers
+      at: '2026-09-29T00:09:41-06:00'
+    - term: ARPU observado
+      plain: monto pagado promedio por cliente activo, calculado con los pagos; no es precio de lista ni MRR contratado
+      at: '2026-09-29T00:26:18-06:00'
+    - term: primeros pagadores observados
+      plain: clientes cuyo primer pago aparece en los datos; no son leads ni necesariamente clientes recién ganados
+      at: '2026-09-29T00:26:18-06:00'
 workspace:
   type: finora-eda
-  path: ../finora-eda
+  path: /Users/hugomartinez/GitHub/Claude Prueba/finora-eda
   label: Finora · Business Exploration Workspace
 phases:
   briefing:
-    status: review
-    ready_count: 0
+    status: ready
+    ready_count: 1
     history:
     - at: '2026-09-28T22:22:23-06:00'
       from: not_started
@@ -57,6 +107,19 @@ phases:
       to: review
       by: import
       note: brief importado; pendiente de Mark Ready
+    - at: '2026-09-29T00:13:54-06:00'
+      from: review
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/briefing/v1-20260929-001353
+    ready_at: '2026-09-29T00:13:54-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/briefing/v1-20260929-001353
+    approved_artifact: brief/approved/brief.v1.md
+    decision: D-013
   framing:
     status: review
     ready_count: 0
@@ -87,4 +150,10 @@ phases:
     status: not_started
     ready_count: 0
     history: []
-updated_at: '2026-09-28T22:22:27-06:00'
+updated_at: '2026-09-29T00:26:18-06:00'
+data_model:
+  id: finora
+  label: Finora · modelo analítico
+  source: finora-eda · Business Exploration Workspace
+  bound_at: '2026-09-28T23:55:00-06:00'
+  bound_by: hugo
