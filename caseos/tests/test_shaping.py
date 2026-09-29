@@ -41,8 +41,11 @@ def test_an_approved_task_launches_with_its_agent(case, monkeypatch):
                                            "intensity": "L2", "links": [h["id"]], "slides": ["S2.3"]})
     launched = []
     monkeypatch.setattr(research, "launch_job", lambda store, rid: launched.append(rid) or type("J", (), {"id": "JOB-x"})())
-    out = shaping.send_task(case, "RT-001")
+    out = shaping.send_task(case, "RT-001", via="vía Claude (D-0)")
     r = case.get(out["research_id"])
+    from caseos.util import read_jsonl
+    asked = [e for e in read_jsonl(case.root / "audit/activity.jsonl") if "pidió research" in (e.get("summary") or "")]
+    assert asked[-1]["summary"].endswith("vía Claude (D-0)") and r["requested_via"] == "vía Claude (D-0)"   # delegated, and says so
     assert (r["specialty"], r["intensity"], r["route"]["source"]) == ("measurement", "L2", "hugo")
     assert h["id"] in r["links"] and r["shaping_task"] == "RT-001" and r["slides"] == ["S2.3"] and launched
     task = case.read_data("framing/current.yaml")["research_plan"][0]

@@ -169,7 +169,7 @@ PEER = _obj({"supported_claims": _SA, "bare_assertions": _SA, "contradictions": 
 # ------------------------------------------------------------------------------------------ create + launch
 def create_request(store: CaseStore, question: str, *, links: list[str] | None = None, route: dict | None = None,
                    actor: str = "hugo", parent: str | None = None, relation: str | None = None, launch: bool = True,
-                   force_purpose: bool = False) -> dict:
+                   force_purpose: bool = False, via: str = "") -> dict:
     q = (question or "").strip()
     if len(q) < 8:
         raise ValueError("La pregunta es demasiado corta.")
@@ -188,7 +188,8 @@ def create_request(store: CaseStore, question: str, *, links: list[str] | None =
     if parent:
         data[relation or "follow_up_of"] = parent
     r = store.create("research", data, actor=actor,
-                     summary=f"{'Hugo' if actor == 'hugo' else actor} pidió research ({rt['intensity']} · {SPECIALTIES[rt['specialty']]}): {clip(q, 90)}")
+                     summary=f"{'Hugo' if actor == 'hugo' else actor} pidió research ({rt['intensity']} · {SPECIALTIES[rt['specialty']]}): {clip(q, 90)}"
+                             + (f" · {via}" if via else ""))
     if not purpose["ok"] and not force_purpose:
         store.log("router", "flagged", [r["id"]], f"{r['id']}: RESEARCH WITHOUT CASE PURPOSE — espera decisión de Hugo",
                   material=True)

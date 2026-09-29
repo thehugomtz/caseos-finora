@@ -353,7 +353,7 @@ def send_task(store: CaseStore, task_id: str, *, actor: str = "hugo", via: str =
     spec = KINDS[t["kind"]]["specialty"]
     route = {"specialty": spec, "intensity": "analytics" if spec == "analytics" else t.get("intensity") or "L2"}
     links = [x for x in t.get("links") or [] if type_of(x) in ("question", "hypothesis", "decision", "claim") and store.get(x)]
-    out = research.create_request(store, t["question"], links=links, route=route, actor=actor, force_purpose=True, launch=True)
+    out = research.create_request(store, t["question"], links=links, route=route, actor=actor, force_purpose=True, launch=True, via=via)
     r = out["research"]
     # an approved plan task has case purpose by construction: Hugo approved it in the Shaping document
     store.update(r["id"], {"shaping_task": task_id, "slides": t.get("slides") or [], "task_why": t.get("why", ""),
