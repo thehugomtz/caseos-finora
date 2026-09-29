@@ -1,0 +1,118 @@
+id: R-023
+type: research
+research_question: ¿Cómo definir y medir el funnel si no todos lo recorren igual? El mix MECE de funnels (Executive,
+  Self Service, Hybrid y Reactivate), las etapas de cada uno y la regla que pone a cada lead en uno solo.
+case_question: Q-046, Q-050, H-006, H-028, H-036, H-037, C-005
+specialty: measurement
+intensity: L3
+route:
+  specialty: measurement
+  intensity: L3
+  agent: measurement
+  scores:
+    measurement: 2
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-046
+    - Q-050
+    - H-006
+    - H-028
+    - H-036
+    - H-037
+    - C-005
+    suggested:
+    - Q-035
+    - H-051
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-046
+- Q-050
+- H-006
+- H-028
+- H-036
+- H-037
+- C-005
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:15:51-06:00'
+updated_at: '2026-09-29T14:15:52-06:00'
+version: 4
+job_id: JOB-20260929-141552-50fd
+error: null
+started_at: '2026-09-29T14:15:52-06:00'
+shaping_task: RT-023
+slides:
+- S2.3
+- S2.7
+task_why: Reformula RT-016 (ya investigada en R-016). Es la pregunta que el caso hace literalmente y la base de
+  las métricas (S2.5), de las hipótesis ToFu/BoFu (S2.6) y de la solución (S2.7). Si la regla no es MECE, la suma
+  por ruta no cuadra con el total del nudo y la comparación de «más leads, pero no más ventas» se rompe.
+task:
+  work: propuesta
+  draft_answer: 'Propuesta de arranque: el mix funciona si se corta con dos preguntas, no como lista. 1) Puerta,
+    fija al entrar: ¿el registro nació en el producto (se registró solo) o en el proceso comercial (campaña, referido,
+    partner, prospección)? 2) Intervención antes del nudo, contando tramos (pasar de una etapa a la siguiente):
+    si ninguno lo movió una persona, es Self Service; si todos, Executive; si algunos, Hybrid. Hybrid tiene los
+    dos casos de Hugo: A) empezó solo arriba y lo intervinieron abajo; B) lo contactaron como New y él solito lo
+    acabó. Reactivate va como loop, no como cuarta ruta: el lead estancado entra, se trabaja y se reasigna según
+    el caso, sin contar como entrada nueva. Si lo reactiva un SDR, eso cuenta como intervención. Etapas: Executive
+    = New → Working → Engaged → SQL → Demo → Proposal → Won, más estados de salida (Lost, Descalificado, a Reactivate);
+    la entrada directa a SQL es Executive con etapa de entrada SQL. Self Service = llega → se registra → activación
+    → señal de compra → paga. El brief dice «llegan directo al producto, se registran, lo usan y pagan»; activación
+    y señal de compra son propuesta. Hybrid A = registro → uso → señal que dispara el contacto de SDR/AE → demo
+    o propuesta si hace falta → nudo. Hybrid B = New → Working/Engaged → registro en el producto → paga sin AE.
+    El canal es un atributo que cruza las tres rutas. Borde por decidir: el lead de campaña que nadie contactó y
+    compró solo (Self Service con puerta comercial; habla directo de H-006). No sabemos si Self Service tiene prueba
+    gratis, freemium o pago al registrarse, qué cuenta como intervención, ni si CRM y producto comparten ID.'
+  hugo_said:
+  - text: Assisted / Self Service / Executive
+    ref: N-024
+  steps:
+  - kind: data
+    what: Confirmar qué hay para asignar rutas. En el modelo no hay etapa, canal, toques de SDR/AE ni eventos de
+      producto, así que con los datos del caso no se puede asignar ninguna ruta. Solo el nudo es observable, si
+      se define como primer pago (bandera de alta). No inferir la ruta por monto ni por industria.
+    where:
+    - mart.customer_month
+    - raw.transactions
+  - kind: research
+    what: Buscar cómo se definen en la práctica el bowtie con varias puertas, las rutas mixtas (contacto de ventas
+      disparado por el uso del producto) y el reciclaje de leads estancados. Sirve como opciones para la propuesta,
+      no como estándar ni para fijar umbrales.
+    where: []
+  - kind: proposal
+    what: 'Regla de asignación en dos preguntas, con la tabla de casos: qué ruta toca en cada combinación de puerta
+      e intervención, incluidos los bordes (entrada directa a SQL que vino del producto o de un partner, lead de
+      campaña no contactado que compró solo, formulario de «hablar con ventas», prueba montada por un AE, lead que
+      pasó por Reactivate).'
+    where: []
+  - kind: proposal
+    what: 'Etapas de cada ruta, con criterio de entrada y salida por etapa y su dueño (SDR, AE o el cliente solo);
+      estados de salida; el loop de Reactivate (umbral de estancado como parámetro a acordar con Finora, y reasignación);
+      y los campos mínimos para que la regla funcione: ID común CRM–producto, puerta, canal, etapa de entrada, toques
+      con fecha y tipo, eventos de producto y motivo de salida. Alimenta S2.7.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 14:05, D-017)

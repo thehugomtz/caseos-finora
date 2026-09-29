@@ -1,0 +1,1109 @@
+{
+ "run_id": "RUN-20260929-140039-framer-9e78",
+ "agent": "framer",
+ "role": "framer",
+ "purpose": "Turno de framing (challenge)",
+ "started_at": "2026-09-29T14:14:09-06:00",
+ "duration_ms": 810334,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/d08f909e6717fb65.md",
+ "system_prompt_hash": "d08f909e6717fb65",
+ "prompt": "## Brief (resumen)\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilidad y qué dato permitiría elegir) y qué solución analítica le permitiría al CRO operar el funnel de fo…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nContexto: Finora cobra suscripciones mensuales y opera con un modelo híbrido: algunos usuarios llegan directo al producto, se registran, lo usan y pagan sin necesariamente hablar con ventas; otros entran al proceso comercial por campañas, referidos, partners o prospección. Overview: Finora crece mucho más en clientes que en ingreso — clientes 4.5x, ingreso / MRR pagado 2.8x y MRR por cliente activo −38% (de ~COP 92.8 mil a ~COP 57.8 mil); el periodo de estas cifras sigue sin fijar. Growth / CRO: Finora plantea algo como “estamos generando más leads, pero no estamos vendiendo más”; el volumen en primeras etapas creció, sobre todo en New, pero los clientes nuevos no crecen al mismo ritmo. Funnel aproximado: New → Working → Engaged → SQL → Demo → Proposal → Won; los SDRs trabajan sobre todo las primeras etapas y después normalmente entra un Account Executive. No todos lo recorren igual: hay self-service, entradas directas a SQL, leads estancados semanas en alguna etapa y distintos canales o motions. La pregunta del caso toca demanda, calidad, velocidad de atención y conversión post-SQL. Revenue / CFO: la pregunta principal es “¿por qué cambió nuestro MRR?”. El valor de la suscripción puede cam…\nEntregables: Presentación ejecutiva ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción; Material de soporte (propuesto, no final) · 1 Overview — observaciones generales y salud del negocio que introducen las secciones siguientes (p. ej. clientes 4…; Material de soporte (propuesto, no final)· 2 Growth — L1: las relaciones que comentó Hugo (por precisar). L2: entradas y actividad económica de clientes y segm…; Material de soporte (propuesto, no final)· 3 Revenue — L1: qué data observable de pricing introductorio podemos sacar. L2: cómo debería Finora introducir descu…; Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA\nRestricciones: No vamos a llamar “causa” a algo que sólo muestra una asociación.; No hay datos de funnel: lo que pasa entre New y Won (etapas, canales, tipo de recorrido, velocidad de atención, conversión post-SQL) se responde como propuesta…; Solución fuera de esta etapa: el esqueleto de láminas es storyline provisional; no construimos dashboards, métricas definitivas, modelo de datos ni deck final…\nVacíos declarados: Qué canales o motions de adquisición existen realmente y si algún dato permite saber por cuál entró cada cliente: los datos disponibles no traen canal.; Datos de funnel y de capacidad comercial (etapa por lead, tiempo en etapa, capacidad de SDRs y AEs, tiempos de atención, backlog) no están en los datos disponi…; Qué métricas usa hoy Finora y qué decisiones quiere tomar el CRO con el funnel.; Hasta dónde es válido relacionar la inversión en Marketing por categoría con clientes nuevos o ingreso cruzando fechas; la unidad del gasto sigue sin documenta…; Los datos disponibles no traen margen ni costo por cliente: pesa si se proponen LTV o UCM.; Qué tiene ya definido Finora sobre los descuentos temporales, o si el mecanismo se propone desde cero.\n\n## Framing vivo\nPregunta ejecutiva: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nFrames candidatos: CRO por cuánto entra, quién entra y cómo compra con el tiempo (elegido); CFO por clientes que entran / salen / permanecen (elegido); CRO por etapas comerciales; CFO por comportamiento / precio / descuentos\nDecisiones necesarias: Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente).; Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa.; Qué es «Executive» en la Lámina 3: la ruta de entrada directa a SQL o un segmento de cuentas con KAM. Define si las columnas separan cómo compra el cliente o quién es.; Qué decisiones del CRO asumimos explícitamente para la columna «Decision Making», dado que el caso no las define.; Cómo se arma el funnel híbrido: una secuencia con varias puertas de entrada, un funnel por motion que converge en el pago, o cohortes de entrada con plazo fijo (ver alternativas de este turno).; Qué MRR es el titular cuando existan descuentos: el de antes de descuento (valor de la suscripción), el cobrado, o ambos con el descuento como línea del puente.; Qué entra en «revenue que dejamos de capturar por decisiones comerciales»: solo descuentos temporales o también otras concesiones, como una tarifa negociada.; Si el mecanismo de descuentos temporales se propone desde cero como supuesto declarado, dado que no sabemos qué tiene definido Finora.\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.; Descuentos a partir del tamaño de un salto del monto.; Una lectura del puente si las contribuciones no concilian con el total.; Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto de canal o ruta.; Un segmento fabricado por clustering cuando no hay concentración clara.; La calidad de los leads a partir de lo que pasa después del pago.; Retención contractual a partir de la continuidad de pago.; Que Finora «tiene un problema» de CRM o analítica digital: que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre.; Valores de LTV o UCM (no hay margen ni costo por cliente) ni de CAC por canal (no hay canal). Un CAC combinado depende de documentar la unidad del gasto y de acordar qué es adquirir un cliente.; Que una categoría de gasto (ToFu, Team, Habilitación) generó ventas porque las dos series se mueven en las mismas fechas.; Que el ~−38% por cliente activo sea deterioro de la salud del negocio: todavía no separamos la mezcla de quienes entran, el precio y las salidas.; Una cifra histórica de revenue no capturado ni un puente histórico por tarifa y descuento: el histórico no trae tarifas ni descuentos; eso se propone hacia adelante.; Plazos o umbrales del funnel (días para «estancado», plazo para contar la compra) como si fueran estándar de mercado: son parámetros a acordar con Finora.; Que los tres casos de Q-025 muestran lo que pasa en Finora: son ejemplos construidos que prueban un límite del modelo, no observaciones.\n\n## Shaping (el documento que sale de Framing; tú propones, Hugo aprueba)\nProblema aprobado: Hay que definir nosotros diferentes propuestas de acuerdo a lo que se requiere, propuestas de medición, frameworks, etc. · situación: La data actualmente no alcanza, debemos de responder en la medida de lo posible pero hay cosas que no y ahi es donde proponemos y lo dice textualmente el caso: Growth: ¿Cómo definirías y medirías el funnel si no todos los clientes lo recorren igual (self-serve, entrada directa a SQL, estancamientos…\nGuion aprobado:\n- S1 Overview: S1.1 Overview\n- S2 Growth: S2.1 Las relaciones que comentó Hugo; S2.2 Entradas y actividad económica de clientes y segmentos; S2.3 Cómo definir y medir el funnel si no todos lo recorren igual; S2.4 Dónde y en qué segmentos se concentra la pérdida de crecimiento; S2.5 Qué métricas propondrías que hoy no existen; S2.6 Hipótesis ToFu y BoFu; S2.7 Solución analítica para que el CRO opere el funnel de forma recurrente y qué de…\n- S3 Revenue: S3.1 Qué data observable de pricing introductorio podemos sacar; S3.2 Cómo debería Finora introducir descuentos temporales; S3.3 Cómo separar el valor de la suscripción del precio efectivamente pagado; S3.4 Cómo clasificar inicio y fin de un descuento para que no se confundan con contr…\nPlan de investigación aprobado:\n- RT-001 [measurement · sent] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o descartaría cada una (entradas únicas con fe…\n- RT-002 [data_model · sent] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuento sin confundirlos con contracción o exp…\n- RT-003 [data · sent] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del Overview? ¿Y qué señales de salud del m…\n- RT-004 [data · sent] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilitación comercial o en producto?\n- RT-005 [measurement · sent] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad de la máquina de leads (H-005)? Por ejemp…\n- RT-015 [data · sent] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Demanda ToFu, Team, Habilitación) a lo larg…\n- RT-016 [measurement · sent] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados semanas)? Qué puertas (Assisted / Self Ser…\n- RT-017 [data · sent] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ticket de entrada, cosecha, churn observad…\n- RT-018 [measurement · sent] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los datos del caso y cuáles necesitan datos…\n- RT-019 [measurement · sent] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar? Capa técnica (CRM, analítica digital) y…\n- RT-020 [data · sent] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla como descuento?\n- RT-021 [research · sent] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanismo propuesto, implicaciones multidiscipl…\nDatos del caso para tareas de tipo data (Analytics): Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación… | raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × me… | raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente) | raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes) | mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure… | mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde customer_month; cuadran al centavo con la Fase 1 (34 filas; grano mes)\n\n## Ledger del caso (usa estos IDs; no dupliques)\n- H-004 (HC3ab) [HYPOTHESIS · accepted · estado open; se debilita si: Si se recupera, pierde fuerza la explicación de una caída persistente en ese periodo. Si no se recupera, el retraso pierde fuerza como expl…] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [HYPOTHESIS · accepted · estado open; se debilita si: Se debilita si las señales al entrar, medidas con el mismo criterio, no empeoraron. La opinión posterior de Sales no basta.] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo. · Hugo: \"La calidad de la máquina de leads bajó\"\n- H-006 (HC3s) [HYPOTHESIS · accepted · estado open; se debilita si: Se debilita si la carga por SDR/AE no subió cuando creció New, si los tiempos a primer contacto no empeoraron o si la compra cae igual en l…] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad. · Hugo: \"La capacidad comercial instalada no alcanza la demanda generada\"\n- H-007 (HC3p) [HYPOTHESIS · accepted · estado open; se debilita si: Si el tramo posterior está estable, esa ubicación pierde fuerza. Si cae, sabemos dónde mirar, no necesariamente por qué ocurre.] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [HYPOTHESIS · accepted · estado open; se debilita si: Si no hay señales que lo sostengan, no dedicar tiempo a investigar el mercado en general. Si aparecen, precisar una pregunta externa concre…] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [HYPOTHESIS · accepted · estado open; se debilita si: Si el valor antes de descuentos cambia, revisar cantidad, características y tarifa. Si ese valor no cambia pero el pago sí, mirar descuento…] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [HYPOTHESIS · accepted · estado open; se debilita si: Si se documenta un descuento, puede investigarse su aporte. Si se confirma que no hubo, descartamos esa explicación histórica. No tener el…] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [HYPOTHESIS · accepted · estado open; se debilita si: Si terminó la relación, se sostiene hablar de salida. Si el cliente sigue activo, hay que retirar esa etiqueta aunque no haya pago observad…] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [HYPOTHESIS · accepted · estado open; se debilita si: Si se confirma, ese descuento pertenece al cálculo de esa salida. No se cuenta como fin de descuento de un cliente que permanece.] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [HYPOTHESIS · accepted · estado open; se debilita si: Cambio de uso o plan con tarifa comparable apoya esta explicación. Configuración estable la debilita.] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [HYPOTHESIS · accepted · estado open; se debilita si: Tarifa distinta con características comparables apoya precio. Tarifa estable lo debilita.] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [HYPOTHESIS · accepted · estado open; se debilita si: Descuento distinto con suscripción estable apunta a ese componente comercial. Sin datos de descuento, no elegir una explicación por la form…] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [HYPOTHESIS · accepted · estado open; se debilita si: Si hay al menos un contraejemplo relevante, la observación no identifica esa distinción. Si existen otros campos que lo resuelven, se corri…] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [HYPOTHESIS · accepted · estado open; se debilita si: Si hay contradicciones, ajustar los nombres y el alcance antes de interpretar. Si no sabemos que es MRR, llamarlo monto observado.] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [HYPOTHESIS · accepted · estado open; se debilita si: Cambio que se sostiene apoya describir un cambio de pagadores. Si desaparece al corregir datos, se retira esa lectura.] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [HYPOTHESIS · accepted · estado open; se debilita si: Si hay concentración respaldada, enfocar ahí las siguientes preguntas. Si no, no fabricar grupos para forzar una historia.] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [HYPOTHESIS · accepted · estado open; se debilita si: Si no suma, corregir antes de interpretar. Si se compensan, no decir que no pasó nada porque el neto sea pequeño.] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [HYPOTHESIS · accepted · estado open; se debilita si: Si la diferencia persiste en una comparación justa, puede matizar la lectura económica. Si no hay seguimiento comparable, no concluir deter…] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [HYPOTHESIS · accepted · estado open; se debilita si: Si no añade una conclusión que cambie la historia, dejarlo fuera. Si divergen, sólo describirlo, sin atribuir el resultado al gasto.] Gasto agregado y resultados pagados evolucionan de forma diferente.\n- H-023 [HYPOTHESIS · proposed · estado open; se debilita si: Si PayrollExpenses no es negativo entre may-23 y ago-23 y la caída desde may-23 se mantiene al excluir PayrollExpenses y Freelance, el vall…] El valle del S&M total en ago-23 (1,10 u) refleja en parte movimientos contables (PayrollExpenses negativo, fin de Freelance) y no solo menos gasto.\n- H-024 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si no hay salidas observadas en nov–dic-22 que coincidan en industria y monto con las primeras apariciones de ene-23, y si Fino…] Parte del salto de primeras apariciones de dic-22 (26) a ene-23 (60) no es entrada nueva, sino un efecto de registro: pagadores que ya existían y reaparecen con otro identificador o por un cambio de sistema de cobro.\n- H-025 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si Finora confirma que en may/jun-23 solo cambió cómo se registra el gasto y no la operación, o si la serie mensual muestra que…] El aumento de primeras apariciones en jun–dic-23 frente a ene–may-23 y la caída del S&M registrado desde may-23 vienen de un mismo cambio en la operación comercial a mitad de 2023 (por ejemplo, un giro hacia Self Servic…\n- H-026 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si, con bandas de ticket fijas en COP según los cortes de 2022, las primeras apariciones por mes de la banda alta crecen en una…] El volumen extra de primeras apariciones entre 2022 y 2024 es sobre todo de ticket bajo: las entradas de ticket alto por mes no crecen al ritmo del total (+104%).\n- H-027 [HYPOTHESIS · proposed · estado open; se debilita si: El enunciado o Finora confirman que la definición de lead, el formulario, la regla de calificación y el reparto no cambiaron entre el perio…] Parte del aumento de entradas y de la peor mezcla viene de un cambio en cómo se cuentan o se reparten (definición de lead, formulario, regla de calificación o reparto), no de más demanda ni de una máquina de leads que g…\n- H-028 [HYPOTHESIS · proposed · estado open; se debilita si: La mezcla de ajuste al entrar no empeora entre periodos, o, dentro de una misma banda de ajuste, ni el primer contacto humano ni la compra…] H-005 y H-006 pueden operar a la vez: con más volumen, los SDR/AE dejan sin trabajar primero las entradas que perciben peores (R-014, citando a Sabnis et al., 2013). La palanca cambia según si esas entradas comprarían a…\n- H-029 [HYPOTHESIS · proposed · estado open; se debilita si: Si la caída se mantiene parecida al comparar jul–sep 2024 con 2023 (sin octubre) y el vínculo CRM→pago muestra que el tiempo entre Won y pr…] El −19% de jul–oct 2024 en primeros pagadores observados es, al menos en parte, un efecto de borde o de rezago: octubre-24 incompleto en los pagos, o más tiempo entre Won y primer pago en 2024 que en 2023.\n- H-030 [HYPOTHESIS · proposed · estado open; se debilita si: Si T-004, con el mismo estadístico y la misma ventana que R-010, muestra el ticket de 2024 por debajo del de 2023, no hay reconciliación y…] El ticket de entrada bajó antes de 2024 y se mantuvo de 2023 a 2024. Eso haría compatibles el primer pago menor de R-003/R-009 con «el monto por alta no cayó» de R-010.\n- H-031 [HYPOTHESIS · proposed · estado open; se debilita si: Con la regla que apruebes en H-017, la reactivación y la contracción de T-003 quedan en niveles parecidos a los observados.] Una parte relevante de la reactivación y la contracción del puente observado (T-003) desaparece al aplicar una ventana de gracia y repartir los pagos que cubren varios meses.\n- H-032 [HYPOTHESIS · proposed · estado open; se debilita si: Medido con M1 o con el monto usual, el ticket de entrada cae entre 2022 y 2023–2024 en una proporción parecida a la del primer pago.] El primer pago de los nuevos pagadores queda por debajo de su monto usual, y esa brecha es mayor en las cohortes 2023–2024 que en 2022. Si es así, parte de la caída del ticket de entrada (T-018) es de medición.\n- H-033 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si Finora confirma que cada fila es el valor del periodo de servicio (no el pago recibido) y que no cobra varios meses juntos,…] Más de la mitad del COP de contracción observada es momento de cobro —un primer pago o una reactivación que cubre más de un mes, cargos iniciales o atrasos—, no suscripciones que se achican.\n- H-034 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si la política de mora de Finora no permite pagar meses atrasados, o si la facturación muestra esas suscripciones como cancelad…] Los meses en cero seguidos de un pago del doble son atrasos, no bajas seguidas de un regreso: inflan el churn observado de ese mes y la reactivación.\n- H-035 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si, midiendo la entrada con el monto usual del cliente (su segundo mes pagado, comparando solo a quienes lo tienen), la caída d…] Parte de la caída del ticket de entrada (T-018: mediana COP 63,0 mil en 2022 y 36,8 mil en 2023) se debe a un cambio en la forma del primer cobro, no a suscripciones de entrada más pequeñas.\n- H-036 [HYPOTHESIS · proposed · estado open; se debilita si: Con la puerta etiquetada por cuenta y unida a los pagos, la participación de la puerta de menor valor entre los primeros pagadores no sube…] Puente Growth–Revenue para Q-003: la mezcla de entradas se movió hacia una puerta de menor valor (por ejemplo, Self Service, si existe como compra sin intervención humana). Eso explicaría a la vez más primeros pagadores…\n- H-037 [HYPOTHESIS · proposed · estado open; se debilita si: Con los pagos, el peso de las reactivaciones observadas en las entradas a pago es estable entre 2022 y 2024, y la tendencia de las entradas…] En el nudo, «clientes nuevos» cambia según se cuenten o no las reactivaciones observadas (según R-016, equivalen al 18–38% de las entradas a pago). Si su peso se movió en el período, parte de lo que el CRO lee como «nue…\n- H-038 [HYPOTHESIS · proposed · estado open; se debilita si: Con motion y canal por cuenta unidos a la facturación, el ticket de entrada baja en proporción parecida dentro de cada motion y canal. O bi…] La caída del ticket de entrada de los nuevos pagadores observados (T-004, T-018) viene sobre todo de un cambio de mezcla hacia motions o canales de adquisición de menor ticket, no de una baja dentro de cada motion. Self…\n- H-039 [HYPOTHESIS · proposed · estado open; se debilita si: Con el estado de suscripción de la facturación, la mayoría de esos huecos de un mes muestran una cancelación y una suscripción nueva.] La mayor parte del churn observado que vuelve al mes siguiente con el mismo monto (44%, DM-4) es un desfase del cobro con la suscripción vigente, no una baja seguida de una nueva alta. Si se confirma, dice cuánto del ru…\n- H-040 [HYPOTHESIS · proposed · estado open; se debilita si: En el panel, el pago de regreso tras un mes sin pago no se parece a la suma de lo que se dejó de pagar (por ejemplo, cerca del doble del mo…] Una parte importante de los movimientos que se deshacen al mes siguiente (meses sin pago seguidos de un regreso, subidas que duran un mes) son efectos del calendario de cobro: atrasos que se ponen al día y pagos dobles…\n- H-041 [HYPOTHESIS · proposed · estado open; se debilita si: El ticket de entrada de 2022 (promedio y mediana) se mantiene al excluir mar–may-22, o esas primeras apariciones no tienen un ticket distin…] Parte de las primeras apariciones de pago de 2022, sobre todo en mar–may-22, son clientes anteriores al panel que no pagaron en ene–feb-22. Eso inflaría el ticket de entrada de 2022 (COP 128,7 mil de promedio) y exagera…\n- H-042 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si, midiendo desde el segundo pago, la mediana 2022→2024 cae en una proporción parecida a la del primer pago (COP 63,0 → 42,0 m…] Parte de la caída del ticket de entrada 2022→2024 y de la baja de la cosecha 2022 se debe a pagos iniciales grandes en 2022 (primer pago por encima del pago recurrente), no a un cambio en lo que el cliente paga mes a me…\n- H-043 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si la razón de promedios medida solo sobre churn persistente sigue por encima de 1, con el límite inferior del intervalo tambié…] El «churn caro» por promedio (F-101) viene en buena parte de cuentas grandes que se saltan pagos y vuelven, no de salidas.\n- H-044 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta como señal si, con intervalos como los de F-100, el churn persistente y el ticket de entrada de Salud se solapan con los de las…] Salud tiene mejor economía observada por cliente que el resto: menor churn persistente, el ticket de entrada mediano más alto de 2024 (empatado con Restaurantes) y la menor caída del MRR por cliente, pero con poco volum…\n- H-045 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si, mes a mes en la ventana limpia, la mediana del primer pago no baja de nivel en los mismos meses en que saltan las altas (de…] Hacia inicios de 2023 hubo un cambio general en la entrada, de oferta, de plan de entrada, de Canal de adquisición (por ejemplo, más Self Service) o de forma del primer cobro. Ese cambio movió a la vez el número de alta…\n- H-046 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si, en la misma población de ventana limpia, el ticket de entrada medido con el 2.º pago o con el monto usual de los meses 2–3…] Parte de la caída del ticket de entrada medida con el primer pago viene de lo que incluye ese primer cobro (importes que no se repiten en el 2.º pago), no de un nivel recurrente más bajo. En 2022, el 23,2% de las altas…\n- H-047 [HYPOTHESIS · proposed · estado open; se debilita si: Se descarta si los montos fuera de la grilla y los ajustes pequeños se concentran en pocos clientes, o si su frecuencia sigue la antigüedad…] El aumento de montos fuera de la grilla (de 19% a 42%) y de ajustes pequeños (de 9% a 75% de los eventos de expansión) refleja un cambio general en la forma de cobrar, que afecta a la vez a clientes nuevos y antiguos, y…\n- H-048 [HYPOTHESIS · proposed · estado open; se debilita si: En una simulación con esos cuatro casos, dos situaciones distintas dan las mismas líneas del puente, o la suma de las líneas no cuadra con…] Un puente de tres capas (MRR de lista, descuento y MRR neto), con líneas propias de «descuento nuevo/aumentado» y «descuento reducido/terminado», separa los tres casos de Q-025 y el descuento del 100%, y sigue cuadrando…\n- H-049 [HYPOTHESIS · proposed · estado open; se debilita si: Con cohortes marcadas y un grupo de control, a igual antigüedad no hay diferencia de MRR de lista entre cohortes con y sin descuento. No se…] De aquí en adelante, las cohortes que Finora consiga con descuento temporal van a tener menos MRR de lista a igual antigüedad que cohortes comparables sin descuento, como sugiere la evidencia externa de F-154.\n- N-001 (U01) [USER_INTUITION · accepted] U01 · Dos problemas conectados · Hugo: \"Separaste más leads sin más clientes y cambio del MRR.\"\n- N-002 (U03) [PROPOSAL · accepted] U03 · Separar lo comercial del revenue · Hugo: \"Propusiste distinguir atribución comercial e ingreso generado.\"\n- N-003 (U04) [USER_INTUITION · accepted] U04 · Entraron muchos leads no calificados · Hugo: \"Tu lectura fue que creció una máquina de leads y posiblemente bajó la calidad.\"\n- N-004 (U05) [OBSERVATION · accepted] U05 · Primera aparición como cliente nuevo · Hugo: \"Señalaste que podemos identificar cuándo aparece un cliente por primera vez en Transactions.\"\n- N-005 (U08) [OBSERVATION · accepted] U08 · Self-serve, SQL directo y semanas estancado · Hugo: \"Detectaste que no todos recorren el proceso igual y que el tiempo podía importar.\"\n- N-006 (U09) [PROPOSAL · accepted] U09 · Primero ordenar canales, después medir · Hugo: \"Querías poner nombres y separar tipos de adquisición antes de medir.\"\n- N-007 (U10) [PROPOSAL · accepted] U10 · Agrupar clientes por pagos, churn y gasto · Hugo: \"Propusiste investigar grupos y ver si correspondían a self-serve, SQL u otros recorridos.\"\n- N-008 (U11) [PROPOSAL · accepted] U11 · Trato analítico distinto por segmento · Hugo: \"Assisted / Self Service / Executive · Canales: Canal de adquisición 3, Canal de adquisición 2, Digital, WoM, Clientes q…\"\n- N-009 (U13) [PROPOSAL · accepted] U13 · La herramienta ya construida · Hugo: \"Dashboards automatizados con métricas de acuerdo a los foros / Análisis Adhoc / Agentes de inteligencia artificial como…\"\n- N-010 (U14) [PROPOSAL · accepted] U14 · Antes, definiciones y fuentes claras · Hugo: \"Técnica… Pulir su CRM / Implementación de Analítica Digital\"\n- N-011 (U15) [OBSERVATION · accepted] U15 · Tu Parte 3 · Hugo: \"El bloque que titulaste CFO repetía el contenido del CRO.\"\n- N-012 (U16) [PROPOSAL · accepted] U16 · Tus pedidos posteriores · Hugo: \"Pediste MECE, separar diagnóstico de plan/solución y priorizar impacto × capacidad.\"\n- N-013 (A01) [UNKNOWN · accepted] Qué contamos como una persona o cuenta que entra. Un contacto, usuario, oportunidad y cliente no son necesariamente la misma unidad.\n- N-014 (A02) [UNKNOWN · accepted] Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa.\n- N-015 (A03) [UNKNOWN · accepted] Si primera transacción realmente significa cliente nuevo y si la historia y los IDs lo permiten.\n- N-016 (A04) [UNKNOWN · accepted] Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece.\n- N-017 (A05) [UNKNOWN · accepted] Si los meses están completos y la escala de Transactions ya fue multiplicada por 10.000 para llegar a COP.\n- N-018 (A06) [UNKNOWN · accepted] Si Industry describe la industria actual o la de entonces, y qué clientes no tienen clasificación.\n- N-019 (A07) [UNKNOWN · accepted] Si un resultado neto estable esconde aumentos y caídas que se compensan.\n- N-020 [OBSERVATION · accepted] Entre dos periodos aún sin fijar, los clientes activos observados crecen 4,5× y el monto pagado 2,8×. El monto pagado por cliente activo baja ~38% (≈COP 92,8 mil → 57,8 mil). Las tres cifras son una sola observación: el… · Hugo: \"Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a…\"\n- N-021 [PROPOSAL · accepted] Material de soporte en tres secciones: Overview (salud general que introduce lo demás) → Growth (L1 relaciones; L2 entradas, actividad económica y gasto; L3 funnel por motion; L4 concentración, hipótesis y solución anal… · Hugo: \"el storytelling lo visualizo más o menos así: Sección 1 Overview… Sección 2 Growth… Revenue…\"\n- N-022 [PROPOSAL · accepted] Lámina 2 de Growth: describir los primeros pagadores observados y su actividad económica (monto pagado) por segmento. Con los datos disponibles, el único segmento es industria. · Hugo: \"Entradas y Actividad económica de los clientes y de diferentes segmentos\"\n- N-023 [PROPOSAL · accepted] Agrupar el gasto de Marketing en tres bloques: generación de demanda ToFu (Paid Media + Publicidad no web), equipo (Payroll Expenses + Travel) y habilitación (Software Tools + Freelance). Queda abierta la duda de si hab… · Hugo: \"Inversión en Generación de Demanda para ToFu (Paid Media y Publicidad no web) / Team + Payroll Expenses + Travel / Habi…\"\n- N-024 [ASSUMPTION · accepted] La Lámina 3 supone que Finora tiene tres motions distinguibles y que cada lead o cliente se puede asignar a una. El caso respalda self-service y proceso comercial asistido; «Executive» no aparece como ruta propia. · Hugo: \"Assisted / Self Service / Executive\"\n- N-025 [PROPOSAL · accepted] Como no se conocen las métricas actuales de Finora, proponer métricas que hoy no existen partiendo de MRR, ARR, ARPU, CAC, LTV, Churn y UCM. · Hugo: \"No es posible determinar las métricas actuales, pero típicamente pensaría en abordar estos frameworks de Growth (MRR, A…\"\n- N-026 [USER_INTUITION · accepted] Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analítica). · Hugo: \"Por lo que se puede observar tienen un problema\"\n- N-027 [UNKNOWN · accepted] No sabemos qué decisiones quiere tomar el CRO con el funnel. La columna «Decision Making» de la solución está vacía. · Hugo: \"Decision Making\"\n- N-028 [PROPOSAL · accepted] Sección Revenue: primero, lo observable de pricing y comportamiento actual en los pagos; después, cómo introducir descuentos temporales (mecanismo propuesto) y sus implicaciones multidisciplinarias. · Hugo: \"Revisar Data observable de pricing y comportamiento actual, observaciones generales // Finora quiere introducir descuen…\"\n- N-029 [PROPOSAL · accepted] Una propuesta de modelo de datos que resuelva dos cosas: separar el valor de la suscripción del precio efectivamente pagado (campos, tablas, definiciones) y clasificar el inicio y el fin de un descuento para que no se c… · Hugo: \"¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones agregar…\"\n- N-030 [FACT · proposed] Hoy el histórico de Finora tiene cliente + mes + monto pagado, y los cambios del monto entre meses se usan para clasificar movimientos: crecimiento, contracción, churn o reactivación. · Hugo: \"Hoy existe un histórico con cliente + mes + monto pagado, y los cambios entre meses se usan para clasificar movimientos…\"\n- N-031 [PROPOSAL · proposed] Hipótesis de diseño para S3.3: el descuento temporal se guarda como registro propio ligado a la suscripción (monto o %, fecha de inicio, fecha de fin y motivo), separado del valor de la suscripción. Valor de la suscripc…\n- N-032 [PROPOSAL · proposed] Hipótesis de diseño para S3.4: el inicio, el cambio y el fin de un descuento son movimientos propios del puente, no contracción ni expansión. Así, 100→80 es contracción solo si baja el valor de la suscripción; si el val…\n- Q-001 (CRO) [QUESTION · accepted · pregunta ejecutiva] ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) [QUESTION · accepted · pregunta ejecutiva] ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) [QUESTION · accepted · pregunta ejecutiva] ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n- Q-004 (C1) [QUESTION · accepted] ¿Realmente aumentó igual la entrada total?\n- Q-005 (C2) [QUESTION · accepted] ¿Cambió la gente que entra o el tiempo que ha tenido para comprar?\n- Q-006 (C3) [QUESTION · accepted] ¿Personas similares están comprando menos o comprando más tarde?\n- Q-007 (F1) [QUESTION · accepted] ¿Cuánto aportan los clientes que entran?\n- Q-008 (F2) [QUESTION · accepted] ¿Cuánto dejan de aportar los clientes que salen?\n- Q-009 (F3) [QUESTION · accepted] ¿Qué cambió en quienes permanecen?\n- Q-010 (W0) [QUESTION · accepted] ¿Qué podemos nombrar y comparar válidamente?\n- Q-011 (W1) [QUESTION · accepted] ¿El monto identifica los escenarios del CFO?\n- Q-012 (W2) [QUESTION · accepted] ¿Qué cambió en los primeros pagadores observados?\n- Q-013 (W3) [QUESTION · accepted] ¿Dónde se concentra el cambio del monto observado?\n- Q-014 (W4) [QUESTION · accepted] ¿En qué segmentos se concentra la pérdida de crecimiento? Con los datos disponibles solo se puede mirar por industria y sobre pagadores observados; no sobre leads ni por canal. · Hugo: \"¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?\"\n- Q-015 (W5) [QUESTION · accepted] ¿Cambió la economía posterior de los nuevos pagadores?\n- Q-016 (W6) [QUESTION · accepted] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?\n- Q-017 (W7) [QUESTION · accepted] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente?\n- Q-018 (W8) [QUESTION · accepted] ¿Qué relación entre el gasto de Marketing por categoría y los nuevos pagadores o el monto pagado se puede describir cruzando fechas, y hasta dónde llega (asociación, no efecto)? · Hugo: \"¿Hasta donde si podemos determinar y relacionar un incremento en ventas con la inversión en las diferentes categorías?…\"\n- Q-019 (W9) [QUESTION · accepted] ¿Qué cambió en la respuesta y qué sigue abierto? (volver a las hipótesis y escribir qué aprendimos)\n- Q-020 (U02) [QUESTION · accepted] U02 · ¿Qué cambió y desde cuándo? · Hugo: \"Preguntaste por dirección, momento y comparación; incluso si ventas podía estar creciendo más lento.\"\n- Q-021 (U06) [QUESTION · accepted] U06 · Demanda, calidad, atención y post-SQL · Hugo: \"Retomaste las explicaciones del caso y preguntaste cómo distinguirlas.\"\n- Q-022 (U07) [QUESTION · accepted] U07 · ¿La data actual da alguna pista? · Hugo: \"Preguntaste qué podíamos inferir con pagos, industria y gasto.\"\n- Q-023 (U12) [QUESTION · accepted] U12 · ¿Validar implica experimentos? · Hugo: \"Preguntaste por experimentación e hipótesis nula.\"\n- Q-024 [QUESTION · accepted] ¿Qué relaciones van en la Lámina 1 de Growth? No están registradas en el caso y el brief también las marca «por precisar». · Hugo: \"Lámina 1: las relaciones que te comenté\"\n- Q-025 [QUESTION · accepted] Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (100→130 con −30, y sigue pagando 100), contracción vs descuento (100→80) y fin de descuento vs expansión. · Hugo: \"¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? / Si un cliente pag…\"\n- Q-026 [QUESTION · proposed] ¿Qué está pasando con el negocio subyacente (el valor de la suscripción antes de descuentos) y cuánto revenue deja de capturar Finora por decisiones comerciales, como los descuentos temporales? · Hugo: \"Quiero saber qué está pasando con el negocio subyacente y cuánto revenue estamos dejando de capturar por decisiones com…\"\n- Q-027 [QUESTION · proposed] ¿PayrollExpenses y Team se solapan (los dos suenan a costo de personas)? ¿Los 5 meses con PayrollExpenses negativo son reversos o reclasificaciones, y en qué meses caen?\n- Q-028 [QUESTION · proposed] ¿Qué le pedimos a Finora para cerrar el gasto (moneda y factor de escala, centro de costo y proveedor por rubro, método de asignación antes y después de jun-23)? ¿Lo contamos como hueco de su WoW en la respuesta?\n- Q-029 [QUESTION · proposed] F-070 da el gasto por primer pagador con dos decimales, y en 2024 la diferencia con y sin Habilitación (0,04 vs 0,03 u) es del tamaño del redondeo. ¿Se reporta como índice 2022 = 100?\n- Q-030 [QUESTION · proposed] Para Finora: ¿en qué unidad y moneda está el archivo de S&M? ¿Qué cambió en may/jun-23, cuando Team deja de ser un porcentaje fijo y Freelance pasa a cero: cambió lo que incluye el archivo o cambió la operación?\n- Q-031 [QUESTION · proposed] Para Finora: ¿qué pasó alrededor de ene-23 y de jun-23? Por ejemplo: plan o precio de entrada, empuje de Self Service, cambios en Team, sistema de cobro o identificadores.\n- Q-032 [QUESTION · proposed] Para el CRO: ¿cómo mide «ventas» (conteo de Won, primeros pagos o valor nuevo) y a qué periodo se refiere con «más leads, pero no más ventas»?\n- Q-033 [QUESTION · proposed] ¿Qué significa 'New' en H-006: entradas o clientes nuevos? (La misma palabra aparece en H-001.) ¿Y qué meses son 'la caída'? Sin eso, la comparación de R-014 no tiene periodo base ni periodo de caída. R-012 (en curso) p…\n- Q-034 [QUESTION · proposed] ¿Qué cuenta como 'compra' en la ventana fija de R-014: Won, primer pago o suscripción activa? El framing lo deja por acordar, y la prueba depende de eso.\n- Q-035 [QUESTION · proposed] ¿El enunciado dice algo sobre Self Service (si existía sin SDR/AE en ambos periodos) o sobre cambios en la definición de lead, el formulario, la calificación o el reparto? Es el chequeo más barato antes de tratarlos com…\n- Q-036 [QUESTION · proposed] ¿Octubre-24 está completo en los pagos? ¿Cómo queda jul–sep 2024 frente a 2023 sin octubre?\n- Q-037 [QUESTION · proposed] ¿El tramo de 2023 con más primeros pagadores por mes que señala R-015 cae en jul–oct? Si es así, el −19% se compara contra un pico.\n- Q-038 [QUESTION · proposed] ¿Qué hito usa el CRO como «venta» (Won, primer pago o suscripción activa)? ¿Habla de nivel («no más ventas») o de proporción («no crecen en la misma proporción»)?\n- Q-039 [QUESTION · proposed] Si apruebas la regla de H-017: ¿cuántos meses sin pago se toleran antes de contar una salida, y cómo se reparte un pago que cubre varios meses?\n- Q-040 [QUESTION · proposed] D-007 (activa) deja fuera las métricas definitivas y el modelo de datos. ¿Aplicaba solo a Framing? Si ya no aplica, ¿confirmas D-015 para que R-018, R-011, R-019 y R-021 entren al caso como propuestas trazables?\n- Q-041 [QUESTION · proposed] ¿Pedimos ya a Finora la unidad y moneda del S&M, el margen o costo de servir, la facturación con periodo de servicio y el motion y canal de cada cliente? ¿O esos campos se quedan solo en la Propuesta de Modelo de datos?\n- Q-042 [QUESTION · proposed] ¿Qué representa cada fila de raw.transactions (factura emitida, pago recibido o valor del periodo de servicio) y a qué fecha corresponde month? Es la pregunta a Finora que más desbloquea: decide si el monto se puede lee…\n- Q-043 [QUESTION · proposed] ¿Tiene Finora facturación o CRM con plan, cantidad, tarifa de lista con fechas y descuentos por suscripción? ¿Desde qué mes? ¿Hubo descuentos o cambios de tarifa entre 2022 y 2024?\n- Q-044 [QUESTION · proposed] ¿Cómo cobra Finora: frecuencia de facturación, cargos de instalación, pagos parciales y política de mora?\n- Q-045 [QUESTION · proposed] Para el CRO: ¿cómo calcula hoy «más leads, pero no más ventas» (conteos de período o cohortes con ventana cumplida)? ¿Desde cuándo llega más gente? ¿Cuánto tarda cada puerta en llegar al primer pago? Las tres respuestas…\n- Q-046 [QUESTION · proposed] ¿Cómo define Finora cada puerta y existe Self Service real (compra sin intervención humana)? F-140 tiene confianza media justo en ese punto. Si no hay Self Service, el bowtie queda en dos puertas y la hipótesis puente s…\n- Q-047 [QUESTION · proposed] ¿Qué tabla respalda el 90–96% de activos en M3 por cosecha y el 18–38% de reactivaciones sobre entradas a pago que cita R-016? No veo ninguna tabla listada que los nombre (¿sale de T-002?). Sin tabla, esas cifras no ent…\n- Q-048 [QUESTION · proposed] ¿El gasto de S&M entra como cuarta fuente de la capa técnica, con unidad, clasificación funcional y, si se puede, desglose por motion y canal? Sin eso, los foros mensual (Inversión en Marketing) y trimestral (reparto en…\n- Q-049 [QUESTION · proposed] ¿Qué explicaciones del CRO (H-001 a H-008) quedan contrastables con las fuentes de R-019? ¿Qué campos hay que añadir para H-005, H-006 y H-008, usando el dato mínimo que ya definen R-010 y R-014?\n- Q-050 [QUESTION · proposed] ¿Cuál es el nudo del bowtie: Won, primer pago o suscripción activa? El framing lo deja por acordar, R-016 usa primer pago y la capa de decisión de R-019 depende de esa elección.\n- Q-051 [QUESTION · proposed] ¿A qué periodo y a qué hito se refiere el CRO con «más leads, pero no más ventas»? Si es 2023 → 2024 y el hito es el primer pago, la meseta de primeras apariciones (54,2 → 55,4 por mes, F-078) es el tramo observado que…\n- Q-052 [QUESTION · proposed] ¿Qué cambió en Finora entre dic-22 y ene-23 (oferta, precio, canal de entrada, sistema de cobro o identificadores de cliente)? Ahí están el escalón de primeras apariciones (F-110/T-016) y la caída del ticket de entrada.…\n- Q-053 [QUESTION · proposed] Tomando solo a los clientes activos tanto en ene-22 como en oct-24, ¿su pago promedio sube o baja? Eso dice si el 97,4 mil significa que pagan más o que se fueron los que pagaban menos. Es un chequeo rápido con el propi…\n- Q-054 [QUESTION · proposed] ¿Finora tiene tamaño de cliente (empleados, sedes) o plan contratado por cliente? Es lo mínimo para segmentar más allá de la industria (F-106).\n- Q-055 [QUESTION · proposed] ¿Qué eran los pagos iniciales grandes de 2022 (setup, prepago, anualidad u otro)? Define si el ticket de entrada de 2022 es comparable con el de 2024.\n- Q-056 [QUESTION · proposed] ¿Hay gasto de Generación de Demanda o leads por industria? Sin eso, la señal de Salud (F-104, F-105) no dice si conviene buscar más clientes ahí.\n- Q-057 [QUESTION · proposed] Para Finora: ¿hubo algún cambio de oferta, plan de entrada, Canal de adquisición o forma de cobro hacia ene-23? Ese mes las altas observadas pasan de 26 a 60 (T-016), y la mediana del ticket de entrada baja de COP 63,0…\n- Q-058 [QUESTION · proposed] Para Finora: ¿qué incluye el primer cobro de un cliente (prorrateo, cargo inicial, meses adelantados)? Sin saberlo, el ticket de entrada medido con el 1.er pago no es del todo comparable entre años (Q-012).\n- Q-059 [QUESTION · proposed] Para Finora: ¿qué representa el monto del archivo de pagos: cobro emitido, pago recibido o neto de créditos? De eso depende cómo leer en el bloque CFO las reversiones y los ajustes retroactivos de F-090.\n- Q-060 [QUESTION · proposed] ¿Finora tiene plan, cantidad y precio de lista, con fechas, en algún sistema (facturación o CRM)? Según R-021, es la condición para separar cantidad de tarifa en Q-002, con o sin descuentos. Si hay historial, quizá una…\n- Q-061 [QUESTION · proposed] ¿Los contratos de Finora son mensuales cancelables o a plazo fijo? De eso depende si el descuento se lee en MRR neto, en revenue reconocido o en caja (F-153).\n- Q-062 [QUESTION · proposed] ¿El monto de raw.transactions es lo facturado o lo cobrado, y un mes en cero genera fila? Chequeo mínimo con lo que ya tenemos: contar las filas con monto 0 y ver cuántas reactivaciones del puente (R-004) vuelven tras u…\n\n## Evidencia aceptada (hechos con base evidence:<ID>)\n(ninguna todavía)\n\n## Conversación reciente\nHugo (organize): el storytelling lo visualizo más o menos así: Seccion 1 Overview: Meter observacines generales como la que te dije Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil. y profunizar un poco en insights generales y salud en genera, algo que permita introducir a las siguientes secciones. Seccion 2: Growth, Lamina 1: las relaciones que te comenté, lámina 2:\nEntradas y Actividad económica de los clientes y de diferentes segmentos \n\nInversión en Marketing\n\n¿Hasta donde si podemos determinar y relacionar un incremento en…\nFramer: Va, lo registré como esqueleto del material de soporte, no como los 5 minutos. Te propongo pasar tu orden Overview → Growth → Revenue al storyline provisional. Tú lo apruebas.\n\nLo que noté al ordenarlo:\n\n- Overview: 4,5×, 2,8× y −38% son una sola observación. El −38% sale de dividir 2,8 entre 4,5 (≈ 0,62). Queda como observación mientras no fijemos el periodo. En la lámina yo diría «MRR pagado por cliente activo», que en el fondo es tu ARPU observado.\n- Growth L2: aquí «entradas» son los primeros pagadores observados, no leads. Tu «hasta dónde sí podemos» con el gasto por categoría refina Q-0…\nHugo (advise): Quiero que en research agregues lo que tenemos que proponer que está fuera de la data ¿Cómo definirías y medirías el funnel si no todos los clientes lo recorren igual (self-serve, entrada directa a SQL, estancamientos de semanas)? ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento? (este si se podría investigar algo en la data) ¿Qué métricas propondrías que hoy no existen? ¿Qué hipótesis explicarían el fenómeno (demanda, calidad, velocidad de atención, conversión post-SQL) y qué datos usarías para validar o descartar cada una? Revenue Finora cobra suscripciones mensuales cuyo va…\nFramer: Listo, ya lo pasé a research: son 9 tareas nuevas y hay 2 que te propongo cambiar de tipo. Como dices, casi todo es propuesta: solo 2 tareas usan data. Nada entra al plan hasta que lo apruebes.\n\n**Growth**\n- Cómo definir y medir el funnel, y qué métricas que hoy no existen propondríamos (measurement).\n- Dónde se concentra la pérdida de crecimiento por industria y cohorte, separando lo que es mezcla de lo que cambió dentro de cada grupo (data). Esto también ayuda a leer el −38% del Overview.\n- RT-001 pasa a data_model: pide el registro interno de Finora, y eso no se encuentra con research.\n- R…\n\n## Modo\nMODO CHALLENGE — «ahora intenta romper esto». Llena `challenge` (supuestos ocultos, contraargumento más fuerte, explicación alternativa, evidencia que lo invalidaría, claim de mayor riesgo). Tono tranquilo. `alternatives` vacío salvo que ayude a salir del problema.\nLentes de advisor cargadas para este turno: CRO (5 señal(es) de dominio CRO en la pregunta). Úsalas como lentes; tú conservas la síntesis.\n\n## Mensaje de Hugo\nEstá muy bien, pero yo esperaba ver una propuesta detallada del mix y MECE con su respectivo funnel y como se deberia de medir cada uno, recordemos que el funnel actual es New\nWorking SDR\nEngaged SDR\nSQL SDR\nDemo Account Executie\nProposal Account Executive\nWon /// ese es el punto de partida pero tambien tenemos otros Self Service con sus respectivos canales, Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y el solito lo acabó, hay que bajar bien esa definición), y el otro era el funnel tradicionald e ejecutivos, lo importante es que cada uno tiene sus estapas, el de ejecutivos ya está bien definido y te lo acabo de pasar, hay que definir self service o hybrid, tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso, cada uno de esos funneles tienen sus pasos, es lo que hay que definir y a cada casuistica de funnel asignarle métricas MECE\n\nSobre C-005: Proponemos un bowtie por puertas: Self Service, Assisted y Executive con nudo común\n\nDevuelve el FramerTurn. Reglas del patch: executive_question vacío = sin cambio; candidate_frames vacío = sin cambio (si lo envías, la lista completa, máx. 3); problem con campos vacíos = sin cambio en esos campos; storyline_guide = SOLO las secciones que cambian, completas con sus láminas (usa el id S# existente para revisar una; id vacío = sección nueva); research_plan = SOLO tareas nuevas o revisadas (id RT-### para revisar; vacío = nueva), cada una con work, draft_answer (tu respuesta de arranque desde el contexto: hipótesis de trabajo, sin cifras que no estén arriba), hugo_said (sus palabras textuales con el ID) y steps (data con tablas reales del modelo · research · proposal); decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo. Todo lo de shaping queda como propuesta hasta que Hugo lo apruebe.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "reply",
+   "items",
+   "framing_patch",
+   "advisors",
+   "alternatives",
+   "challenge",
+   "language",
+   "next_steps"
+  ],
+  "properties": {
+   "reply": {
+    "type": "string"
+   },
+   "items": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "kind",
+      "structured",
+      "hugo_wording",
+      "basis",
+      "confidence",
+      "falsifier",
+      "links",
+      "updates"
+     ],
+     "properties": {
+      "kind": {
+       "type": "string",
+       "enum": [
+        "FACT",
+        "OBSERVATION",
+        "USER_INTUITION",
+        "ASSUMPTION",
+        "HYPOTHESIS",
+        "QUESTION",
+        "PROPOSAL",
+        "DECISION",
+        "UNKNOWN"
+       ]
+      },
+      "structured": {
+       "type": "string"
+      },
+      "hugo_wording": {
+       "type": "string"
+      },
+      "basis": {
+       "type": "string"
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low",
+        "n/a"
+       ]
+      },
+      "falsifier": {
+       "type": "string"
+      },
+      "links": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "updates": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "framing_patch": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "executive_question",
+     "candidate_frames",
+     "problem",
+     "storyline_guide",
+     "research_plan",
+     "decisions_needed",
+     "should_not_claim",
+     "language_notes",
+     "risks"
+    ],
+    "properties": {
+     "executive_question": {
+      "type": "string"
+     },
+     "candidate_frames": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "description",
+        "when_it_wins",
+        "cost"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "description": {
+         "type": "string"
+        },
+        "when_it_wins": {
+         "type": "string"
+        },
+        "cost": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "statement",
+       "situation",
+       "why_it_matters",
+       "in_scope",
+       "out_of_scope"
+      ],
+      "properties": {
+       "statement": {
+        "type": "string"
+       },
+       "situation": {
+        "type": "string"
+       },
+       "why_it_matters": {
+        "type": "string"
+       },
+       "in_scope": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "out_of_scope": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "storyline_guide": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
+        "title",
+        "purpose",
+        "slides",
+        "why"
+       ],
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "title": {
+         "type": "string"
+        },
+        "purpose": {
+         "type": "string"
+        },
+        "slides": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "title",
+           "question",
+           "intent",
+           "notes",
+           "links"
+          ],
+          "properties": {
+           "title": {
+            "type": "string"
+           },
+           "question": {
+            "type": "string"
+           },
+           "intent": {
+            "type": "string"
+           },
+           "notes": {
+            "type": "string"
+           },
+           "links": {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           }
+          }
+         }
+        },
+        "why": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "research_plan": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
+        "slides",
+        "question",
+        "work",
+        "kind",
+        "intensity",
+        "draft_answer",
+        "hugo_said",
+        "steps",
+        "why",
+        "links"
+       ],
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "slides": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "question": {
+         "type": "string"
+        },
+        "work": {
+         "type": "string",
+         "enum": [
+          "propuesta",
+          "datos",
+          "research"
+         ]
+        },
+        "kind": {
+         "type": "string",
+         "enum": [
+          "data",
+          "research",
+          "measurement",
+          "data_model"
+         ]
+        },
+        "intensity": {
+         "type": "string",
+         "enum": [
+          "L1",
+          "L2",
+          "L3",
+          "auto"
+         ]
+        },
+        "draft_answer": {
+         "type": "string"
+        },
+        "hugo_said": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "text",
+           "ref"
+          ],
+          "properties": {
+           "text": {
+            "type": "string"
+           },
+           "ref": {
+            "type": "string"
+           }
+          }
+         }
+        },
+        "steps": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "kind",
+           "what",
+           "where"
+          ],
+          "properties": {
+           "kind": {
+            "type": "string",
+            "enum": [
+             "data",
+             "research",
+             "proposal"
+            ]
+           },
+           "what": {
+            "type": "string"
+           },
+           "where": {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           }
+          }
+         }
+        },
+        "why": {
+         "type": "string"
+        },
+        "links": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     },
+     "decisions_needed": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "should_not_claim": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "language_notes": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "risks": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "advisors": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "lens",
+      "why",
+      "contribution"
+     ],
+     "properties": {
+      "lens": {
+       "type": "string",
+       "enum": [
+        "ceo",
+        "cro",
+        "cfo",
+        "cpo",
+        "cdo"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "contribution": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "alternatives": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "name",
+      "approach",
+      "when_it_wins",
+      "cost"
+     ],
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "approach": {
+       "type": "string"
+      },
+      "when_it_wins": {
+       "type": "string"
+      },
+      "cost": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "challenge": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "hidden_assumptions",
+     "strongest_counterargument",
+     "alternative_explanation",
+     "invalidating_evidence",
+     "highest_risk_claim"
+    ],
+    "properties": {
+     "hidden_assumptions": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "strongest_counterargument": {
+      "type": "string"
+     },
+     "alternative_explanation": {
+      "type": "string"
+     },
+     "invalidating_evidence": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "highest_risk_claim": {
+      "type": "string"
+     }
+    }
+   },
+   "language": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "register",
+     "technical_level",
+     "formality",
+     "preserved_terms",
+     "introduced_terms"
+    ],
+    "properties": {
+     "register": {
+      "type": "string"
+     },
+     "technical_level": {
+      "type": "string"
+     },
+     "formality": {
+      "type": "string"
+     },
+     "preserved_terms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "introduced_terms": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "term",
+        "plain"
+       ],
+       "properties": {
+        "term": {
+         "type": "string"
+        },
+        "plain": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "next_steps": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "adaptive-case-framer",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "f0fa52d3d8e5"
+  },
+  {
+   "id": "business-case-partner",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "Hugo (~/.codex/skills/business-case-partner)",
+   "kind": "vendor",
+   "digest": "d310b71c0a76"
+  },
+  {
+   "id": "case-shaping",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (inspired by the shaping step of Shape Up)",
+   "kind": "custom",
+   "digest": "4bfa257e2bb7"
+  },
+  {
+   "id": "cro-advisor",
+   "mode": "lens",
+   "why": "5 señal(es) de dominio CRO en la pregunta",
+   "source": "alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor",
+   "kind": "vendor",
+   "digest": "cd712605d907"
+  },
+  {
+   "id": "assumption-challenger",
+   "mode": "challenge",
+   "why": "modo Challenge",
+   "source": "CaseOS adaptation of alirezarezvani/claude-skills executive-mentor /em:challenge + /em:stress-test",
+   "kind": "custom",
+   "digest": "62245d33181d"
+  },
+  {
+   "id": "executive-mentor",
+   "mode": "challenge",
+   "why": "modo Challenge",
+   "source": "alirezarezvani/claude-skills · c-level-advisor/executive-mentor",
+   "kind": "vendor",
+   "digest": "8c4f6b85b37e"
+  }
+ ],
+ "lenses": [
+  {
+   "lens": "cro",
+   "skill": "cro-advisor",
+   "score": 5,
+   "why": "5 señal(es) de dominio CRO en la pregunta"
+  }
+ ],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "reply": "Tienes razón, faltaba bajar el mix. Me pides una propuesta y el modo está en Challenge, así que hice las dos cosas. La propuesta quedó como respuesta de arranque en RT-016, que revisé con las etapas de cada funnel. RT-016 ya estaba enviada, así que la revisión cambia esa respuesta de arranque. Además, abrí una tarea nueva de métricas MECE por casuística.\n\nEn corto:\n- **Executive (SDR → AE):** tus etapas de New a Won, más estados de salida (Lost, Descalificado, a Reactivate). La entrada directa a SQL la trataría como Executive que empieza en SQL.\n- **Self Service:** llega → se registra → lo usa → paga, como dice el brief. Dividir «lo usa» en activación y señal de compra es propuesta mía.\n- **Hybrid:** tus dos casos. A) Empezó solo arriba y lo intervinieron abajo. B) Lo contactaron como New y él solito lo acabó.\n- **Reactivate:** propongo que sea un loop y no una cuarta ruta. Tú mismo lo dices: «asignarlos a un funnel de acuerdo al caso». Un lead reactivado no cuenta como entrada nueva.\n\nDónde se rompe: tal como está, la lista no es MECE, porque mezcla tres ejes: quién movió al lead, en qué estado está (Reactivate) y de dónde vino (canales). Un lead puede ser Executive y estar estancado a la vez, y un Self Service de hoy puede ser Hybrid mañana. Por eso Hybrid no puede ser puerta del bowtie de C-005: se sabe después, no al entrar. Dejé en decisiones si Hybrid reemplaza a Assisted.\n\nPropongo resolverlo con dos preguntas:\n1. ¿Por qué puerta nació el registro: producto o comercial? Eso se fija al entrar.\n2. ¿Cuántos tramos movió una persona antes del nudo? Si ninguno, es Self Service; si todos, Executive; si algunos, Hybrid.\n\nOtra cosa: que Hybrid convierta más que Self Service no mide lo que aporta el SDR, porque ellos eligen a quién tocar (H-028).\n\nLente CRO: si Self Service no genera oportunidad, el nudo común no puede ser Won (Q-050).\n\n¿Medimos la conversión por puerta y usamos Self Service / Hybrid / Executive para describir cómo llegaron al nudo, o prefieres que cada ruta sea su propia cohorte?",
+  "items": [
+   {
+    "kind": "FACT",
+    "structured": "El funnel comercial aproximado del brief es New → Working → Engaged → SQL → Demo → Proposal → Won. Los SDRs trabajan sobre todo las primeras etapas y después normalmente entra un Account Executive.",
+    "hugo_wording": "recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie / Proposal Account Executive / Won /// ese es el punto de partida",
+    "basis": "brief",
+    "confidence": "high",
+    "falsifier": "Si Finora usa otras etapas u otro orden en su CRM.",
+    "links": [
+     "N-005",
+     "Q-001"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Executive = el funnel tradicional de ejecutivos: las etapas del brief, con Working, Engaged y SQL a cargo del SDR, y Demo y Proposal a cargo del AE. Para Hugo ya está definido. Si lo confirma, se cierra la duda de si «Executive» era la entrada directa a SQL o un segmento de cuentas con KAM.",
+    "hugo_wording": "y el otro era el funnel tradicionald e ejecutivos, lo importante es que cada uno tiene sus estapas, el de ejecutivos ya está bien definido y te lo acabo de pasar",
+    "basis": "Hugo, comentario sobre C-005; la secuencia de etapas viene del brief",
+    "confidence": "n/a",
+    "falsifier": "Se debilita si Finora tiene criterios distintos por etapa o si el traspaso SDR → AE no ocurre en SQL → Demo. El brief dice «sobre todo» y «normalmente».",
+    "links": [
+     "N-024",
+     "N-008",
+     "C-005"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Mix de funnels por casuística: Executive (SDR → AE), Self Service con sus canales, Hybrid y, de forma tentativa, Reactivate. Cada uno con sus etapas y sus métricas MECE.",
+    "hugo_wording": "cada uno de esos funneles tienen sus pasos, es lo que hay que definir y a cada casuistica de funnel asignarle métricas MECE",
+    "basis": "Hugo, comentario sobre C-005",
+    "confidence": "n/a",
+    "falsifier": "Si un mismo lead puede estar en dos funnels a la vez o cambiar de funnel, el mix no es MECE sin una regla de asignación.",
+    "links": [
+     "C-005",
+     "N-006",
+     "N-024"
+    ],
+    "updates": "N-008"
+   },
+   {
+    "kind": "FACT",
+    "structured": "El brief describe la ruta sin ventas: algunos usuarios llegan directo al producto, se registran, lo usan y pagan sin necesariamente hablar con ventas. Otros entran al proceso comercial por campañas, referidos, partners o prospección.",
+    "hugo_wording": "tambien tenemos otros Self Service con sus respectivos canales",
+    "basis": "brief",
+    "confidence": "high",
+    "falsifier": "Si Finora confirma que no existe compra sin intervención humana (Q-046).",
+    "links": [
+     "Q-046",
+     "N-005"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "OBSERVATION",
+    "structured": "El «sin necesariamente hablar con ventas» del brief ya deja espacio a Hybrid: algunos de los que entran por el producto sí hablan con una persona. Es el caso A de Hugo.",
+    "hugo_wording": "",
+    "basis": "brief",
+    "confidence": "medium",
+    "falsifier": "Si Finora confirma que quien entra por el producto nunca tiene contacto de ventas antes de pagar.",
+    "links": [
+     "Q-046"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Hybrid = en el recorrido hubo al menos un tramo sin persona (Self Service) y al menos uno intervenido por una persona. Dos casos: A) empezó solo arriba y lo intervinieron abajo; B) lo contactaron como New y terminó solo. Falta definir qué cuenta como «intervención».",
+    "hugo_wording": "Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y el solito lo acabó, hay que bajar bien esa definición)",
+    "basis": "Hugo, comentario sobre C-005",
+    "confidence": "n/a",
+    "falsifier": "Si no se puede registrar en la misma cuenta quién movió cada tramo, Hybrid no se distingue de Executive ni de Self Service.",
+    "links": [
+     "N-005",
+     "Q-046",
+     "C-005"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Reactivate (tentativo): leads estancados en alguna etapa que se pueden reactivar y reasignar a un funnel según el caso.",
+    "hugo_wording": "tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso",
+    "basis": "Hugo, comentario sobre C-005",
+    "confidence": "n/a",
+    "falsifier": "Si el reactivado se cuenta como entrada nueva, o queda a la vez en su funnel original y en Reactivate, se rompe el MECE.",
+    "links": [
+     "N-005",
+     "H-004",
+     "H-037"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Regla MECE propuesta, en dos preguntas. 1) Puerta, fija al entrar: el registro nace en el producto o en el proceso comercial. 2) Intervención antes del nudo, contando tramos (pasar de una etapa a la siguiente): si ninguno lo movió una persona, es Self Service; si todos, Executive; si algunos, Hybrid. Reactivate es un loop con marca, no una ruta ni una entrada nueva, y sus acciones cuentan como intervención solo si las hace un SDR/AE. El canal es un atributo que cruza las tres rutas. La conversión se mide por cohorte de puerta y la ruta describe cómo llegaron al nudo.",
+    "hugo_wording": "",
+    "basis": "propuesta del Framer sobre las definiciones de Hugo",
+    "confidence": "n/a",
+    "falsifier": "Se debilita si, con registros reales, un lead cae en dos rutas o cambia de ruta más de una vez, o si casi todos caen en una sola ruta y separarlas no agrega nada.",
+    "links": [
+     "C-005",
+     "N-008",
+     "H-028",
+     "H-036",
+     "H-037",
+     "Q-050"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "PROPOSAL",
+    "structured": "Métricas MECE por ruta. En cada cohorte de entrada, a una fecha dada cada lead está en un solo estado: llegó al nudo, activo en una etapa, estancado, en Reactivate, perdido o descalificado. La suma da 100%. Encima, cuatro familias de métricas iguales para todas las rutas: volumen, conversión con plazo fijo, velocidad y valor al nudo. Entre rutas solo se comparan entrada, nudo y valor; las etapas intermedias se comparan dentro de cada ruta a lo largo del tiempo.",
+    "hugo_wording": "",
+    "basis": "propuesta del Framer",
+    "confidence": "n/a",
+    "falsifier": "Se debilita si la suma de estados por cohorte no da el total de entradas (hay leads sin estado o con dos), o si el CRO necesita decisiones que estas familias no cubren (N-027).",
+    "links": [
+     "N-025",
+     "N-027",
+     "H-004",
+     "H-005",
+     "H-006",
+     "H-007"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "HYPOTHESIS",
+    "structured": "La conversión de Hybrid va a reflejar sobre todo a quién eligen tocar los SDR/AE (los que ya venían bien o los que se atoraron), no lo que aporta la intervención.",
+    "hugo_wording": "",
+    "basis": "razonamiento sobre H-028 (R-014, Sabnis et al., 2013)",
+    "confidence": "medium",
+    "falsifier": "Se debilita si la intervención sigue una regla fija que no depende de cómo va el lead (por ejemplo, todo registro con la misma señal de uso), o si frente a un grupo sin contacto elegido al azar la diferencia de compra se mantiene.",
+    "links": [
+     "H-028",
+     "H-006",
+     "Q-023"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "HYPOTHESIS",
+    "structured": "Parte de lo que se ve como recorridos distintos podría ser cómo se registra en el CRM: oportunidades creadas directo en SQL, leads sin estado de salida que se ven estancados porque nadie los cerró, y clientes Self Service que solo aparecen cuando pagan.",
+    "hugo_wording": "",
+    "basis": "explicación alternativa; el caso no trae datos de CRM",
+    "confidence": "low",
+    "falsifier": "Se debilita si las entradas directas a SQL tienen un origen propio registrado (partner, referido, demo pedida) y los estancados tienen actividad registrada en el periodo.",
+    "links": [
+     "N-005",
+     "N-010",
+     "N-026"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "ASSUMPTION",
+    "structured": "Para medir Hybrid hay que unir, por la misma cuenta, los toques de SDR/AE (CRM) y los pasos en el producto (registro, uso, pago). Los datos del caso no traen nada de eso y no sabemos si Finora lo tiene.",
+    "hugo_wording": "",
+    "basis": "vacío declarado en el brief: no hay datos de funnel",
+    "confidence": "low",
+    "falsifier": "Si Finora no tiene un ID común entre CRM y producto, Hybrid no se puede medir y la propuesta se queda en puertas.",
+    "links": [
+     "N-010",
+     "N-013",
+     "Q-041"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "ASSUMPTION",
+    "structured": "Self Service no genera oportunidad ni Won en el CRM. Si es así, el nudo común no puede ser Won y queda entre primer pago y suscripción activa.",
+    "hugo_wording": "",
+    "basis": "razonamiento sobre el brief: en Self Service se paga sin necesariamente hablar con ventas",
+    "confidence": "medium",
+    "falsifier": "Si el CRM de Finora crea un Won automático cuando alguien paga en el producto.",
+    "links": [
+     "Q-050",
+     "N-014",
+     "C-005"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "QUESTION",
+    "structured": "¿Qué cuenta como intervención de una persona para Hybrid: cualquier contacto registrado de SDR/AE o solo una conversación real (llamada conectada, demo, propuesta)? ¿Llenar un formulario de «hablar con ventas» cuenta como tramo sin persona?",
+    "hugo_wording": "hay que bajar bien esa definición",
+    "basis": "definición pendiente",
+    "confidence": "n/a",
+    "falsifier": "",
+    "links": [
+     "Q-046"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "UNKNOWN",
+    "structured": "No sabemos si Self Service tiene prueba gratis con fecha de fin, freemium o pago al registrarse. Eso cambia las etapas entre el registro y el pago.",
+    "hugo_wording": "",
+    "basis": "no está en el brief ni en los datos",
+    "confidence": "n/a",
+    "falsifier": "Se cierra con la respuesta de Finora.",
+    "links": [
+     "Q-046"
+    ],
+    "updates": ""
+   },
+   {
+    "kind": "QUESTION",
+    "structured": "¿Desde cuántos días sin actividad, y en qué etapa, un lead cuenta como estancado y entra a Reactivate? Es un parámetro que hay que acordar con Finora, no un estándar de mercado.",
+    "hugo_wording": "los que dicen que están estancados",
+    "basis": "el brief menciona leads estancados semanas en alguna etapa",
+    "confidence": "n/a",
+    "falsifier": "",
+    "links": [
+     "H-004",
+     "N-005"
+    ],
+    "updates": ""
+   }
+  ],
+  "framing_patch": {
+   "executive_question": "",
+   "candidate_frames": [],
+   "problem": {
+    "statement": "",
+    "situation": "",
+    "why_it_matters": "",
+    "in_scope": [],
+    "out_of_scope": []
+   },
+   "storyline_guide": [],
+   "research_plan": [
+    {
+     "id": "RT-016",
+     "slides": [
+      "S2.3",
+      "S2.7"
+     ],
+     "question": "¿Cómo definir y medir el funnel si no todos lo recorren igual? El mix MECE de funnels (Executive, Self Service, Hybrid y Reactivate), las etapas de cada uno y la regla que pone a cada lead en uno solo.",
+     "work": "propuesta",
+     "kind": "measurement",
+     "intensity": "L3",
+     "draft_answer": "Propuesta de arranque: el mix funciona si se corta con dos preguntas, no como lista. 1) Puerta, fija al entrar: ¿el registro nació en el producto (se registró solo) o en el proceso comercial (campaña, referido, partner, prospección)? 2) Intervención antes del nudo, contando tramos (pasar de una etapa a la siguiente): si ninguno lo movió una persona, es Self Service; si todos, Executive; si algunos, Hybrid. Hybrid tiene los dos casos de Hugo: A) empezó solo arriba y lo intervinieron abajo; B) lo contactaron como New y él solito lo acabó. Reactivate va como loop, no como cuarta ruta: el lead estancado entra, se trabaja y se reasigna según el caso, sin contar como entrada nueva. Si lo reactiva un SDR, eso cuenta como intervención. Etapas: Executive = New → Working → Engaged → SQL → Demo → Proposal → Won, más estados de salida (Lost, Descalificado, a Reactivate); la entrada directa a SQL es Executive con etapa de entrada SQL. Self Service = llega → se registra → activación → señal de compra → paga. El brief dice «llegan directo al producto, se registran, lo usan y pagan»; activación y señal de compra son propuesta. Hybrid A = registro → uso → señal que dispara el contacto de SDR/AE → demo o propuesta si hace falta → nudo. Hybrid B = New → Working/Engaged → registro en el producto → paga sin AE. El canal es un atributo que cruza las tres rutas. Borde por decidir: el lead de campaña que nadie contactó y compró solo (Self Service con puerta comercial; habla directo de H-006). No sabemos si Self Service tiene prueba gratis, freemium o pago al registrarse, qué cuenta como intervención, ni si CRM y producto comparten ID.",
+     "hugo_said": [
+      {
+       "text": "Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y el solito lo acabó, hay que bajar bien esa definición)",
+       "ref": "comentario sobre C-005"
+      },
+      {
+       "text": "el de ejecutivos ya está bien definido y te lo acabo de pasar, hay que definir self service o hybrid",
+       "ref": "comentario sobre C-005"
+      },
+      {
+       "text": "tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso",
+       "ref": "comentario sobre C-005"
+      },
+      {
+       "text": "Assisted / Self Service / Executive",
+       "ref": "N-024"
+      }
+     ],
+     "steps": [
+      {
+       "kind": "data",
+       "what": "Confirmar qué hay para asignar rutas. En el modelo no hay etapa, canal, toques de SDR/AE ni eventos de producto, así que con los datos del caso no se puede asignar ninguna ruta. Solo el nudo es observable, si se define como primer pago (bandera de alta). No inferir la ruta por monto ni por industria.",
+       "where": [
+        "mart.customer_month",
+        "raw.transactions"
+       ]
+      },
+      {
+       "kind": "research",
+       "what": "Buscar cómo se definen en la práctica el bowtie con varias puertas, las rutas mixtas (contacto de ventas disparado por el uso del producto) y el reciclaje de leads estancados. Sirve como opciones para la propuesta, no como estándar ni para fijar umbrales.",
+       "where": [
+        "modelo bowtie (C-005)",
+        "prácticas de funnels híbridos y product-led sales en SaaS B2B",
+        "R-014"
+       ]
+      },
+      {
+       "kind": "proposal",
+       "what": "Regla de asignación en dos preguntas, con la tabla de casos: qué ruta toca en cada combinación de puerta e intervención, incluidos los bordes (entrada directa a SQL que vino del producto o de un partner, lead de campaña no contactado que compró solo, formulario de «hablar con ventas», prueba montada por un AE, lead que pasó por Reactivate).",
+       "where": [
+        "S2.3",
+        "C-005"
+       ]
+      },
+      {
+       "kind": "proposal",
+       "what": "Etapas de cada ruta, con criterio de entrada y salida por etapa y su dueño (SDR, AE o el cliente solo); estados de salida; el loop de Reactivate (umbral de estancado como parámetro a acordar con Finora, y reasignación); y los campos mínimos para que la regla funcione: ID común CRM–producto, puerta, canal, etapa de entrada, toques con fecha y tipo, eventos de producto y motivo de salida. Alimenta S2.7.",
+       "where": [
+        "S2.3",
+        "S2.7"
+       ]
+      }
+     ],
+     "why": "Es la pregunta que el caso hace literalmente y la base de las métricas (S2.5), de las hipótesis ToFu/BoFu (S2.6) y de la solución (S2.7). Si la regla no es MECE, la suma por ruta no cuadra con el total del nudo y la comparación de «más leads, pero no más ventas» se rompe.",
+     "links": [
+      "N-005",
+      "N-006",
+      "N-008",
+      "N-013",
+      "N-024",
+      "Q-046",
+      "Q-050",
+      "H-006",
+      "H-028",
+      "H-036",
+      "H-037",
+      "C-005"
+     ]
+    },
+    {
+     "id": "",
+     "slides": [
+      "S2.3",
+      "S2.5"
+     ],
+     "question": "¿Qué métricas MECE le corresponden a cada casuística de funnel (Executive, Self Service, Hybrid y el loop de Reactivate), cómo se calcula cada una y cuáles se pueden comparar entre funnels?",
+     "work": "propuesta",
+     "kind": "measurement",
+     "intensity": "L2",
+     "draft_answer": "Propuesta de arranque: todas las rutas se miden con la misma lógica y solo cambian las etapas. Base MECE: en cada cohorte de entrada (mes y puerta), a una fecha dada cada lead está en un solo estado: llegó al nudo, activo en una etapa, estancado, en Reactivate, perdido o descalificado. La suma da 100% y cuadra con el total. Encima van cuatro familias: volumen (entradas por periodo, puerta y canal), conversión (por etapa y al nudo, con plazo fijo), velocidad (tiempo a primer contacto, tiempo en etapa, tiempo al nudo) y valor al nudo (ticket de entrada, el puente con Revenue). Lo propio de cada ruta: Executive = tiempo a primer contacto, % de New contactado, conversión post-SQL y Won → primer pago; Self Service = activación y paso de registro a pago; Hybrid = qué señal dispara el contacto, tiempo de la señal al contacto y cuántos pasan de Self Service a Hybrid; Reactivate = estancados por etapa y antigüedad, % reactivado y % que llega al nudo, conservando la fecha de entrada original. Entre rutas solo se comparan entrada, nudo y valor; las etapas intermedias se comparan dentro de cada ruta a lo largo del tiempo. La conversión de Hybrid no dice cuánto aporta la persona; para eso haría falta un grupo sin contacto elegido al azar (Q-023). Plazos y umbrales se acuerdan con Finora.",
+     "hugo_said": [
+      {
+       "text": "a cada casuistica de funnel asignarle métricas MECE",
+       "ref": "comentario sobre C-005"
+      },
+      {
+       "text": "yo esperaba ver una propuesta detallada del mix y MECE con su respectivo funnel y como se deberia de medir cada uno",
+       "ref": "comentario sobre C-005"
+      },
+      {
+       "text": "No es posible determinar las métricas actuales",
+       "ref": "N-025"
+      }
+     ],
+     "steps": [
+      {
+       "kind": "data",
+       "what": "Con los datos del caso no se puede calcular ninguna métrica de conversión, velocidad ni estancamiento, porque no hay etapas ni toques. Lo único calculable es lo del nudo, si se define como primer pago: altas por mes y ticket de entrada. Ojo: la reactivación de mart.customer_month es de pagadores, no el Reactivate de leads.",
+       "where": [
+        "mart.customer_month",
+        "mart.monthly_metrics"
+       ]
+      },
+      {
+       "kind": "research",
+       "what": "Buscar cómo se mide en la práctica el aporte del contacto humano en rutas mixtas (grupos sin contacto, señal de uso que dispara el contacto) y cómo se reportan los leads reciclados sin contarlos dos veces. Solo como opciones.",
+       "where": [
+        "prácticas de product-led sales y sales assist en SaaS B2B",
+        "R-014"
+       ]
+      },
+      {
+       "kind": "proposal",
+       "what": "Entregable: una tabla por ruta con etapas × métricas (definición, cálculo en palabras, grano, dónde se registra); la identidad de estados que suma 100% por cohorte; qué se compara entre rutas y qué no; qué hipótesis del CRO alimenta cada métrica (H-004, H-005, H-006, H-007); y qué parámetros hay que acordar con Finora. Debe quedar consistente con las métricas de negocio de RT-018.",
+       "where": [
+        "S2.3",
+        "S2.5",
+        "RT-018"
+       ]
+      }
+     ],
+     "why": "Es lo que Hugo pidió explícitamente y lo que convierte el mix en algo que el CRO puede operar. Sin la identidad de estados, las métricas por ruta no cuadran con el total y no responden a «más leads, pero no más ventas».",
+     "links": [
+      "H-004",
+      "H-005",
+      "H-006",
+      "H-007",
+      "H-028",
+      "H-037",
+      "Q-023",
+      "Q-050",
+      "N-025",
+      "N-027"
+     ]
+    }
+   ],
+   "decisions_needed": [
+    "Nombres en C-005: ¿Hybrid ocupa el lugar de Assisted y Executive queda como el funnel de ejecutivos (SDR → AE)? Si es así, se cierra la duda de si Executive era la entrada directa a SQL o cuentas con KAM, y C-005 pasaría a tener dos puertas (producto y comercial), tres rutas, un loop de Reactivate y el nudo común.",
+    "Regla de asignación: medir la conversión por puerta (fija al entrar) y usar la ruta Self Service / Hybrid / Executive para describir cómo llegaron al nudo, o tratar cada ruta como cohorte propia.",
+    "Qué cuenta como intervención de una persona en Hybrid (cualquier contacto registrado de SDR/AE, o solo conversación real: llamada conectada, demo, propuesta) y si un formulario de «hablar con ventas» cuenta como tramo sin persona.",
+    "Reactivate: loop con marca que reasigna a una ruta sin crear entrada nueva, o cuarta ruta con cohortes propias.",
+    "Dónde va el lead de campaña que nadie contactó y compró solo: Self Service con puerta comercial, o una categoría propia de «no trabajado» (le sirve a H-006).",
+    "Si S2.3 se abre en varias láminas (mix y regla · etapas por ruta · métricas por ruta) o se queda en una sola lámina con tabla."
+   ],
+   "should_not_claim": [
+    "Que la conversión de Hybrid frente a Self Service o Executive mide lo que aporta la intervención humana: los SDR/AE eligen a quién tocar, así que sin un grupo sin contacto elegido al azar es solo asociación.",
+    "Las etapas propuestas de Self Service (activación, señal de compra) o de Hybrid como si fueran las de Finora: son propuesta. Ni siquiera sabemos si hay prueba gratis, freemium o pago al registrarse.",
+    "Que el funnel de ejecutivos tiene criterios de etapa definidos: el brief da la secuencia y un traspaso SDR → AE que ocurre «sobre todo» y «normalmente»; qué hace a un lead Engaged o SQL no está definido.",
+    "Tasas de etapas intermedias comparadas entre rutas (SQL contra activación) como si midieran lo mismo.",
+    "La ruta de un pagador (Self Service, Hybrid o Executive) inferida del monto o del ticket de entrada."
+   ],
+   "language_notes": [
+    "«Reactivate» (leads estancados, antes del nudo) no es la «reactivación» de mart.customer_month (pagadores que vuelven: H-034, H-037, H-039). En las láminas, «Reactivate de leads» frente a «reactivación de pagadores».",
+    "«Executive», para Hugo, es el funnel de ejecutivos (SDR → AE). Un lector en inglés puede entenderlo como C-level o enterprise, así que la primera vez conviene escribir «Executive (SDR → AE)».",
+    "Tres palabras para tres ejes, sin usarlas como sinónimos: puerta = por dónde nació el registro (producto o comercial); ruta = quién lo movió hasta el nudo (Self Service, Hybrid, Executive); canal = de dónde vino (Digital, WoM, partners, campañas…).",
+    "«Tramo sin persona» = el cliente avanza solo en el producto; «intervención» = contacto registrado de SDR/AE. Llenar un formulario no es tramo sin persona (propuesta, por confirmar)."
+   ],
+   "risks": [
+    "Sobre-diseño: tres rutas × 5–7 etapas × cuatro familias de métricas sin saber qué decide el CRO (N-027). Puede salir una taxonomía que Finora no pueda instrumentar ni usar.",
+    "Si CRM y producto no comparten ID de cuenta, Hybrid no se puede medir y la propuesta se queda en puertas (N-010).",
+    "Si Reactivate cuenta como entrada, infla «más leads» con los mismos leads; es el mismo tipo de error que H-037.",
+    "RT-016 ya estaba enviada: si el especialista ya arrancó con la respuesta anterior, pueden circular dos versiones del mix."
+   ]
+  },
+  "advisors": [
+   {
+    "lens": "cro",
+    "why": "Es diseño de funnel y de motions (Self Service, sales-led, híbrido): justo lo que el CRO va a operar.",
+    "contribution": "Para el CRO son dos cosas distintas: una cola de personas (Executive y Hybrid: tiempo a primer contacto, dónde mueren los deals, conversión post-SQL) y un producto que vende solo (Self Service: activación y paso de registro a pago). En Hybrid la palanca es a quién tocar y cuándo, es decir, qué señal de uso dispara el contacto. Y si Self Service no genera oportunidad, el nudo común no puede ser Won: queda entre primer pago y suscripción activa (Q-050)."
+   }
+  ],
+  "alternatives": [
+   {
+    "name": "Cuatro funnels por casuística",
+    "approach": "Executive, Self Service, Hybrid y Reactivate, cada uno con sus etapas y su cohorte. Cada lead está en el funnel por donde va hoy.",
+    "when_it_wins": "Si en Finora cada ruta tiene un equipo dueño distinto y lo que se busca es operar cada cola por separado.",
+    "cost": "No es MECE en el tiempo: un lead cambia de funnel y Reactivate se cruza con los demás. La conversión por funnel depende de a quién se ayudó, y la suma no cuadra con el total del nudo sin reglas extra."
+   },
+   {
+    "name": "Dos preguntas + loop (arranque en RT-016)",
+    "approach": "Puerta fija al entrar para cohortes y conversión. Ruta según la intervención antes del nudo (ninguna = Self Service, toda = Executive, parte = Hybrid) para describir cómo llegaron. Reactivate como loop con marca y canal como atributo.",
+    "when_it_wins": "Cuando el CRO necesita que todo cuadre con el total y comparar entrada y nudo entre puertas, que es justo «más leads, pero no más ventas».",
+    "cost": "Exige registrar toques de SDR/AE y eventos de producto con un ID común. Para los equipos es menos intuitivo que tener «su» funnel."
+   },
+   {
+    "name": "Un solo funnel con varias entradas y estados de salida",
+    "approach": "La secuencia de ejecutivos como columna vertebral. Self Service entra por un atajo (registro → pago), la entrada directa a SQL es otra entrada, y se agregan estados de salida (Lost, Descalificado, Nurture).",
+    "when_it_wins": "Si Self Service es chico o si la variedad de recorridos resulta ser de registro en el CRM y no de formas distintas de comprar.",
+    "cost": "Esconde las etapas de Self Service y la parte Hybrid. Si el volumen extra entró por el producto, no se ve."
+   }
+  ],
+  "challenge": {
+   "hidden_assumptions": [
+    "Que Executive, Self Service, Hybrid y Reactivate forman una partición MECE — baja / crítico — la lista mezcla tres ejes: quién movió al lead (Self Service, Hybrid, Executive), en qué estado está (Reactivate) y de dónde vino (canales). Un lead puede ser Executive y estar estancado a la vez, y los canales del brief (campañas, referidos, partners, prospección) son del proceso comercial, no solo de Self Service.",
+    "Que la ruta se conoce al entrar — baja / alto — Hybrid solo se sabe cuando alguien interviene o al llegar al nudo; un Self Service de hoy puede ser Hybrid mañana. Si las cohortes se arman por ruta, dependen del resultado.",
+    "Que se puede ver quién movió cada tramo en la misma cuenta — desconocida / crítico — hay que unir CRM (toques de SDR/AE) y producto (registro, uso, pago) con un ID común. Los datos del caso no traen nada de eso y no sabemos si Finora lo tiene.",
+    "Que el funnel de ejecutivos ya está bien definido — media / alto — están los nombres y el orden, pero no qué hace pasar a un lead de Working a Engaged o a SQL, ni los estados de salida. El brief dice que el traspaso SDR → AE ocurre «sobre todo» y «normalmente», y la entrada directa a SQL es justo lo que el orden no resuelve.",
+    "Que llenar un formulario no cuenta como tramo Self Service — media / alto — si cuenta, casi todo el inbound queda en Hybrid y Executive se queda con pura prospección. Hay que fijar qué es avanzar solo (en el producto) y qué es intervención (contacto registrado de SDR/AE).",
+    "Que Reactivate no crea una entrada nueva — media / alto — si el reactivado se vuelve a contar al reasignarlo, infla «más leads» con los mismos leads. Es el mismo tipo de error que H-037 con las reactivaciones de pagadores."
+   ],
+   "strongest_counterargument": "Si los funnels se definen por recorrido, compararlos no dice lo que el CRO quiere saber. El que se atoró en Self Service y recibió ayuda sale de Self Service y entra a Hybrid, así que Self Service se queda solo con los que compraron fácil y se ve mejor de lo que es. Si, al revés, los SDR solo tocan a los que ya venían bien (H-028), Hybrid se ve mejor por selección, no porque la persona aporte. En los dos casos, «Hybrid convierte más que Self Service» no justifica mover capacidad de SDR/AE. Y como cada funnel tiene etapas distintas, entre ellos solo se pueden comparar entrada, nudo y valor.",
+   "alternative_explanation": "Que no todos recorran el funnel igual puede deberse, en parte, a cómo se registra y no a cómo compra la gente. Por ejemplo: oportunidades creadas directo en SQL por un AE o un partner, leads sin estado de salida que se ven «estancados» porque nadie los cerró, y clientes Self Service que no existen en el CRM hasta que pagan y se ven como saltos a Won. Si fuera así, lo que falta es una etapa de entrada y estados de salida en un solo funnel, no cuatro funnels. Es una posibilidad, no una conclusión: el caso no trae datos del CRM.",
+   "invalidating_evidence": [
+    "Con CRM y producto unidos por cuenta: si un mismo lead aparece en dos rutas en la misma fecha o cambia de ruta más de una vez, la regla no es MECE y hay que corregirla antes de medir.",
+    "Si casi todos los que llegan al nudo caen en una sola ruta (por ejemplo, casi todo es Hybrid), separar funnels no agrega nada: basta una ruta con variantes.",
+    "Si las entradas directas a SQL no tienen un origen propio registrado (partner, referido, demo pedida) y los estancados no tienen actividad en el periodo, la diferencia es de registro: alcanza con un funnel con etapa de entrada y estados de salida.",
+    "Si en un grupo con señal de uso, elegido al azar y sin contacto humano, la compra es parecida a la de los contactados, Hybrid no es una motion distinta sino Self Service con un toque."
+   ],
+   "highest_risk_claim": "Que Executive / Self Service / Hybrid / Reactivate ya es una partición MECE. Si no lo es, la suma por funnel no cuadra con el total del nudo, cada métrica por funnel arrastra dobles conteos y la comparación de totales que pide el CRO («más leads, pero no más ventas») deja de ser confiable."
+  },
+  "language": {
+   "register": "Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés.",
+   "technical_level": "business / analítico (funnel, SDR, AE, SQL, MECE, bowtie)",
+   "formality": "tú, informal, sin rodeos",
+   "preserved_terms": [
+    "funnel",
+    "MECE",
+    "Executive",
+    "Self Service",
+    "Hybrid",
+    "Reactivate",
+    "Assisted",
+    "New",
+    "Working",
+    "Engaged",
+    "SQL",
+    "Demo",
+    "Proposal",
+    "Won",
+    "SDR",
+    "Account Executive",
+    "casuística",
+    "canales",
+    "estancados",
+    "bowtie",
+    "puertas",
+    "nudo"
+   ],
+   "introduced_terms": [
+    {
+     "term": "ruta",
+     "plain": "cómo llegó al nudo según quién lo movió: Self Service (nadie de ventas), Executive (siempre una persona) o Hybrid (a ratos solo, a ratos una persona)"
+    },
+    {
+     "term": "tramo",
+     "plain": "el paso de una etapa a la siguiente: es «con persona» si lo movió un contacto registrado de SDR/AE, y «sin persona» si el cliente avanzó por su cuenta en el producto"
+    }
+   ]
+  },
+  "next_steps": [
+   "Hugo decide la regla de asignación: puerta fija al entrar para medir conversión y ruta para describir, o cada ruta como cohorte propia.",
+   "Confirmar los nombres de C-005 (¿Hybrid en lugar de Assisted?; Executive = SDR → AE) y reescribir el claim: dos puertas, tres rutas, loop de Reactivate y nudo común.",
+   "Aprobar la revisión de RT-016 y la tarea nueva de métricas MECE para que Measurement valide o corrija la propuesta de arranque.",
+   "Sumar a las preguntas para Finora: modelo de Self Service (prueba gratis, freemium o pago al registrarse) y si CRM y producto comparten ID de cuenta (Q-046, Q-041)."
+  ]
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 808263,
+  "input_tokens": 2,
+  "output_tokens": 92001,
+  "cache_read": 17761,
+  "cache_write": 23371,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 2.0488462,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

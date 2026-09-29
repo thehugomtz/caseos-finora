@@ -1,0 +1,83 @@
+id: F-157
+type: finding
+headline: El loop de Reactivate que se ve en los pagos no es solo win-back. La mayoría son vueltas tras un solo
+  mes en cero, y una parte paga el doble al volver, como si pusiera al día el mes atrasado.
+evidence_text: 'De 751 churns observados, 330 vuelven al mes siguiente, 138 vuelven después y 283 no han vuelto
+  a oct-24 (DM-04). El 70,5% de las 468 reactivaciones llega tras exactamente un mes en cero: 82,5% en 2022, 59,3%
+  en 2023 y 67,9% en 2024 (DM-05). De esas 330, 100 (30,3%) pagan exactamente 2× su monto usual al volver y 87 (26,4%)
+  vuelven con el mismo monto de antes (DM-06, DM-07). Hay pagos de k veces el monto usual, con k entre 2 y 12, en
+  512 filas (DM-08). La práctica de suscripciones registra un fallo de cobro recuperado como baja más alta, y recomienda
+  reportarlo aparte del churn voluntario porque le toca a otro equipo (SRC-FLX).'
+confidence: medium
+limitations:
+- Sin eventos de cobro esto es un proxy. Pagar 2× puede ser un upgrade o un prepago, y una vuelta al mes puede ser
+  una pausa real. El porcentaje de 2022 está sesgado hacia brechas cortas por el inicio de la ventana.
+kind: measurement
+claims:
+- claim: El churn involuntario (por fallo de pago) que luego se recupera se registra como una baja más una alta
+    posterior, infla las altas y acorta el payback. Se recomienda reportarlo al lado del churn voluntario porque
+    apunta a equipos distintos.
+  source_id: SRC-FLX
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: supports
+  notes: Respalda partir el loop de Reactivate en recuperación de cobro y win-back.
+- claim: De 751 churns observados, 330 (43,9%) vuelven a pagar al mes siguiente, 138 vuelven tras 2 o más meses
+    y 283 (37,7%) no vuelven antes de oct-24.
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: context
+  notes: Los tres estados del loop son MECE y suman 751. Los 283 están censurados a la derecha.
+- claim: 'De las 468 reactivaciones, 330 (70,5%) llegan tras exactamente un mes en cero. Por año de regreso: 82,5%
+    (137/166) en 2022, 59,3% (83/140) en 2023 y 67,9% (110/162) en 2024.'
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: supports
+  notes: Las cifras son exactas; su interpretación es de confianza media. 2022 está sesgado hacia brechas cortas
+    por el inicio de la ventana.
+- claim: De las 330 vueltas tras un mes en cero, 100 (30,3%) pagan exactamente 2× su monto usual al volver. De las
+    138 con brecha de 2 o más meses, 26 (18,8%) pagan (brecha + 1)× su monto usual.
+  source_id: DM-06
+  source_type: data_model
+  confidence: medium
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: supports
+  notes: 'Consistente con ponerse al día con los meses no pagados, pero es un proxy: podría ser un upgrade o un
+    prepago.'
+- claim: De las 330 vueltas al mes siguiente, 87 (26,4%) vuelven con el mismo monto que pagaban antes del mes en
+    cero.
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: context
+  notes: No se suma con DM-06 porque no verifiqué que los grupos sean disjuntos.
+- claim: Hay pagos que equivalen a k veces el monto usual del cliente (k de 2 a 12) en 512 filas cliente × mes.
+    244 clientes tienen al menos un mes con pago igual a 2× su monto usual.
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: context
+  notes: 'Un mes en cero no es necesariamente churn: existen pagos multi-mes.'
+unverified: false
+source_ref:
+  research: R-022
+links:
+- R-022
+- H-037
+- H-006
+- H-005
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:30:20-06:00'
+updated_at: '2026-09-29T14:30:20-06:00'
+version: 1

@@ -1,0 +1,488 @@
+id: R-026
+type: research
+research_question: ¿Cuál es el ticket de entrada estabilizado —el segundo pago o el monto usual, no el primer pago—
+  por año de alta y por industria, en cohortes de ventana limpia? ¿Se sostiene la caída 2022→2023 de T-018 y el
+  «menor ticket» de C-007?
+case_question: C-003, C-007, H-035, H-041, H-042, H-046
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 3
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - C-003
+    - C-007
+    - H-035
+    - H-041
+    - H-042
+    - H-046
+    suggested:
+    - H-032
+    - H-030
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-003
+- C-007
+- H-035
+- H-041
+- H-042
+- H-046
+- F-160
+- F-161
+- F-162
+- F-163
+- F-164
+- F-165
+- F-166
+- F-167
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T14:43:14-06:00'
+version: 6
+job_id: JOB-20260929-143800-f853
+error: null
+started_at: '2026-09-29T14:38:00-06:00'
+shaping_task: RT-026
+slides:
+- S2.4
+- S2.2
+task_why: 'Lo pidió el COS en su revisión de cobertura de las 8 preguntas (D-017), acción 3: C-003 y C-007 se apoyan
+  en el primer pago, que no sirve como valor de entrada.'
+task:
+  work: datos
+  draft_answer: 'De arranque: T-004 y T-018 miden la entrada con el primer pago, y F-139 y F-143 dicen que ese pago
+    no sirve como valor de entrada (T-053 a T-055 muestran que en ventana limpia el segundo pago suele quedar por
+    debajo del primero). Si la caída 2022→2023 se mantiene con el monto estabilizado, C-003 y el «menor ticket»
+    de C-007 se sostienen; si se achica, la historia de la entrada es de primer cobro, no de valor.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Por alta de ventana limpia: primer pago, segundo pago y monto usual (mediana de los primeros tres meses
+      con pago). Mediana y promedio por año de alta y por industria, con cuántas altas no tienen segundo pago.'
+    where:
+    - mart.new_customers
+    - mart.customer_month
+    - raw.industry
+  - kind: data
+    what: 'Comparar contra T-018 y T-004: cuánto cambia la caída 2022→2023 y el rebote de 2024 con el monto estabilizado,
+      y qué pasa en las cosechas de menor ticket de C-007.'
+    where:
+    - mart.vintage_month
+    - mart.customer_month
+  - kind: proposal
+    what: 'Tabla lista para lámina: ticket de entrada estabilizado por año e industria, con la regla de estabilización
+      escrita y sus límites.'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+workspace_run_started: INV-20260929-143800-15c0
+why_it_matters: ''
+short_answer: La caída del ticket de entrada se sostiene con el ticket estabilizado. Con el segundo pago y el monto
+  usual temprano, la mediana del ticket de entrada baja de COP 52,5 mil en 2022 a COP 36,8 mil en 2023, y el nivel
+  de 2024 sigue por debajo de 2022. El «menor ticket» coincide con lo observado dentro de Producción, Restaurantes,
+  Retail, Salud, Servicios profesionales y Tecnología. Señal direccional
+headline: La caída del ticket de entrada se sostiene con el ticket estabilizado
+what_is_established:
+- 'Al excluir el primer pago, el nivel de entrada de las cohortes 2023 y 2024 se mantiene por debajo del de 2022:
+  la mediana del segundo pago pasa de COP 52,5 mil a COP 36,8 mil y COP 38,9 mil. El movimiento no es monótono:
+  2024 queda por encima de 2023.'
+- 'El descenso no es un artefacto de medir el primer cobro: también aparece en el segundo pago y en el monto usual
+  temprano, aunque desde un punto de partida más bajo que el primer pago de 2022 (COP 63,0 mil).'
+- El efecto dentro de las industrias explica 91% del cambio 2022→2023 y 96% del cambio 2022→2024, frente a 9% y
+  4% del mix. El nivel de 2024 es menor que el de 2022 en las industrias analizadas, con Salud como excepción en
+  el tramo 2022→2023.
+- En la cohorte 2022 el primer pago promedio (COP 128,7 mil) supera al pago promedio del segundo mes (COP 59,0 mil),
+  y esa brecha desaparece en las cohortes siguientes, con razón 1,00 en 2023 y 0,93 en 2024. El patrón es consistente
+  con pagos iniciales grandes y cobros retroactivos.
+- No es posible separar cuánto del menor ticket corresponde a tarifas de lista, empaquetamiento, descuentos o créditos.
+  Los datos no incluyen precios, planes, descuentos ni la definición contable del monto.
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede atribuir el menor ticket estabilizado a tarifas, planes, descuentos o créditos: faltan precios, planes,
+  descuentos y la definición contable del monto, y no hay funnel ni atribución.'
+- La brecha entre primer pago y ticket estabilizado en la cohorte 2022 coincide con pagos iniciales grandes y cobros
+  retroactivos, por lo que no debe leerse como cambio de tarifa.
+- 'El resultado no es homogéneo por industria: Salud se mantiene en COP 63,0 mil entre 2022 y 2023, con montos extremos
+  y concentración en pocas cuentas.'
+- 'No hay base para leer un descenso continuado: el ticket estabilizado de 2024 (COP 38,9 mil) queda por encima
+  del de 2023 (COP 36,8 mil).'
+alternative_explanations: []
+case_implication: Si el ticket de entrada se usa como indicador de gestión, convendría definirlo como monto usual
+  temprano por cohorte, dado que la caída 2022→2023 se sostiene con esa definición. Si se quiere actuar sobre el
+  nivel de entrada, podría priorizarse la revisión dentro de cada industria, ya que el efecto dentro explica 91%
+  del cambio 2022→2023 y 96% del cambio 2022→2024.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿El ticket estabilizado de las cohortes recientes se mantiene al medirlo en el mes doce de vida y no solo en los
+  primeros meses?
+- ¿El repunte del ticket estabilizado entre las cohortes 2023 y 2024 se concentra en Restaurantes y Servicios profesionales
+  o aparece en el resto de industrias?
+- ¿Qué parte de la brecha entre primer pago y segundo pago de la cohorte 2022 corresponde a la firma de pago doble
+  y a liquidaciones retroactivas identificadas en calidad de datos?
+- ¿Las altas con monto usual temprano bajo retienen igual que las de monto alto dentro de cada industria?
+- ¿Cómo cambian estas medianas al excluir las cuentas que concentran montos extremos?
+handoff_to_cos:
+  summary: La caída del ticket de entrada se sostiene con el ticket estabilizado
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-143800-15c0
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: En cohortes de ventana limpia, la mediana del segundo pago (M1) de las altas es COP 52,5 mil en 2022, COP
+    36,8 mil en 2023 y COP 38,9 mil en 2024, y la mediana del monto usual temprano (M0–M2) pasa de COP 60,9 mil
+    en 2022 a COP 36,8 mil en 2023 y COP 37,8 mil en 2024.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: m1 mediana
+      valores:
+      - 52500.0
+      - 36750.0
+      - 38850.0
+    - nombre: rr mediana
+      valores:
+      - 60900.0
+      - 36750.0
+      - 37800.0
+  claim: C-001
+- id: V-02
+  title: Medido con el monto usual temprano, el efecto dentro de las industrias explica 91% del cambio del ticket
+    de entrada 2022→2023 y 96% del cambio 2022→2024, frente a 9% y 4% del mix de industrias; el límite inferior
+    del intervalo bootstrap del efecto dentro es 84% y 90%.
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: '2022'
+      valor: 87462.48772058824
+      tipo: total
+    - etiqueta: 'Mix de
+
+        industrias'
+      corta: Mix
+      valor: -1513.3733705536463
+      tipo: delta
+    - etiqueta: 'Dentro de las
+
+        industrias'
+      corta: Dentro
+      valor: -40501.68990960137
+      tipo: delta
+    - etiqueta: '2024'
+      valor: 45447.424440433206
+      tipo: total
+  claim: C-008
+- id: V-03
+  title: 'La caída del ticket de entrada entre las cohortes 2022 y 2023 se observa también con el ticket estabilizado:
+    la mediana del segundo pago pasa de COP 52,5 mil a COP 36,8 mil y la del monto usual temprano de COP 60,9 mil
+    a COP 36,8 mil, mientras la mediana del primer pago pasa de COP 63,0 mil a COP 36,8 mil.'
+  spec:
+    tipo: puntos
+    filas:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: P25
+      valores:
+      - 37800.0
+      - 21000.0
+      - 25200.0
+    - nombre: Mediana
+      valores:
+      - 63000.0
+      - 36750.0
+      - 42000.0
+    - nombre: P75
+      valores:
+      - 94500.0
+      - 58537.5
+      - 60900.0
+  claim: C-002
+- id: V-04
+  title: La mediana del monto usual temprano de las altas es menor en 2024 que en 2022 en Producción (COP 55,1 mil
+    a COP 37,8 mil), Restaurantes (COP 62,0 mil a COP 48,3 mil), Retail (COP 35,7 mil a COP 25,2 mil), Salud (COP
+    63,0 mil a COP 48,8 mil), Servicios profesionales (COP 63,0 mil a COP 31,5 mil) y Tecnología (COP 63,0 mil a
+    COP 44,1 mil).
+  spec:
+    tipo: tabla
+    columnas:
+    - id: industry
+      nombre: industry
+      formato: texto
+    - id: year
+      nombre: year
+      formato: int
+    - id: altas
+      nombre: altas
+      formato: int
+    - id: m0_mediana
+      nombre: m0_mediana
+      formato: num2
+    - id: m1_mediana
+      nombre: m1_mediana
+      formato: num2
+    - id: rr_mediana
+      nombre: rr_mediana
+      formato: num2
+    - id: rr_promedio
+      nombre: rr_promedio
+      formato: num2
+    filas:
+    - industry: Producción
+      year: 2022
+      altas: 70
+      m0_mediana: 63000.0
+      m1_mediana: 52500.0
+      rr_mediana: 55125.0
+      rr_promedio: 53075.0
+    - industry: Producción
+      year: 2023
+      altas: 155
+      m0_mediana: 42000.0
+      m1_mediana: 42000.0
+      rr_mediana: 42000.0
+      rr_promedio: 51195.0
+    - industry: Producción
+      year: 2024
+      altas: 113
+      m0_mediana: 39900.0
+      m1_mediana: 38850.0
+      rr_mediana: 37800.0
+      rr_promedio: 43061.0
+    - industry: Restaurantes
+      year: 2022
+      altas: 78
+      m0_mediana: 65625.0
+      m1_mediana: 58800.0
+      rr_mediana: 61950.0
+      rr_promedio: 117465.0
+    - industry: Restaurantes
+      year: 2023
+      altas: 164
+      m0_mediana: 42000.0
+      m1_mediana: 42000.0
+      rr_mediana: 42000.0
+      rr_promedio: 50858.0
+    - industry: Restaurantes
+      year: 2024
+      altas: 153
+      m0_mediana: 52500.0
+      m1_mediana: 48300.0
+      rr_mediana: 48300.0
+      rr_promedio: 54325.0
+    - industry: Retail
+      year: 2022
+      altas: 49
+      m0_mediana: 50400.0
+      m1_mediana: 31150.0
+      rr_mediana: 35700.0
+      rr_promedio: 61717.0
+    - industry: Retail
+      year: 2023
+      altas: 169
+      m0_mediana: 21000.0
+      m1_mediana: 21000.0
+      rr_mediana: 21000.0
+      rr_promedio: 30020.0
+    - industry: Retail
+      year: 2024
+      altas: 133
+      m0_mediana: 26250.0
+      m1_mediana: 25200.0
+      rr_mediana: 25200.0
+      rr_promedio: 32485.0
+    - industry: Salud
+      year: 2022
+      altas: 21
+      m0_mediana: 63000.0
+      m1_mediana: 63000.0
+      rr_mediana: 63000.0
+      rr_promedio: 62550.0
+    - industry: Salud
+      year: 2023
+      altas: 37
+      m0_mediana: 63000.0
+      m1_mediana: 63000.0
+      rr_mediana: 63000.0
+      rr_promedio: 67025.0
+    - industry: Salud
+      year: 2024
+      altas: 46
+      m0_mediana: 52500.0
+      m1_mediana: 50400.0
+      rr_mediana: 48825.0
+      rr_promedio: 50197.0
+    - industry: Servicios profesionales
+      year: 2022
+      altas: 17
+      m0_mediana: 63000.0
+      m1_mediana: 60900.0
+      rr_mediana: 63000.0
+      rr_promedio: 69454.0
+    - industry: Servicios profesionales
+      year: 2023
+      altas: 61
+      m0_mediana: 21000.0
+      m1_mediana: 19950.0
+      rr_mediana: 19950.0
+      rr_promedio: 27983.0
+    - industry: Servicios profesionales
+      year: 2024
+      altas: 48
+      m0_mediana: 31500.0
+      m1_mediana: 31500.0
+      rr_mediana: 31500.0
+      rr_promedio: 45059.0
+    - industry: Tecnología
+      year: 2022
+      altas: 37
+      m0_mediana: 67200.0
+      m1_mediana: 63000.0
+      rr_mediana: 63000.0
+      rr_promedio: 145780.0
+    - industry: Tecnología
+      year: 2023
+      altas: 64
+      m0_mediana: 44625.0
+      m1_mediana: 43050.0
+      rr_mediana: 46725.0
+      rr_promedio: 57392.0
+    - industry: Tecnología
+      year: 2024
+      altas: 61
+      m0_mediana: 49350.0
+      m1_mediana: 46725.0
+      rr_mediana: 44100.0
+      rr_promedio: 52590.0
+  claim: C-007
+- id: V-05
+  title: 'El ticket estabilizado no continúa bajando después de 2023: la mediana del segundo pago de las altas de
+    2024 (COP 38,9 mil) es mayor que la de 2023 (COP 36,8 mil) y la mediana del monto usual temprano pasa de COP
+    36,8 mil a COP 37,8 mil.'
+  spec:
+    tipo: barras
+    x:
+    - '2024'
+    - '2023'
+    formato: cop
+    series:
+    - nombre: m1 mediana
+      valores:
+      - 38850.0
+      - 36750.0
+    - nombre: rr mediana
+      valores:
+      - 37800.0
+      - 36750.0
+  claim: C-003
+- id: V-06
+  title: En la cohorte 2022 el primer pago promedio (COP 128,7 mil) supera al pago promedio del segundo mes (COP
+    59,0 mil) y la razón entre la mediana de M1 y la mediana de M0 es 0,83; esa brecha desaparece en las cohortes
+    siguientes, con razón 1,00 en 2023 y 0,93 en 2024, patrón consistente con pagos iniciales grandes y cobros retroactivos
+    más que con un cambio de tarifa.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num2
+    series:
+    - nombre: razon m1 m0 mediana
+      valores:
+      - 0.833
+      - 1.0
+      - 0.925
+  claim: C-009
+- id: V-07
+  title: 'No es posible separar cuánto del menor ticket estabilizado por cohorte e industria corresponde a tarifas
+    de lista, empaquetamiento, descuentos o créditos: los datos no incluyen precios, planes, descuentos ni la definición
+    contable del monto.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-010
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-143800-15c0
+  path: investigations/runs/INV-20260929-143800-15c0.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T14:43:14-06:00'
+findings:
+- F-160
+- F-161
+- F-162
+- F-163
+- F-164
+- F-165
+- F-166
+- F-167
+run_ids:
+- INV-20260929-143800-15c0
+usage:
+  INV-20260929-143800-15c0:
+    cost_usd: 1.4104845
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true

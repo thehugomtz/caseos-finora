@@ -1,0 +1,88 @@
+id: R-028
+type: research
+research_question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento
+  de cobro? Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación,
+  y un pago que cubre varios meses se reparte.'
+case_question: H-031, H-033, H-034, H-039, H-040, C-009, C-016
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 2
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - H-031
+    - H-033
+    - H-034
+    - H-039
+    - H-040
+    - C-009
+    - C-016
+    suggested:
+    - Q-039
+    - H-057
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-031
+- H-033
+- H-034
+- H-039
+- H-040
+- C-009
+- C-016
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T14:38:00-06:00'
+version: 4
+job_id: JOB-20260929-143800-8989
+error: null
+shaping_task: RT-028
+slides:
+- S3.1
+task_why: 'Lo pidió el COS en su revisión de cobertura de las 8 preguntas (D-017), acción 8 (opcional): refuerza
+  Q5 y le da tabla a X-037.'
+task:
+  work: datos
+  draft_answer: 'De arranque: R-011 encontró que más de la mitad del COP de «contracción» cae el mes siguiente a
+    un primer pago o a una reactivación (X-037), pero esa cifra no tiene tabla. Si el puente normalizado confirma
+    que una parte grande es cobro, el argumento para el CFO se refuerza: aun sin descuentos, el puente de monto
+    pagado ya confunde cobro con contracción.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Reglas de normalización por cliente-mes: hueco de un mes con regreso al monto usual = brecha de cobro;
+      pago de varios meses = repartir con el monto usual; mes alto seguido del monto usual = efecto de cobro.'
+    where:
+    - mart.customer_month
+    - raw.transactions
+    - mart.churn_events
+  - kind: data
+    what: Puente anual antes y después de normalizar, reconciliado contra T-003 (el stock de punta a punta no cambia),
+      y la tabla de la cifra de X-037.
+    where:
+    - mart.monthly_metrics
+    - mart.customer_month
+  - kind: proposal
+    what: 'Para la lámina de Q5 («se puede / con cuidado / no se puede»): cuánto del puente es cobro y qué se lee
+      con confianza.'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+started_at: '2026-09-29T14:38:00-06:00'

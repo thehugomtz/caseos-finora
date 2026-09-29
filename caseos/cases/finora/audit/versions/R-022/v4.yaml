@@ -1,0 +1,113 @@
+id: R-022
+type: research
+research_question: ¿Qué métricas MECE le corresponden a cada casuística de funnel (Executive, Self Service, Hybrid
+  y el loop de Reactivate), cómo se calcula cada una y cuáles se pueden comparar entre funnels?
+case_question: H-004, H-005, H-006, H-007, H-028, H-037, Q-023, Q-050
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 3
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - H-004
+    - H-005
+    - H-006
+    - H-007
+    - H-028
+    - H-037
+    - Q-023
+    - Q-050
+    suggested:
+    - C-005
+    - Q-046
+    - Q-045
+    - Q-035
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-004
+- H-005
+- H-006
+- H-007
+- H-028
+- H-037
+- Q-023
+- Q-050
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:15:47-06:00'
+updated_at: '2026-09-29T14:15:47-06:00'
+version: 4
+job_id: JOB-20260929-141547-760a
+error: null
+started_at: '2026-09-29T14:15:47-06:00'
+shaping_task: RT-022
+slides:
+- S2.3
+- S2.5
+task_why: Es lo que Hugo pidió explícitamente y lo que convierte el mix en algo que el CRO puede operar. Sin la
+  identidad de estados, las métricas por ruta no cuadran con el total y no responden a «más leads, pero no más ventas».
+task:
+  work: propuesta
+  draft_answer: 'Propuesta de arranque: todas las rutas se miden con la misma lógica y solo cambian las etapas.
+    Base MECE: en cada cohorte de entrada (mes y puerta), a una fecha dada cada lead está en un solo estado: llegó
+    al nudo, activo en una etapa, estancado, en Reactivate, perdido o descalificado. La suma da 100% y cuadra con
+    el total. Encima van cuatro familias: volumen (entradas por periodo, puerta y canal), conversión (por etapa
+    y al nudo, con plazo fijo), velocidad (tiempo a primer contacto, tiempo en etapa, tiempo al nudo) y valor al
+    nudo (ticket de entrada, el puente con Revenue). Lo propio de cada ruta: Executive = tiempo a primer contacto,
+    % de New contactado, conversión post-SQL y Won → primer pago; Self Service = activación y paso de registro a
+    pago; Hybrid = qué señal dispara el contacto, tiempo de la señal al contacto y cuántos pasan de Self Service
+    a Hybrid; Reactivate = estancados por etapa y antigüedad, % reactivado y % que llega al nudo, conservando la
+    fecha de entrada original. Entre rutas solo se comparan entrada, nudo y valor; las etapas intermedias se comparan
+    dentro de cada ruta a lo largo del tiempo. La conversión de Hybrid no dice cuánto aporta la persona; para eso
+    haría falta un grupo sin contacto elegido al azar (Q-023). Plazos y umbrales se acuerdan con Finora.'
+  hugo_said:
+  - text: No es posible determinar las métricas actuales
+    ref: N-025
+  steps:
+  - kind: data
+    what: 'Con los datos del caso no se puede calcular ninguna métrica de conversión, velocidad ni estancamiento,
+      porque no hay etapas ni toques. Lo único calculable es lo del nudo, si se define como primer pago: altas por
+      mes y ticket de entrada. Ojo: la reactivación de mart.customer_month es de pagadores, no el Reactivate de
+      leads.'
+    where:
+    - mart.customer_month
+    - mart.monthly_metrics
+  - kind: research
+    what: Buscar cómo se mide en la práctica el aporte del contacto humano en rutas mixtas (grupos sin contacto,
+      señal de uso que dispara el contacto) y cómo se reportan los leads reciclados sin contarlos dos veces. Solo
+      como opciones.
+    where: []
+  - kind: proposal
+    what: 'Entregable: una tabla por ruta con etapas × métricas (definición, cálculo en palabras, grano, dónde se
+      registra); la identidad de estados que suma 100% por cohorte; qué se compara entre rutas y qué no; qué hipótesis
+      del CRO alimenta cada métrica (H-004, H-005, H-006, H-007); y qué parámetros hay que acordar con Finora. Debe
+      quedar consistente con las métricas de negocio de RT-018.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 14:05, D-017)

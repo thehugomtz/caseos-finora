@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T13:13:04-06:00 · motivo: Hugo cuestionó C-005: Quiero saber que modelos se exploraron y como se llegó a que ese era el mejor framework p…
+> Actualizado: 2026-09-29T14:58:17-06:00 · motivo: R-029 falló (limit); la solicitud se conservó
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,9 +25,9 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-19 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 10 decisiones activas · 74 alertas abiertas.
+26 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 95 alertas abiertas.
 
-COS: El research está casi cerrado: 19 de 21 completados (R-007 y R-008, bloqueadas por falta de datos). Con R-021, los tres bloques (Overview, Growth y Revenue/CFO) ya tienen respuesta o propuesta; en descuentos, solo de aquí en adelante. Pero todo sigue en proposed: 0 findings aceptados y 154 sin revisar, D-009 a D-012 y D-015 sin confirmar, y Framing en needs_review con X-001 a X-004 abiertas. Para abrir Story falta revisar los findings núcleo (empezando por el puente de R-004 y F-150 a F-154) y decidir si las propuestas entran a la historia (D-007 vs D-015).
+COS: R-026 confirma que la caída del ticket de entrada está en el monto que se repite: el 2.º pago pasa de 52,5 a 36,8 mil y luego a 38,9 mil. Es un escalón 2022→2023 dentro de las 6 industrias, no un efecto del primer cobro ni una tendencia, y los promedios del primer pago de 2022 están inflados y no sirven como tamaño de la caída. Queda abierto si la base 2022 incluye clientes previos al panel (H-041) y en qué mes cae el escalón (H-045 frente a H-025); H-032 queda contradicha, y con 0 findings aceptados ninguna claim, incluidas C-003 y C-007, está lista para la story.
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
@@ -57,6 +57,7 @@ v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-017** Delegación a Claude (2): que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y el storytelling lo mues… · 2026-09-29 → «Voy a comer pero ahí checa con el chief y las herramientas…
 - **D-016** Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling · 2026-09-29 → «Vale, voy a desayunar ahorita que acabes lo corres, creo q…
 - **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-013** Briefing marcada Ready (v1) · 2026-09-29 → Ready
@@ -66,9 +67,9 @@ v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
 - **D-004** Preguntas de pagos separadas de causas · 2026-09-28 → HO responde cosas más pequeñas que HC/HF. No se usa un sust…
 - **D-005** Prioridad por importancia × capacidad · 2026-09-28 → Orden revisable cuando conozcamos datos y resultados. Cero…
 - **D-007** Solución fuera de esta etapa · 2026-09-28 → Sin dashboards, métricas definitivas, modelo de datos ni de…
-- **D-008** Versiones del brief conservadas · 2026-09-28 → v0.3 técnica y v0.4 corta siguen accesibles; esta edición n…
+- … y 1 más
 
-_Por confirmar:_ D-009, D-010, D-011, D-012, D-015
+_Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
 ## Active Hypotheses
 - **H-001** (HC1) New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía. · open
@@ -81,7 +82,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 39 más
+- … y 50 más
 
 ## Evidence We Trust
 _Todavía no hay evidencia aceptada._
@@ -97,7 +98,7 @@ _Todavía no hay evidencia aceptada._
 - Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
 - Descuentos a partir del tamaño de un salto del monto.
 - Una lectura del puente si las contribuciones no concilian con el total.
-- … y 11 más
+- … y 21 más
 
 ## Open Questions
 - **Q-004** (C1) ¿Realmente aumentó igual la entrada total?
@@ -110,7 +111,7 @@ _Todavía no hay evidencia aceptada._
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 49 más
+- … y 58 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -123,7 +124,7 @@ _Todavía no hay evidencia aceptada._
 - **R-008** (W7) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-009** (Q2) La caída se concentra en quién entra, no en la base previa · completed · por revisar
 - **R-010** Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (… · completed · por revisar
-- … y 11 más
+- … y 19 más
 
 ## Accepted Frameworks
 - **D-001** CRO pasa de cuatro a tres ramas
@@ -136,6 +137,7 @@ _Sin tablas aceptadas._
 
 ## Contradictions
 - **X-040** R-011 contradice H-017
+- **X-094** R-026 contradice H-032
 
 ## Risks
 - **X-001** R-013 cambia el framing Q-018
@@ -148,7 +150,7 @@ _Sin tablas aceptadas._
 - **X-036** R-011 cambia la historia Q-002
 - **X-037** R-011 cambia la historia T-003
 - **X-038** R-011 cambia el framing Q-026
-- … y 14 más
+- … y 24 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
@@ -168,19 +170,19 @@ language:
   preserve_user_vocabulary: true
   avoid_unnecessary_jargon: true
 ```
-Registro observado: Conversacional y directo; pega el texto literal del caso y piensa en láminas, secciones y bloques de deck. · nivel técnico: Negocio y análisis: maneja funnel, SQL, MRR, churn, contracción y expansión sin necesidad de explicación. · vocabulario de Hugo: expansión, Propuesta de Modelo de datos, CEO, Overview, Growth, Revenue, insights, salud, Inversión en Marketing, Generación de Demanda, ToFu, BoFu, Team, Habilitación
+Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 13:13 · Hugo cuestionó C-005: Quiero saber que modelos se exploraron y como se llegó a que ese era el mejor framework p…
-- 2026-09-29 11:56 · COS evaluó R-021: R-021 le da mecanismo a la parte de propuesta del bloque CFO. El descuento tiene que existir como o…
-- 2026-09-29 11:56 · COS propone hipótesis: De aquí en adelante, las cohortes que Finora consiga con descuento temporal van…
-- 2026-09-29 11:56 · COS propone hipótesis: Un puente de tres capas (MRR de lista, descuento y MRR neto), con líneas propia…
-- 2026-09-29 11:56 · COS: R-021 cambia el framing
-- 2026-09-29 11:56 · COS: R-021 cambia el framing D-007
-- 2026-09-29 11:56 · COS: R-021 cambia el framing Q-026
-- 2026-09-29 11:56 · COS: R-021 cambia la historia Q-002
-- 2026-09-29 11:56 · COS: R-021 cambia el framing H-015
-- 2026-09-29 11:55 · COS evaluó R-020: R-020 deja una cosa firme y dos cuidados. Todo se apoya en los findings F-083 a F-093, que siguen p…
+- 2026-09-29 14:58 · R-029 falló (limit); la solicitud se conservó
+- 2026-09-29 14:58 · COS evaluó R-026: R-026 confirma que la caída del ticket de entrada no es un efecto del primer pago: también aparece…
+- 2026-09-29 14:58 · COS propone hipótesis: El escalón 2022→2023 del ticket estabilizado se explica porque más primeros pag…
+- 2026-09-29 14:58 · COS: R-026 requiere más investigación H-026
+- 2026-09-29 14:58 · COS: R-026 contradice H-032
+- 2026-09-29 14:58 · COS: R-026 requiere más investigación H-041
+- 2026-09-29 14:56 · COS: R-025 podría afectar C-011
+- 2026-09-29 14:56 · R-025 completada: Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads ni CRM, sol…
+- 2026-09-29 14:56 · R-025: finding propuesto — Para separar las 17 causas: comparar cohortes de entrada a igual edad y partir…
+- 2026-09-29 14:56 · R-025: finding propuesto — El gasto y los primeros pagadores se mueven en sentido contrario en los dos sem…
 
 
-<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 15, Observación 4, Desconocido 8, Supuesto 1, Hecho 1 -->
+<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 26, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

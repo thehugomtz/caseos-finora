@@ -1,0 +1,57 @@
+id: F-159
+type: finding
+headline: Hoy no se puede calcular ninguna métrica por motion ni nada anterior al pago. Además, probar las palancas
+  de H-006 y H-028 requiere un experimento.
+evidence_text: El modelo solo tiene pagos, industria y gasto S&M sin unidad documentada. No hay motion, leads, oportunidades,
+  contactos ni estados de cobro (DM-01). La métrica PLS «sales-assisted conversion» compara cuentas tocadas por
+  ventas contra auto-servidas (SRC-SYB). Si el SDR elige a quién toca, esa diferencia no es el efecto del toque
+  (inferencia, ver H-028). La velocidad de respuesta a leads aparece en la literatura como variable relevante (SRC-HBR),
+  lo que justifica medir el tiempo a primer contacto, pero eso no dice nada de Finora.
+confidence: high
+limitations:
+- No sabemos qué registra Finora en sus sistemas. Parte de estos eventos podría existir fuera del modelo del caso.
+kind: measurement
+claims:
+- claim: La «sales-assisted conversion rate» de la práctica PLS compara la conversión de las cuentas tocadas por
+    ventas contra la de las que se auto-sirvieron.
+  source_id: SRC-SYB
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: Es una comparación observacional. Si ventas elige a quién toca, la diferencia no es el efecto del toque
+    (inferencia, ver H-028).
+- claim: Oldroyd, McElheran y Elkington (HBR, 2011) documentan que la mayoría de las empresas no responde lo bastante
+    rápido a las consultas online de potenciales clientes.
+  source_id: SRC-HBR
+  source_type: academic
+  confidence: medium
+  freshness: 2011; solo se recuperaron la cita y el abstract.
+  supports_or_contests: context
+  notes: Es un benchmark de contexto de EE. UU. Justifica medir el tiempo a primer contacto en Hybrid; sobre Finora
+    es hipótesis (H-006).
+- claim: El modelo del caso no tiene ningún campo de motion o canal de entrada, lead, oportunidad, contacto comercial
+    ni estado de suscripción o de cobro. Solo tiene pagos mensuales por cliente, industria y gasto S&M por rubro,
+    con unidad no documentada.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Modelo consultado el 2026-09-29.
+  supports_or_contests: context
+  notes: 'Limita qué se puede calcular hoy: solo el lado derecho en agregado y el loop de Reactivate.'
+unverified: false
+source_ref:
+  research: R-022
+links:
+- R-022
+- H-037
+- H-006
+- H-005
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:30:20-06:00'
+updated_at: '2026-09-29T14:30:20-06:00'
+version: 1

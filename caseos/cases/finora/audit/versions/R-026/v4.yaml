@@ -1,0 +1,87 @@
+id: R-026
+type: research
+research_question: ¿Cuál es el ticket de entrada estabilizado —el segundo pago o el monto usual, no el primer pago—
+  por año de alta y por industria, en cohortes de ventana limpia? ¿Se sostiene la caída 2022→2023 de T-018 y el
+  «menor ticket» de C-007?
+case_question: C-003, C-007, H-035, H-041, H-042, H-046
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 3
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - C-003
+    - C-007
+    - H-035
+    - H-041
+    - H-042
+    - H-046
+    suggested:
+    - H-032
+    - H-030
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-003
+- C-007
+- H-035
+- H-041
+- H-042
+- H-046
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T14:38:00-06:00'
+version: 4
+job_id: JOB-20260929-143800-f853
+error: null
+started_at: '2026-09-29T14:38:00-06:00'
+shaping_task: RT-026
+slides:
+- S2.4
+- S2.2
+task_why: 'Lo pidió el COS en su revisión de cobertura de las 8 preguntas (D-017), acción 3: C-003 y C-007 se apoyan
+  en el primer pago, que no sirve como valor de entrada.'
+task:
+  work: datos
+  draft_answer: 'De arranque: T-004 y T-018 miden la entrada con el primer pago, y F-139 y F-143 dicen que ese pago
+    no sirve como valor de entrada (T-053 a T-055 muestran que en ventana limpia el segundo pago suele quedar por
+    debajo del primero). Si la caída 2022→2023 se mantiene con el monto estabilizado, C-003 y el «menor ticket»
+    de C-007 se sostienen; si se achica, la historia de la entrada es de primer cobro, no de valor.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Por alta de ventana limpia: primer pago, segundo pago y monto usual (mediana de los primeros tres meses
+      con pago). Mediana y promedio por año de alta y por industria, con cuántas altas no tienen segundo pago.'
+    where:
+    - mart.new_customers
+    - mart.customer_month
+    - raw.industry
+  - kind: data
+    what: 'Comparar contra T-018 y T-004: cuánto cambia la caída 2022→2023 y el rebote de 2024 con el monto estabilizado,
+      y qué pasa en las cosechas de menor ticket de C-007.'
+    where:
+    - mart.vintage_month
+    - mart.customer_month
+  - kind: proposal
+    what: 'Tabla lista para lámina: ticket de entrada estabilizado por año e industria, con la regla de estabilización
+      escrita y sus límites.'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)

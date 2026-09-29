@@ -1,0 +1,1191 @@
+id: R-025
+type: research
+research_question: ¿Qué causas potenciales —las cuatro que trae el caso (demanda, calidad, velocidad de atención,
+  conversión post-SQL) y al menos 3–5 más— podrían explicar «más leads, pero no más ventas», en el orden de C-011
+  (primero artefactos de medición, después causas ToFu y BoFu)? ¿Qué tendría que ser cierto en los datos para validar
+  o descartar cada una?
+case_question: 'Q-016: la evidencia mínima para distinguir las explicaciones del CRO. Sirve a Q-001 y Q-021 y sigue
+  el orden de C-011.'
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 3
+    data_engineering: 0
+    analytics: 1
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-001
+    - Q-016
+    - Q-021
+    - H-005
+    - H-006
+    - H-024
+    - H-027
+    - H-028
+    - H-029
+    - H-037
+    - H-051
+    - C-011
+    - H-052
+    - H-053
+    - H-054
+    - H-055
+    - H-056
+    - H-057
+    - Q-065
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-001
+- Q-016
+- Q-021
+- H-005
+- H-006
+- H-024
+- H-027
+- H-028
+- H-029
+- H-037
+- H-051
+- C-011
+- H-052
+- H-053
+- H-054
+- H-055
+- H-056
+- H-057
+- Q-065
+- F-204
+- F-205
+- F-206
+- F-207
+- F-208
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T14:56:18-06:00'
+version: 5
+job_id: JOB-20260929-143800-bdd6
+error: null
+started_at: '2026-09-29T14:38:00-06:00'
+shaping_task: RT-025
+slides:
+- S2.6
+- S2.7
+task_why: Reformula RT-001 (ya investigada en R-010). El caso da cuatro explicaciones que mezclan causas con un
+  lugar del funnel. Sin más causas que compitan o se encadenen, y sin saber qué dato las separa, S2.6 queda como
+  una lista y la columna «Decision Making» de S2.7 sigue vacía (N-027).
+task:
+  work: propuesta
+  draft_answer: 'Leo C-011 como orden de lectura. Paso 1, acotar artefactos antes de leer cualquier tasa: cambio
+    en cómo se cuentan o reparten los leads (H-027), registro del CRM (H-051), entradas que no son prospectos (clientes
+    actuales, duplicados, spam), rezago o borde de octubre-24 (H-029), reactivaciones contadas como nuevas (H-037)
+    e IDs que cambian (H-024). Con los pagos solo se acotan los de pagadores; los de leads necesitan el CRM. Paso
+    2, causas según dónde viven: ToFu —demanda, calidad definida al entrar (H-005) y ventas que cambiaron de puerta—;
+    MoFu —velocidad de atención, capacidad comercial instalada (H-006), el SDR elige a quién trabajar (H-028), SQL
+    inflados por metas del SDR y estancados sin seguimiento—; BoFu —la conversión post-SQL es el lugar; detrás pueden
+    estar SQL inflados, capacidad del AE u oferta, precio o competencia—; después del cierre —Won que no llega a
+    pagar—. Mi hipótesis de trabajo es una cadena, no una causa ganadora: la prueba se hace por cohorte de entrada
+    con plazo fijo, buscando la primera etapa que pierde conversión, y cada causa se amarra a la palanca del CRO
+    que movería. Todo es hipótesis: el caso no trae datos de funnel.'
+  hugo_said:
+  - text: hay que generar más causas potenciales, por lo menos 3-5 más y definir que datos tendrian que ser ciertos
+      para validar o descartar cada una
+    ref: N-044
+  - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
+      y asignarlos a…
+    ref: N-038
+  steps:
+  - kind: proposal
+    what: 'Tabla de causas: las cuatro del caso rebotadas, las seis nuevas de este turno y las que ya están en el
+      ledger. Para cada una: familia (paso 1 · ToFu · MoFu · BoFu · después del cierre), qué tendría que ser cierto
+      para validarla, qué la descarta, dato mínimo, si está en el caso o hay que pedirlo a Finora, y qué palanca
+      del CRO movería.'
+    where: []
+  - kind: data
+    what: 'Paso 1 del lado de pagadores, lo único que se puede hacer hoy: octubre-24, reactivaciones contadas como
+      nuevas e IDs que cambian (lo corre la tarea de datos nueva de este turno). Los datos del caso no traen leads,
+      etapas ni canal: ninguna causa del paso 2 se prueba con ellos.'
+    where:
+    - mart.customer_month
+    - mart.monthly_metrics
+    - raw.transactions
+  - kind: proposal
+    what: 'Extracto único para los dos pasos: por lead, fecha de creación y origen (incluida la entrada directa
+      a SQL), dueño y fecha de cada etapa, motivo de descalificación y de pérdida, e ID de cuenta que se una con
+      facturación y con el registro en producto; más el historial de metas o comisiones de SDR/AE y de precio o
+      plan.'
+    where: []
+  - kind: proposal
+    what: 'Prueba de cadena: por cohorte de entrada con plazo fijo, encontrar la primera etapa donde cambia la conversión
+      y comparar cómo cambian en el tiempo (no su nivel) las entradas directas a SQL frente a los SQL del SDR. Salida:
+      qué causas quedan en juego y qué palanca del CRO toca cada una, para la columna «Decision Making».'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+why_it_matters: 'Define qué dato separa cada causa y, con eso, qué palanca se le propone al CRO y al CFO: corregir
+  la medición, redirigir gasto, sumar capacidad o SLA, o corregir la oferta o el cobro. Sin ese orden se puede terminar
+  pagando la palanca equivocada.'
+short_answer: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las reactivaciones, ni reapariciones
+  con otro ID, y se concentra en Retail+Producción. Propongo 17 causas en el orden de C-011 (7 artefactos, 3 ToFu,
+  4 MoFu y 3 BoFu/después del cierre), cada una con qué tendría que ser cierto y qué la descarta. Confianza alta
+  en los hechos de pagos y media en el marco.'
+claims:
+- claim: El modelo del caso no tiene tablas de leads, SQL, oportunidades, dueños ni fechas de etapa. Solo tiene
+    pagos cliente × mes, industria y gasto S&M mensual.
+  source_id: DM-0
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: No se puede calcular ninguna conversión del funnel. Todo el lado de leads depende de Q-065.
+- claim: 'Primeros pagadores por mes: dic-22 26 → ene-23 60; jun-24 84 (el mes limpio más alto) → jul-24 48; oct-24
+    50 vs oct-23 64.'
+  source_id: DM-1
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Muestra el quiebre de julio 2024 y el salto de ene-23 que examina H-024.
+- claim: 'Jul–oct: 251 (2023) vs 203 (2024) primeros pagadores (−19%). Sin octubre (jul–sep): 187 vs 153 (−18%).'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: Va contra H-029 en su parte de octubre incompleto. El rezago Won→pago no se ve en los pagos.
+- claim: 'Ene–jun: 272 (2023) vs 351 (2024) primeros pagadores (+29%). Ene–oct: 523 vs 554 (+6%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: La caída es solo del segundo tramo; la historia depende de la ventana que use el CRO.
+- claim: 'Mar–oct: 227 (2022), 433 (2023) y 465 (2024) primeros pagadores.'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 2022 está afectado por el inicio de la ventana (ene-22) y el arrastre de feb-22.
+- claim: 'Gasto 2024 vs 2023 (unidad no documentada). Ene–jun: generación de demanda 9,722→7,655 (−21%), capacidad
+    comercial 5,663→3,998 (−29%), S&M 16,853→12,204 (−28%). Jul–oct: 2,985→4,367 (+46%), 2,274→2,882 (+27%), 5,454→7,551
+    (+38%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'En el mart, capacidad = Team + PayrollExpenses + Travel: no es headcount ni carga. Encaja con H-006 con
+    rezago, pero no la prueba.'
+- claim: 'Jul–oct, contando reactivaciones: entradas a pago 311 (2023) vs 260 (2024), −16%. Peso de reactivaciones:
+    19,3% vs 21,9%.'
+  source_id: DM-5
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: 'Contra H-037 como explicación de jul–oct: la dirección es la misma que contando solo nuevos (−19%).'
+- claim: 'Ene–jun: reactivaciones 59 (2023) vs 105 (2024). Con ellas, las entradas a pago crecen +38% (456 vs 331)
+    en vez de +29%.'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: 'Apoya H-037 en magnitud para ene–jun: ahí contar las reactivaciones sí cambia la cifra.'
+- claim: 'Mar–oct, peso de las reactivaciones en las entradas a pago: 39,5% (2022), 19,4% (2023), 22,0% (2024).'
+  source_id: DM-2
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Si la base de comparación es 2022, «nuevos» cambia mucho según se cuenten o no las reactivaciones. 2022
+    tiene efecto de borde de ventana.
+- claim: 'Nov–dic-22: 20 churns observados; 7 no vuelven antes de oct-24.'
+  source_id: DM-6
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Es el universo de candidatos a reaparecer con otro ID en ene-23.
+- claim: Como mucho 2 salidas sin retorno de nov–dic-22 (una de Producción por 63.000 COP y una de Restaurantes
+    por 42.000 COP) coinciden en industria y monto exacto con primeras apariciones de ene-23.
+  source_id: DM-4
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: 'Debilita H-024. Ene-23 tuvo 60 primeras apariciones (DM-1). 42.000 es un monto común: la coincidencia
+    es posible, no probada. Tampoco detecta cambios de sistema de cobro.'
+- claim: 'Jul–oct 2023→2024 por industria de los primeros pagadores: Retail+Producción 129→92 (−29%), Restaurantes
+    62→50 (−19%), Tecnología+Servicios profesionales+Salud 60→61.'
+  source_id: DM-3
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Son pagadores, no leads. Encaja mal con un choque de demanda parejo; con estos conteos, lo de Restaurantes
+    puede ser ruido (inferencia).
+- claim: 'M0 promedio de los primeros pagadores de jul–oct: 42.794 COP (2023) vs 44.601 COP (2024).'
+  source_id: DM-3
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Es monto pagado observado, no MRR contratado. Que no caiga no descarta H-056.
+- claim: 'Sin pago en M1 después del primer pago: 5 de 251 (jul–oct 2023) vs 5 de 153 observables (jul–sep 2024;
+    los 50 de oct-24 no tienen M1 observable).'
+  source_id: DM-3
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: Va contra la parte de H-057 que habla de caerse en el arranque tras pagar. No mide Won que nunca pagó.
+- claim: 'Gasto S&M por primer pagador (unidad no documentada): en jul–oct sube de 0,0217 a 0,0372 (+71%); en ene–oct
+    baja de 0,0427 a 0,0357 (−16%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'Cálculo sobre las sumas de DM-7. Es un cociente del mismo periodo: ignora el rezago entre gasto, entrada
+    y pago.'
+- claim: Oldroyd, McElheran y Elkington (HBR, 2011, vol. 89 n.º 3) sostienen que la mayoría de las empresas no responde
+    lo bastante rápido a los leads online.
+  source_id: EXT-1
+  source_type: academic
+  confidence: medium
+  freshness: '2011'
+  supports_or_contests: context
+  notes: Benchmark de otras empresas; contexto para H-006, no evidencia sobre Finora.
+- claim: 'Según la cita del estudio de HBR (auditoría de 2.241 empresas de EE. UU.): 37% respondió en menos de una
+    hora y 23% nunca respondió. Contactar dentro de la primera hora hizo casi 7 veces más probable calificar el
+    lead que hacerlo una hora después, y más de 60 veces que tras 24 horas.'
+  source_id: EXT-2
+  source_type: marketing
+  confidence: medium
+  freshness: 2011 (citado en página actualizada 2026-04-13)
+  supports_or_contests: context
+  notes: Fuente secundaria. Es una asociación observacional, no causa, y está confundida por el triage (H-028).
+- claim: 'Sabnis, Chatterjee, Grewal y Lilien (Journal of Marketing, 2013): los reps no persiguen cerca del 70%
+    de los leads de marketing. El seguimiento depende de la precalificación, del seguimiento gerencial, del volumen
+    de leads y de la experiencia y desempeño del rep.'
+  source_id: EXT-3
+  source_type: academic
+  confidence: high
+  freshness: '2013'
+  supports_or_contests: context
+  notes: Mecanismo para H-006, H-028 y H-055. La cifra es de otras empresas.
+- claim: Forrester (Daniels, 2023) recomienda medir sobre la oportunidad y el grupo de compra en vez del MQL. Dice
+    que menos del 1% de los leads llega a negocio cerrado y que reportar entre objetos distintos (conversión de
+    leads, leads reciclados) genera fricción.
+  source_id: EXT-4
+  source_type: industry
+  confidence: medium
+  freshness: '2023-11-21'
+  supports_or_contests: context
+  notes: Sustenta el marco alternativo. El <1% es una cifra general, no de Finora.
+- claim: TTEC pagaba a sus SDR por reunión agendada aunque no se convirtiera en SAL u oportunidad, y eso llevó a
+    pasar leads peor filtrados. Al premiar SAL u oportunidad, bajaron los SQL pero subió la probabilidad de ganar
+    los que pasan.
+  source_id: EXT-5
+  source_type: company
+  confidence: low
+  freshness: s/f (cambio en primavera 2022)
+  supports_or_contests: context
+  notes: 'Caso único y autorreportado: ilustra el mecanismo de H-054, no su frecuencia.'
+- claim: 'Integrate (2025): tasas altas de duplicados distorsionan el volumen, la conversión y el esfuerzo del SDR.
+    Según su estimación, controles previos al CRM pueden bloquear o recuperar entre 15% y 30% de los leads inbound.'
+  source_id: EXT-6
+  source_type: marketing
+  confidence: low
+  freshness: '2025-08-08'
+  supports_or_contests: context
+  notes: Contexto para H-052. Proveedor con interés comercial; la cifra es una estimación propia.
+- claim: 'Mixpanel: quien no completa los pasos dentro de la ventana de conversión sale del funnel y no se cuenta
+    como conversión.'
+  source_id: EXT-7
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Fundamenta comparar cohortes a igual edad (cohortes inmaduras, H-029).
+- claim: 'Etumos: una cohorte es un grupo de prospectos que cruza un umbral del funnel en el mismo periodo; superponer
+    cohortes muestra patrones de conversión y velocidad.'
+  source_id: EXT-8
+  source_type: industry
+  confidence: medium
+  freshness: 2020-04-08 (actualizado 2026-08-27)
+  supports_or_contests: context
+  notes: Apoya el grano por cohorte de entrada.
+- claim: 'Kyle Poyar (AMA en Pocus, 2023): «si solo trabajas los PQL, trabajas la fruta al alcance que quizá convierte
+    sola». En el modelo híbrido, Self Service es el punto de partida y ventas entra donde hace falta.'
+  source_id: EXT-9
+  source_type: expert
+  confidence: low
+  freshness: '2023-02-20'
+  supports_or_contests: context
+  notes: 'Opinión experta que ilustra el riesgo de H-053: atribuir a ventas compras que Self Service cerraba solo.'
+- claim: 'Clozd (2026): al comparar los motivos de pérdida del rep con entrevistas a compradores, los reps se equivocaron
+    en el motivo real el 85% de las veces.'
+  source_id: EXT-10
+  source_type: marketing
+  confidence: low
+  freshness: '2026-09-23'
+  supports_or_contests: contests
+  notes: Cuestiona usar solo los motivos del CRM para probar H-056. Es un proveedor de win-loss con interés comercial.
+- claim: 'Recurly: el churn involuntario ocurre cuando la suscripción se cae por un pago fallido (tarjeta vencida,
+    rechazo), no por decisión del cliente.'
+  source_id: EXT-11
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Definición útil para separar, en H-057, el pago fallido del arrepentimiento.
+sources:
+- id: DM-0
+  title: Qué tablas y columnas tiene el modelo (¿hay leads o CRM?)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: catalogo_modelo()
+  verified: true
+- id: DM-1
+  title: Serie mensual de primeros pagadores, reactivaciones, churn y gasto S&M
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT month, window_flag, active_customers, new_customers, reactivated_customers, churned_customers, demand_gen_spend,
+    sales_capacity_spend, enablement_spend, total_sm_spend, median_new_customer_mrr_cop FROM mart.monthly_metrics_phase1
+    ORDER BY month
+  verified: true
+- id: DM-2
+  title: Primeros pagadores y reactivaciones por año en mar–oct, jul–sep y jul–oct; gasto de mar–oct
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT SUBSTR(month,1,4) AS anio, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN new_customers
+    ELSE 0 END) AS nuevos_mar_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN reactivated_customers
+    ELSE 0 END) AS react_mar_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '07' AND '09' THEN new_customers ELSE
+    0 END) AS nuevos_jul_sep, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '07' AND '10' THEN new_customers ELSE 0 END)
+    AS nuevos_jul_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN demand_gen_spend ELSE 0 END) AS
+    demand_gen_mar_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN sales_capacity_spend ELSE 0 END)
+    AS capacidad_mar_oct FROM mart.monthly_metrics_phase1 GROUP BY SUBSTR(month,1,4) ORDER BY anio
+  verified: true
+- id: DM-3
+  title: 'Primeros pagadores por ventana 2023–2024: industria, M0 y pago en M1'
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT CASE WHEN cohort_month BETWEEN '2023-07' AND '2023-10' THEN 'jul-oct 2023' WHEN cohort_month BETWEEN
+    '2024-07' AND '2024-10' THEN 'jul-oct 2024' WHEN cohort_month BETWEEN '2023-01' AND '2023-06' THEN 'ene-jun
+    2023' WHEN cohort_month BETWEEN '2024-01' AND '2024-06' THEN 'ene-jun 2024' END AS ventana, COUNT(*) AS altas,
+    SUM(CASE WHEN industry IN ('Retail','Producción') THEN 1 ELSE 0 END) AS retail_produccion, SUM(CASE WHEN industry='Restaurantes'
+    THEN 1 ELSE 0 END) AS restaurantes, SUM(CASE WHEN industry IN ('Tecnología','Servicios profesionales','Salud')
+    THEN 1 ELSE 0 END) AS tec_serv_salud, ROUND(AVG(m0_cop)) AS m0_prom, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop
+    = 0 THEN 1 ELSE 0 END) AS sin_pago_m1, SUM(CASE WHEN m1_cop IS NULL THEN 1 ELSE 0 END) AS m1_no_observado FROM
+    mart.new_customers WHERE cohort_month BETWEEN '2023-01' AND '2024-10' GROUP BY 1 ORDER BY 1
+  verified: true
+- id: DM-4
+  title: Primeras apariciones de ene-23 que coinciden (industria y monto) con salidas sin retorno de nov–dic-22
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT n.customer_id, n.industry, n.m0_cop, c.customer_id AS churn_id, c.month AS churn_month, c.prev_mrr_cop,
+    c.months_to_return FROM mart.new_customers n JOIN mart.churn_events c ON c.industry = n.industry AND c.prev_mrr_cop
+    = n.m0_cop AND c.month IN ('2022-11','2022-12') AND c.months_to_return IS NULL WHERE n.cohort_month = '2023-01'
+    ORDER BY n.industry, n.m0_cop
+  verified: true
+- id: DM-5
+  title: 'Jul–oct 2023 vs 2024: nuevos, reactivaciones, peso de reactivaciones y gasto'
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT SUBSTR(month,1,4) AS anio, SUM(new_customers) AS nuevos_jul_oct, SUM(reactivated_customers) AS react_jul_oct,
+    SUM(new_customers)+SUM(reactivated_customers) AS entradas_a_pago, ROUND(100.0*SUM(reactivated_customers)/(SUM(new_customers)+SUM(reactivated_customers)),1)
+    AS pct_react, SUM(demand_gen_spend) AS demand_gen, SUM(sales_capacity_spend) AS capacidad, SUM(total_sm_spend)
+    AS sm_total FROM mart.monthly_metrics_phase1 WHERE SUBSTR(month,6,2) BETWEEN '07' AND '10' AND SUBSTR(month,1,4)
+    IN ('2023','2024') GROUP BY 1 ORDER BY 1
+  verified: true
+- id: DM-6
+  title: Churns observados de nov–dic-22 y cuántos no vuelven
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT month, COUNT(*) AS churns, SUM(CASE WHEN months_to_return IS NULL THEN 1 ELSE 0 END) AS no_vuelven
+    FROM mart.churn_events WHERE month IN ('2022-11','2022-12') GROUP BY month ORDER BY month
+  verified: true
+- id: DM-7
+  title: 'Ene–jun y jul–oct, 2023 vs 2024: nuevos, reactivaciones y gasto por grupo'
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT SUBSTR(month,1,4) AS anio, CASE WHEN SUBSTR(month,6,2) BETWEEN '01' AND '06' THEN 'ene-jun' ELSE
+    'jul-oct' END AS tramo, SUM(new_customers) AS nuevos, SUM(reactivated_customers) AS react, SUM(demand_gen_spend)
+    AS demand_gen, SUM(sales_capacity_spend) AS capacidad, SUM(total_sm_spend) AS sm_total FROM mart.monthly_metrics_phase1
+    WHERE SUBSTR(month,1,4) IN ('2023','2024') AND SUBSTR(month,6,2) BETWEEN '01' AND '10' GROUP BY 1, 2 ORDER BY
+    2, 1
+  verified: true
+- id: EXT-1
+  title: 'The Short Life of Online Sales Leads (HBR, 2011): ficha'
+  url: https://scholarsarchive.byu.edu/facpub/9711
+  publisher: BYU ScholarsArchive (Harvard Business Review)
+  date: '2011'
+  source_type: academic
+  quality: B
+  note: 'Ficha y resumen: Oldroyd, McElheran y Elkington; HBR 89(3):28. La ficha no trae cifras.'
+  verified: true
+- id: EXT-2
+  title: How Fast Do Marketing Leads Turn Cold? (and How to Stop It Happening)
+  url: https://ventureharbour.com/how-fast-do-marketing-leads-turn-cold-and-how-to-stop-it-happening/
+  publisher: Venture Harbour (Aaron Brooks)
+  date: '2026-04-13'
+  source_type: marketing
+  quality: C
+  note: Fuente secundaria que cita las cifras del estudio de HBR (2.241 empresas; 7x y 60x).
+  verified: true
+- id: EXT-3
+  title: 'The Sales Lead Black Hole: On Sales Reps'' Follow-Up of Marketing Leads'
+  url: https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/
+  publisher: Penn State (Journal of Marketing 77(1))
+  date: '2013'
+  source_type: academic
+  quality: A
+  note: 'Resumen: cerca del 70% de los leads de marketing no se persiguen; factores de motivación, oportunidad y
+    habilidad.'
+  verified: true
+- id: EXT-4
+  title: 'Saying Goodbye To MQLs: A Parting That Is All Sweet And No Sorrow'
+  url: https://www.forrester.com/blogs/saying-goodbye-to-mqls-sweet-and-no-sorrow/
+  publisher: Forrester (Simon Daniels)
+  date: '2023-11-21'
+  source_type: industry
+  quality: B
+  note: Argumento para medir por oportunidad y grupo de compra (B2B Revenue Waterfall).
+  verified: true
+- id: EXT-5
+  title: Grow your sales pipeline by changing your SDR approach
+  url: https://www.ttec.com/blog/grow-your-sales-pipeline-changing-your-sdr-approach-we-did-it-and-you-can-too
+  publisher: TTEC (Adam Lightfield)
+  date: s/f
+  source_type: company
+  quality: C
+  note: 'Caso propio: compensación de SDR por reunión agendada vs por SAL u oportunidad.'
+  verified: true
+- id: EXT-6
+  title: 'Data quality metrics: the 10 measures B2B teams should track'
+  url: https://www.integrate.com/resources/blog/data-quality-metrics/
+  publisher: Integrate
+  date: '2025-08-08'
+  source_type: marketing
+  quality: C
+  note: 'Proveedor: los duplicados distorsionan volumen, conversión y esfuerzo del SDR; estima que se puede bloquear
+    entre 15% y 30% de los leads.'
+  verified: true
+- id: EXT-7
+  title: Funnels Advanced Concepts
+  url: https://docs.mixpanel.com/docs/reports/funnels/funnels-advanced
+  publisher: Mixpanel Docs
+  date: s/f (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: 'Ventana de conversión: quien no completa los pasos a tiempo sale del funnel.'
+  verified: true
+- id: EXT-8
+  title: 'Marketing lead reporting: use cohort analysis to better understand conversion velocity'
+  url: https://etumos.com/marketing-automation/marketing-lead-reporting-use-cohort-analysis-better-understand-conversion-velocity
+  publisher: Etumos
+  date: 2020-04-08 (actualizado 2026-08-27)
+  source_type: industry
+  quality: C
+  note: Cohorte definida por umbral del funnel; superponer cohortes para ver conversión y velocidad.
+  verified: true
+- id: EXT-9
+  title: Product-Led Sales AMA with Kyle Poyar (OpenView PLS benchmarks)
+  url: https://pocus.com/blog/product-led-sales-pls-ama-kyle-poyar-openview-pls-benchmarks
+  publisher: Pocus
+  date: '2023-02-20'
+  source_type: expert
+  quality: C
+  note: Modelo híbrido; riesgo de trabajar PQL que habrían convertido solos.
+  verified: true
+- id: EXT-10
+  title: 'Win-loss analysis: what''s the best source of win-loss data?'
+  url: https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data
+  publisher: Clozd (Andrew Peterson)
+  date: '2026-09-23'
+  source_type: marketing
+  quality: C
+  note: 'Proveedor: los reps se equivocan en el motivo real el 85% de las veces frente a entrevistas con compradores.'
+  verified: true
+- id: EXT-11
+  title: Involuntary churn (glosario)
+  url: https://recurly.com/glossary/involuntary-churn/
+  publisher: Recurly
+  date: s/f (consultado 2026-09-29)
+  source_type: industry
+  quality: C
+  note: Definición de churn involuntario por pago fallido.
+  verified: true
+alternative_explanations:
+- 'En el periodo que mira el CRO puede no haber caída: en pagos, ene–oct 2024 tiene +6% de primeros pagadores y
+  ene–jun +29%. Si «más leads» se refiere a todo 2024, el problema es de proporción (Q-001), no de caída.'
+- 'Rezago: las entradas del salto y el gasto de jul–oct todavía no llegan a pago (cohortes inmaduras). La caída
+  de primeros pagadores reflejaría entradas de meses anteriores, cuando el gasto de capacidad había bajado.'
+- 'El gasto reacciona a los resultados: si Finora sube el gasto cuando ve caer las altas, la relación gasto→pagadores
+  sale inversa por cómo se decide, no por ineficiencia.'
+- 'Causa de segmento: demanda o ajuste de la oferta en Retail y Producción, no un problema general del funnel.'
+- 'Cambio de motion: parte de la compra pasó de Self Service (rápido) a sales-assisted (más lento) sin que cambie
+  la demanda.'
+- 'Ruido: con 48–84 primeros pagadores por mes, parte de la variación por industria puede ser azar (en especial
+  Restaurantes, 62→50).'
+what_is_established:
+- 'El modelo no tiene leads, SQL, etapas, dueños ni fechas de CRM: hoy no se puede calcular ninguna conversión del
+  funnel.'
+- 'Primeros pagadores observados: jul–oct 2024 203 vs 251 (−19%); jul–sep 153 vs 187 (−18%); ene–jun 351 vs 272
+  (+29%); ene–oct 554 vs 523 (+6%).'
+- Contando reactivaciones, jul–oct cae −16% (260 vs 311) y su peso pasa de 19,3% a 21,9%. En ene–jun el crecimiento
+  pasa de +29% a +38%.
+- De 7 salidas sin retorno en nov–dic-22, como mucho 2 coinciden en industria y monto exacto con primeras apariciones
+  de ene-23.
+- La caída de jul–oct se concentra en Retail+Producción (129→92); Tecnología+Servicios profesionales+Salud quedan
+  planos (60→61); el M0 promedio no baja; dejar de pagar en M1 es raro (5/251 vs 5/153).
+- 'Gasto, con unidad no documentada: en ene–jun 2024 fue menor que en 2023 (demanda −21%, capacidad −29%); en jul–oct
+  fue mayor (+46%, +27%).'
+what_is_contested:
+- 'Que haya habido «más leads» y cuántos: es una afirmación del CRO que el modelo no permite observar.'
+- 'Que el gasto de capacidad comercial refleje headcount o carga: el rubro mezcla Team, PayrollExpenses y Travel.'
+- 'Que los benchmarks de velocidad (HBR 2011) y de leads no trabajados (Sabnis 2013) apliquen a Finora: son otras
+  empresas y otros años.'
+- Que los motivos de pérdida del CRM sirvan para probar H-056 sin validarlos con compradores.
+what_remains_unknown:
+- Leads por mes y por fuente, y qué parte son duplicados, clientes actuales, soporte o spam (H-052).
+- Si cambiaron, y cuándo, la definición de lead, el formulario, la calificación, el reparto, la cuota del SDR o
+  los precios y planes (H-027, H-054, H-056).
+- Carga por SDR/AE, tiempo a primer contacto humano y estancados por cohorte (H-006, H-028, H-055).
+- SQL por origen, aceptación del AE, conversión post-SQL y Proposal→Won (post-SQL, H-054, H-056).
+- Tiempo y proporción de Won que llegan al primer pago, y el motion de cada primer pagador (H-029, H-053, H-057).
+- Cuánto dura el ciclo lead→Won, que se necesita para fijar la edad de comparación de las cohortes.
+case_implication: 'R-025 no cambia el orden de C-011: lo vuelve aplicable y le suma un Paso 0 (fijar el periodo
+  y la edad de comparación). Hoy ya se le puede decir al CRO y al CFO qué no explica la caída del lado de pagos
+  (octubre incompleto, reactivaciones contadas como nuevas, reapariciones con otro ID) y dónde está (jul–oct 2024,
+  sobre todo Retail+Producción). Lo que no se puede decir es por qué: ninguna causa del funnel se valida ni se descarta
+  sin el CRM. El mensaje defendible sería: «en pagos, 2024 creció hasta junio y cayó desde julio, con más gasto;
+  para saber si fue medición, mezcla, capacidad, cierre o cobro, necesitamos estos eventos». El pedido de datos
+  sigue el mismo orden que las causas: primero lo que cierra artefactos (log de cambios, ID de cuenta, duplicados),
+  después mezcla y tiempos, y al final motivos de pérdida y Won→pago.'
+changes_current_story:
+  value: maybe
+  why: 'El orden de C-011 se mantiene. Lo que puede cambiar es el framing de Q-001: en pagos, 2024 no es un año
+    parejo de «no crecen» (ene–jun +29%, jul–oct −19%, ene–oct +6%) y la caída se concentra en Retail+Producción.
+    Si el CRO habla de todo 2024, la pregunta es de proporción; si habla del segundo semestre, es de caída con más
+    gasto. Depende del periodo que confirme el CRO.'
+affected_hypotheses:
+- id: H-029
+  effect: weakens
+  why: Sin octubre la caída sigue en −18% (153 vs 187), así que octubre incompleto no la explica. Queda abierto
+    el rezago Won→primer pago, que solo se ve uniendo CRM y cobro.
+- id: H-024
+  effect: weakens
+  why: De 7 salidas sin retorno en nov–dic-22, como mucho 2 coinciden en industria y monto con las 60 primeras apariciones
+    de ene-23. Falta que Finora confirme que no cambió el sistema de cobro.
+- id: H-037
+  effect: weakens
+  why: 'En jul–oct, contar reactivaciones mueve la caída de −19% a −16%: la dirección no cambia. Sí importa para
+    las magnitudes de ene–jun (+38% vs +29%) y si la base de comparación es 2022 (39,5% de peso en mar–oct).'
+- id: H-005
+  effect: requires_research
+  why: Sin leads no se puede medir la mezcla al entrar. Como la caída de pagadores se concentra en Retail+Producción,
+    conviene medir la mezcla por industria con criterios congelados.
+- id: H-006
+  effect: requires_research
+  why: 'El gasto de capacidad cayó −29% en ene–jun 2024, antes de la caída de jul–oct, y subió +27% en jul–oct.
+    Encaja con H-006 con rezago, pero gasto ≠ headcount ≠ carga: hace falta el roster con fechas.'
+- id: H-028
+  effect: requires_research
+  why: Necesita tiempos a primer contacto por banda de ajuste y carga semanal; hoy no hay datos.
+- id: H-027
+  effect: requires_research
+  why: Solo se prueba con un log de cambios con fecha (formularios, definición, calificación, reparto) y confirmación
+    de Finora.
+- id: H-051
+  effect: requires_research
+  why: Necesita el origen de las entradas directas a SQL y la actividad de los estancados.
+- id: H-052
+  effect: requires_research
+  why: Necesita leads con ID de cuenta o dominio, formulario y marca de cliente actual para medir la proporción
+    de no-prospectos.
+- id: H-053
+  effect: requires_research
+  why: Los pagos no traen el motion de cada primer pagador. Hace falta el registro en producto y saber si hubo toque
+    comercial antes del pago.
+- id: H-054
+  effect: requires_research
+  why: Necesita la aceptación de SQL por el AE, el origen del SQL y el historial de cuotas del SDR.
+- id: H-055
+  effect: requires_research
+  why: Necesita el historial de estados (Working, Engaged) y la actividad, para medir estancados a N semanas y cuánto
+    se recupera.
+- id: H-056
+  effect: requires_research
+  why: El M0 promedio no cae (42.794 vs 44.601 COP), pero eso no descarta cambios de oferta que afecten quién compra.
+    Los motivos de pérdida del CRM hay que validarlos con compradores.
+- id: H-057
+  effect: requires_research
+  why: Después del primer pago casi nadie se cae en M1 (5/251 vs 5/153), así que esa parte no explica la caída.
+    El tramo Won→primer pago sigue sin verse sin el puente entre CRM y cobro.
+affected_claims:
+- id: C-011
+  effect: supports
+  why: 'El orden funciona y ya permite cerrar tres artefactos con los pagos. Propongo sumarle un Paso 0 (periodo
+    y edad de las cohortes) y un artefacto nuevo: cohortes inmaduras, es decir, un ciclo lead→Won más largo.'
+suggested_action: 'Propongo a Hugo cuatro pasos. (1) Validar con el CRO el Paso 0: qué meses son la base y cuáles
+  la caída de «más leads», porque en pagos ene–oct 2024 crece +6% y la caída es de jul–oct. (2) Marcar H-029 (parte
+  octubre), H-037 y H-024 como débiles, a la espera de confirmación de Finora. (3) Ampliar Q-065 con el log de cambios
+  con fecha, el roster de SDR/AE con fechas y cuotas, la versión de precios y una tabla puente CRM ↔ «Cliente N».
+  (4) Congelar antes de ver datos la regla de duplicado, los criterios de banda de ajuste y la edad N de comparación
+  de las cohortes.'
+new_questions:
+- ¿Qué meses compara el CRO cuando dice «más leads», y cuántos leads por fuente hubo en cada uno?
+- '¿Qué cambió en 2024 y en qué fecha: formularios, definición de lead, calificación, reparto, cuota del SDR, precios
+  o planes, o headcount de SDR/AE?'
+- ¿Cuántos días tarda hoy una entrada en llegar a Won y a primer pago, por motion, para fijar la edad de comparación
+  de las cohortes?
+handoff_to_cos:
+  summary: R-025 ordena 17 causas según C-011 (7 artefactos, 3 ToFu, 4 MoFu, 3 BoFu/después del cierre), cada una
+    con qué tendría que ser cierto y qué la descarta. Con los pagos, la caída de primeros pagadores es de jul–oct
+    2024 (−19%; ene–oct +6%), se concentra en Retail+Producción y no la explican octubre incompleto, las reactivaciones
+    ni reapariciones con otro ID. Todo lo del funnel depende de Q-065.
+  recommended_next: 'Llevar a Hugo para que decida: (1) el Paso 0 con el CRO (qué periodo); (2) ampliar Q-065 con
+    log de cambios, roster y cuotas, y puente CRM↔cobro; (3) abrir o no la hipótesis nueva de cohortes inmaduras,
+    y registrar Demanda y Post-SQL como hipótesis propias (hoy solo viven en Q-021).'
+confidence_buckets:
+  high_confidence:
+  - Sin CRM en el modelo, hoy no se puede calcular ninguna conversión del funnel.
+  - 'Primeros pagadores: jul–oct 2024 −19% (jul–sep −18%), ene–jun +29%, ene–oct +6%.'
+  - Octubre incompleto, reactivaciones y reapariciones con otro ID no alcanzan para explicar la caída de jul–oct.
+  plausible:
+  - La caída de 2024 es de segmento (Retail+Producción), no general.
+  - Parte de la tensión entre gasto y pagadores se explica por rezago o cohortes inmaduras.
+  - 'H-006 con rezago: menos gasto de capacidad en ene–jun 2024, antes de la caída.'
+  contested:
+  - Que haya habido «más leads» y cuántos.
+  - Que el gasto de capacidad refleje headcount o carga.
+  - Que los benchmarks externos (velocidad, leads no trabajados, motivos de pérdida) describan a Finora.
+  unknown:
+  - 'Todo el lado de lead, SQL y oportunidad: mezcla, tiempos, estancados, aceptación, post-SQL y motivos de pérdida.'
+  - Won→primer pago y motion de cada primer pagador.
+  - Log de cambios de definición, reparto, cuotas y precios.
+specialist:
+  measurement:
+    problem_interpretation: 'El CRO compara dos conteos con distinta unidad y distinto momento: los leads del periodo
+      (personas, con duplicados y clientes actuales) contra los clientes nuevos del periodo (cuentas que pagaron
+      por primera vez, que entraron meses antes y por recorridos distintos). Ese cociente mezcla motions (Self Service,
+      sales-assisted, directo a SQL, Hybrid, Reactivate), mezcla cohortes de distinta edad y no separa volumen,
+      mezcla y tasa. Antes de buscar la causa hay que fijar el periodo, la unidad (cuenta), el hito de entrada y
+      la edad de comparación; recién ahí cada causa deja una firma distinta. El modelo del caso solo ve a quienes
+      pagaron: sirve para cerrar artefactos del lado de pagos, no para medir conversión.'
+    measurement_objective: Poder decir, para el periodo que el CRO llama «más leads, no más ventas», qué parte de
+      la brecha es artefacto de conteo, qué parte es mezcla al entrar (ToFu), qué parte es alcance y tiempo en las
+      etapas tempranas (MoFu), qué parte es tasa en el cierre (BoFu) y qué parte son Won que no llegan a pagar.
+      Todo por motion y con cohortes a igual edad.
+    recommended_framework:
+      name: Escalera de descarte por cohorte de entrada (orden de C-011), con descomposición volumen–mezcla–tasa
+        por motion
+      structure: 'Unidad: la cuenta (empresa) que entra, sin duplicados; la oportunidad para BoFu; la cuenta pagadora
+        para el resultado. Grano: cohorte mensual de entrada, comparada a igual edad (N días). Hito: primera entrada
+        de la cuenta (lead creado; SQL si entra directo; registro en producto si es Self Service). Cada motion se
+        mide por separado (Self Service, sales-assisted, directo a SQL, Hybrid, Reactivate). Resultados comunes:
+        primeros pagadores, M0 y Won→pago.
+
+
+        PASO 0 · Fijar periodo y edad. Tendría que ser cierto que, en el periodo que el CRO llama «más leads», los
+        primeros pagadores crecen menos que las entradas válidas, comparando cohortes de igual edad. Hoy, en pagos:
+        ene–jun 2024 +29%, jul–oct −19%, ene–oct +6%.
+
+
+        PASO 1 · Artefactos (se cierran antes de interpretar)
+
+        1) H-029, borde o rezago. La valida: que la caída desaparezca sin octubre, o que suba el tiempo Won→primer
+        pago. La descarta: que se mantenga sin octubre y el tiempo no cambie. Hoy: sin octubre sigue en −18%, así
+        que la parte de octubre es débil; el rezago está pendiente.
+
+        2) H-024, reaparición con otro ID. La valida: primeras apariciones que coinciden con salidas recientes,
+        o un cambio de sistema de cobro. La descarta: ninguna coincidencia y confirmación de Finora. Hoy: como mucho
+        2 de 60 en ene-23, débil.
+
+        3) H-037, reactivaciones contadas como nuevos. La valida: que su peso se mueva y cambie la tendencia. La
+        descarta: peso estable y misma tendencia. Hoy: en jul–oct pasa de 19,3% a 21,9% y la caída es −16% vs −19%,
+        misma dirección; pesa en ene–jun y contra 2022.
+
+        4) H-052, no-prospectos en New. La valida: que suba la proporción de duplicados, clientes actuales, soporte/upgrade
+        o spam y que, al quitarlos, la brecha se cierre. La descarta: una proporción baja y estable.
+
+        5) H-027, cambio de definición, formulario, calificación o reparto. La valida: un cambio con fecha que coincide
+        con el salto y se concentra en la fuente afectada. La descarta: un log sin cambios en el periodo.
+
+        6) H-051, cómo se registra el recorrido. La valida: SQL directos sin origen, estancados sin actividad y
+        Self Service que solo aparece al pagar. La descarta: origen y actividad registrados.
+
+        7) NUEVA · cohortes inmaduras (ciclo lead→Won más largo). La valida: que a igual edad la conversión de las
+        cohortes no caiga y solo se alargue el tiempo a Won. La descarta: que a igual edad caiga.
+
+
+        PASO 2 · ToFu
+
+        8) Demanda (Q-021). La valida: una caída pareja en fuentes, bandas y motions (incluidos Self Service y entradas
+        directas), señales de alta intención que no crecen con los leads y más cierres «sin decisión». La descarta:
+        una caída concentrada donde crecieron las entradas. Hoy (solo pagadores): Tecnología, Servicios profesionales
+        y Salud planos, Retail+Producción −29%; si es demanda, es de segmento.
+
+        9) H-005, calidad. La valida: que, con criterios congelados, la mezcla empeore y la tasa dentro de cada
+        banda se mantenga (efecto mezcla). La descarta: mezcla estable, o una tasa que cae dentro de cada banda.
+
+        10) H-053, compras de Self Service que ahora pasan por el funnel. La valida: que los New del aumento tuvieran
+        registro previo en el producto y que bajen los primeros pagadores sin toque comercial cuando suben los leads.
+        La descarta: sin registro previo y Self Service estable.
+
+
+        PASO 3 · MoFu
+
+        11) H-006, velocidad o capacidad. La valida: más carga por SDR/AE, peor tiempo a primer contacto humano
+        y, dentro de la misma banda, menos compra en lo contactado tarde (mejor si se ve en llegadas fuera de horario).
+        La descarta: carga o tiempos estables, o una caída igual en lo atendido rápido.
+
+        12) H-028, triage bajo carga. La valida: que con más carga el contacto caiga sobre todo en las bandas percibidas
+        como peores. La palanca depende de si esas bandas compran cuando se las atiende.
+
+        13) H-055, estancados sin seguimiento. La valida: que suba la proporción en Working/Engaged sin actividad
+        a N semanas y que los retomados compren. La descarta: proporción estable, o retomados que no compran.
+
+        14) H-054, metas del SDR. La valida: que caiga la aceptación de SQL por el AE y que el post-SQL caiga en
+        los SQL del SDR pero no en los directos, después de un cambio de cuota con fecha. La descarta: una caída
+        igual en ambos orígenes.
+
+
+        PASO 4 · BoFu y después del cierre
+
+        15) Post-SQL (Q-021). La valida: SQL que crecieron con los leads mientras los Won no, con la caída en SQL→Won
+        dentro del mismo origen y motion. La descarta: que los SQL no hayan crecido (entonces el problema está antes).
+
+        16) H-056, precio o plan, competidor, funcionalidad. La valida: que caiga Proposal→Won, que cambien los
+        motivos de pérdida (validados con compradores) y que la caída se concentre donde cambió la oferta o en segmentos
+        nuevos. La descarta: Proposal→Won estable. Hoy: el M0 no cae, pero eso no descarta.
+
+        17) H-057, Won que no llega a pagar. La valida: que baje la proporción de Won con primer pago en 30/60 días.
+        La descarta: una proporción alta y estable. Hoy: después del primer pago casi nadie se cae en M1; el tramo
+        Won→pago no se ve.
+
+
+        Lectura: los artefactos mueven el conteo; ToFu mueve la mezcla; MoFu mueve el alcance y el tiempo en las
+        etapas tempranas con la misma mezcla; BoFu mueve las tasas finales; después del cierre se mueve Won→pago.'
+      why: El síntoma del CRO es un cociente entre dos conteos de distinto periodo y unidad. Si no se fijan unidad,
+        cohorte y edad, un cambio de definición, un rezago o un cambio de motion se leen como caída de conversión.
+        La escalera sigue C-011 y es MECE según dónde se pierde la compra (medición, entrada, trabajo del lead,
+        cierre, cobro). A cada causa le da una firma y un descarte observables, en vez de una tasa mezclada que
+        no describe a nadie.
+    alternative_frameworks:
+    - name: B2B Revenue Waterfall por oportunidad (Forrester)
+      when_better: Cuando en Finora la compra la decide un grupo de personas y el CRM se lleva con disciplina a
+        nivel de oportunidad. Sirve bien para BoFu (post-SQL, H-056).
+      tradeoff: 'Deja fuera justo lo que C-011 pide revisar primero: duplicados, clientes actuales y spam a nivel
+        lead (H-052), y el Self Service, que nunca abre oportunidad (H-053).'
+    - name: Máquina de estados del ciclo de vida (New→Working→Engaged→SQL→Won→pago, con salidas y reciclajes)
+      when_better: Cuando hay muchos reciclajes y recorridos no lineales (H-051, H-055) y el CRM guarda el historial
+        completo de estados.
+      tradeoff: Pide más datos y es más difícil de contar en una lámina al CRO o al CFO. No reemplaza la comparación
+        de cohortes a igual edad.
+    metric_definitions:
+    - metric: Entradas válidas
+      definition: Cuentas (empresas) con una entrada nueva, quitando duplicados, clientes actuales, pedidos de soporte/upgrade
+        y spam o bots.
+      formula: entradas_brutas − duplicados − clientes_actuales − soporte_upgrade − spam
+      grain: cuenta × semana de creación × fuente × motion
+      milestone: 'Primera entrada de la cuenta en la ventana: lead creado; SQL creado si entra directo; registro
+        en producto si es Self Service'
+      notes: Base para H-052 y H-027. La ventana de duplicado (por ejemplo, 90 días) es una propuesta que hay que
+        congelar antes de ver resultados.
+    - metric: Tasa de no-prospectos
+      definition: Proporción de las entradas brutas que no pueden comprar.
+      formula: (duplicados + clientes_actuales + soporte_upgrade + spam) ÷ entradas_brutas
+      grain: semana de creación × fuente × formulario
+      milestone: Lead creado
+      notes: 'H-052: si sube junto con el salto y la brecha se cierra al quitarlos, parte del aumento es artefacto.'
+    - metric: Mezcla de ajuste al entrar
+      definition: 'Proporción de entradas válidas en cada banda de ajuste (A/B/C), con criterios congelados del
+        periodo base: industria, tamaño, rol y acción de alta intención (por ejemplo, pedir demo).'
+      formula: entradas_válidas_banda_b ÷ entradas_válidas
+      grain: cohorte mensual de entrada × fuente × motion
+      milestone: Entrada
+      notes: Para H-005 y Demanda. No usar la opinión posterior de Sales ni un score recalibrado a mitad del periodo.
+    - metric: Alcance por etapa a edad fija
+      definition: Proporción de una cohorte de entrada que llega a la etapa S dentro de N días, por motion.
+      formula: entradas_de_la_cohorte_que_llegan_a_S_en_≤N_días ÷ entradas_válidas_de_la_cohorte
+      grain: cohorte mensual × motion × banda × fuente
+      milestone: Entrada; S ∈ {primer contacto humano, Working, Engaged, SQL, Demo, Proposal, Won, primer pago};
+        N ∈ {7, 30, 90, 180}
+      notes: Reemplaza «clientes del mes ÷ leads del mes». Solo se comparan cohortes de la misma edad; las recientes
+        se marcan como inmaduras.
+    - metric: Tiempo a primer contacto humano
+      definition: Horas hábiles entre la creación y la primera actividad humana (llamada, correo personal, reunión),
+        sin contar secuencias automáticas.
+      formula: mediana(primer_contacto_humano_at − created_at); % contactado en ≤1 h y en ≤24 h
+      grain: entrada × cohorte semanal × fuente × banda × franja de llegada
+      milestone: Lead creado
+      notes: Para H-006 y H-028. La relación con la compra está confundida por el triage; las llegadas fuera de
+        horario sirven como contraste natural.
+    - metric: Carga por rep
+      definition: Entradas válidas asignadas por SDR activo y SQL abiertos por AE activo, ponderando a quienes están
+        en rampa.
+      formula: entradas_válidas_asignadas ÷ FTE_SDR_efectivos; SQL_abiertos ÷ FTE_AE_efectivos
+      grain: semana × equipo
+      milestone: Asignación
+      notes: Para H-006. Necesita un roster con fechas de ingreso, salida y fin de rampa; el gasto del mart no sirve
+        como sustituto.
+    - metric: Estancamiento a N semanas y recuperación
+      definition: Proporción de la cohorte que sigue en Working/Engaged sin actividad en los últimos 14 días y sin
+        estado de salida a la edad N; y, de los que se retoman, cuántos llegan a Won.
+      formula: estancados_a_edad_N ÷ entradas_válidas_de_la_cohorte; Won_en_≤90_días_de_retomados ÷ retomados
+      grain: cohorte mensual × dueño × fuente
+      milestone: Entrada (para el estancamiento); retoma (para la recuperación)
+      notes: Para H-055 y H-051. Los 14 días son una propuesta. Mejor si se retoma al azar una muestra de estancados.
+    - metric: Aceptación de SQL por el AE
+      definition: Proporción de los SQL pasados que el AE acepta como oportunidad, por origen.
+      formula: SQL_aceptados ÷ SQL_pasados
+      grain: mes × origen (SDR, directo, Hybrid) × SDR
+      milestone: SQL creado
+      notes: 'Para H-054: si cae cuando cambia la cuota del SDR, la madurez del SQL se degradó antes del traspaso.'
+    - metric: Conversión post-SQL a edad fija, por origen
+      definition: Proporción de los SQL de una cohorte que llegan a Won en ≤N días, separando SQL→Demo→Proposal→Won.
+      formula: SQL_de_la_cohorte_con_Won_en_≤N_días ÷ SQL_de_la_cohorte
+      grain: cohorte mensual de SQL × origen × motion × banda
+      milestone: SQL creado
+      notes: Para Post-SQL, H-054 y H-056. No mezclar entradas directas con SQL del SDR.
+    - metric: Mezcla de motivos de pérdida, validada
+      definition: Distribución de las pérdidas según un motivo de lista cerrada (precio/plan, competidor, funcionalidad,
+        sin decisión, timing, no califica) y según la etapa de pérdida, contrastada con entrevistas a compradores.
+      formula: pérdidas_con_motivo_m ÷ pérdidas_con_motivo; concordancia = casos con motivo_CRM = motivo_comprador
+        ÷ muestra entrevistada
+      grain: trimestre × segmento × etapa de pérdida
+      milestone: Cierre perdido
+      notes: Para H-056 y Demanda (cierres «sin decisión»). El motivo del CRM por sí solo no alcanza.
+    - metric: Won→primer pago
+      definition: Proporción de los Won con primer pago en ≤30/60 días, y días hasta ese pago.
+      formula: Won_con_primer_pago_en_≤X_días ÷ Won; mediana(primer_pago_at − won_at)
+      grain: cohorte mensual de Won × motion
+      milestone: Won
+      notes: Para H-057 y H-029. Requiere una tabla puente CRM ↔ «Cliente N». El primer pago es la primera aparición
+        en pagos, no una adquisición confirmada.
+    - metric: Primeros pagadores por motion
+      definition: Cuentas con primer pago observado en el mes, separadas por motion; Reactivate se reporta aparte.
+      formula: count(cuentas con primer pago en el mes t) por motion
+      grain: mes × motion × industria
+      milestone: Primer pago observado
+      notes: Es el resultado económico común. Hoy solo existe el total (mart.new_customers), sin motion.
+    - metric: Descomposición volumen–mezcla–tasa
+      definition: 'Reparte el cambio de primeros pagadores entre dos periodos en tres efectos: volumen (más entradas),
+        mezcla (otra composición por celda) y tasa (otra conversión dentro de cada celda).'
+      formula: ΔC = (V₁ − V₀)·Σc s₀c·r₀c + V₁·Σc (s₁c − s₀c)·r₀c + V₁·Σc s₁c·(r₁c − r₀c); c = fuente × banda × motion;
+        V = entradas válidas; s = participación; r = alcance a Won o a pago a edad N
+      grain: periodo base vs periodo de caída, con cohortes a igual edad
+      milestone: Entrada
+      notes: Dice qué se movió. Si es la mezcla, apunta a ToFu (H-005, demanda de segmento); si es la tasa temprana,
+        a MoFu (H-006, H-055, H-054); si es la tasa final, a BoFu (Post-SQL, H-056).
+    - metric: Valor por entrada
+      definition: Monto de primer pago que genera cada entrada válida; separa el valor de la tasa.
+      formula: Σ M0 de los primeros pagadores de la cohorte ÷ entradas_válidas_de_la_cohorte; revenue que dejamos
+        de capturar = (tasa_base − tasa_actual) × entradas × M0_promedio
+      grain: cohorte mensual × motion × industria
+      milestone: Entrada (el numerador se mide en el primer pago)
+      notes: El M0 es monto pagado observado, no MRR contratado.
+    required_events:
+    - event: lead_created
+      trigger: Se crea un lead (formulario, chat, importación, evento, API)
+      properties:
+      - lead_id
+      - person_id
+      - account_id o dominio
+      - created_at
+      - fuente / campaña / formulario
+      - tipo de entrada (New, Hybrid, Reactivate)
+      - industria, tamaño, rol
+      - acción de alta intención (demo, pricing, contacto con ventas)
+      - es_cliente_actual
+      - validación o spam_score
+    - event: lead_merged
+      trigger: Se fusiona un duplicado
+      properties:
+      - lead_id
+      - master_lead_id
+      - regla de duplicado
+      - merged_at
+    - event: lead_assigned
+      trigger: Se asigna o reasigna dueño
+      properties:
+      - lead_id
+      - owner_id
+      - rol (SDR/AE)
+      - routing_rule_id
+      - assigned_at
+    - event: activity_logged
+      trigger: Llamada, correo, reunión o tarea sobre un lead o una oportunidad
+      properties:
+      - record_id
+      - owner_id
+      - tipo
+      - manual o automática
+      - occurred_at
+      - resultado
+    - event: lead_status_changed
+      trigger: El lead cambia de estado
+      properties:
+      - lead_id
+      - estado anterior y nuevo (New, Working, Engaged, Recycled, Disqualified, Converted)
+      - changed_at
+      - motivo de descalificación
+    - event: opportunity_created (SQL)
+      trigger: Se crea un SQL u oportunidad, por conversión de un lead o directo
+      properties:
+      - opp_id
+      - account_id
+      - lead_id (si viene de un lead)
+      - created_at
+      - origen (SDR, directo, partner, referido, demo pedida, Self Service asistido)
+      - creado_por
+    - event: sql_reviewed
+      trigger: El AE acepta o rechaza el SQL
+      properties:
+      - opp_id
+      - ae_id
+      - decisión
+      - motivo
+      - reviewed_at
+    - event: opportunity_stage_changed
+      trigger: La oportunidad cambia de etapa (Demo, Proposal, Negotiation)
+      properties:
+      - opp_id
+      - etapa anterior y nueva
+      - changed_at
+      - monto
+      - plan
+      - versión de la lista de precios
+    - event: opportunity_closed
+      trigger: Cierre como Won, Lost o sin decisión
+      properties:
+      - opp_id
+      - resultado
+      - closed_at
+      - motivo de pérdida (lista cerrada)
+      - competidor
+      - plan y precio cotizado
+    - event: product_signup
+      trigger: Registro en el producto
+      properties:
+      - account_id
+      - user_id
+      - signup_at
+      - plan
+      - hubo toque comercial antes de pagar
+    - event: payment_recorded / payment_failed
+      trigger: Cobro exitoso o fallido
+      properties:
+      - account_id (puente a «Cliente N»)
+      - subscription_id
+      - monto
+      - paid_at o failed_at
+      - motivo del fallo
+    - event: config_changed
+      trigger: Cambio de formulario, definición de lead, calificación, scoring, reparto, cuota del SDR o precios
+      properties:
+      - objeto
+      - descripción
+      - effective_at
+      - responsable
+    - event: rep_roster_snapshot
+      trigger: Alta, baja o fin de rampa de un SDR/AE (o foto semanal del equipo)
+      properties:
+      - rep_id
+      - rol
+      - equipo
+      - start_date
+      - end_date
+      - ramp_end_date
+      - métrica y valor de cuota
+    required_dimensions:
+    - dimension: Motion (Self Service, sales-assisted, directo a SQL, Hybrid, Reactivate)
+      why: Cada recorrido tiene etapas y tiempos distintos; una tasa mezclada no describe a nadie.
+    - dimension: Cohorte de entrada y edad (días desde la entrada)
+      why: Permite comparar a igual madurez y separar el rezago de una caída real.
+    - dimension: Fuente / campaña / formulario
+      why: Separa volumen de mezcla (H-005) y ubica cambios de definición (H-027) o duplicados (H-052).
+    - dimension: Banda de ajuste congelada (A/B/C)
+      why: Mide la calidad al entrar con el mismo criterio en ambos periodos (H-005, H-028).
+    - dimension: Industria y tamaño
+      why: En pagos, la caída se concentra en Retail+Producción; hay que ver si en esos segmentos es un tema ToFu
+        o BoFu.
+    - dimension: Estado de la cuenta al entrar (nueva, cliente actual, ex-cliente)
+      why: Separa los no-prospectos (H-052) y las reactivaciones (Reactivate, H-037).
+    - dimension: Dueño, equipo y estado de rampa
+      why: Para carga y triage (H-006, H-028) y para las metas del SDR (H-054).
+    - dimension: Franja de llegada (hábil, noche, fin de semana)
+      why: Contraste natural para medir la velocidad sin el sesgo del triage.
+    - dimension: Origen del SQL (SDR, directo, Hybrid)
+      why: Separa la madurez del SQL (H-054) de los problemas de cierre (Post-SQL).
+    - dimension: Versión de la oferta (plan y lista de precios)
+      why: Aísla los cambios de oferta (H-056).
+    decision_enabled: 'Qué palanca proponerle al CRO y al CFO, y en qué orden: (1) corregir cómo se cuentan los
+      leads y cuál es el periodo antes de reportar; (2) si domina la mezcla, redirigir la generación de demanda
+      por fuente y segmento en vez de sumar volumen; (3) si dominan el alcance temprano o el tiempo, trabajar capacidad,
+      SLA y reparto antes de sumar gasto; (4) si dominan post-SQL o Proposal→Won, revisar oferta, pricing o posicionamiento
+      por segmento; (5) si domina Won→pago, revisar cobro y onboarding. Además, decidir si conviene seguir subiendo
+      el gasto de generación de demanda.'
+    limitations:
+    - 'El modelo no tiene leads ni CRM: todas las pruebas del funnel dependen de Q-065.'
+    - 'Los pagos solo muestran a quien pagó: no hay denominador para calcular conversión.'
+    - La unidad del gasto no está documentada, y gasto ≠ headcount ≠ carga ≠ leads.
+    - 'La relación entre tiempo de contacto y compra está confundida por el triage (H-028): sin un contraste natural
+      o una prueba, es solo asociación.'
+    - Los motivos de pérdida del CRM tienen el sesgo del rep; hace falta una muestra de entrevistas a compradores.
+    - Las cohortes recientes están truncadas, y oct-24 no tiene M1 observable.
+    - 'Hay conteos chicos por mes e industria: diferencias pequeñas pueden ser ruido.'
+    - Los benchmarks externos (2011, 2013, proveedores) son contexto, no evidencia sobre Finora.
+    implementation_implications:
+    - 'Data Engineering: una tabla de hechos de entradas a grano cuenta-entrada, con regla de duplicado; historial
+      de estados y etapas con fecha y hora; una tabla puente CRM ↔ «Cliente N» ↔ registro en producto.'
+    - 'Pedido a Finora (ampliar Q-065): log de cambios con fecha (formularios, definición de lead, calificación,
+      reparto, scoring, cuota del SDR, precios y planes) y roster de SDR/AE con fechas.'
+    - 'Congelar antes de ver datos: periodo base y de caída, ventana de duplicado, criterios de las bandas de ajuste
+      y edad N de comparación.'
+    - Reportar por motion (Self Service, sales-assisted, directo a SQL, Hybrid, Reactivate), nunca con una tasa
+      lead→cliente mezclada.
+    - 'Diseñar contrastes para poder hablar de causa: franja de llegada (H-006), retoma al azar de estancados (H-055)
+      y entrevistas a compradores perdidos (H-056).'
+    - Mientras no llegue el CRM, la lámina para el CRO y el CFO habla solo de primeros pagadores, reactivaciones,
+      M0 y M1, sin tasas de conversión.
+sql_runs:
+- catalogo_modelo()
+- SELECT month, window_flag, active_customers, new_customers, reactivated_customers, churned_customers, demand_gen_spend,
+  sales_capacity_spend, enablement_spend, total_sm_spend, median_new_customer_mrr_cop FROM mart.monthly_metrics_phase1
+  ORDER BY month
+- SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, ROUND(AVG(m0_cop)) AS m0_prom,
+  MIN(cohort_month) AS primer_mes, MAX(cohort_month) AS ultimo_mes FROM mart.new_customers GROUP BY year ORDER BY
+  year
+- SELECT SUBSTR(month,1,4) AS anio, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN new_customers ELSE
+  0 END) AS nuevos_mar_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN reactivated_customers ELSE
+  0 END) AS react_mar_oct, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '07' AND '09' THEN new_customers ELSE 0 END)
+  AS nuevos_jul_sep, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '07' AND '10' THEN new_customers ELSE 0 END) AS nuevos_jul_oct,
+  SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN demand_gen_spend ELSE 0 END) AS demand_gen_mar_oct,
+  SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN sales_capacity_spend ELSE 0 END) AS capacidad_mar_oct
+  FROM mart.monthly_metrics_phase1 GROUP BY SUBSTR(month,1,4) ORDER BY anio
+- SELECT year, industry, COUNT(*) AS altas FROM mart.new_customers WHERE clean GROUP BY year, industry ORDER BY
+  year, altas DESC
+- SELECT CASE WHEN cohort_month BETWEEN '2023-07' AND '2023-10' THEN 'jul-oct 2023' WHEN cohort_month BETWEEN '2024-07'
+  AND '2024-10' THEN 'jul-oct 2024' WHEN cohort_month BETWEEN '2023-01' AND '2023-06' THEN 'ene-jun 2023' WHEN cohort_month
+  BETWEEN '2024-01' AND '2024-06' THEN 'ene-jun 2024' END AS ventana, COUNT(*) AS altas, SUM(CASE WHEN industry
+  IN ('Retail','Producción') THEN 1 ELSE 0 END) AS retail_produccion, SUM(CASE WHEN industry='Restaurantes' THEN
+  1 ELSE 0 END) AS restaurantes, SUM(CASE WHEN industry IN ('Tecnología','Servicios profesionales','Salud') THEN
+  1 ELSE 0 END) AS tec_serv_salud, ROUND(AVG(m0_cop)) AS m0_prom, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop =
+  0 THEN 1 ELSE 0 END) AS sin_pago_m1, SUM(CASE WHEN m1_cop IS NULL THEN 1 ELSE 0 END) AS m1_no_observado FROM mart.new_customers
+  WHERE cohort_month BETWEEN '2023-01' AND '2024-10' GROUP BY 1 ORDER BY 1
+- SELECT n.customer_id, n.industry, n.m0_cop, c.customer_id AS churn_id, c.month AS churn_month, c.prev_mrr_cop,
+  c.months_to_return FROM mart.new_customers n JOIN mart.churn_events c ON c.industry = n.industry AND c.prev_mrr_cop
+  = n.m0_cop AND c.month IN ('2022-11','2022-12') AND c.months_to_return IS NULL WHERE n.cohort_month = '2023-01'
+  ORDER BY n.industry, n.m0_cop
+- SELECT SUBSTR(month,1,4) AS anio, SUM(new_customers) AS nuevos_jul_oct, SUM(reactivated_customers) AS react_jul_oct,
+  SUM(new_customers)+SUM(reactivated_customers) AS entradas_a_pago, ROUND(100.0*SUM(reactivated_customers)/(SUM(new_customers)+SUM(reactivated_customers)),1)
+  AS pct_react, SUM(demand_gen_spend) AS demand_gen, SUM(sales_capacity_spend) AS capacidad, SUM(total_sm_spend)
+  AS sm_total FROM mart.monthly_metrics_phase1 WHERE SUBSTR(month,6,2) BETWEEN '07' AND '10' AND SUBSTR(month,1,4)
+  IN ('2023','2024') GROUP BY 1 ORDER BY 1
+- SELECT month, COUNT(*) AS churns, SUM(CASE WHEN months_to_return IS NULL THEN 1 ELSE 0 END) AS no_vuelven FROM
+  mart.churn_events WHERE month IN ('2022-11','2022-12') GROUP BY month ORDER BY month
+- SELECT SUBSTR(month,1,4) AS anio, CASE WHEN SUBSTR(month,6,2) BETWEEN '01' AND '06' THEN 'ene-jun' ELSE 'jul-oct'
+  END AS tramo, SUM(new_customers) AS nuevos, SUM(reactivated_customers) AS react, SUM(demand_gen_spend) AS demand_gen,
+  SUM(sales_capacity_spend) AS capacidad, SUM(total_sm_spend) AS sm_total FROM mart.monthly_metrics_phase1 WHERE
+  SUBSTR(month,1,4) IN ('2023','2024') AND SUBSTR(month,6,2) BETWEEN '01' AND '10' GROUP BY 1, 2 ORDER BY 2, 1
+completed_at: '2026-09-29T14:56:18-06:00'
+findings:
+- F-204
+- F-205
+- F-206
+- F-207
+- F-208
+run_ids:
+- RUN-20260929-143800-measurement-8dc5
+usage:
+  RUN-20260929-143800-measurement-8dc5:
+    cost_usd: 3.7211796
+    turns: 39
+    ms: 1095841
+    input_tokens: 36
+    output_tokens: 119260
+    cache_read: 688608
+    cache_write: 101950
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: measurement-strategy
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: cro-advisor
+  mode: dynamic
+  why: 2 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+  kind: vendor
+  digest: cd712605d907
+validation:
+  unverified_sources: []
+  bare_claims: []
+  seen_urls: 113
+  ok: true
