@@ -22,7 +22,7 @@ Otras formas:
 - `python -m agent recompose <archivo>` vuelve a componer la narrativa y usa el modelo. `python -m agent revisual <archivo>` solo reasigna las gráficas automáticas, sin modelo.
 - Cada corrida queda en `#investigacion/INV-…`; con el servidor, ese enlace la vuelve a abrir.
 - Sin servidor: `finora_eda.html` trae embebidas las respuestas verificadas y la investigación dorada. Ahí Enter lleva a la respuesta verificada más cercana, o dice con honestidad que la pregunta necesita el servidor.
-- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 89 en total).
+- Evaluaciones: `.venv/bin/python -m evals.run_evals` (no llaman al modelo; 90 en total).
 
 ## Respuesta primero (iteración de UX del 27-sep-2026)
 
@@ -209,6 +209,7 @@ La duración varía: en la corrida 3 el segundo intento del compositor esperó 4
 - El validador comprueba de dónde sale cada cifra y rechaza participaciones imposibles, pero no entiende unidades en general. Un 1% leído como fracción (100%) todavía pasaría; eso le toca a la pasada crítica.
 - La gramática visual no sabe comparar años desde un SQL ad hoc con más de tres filas por corte, y el agente cae en una tabla (H2 de la corrida 6).
 - Una pregunta libre amplia tarda más que la dorada: la corrida 6 tomó 18 minutos, 17 de ellos del investigador.
+- Una investigación corre dentro del proceso del servidor. Si el servidor se detiene (con Ctrl-C, al reiniciarlo, o porque la app cerró su vista previa), la corrida se corta: queda guardada como interrumpida, la vista en vivo lo dice a los ~15 s y ofrece volver a investigar, y la respuesta publicada antes no se pierde. Para corridas largas conviene correr el servidor en una terminal propia, con el comando de arriba (el 28-sep la app detuvo la vista previa y cortó una re-investigación de W4).
 - Las preguntas del caso W0–W5 solo se investigan con el servidor local. Sin él, la cola muestra las bloqueadas y las respuestas ya publicadas. El servidor corre una investigación a la vez: si hay una en curso, Investigar espera.
 - Los sustitutos inválidos se detectan por términos. Un sustituto dicho con otras palabras pasaría: eso le toca a la pasada crítica.
 - Preparar narrativa solo aparece con el servidor local: el HTML estático no guarda ni consolida. Profundizar desde una pieza es una investigación en vivo completa y tarda lo mismo (de 5 a 18 minutos). Proponer el esqueleto toma alrededor de un minuto y consolidar, de uno a tres.

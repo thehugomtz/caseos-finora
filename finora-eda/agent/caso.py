@@ -15,7 +15,7 @@ import shutil
 
 import yaml
 
-from .config import BRAIN, EFFORT, INVESTIGATIONS, PROMPTS
+from .config import BRAIN, EFFORT, INVESTIGATIONS, PROMPTS, RUNS
 from .lint import causal_hits, norm, number_words, numbers_in, qualifiers, stray_digits
 
 CASE_DIR = INVESTIGATIONS / "caso"
@@ -451,11 +451,34 @@ def load_answer(qid: str) -> dict | None:
     return _CACHE[qid][1]
 
 
+_RUNS_CACHE: dict[str, tuple[float, dict]] = {}
+
+
+def last_attempts() -> dict[str, dict]:
+    """El último intento guardado de cada pregunta del caso (lee investigations/runs con caché por fecha)."""
+    out = {}
+    for p in RUNS.glob("INV-*.json"):
+        mt = p.stat().st_mtime
+        if p.name not in _RUNS_CACHE or _RUNS_CACHE[p.name][0] != mt:
+            try:
+                d = json.loads(p.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            _RUNS_CACHE[p.name] = (mt, {"id": d.get("id"), "caso_id": d.get("caso_id"), "status": d.get("status"),
+                                        "error": d.get("error"), "started_ms": d.get("started_ms") or 0})
+        r = _RUNS_CACHE[p.name][1]
+        if r["caso_id"] and r["started_ms"] >= (out.get(r["caso_id"]) or {}).get("started_ms", -1):
+            out[r["caso_id"]] = r
+    return out
+
+
 def statuses(live: dict) -> list[dict]:
     """Estado de cada pregunta: bloqueada por capacidad, investigando si hay una corrida en curso, respondida si hay
     respuesta publicada, pendiente si no."""
+    from .orchestrator import friendly_error
     running = {i.caso_id: i.id for i in live.values() if getattr(i, "caso_id", None) and i.status not in ("publicada", "error")}
-    failed = {i.caso_id: i.error for i in live.values() if getattr(i, "caso_id", None) and i.status == "error"}
+    failed = {q: friendly_error(r["error"] or "") for q, r in last_attempts().items() if r["status"] == "error"}
+    failed.update({i.caso_id: friendly_error(i.error or "") for i in live.values() if getattr(i, "caso_id", None) and i.status == "error"})
     out = []
     for qid in ORDER:
         q, d = QUESTIONS[qid], load_answer(qid)

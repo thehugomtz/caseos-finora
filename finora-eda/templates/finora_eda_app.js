@@ -2301,9 +2301,10 @@ function staticAnswer(text, routes) {
   }
   $("invBack").focus();
 }
-let liveES = null;
+let liveES = null, LIVE_REQ = null;
 async function startLive(body, pregunta, routes, caseQ) {
   if (!LIVE) return;
+  LIVE_REQ = { body: body, pregunta: pregunta, routes: routes, caseQ: caseQ };
   let r;
   try {
     r = await fetch(LIVE.api + "/investigations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -2319,6 +2320,7 @@ async function startLive(body, pregunta, routes, caseQ) {
 function attachLive(id, pregunta, caseQ, routes) {
   // también sirve para volver a una corrida en curso: el stream reenvía los eventos desde el inicio
   if (!id) return;
+  if (!LIVE_REQ || LIVE_REQ.pregunta !== pregunta) LIVE_REQ = { body: caseQ ? { pregunta_id: caseQ.id } : { pregunta: pregunta }, pregunta: pregunta, routes: routes, caseQ: caseQ };
   liveShell(pregunta, caseQ ? [] : routes || routeQuestion(pregunta), caseQ);
   if (liveES) liveES.close();
   liveES = new EventSource(LIVE.api + "/investigations/" + id + "/stream");
@@ -2385,11 +2387,34 @@ function liveStep(k) {
   document.querySelectorAll("#liveSteps div").forEach((d, j) => { d.classList.toggle("on", j === i); d.classList.toggle("done", j < i); });
 }
 async function pollLive(id) {
-  for (let k = 0; k < 400; k++) {
-    const d = await fetch(LIVE.api + "/investigations/" + id).then(x => x.json()).catch(() => null);
+  // si el servidor deja de responder o ya no conoce la corrida, se dice con claridad en lugar de esperar para siempre
+  let misses = 0;
+  for (let k = 0; k < 480; k++) {
+    let d = null;
+    try { const r = await fetch(LIVE.api + "/investigations/" + id); d = r.ok ? await r.json() : null; } catch (e) { d = null; }
     if (d && (d.status === "publicada" || d.status === "error")) { openInvestigation(d); return; }
-    await new Promise(res => setTimeout(res, 2000));
+    misses = d ? 0 : misses + 1;
+    if (misses >= 6) break;
+    await new Promise(res => setTimeout(res, 2500));
   }
+  liveLost();
+}
+function liveLost() {
+  if (liveES) { liveES.close(); liveES = null; }
+  const b = $("invBody");
+  if (!invOpen || !b || !$("liveSteps")) return;          // ya no está abierta la vista en vivo
+  $("invLive").hidden = true;
+  $("invStatus").replaceChildren(tagRaw("prec", "!", "Interrumpida"));
+  const k = b.querySelector(".answer-k.analyzing");
+  if (k) { k.classList.remove("analyzing"); k.textContent = "Investigación interrumpida"; }
+  const box = H("div", "ans-banner");
+  box.append("Se perdió la conexión con el servidor local: la investigación se interrumpió porque el servidor se detuvo o se reinició. No es un error del análisis y lo que ya estaba publicado sigue intacto. ");
+  const acts = H("div", "ans-actions", box);
+  const req = LIVE_REQ;
+  if (req) btn(acts, "Volver a investigar", "primary", () => startLive(req.body, req.pregunta, req.routes, req.caseQ));
+  if (req && req.caseQ) btn(acts, "Ir a la cola del caso", "", () => openCaseQueue(req.caseQ.id));
+  b.prepend(box);
+  liveLine("✗ sin respuesta del servidor local: investigación interrumpida", "e");
 }
 function onLiveEvent(ev, id) {
   const d = ev.data || {}, t = "[" + f.num(ev.t / 1000, 1) + " s] ";
@@ -2972,7 +2997,7 @@ function caseActions(acts, q, st, row) {
   const deps = (q.depende_de || []).filter(x => CQ[x] && CQ[x].capacidad_nivel !== "bloqueada" && caseStatus(x) !== "respondida");
   if (deps.length && st === "pendiente") H("span", "muted cq-note", acts, "Depende de " + deps.join(" y ") + (deps.length > 1 ? ", que todavía no tienen respuesta." : ", que todavía no tiene respuesta."));
   if (meta && meta.finished) H("span", "muted cq-note", acts, "Respondida el " + new Date(meta.finished).toLocaleString("es-CO") + (meta.degradada ? " · compuesta sin texto libre" : ""));
-  if (row.ultimo_error) H("span", "muted cq-note", acts, "El último intento terminó con error: " + String(row.ultimo_error).slice(0, 160));
+  if (row.ultimo_error) H("span", "muted cq-note", acts, "El último intento no terminó: " + String(row.ultimo_error).slice(0, 180));
 }
 function investigateCase(qid) {
   const q = CQ[qid];

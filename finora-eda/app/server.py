@@ -17,8 +17,8 @@ from pydantic import BaseModel
 from agent import caso
 from agent import narrative as nar
 from agent.config import DB_PATH, GOLDEN, ROOT, RUNS
-from agent.orchestrator import run
-from agent.state import Investigation
+from agent.orchestrator import INTERRUPTED, run
+from agent.state import Investigation, now_ms
 from agent.warehouse import build
 
 GOLDEN_Q = {"Q2": "¿Por qué disminuyó el MRR por cliente?"}
@@ -32,6 +32,13 @@ async def lifespan(_app):
     if not DB_PATH.exists():
         build()
     yield
+    # al apagarse: una investigación en curso queda guardada como interrumpida, nunca "en curso" para siempre
+    for inv in LIVE.values():
+        if inv.status not in ("publicada", "error"):
+            inv.error, inv.finished_ms = INTERRUPTED, now_ms()
+            inv.set_status("error")
+            inv.emit("final", {"id": inv.id, "error": inv.error})
+            inv.save()
 
 
 app = FastAPI(title="Finora · workspace agentic (local)", lifespan=lifespan)

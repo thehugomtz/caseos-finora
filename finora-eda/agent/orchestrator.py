@@ -154,6 +154,18 @@ def _check_package(inv: Investigation) -> list[str]:
     return notes
 
 
+INTERRUPTED = ("Interrumpida: el servidor local se detuvo mientras el agente investigaba. No es un error del análisis; "
+               "lo publicado antes sigue intacto. Vuelve a investigar para repetirla.")
+
+
+def friendly_error(e) -> str:
+    """El proceso del agente terminado desde fuera (SIGTERM, código 143) se reporta como interrupción, no como fallo."""
+    msg = str(e)
+    if "exit code 143" in msg or "exit code -15" in msg or "SIGTERM" in msg or msg.startswith("Interrumpida"):
+        return INTERRUPTED
+    return msg if isinstance(e, str) else f"{type(e).__name__}: {e}"
+
+
 def _next_visual_id(inv: Investigation) -> str:
     n = max([int(k[2:]) for k in inv.visuals if k[2:].isdigit()] + [0]) + 1
     return f"V-{n:02d}"
@@ -283,7 +295,7 @@ async def run(inv: Investigation, save_golden: bool = False) -> Investigation:
         inv.set_status("publicada")
         inv.emit("final", {"id": inv.id})
     except Exception as e:  # noqa: BLE001 - se publica el error con el estado parcial
-        inv.error = f"{type(e).__name__}: {e}"
+        inv.error = friendly_error(e)
         inv.finished_ms = now_ms()
         inv.set_status("error")
         inv.emit("final", {"id": inv.id, "error": inv.error})

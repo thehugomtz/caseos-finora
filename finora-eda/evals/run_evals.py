@@ -19,7 +19,7 @@ from pathlib import Path
 import yaml
 
 from agent import semantic
-from agent.config import BRAIN, GOLDEN
+from agent.config import BRAIN, GOLDEN, RUNS
 from agent.evidence import Evidence, Registry
 from agent.tools import check_sql
 from agent.validator import (PLAYBOOKS, causal_hits, number_words, qualifiers, stray_digits, validate_claim,
@@ -384,8 +384,17 @@ def case_flow():
             check("Caso · flujo sin modelo: tres rechazos dejan la respuesta sin texto libre, marcada y completa",
                   inv2.status == "publicada" and inv2.respuesta_caso["degradada"] and inv2.respuesta_caso["hechos_observados"]
                   and inv2.respuesta_caso["siguiente_pregunta"]["id"], str(inv2.respuesta_caso and inv2.respuesta_caso.get("intentos")))
+            # una re-investigación interrumpida (servidor detenido) no borra la respuesta vigente y la cola lo dice
+            caso.RUNS = state.RUNS
+            inv3 = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            inv3.error, inv3.status = orchestrator.friendly_error(Exception("Command failed with exit code 143")), "error"
+            inv3.save()
+            row = {r["id"]: r for r in caso.statuses({})}["W3"]
+            check("Caso · una corrida interrumpida por el servidor se reporta como interrupción y no borra la respuesta vigente",
+                  row["estado"] == "respondida" and row.get("ultimo_error", "").startswith("Interrumpida"), str(row))
         finally:
             orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR = saved
+            caso.RUNS = RUNS
 
 
 def visual_rules():
