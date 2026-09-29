@@ -77,7 +77,8 @@ function startEvents() {
       const j = ev.job;
       if (["succeeded", "failed", "interrupted"].includes(ev.event.kind)) {
         if (ev.event.kind === "succeeded") toast(`${j.title}: listo`, "ok");
-        else toast(`${j.title}: ${ev.event.kind === "failed" ? "falló — la solicitud se conservó (reintentable)" : "interrumpido"}`, "err", 7000);
+        else toast(`${j.title}: ${ev.event.kind === "failed" ? "falló" : "se interrumpió"}${(ev.event.data || {}).error ? " — " + String(ev.event.data.error).slice(0, 160) : ""}. `
+          + "Tu solicitud se conservó: puedes reintentarla.", "err", 20000);
         refreshSoon();
       }
       app.emit("job", ev);

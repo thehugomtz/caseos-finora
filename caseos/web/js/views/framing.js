@@ -106,7 +106,8 @@ export async function mount(root) {
       fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", { style: { borderColor: "var(--bad-line)" } }, h("div.small", "No pude responder: " + (t.error || "error")),
         h("div.small.muted", "Tu mensaje quedó guardado; puedes reintentar."), h("div.mt", btn("Reintentar", { sm: true, icon: "refresh", onClick: async () => { await api.cpost(`/framer/${t.turn_id}/retry`); await paint(); } }))));
     } else {
-      fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", h("div.row", thinking(), h("span.small.muted", t.status === "running" ? "pensando con " + ((t.skills || []).map(s => s.id).join(" · ") || "sus skills") : "en cola"))));
+      fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", h("div.row", thinking(), h("span.small.muted", t.status === "running" ? "pensando con " + ((t.skills || []).map(s => s.id).join(" · ") || "sus skills") : "en cola"),
+        h("span.small.faint", { dataset: { since: t.ts } }, since(t.ts)))));
     }
     return h("div.stack", { style: { gap: "12px" } }, hugo, fr);
   };
@@ -551,6 +552,10 @@ export async function mount(root) {
   app.on("job", onJob);
   return { update: paint, destroy: () => { app.listeners.job = (app.listeners.job || []).filter(f => f !== onJob); } };
 }
+
+// minutes a turn has been thinking (the label ticks while the view is open)
+const since = iso => { const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000); return m < 1 ? "· menos de 1 min" : `· ${m} min`; };
+setInterval(() => document.querySelectorAll("[data-since]").forEach(x => { x.textContent = since(x.dataset.since); }), 30000);
 
 function load(k, dflt) { try { return JSON.parse(sessionStorage.getItem(k)) || dflt; } catch (e) { return dflt; } }
 function save(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } }

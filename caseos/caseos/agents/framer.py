@@ -411,9 +411,10 @@ async def _job(job, params):
     prompt = build_prompt(store, message, mode, lenses)
     _patch_turn(store, turn["turn_id"], {"status": "running", "skills": skills.record(selected), "lenses": lenses})
     await job.event("skills", {"skills": [s["id"] for s in skills.record(selected)], "lenses": [l["lens"] for l in lenses]})
+    # at max effort, with a grown case and a Challenge that asks for real proposals, a turn can pass 15 min (29-sep)
     spec = RunSpec(agent="framer", role="framer", system=system, prompt=prompt, schema=SCHEMA, max_turns=4,
                    skills=skills.record(selected), lenses=lenses, purpose=f"Turno de framing ({mode})",
-                   case_id=store.id, case_root=store.root)
+                   case_id=store.id, case_root=store.root, timeout_s=2400)
 
     async def on_event(kind, data):
         await job.event(kind, data)

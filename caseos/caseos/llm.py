@@ -232,7 +232,7 @@ class AgentSDKLLM:
             raise
         except asyncio.TimeoutError:
             error = "timeout"
-            raise AgentError("timeout", f"El agente tardó más de {int(spec.timeout_s)} s.", run_id=run_id)
+            raise AgentError("timeout", f"Se cortó: el agente tardó más de {round(spec.timeout_s / 60)} min.", run_id=run_id)
         except asyncio.CancelledError:
             error = "interrupted"
             raise

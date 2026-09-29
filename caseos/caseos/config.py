@@ -37,7 +37,7 @@ EFFORT = {r: os.environ.get(f"CASEOS_EFFORT_{r.upper()}", DEFAULT_EFFORT) for r 
 # Soft spend caps per run (API-equivalent USD, reported by the SDK; on the subscription nothing is billed per call).
 # Sized for max effort: they stop a runaway run, not a normal one.
 BUDGET_USD = {
-    "framer": 4.0, "planner": 8.0, "briefer": 3.0, "cos": 4.0, "cos_impact": 3.0, "router": 1.0, "command": 1.0, "business_research": 8.0,
+    "framer": 8.0, "planner": 8.0, "briefer": 3.0, "cos": 4.0, "cos_impact": 3.0, "router": 1.0, "command": 1.0, "business_research": 8.0,
     "deep_research": 8.0, "peer_review": 4.0, "measurement": 8.0, "data_engineering": 8.0, "synthesis": 4.0,
     "story": 6.0, "storyteller": 45.0,
 }

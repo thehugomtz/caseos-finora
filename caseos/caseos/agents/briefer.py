@@ -169,7 +169,7 @@ async def _job(job, params):
     _patch_turn(store, turn["turn_id"], {"status": "running", "skills": skills.record(selected)})
     await job.event("skills", {"skills": [s["id"] for s in skills.record(selected)]})
     spec = RunSpec(agent="briefer", role="briefer", system=system, prompt=build_prompt(store, message), schema=SCHEMA, max_turns=4,
-                   skills=skills.record(selected), purpose="Turno de briefing", case_id=store.id, case_root=store.root)
+                   skills=skills.record(selected), purpose="Turno de briefing", case_id=store.id, case_root=store.root, timeout_s=1800)
 
     async def on_event(kind, data):
         await job.event(kind, data)
