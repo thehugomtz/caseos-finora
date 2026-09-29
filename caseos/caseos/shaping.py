@@ -421,12 +421,16 @@ def quote_matches(quote: str, entity: dict) -> bool:
     return len(q & _tokens(said)) / len(q) >= 0.6
 
 
-def guard_tasks(store: CaseStore, tasks: list[dict], fr: dict, *, context: str = "") -> tuple[list[dict], list[str]]:
+def guard_tasks(store: CaseStore, tasks: list[dict], fr: dict, *, context: str = "",
+                fresh: list[str] = ()) -> tuple[list[dict], list[str]]:
     """What an agent writes into a task is checked before it becomes a proposal: slides and IDs must exist, a quote of
     Hugo must be his, "investigar datos" can only name tables the model has, and a number in the starting answer that
-    the case context does not contain is flagged (the answer is a working hypothesis, not evidence)."""
+    the case context does not contain is flagged (the answer is a working hypothesis, not evidence). `fresh` are the
+    items recorded in this same turn: the agent cannot know their IDs yet, so a quote of what Hugo just said is pointed
+    to the item that holds those words."""
     from . import evidence
     ents = store.all()
+    fresh = [ents[i] for i in fresh if i in ents and ents[i].get("verbatim") is not False and (ents[i].get("hugo_wording") or "").strip()]
     sids = slide_ids(fr)
     tables = model_tables(store)
     pool = [n.value for n in evidence.numbers_in(context)]
@@ -442,6 +446,10 @@ def guard_tasks(store: CaseStore, tasks: list[dict], fr: dict, *, context: str =
         said = []
         for x in clean_said(t.get("hugo_said")):
             e = ents.get(x["ref"])
+            if not (e and quote_matches(x["text"], e)):
+                home = next((f for f in fresh if quote_matches(x["text"], {"hugo_wording": f["hugo_wording"]})), None)
+                if home:
+                    x, e = {**x, "ref": home["id"]}, home
             if not e:
                 notes.append(f"Una cita atribuida a Hugo no tenía referencia válida ({x['ref'] or 'sin ID'}): se quitó.")
             elif e.get("verbatim") is False:

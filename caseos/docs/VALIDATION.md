@@ -189,3 +189,26 @@ borrador del Story Package. Encontrado y corregido sobre la marcha:
 - **Cómo se llegó a un claim:** el detalle de un claim muestra lo registrado de la investigación que lo sostiene (sin
   llamar a un modelo). Una versión que le pedía al COS reconstruir el camino fue bloqueada por las salvaguardas del
   modelo y se retiró a pedido de Hugo.
+
+### Corrida en el caso real (29-sep, 14:05 → tarde) — delegada por Hugo en el chat (D-017)
+
+Hugo pidió que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y que Story lo
+muestre. Hecho «vía Claude»: los dos Challenge de Hugo (13:43 sobre C-005, 13:56 sobre C-011) se reintentaron; el COS
+revisó la cobertura pregunta por pregunta; sus huecos y las tareas del Framer se aprobaron y lanzaron (R-022…R-028); su
+propuesta sobre D-007 quedó registrada como decisión **propuesta** (D-018, decide Hugo); después, borrador 2 del Story
+Package. Encontrado y corregido:
+
+- **Un turno largo del Framer se cortaba a los 15 min** (13:43): Framer 40 min, Briefer 30 min, COS (preguntas e
+  impacto) 40 min — la revisión de cobertura terminó a los 14 min 59 s; presupuesto del Framer US$8; el aviso de fallo
+  dura 20 s y dice por qué.
+- **El Framer reescribía una tarea que ya estaba en Research:** una revisión de RT-001 (ya investigada como R-010) no
+  lanzaba nada. Ahora la versión nueva entra como tarea nueva que dice qué reformula.
+- **El Framer perdía las palabras de Hugo del mismo turno:** citaba su mensaje, pero la nota que las guarda aún no tenía
+  ID, y la cita se quitaba («sin referencia válida»). Ahora la cita apunta a la nota de ese turno si sus palabras
+  coinciden, y una tarea puede enlazar un item del mismo turno con «#n» (su posición); antes quedaban sueltas (RT-025
+  no estaba ligada a las seis causas nuevas H-052…H-057).
+- **Story veía 400 caracteres de cada diseño:** el marco de medición o el modelo de datos de un especialista llegaba
+  recortado al borrador; ahora llegan el marco, las decisiones que habilita, las métricas, las entidades, la lógica de
+  clasificación y ejemplos.
+- **Instrucciones delegadas etiquetadas como de Hugo:** el prompt de Story decía «Instrucciones de Hugo» aunque las
+  escribiera Claude por delegación; ahora dice de quién son (`via`), y lo textual de Hugo va entre comillas con su ID.

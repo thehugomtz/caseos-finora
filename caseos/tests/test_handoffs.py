@@ -241,3 +241,22 @@ def test_a_multiple_written_next_to_its_backed_figures_is_backed():
     assert unsupported_numbers("Crecieron 3,1×.", [t]) == ["3,1×"]                                    # no figures next to it: not backed
     t2 = {"columns": ["mes", "mrr_por_cliente"], "rows": [["ene-22", 92.8e3], ["oct-24", 57.8e3]]}
     assert unsupported_numbers("Baja de COP 92,8 mil a COP 57,8 mil (−38%).", [t2]) == []
+
+
+def test_the_case_statement_figures_are_an_example_not_unsupported_data(case):
+    b = case.read_data("brief/brief.yaml", {}) or {}
+    case.write_data("brief/brief.yaml", {**b, "brief_text": "Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento?"})
+    f, t = _accepted_evidence(case)
+    q = "Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento?"
+    ok = _package(f, t, key="cfo", question=q, headline="Pagar 80 con la lista en 100 es un descuento de 20",
+                  answer="Si la lista sigue en 100, los 20 son descuento nuevo; si bajó la lista, es contracción.")
+    errors, _ = story.validate_package(case, ok)
+    assert not any("cifra" in e for e in errors)                       # the question's own figures, used as its example
+    bad = _package(f, t, key="cfo", question=q, headline="Pagar 80 con la lista en 100 es un descuento de 20",
+                   answer="En Finora, 45 clientes están en ese caso.")
+    errors, _ = story.validate_package(case, bad)
+    assert any("45" in e for e in errors)                               # anything else still needs a table
+    loose = _package(f, t, key="cfo", question="¿Qué pasó con 100 clientes?", headline="Pagar 80 es un descuento",
+                     answer="De 100 a 80.")
+    errors, _ = story.validate_package(case, loose)
+    assert any("cifra" in e for e in errors)                            # only figures the statement poses, not any the COS writes

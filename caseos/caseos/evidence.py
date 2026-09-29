@@ -161,8 +161,10 @@ def _derived(n: Num, pairs: list[tuple[float, float]]) -> bool:
     return False
 
 
-def unsupported_numbers(text: str, tables: list[dict]) -> list[str]:
-    pool = [v for t in tables for v in table_numbers(t)]
+def unsupported_numbers(text: str, tables: list[dict], given: list[float] = ()) -> list[str]:
+    """Numbers in `text` that no table backs. `given` are figures the case statement itself poses (an example of the
+    question being answered, not data about the company)."""
+    pool = [v for t in tables for v in table_numbers(t)] + list(given)
     nums = numbers_in(text)
     figs = [n for n in nums if not n.pct and not n.times and n.value and supported(n, pool)]
     pairs = [(a.value, b.value) for a, b in zip(figs, figs[1:]) if (a.value > 0) == (b.value > 0)]

@@ -11,7 +11,7 @@ import re
 
 from . import cases, cos, jobs, phases, shaping, skills
 from .agents import base
-from .evidence import numbers_in, unsupported_numbers, validate_table, verbal_ratio_issues
+from .evidence import numbers_in, supported, unsupported_numbers, validate_table, verbal_ratio_issues
 from .llm import RunSpec, get_llm
 from .model import title_of, type_of
 from .store import CaseStore
@@ -57,12 +57,20 @@ def pending_acceptance(store: CaseStore, pkg: dict) -> list[str]:
     return sorted({i for i in ids if i in ents and (ents[i].get("review") or {}).get("state") not in ("accepted", "rejected")})
 
 
+def statement_numbers(store: CaseStore) -> list[float]:
+    """Figures the case statement poses: the brief's text and the problem Hugo approved in Shaping."""
+    brief = store.read_data("brief/brief.yaml", {}) or {}
+    pr = (store.read_data("framing/current.yaml", {}) or {}).get("problem") or {}
+    return [n.value for n in numbers_in(" ".join([brief.get("brief_text") or "", pr.get("situation") or "", pr.get("statement") or ""]))]
+
+
 def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]:
     """Errors block Story Ready. In a draft (`pkg.draft`), evidence still waiting for Hugo is not an error of the
     package: it is listed apart (pending_acceptance) and blocks Ready through the phase gate."""
     ents = store.all()
     errors, warnings = [], []
     draft = bool(pkg.get("draft"))
+    statement = statement_numbers(store)
     for k in ("audience", "objective", "governing_thought", "claims"):
         if not pkg.get(k):
             errors.append(f"El Story Package no tiene '{k}'.")
@@ -92,7 +100,9 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
             if errs:
                 errors.append(f"{cid}: la tabla {t['id']} no cumple el contrato ({'; '.join(errs[:2])}).")
         text = f"{c.get('headline', '')} {c.get('answer', '')}"
-        unsup = unsupported_numbers(text, tables)
+        # the figures of the case's own question («pagaba 100 y ahora paga 80») are an example, not data about the company
+        given = [n.value for n in numbers_in(c.get("question") or "") if supported(n, statement)]
+        unsup = unsupported_numbers(text, tables, given)
         if unsup:
             errors.append(f"{cid}: cifra(s) sin tabla que las respalde: {', '.join(unsup[:5])}.")
         verr, vwarn = verbal_ratio_issues(text, tables)
@@ -128,10 +138,19 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
 # ------------------------------------------------------------------------------------------ generation (COS)
 def submit_package(store: CaseStore, *, instructions: str = "", draft: bool = False, actor: str = "hugo", via: str = "") -> dict:
     job = jobs.submit(store.id, "story_package", "COS prepara el " + ("borrador del Story Package" if draft else "Story Package"),
-                      {"instructions": instructions, "draft": draft}, agent="cos")
+                      {"instructions": instructions, "draft": draft, "via": via}, agent="cos")
     store.log(actor, "requested", ["story"], ("Hugo pidió el borrador del Story Package (con evidencia por revisar)" if draft
                                               else "Hugo pidió preparar el Story Package") + (f" · {via}" if via else ""))
     return {"job_id": job.id}
+
+
+def _flat(v) -> str:
+    """A specialist's structured design (lists of dicts) as one line of text for the prompt."""
+    if isinstance(v, dict):
+        return "; ".join(f"{k}: {_flat(x)}" for k, x in v.items() if x not in (None, "", [], {}))
+    if isinstance(v, list):
+        return " | ".join(_flat(x) for x in v if x not in (None, "", [], {}))
+    return str(v or "").strip()
 
 
 def _evidence_block(store: CaseStore, *, draft: bool = False) -> str:
@@ -156,11 +175,20 @@ def _evidence_block(store: CaseStore, *, draft: bool = False) -> str:
                          and (e.get("review") or {}).get("state") != "rejected"], key=lambda e: e["id"]):
             sp = r.get("specialist") or {}
             extra = ""
+            # a design slide (funnel, metrics, data model, rules) is only as good as what the COS sees of the design
             if sp.get("measurement"):
-                fw = (sp["measurement"].get("recommended_framework") or {})
-                extra = f" · marco propuesto: {fw.get('name', '')} — {clip(fw.get('structure', ''), 400)}"
+                m = sp["measurement"]
+                fw = m.get("recommended_framework") or {}
+                extra = (f" · marco propuesto: {fw.get('name', '')} — {clip(fw.get('structure', ''), 1500)}"
+                         f"\n  decisiones que habilita: {clip(_flat(m.get('decision_enabled')), 700)}"
+                         f"\n  métricas: {clip(_flat(m.get('metric_definitions')), 3000)}"
+                         f"\n  eventos y dimensiones que hacen falta: {clip(_flat([m.get('required_events'), m.get('required_dimensions')]), 1200)}")
             elif sp.get("data_model"):
-                extra = f" · modelo propuesto: {clip(sp['data_model'].get('conceptual_model', ''), 400)}"
+                dm = sp["data_model"]
+                extra = (f" · modelo propuesto: {clip(_flat(dm.get('conceptual_model')), 2000)}"
+                         f"\n  entidades: {clip(_flat(dm.get('entities')), 1800)}"
+                         f"\n  clasificación: {clip(_flat(dm.get('classification_logic')), 2500)}"
+                         f"\n  ejemplos: {clip(_flat(dm.get('example_records')), 1500)}")
             lines.append(f"- {r['id']} [{r.get('specialty')}{' · tarea ' + r['shaping_task'] if r.get('shaping_task') else ''}"
                          f"{' · láminas ' + ', '.join(r.get('slides') or []) if r.get('slides') else ''}] {clip(r.get('research_question', ''), 160)}"
                          f" → {clip(r.get('short_answer', ''), 500)}{extra}")
@@ -182,7 +210,9 @@ async def _job(job, params):
     prev = store.read_data("story/package.yaml") or {}
     fr = store.read_data("framing/current.yaml", {}) or {}
     draft = bool(params.get("draft"))
-    prompt = (f"Instrucciones de Hugo: {params.get('instructions') or '—'}\n\n"
+    # instructions written for Hugo by someone he delegated to are not his words
+    who = f"Instrucciones ({params['via']}; lo textual de Hugo va entre comillas)" if params.get("via") else "Instrucciones de Hugo"
+    prompt = (f"{who}: {params.get('instructions') or '—'}\n\n"
               + ("## BORRADOR — Hugo quiere ver cómo quedaría la historia antes de revisar la evidencia\n"
                  "Puedes citar findings por revisar (propuestos) además de los aceptados; cada claim que dependa de ellos queda "
                  "marcado como pendiente de su aceptación y el paquete no puede marcarse Ready hasta que la acepte. No subas la "
@@ -196,7 +226,9 @@ async def _job(job, params):
               ("\n\n## Paquete anterior (mejóralo, conserva las keys de los claims que sigan vigentes)\n" + yaml_dump(prev)[:12000] if prev else "") +
               "\n\nReglas: cada claim de evidencia cita findings " + ("aceptados o por revisar" if draft else "ACEPTADOS")
               + " (evidence_ids) y las tablas (table_ids) donde está cada cifra "
-              "que escribas; si una cifra no está en una tabla, no la escribas. Nada de cantidades con letras («a la mitad», «el doble», "
+              "que escribas; si una cifra no está en una tabla, no la escribas (salvo las cifras del enunciado que trae la pregunta del "
+              "claim —«pagaba 100 y ahora paga 80»—: escribe esa pregunta en question y úsalas como el ejemplo que son, nunca como "
+              "datos de la empresa). Nada de cantidades con letras («a la mitad», «el doble», "
               "«por cuatro») salvo que coincidan con las cifras de la tabla: prefiere la cifra. Lenguaje asociativo, no causal. Recomendaciones condicionales. "
               "keys de claims estables y cortas (p. ej. 'arpa-mix'). "
               + ("Sigue el guion de Hugo: sus secciones son las secciones del paquete, en su orden; cada lámina con evidencia aceptada "

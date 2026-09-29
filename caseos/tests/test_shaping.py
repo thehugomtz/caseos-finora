@@ -119,3 +119,15 @@ def test_a_draft_story_can_use_evidence_hugo_has_not_accepted_but_cannot_be_read
     case.set_review(f["id"], "accepted", actor="hugo")
     v = story.revalidate(case)
     assert v["ok"] and v["pending"] == [] and not any("no has aceptado" in b for b in phases.readiness(case, "story")["blockers"])
+
+
+def test_a_draft_story_sees_the_specialist_design_not_just_its_headline(case):
+    r = case.create("research", {"research_question": "¿Cómo separar suscripción y precio pagado?", "specialty": "data_engineering",
+                                 "intensity": "L2", "status": "completed", "short_answer": "Tres capas.",
+                                 "specialist": {"data_model": {"conceptual_model": "Seis peldaños de valor.",
+                                                               "entities": [{"name": "discount_grant", "purpose": "descuento con inicio y fin"}],
+                                                               "classification_logic": [{"rule": "¿Cambió la lista?", "then": "expansión"}]}}},
+                    actor="research")
+    block = story._evidence_block(case, draft=True)
+    assert r["id"] in block and "discount_grant" in block and "¿Cambió la lista?" in block
+    assert story._flat({"a": [{"b": "x"}, "y"], "c": ""}) == "a: b: x | y"

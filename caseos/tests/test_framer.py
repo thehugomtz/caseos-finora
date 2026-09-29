@@ -162,3 +162,27 @@ def test_hugo_terms_and_explained_terms_are_fine():
 def test_english_reply_in_a_spanish_case_is_flagged():
     r = language.assess("We need to look at the numbers and the drivers of this change in the base.", {"primary": "es"}, "")
     assert not r["ok"]
+
+
+def test_a_quote_of_this_turn_points_to_its_note_and_a_sent_task_is_not_rewritten(case):
+    from caseos import shaping
+    shaping.set_section(case, "plan:new", {"question": "¿Qué hipótesis ToFu y BoFu explican la brecha?", "kind": "measurement"})
+    fr = case.read_data("framing/current.yaml")
+    fr["research_plan"][0].update(status="sent", research_id="R-001")                   # already in Research
+    case.write_data("framing/current.yaml", fr)
+    words = "hay que generar más causas potenciales, por lo menos 3-5 más"
+
+    def out(spec):
+        o = _turn("")
+        o["items"] = [_item(kind="USER_INTUITION", structured="Sumar causas a las cuatro del caso.", hugo_wording=words)]
+        o["framing_patch"]["research_plan"] = [{"id": "RT-001", "question": "¿Qué otras causas explican la brecha?",
+                                                "kind": "measurement", "intensity": "L2", "why": "", "links": ["#1"], "slides": [],
+                                                "hugo_said": [{"text": words, "ref": "este turno"}]}]
+        return o
+    res, rec = _run_turn(case, f"Faltan 2 cosas: {words} y qué datos las validan", "challenge", out)
+    pend = case.read_data("framing/current.yaml")["pending"]
+    assert "plan:RT-001" not in pend                                                     # the researched task is not rewritten…
+    task = pend["plan:RT-002"]["value"]                                                  # …the new version is new work
+    assert task["why"].startswith("Reformula RT-001")
+    assert task["hugo_said"] == [{"text": words, "ref": res["created"][0]}]              # his words, pointed to the note of this turn
+    assert task["links"] == [res["created"][0]]                                          # "#1" = the first item of this turn

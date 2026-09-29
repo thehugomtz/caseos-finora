@@ -165,7 +165,8 @@ def build_prompt(store: CaseStore, message: str, mode: str, lenses: list[dict]) 
                   "storyline_guide = SOLO las secciones que cambian, completas con sus láminas (usa el id S# existente para revisar "
                   "una; id vacío = sección nueva); research_plan = SOLO tareas nuevas o revisadas (id RT-### para revisar; vacío = "
                   "nueva), cada una con work, draft_answer (tu respuesta de arranque desde el contexto: hipótesis de trabajo, sin "
-                  "cifras que no estén arriba), hugo_said (sus palabras textuales con el ID) y steps (data con tablas reales del "
+                  "cifras que no estén arriba), hugo_said (sus palabras textuales con el ID), links (para un item de ESTE turno, que "
+                  "aún no tiene ID, usa «#n»: su posición en items, 1 = el primero) y steps (data con tablas reales del "
                   "modelo · research · proposal); decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo. Todo lo de shaping queda "
                   "como propuesta hasta que Hugo lo apruebe."]
     return "\n".join(lines)
@@ -176,7 +177,7 @@ def guard(out: dict, mode: str, existing: dict[str, dict]) -> tuple[dict, list[s
     """Code-level epistemic guards. Returns the cleaned turn and the list of corrections made."""
     notes: list[str] = []
     items = []
-    for it in out.get("items") or []:
+    for pos, it in enumerate(out.get("items") or [], 1):
         txt = (it.get("structured") or "").strip()
         if not txt:
             continue
@@ -197,7 +198,7 @@ def guard(out: dict, mode: str, existing: dict[str, dict]) -> tuple[dict, list[s
         if upd and upd not in existing:
             notes.append(f"Referencia inexistente {upd} ignorada.")
             upd = ""
-        items.append({**it, "kind": kind, "structured": txt, "links": links, "updates": upd})
+        items.append({**it, "kind": kind, "structured": txt, "links": links, "updates": upd, "_pos": pos})
     out["items"] = items
     adv = out.get("advisors") or []
     if len(adv) > 2:
@@ -223,6 +224,7 @@ def guard(out: dict, mode: str, existing: dict[str, dict]) -> tuple[dict, list[s
 def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: str, context: str = "") -> dict:
     existing = store.all()
     created, updated = [], []
+    at = {}                                                    # "#n" (the item's place in this turn) → the ID it got
     actor = "framer"
     with store.batch():
         for it in out["items"]:
@@ -249,6 +251,7 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
                                               origin={"hugo_wording": common["hugo_wording"]})
                 store.update(d["id"], {"hugo_wording": common["hugo_wording"], "phase": "framing"}, actor=actor, material=False)
                 created.append(d["id"])
+                at[f"#{it.get('_pos')}"] = d["id"]
                 continue
             else:
                 data = {**common, "kind": kind, "text": it["structured"], "status": "active"}
@@ -266,10 +269,12 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
                 store.update(target["id"], patch, actor=actor, run_id=run_id,
                              summary=f"Framer refinó {target['id']}: {clip(it['structured'], 90)}")
                 updated.append(target["id"])
+                at[f"#{it.get('_pos')}"] = target["id"]
             else:
                 e = store.create(etype, data, actor=actor, run_id=run_id,
                                  summary=f"Framer capturó {KIND_LABELS.get(kind, kind).lower()}: {clip(it['structured'], 90)}")
                 created.append(e["id"])
+                at[f"#{it.get('_pos')}"] = e["id"]
         fr = store.read_data("framing/current.yaml", {}) or cases.empty_framing()
         p = out["framing_patch"]
         changed = []
@@ -295,10 +300,19 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
                 proposed.append(f"guion:{sid}")
                 known_secs.add(sid)
         known_tasks = {x["id"] for x in fr.get("research_plan") or []} | {k.split(":", 1)[1] for k in (fr.get("pending") or {}) if k.startswith("plan:")}
-        tasks, task_notes = shaping.guard_tasks(store, p.get("research_plan") or [], fr, context=context or message)
+        plan = [{**t, "links": [at.get(x, x) for x in t.get("links") or []],
+                 "hugo_said": [{**x, "ref": at.get(x.get("ref"), x.get("ref"))} if isinstance(x, dict) else x for x in t.get("hugo_said") or []]}
+                for t in p.get("research_plan") or []]
+        tasks, task_notes = shaping.guard_tasks(store, plan, fr, context=context or message, fresh=created)
         out.setdefault("_corrections", []).extend(task_notes)
+        sent = {x["id"] for x in fr.get("research_plan") or [] if x.get("status") == "sent"}
         for t in tasks:
             tid = t.get("id") if t.get("id") in known_tasks else shaping.next_task_id(fr)
+            if tid in sent:
+                # already researched: changing it would launch nothing, so the new version is new work that says what it builds on
+                t = {**t, "why": f"Reformula {tid} (ya investigada). {t.get('why') or ''}".strip()}
+                out["_corrections"].append(f"{tid} ya estaba en Research: la versión nueva va como tarea nueva.")
+                tid = shaping.next_task_id(fr)
             if shaping.propose(store, f"plan:{tid}", t, basis="framer", why=t.get("why", ""), turn_id=run_id, fr=fr, save=False):
                 proposed.append(f"plan:{tid}")
                 known_tasks.add(tid)

@@ -353,7 +353,8 @@ async def _impact_job(job, params):
                    "No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'."]
     prompt = "\n".join(detail) + "\n\n" + digest(store, focus=src.get("findings") or [])
     spec = RunSpec(agent="cos", role="cos_impact", system=system, prompt=prompt, schema=IMPACT_SCHEMA, max_turns=4,
-                   skills=skills.record(selected), purpose=f"Impacto de {sid}", case_id=store.id, case_root=store.root)
+                   skills=skills.record(selected), purpose=f"Impacto de {sid}", case_id=store.id, case_root=store.root,
+                   timeout_s=2400)                         # a whole-case read at max effort: 15 min was the edge
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
     out = res.output or {}
     ents = store.all()
@@ -430,7 +431,7 @@ async def _ask_job(job, params):
               "\n\nResponde en el registro de Hugo, con IDs. Si la respuesta depende de algo que no está en el estado, dilo.")
     spec = RunSpec(agent="cos", role="cos", system=system, prompt=prompt, schema=ASK_SCHEMA, max_turns=4,
                    skills=skills.record(selected), purpose=f"Pregunta al COS: {clip(q, 80)}", case_id=store.id,
-                   case_root=store.root)
+                   case_root=store.root, timeout_s=2400)
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
     out = res.output or {}
     ents = store.all()

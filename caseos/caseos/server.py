@@ -627,11 +627,12 @@ def story_get(cid: str):
 class PackageBody(BaseModel):
     instructions: str = ""
     draft: bool = False
+    via: str = ""                     # who wrote the instructions when Hugo delegated it (never passed off as his words)
 
 
 @app.post("/api/cases/{cid}/story/package")
 def story_package(cid: str, body: PackageBody):
-    return story.submit_package(S(cid), instructions=body.instructions, draft=body.draft)
+    return story.submit_package(S(cid), instructions=body.instructions, draft=body.draft, via=body.via)
 
 
 @app.post("/api/cases/{cid}/story/validate")
