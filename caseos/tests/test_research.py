@@ -116,3 +116,16 @@ def test_the_process_of_a_result_comes_from_its_run_record(case):
     assert p["runs"][0]["steps"][1]["error"] and p["runs"][0]["steps"][3]["text"] == "https://www.example.org/bowtie"   # truncated input
     assert p["counts"] == {"sql": 1, "catalog": 1, "search": 1, "read": 1, "total": 4} and p["work_s"] == 90
     assert [x["research"]["id"] for x in research.proposals(case)] == [r["id"]]
+
+
+def test_a_claim_shows_the_research_behind_it_from_the_record(case):
+    r = case.create("research", {"research_question": "¿Cómo definir el funnel?", "status": "completed", "specialty": "measurement"},
+                    actor="measurement")
+    data = case.create("research", {"research_question": "¿Dónde se concentra?", "status": "completed", "specialty": "analytics"},
+                       actor="analytics")
+    f = case.create("finding", {"headline": "Tres puertas con un nudo común", "source_ref": {"research": r["id"]}}, actor="measurement")
+    g = case.create("finding", {"headline": "Cosechas de menor ticket", "links": [data["id"]]}, actor="analytics")
+    c = case.create("claim", {"key": "bowtie", "headline": "Bowtie por puertas", "evidence_ids": [f["id"], g["id"]]}, actor="cos")
+    paths = research.paths_for(case, c["id"])
+    assert [p["research"]["id"] for p in paths] == [r["id"]]            # the proposal behind it; data research has its own page
+    assert [p["research"]["id"] for p in research.paths_for(case, f["id"])] == [r["id"]]

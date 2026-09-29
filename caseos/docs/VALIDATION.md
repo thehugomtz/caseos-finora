@@ -181,3 +181,11 @@ borrador del Story Package. Encontrado y corregido sobre la marcha:
 - **Cola del COS:** con 3 corridas simultáneas y esfuerzo max, cada evaluación tarda ~10 min y cuesta ~US$1.25; doce
   evaluaciones son la parte más lenta del ciclo.
 - **Traza del workspace:** los errores de herramienta del investigador ahora dicen qué falló (el investigador los corrige).
+
+- **Esquema del Framer inválido (29-sep, 11:57 → 13:30):** al darle `id` a las tareas del plan, el esquema del Framer lo
+  repetía (`required: ["id", "id", …]`) y el CLI rechazaba cada turno antes de empezar; el Challenge de Hugo sobre C-005
+  (13:13) falló por eso y quedó guardado para reintentar. Corregido, y `tests/test_schemas.py` revisa todos los esquemas de
+  los agentes (metaesquema JSON, obligatorios repetidos o sin definir, `additionalProperties: false`).
+- **Cómo se llegó a un claim:** el detalle de un claim muestra lo registrado de la investigación que lo sostiene (sin
+  llamar a un modelo). Una versión que le pedía al COS reconstruir el camino fue bloqueada por las salvaguardas del
+  modelo y se retiró a pedido de Hugo.

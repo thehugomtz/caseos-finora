@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T11:56:40-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-29T13:13:04-06:00 · motivo: Hugo cuestionó C-005: Quiero saber que modelos se exploraron y como se llegó a que ese era el mejor framework p…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -171,6 +171,7 @@ language:
 Registro observado: Conversacional y directo; pega el texto literal del caso y piensa en láminas, secciones y bloques de deck. · nivel técnico: Negocio y análisis: maneja funnel, SQL, MRR, churn, contracción y expansión sin necesidad de explicación. · vocabulario de Hugo: expansión, Propuesta de Modelo de datos, CEO, Overview, Growth, Revenue, insights, salud, Inversión en Marketing, Generación de Demanda, ToFu, BoFu, Team, Habilitación
 
 ## Recent Material Changes
+- 2026-09-29 13:13 · Hugo cuestionó C-005: Quiero saber que modelos se exploraron y como se llegó a que ese era el mejor framework p…
 - 2026-09-29 11:56 · COS evaluó R-021: R-021 le da mecanismo a la parte de propuesta del bloque CFO. El descuento tiene que existir como o…
 - 2026-09-29 11:56 · COS propone hipótesis: De aquí en adelante, las cohortes que Finora consiga con descuento temporal van…
 - 2026-09-29 11:56 · COS propone hipótesis: Un puente de tres capas (MRR de lista, descuento y MRR neto), con líneas propia…
@@ -180,7 +181,6 @@ Registro observado: Conversacional y directo; pega el texto literal del caso y p
 - 2026-09-29 11:56 · COS: R-021 cambia la historia Q-002
 - 2026-09-29 11:56 · COS: R-021 cambia el framing H-015
 - 2026-09-29 11:55 · COS evaluó R-020: R-020 deja una cosa firme y dos cuidados. Todo se apoya en los findings F-083 a F-093, que siguen p…
-- 2026-09-29 11:55 · COS propone hipótesis: El aumento de montos fuera de la grilla (de 19% a 42%) y de ajustes pequeños (d…
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 15, Observación 4, Desconocido 8, Supuesto 1, Hecho 1 -->

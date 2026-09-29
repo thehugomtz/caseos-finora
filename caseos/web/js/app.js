@@ -244,7 +244,7 @@ app.markReady = markReady;
 app.reopenPhase = reopenPhase;
 
 /* ------------------------------------------------------------------ entity drawer */
-async function openEntity(id, silent) {
+async function openEntity(id, silent, opts = {}) {
   app.drawerId = id;
   const d = $("#drawer");
   if (!silent) { d.classList.add("on"); $("#scrim").classList.add("on"); mount(d, h("div.dh", h("div.eyebrow", "Cargando " + id))); }
@@ -256,11 +256,35 @@ async function openEntity(id, silent) {
   const head = h("div.dh", btn("", { icon: "x", variant: "ghost", sm: true, onClick: closeOverlays }),
     h("div.row.wrap", idTag(e.id, { alias: e.alias, stale: !!e.stale }), h("span.eyebrow", TYPE_LABEL[t] || t), e.kind && t === "note" ? kindChip(e.kind) : null,
       e.status ? statusChip(e.status) : null, review(rv, !!e.stale), e.confidence ? h("span.chip", "confianza " + e.confidence) : null),
-    h("div.big", titleOf(e)));
-  const body = h("div.db", drawerBody(e, data), lineageBlock(data.lineage), actionBlock(e, data.actions), provenance(e, data.history));
+    h("div.big", titleOf(e)),
+    (data.paths || []).length ? h("div.row", btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => showPaths() })) : null);
+  const paths = pathsBlock(data.paths);
+  const body = h("div.db", drawerBody(e, data), paths, lineageBlock(data.lineage), actionBlock(e, data.actions), provenance(e, data.history));
   d.querySelector(".close");
   mount(d, head, body);
   body.querySelectorAll(".idref").forEach(x => x.addEventListener("click", () => openEntity(x.dataset.id)));
+  if (opts.paths) showPaths();
+}
+
+/* ------------------------------------------------------------------ how a claim or finding was reached */
+// The research behind it, straight from the record: where it started, how it read the problem, what it looked at in
+// order, what it discarded and chose, what it concluded, and what the COS did with it. No model is asked anything.
+function showPaths() {
+  const box = document.querySelector("#drawer .paths");
+  if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function pathsBlock(paths) {
+  if (!(paths || []).length) return null;
+  const box = h("div.dsec.paths", h("h4", "Cómo se llegó a esto"),
+    h("div.small.muted", "Lo registrado de la investigación que lo sostiene: de dónde arrancó, qué revisó en orden, qué descartó y qué eligió, a qué llegó y qué hizo el COS."));
+  import("./views/research.js").then(({ processLadder }) => {
+    paths.forEach(({ research: r, process: pr }) => box.append(h("div.pathcard",
+      h("div.row.between.wrap", h("div.row.wrap", idTag(r.id), r.shaping_task ? h("span.chip.ghost", r.shaping_task) : null,
+        h("span.small.muted.clamp2", r.research_question || "")),
+        btn("Abrir", { sm: true, variant: "ghost", icon: "arrow", onClick: () => { closeOverlays(); app.go("#/research/" + r.id); } })),
+      processLadder(r, pr, { compact: true }))));
+  });
+  return box;
 }
 app.openEntity = openEntity;
 export function titleOf(e) { return e.headline || e.statement || e.text || e.title || e.research_question || e.question || e.id; }
@@ -301,7 +325,8 @@ function drawerBody(e, data) {
   if (t === "claim") {
     const s = data.strength || {};
     out.push(dsec("Claim", kv([["Pregunta", e.question], ["Respuesta", e.answer], ["Rol", e.role_in_story], ["Confianza", e.confidence], ["Intención visual", e.visual_intent]])),
-      dsec("Fuerza", h("div.row.wrap", statusChip(s.level === "supported" ? "supported" : s.level === "weak" ? "weak" : s.level === "proposal" ? "proposed" : "unsupported"),
+      dsec("Fuerza", h("div.row.wrap", statusChip(s.level === "supported" ? "supported" : s.level === "weak" ? "weak" : s.level === "proposal" ? "proposed"
+        : s.level === "pending" ? "pending" : "unsupported"),
         s.unsupported_numbers && s.unsupported_numbers.length ? h("span.chip.bad", "cifras sin tabla: " + s.unsupported_numbers.join(", ")) : null)),
       dsec("Limitaciones", h("ul.prose", (e.limitations || []).map(x => h("li", x)))));
   }

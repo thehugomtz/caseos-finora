@@ -43,7 +43,7 @@ FRAME = _obj({"name": _S, "description": _S, "when_it_wins": _S, "cost": _S})
 PROBLEM = _obj({"statement": _S, "situation": _S, "why_it_matters": _S, "in_scope": _SA, "out_of_scope": _SA})
 SLIDE = _obj({"title": _S, "question": _S, "intent": _S, "notes": _S, "links": _SA})
 SECTION = _obj({"id": _S, "title": _S, "purpose": _S, "slides": {"type": "array", "items": SLIDE}, "why": _S})
-TASK = {**PLAN_TASK, "required": ["id", *PLAN_TASK["required"]], "properties": {"id": _S, **PLAN_TASK["properties"]}}
+TASK = PLAN_TASK                  # the same task anatomy as the plan from the guion (it already carries the id to revise)
 SCHEMA = _obj({
     "reply": _S,
     "items": {"type": "array", "items": ITEM},

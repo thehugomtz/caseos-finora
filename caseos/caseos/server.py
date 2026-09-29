@@ -209,6 +209,8 @@ def entity(cid: str, eid: str):
         extra["findings_full"] = [ents[f] for f in e.get("findings") or [] if f in ents]
         extra["job"] = jobs.get(cid, e["job_id"]) if e.get("job_id") else None
         extra["process"] = research.process(s, e) if e.get("status") == "completed" else None
+    if e.get("type") in ("claim", "finding"):
+        extra["paths"] = research.paths_for(s, eid)
     return {"entity": e, "lineage": lineage.lineage(ents, eid), "history": [{"version": h["version"], "updated_at": h["updated_at"]}
                                                                              for h in s.history(eid)],
             "actions": [{"id": a, "label": actions.ACTIONS[a]} for a in actions.available(e)], **extra}

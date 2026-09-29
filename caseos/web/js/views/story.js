@@ -89,7 +89,8 @@ function claimCard(c, ent, i) {
       s.unsupported_numbers && s.unsupported_numbers.length ? h("div.corr", "Cifras sin tabla: " + s.unsupported_numbers.join(", ")) : null,
       c.visual_intent ? h("div.small.muted", "Intención visual: " + c.visual_intent) : null,
       (c.limitations || []).length ? h("div.small.faint", "Límites: " + c.limitations.join(" · ")) : null,
-      h("div.row", btn("Editar claim", { sm: true, variant: "ghost", onClick: () => editClaim(c) }), btn("Detalle", { sm: true, variant: "ghost", onClick: () => app.openEntity(c.claim_id) }))));
+      h("div.row", btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => app.openEntity(c.claim_id, false, { paths: true }) }),
+        btn("Editar claim", { sm: true, variant: "ghost", onClick: () => editClaim(c) }), btn("Detalle", { sm: true, variant: "ghost", onClick: () => app.openEntity(c.claim_id) }))));
 }
 
 async function editClaim(c) {

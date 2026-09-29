@@ -639,6 +639,34 @@ def process(store: CaseStore, r: dict) -> dict | None:
             "work_s": sum(rn["work_s"] for rn in runs), "cost_usd": round(sum(rn["cost_usd"] or 0 for rn in runs), 2)}
 
 
+def paths_for(store: CaseStore, eid: str) -> list[dict]:
+    """The research behind an entity — a claim (its research and the research of its evidence), a finding or a research
+    itself — each with how it got there, straight from the record."""
+    ents = store.all()
+    e = ents.get(eid) or {}
+    t = e.get("type")
+    rids: list[str] = []
+    if t == "research":
+        rids = [eid]
+    else:
+        fids = [eid] if t == "finding" else [i for i in e.get("evidence_ids") or [] if i in ents] if t == "claim" else []
+        rids = [i for i in e.get("research_ids") or [] if i in ents] if t == "claim" else []
+        for fid in fids:
+            f = ents[fid]
+            rid = (f.get("source_ref") or {}).get("research") or next((l for l in f.get("links") or [] if type_of(l) == "research"), None)
+            if not rid and (f.get("source_ref") or {}).get("run"):
+                rid = next((r["id"] for r in ents.values() if r.get("type") == "research"
+                            and (r.get("workspace_run") or {}).get("run_id") == f["source_ref"]["run"]), None)
+            if rid and rid in ents and rid not in rids:
+                rids.append(rid)
+    out = []
+    for rid in rids:
+        r = ents[rid]
+        if r.get("status") == "completed" and r.get("specialty") != "analytics":
+            out.append({"research": r, "process": process(store, r)})
+    return out
+
+
 def proposals(store: CaseStore) -> list[dict]:
     """Every completed research that answers with a proposal (not only with data), with how it got there."""
     out = []

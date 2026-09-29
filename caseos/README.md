@@ -82,7 +82,9 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
    log, claims más débiles, siguientes mejores acciones. Pregúntale lo que sea del caso.
 8. **Story** — el COS arma el **Story Package** siguiendo tu Guion; el código valida que cada claim tenga evidencia
    aceptada y que cada cifra exista en una tabla. La pestaña **Guion** muestra lámina por lámina qué claims la cubren y
-   si la evidencia está (con evidencia · parcial · sin evidencia). Una lámina sin evidencia no se rellena: queda marcada
+   si la evidencia está (con evidencia · parcial · sin evidencia). En cada claim, **Cómo se llegó a esto** abre lo
+   registrado de la investigación que lo sostiene: arranque, lectura del problema, pasos en orden, qué descartó y qué
+   eligió, conclusión y evaluación del COS (sin llamar a ningún modelo). Una lámina sin evidencia no se rellena: queda marcada
    y su pregunta pasa a research. Lo apruebas tú.
 9. **Slides** — el paquete aprobado pasa al **Executive Visual Storyteller existente** (no se reconstruyó: se enlaza) y
    regresa un deck HTML. Puedes darle una **guía de formato** en palabras simples: tipografía de títulos y de texto
