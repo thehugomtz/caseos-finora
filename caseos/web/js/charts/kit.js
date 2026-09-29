@@ -8,7 +8,7 @@ const cv = n => css().getPropertyValue(n).trim();
 export const C = {};
 export function refreshColors() {
   Object.assign(C, { s1: cv("--s1"), s2: cv("--s2"), s3: cv("--s3"), s4: cv("--s4"), s5: cv("--s5"), s6: cv("--s6"), s7: cv("--s7"), s8: cv("--s8"),
-    ink: cv("--ink"), ink2: cv("--ink-2"), muted: cv("--ink-3"), de: cv("--de"), surface: cv("--surface") || "#101218" });
+    ink: cv("--ink"), ink2: cv("--ink-2"), muted: cv("--ink-3"), de: cv("--de"), surface: cv("--surface") || "#ffffff" });
 }
 refreshColors();
 export const PAL = () => [C.s1, C.s2, C.s3, C.s4, C.s5, C.s6, C.s7, C.s8];

@@ -18,14 +18,14 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Streamin
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, decisions, framing_doc, jobs,
+from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, framing_doc, jobs, slidestyle,
                lineage, phases, research, search, skills, story, storyteller)
 from .agents import base as agents_base
-from .agents import framer
+from .agents import briefer, framer
 from .model import PHASES, TYPES, title_of, type_of
 from .phases import GateError
 from .store import StoreError
-from .util import read_json, read_jsonl, yaml_load
+from .util import now_iso, read_json, read_jsonl, yaml_load
 
 WS_MOUNTED = {"finora": False}
 
@@ -36,6 +36,7 @@ async def lifespan(_app):
     n = jobs.mark_interrupted_on_boot()
     for c in cases.list_cases():
         framer.recover_turns(cases.get(c["id"]))
+        briefer.recover_turns(cases.get(c["id"]))
         storyteller.recover_decks(cases.get(c["id"]))
     if n:
         print(f"[caseos] {n} trabajo(s) interrumpido(s) en la sesión anterior; sus solicitudes siguen disponibles para reintentar.")
@@ -135,8 +136,9 @@ def agent_card(aid: str):
 # ------------------------------------------------------------------------------------------ cases
 class NewCase(BaseModel):
     name: str
-    objective: str
+    objective: str = ""
     audience: list[str] = []
+    data_model: str = ""
     brief_text: str = ""
     context: str = ""
     deliverables: list[str] = []
@@ -157,6 +159,8 @@ def cases_create(body: NewCase):
                           context=body.context, deliverables=body.deliverables, constraints=body.constraints,
                           language={"primary": body.language, "structured_language": body.language}, title=body.title,
                           client=body.client)
+    if body.data_model:
+        datamodels.bind(s, body.data_model, actor="hugo")
     return {"id": s.id}
 
 
@@ -168,7 +172,7 @@ def case_summary(cid: str):
     for e in s.all().values():
         counts[e["type"]] = counts.get(e["type"], 0) + 1
     return {"id": s.id, "meta": {k: m.get(k) for k in ("name", "title", "client", "objective", "audience", "language", "workspace",
-                                                       "created_at", "updated_at")},
+                                                       "data_model", "created_at", "updated_at")},
             "phases": phases.phases_view(s), "current_phase": phases.current_phase(m), "counts": counts,
             "running": jobs.running(cid), "analytics": analytics.info(s)}
 
@@ -246,13 +250,118 @@ def entity_action(cid: str, eid: str, action: str, body: ActionBody):
 @app.get("/api/cases/{cid}/brief")
 def brief_get(cid: str):
     s = S(cid)
-    return {"brief": briefing.get(s), "phase": next(p for p in phases.phases_view(s) if p["id"] == "briefing"),
-            "readiness": phases.readiness(s, "briefing")}
+    dm = s.meta().get("data_model")
+    bound = None
+    if dm:
+        try:
+            bound = datamodels.get(dm["id"]).summary() | {"bound_at": dm.get("bound_at")}
+        except ValueError as e:
+            bound = {**dm, "available": False, "note": str(e)}
+    return {"brief": briefing.get(s), "view": briefing.view(s), "conversation": briefer.conversation(s),
+            "phase": next(p for p in phases.phases_view(s) if p["id"] == "briefing"), "readiness": phases.readiness(s, "briefing"),
+            "data_model": bound, "data_models": datamodels.available()}
 
 
 @app.patch("/api/cases/{cid}/brief")
 def brief_patch(cid: str, body: EntityPatch):
     return briefing.update(S(cid), body.fields, actor="hugo")
+
+
+class BrieferTurn(BaseModel):
+    message: str
+
+
+@app.post("/api/cases/{cid}/briefer")
+def briefer_turn(cid: str, body: BrieferTurn):
+    return briefer.start_turn(S(cid), body.message)
+
+
+@app.post("/api/cases/{cid}/briefer/{turn_id}/retry")
+def briefer_retry(cid: str, turn_id: str):
+    return briefer.retry_turn(S(cid), turn_id)
+
+
+class SectionBody(BaseModel):
+    value: list[str] | str
+
+
+@app.put("/api/cases/{cid}/brief/sections/{key}")
+def brief_section_set(cid: str, key: str, body: SectionBody):
+    return briefing.set_section(S(cid), key, body.value, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/brief/sections/{key}/approve")
+def brief_section_approve(cid: str, key: str):
+    return briefing.approve(S(cid), key, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/brief/sections/{key}/discard")
+def brief_section_discard(cid: str, key: str):
+    return briefing.discard(S(cid), key, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/brief/approve-all")
+def brief_approve_all(cid: str):
+    return briefing.approve_all(S(cid), actor="hugo")
+
+
+# ------------------------------------------------------------------------------------------ data models
+@app.get("/api/datamodels")
+def datamodels_list():
+    return {"models": datamodels.available()}
+
+
+@app.get("/api/datamodels/{mid}")
+def datamodel_detail(mid: str):
+    m = datamodels.get(mid)
+    return {"catalog": m.catalog(), "checks": m.checks(), "summary": m.summary()}
+
+
+@app.get("/api/datamodels/{mid}/sample")
+def datamodel_sample(mid: str, table: str, limit: int = 20):
+    return datamodels.get(mid).sample(table, limit=limit)
+
+
+class QueryBody(BaseModel):
+    sql: str
+    limit: int = 500
+
+
+@app.post("/api/datamodels/{mid}/query")
+def datamodel_query(mid: str, body: QueryBody):
+    return datamodels.get(mid).query(body.sql, limit=body.limit)
+
+
+class BindBody(BaseModel):
+    model_id: str
+
+
+@app.post("/api/cases/{cid}/datamodel")
+def case_datamodel_bind(cid: str, body: BindBody):
+    return datamodels.bind(S(cid), body.model_id, actor="hugo")
+
+
+@app.delete("/api/cases/{cid}/datamodel")
+def case_datamodel_unbind(cid: str):
+    datamodels.unbind(S(cid), actor="hugo")
+    return {"ok": True}
+
+
+@app.post("/api/cases/{cid}/entities/{eid}/verify")
+def entity_verify(cid: str, eid: str):
+    s = S(cid)
+    e = s.require(eid)
+    if e.get("type") != "table":
+        raise HTTPException(400, "Solo las tablas de evidencia se comprueban contra el modelo de datos.")
+    m = datamodels.for_case(s)
+    if m is None and (s.meta().get("workspace") or {}).get("type") == "finora-eda":
+        m = datamodels.get("finora")
+    if m is None:
+        raise HTTPException(400, "El caso no tiene modelo de datos: elígelo en Briefing.")
+    res = m.verify_table(e)
+    s.update(eid, {"verification": {**res, "model": m.id, "at": now_iso()}},
+             actor="hugo", material=False, verb="verified", summary=f"{eid} comprobada contra {m.label}: {res['detail']}")
+    return res
 
 
 @app.get("/api/cases/{cid}/framing")
@@ -470,6 +579,8 @@ def story_validate(cid: str):
 def slides_get(cid: str):
     s = S(cid)
     return {"decks": storyteller.decks(s), "directions": storyteller.DIRECTIONS, "links": storyteller.ensure_links(),
+            "style": s.meta().get("slides_style") or {}, "fonts": {"vendored": slidestyle.VENDORED, "suggested": slidestyle.SUGGESTED},
+            "color_keys": slidestyle.COLOR_KEYS,
             "phase": next(p for p in phases.phases_view(s) if p["id"] == "slides"), "slides": [_compact(e) | {
                 "claim_id": e.get("claim_id"), "deck": e.get("deck"), "render": e.get("render"), "qa_verdict": e.get("qa_verdict"),
                 "composition": e.get("composition")} for e in s.list("slide")]}
@@ -479,12 +590,24 @@ class HandoffBody(BaseModel):
     direction: str = "editorial"
     critic: bool = True
     run: bool = True
+    style: dict | None = None
+
+
+@app.put("/api/cases/{cid}/slides/style")
+def slides_style_save(cid: str, body: dict):
+    s = S(cid)
+    st = slidestyle.normalize(body)
+    meta = s.meta()
+    meta["slides_style"] = {**st, "saved_at": now_iso()}
+    s.save_meta(meta)
+    s.log("hugo", "updated", [], "Guía de formato de slides actualizada", material=False)
+    return meta["slides_style"]
 
 
 @app.post("/api/cases/{cid}/slides/handoff")
 def slides_handoff(cid: str, body: HandoffBody):
     s = S(cid)
-    rec = storyteller.prepare(s, direction=body.direction, critic=body.critic)
+    rec = storyteller.prepare(s, direction=body.direction, critic=body.critic, style=body.style)
     out = {"deck": rec}
     if body.run:
         out.update(storyteller.submit_run(s, rec["id"]))

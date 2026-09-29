@@ -18,6 +18,8 @@ export const api = {
   cget: p => req("GET", api.cp(p)),
   cpost: (p, b) => req("POST", api.cp(p), b || {}),
   cpatch: (p, b) => req("PATCH", api.cp(p), b || {}),
+  cput: (p, b) => req("PUT", api.cp(p), b || {}),
+  cdel: p => req("DELETE", api.cp(p)),
   action: (id, action, payload) => req("POST", api.cp(`/entities/${id}/actions/${action}`), { payload: payload || {} }),
 };
 

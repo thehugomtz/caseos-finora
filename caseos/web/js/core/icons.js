@@ -32,6 +32,11 @@ const P = {
   bolt: "M13 2 4 14h7l-1 8 9-12h-7z",
   undo: "M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3",
   send: "M22 2 11 13M22 2 15 22l-4-9-9-4z",
+  sun: "M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+  moon: "M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z",
+  table: "M3 5h18v14H3zM3 10h18M3 15h18M9 5v14",
+  check2: "M20 6 9 17l-5-5",
+  edit: "M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4",
 };
 
 export function icon(name, cls) {
@@ -53,9 +58,9 @@ export function brandMark() {
   const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   s.setAttribute("viewBox", "0 0 32 32");
   s.setAttribute("class", "mark");
-  s.innerHTML = `<defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fb2ff"/><stop offset="1" stop-color="#5ee0c8"/></linearGradient></defs>
+  s.innerHTML = `<defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--agent)"/></linearGradient></defs>
     <circle cx="16" cy="16" r="13.5" fill="none" stroke="url(#bm)" stroke-width="1.4" opacity=".55"/>
     <ellipse cx="16" cy="16" rx="13.5" ry="5.2" fill="none" stroke="url(#bm)" stroke-width="1.2" transform="rotate(-28 16 16)" opacity=".9"/>
-    <circle cx="16" cy="16" r="3.6" fill="#e9c46a"/><circle cx="27.4" cy="10.2" r="1.7" fill="#5ee0c8"/>`;
+    <circle cx="16" cy="16" r="3.6" style="fill:var(--human)"/><circle cx="27.4" cy="10.2" r="1.7" style="fill:var(--agent)"/>`;
   return s;
 }

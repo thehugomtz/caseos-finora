@@ -81,7 +81,7 @@ export async function mount(root) {
           (t.next_steps || []).length ? h("div.small.muted", { style: { marginTop: "10px" } }, "Siguiente: " + t.next_steps.join(" · ")) : null,
           t.language && t.language.introduced_terms && t.language.introduced_terms.length ? h("div.small.faint", { style: { marginTop: "6px" } }, "Términos introducidos: " + t.language.introduced_terms.map(x => `${x.term} (${x.plain})`).join("; ")) : null));
     } else if (t.status === "failed") {
-      fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", { style: { borderColor: "rgba(255,107,118,.35)" } }, h("div.small", "No pude responder: " + (t.error || "error")),
+      fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", { style: { borderColor: "var(--bad-line)" } }, h("div.small", "No pude responder: " + (t.error || "error")),
         h("div.small.muted", "Tu mensaje quedó guardado; puedes reintentar."), h("div.mt", btn("Reintentar", { sm: true, icon: "refresh", onClick: async () => { await api.cpost(`/framer/${t.turn_id}/retry`); await paint(); } }))));
     } else {
       fr = h("div.turn.turn-f", h("div.who", "Framer"), h("div.bubble", h("div.row", thinking(), h("span.small.muted", t.status === "running" ? "pensando con " + ((t.skills || []).map(s => s.id).join(" · ") || "sus skills") : "en cola"))));
@@ -89,7 +89,7 @@ export async function mount(root) {
     return h("div.stack", { style: { gap: "12px" } }, hugo, fr);
   };
 
-  const challengeView = c => h("div.panel.tight.alert", { style: { marginTop: "12px" } }, h("div.eyebrow", { style: { color: "#ff9aa2" } }, "Challenge · executive mentor"),
+  const challengeView = c => h("div.panel.tight.alert", { style: { marginTop: "12px" } }, h("div.eyebrow", { style: { color: "var(--bad-ink)" } }, "Challenge · executive mentor"),
     h("div.challenge", [["Supuestos ocultos", h("ul.prose", (c.hidden_assumptions || []).map(x => h("li", x)))], ["Contraargumento más fuerte", c.strongest_counterargument],
       ["Explicación alternativa", c.alternative_explanation], ["Evidencia que lo invalidaría", h("ul.prose", (c.invalidating_evidence || []).map(x => h("li", x)))],
       ["Claim de mayor riesgo", c.highest_risk_claim]].filter(r => r[1] && (typeof r[1] !== "string" || r[1].trim())).map(([k, v]) => h("div.c", h("div.k", k), h("div", v)))));
@@ -108,7 +108,7 @@ export async function mount(root) {
         fr.executive_question_note ? h("div.small.faint", { style: { marginTop: "8px" } }, fr.executive_question_note) : null),
       fr.dual && fr.dual.length ? h("div.panel.flush", h("div.phead", h("h2.sec", "Lo que Hugo piensa ↔ interpretación estructurada", h("span.count", String(fr.dual.length)))),
         h("div", fr.dual.slice(0, 7).map(d => h("div.dualrow", { on: { click: () => app.openEntity(d.id) } },
-          h("div", { style: { padding: "12px 16px", background: "rgba(233,196,106,.04)", borderRight: "1px solid var(--line)" } }, h("div.row", { style: { marginBottom: "6px" } }, idTag(d.id), d.verbatim === false ? h("span.faint.small", "paráfrasis") : null), h("div.voice", { style: { fontSize: "15px" } }, d.hugo_wording)),
+          h("div", { style: { padding: "12px 16px", background: "var(--human-soft)", borderRight: "1px solid var(--line)" } }, h("div.row", { style: { marginBottom: "6px" } }, idTag(d.id), d.verbatim === false ? h("span.faint.small", "paráfrasis") : null), h("div.voice", { style: { fontSize: "15px" } }, d.hugo_wording)),
           h("div", { style: { padding: "12px 16px" } }, h("div.small", { style: { color: "var(--ink)" } }, d.structured)))))) : null,
       h("div.panel.flush", h("div", { style: { padding: "6px 14px 0" } }, tabs(LEDGER.map(([k, l]) => ({ id: k, label: l, count: counts[k] })), tab, k => { tab = k; paintBoard(); })),
         h("div", { style: { padding: "0 14px 14px" } }, rows.length ? h("div.ledger", rows.map(r => h("div.lrow", { on: { click: () => app.openEntity(r.id) } },

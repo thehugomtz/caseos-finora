@@ -20,7 +20,7 @@ const VIEWS = {
   home: () => import("./views/home.js"), briefing: () => import("./views/briefing.js"), framing: () => import("./views/framing.js"),
   research: () => import("./views/research.js"), analytics: () => import("./views/analytics.js"), cos: () => import("./views/cos.js"),
   story: () => import("./views/story.js"), slides: () => import("./views/slides.js"), agents: () => import("./views/agents.js"),
-  artifacts: () => import("./views/artifacts.js"),
+  artifacts: () => import("./views/artifacts.js"), data: () => import("./views/data.js"),
 };
 const NAV = [
   { grp: null, items: [{ id: "home", label: "Home", icon: "home" }] },
@@ -32,12 +32,13 @@ const NAV = [
     { id: "story", label: "Story", icon: "story", phase: "story", n: "05" },
     { id: "slides", label: "Slides", icon: "slides", phase: "slides", n: "06" }] },
   { grp: "System", items: [
+    { id: "data", label: "Datos", icon: "db" },
     { id: "analytics", label: "Analytics", icon: "chart" },
     { id: "agents", label: "Agents", icon: "agents" },
     { id: "artifacts", label: "Artifacts", icon: "files" }] },
 ];
 const VIEW_AGENT = { framing: "framer", research: "router", analytics: "analytics", cos: "cos", story: "cos", slides: "visual_storyteller",
-  briefing: "framer", home: "cos", agents: "cos", artifacts: "cos" };
+  briefing: "briefer", home: "cos", agents: "cos", artifacts: "cos", data: "analytics" };
 
 /* ------------------------------------------------------------------ boot */
 async function boot() {
@@ -106,6 +107,7 @@ function shell(list) {
       h("div.rail-foot",
         h("button#hood-btn", { type: "button", on: { click: toggleHood } }, icon("hood"), "Under the hood"),
         h("button", { type: "button", on: { click: startDemo } }, icon("demo"), "Demo mode"),
+        h("button#theme-btn", { type: "button", on: { click: toggleTheme } }, icon(theme() === "dark" ? "sun" : "moon"), theme() === "dark" ? "Tema claro" : "Tema oscuro"),
         h("div.auth", "Agentes: ", h("b", app.health ? app.health.auth.split(" (")[0] : "sin conexión")))),
     h("div.main",
       h("header.top",
@@ -168,6 +170,17 @@ async function route() {
   if (app.demo) demoSpot();
 }
 async function rerender() { await route(); }
+
+/* ------------------------------------------------------------------ theme (light by default; remembered per browser) */
+function theme() { return document.documentElement.dataset.theme === "dark" ? "dark" : "light"; }
+function toggleTheme() {
+  const next = theme() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("caseos.theme", next); } catch (e) { /* private mode: the choice lasts this session */ }
+  const b = $("#theme-btn");
+  if (b) mount(b, icon(next === "dark" ? "sun" : "moon"), next === "dark" ? "Tema claro" : "Tema oscuro");
+  route();                                                         // charts read the theme tokens when they draw
+}
 app.go = hash => { if (location.hash === hash) route(); else location.hash = hash; };
 
 /* ------------------------------------------------------------------ command layer */
@@ -258,7 +271,7 @@ function drawerBody(e, data) {
   const out = [];
   if (e.hugo_wording) out.push(h("div.dual", h("div", h("div.h", "Hugo" + (e.verbatim === false ? " (paráfrasis)" : "")), h("div.v", e.hugo_wording)),
     h("div", h("div.h", "Interpretación estructurada"), h("div.s", e.structured || titleOf(e)))));
-  if (e.stale) out.push(h("div.panel.tight", { style: { borderColor: "rgba(245,165,36,.35)" } }, h("div.eyebrow", { style: { color: "#ffc766" } }, "needs_review"), h("div.small", e.stale.reason)));
+  if (e.stale) out.push(h("div.panel.tight", { style: { borderColor: "var(--warn-line)" } }, h("div.eyebrow", { style: { color: "var(--warn-ink)" } }, "needs_review"), h("div.small", e.stale.reason)));
   if (t === "hypothesis") out.push(dsec("Hipótesis", kv([["Pregunta", e.question], ["Se debilita si", e.falsifier || h("span.chip.warn", "sin falsificador")],
     ["Explicación alternativa", e.alternative], ["Evidencia necesaria", e.evidence_needed], ["Capacidad", e.capacity], ["Prioridad", e.priority],
     ["Origen de la idea", (e.idea_origin || []).join(" · ")]])), e.assessed ? dsec("Evaluación del agente (pendiente de tu revisión)", h("div.row.wrap", h("span.chip.accent", e.assessed.state), h("span.small.muted", e.assessed.by)), h("p.prose", e.assessed.reading || "")) : null);
@@ -279,7 +292,8 @@ function drawerBody(e, data) {
     ["Transformación", e.transformation], ["Filtros", (e.filters || []).join("; ")], ["Periodo", e.period && (e.period.from || e.period.desde) ? `${e.period.from || e.period.desde} → ${e.period.to || e.period.hasta}` : ""],
     ["Grano", e.grain], ["Análisis", e.analysis_id], ["Visual preferido", e.preferred_visual], ["Creada", e.created_at]])),
     e.definitions && Object.keys(e.definitions).length ? dsec("Definiciones", kv(Object.entries(e.definitions))) : null,
-    dsec("Limitaciones", h("ul.prose", (e.limitations || []).map(x => h("li", x)))), e.query ? dsec("Consulta", h("pre.raw", e.query)) : null);
+    dsec("Limitaciones", h("ul.prose", (e.limitations || []).map(x => h("li", x)))), e.query ? dsec("Consulta", h("pre.raw", e.query)) : null,
+    dsec("Comprobar contra el modelo de datos", verifyBlock(e)));
   if (t === "decision") out.push(dsec("Decisión", kv([["Fecha", e.date], ["Contexto", e.context], ["Recomendación del agente", e.agent_recommendation], ["Elección de Hugo", e.user_choice],
     ["Razón", e.user_rationale], ["Impacto aguas abajo", e.downstream_impact], ["Tipo", e.kind], ["Reemplaza a", e.supersedes], ["Reemplazada por", e.superseded_by], ["Nota", e.confirm_note || e.superseded_note]])),
     e.options && Object.keys(e.options).length ? dsec("Opciones", kv(Object.entries(e.options))) : null,
@@ -305,6 +319,22 @@ export function tableBlock(tb) {
         h("tbody", (tb.rows || []).slice(0, 200).map(r => h("tr", r.map(v => h("td", v === null ? "–" : String(v))))))))));
   requestAnimationFrame(() => renderEvidenceTable(wrap.querySelector(".chart"), tb, wrap.querySelector(".legend")));
   return wrap;
+}
+function verifyBlock(e) {
+  const box = h("div");
+  const show = v => mount(box,
+    h("div.row.wrap", h(`span.chip.${v.status === "ok" ? "good" : v.status === "no_query" ? "ghost" : v.status === "partial" ? "warn" : "bad"}`,
+      { ok: "comprobada", partial: "comprobada en parte", fail: "no cuadra", no_query: "sin consulta" }[v.status] || v.status), h("span.small", v.detail)),
+    (v.missing || []).length ? h("div.small.muted", { style: { marginTop: "6px" } }, "Cifras que no reaparecen: " + v.missing.join(" · ")) : null,
+    (v.queries || []).length ? h("details", { style: { marginTop: "6px" } }, h("summary.small.faint", { style: { cursor: "pointer" } }, `${v.queries.length} consulta(s) re-ejecutada(s)`),
+      v.queries.map(q => h("div", { style: { marginTop: "6px" } }, h("div.small", q.ok ? `✓ ${q.rows} fila(s) · ${q.ms} ms` : `✗ ${q.error}`), h("pre.raw", q.sql)))) : null,
+    v.at ? h("div.small.faint", { style: { marginTop: "6px" } }, `Última comprobación: ${ago(v.at)}${v.model ? " · modelo " + v.model : ""}`) : null);
+  const run = async () => {
+    mount(box, h("div.small.muted", "Volviendo a correr su consulta sobre el modelo…"));
+    try { show(await api.cpost(`/entities/${e.id}/verify`)); refreshSoon(); } catch (err) { mount(box, h("div.qerr", err.message)); }
+  };
+  if (e.verification) show(e.verification); else mount(box, h("div.small.muted", "Vuelve a correr la consulta de esta tabla sobre el modelo de datos del caso y revisa que cada cifra reaparezca."));
+  return h("div.stack", { style: { gap: "8px" } }, box, h("div", btn(e.verification ? "Comprobar otra vez" : "Comprobar ahora", { sm: true, icon: "check", onClick: run })));
 }
 function lineageBlock(lg) {
   const order = ["question", "hypothesis", "note", "research", "finding", "table", "alert", "decision", "claim", "slide", "artifact"];
@@ -524,19 +554,23 @@ async function caseMenu() {
   const m = modal({ eyebrow: "Casos", title: "Cambiar de caso", body, actions: [{ label: "Cerrar", variant: "ghost" }] });
 }
 function switchCase(id) { try { localStorage.setItem("caseos.case", id); } catch (e) { /* private mode */ } location.hash = "#/home"; location.reload(); }
-function newCaseDialog() {
-  const f = {};
-  const field = (k, label, opts = {}) => h("div.field", h("label", label), f[k] = h(opts.multi ? "textarea" : "input", { placeholder: opts.ph || "" }));
-  modal({ eyebrow: "CaseOS", title: "Nuevo caso", body: h("div", h("p.small.muted", "CaseOS no está atado a Finora: cada caso tiene su brief, su framing, su estado y su memoria."),
-    field("name", "Nombre del caso"), field("objective", "Objetivo (qué hay que decidir o entender)", { multi: true }), field("audience", "Audiencia (separada por comas)", { ph: "CEO, CFO" }),
-    field("deliverables", "Entregables (separados por ;)"), field("brief", "Texto del brief (pégalo tal cual)", { multi: true })),
+async function newCaseDialog() {
+  const name = h("input", { placeholder: "Finora · reencuadre" });
+  const models = ((await api.get("/api/datamodels")).models || []).filter(m => m.available);
+  const sel = h("select", h("option", { value: "" }, "Sin modelo por ahora (lo eliges en Briefing)"), models.map(m => h("option", { value: m.id }, m.label)));
+  modal({ eyebrow: "CaseOS", title: "Nuevo caso en blanco", body: h("div",
+    h("p.small.muted", "Solo el nombre. Todo lo demás lo armas en Briefing platicando con el Briefer, y apruebas sección por sección."),
+    h("div.field", h("label", "Nombre del caso"), name),
+    h("div.field", h("label", "Modelo de datos (opcional)"), sel)),
     actions: [{ label: "Cancelar", variant: "ghost" }, { label: "Crear caso", variant: "primary", onClick: async () => {
+      if (!name.value.trim()) { name.focus(); return false; }
       try {
-        const r = await api.post("/api/cases", { name: f.name.value.trim(), objective: f.objective.value.trim(), audience: f.audience.value.split(",").map(s => s.trim()).filter(Boolean),
-          deliverables: f.deliverables.value.split(";").map(s => s.trim()).filter(Boolean), brief_text: f.brief.value });
-        switchCase(r.id);
+        const r = await api.post("/api/cases", { name: name.value.trim(), data_model: sel.value });
+        try { localStorage.setItem("caseos.case", r.id); } catch (e) { /* private mode */ }
+        location.hash = "#/briefing"; location.reload();
       } catch (e) { toast(e.message, "err"); return false; }
     } }] });
+  requestAnimationFrame(() => name.focus());
 }
 app.newCase = newCaseDialog;
 

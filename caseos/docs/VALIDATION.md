@@ -29,7 +29,7 @@ falsificador, sus palabras junto a la estructura y su vocabulario preservado.
 - finora-eda: árbol de git limpio (CaseOS no modificó nada); `.venv/bin/python -m evals.run_evals` → **94/94**.
 - Respaldo previo: tag `pre-caseos-2026-09-28` + bundle + tgz del estado de ejecución en `Claude Prueba/_backups/`.
 
-## 3. Flujo en vivo (modelo real, `claude-opus-5`, suscripción)
+## 3. Flujo en vivo (modelo real, `claude-opus-5` effort high, suscripción)
 
 Las pruebas en vivo corrieron en un **sandbox** (`.runtime/e2e/cases`, puerto 8781: copia de Finora con los mensajes de
 “Hugo” escritos por Claude). El caso real `cases/finora` se reimportó limpio al final: ahí no hay nada escrito a nombre
@@ -100,3 +100,20 @@ Deck: `.runtime/e2e/cases/finora/slides/decks/finora-sandbox-d-v1-20260928-22221
 Recorrido de todas las vistas a 1512×945 (Home, Briefing, Framing, Research + detalle, Chief of Staff, Story, Slides,
 Agents, Artifacts, Analytics): sin desbordes horizontales ni texto recortado tras la corrección de las pestañas; ⌘K busca
 por ID y texto; el detalle de research muestra respuesta, findings con evidencia, fuentes, límites y acciones.
+
+## 7. Segunda ronda (28-sep-2026, noche): Opus 5.5 max, caso en blanco, Briefing conversacional, modelo de datos, tema claro, guía de formato
+
+- **Modelo:** `claude-opus-5-5` con esfuerzo `max` verificado en vivo sobre la suscripción (`apiKeySource: none`).
+- **Pruebas:** `pytest` → 46 pasan (nuevas: `test_briefing.py`, `test_datamodels.py`, `test_slidestyle.py`).
+- **Modelo de datos (real):** raw 3 tablas · staging 3 vistas · mart 7 tablas/vistas; **7/7 checks** (66.674 filas
+  raw = staging = mart; monto por mes al centavo en 34 meses; 1.961 clientes; S&M por mes; 19 pruebas de paridad del
+  workspace). Consola: `SELECT … FROM mart.monthly_metrics` 34 filas en ~30 ms; `DELETE`, `read_csv`, `COPY`, `ATTACH` y
+  cambios de configuración rechazados.
+- **Briefer en vivo** (sandbox, caso «Prueba en blanco»): 7 propuestas con base (`hugo` o `inferido`), las palabras de
+  Hugo al lado, una sola pregunta acotada, y detectó con el modelo de datos que no hay precios de lista ni descuentos.
+  Costo: US$0.94 · **6.8 min** (43.644 tokens de salida en esfuerzo max).
+- **UI:** aprobar, editar y aprobar, descartar y *Mark Ready* probados con clics; el borrador sobrevive a un repintado en
+  vivo; vista Datos (linaje, detalle, muestra, consola, checks); guía de formato con vista previa; claro y oscuro.
+- **Encontrado y corregido:** meses ISO (`2024-08`) se leían como el número 8 en la disciplina de cifras; `data_model`
+  no viajaba en el resumen del caso; la guía de colores se encimaba en paneles angostos; Python sin certificados para
+  bajar Google Fonts (se usa certifi).

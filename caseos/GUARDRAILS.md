@@ -16,6 +16,9 @@ Dos clases de reglas, y conviene no confundirlas:
 | Reabrir exige razón, muestra el impacto antes y marca needs_review lo afectado; no borra nada | `phases.impact`, `phases.reopen`, `lineage.impact_radius` | `test_reopen_flags_downstream_without_deleting` |
 | Todo lo que produce un agente entra como propuesto; las decisiones de agentes quedan `proposed` | `store.create`, `decisions.record_decision` | `test_messy_text_is_classified_guarded_and_keeps_hugo_words` |
 | Un FACT sin base (brief, material del caso o evidencia **aceptada**) se reclasifica | `framer.guard` | `test_fact_needs_accepted_evidence` |
+| El Briefer solo propone: nada entra al brief sin que Hugo lo apruebe o lo edite; una propuesta sobre una sección aprobada es una revisión; el enunciado pegado lo guarda el código literal | `briefing.propose` / `approve`, `briefer.guard` | `test_briefer_proposes_and_hugo_approves_section_by_section`, `test_reframe_is_a_revision_not_an_overwrite`, `test_pasted_statement_is_stored_verbatim_by_code` |
+| El modelo de datos es de solo lectura: una SELECT sobre raw/staging/mart; sin archivos, sin escrituras, sin reconfigurar | `datamodels.guard_sql`, DuckDB con `enable_external_access=false` y `lock_configuration` | `test_queries_are_read_only_and_limited` |
+| Las capas cuadran y se puede comprobar una tabla re-ejecutando su consulta | `datamodels.checks`, `verify_table` | `test_three_layers_and_every_check_passes`, `test_an_evidence_table_is_verified_against_the_model` |
 | Hipótesis sin falsificador quedan marcadas | `framer.guard`, `framer.apply_turn` | idem |
 | Advisors ≤ 2, alternativas ≤ 3, Organize sin alternativas, Challenge solo en su modo | `framer.guard` | `test_mode_limits_on_alternatives` |
 | Las palabras de Hugo nunca se reemplazan en silencio (historial visible) | `framer.apply_turn` | `test_messy_text_…` |

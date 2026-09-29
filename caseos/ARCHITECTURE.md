@@ -33,14 +33,18 @@ El estado del caso son **archivos** legibles y versionados; no hay base de datos
 
 | Módulo | Responsabilidad |
 |---|---|
-| `config.py` | rutas, modelo (`claude-opus-5`), effort y tope de costo por rol, host/puerto |
+| `config.py` | rutas, modelo (`claude-opus-5-5`), effort (`max`) y tope de costo por rol, host/puerto |
 | `model.py` | fases, tipos de entidad y prefijos de ID (Q H N R F T D X C S A), tipos epistémicos |
 | `store.py` | `CaseStore`: crear/actualizar entidades con versión, escritura atómica, caché por mtime, traza, snapshots |
 | `lineage.py` | grafo de linaje (links no dirigidos), linaje por tipo, *downstream* e **impact radius** |
 | `phases.py` | estado de fases, `readiness` (bloqueos y avisos por fase), `mark_ready` (solo Hugo), `reopen` |
 | `decisions.py` | decision log (§55): activas si decide Hugo, propuestas si las sugiere un agente; `do_not_resurface` |
 | `brain.py` | `brain.md`: memoria viva del caso, se regenera en cada cambio material |
-| `briefing.py`, `framing_doc.py` | brief y framing vivo (`framing/current.yaml` → `current.md`) |
+| `briefing.py` | brief por secciones: valor aprobado + estado + propuestas pendientes; aprobar / editar / descartar |
+| `agents/briefer.py` | turno del Briefer: propuestas con base, enunciado literal copiado por código |
+| `datamodels.py` | modelos de datos del caso: raw → staging → mart en DuckDB en memoria (warehouse adjunto READ_ONLY, acceso a archivos bloqueado), catálogo, consultas SELECT guardadas, 7 checks de reconciliación, verificación de EvidenceTables |
+| `slidestyle.py` | guía de formato de slides → tema del renderer (tokens, contraste WCAG, Google Fonts OFL descargadas al deck) |
+| `framing_doc.py` | framing vivo (`framing/current.yaml` → `current.md`) |
 | `agents/` | `base.py` (contratos desde `agents/*.md`, kernel del sistema), `framer.py` |
 | `research.py` | Router, especialistas, L3 (profundidad + amplitud + contraargumento + peer review), aceptar/cuestionar |
 | `analytics.py` | puente con el workspace: corridas, promover claims a findings, **EvidenceTable** con linaje |
@@ -93,6 +97,16 @@ Los endpoints síncronos corren en hilos: `jobs._spawn` agenda en el loop del se
 | COS → Story | Story Package (§61) | `story.validate_package`: evidencia aceptada, cifras en tablas, dependencias needs_review, lenguaje causal |
 | Story → Storyteller | carpeta del deck: `storyline.md`, `data/*.yaml`, `caseos-handoff.yaml` | Story Ready + paquete válido; `storyteller._guard` limita escrituras al deck |
 
+## Modelo de datos
+
+`datamodels.FinoraModel` arma, por proceso, un DuckDB en memoria: `raw.*` son los tres CSV cargados como texto (con
+sha256), `staging.*` son vistas tipadas con las reglas de la Fase 1, `mart.*` son vistas sobre el warehouse del
+workspace adjunto en solo lectura. Después del arranque se desactiva el acceso a archivos y se bloquea la configuración;
+las consultas pasan por `guard_sql` (una SELECT sobre raw/staging/mart), con límite de filas y de tiempo. Los checks
+prueban que staging y mart cuadran (filas, montos por mes al centavo, clientes, S&M) y re-ejecutan la paridad del
+propio workspace. Elegir el modelo en Briefing lo enlaza al caso (`case.yaml › data_model` y `workspace`) y llena
+«Datos disponibles».
+
 ## Workspaces
 
 Un workspace analítico es un módulo con `adapter(cfg)` que expone: `available`, `info()`, `canonical()`,
@@ -110,8 +124,9 @@ los scripts del renderer. `prepare()` crea el deck con el propio `new-deck.mjs` 
 
 ## Front end
 
-HTML + ES modules sin build (`web/js`), `h()` hyperscript, un router por hash y SSE para el estado en vivo. Kit de
-gráficas SVG portado del workspace (línea, barras, cascada, dispersión, puntos) con paleta validada para fondo oscuro.
+HTML + ES modules sin build (`web/js`), `h()` hyperscript, un router por hash y SSE para el estado en vivo. Tema claro
+por defecto y oscuro opcional (tokens semánticos en `:root` / `[data-theme="dark"]`, elección guardada por navegador).
+Kit de gráficas SVG portado del workspace con la paleta de referencia de dataviz validada para cada fondo.
 Fuentes locales (Inter, Newsreader, IBM Plex Mono; OFL). Los estáticos se sirven bajo una ruta versionada por arranque.
 
 ## Seguridad

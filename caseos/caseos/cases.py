@@ -62,7 +62,7 @@ def forget(case_id: str) -> None:
         _stores.pop(case_id, None)
 
 
-def create_case(*, name: str, objective: str, audience: list[str], brief_text: str = "", context: str = "",
+def create_case(*, name: str, objective: str = "", audience: list[str] | None = None, brief_text: str = "", context: str = "",
                 deliverables: list[str] | None = None, constraints: list[str] | None = None,
                 language: dict | None = None, title: str = "", client: str = "", case_id: str | None = None,
                 workspace: dict | None = None, actor: str = "hugo") -> CaseStore:
@@ -78,9 +78,15 @@ def create_case(*, name: str, objective: str, audience: list[str], brief_text: s
             "workspace": workspace or {"type": "none"},
             "phases": {p: {"status": "not_started", "ready_count": 0, "history": []} for p in PHASES}}
     write_yaml(root / "case.yaml", meta)
+    audience = audience or []
     brief = {"title": title or name, "objective": objective, "audience": audience, "context": context,
              "brief_text": brief_text, "deliverables": deliverables or [], "constraints": constraints or [],
              "gaps": [], "sources": [], "created_at": now_iso()}
+    # whatever Hugo typed when creating the case is his: those sections start approved; the rest is built in Briefing
+    brief["sections"] = {k: {"state": "approved", "by": actor, "at": now_iso(), "basis": "alta del caso", "version": 1}
+                         for k in ("title", "objective", "audience", "context", "brief_text", "deliverables", "constraints")
+                         if brief.get(k) not in (None, "", [])}
+    brief["pending"] = {}
     write_yaml(root / "brief" / "brief.yaml", brief)
     write_yaml(root / "framing" / "current.yaml", empty_framing())
     (root / "README.md").write_text(case_readme(meta), encoding="utf-8")

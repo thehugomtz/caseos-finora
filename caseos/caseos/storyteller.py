@@ -15,7 +15,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from . import cases, config, jobs, phases
+from . import cases, config, jobs, phases, slidestyle
 from .llm import AgentError
 from .model import title_of
 from .store import CaseStore, StoreError
@@ -66,7 +66,7 @@ def _upsert_deck(store: CaseStore, deck: dict) -> None:
 
 # ------------------------------------------------------------------------------------------ prepare
 def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = True, title: str = "",
-            actor: str = "hugo") -> dict:
+            actor: str = "hugo", style: dict | None = None) -> dict:
     meta = store.meta()
     if meta["phases"]["story"].get("status") != "ready":
         raise StoreError("El Story Package tiene que estar aprobado (Story Ready) antes de pasarlo al Visual Storyteller.")
@@ -89,6 +89,17 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
                         (meta.get("language") or {}).get("primary", "es")], capture_output=True, text=True, timeout=60)
     if p.returncode != 0:
         raise StoreError(f"new-deck.mjs falló: {p.stderr[-400:]}")
+    applied = None
+    if style and not slidestyle.is_empty(style):
+        base_dir = theme if theme in ("editorial", "modern", "blueprint") else "editorial"
+        applied = slidestyle.apply_to_deck(deck, style, base_dir)
+        q = subprocess.run(["node", str(script), str(deck), "--set-direction", str(deck / applied["theme"])], capture_output=True,
+                           text=True, timeout=60)
+        if q.returncode != 0:
+            raise StoreError(f"No pude aplicar la guía de formato: {q.stderr[-300:]}")
+        meta = store.meta()
+        meta["slides_style"] = {**applied["style"], "saved_at": now_iso()}
+        store.save_meta(meta)
     ents = store.all()
     tables = {}
     for c in pkg.get("claims") or []:
@@ -110,13 +121,15 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
                "research": sorted({r for c in pkg.get("claims") or [] for r in c.get("research_ids") or []}),
                "limitations": sorted({l for c in pkg.get("claims") or [] for l in c.get("limitations") or []}),
                "appendix_candidates": pkg.get("appendix_candidates"), "visual_references": pkg.get("visual_references"),
-               "brand_system": {"note": "Sin marca impuesta: tokens del tema elegido."},
+               "brand_system": ({"note": "Guía de formato de Hugo aplicada como tokens del tema (assets/theme.css).", **applied}
+                                if applied else {"note": "Sin marca impuesta: tokens del tema elegido."}),
                "rules": ["No cambies el argumento ni las cifras del Story Package; si algo no se sostiene, anótalo en storyline.md §7.",
                          "Toda cifra de una slide sale de data/*.yaml (usa los valores literales).",
                          "Conserva claim_id en cada slide spec (campo claim_id) para el linaje CaseOS."]}
     (deck / "caseos-handoff.yaml").write_text(yaml_dump(handoff), encoding="utf-8")
     rec = {"id": f"DECK-{stamp()}", "slug": slug, "path": str(deck.relative_to(store.root)), "title": title,
-           "direction": direction, "critic": critic, "status": "prepared", "created_at": now_iso(),
+           "direction": "caseos" if applied else direction, "critic": critic, "status": "prepared", "created_at": now_iso(),
+           "style": applied,
            "package_version": pkg.get("version"), "tables": len(tables), "claims": len(pkg.get("claims") or [])}
     _upsert_deck(store, rec)
     phases.touch(store, "slides", actor=actor)
@@ -287,8 +300,18 @@ async def _run_job(job, params):
     if missing:
         raise StoreError("Faltan skills del Storyteller: " + ", ".join(m["skill"] for m in missing))
     direction = d.get("direction", "editorial")
-    dir_text = ("Dirección visual: **elige tú** (Hugo dijo «autónomo»): corre el board de direcciones, elige y justifica en visual-direction.md."
-                if direction == "auto" else f"Dirección visual elegida por Hugo: **{direction}** (ya aplicada en assets/theme.css; no pidas elegir).")
+    st = d.get("style") or {}
+    if st:
+        sg = st.get("style") or {}
+        dir_text = ("Dirección visual: **la guía de formato de Hugo**, ya aplicada como tokens en assets/theme.css sobre la base "
+                    f"«{st.get('base_direction')}»: tipografía de títulos {sg.get('title_font') or '(la de la base)'}, de texto "
+                    f"{sg.get('text_font') or '(la de la base)'}, colores " + (", ".join(f"{k} {v}" for k, v in (sg.get('colors') or {}).items()) or "(los de la base)")
+                    + ". No cambies tipografías ni colores y no corras el board de direcciones; usa el acento solo para el insight."
+                    + (f" Notas de Hugo sobre el formato: «{sg['notes']}»." if sg.get("notes") else "")
+                    + (" Ajustes de contraste ya hechos: " + " ".join(st.get("notes") or []) if st.get("notes") else ""))
+    else:
+        dir_text = ("Dirección visual: **elige tú** (Hugo dijo «autónomo»): corre el board de direcciones, elige y justifica en visual-direction.md."
+                    if direction == "auto" else f"Dirección visual elegida por Hugo: **{direction}** (ya aplicada en assets/theme.css; no pidas elegir).")
     critic_text = ("Antes de terminar, pasa la crítica independiente con el agente `independent-slide-critic` y aplica sus veredictos."
                    if d.get("critic") else "No uses el agente de crítica independiente en esta corrida (Hugo lo desactivó); sí tu propio loop de QA.")
     append = f"""
@@ -323,7 +346,7 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
         tools=tools, allowed_tools=["Read", "Glob", "Grep"], skills=list(config.STORYTELLER_SKILLS),
         setting_sources=["project"], strict_mcp_config=True,
         system_prompt={"type": "preset", "preset": "claude_code", "append": append},
-        model=config.model_for("storyteller"), effort=config.EFFORT.get("storyteller", "high"),
+        model=config.model_for("storyteller"), effort=config.EFFORT.get("storyteller", config.DEFAULT_EFFORT),
         max_turns=300, max_budget_usd=config.BUDGET_USD.get("storyteller"), cwd=str(config.ROOT),
         add_dirs=[str(deck)], can_use_tool=_guard(deck, on_deny), agents=agents)
     started = now_ms()

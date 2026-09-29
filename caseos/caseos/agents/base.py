@@ -13,6 +13,8 @@ from .. import config, skills
 from ..util import read_yaml
 
 AGENTS: dict[str, dict] = {
+    "briefer": {"doc": "briefer.md", "name": "Briefer", "group": "briefing", "icon": "brief",
+                "short": "Arma el brief contigo, sección por sección"},
     "framer": {"doc": "framer.md", "name": "Framer", "group": "framing", "icon": "compass",
                "short": "Problem Framing & Initial Storytelling"},
     "cos": {"doc": "cos.md", "name": "Chief of Staff", "group": "synthesis", "icon": "orbit",

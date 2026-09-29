@@ -35,6 +35,7 @@ skills:
     agents:
       framer: {mode: core}
       cos: {mode: dynamic, triggers: [storyline, one-day answer, respuesta de un día, historia, narrativa]}
+      briefer: {mode: dynamic, triggers: [enunciado, reto, reencuadre, reencuadr, cliente, caso]}
 
   - id: clarification-protocol
     kind: custom
@@ -44,6 +45,17 @@ skills:
     purpose: Ask only what blocks the case; one question at a time; defaults become explicit assumptions.
     agents:
       framer: {mode: core, modes: [organize]}
+      briefer: {mode: core}
+
+  # ------------------------------------------------------------------ Briefer
+  - id: brief-builder
+    kind: custom
+    path: skills/custom/brief-builder
+    source: CaseOS
+    license: MIT (CaseOS)
+    purpose: Turns what Hugo says (ideas, reframes, a pasted statement) into brief sections he approves one by one; never invents.
+    agents:
+      briefer: {mode: core}
 
   - id: bulletproof-problem-solving-chatgpt
     kind: vendor

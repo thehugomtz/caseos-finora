@@ -80,7 +80,7 @@ def save_run(spec: RunSpec, result: RunResult | None, error: str | None, started
         pp.write_text(spec.system, encoding="utf-8")
     rec = {"run_id": run_id, "agent": spec.agent, "role": spec.role, "purpose": spec.purpose, "started_at": now_iso(),
            "duration_ms": now_ms() - started, "model": config.model_for(spec.role),
-           "effort": config.EFFORT.get(spec.role), "system_prompt": f"audit/prompts/{h}.md", "system_prompt_hash": h,
+           "effort": config.EFFORT.get(spec.role, config.DEFAULT_EFFORT), "system_prompt": f"audit/prompts/{h}.md", "system_prompt_hash": h,
            "prompt": spec.prompt, "schema": spec.schema, "tools": spec.tools, "skills": spec.skills,
            "lenses": spec.lenses, "max_turns": spec.max_turns, "status": "error" if error else "ok", "error": error}
     if result:
@@ -110,7 +110,7 @@ class AgentSDKLLM:
         model = config.model_for(spec.role)
         opts = ClaudeAgentOptions(
             tools=list(spec.tools), allowed_tools=list(spec.tools), setting_sources=[], strict_mcp_config=True,
-            system_prompt=spec.system, model=model, effort=config.EFFORT.get(spec.role, "high"),
+            system_prompt=spec.system, model=model, effort=config.EFFORT.get(spec.role, config.DEFAULT_EFFORT),
             max_turns=spec.max_turns, cwd=str(config.RUNTIME_DIR), verbatim_prompts=True,
             max_budget_usd=spec.budget_usd or config.BUDGET_USD.get(spec.role),
             output_format={"type": "json_schema", "schema": spec.schema} if spec.schema else None)

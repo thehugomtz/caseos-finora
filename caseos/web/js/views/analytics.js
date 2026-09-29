@@ -38,7 +38,7 @@ export async function mount(root, param) {
         h("div.small.muted.clamp2", r.pregunta),
         h("div.row.wrap.mt", h("span.chip", `${r.claims} afirmaciones validadas`), h("span.chip", `${r.visuals} visuales`), r.linked.length ? h("span.row", { style: { gap: "4px" } }, r.linked.slice(0, 4).map(x => idTag(x))) : h("span.small.faint", "sin enlazar al caso"),
           r.finished_ms ? h("span.small.faint", ago(new Date(r.finished_ms).toISOString())) : null)))) : empty("Sin investigaciones", ws.note || "Lanza una pregunta.")) : null,
-      tab === "workspace" ? (ws.ui ? h("div.panel.flush", { style: { height: "calc(100vh - 280px)", minHeight: "520px" } }, h("iframe", { src: ws.ui, style: { width: "100%", height: "100%", border: 0, borderRadius: "16px", background: "#f3f5fa" }, title: "Business Exploration Workspace" }))
+      tab === "workspace" ? (ws.ui ? h("div.panel.flush", { style: { height: "calc(100vh - 280px)", minHeight: "520px" } }, h("iframe", { src: ws.ui, style: { width: "100%", height: "100%", border: 0, borderRadius: "16px", background: "var(--surface)" }, title: "Business Exploration Workspace" }))
         : empty("Workspace no disponible", "Enlaza el workspace en case.yaml › workspace.")) : null);
   };
   put(root, body);

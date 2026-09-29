@@ -47,7 +47,7 @@ export async function mount(root, param) {
     const byId = Object.fromEntries(NODES.map(n => [n.id, n]));
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    svg.innerHTML = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="rgba(255,255,255,.35)"/></marker></defs>`;
+    svg.innerHTML = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" style="fill:var(--ink-4)"/></marker></defs>`;
     const running = new Set(AGENT_IDS.filter(a => (status[a] || {}).status === "running"));
     EDGES.forEach(([a, b, gate]) => {
       const A = byId[a], B = byId[b];
@@ -75,14 +75,14 @@ export async function mount(root, param) {
       const st = (status[n.id] || {}).status;
       g.setAttribute("class", `node ${st || ""} ${sel === n.id ? "sel" : ""}`);
       g.style.cursor = "pointer";
-      const fill = n.kind === "human" ? "rgba(233,196,106,.12)" : n.kind === "core" ? "rgba(143,164,255,.1)" : n.kind === "asset" ? "rgba(255,255,255,.03)" : n.kind === "artifact" ? "rgba(240,168,104,.06)" : "rgba(16,18,26,.92)";
-      const stroke = n.kind === "human" ? "rgba(233,196,106,.6)" : n.kind === "core" ? "rgba(143,164,255,.5)" : n.kind === "asset" ? "rgba(255,255,255,.14)" : n.kind === "artifact" ? "rgba(240,168,104,.4)" : null;
+      const fill = n.kind === "human" ? "var(--human-soft)" : n.kind === "core" ? "var(--accent-soft)" : n.kind === "asset" ? "var(--glass)" : n.kind === "artifact" ? "var(--warn-soft)" : "var(--topo-box)";
+      const stroke = n.kind === "human" ? "var(--human)" : n.kind === "core" ? "var(--accent-line)" : n.kind === "asset" ? "var(--line-3)" : n.kind === "artifact" ? "var(--warn-line)" : null;
       g.innerHTML = `<rect class="halo" x="${n.x - n.w / 2 - 6}" y="${n.y - n.h / 2 - 6}" width="${n.w + 12}" height="${n.h + 12}" rx="${n.kind === "human" ? 30 : 18}"/>
         <rect class="box" x="${n.x - n.w / 2}" y="${n.y - n.h / 2}" width="${n.w}" height="${n.h}" rx="${n.kind === "human" ? 25 : 14}" style="fill:${fill};${stroke ? "stroke:" + stroke + ";" : ""}${n.kind === "asset" ? "stroke-dasharray:4 4;" : ""}"/>
         <text class="tag" x="${n.x - n.w / 2 + 14}" y="${n.y - n.h / 2 + 17}">${n.tag}</text>
         <text x="${n.x - n.w / 2 + 14}" y="${n.y + (n.h > 55 ? 4 : 6)}" style="font-size:${n.kind === "human" ? 15 : 14.5}px;font-weight:620">${n.name}</text>
         <text class="sub" x="${n.x - n.w / 2 + 14}" y="${n.y + (n.h > 55 ? 21 : 20)}">${n.sub}</text>
-        ${AGENT_IDS.includes(n.id) ? `<circle cx="${n.x + n.w / 2 - 14}" cy="${n.y - n.h / 2 + 14}" r="4" fill="${st === "running" ? "#5ee0c8" : st === "waiting" ? "#e9c46a" : "#545b6b"}"/>` : ""}`;
+        ${AGENT_IDS.includes(n.id) ? `<circle cx="${n.x + n.w / 2 - 14}" cy="${n.y - n.h / 2 + 14}" r="4" style="fill:${st === "running" ? "var(--agent)" : st === "waiting" ? "var(--human)" : "var(--ink-4)"}"/>` : ""}`;
       g.addEventListener("click", () => { sel = n.id; history.replaceState(null, "", "#/agents/" + n.id); drawTopo(); paintPanel(); });
       svg.appendChild(g);
     });

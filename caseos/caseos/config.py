@@ -26,29 +26,20 @@ USER_AGENTS_DIR = Path(os.environ.get("CASEOS_USER_AGENTS_DIR", Path.home() / ".
 STORYTELLER_SKILLS = ["executive-visual-storyteller", "executive-storyline", "consulting-visual-director",
                       "html-slide-renderer", "slide-critic"]
 
-# One model for every agent (the default the existing workspace also uses); cost is tuned with effort, not by
-# silently downgrading models. Override per agent with CASEOS_MODEL_<AGENT> (e.g. CASEOS_MODEL_ROUTER).
-DEFAULT_MODEL = os.environ.get("CASEOS_MODEL", "claude-opus-5")
-EFFORT = {
-    "framer": "high",
-    "cos": "high",
-    "cos_impact": "medium",
-    "router": "low",
-    "command": "low",
-    "business_research": "high",
-    "deep_research": "high",
-    "peer_review": "high",
-    "measurement": "high",
-    "data_engineering": "high",
-    "synthesis": "high",
-    "story": "high",
-    "storyteller": "high",
-}
+# One model and one effort for every agent: Hugo asked for Opus 5.5 at maximum effort (28-sep-2026). Nothing is
+# downgraded silently. Overrides: CASEOS_MODEL / CASEOS_EFFORT for all agents, CASEOS_MODEL_<AGENT> /
+# CASEOS_EFFORT_<ROLE> for one (e.g. CASEOS_EFFORT_ROUTER=high).
+DEFAULT_MODEL = os.environ.get("CASEOS_MODEL", "claude-opus-5-5")
+DEFAULT_EFFORT = os.environ.get("CASEOS_EFFORT", "max")
+ROLES = ["framer", "briefer", "cos", "cos_impact", "router", "command", "business_research", "deep_research", "peer_review",
+         "measurement", "data_engineering", "synthesis", "story", "storyteller"]
+EFFORT = {r: os.environ.get(f"CASEOS_EFFORT_{r.upper()}", DEFAULT_EFFORT) for r in ROLES}
 # Soft spend caps per run (API-equivalent USD, reported by the SDK; on the subscription nothing is billed per call).
+# Sized for max effort: they stop a runaway run, not a normal one.
 BUDGET_USD = {
-    "framer": 1.5, "cos": 1.5, "cos_impact": 0.8, "router": 0.3, "command": 0.3, "business_research": 3.0,
-    "deep_research": 3.0, "peer_review": 1.5, "measurement": 2.0, "data_engineering": 2.0, "synthesis": 1.5,
-    "story": 2.5, "storyteller": 25.0,
+    "framer": 4.0, "briefer": 3.0, "cos": 4.0, "cos_impact": 3.0, "router": 1.0, "command": 1.0, "business_research": 8.0,
+    "deep_research": 8.0, "peer_review": 4.0, "measurement": 8.0, "data_engineering": 8.0, "synthesis": 4.0,
+    "story": 6.0, "storyteller": 45.0,
 }
 
 

@@ -36,7 +36,7 @@ export async function mount(root) {
         metric("Evidencia aceptada", hl.evidence_accepted, `${hl.evidence_proposed} findings por revisar · ${hl.tables_accepted} tablas`),
         metric("Story", hl.claims_total ? `${hl.claims_supported}/${hl.claims_total}` : "—", "claims con soporte"),
         metric("Esperan tu juicio", hl.alerts_open + hl.decisions_open, `${hl.alerts_open} alertas · ${hl.decisions_open} decisiones · ${hl.stale} needs_review`)),
-      room.status_note ? h("div.panel.tight.mt", { style: { borderColor: "rgba(143,164,255,.22)" } }, h("div.row", h("span.eyebrow.accent", "Nota del COS"), h("span.small.faint", ago(room.status_note_at))), h("div.prose", { style: { marginTop: "6px" } }, room.status_note)) : null,
+      room.status_note ? h("div.panel.tight.mt", { style: { borderColor: "var(--accent-line)" } }, h("div.row", h("span.eyebrow.accent", "Nota del COS"), h("span.small.faint", ago(room.status_note_at))), h("div.prose", { style: { marginTop: "6px" } }, room.status_note)) : null,
       h("div.split.mt2",
         h("div.stack.lg",
           h("div.panel.flush.nbas", h("div.phead", h("h2.sec", "Next best actions", h("span.count", String(room.next_best_actions.length))), h("span.small.faint", "reglas deterministas + COS; nada avanza solo")),
@@ -83,7 +83,7 @@ function nbaButton(a) {
 
 function alertCard(x) {
   return h("div.alertcard." + (x.kind || ""),
-    h("div.row.between", h("div.row.wrap", idTag(x.id), h("span.eyebrow", { style: { color: "#ff9aa2" } }, { contradiction: "Contradicción", weakening: "Debilita la historia", story_change: "Cambia la historia", framing_change: "Cambia el framing", new_hypothesis: "Nueva hipótesis", research_needed: "Requiere research", story_review: "Revisar claim" }[x.kind] || "Alerta"),
+    h("div.row.between", h("div.row.wrap", idTag(x.id), h("span.eyebrow", { style: { color: "var(--bad-ink)" } }, { contradiction: "Contradicción", weakening: "Debilita la historia", story_change: "Cambia la historia", framing_change: "Cambia el framing", new_hypothesis: "Nueva hipótesis", research_needed: "Requiere research", story_review: "Revisar claim" }[x.kind] || "Alerta"),
       x.severity ? h("span.chip." + (x.severity === "high" ? "bad" : "warn"), x.severity) : null), h("span.small.faint", x.source && x.target ? `${x.source} → ${x.target}` : "")),
     h("div", h("div.small.muted", "Nueva evidencia"), h("div", { style: { marginTop: "3px" } }, x.finding || "")),
     x.target ? h("div", h("div.small.muted", "Afecta a"), h("div.row", { style: { marginTop: "4px" } }, idTag(x.target), h("span.small", x.target_text || ""))) : null,

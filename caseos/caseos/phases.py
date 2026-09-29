@@ -96,11 +96,17 @@ def readiness(store: CaseStore, phase: str) -> dict:
 
     if phase == "briefing":
         brief = store.read_data("brief/brief.yaml", {}) or {}
-        for k, label in (("objective", "objetivo"), ("audience", "audiencia"), ("deliverables", "entregables")):
+        from .briefing import BY_KEY, REQUIRED
+        for k in REQUIRED:
             if not brief.get(k):
-                blockers.append(f"El brief no tiene {label}.")
+                blockers.append(f"Falta aprobar {BY_KEY[k]['label'].lower()} en el brief.")
+        pend = [BY_KEY[k]["label"] for k in (brief.get("pending") or {}) if k in BY_KEY]
+        if pend:
+            warnings.append(f"{len(pend)} propuesta(s) del Briefer sin revisar ({', '.join(pend)}): no entran al brief aprobado.")
         if brief.get("gaps"):
             warnings.append(f"El brief declara {len(brief['gaps'])} vacío(s) de información.")
+        if not meta.get("data_model") and (meta.get("workspace") or {}).get("type") in (None, "none"):
+            warnings.append("El caso no tiene modelo de datos: Analytics no estará disponible.")
     elif phase == "framing":
         fr = store.read_data("framing/current.yaml", {}) or {}
         if not (fr.get("executive_question") or "").strip():

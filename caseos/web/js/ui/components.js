@@ -100,7 +100,7 @@ export function confirmDialog({ eyebrow, title, text, detail, confirmLabel = "Co
       { label: "Cancelar", variant: "ghost", onClick: () => resolve(null) },
       { label: confirmLabel, variant: human ? "human" : "primary", human, onClick: () => {
         const v = input ? input.value.trim() : true;
-        if (field && field.required && !v) { input.focus(); input.style.borderColor = "rgba(255,107,118,.6)"; return false; }
+        if (field && field.required && !v) { input.focus(); input.style.borderColor = "var(--bad)"; return false; }
         resolve(input ? v : true);
       } }] });
   });

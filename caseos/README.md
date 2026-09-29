@@ -12,6 +12,10 @@ CaseOS es reutilizable: **New Case** crea un caso vacío con la misma estructura
 
 ---
 
+## Empezar un caso desde cero
+
+Selector de caso › **Nuevo caso**: solo el nombre (y, si quieres, el modelo de datos). Te lleva a Briefing en blanco.
+
 ## Arrancar
 
 ```bash
@@ -27,8 +31,9 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
 - **Sin llaves.** Los agentes corren con el **Claude Agent SDK sobre tu suscripción de Claude** (la sesión local de
   Claude Code). No hay API key en el repo; `ANTHROPIC_API_KEY` solo si quieres facturación por API a propósito.
   Ver `.env.example`.
-- **Modelo:** `claude-opus-5` para todos los agentes. El costo se controla con *effort* por rol y un tope por corrida
-  (`caseos/config.py`), nunca bajando de modelo. Cada corrida guarda su costo equivalente en `audit/runs/`.
+- **Modelo:** `claude-opus-5-5` con esfuerzo **max** para todos los agentes (pedido de Hugo). Se puede bajar por agente
+  con `CASEOS_EFFORT_<ROL>` (p. ej. `CASEOS_EFFORT_BRIEFER=high`) sin cambiar de modelo. Cada corrida guarda su costo
+  equivalente en `audit/runs/`.
 - **Corridas largas** (research L3, Visual Storyteller): arranca el servidor en tu propia terminal para que un reinicio
   del panel no las interrumpa. Si algo se interrumpe, la solicitud queda guardada y se reintenta con un clic.
 - Solo escucha en `127.0.0.1`.
@@ -36,7 +41,10 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
 ## Cómo se usa (3–5 minutos)
 
 1. **Home** — el estado del caso: fase actual, qué espera tu decisión, qué están haciendo los agentes.
-2. **Briefing** — el brief importado con sus fuentes y los vacíos declarados. *Mark Ready* (solo tú).
+2. **Briefing** — platicas con el **Briefer** como en Framing (ideas sueltas, un reencuadre o el enunciado pegado) y él
+   propone el brief por secciones; tú apruebas, editas o descartas cada una. Nada aprobado se sobrescribe: un cambio
+   llega como revisión. Aquí también eliges el **modelo de datos** del caso. *Mark Ready* pide objetivo, audiencia y
+   entregables aprobados.
 3. **Framing** — escribe como piensas («creo que están metiendo más leads pero no convierten…»). El Framer separa
    hechos, intuiciones, supuestos, hipótesis (con falsificador) y preguntas; conserva **tus palabras junto a la versión
    estructurada**. Modos: *Organize* (ordena), *Advise* (2–3 alternativas), *Challenge* (intenta romperlo). Aprueba el
@@ -44,15 +52,20 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
 4. **Research** — pide una investigación; el Router elige especialista (Business Research, Measurement, Data
    Engineering, Analytics) e intensidad (L1 lookup · L2 · L3 deep research con peer review). Las citas solo cuentan si la
    URL se recuperó en la corrida. Aceptas, rechazas, cuestionas o profundizas cada resultado.
-5. **Analytics** — el Business Exploration Workspace de Finora, reutilizado tal cual (`/ws/finora`). Un claim validado se
+5. **Datos** — el modelo de datos del caso en tres capas reales: **raw** (los CSV tal cual), **staging** (tipado con las
+   reglas de la Fase 1) y **mart** (lo que consulta Analytics). Columnas, muestra real, consola SQL de solo lectura y 7
+   checks de reconciliación que prueban que las capas cuadran al centavo. Cualquier tabla de evidencia se puede
+   **comprobar** re-ejecutando su consulta sobre el modelo.
+6. **Analytics** — el Business Exploration Workspace de Finora, reutilizado tal cual (`/ws/finora`). Un claim validado se
    promueve a finding y viaja al COS como **EvidenceTable** con linaje completo.
-6. **Chief of Staff** — sala de control: alertas de impacto (apoya / debilita / contradice…) con opciones A/B/C, decision
+7. **Chief of Staff** — sala de control: alertas de impacto (apoya / debilita / contradice…) con opciones A/B/C, decision
    log, claims más débiles, siguientes mejores acciones. Pregúntale lo que sea del caso.
-7. **Story** — el COS arma el **Story Package**; el código valida que cada claim tenga evidencia aceptada y que cada cifra
+8. **Story** — el COS arma el **Story Package**; el código valida que cada claim tenga evidencia aceptada y que cada cifra
    exista en una tabla. Lo apruebas tú.
-8. **Slides** — el paquete aprobado pasa al **Executive Visual Storyteller existente** (no se reconstruyó: se enlaza) y
-   regresa un deck HTML.
-9. **Agents** / **Artifacts** — topología de agentes con lo que hace cada uno; archivos del caso, `brain.md`, decisiones,
+9. **Slides** — el paquete aprobado pasa al **Executive Visual Storyteller existente** (no se reconstruyó: se enlaza) y
+   regresa un deck HTML. Puedes darle una **guía de formato** en palabras simples: tipografía de títulos y de texto
+   (cualquier Google Font), colores y notas; se aplica como tema del renderer con el contraste revisado.
+10. **Agents** / **Artifacts** — topología de agentes con lo que hace cada uno; archivos del caso, `brain.md`, decisiones,
    snapshots.
 
 Atajos: **⌘K** busca cualquier ID o texto y ejecuta comandos («pregúntale a Measurement…», «mándale esto a research»,
@@ -88,5 +101,6 @@ CASEOS_LIVE=1 .venv/bin/python -m pytest -q tests/test_live.py   # opcional: un 
   disponible hasta que se escriba su adaptador (interfaz en ARCHITECTURE › Workspaces).
 - El texto literal del enunciado de Alegra no está en el repo: el brief de Finora se reconstruyó desde el brief v0.3 y las
   notas del proyecto, y lo declara como vacío.
-- Un turno del Framer tarda ~1.5 min (Opus 5, effort high); research L2 3–8 min; L3 y el Storyteller, más.
+- Con Opus 5.5 en esfuerzo max, un turno del Briefer o del Framer tarda varios minutos (medido: 6.8 min un turno del
+  Briefer); research, COS y Storyteller, más. Con `high` los turnos eran de 1–2 min.
 - `cases/finora` contiene material del reto: decide si es público o privado antes de subir el repo a GitHub.
