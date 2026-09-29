@@ -1,0 +1,410 @@
+# Finora — seed transcribed from Hugo's own working brief "Alegra · V0.3 completa en lenguaje claro"
+# (~/Documents/Codex/2026-09-28/new-chat/outputs/alegra_brief_de_trabajo.html, declared the case's source of truth on
+# 28-sep-2026). Every item keeps its section of origin (`source`). Texts are transcribed, not rewritten; where a label
+# had to be phrased as a question it says so in `note`. Nothing here is a numeric finding: numbers come from finora-eda.
+source_doc: "brief v0.3 (alegra_brief_de_trabajo.html)"
+
+brief:
+  title: "Business Analytics: del dato a la decisión"
+  client: "Alegra · reto técnico"
+  company: "Finora — SaaS ficticio para PyMEs; montos en COP"
+  objective: "Entender qué explicaciones podríamos defender ante CRO y CFO, qué sigue siendo una posibilidad y qué información permitiría elegir entre ellas."
+  objective_source: "brief v0.3 §01 · Qué estamos tratando de conseguir"
+  audience: [CEO, CRO, CFO]
+  audience_note: "CRO: cómo conseguimos clientes. CFO: qué mueve el ingreso recurrente. CEO: cómo se conectan ambas cosas. Marketing, Sales, Producto y Finanzas pueden aportar contexto; no elegimos un culpable. (brief v0.3 §01)"
+  context: >-
+    Caso 1 · CRO: más volumen arriba del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won, con entradas
+    self-serve, entradas directas a SQL y leads estancados) sin que los clientes nuevos crezcan al mismo ritmo.
+    Caso 2 · CFO: ¿el modelo cliente + mes + monto permite separar el comportamiento del cliente del precio y de los
+    descuentos temporales que se van a introducir? El caso relata más entradas en primeras etapas y menor crecimiento
+    relativo de clientes nuevos; también plantea introducir descuentos temporales. Todavía no fijamos el periodo ni el
+    signo del cambio económico.
+  context_source: "Resumen del enunciado en las notas del proyecto (27-sep-2026) + brief v0.3 §01 · Qué sabemos del escenario"
+  deliverables:
+    - "Video ejecutivo ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción"
+    - "Link a la demo + video ≤ 5 min del proceso con IA"
+    - "Material de soporte"
+    - "Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA"
+  deliverables_source: "Notas del proyecto (27-sep-2026), resumen del enunciado de Alegra"
+  constraints:
+    - "El reto original da cinco días; no sabemos cuánto queda. Esfuerzo relativo, no fechas. (brief v0.3 §01)"
+    - "No vamos a llamar “causa” a algo que sólo muestra una asociación. (brief v0.3 §01)"
+    - "No hay datos de funnel: el Caso 1 se responde como propuesta de medición, no como diagnóstico. (notas del proyecto)"
+    - "Solución fuera de esta etapa: sin dashboards, métricas definitivas, modelo de datos ni deck hasta que se decida. (brief v0.3 §11)"
+  data_available:
+    - "Transactions.csv — cliente · mes · monto (COP)"
+    - "Industry.csv — industria del cliente"
+    - "S&M_spend.csv — gasto mensual por rubro (unidad sin documentar)"
+    - "Workspace de exploración (finora-eda) con el análisis de la Fase 1, 39 hallazgos canónicos verificados en código y respuestas W0–W5"
+  success_criteria:
+    - "Preguntas separadas sin contar lo mismo dos veces; hipótesis con una explicación alternativa; evidencia que ayude a distinguirlas; tareas que sepamos cuándo cerrar. (brief v0.3 §01)"
+  gaps:
+    - "El texto literal del enunciado de Alegra no está en el repositorio: este brief se reconstruyó desde las notas del proyecto (27-sep) y el brief v0.3. Pendiente adjuntar el enunciado original."
+    - "Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa (sin fijar)."
+    - "Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece (sin confirmar)."
+
+executive_question: "¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué sigue siendo solo una posibilidad y qué información permitiría elegir entre ellas?"
+executive_question_note: "Formulada como pregunta desde brief v0.3 §01 · Qué estamos tratando de conseguir."
+
+executive_questions:
+  - key: CRO
+    audience: CRO
+    text: "¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?"
+    source: "brief v0.3 §05"
+  - key: CFO
+    audience: CFO
+    text: "¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?"
+    source: "brief v0.3 §06"
+  - key: CEO
+    audience: CEO
+    text: "¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?"
+    source: "brief v0.3 §01 (Para quién: «CEO: cómo se conectan ambas cosas») y §10"
+    note: "Etiqueta del brief formulada como pregunta."
+
+branches:
+  - {key: C1, parent: CRO, text: "¿Realmente aumentó igual la entrada total?", scope: "Cuántas personas o cuentas únicas entran por todas las vías. No confundimos entradas con personas acumuladas en una etapa.", source: "brief v0.3 §05 · Rama C1"}
+  - {key: C2, parent: CRO, text: "¿Cambió la gente que entra o el tiempo que ha tenido para comprar?", scope: "Cambia la mezcla de perfiles, vías de ingreso y fechas de entrada. No estamos diciendo todavía que un mismo tipo de persona compre peor.", source: "brief v0.3 §05 · Rama C2"}
+  - {key: C3, parent: CRO, text: "¿Personas similares están comprando menos o comprando más tarde?", scope: "Comparamos el comportamiento a igual tiempo desde la entrada. No creamos dos ramas independientes para «nunca comprará» y «comprará después».", source: "brief v0.3 §05 · Rama C3"}
+  - {key: F1, parent: CFO, text: "¿Cuánto aportan los clientes que entran?", scope: "Todo el aporte de esa cuenta queda en este grupo, incluido su descuento inicial. Distinguimos nuevos de quienes regresan.", source: "brief v0.3 §06 · Rama F1"}
+  - {key: F2, parent: CFO, text: "¿Cuánto dejan de aportar los clientes que salen?", scope: "Sólo bajas reales de la relación recurrente. Su suscripción y su descuento previos se tratan dentro del mismo grupo.", source: "brief v0.3 §06 · Rama F2"}
+  - {key: F3, parent: CFO, text: "¿Qué cambió en quienes permanecen?", scope: "La cuenta está activa en ambas fechas; que el pago neto no cambie no demuestra que todo siga igual.", source: "brief v0.3 §06 · Rama F3"}
+
+hypotheses:
+  # ---- CRO (C1–C3)
+  - alias: HC1
+    branch: C1
+    question: "¿New creció más que el total real?"
+    statement: "New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía."
+    alternative: "Sí creció igual el total, y el problema está en quién entra o en lo que ocurre después."
+    evidence_needed: "Todas las entradas únicas de producto y ventas, cuándo llegaron y cómo se identifica a una misma cuenta en ambas fuentes. Antes se aclaran duplicados y la diferencia entre entradas nuevas y cuentas acumuladas."
+    falsifier: "Si el total crece menos, corregimos la magnitud de la premisa. Si crece como esperaba el CRO, dejamos de usar falta de demanda total como explicación de la menor proporción que compra."
+    capacity: "No directamente. Los pagos no muestran todas las entradas y el gasto no nos dice cuántos leads hubo. Capacidad actual: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC1"
+  - alias: HC2a
+    branch: C2
+    question: "¿Ahora pesa más un tipo de entrada que suele comprar menos o tardar más?"
+    statement: "Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo."
+    alternative: "La mezcla sigue parecida, o no alcanza para explicar la diferencia; algo cambió dentro de los grupos."
+    evidence_needed: "Características y vía de ingreso conocidas cuando cada persona entra, más su compra posterior a tiempos comparables. Incluye a quienes no compraron."
+    falsifier: "Si la mezcla nueva con el comportamiento habitual de cada grupo explica la diferencia, esa lectura gana fuerza. Si queda una diferencia dentro de grupos, pasamos a C3."
+    capacity: "No directamente. Industry describe industrias de clientes, pero no necesariamente a todos los leads. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC2a"
+  - alias: HC2b
+    branch: C2
+    question: "¿Estamos comparando personas demasiado recientes?"
+    statement: "Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar."
+    alternative: "Aun dando el mismo tiempo a personas comparables, la compra sigue siendo menor."
+    evidence_needed: "Fecha de ingreso, fecha de observación y cuándo compraron o qué pasó con quienes no lo hicieron."
+    falsifier: "Si al igualar tiempo y perfil desaparece la diferencia, la juventud del grupo es una explicación compatible. Si no desaparece, «sólo necesitan más tiempo» deja de ser suficiente."
+    capacity: "No. Agrupar desde primer pago sirve para ver qué pasa después de pagar; no nos dice cuánto tardaron desde que llegaron. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC2b"
+  - alias: HC3ab
+    branch: C3
+    question: "¿La diferencia temprana se recupera o sigue abierta?"
+    statement: "HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable."
+    alternative: "El comportamiento dentro de grupos no cambió y el total se explica por C1/C2; o todavía no pasó suficiente tiempo para distinguir ambas posibilidades."
+    evidence_needed: "La historia de todas las entradas: quienes compraron, quienes siguen abiertos y quienes no compraron, en periodos de seguimiento que ambos grupos tengan."
+    falsifier: "Si se recupera, pierde fuerza la explicación de una caída persistente en ese periodo. Si no se recupera, el retraso pierde fuerza como explicación suficiente; aun así no demuestra que esas personas nunca comprarán."
+    capacity: "No con pagos solos: faltan fecha de entrada y personas que nunca pagaron. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC3a/HC3b"
+  - alias: HC3q
+    branch: C3
+    question: "¿Bajó la intención o el ajuste al producto?"
+    statement: "Al entrar, las personas muestran menor necesidad, intención o ajuste, medidos con el mismo criterio."
+    alternative: "Podría haber cambiado el tratamiento recibido o una característica de la mezcla que no vemos."
+    evidence_needed: "Señales capturadas antes de atenderlas, reglas de calificación estables y compra posterior."
+    falsifier: "Si esas señales no empeoraron, esta versión de «menor calidad» pierde fuerza. La opinión posterior de Sales no basta."
+    capacity: "Faltan esos datos. Un cambio que no sabemos explicar no prueba menor calidad."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC3q"
+  - alias: HC3s
+    branch: C3
+    question: "¿Estamos tardando más en atender?"
+    statement: "La menor compra coincide con más demora en atender a personas comparables."
+    alternative: "Puede que el equipo atienda primero a quienes ya tenían más probabilidad de comprar; o que otra cosa cambie al mismo tiempo."
+    evidence_needed: "Ingreso, asignación, primer intento y contacto efectivo, carga del equipo y seguimiento posterior."
+    falsifier: "Si los tiempos no empeoraron donde cae la compra, la hipótesis pierde fuerza. Si empeoraron antes del resultado, es compatible, pero no prueba causalidad."
+    capacity: "No está en las tres fuentes."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC3s"
+  - alias: HC3p
+    branch: C3
+    question: "¿La fricción está después de SQL o dentro del producto?"
+    statement: "Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido."
+    alternative: "Ese tramo no cambió; la diferencia viene de antes, de la mezcla o del tiempo disponible."
+    evidence_needed: "Pasos reales, tiempos y pérdidas después de SQL para las rutas que pasan por ahí; hitos pertinentes de producto para self-serve."
+    falsifier: "Si el tramo posterior está estable, esa ubicación pierde fuerza. Si cae, sabemos dónde mirar, no necesariamente por qué ocurre."
+    capacity: "No disponible. No inventar etapas comerciales para personas que no las recorrieron."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §05 · HC3p"
+  - alias: HC3o
+    branch: C3
+    question: "¿Cambió la oferta o una alternativa que el cliente compara?"
+    statement: "Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas."
+    alternative: "El problema se explica mejor por mezcla, atención o recorrido, sin un cambio de oferta relevante."
+    evidence_needed: "Cambios de condiciones con fecha y señales de clientes que expliquen su decisión; corroborar las razones declaradas."
+    falsifier: "Si no hay señales que lo sostengan, no dedicar tiempo a investigar el mercado en general. Si aparecen, precisar una pregunta externa concreta."
+    capacity: "Pendiente y aparcada por defecto. Sólo se activa si aparece evidencia interna que la haga importante."
+    priority: "Aparcada por defecto"
+    origin: [Bulletproof]
+    source: "brief v0.3 §05 · HC3o"
+  # ---- CFO (F1–F3 + HIF)
+  - alias: HF1a
+    branch: F1
+    question: "¿Cambió lo que aportan antes de descuentos?"
+    statement: "Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas."
+    alternative: "El valor antes de descuentos sigue parecido, pero el pago cambia por descuentos o por cómo/cuándo se cobra."
+    evidence_needed: "Confirmación de entrada a la relación recurrente, historia para distinguir nuevo y retorno, y condiciones de suscripción y tarifa al incorporarse."
+    falsifier: "Si el valor antes de descuentos cambia, revisar cantidad, características y tarifa. Si ese valor no cambia pero el pago sí, mirar descuento o diferencia entre cobro y suscripción."
+    capacity: "No para las causas reales. Podemos describir el aporte de primeros o reaparecidos pagadores. Capacidad directa: 0; descripción de pagos: parcial."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF1a"
+  - alias: HF1b
+    branch: F1
+    question: "¿Un descuento inicial cambia ese aporte?"
+    statement: "Hay descuentos documentados al entrar y cambió cuánto reducen el precio."
+    alternative: "No hubo descuentos; cambió suscripción, tarifa o la forma en que observamos el monto."
+    evidence_needed: "Descuentos efectivamente aplicados y condiciones comparables. Primero saber si existían en los periodos históricos."
+    falsifier: "Si se documenta un descuento, puede investigarse su aporte. Si se confirma que no hubo, descartamos esa explicación histórica. No tener el campo no demuestra que no hubo descuentos."
+    capacity: "No con los CSV descritos. Capacidad histórica: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF1b"
+  - alias: HF2a
+    branch: F2
+    question: "¿El cambio se concentra en bajas reales?"
+    statement: "Salieron más clientes o salieron clientes que aportaban más antes de descuentos."
+    alternative: "Siguen activos y lo que vemos es atraso, descuento total, datos faltantes o cambio de ID."
+    evidence_needed: "Confirmación de vigencia y terminación, condiciones anteriores y contexto de facturación/pago si hace falta."
+    falsifier: "Si terminó la relación, se sostiene hablar de salida. Si el cliente sigue activo, hay que retirar esa etiqueta aunque no haya pago observado."
+    capacity: "No para baja real. Se puede describir ausencia de pago, sin llamarla automáticamente churn. Capacidad directa: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF2a"
+  - alias: HF2b
+    branch: F2
+    question: "¿Tenían descuentos antes de salir?"
+    statement: "Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento."
+    alternative: "No tenían descuentos; la diferencia tiene otro origen o es un error de comparación."
+    evidence_needed: "Descuentos vigentes antes de la baja y su relación con la suscripción que terminó."
+    falsifier: "Si se confirma, ese descuento pertenece al cálculo de esa salida. No se cuenta como fin de descuento de un cliente que permanece."
+    capacity: "No hay evidencia de descuentos en las fuentes descritas. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF2b"
+  - alias: HF3a
+    branch: F3
+    question: "¿El cliente cambió lo que contrata o usa?"
+    statement: "Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables."
+    alternative: "Lo contratado sigue igual y cambió tarifa, descuento o cobro."
+    evidence_needed: "Características y uso de la suscripción, tarifas y fechas de cambio."
+    falsifier: "Cambio de uso o plan con tarifa comparable apoya esta explicación. Configuración estable la debilita."
+    capacity: "El monto solo no distingue estas causas. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF3a"
+  - alias: HF3b
+    branch: F3
+    question: "¿Cambió la tarifa para una suscripción comparable?"
+    statement: "La empresa cambió la tarifa aplicable a una suscripción comparable."
+    alternative: "La tarifa es la misma y cambió lo contratado, el descuento o el cobro."
+    evidence_needed: "Tarifas efectivas en ambas fechas y características de la suscripción."
+    falsifier: "Tarifa distinta con características comparables apoya precio. Tarifa estable lo debilita."
+    capacity: "No está en las fuentes descritas. Capacidad: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF3b"
+  - alias: HF3c
+    branch: F3
+    question: "¿Empezó, cambió o terminó un descuento?"
+    statement: "El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción."
+    alternative: "El descuento no cambió y la explicación está en suscripción, tarifa o cobro."
+    evidence_needed: "Descuentos reales, fechas de aplicación y valor antes de descuentos. Confirmar si un supuesto vencimiento se extendió."
+    falsifier: "Descuento distinto con suscripción estable apunta a ese componente comercial. Sin datos de descuento, no elegir una explicación por la forma del pago."
+    capacity: "No históricamente con monto solo. Sí podemos estudiar si el modelo distinguiría esos escenarios. Capacidad empírica: 0."
+    priority: "3 × 0 = 0 · Importante, faltan datos"
+    origin: [Tú, Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · HF3c"
+  - alias: HIF
+    branch: CFO
+    question: "¿Dos historias distintas pueden verse iguales en cliente + mes + monto?"
+    statement: "Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado."
+    alternative: "Campos adicionales existentes resuelven el caso y la observación sí distingue los escenarios."
+    evidence_needed: "Enunciado y descripción confirmada del modelo actual; historias económicas alternativas compatibles con la misma observación."
+    falsifier: "Si hay al menos un contraejemplo relevante, la observación no identifica esa distinción. Si existen otros campos que lo resuelven, se corrige el planteamiento. Nada de esto prueba descuentos históricos."
+    capacity: "Prueba lógica respondible con el enunciado y el modelo de datos descrito. Capacidad: 3."
+    priority: "3 × 3 = 9 · P1 · primero"
+    origin: [Enunciado, Partner, Bulletproof]
+    source: "brief v0.3 §06 · pregunta adicional HIF y §08"
+  # ---- Lo que sí podemos revisar (HG, HO1–HO5)
+  - alias: HG
+    branch: OBS
+    question: "¿La información permite una comparación confiable?"
+    statement: "Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes."
+    alternative: "Puede haber problemas de fechas, escala, duplicados, historia, valores cero/negativos o cruces de tablas."
+    evidence_needed: "Diccionario y controles ya hechos por el agente, más confirmaciones puntuales de lo que falte."
+    falsifier: "Si hay contradicciones, ajustar los nombres y el alcance antes de interpretar. Si no sabemos que es MRR, llamarlo monto observado."
+    capacity: "Podemos revisar qué está verificado y qué falta; no presuponemos que todo está correcto."
+    priority: "3 × 3* = 9* · P0 · antes de interpretar"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HG"
+  - alias: HO1
+    branch: OBS
+    question: "¿Cambió la cantidad de primeros pagadores?"
+    statement: "Se observa un cambio entre periodos comparables."
+    alternative: "El resultado está estable o la diferencia viene de cobertura/identidad."
+    evidence_needed: "Periodos completos, historia e IDs consistentes, y serie de primeras apariciones."
+    falsifier: "Cambio que se sostiene apoya describir un cambio de pagadores. Si desaparece al corregir datos, se retira esa lectura."
+    capacity: "Parcial: habla de pagadores, no de leads ni necesariamente del hito de venta del CRO."
+    priority: "3 × 2 = 6 · P1 · primero"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HO1"
+  - alias: HO2
+    branch: OBS
+    question: "¿El cambio está concentrado en algunas industrias o componentes?"
+    statement: "Una parte de los grupos explica buena parte del cambio observado."
+    alternative: "El cambio está repartido o parece concentrado por faltantes, pocas observaciones o errores de cruce."
+    evidence_needed: "Contribuciones al cambio, tamaños de grupo y cobertura de industria, conservando sin industria."
+    falsifier: "Si hay concentración respaldada, enfocar ahí las siguientes preguntas. Si no, no fabricar grupos para forzar una historia."
+    capacity: "Parcial. Se definirá qué cambio importa al ver la escala real, sin imponer hoy un umbral arbitrario."
+    priority: "2 × 2 = 4 · P2 · si cambia el foco"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HO2"
+  - alias: HO3
+    branch: OBS
+    question: "¿El monto cambió por quienes aparecen, desaparecen, regresan o siguen pagando?"
+    statement: "El cambio se concentra en uno o varios de esos componentes observados."
+    alternative: "Los componentes se compensan o no hay una concentración clara; también podría haber un problema de datos."
+    evidence_needed: "Separación de grupos observados que sume exactamente al cambio total, mostrando aumentos y caídas."
+    falsifier: "Si no suma, corregir antes de interpretar. Si se compensan, no decir que no pasó nada porque el neto sea pequeño."
+    capacity: "Parcial: no selecciona suscripción, tarifa, descuento o baja contractual como causa."
+    priority: "3 × 2 = 6 · P1 · primero"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HO3"
+  - alias: HO4
+    branch: OBS
+    question: "¿Los nuevos pagadores aportan distinto después de su primera compra?"
+    statement: "Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores."
+    alternative: "Parecen distintos porque unos llevan menos tiempo observados o porque cambió la cobertura."
+    evidence_needed: "Grupos desde primer pago con el mismo tiempo de seguimiento y base suficiente."
+    falsifier: "Si la diferencia persiste en una comparación justa, puede matizar la lectura económica. Si no hay seguimiento comparable, no concluir deterioro."
+    capacity: "Parcial. Sólo hacerlo si puede cambiar la interpretación de HO1–HO3; no prueba calidad de todos los leads."
+    priority: "2 × 2 = 4 · P2 · si cambia la lectura"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HO4"
+  - alias: HO5
+    branch: OBS
+    question: "¿El gasto y los resultados pagados se están moviendo distinto?"
+    statement: "Gasto agregado y resultados pagados evolucionan de forma diferente."
+    alternative: "La diferencia viene de cobertura o clasificación, o ambas series se mueven parecido."
+    evidence_needed: "Series comparables, conceptos de gasto claros y moneda/escala consistente."
+    falsifier: "Si no añade una conclusión que cambie la historia, dejarlo fuera. Si divergen, sólo describirlo, sin atribuir el resultado al gasto."
+    capacity: "Parcial e indirecto. No prueba retorno de inversión ni costo de adquisición por canal."
+    priority: "1 × 2 = 2 · P3 · dejar pendiente por defecto"
+    origin: [Tú, Partner, Bulletproof]
+    source: "brief v0.3 §07 · HO5"
+
+# Hugo's own points (brief v0.3 §02 · "Dónde quedó lo tuyo"). The brief says these are paraphrases, not quotes.
+hugo_points:
+  - {alias: U01, kind: USER_INTUITION, title: "Dos problemas conectados", hugo: "Separaste más leads sin más clientes y cambio del MRR.", added: "Partner: conservar dos frentes y unirlos por los nuevos clientes que empiezan a aportar ingreso."}
+  - {alias: U02, kind: QUESTION, title: "¿Qué cambió y desde cuándo?", hugo: "Preguntaste por dirección, momento y comparación; incluso si ventas podía estar creciendo más lento.", added: "Partner/Bulletproof: no afirmar caída cuando podría ser desaceleración o una comparación de periodos distintos."}
+  - {alias: U03, kind: PROPOSAL, title: "Separar lo comercial del revenue", hugo: "Propusiste distinguir atribución comercial e ingreso generado.", added: "Partner: separar origen del cliente de cambios de suscripción, tarifa y descuento; «atribución» estaba nombrando dos preguntas."}
+  - {alias: U04, kind: USER_INTUITION, title: "Entraron muchos leads no calificados", hugo: "Tu lectura fue que creció una máquina de leads y posiblemente bajó la calidad.", added: "Partner: dejarlo como hipótesis; New no prueba calidad ni inversión causal. Bulletproof: probar antes si cambió la mezcla o el tiempo observado."}
+  - {alias: U05, kind: OBSERVATION, title: "Primera aparición como cliente nuevo", hugo: "Señalaste que podemos identificar cuándo aparece un cliente por primera vez en Transactions.", added: "Partner: llamarlo primer pagador observado hasta confirmar historia e identidad. Bulletproof: convertirlo en una tarea prioritaria con ese alcance."}
+  - {alias: U06, kind: QUESTION, title: "Demanda, calidad, atención y post-SQL", hugo: "Retomaste las explicaciones del caso y preguntaste cómo distinguirlas.", added: "Partner/Bulletproof: especificar qué veríamos si cada una fuera cierta y qué la debilitaría. No tratarlas como causas ya probadas."}
+  - {alias: U07, kind: QUESTION, title: "¿La data actual da alguna pista?", hugo: "Preguntaste qué podíamos inferir con pagos, industria y gasto.", added: "Partner: localizar cambios pagados sin inventar el recorrido. Bulletproof: separar preguntas respondibles y preguntas importantes sin datos."}
+  - {alias: U08, kind: OBSERVATION, title: "Self-serve, SQL directo y semanas estancado", hugo: "Detectaste que no todos recorren el proceso igual y que el tiempo podía importar.", added: "Partner: no son tres canales: forma de comprar, etapa de entrada y tiempo. Bulletproof: comparar a igual tiempo desde entrada."}
+  - {alias: U09, kind: PROPOSAL, title: "Primero ordenar canales, después medir", hugo: "Querías poner nombres y separar tipos de adquisición antes de medir.", added: "Partner: acordar unidad y recorrido no exige resolver toda la atribución multicanal. Bulletproof: no usar una ruta conocida sólo después como si fuera un atributo inicial."}
+  - {alias: U10, kind: PROPOSAL, title: "Agrupar clientes por pagos, churn y gasto", hugo: "Propusiste investigar grupos y ver si correspondían a self-serve, SQL u otros recorridos.", added: "Partner: los patrones de pago no identifican esos recorridos. Bulletproof: aparcar esa inferencia; comenzar con industria y grupos por primera compra si cambia la respuesta."}
+  - {alias: U11, kind: PROPOSAL, title: "Trato analítico distinto por segmento", hugo: "Planteaste que las métricas dependerían del segmento y canal.", added: "Partner: conservar definiciones comunes y comparar grupos equivalentes. El diseño final de métricas sigue pendiente."}
+  - {alias: U12, kind: QUESTION, title: "¿Validar implica experimentos?", hugo: "Preguntaste por experimentación e hipótesis nula.", added: "Partner: primero evidencia que diferencie explicaciones. Bulletproof: añadir la explicación rival y el resultado que nos haría cambiar de opinión."}
+  - {alias: U13, kind: PROPOSAL, title: "La herramienta ya construida", hugo: "Identificaste tu herramienta como posible solución del caso.", added: "Partner: su valor depende de la pregunta y decisión. Bulletproof: dejarla fuera del árbol y de esta etapa de trabajo."}
+  - {alias: U14, kind: PROPOSAL, title: "Antes, definiciones y fuentes claras", hugo: "Dijiste que hay que cerrar definiciones, información y procesos.", added: "Partner: empezar con lo indispensable. Bulletproof: W0 recupera controles existentes antes de repetir análisis."}
+  - {alias: U15, kind: OBSERVATION, title: "Tu Parte 3", hugo: "El bloque que titulaste CFO repetía el contenido del CRO.", added: "La parte CFO añadida no se presenta como una reflexión específica tuya: parte de tus dudas generales y del enunciado."}
+  - {alias: U16, kind: PROPOSAL, title: "Tus pedidos posteriores", hugo: "Pediste MECE, separar diagnóstico de plan/solución y priorizar impacto × capacidad.", added: "El criterio es tuyo. La selección de ramas, la escala y las puntuaciones son propuestas; el ajuste final del árbol y del plan se hizo con Bulletproof."}
+
+# brief v0.3 §03 · "Cosas que todavía tenemos que aclarar antes de interpretar"
+unknowns:
+  - "Qué contamos como una persona o cuenta que entra. Un contacto, usuario, oportunidad y cliente no son necesariamente la misma unidad."
+  - "Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa."
+  - "Si primera transacción realmente significa cliente nuevo y si la historia y los IDs lo permiten."
+  - "Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece."
+  - "Si los meses están completos y la escala de Transactions ya fue multiplicada por 10.000 para llegar a COP."
+  - "Si Industry describe la industria actual o la de entonces, y qué clientes no tienen clasificación."
+  - "Si un resultado neto estable esconde aumentos y caídas que se compensan."
+
+# brief v0.3 §03 · stress test (qué podía confundirnos → cómo queda)
+stress_test:
+  - {n: 1, point: "No sabemos quién comprará algún día", risk: "Separar «nunca compra» de «compra más tarde» exigía observar un futuro que todavía no tenemos.", resolution: "Juntar ambas cosas en la evolución de compra a lo largo del tiempo; retraso y pérdida siguen como explicaciones posibles."}
+  - {n: 2, point: "Ordenar ramas no separa automáticamente las causas", risk: "Atención, demanda, precio y producto pueden afectarse entre sí.", resolution: "No sumar dos causas como si fueran independientes sólo porque tienen nombres distintos."}
+  - {n: 3, point: "«Peor calidad» puede ser una mezcla que no vemos", risk: "Dentro de un grupo amplio puede haber personas distintas que no identificamos.", resolution: "Comparar características conocidas al entrar y dejar la parte que no podemos explicar abierta; no culpar por descarte."}
+  - {n: 4, point: "El recorrido final no es un dato inicial", risk: "Que alguien termine hablando con ventas puede depender de lo que pasó durante el proceso.", resolution: "Separar cómo entró de lo que ocurrió después."}
+  - {n: 5, point: "Ser reciente no es lo mismo que tardar más", risk: "Muchas entradas nuevas pueden parecer lentas aunque el proceso siga igual.", resolution: "Comparar personas con el mismo tiempo desde que entraron."}
+  - {n: 6, point: "Más volumen no explica solo una peor proporción", risk: "La cantidad total aclara cuánto creció la demanda, pero no por qué menos de ella termina comprando.", resolution: "Usar C1 para verificar la escala de la entrada; C2 y C3 para investigar cómo se traduce en clientes."}
+  - {n: 7, point: "Entradas y ventas del mismo mes no necesariamente corresponden", risk: "Quien compra hoy pudo haber entrado semanas antes.", resolution: "No dividir sin más compradores del mes entre leads del mes. Seguir grupos desde su entrada."}
+  - {n: 8, point: "Entrar/salir/permanecer no explica el porqué del monto", risk: "Esos grupos separan clientes, pero no distinguen suscripción de tarifa o descuento.", resolution: "Dentro de cada grupo, preguntar por valor antes de descuento y descuento aplicado."}
+  - {n: 9, point: "No pagar no prueba haber cancelado", risk: "Puede haber atraso, descuento total o un dato faltante.", resolution: "Separar relación activa de pago observado. Cuando sólo vemos pagos, decirlo así."}
+  - {n: 10, point: "No asumir descuentos históricos", risk: "El caso habla de introducirlos; no confirma que expliquen cambios pasados.", resolution: "Separar lo que ocurrió en el histórico de si el modelo permitiría entender descuentos futuros."}
+  - {n: 11, point: "Un neto estable puede esconder cambios", risk: "Altas y bajas, o crecimiento y descuentos, pueden compensarse.", resolution: "Mirar las partes cuando existan."}
+  - {n: 12, point: "«Necesitamos CRM» es demasiado general", risk: "No dice qué dato distinguiría calidad de atención.", resolution: "Precisar qué comparación haríamos, qué esperaríamos ver y qué explicación alternativa seguiría abierta."}
+  - {n: 13, point: "Importancia no significa que podamos calcularlo", risk: "Las preguntas centrales del funnel requieren personas y eventos que no están en Transactions.", resolution: "Separar trabajo posible con la data actual de preguntas importantes que necesitan más evidencia."}
+  - {n: 14, point: "Descuento no equivale a dinero recuperable", risk: "Sin el descuento quizá el cliente no habría comprado o habría cancelado.", resolution: "Distinguir cuánto se redujo el precio de cuánto se habría ganado sin ofrecer esa reducción."}
+
+# brief v0.3 §04 · formas de ordenar el caso
+candidate_frames:
+  - {name: "CRO por cuánto entra, quién entra y cómo compra con el tiempo", description: "Incluye rutas distintas sin asumir que sabemos quién comprará en el futuro. C1, C2 y C3.", when_it_wins: "Es el corte elegido.", chosen: true}
+  - {name: "CFO por clientes que entran / salen / permanecen", description: "Evita contar la misma cuenta en dos grupos entre las mismas fechas; dentro de cada grupo distinguimos suscripción y descuento.", when_it_wins: "Es el corte elegido.", chosen: true}
+  - {name: "CRO por etapas comerciales", description: "Dónde se detiene el avance cuando sí hay historial de etapas.", when_it_wins: "No sirve igual para self-serve ni entradas directas; las etapas quedan como lugar donde investigar dentro de C3.", chosen: false}
+  - {name: "CFO por comportamiento / precio / descuentos", description: "Se parece a la pregunta del ejecutivo.", when_it_wins: "No separa causas limpiamente: un precio o descuento puede cambiar el comportamiento. Se investigan dentro de los grupos.", chosen: false}
+
+perspectives:
+  - {who: CEO, question: "¿Y si estamos comparando leads recientes con compras de personas que llegaron antes?", changes: "Antes de afirmar que algo empeoró, revisar si la comparación tiene sentido."}
+  - {who: Cliente, question: "¿Y si no soy un lead malo, sino que el producto, precio o experiencia no me convence?", changes: "No aceptar como hecho la explicación de Sales."}
+  - {who: Competidor, question: "¿Y si apareció una alternativa mejor, aunque nuestra atención no haya cambiado?", changes: "Dejar esa posibilidad abierta; investigar afuera sólo si aparece una señal que lo justifique."}
+  - {who: CFO, question: "¿Y si cambió cuándo cobramos o cómo registramos, y no la suscripción?", changes: "Aclarar el significado del monto antes de explicar su cambio."}
+  - {who: "Lectura del enunciado", question: "¿Y si no había descuentos y el reto pide prepararnos para cuando existan?", changes: "Dar espacio a la prueba de si el modelo distingue escenarios, sin atribuir descuentos al pasado."}
+
+# brief v0.3 §10 · la explicación provisional que estamos conservando
+initial_storyline:
+  - "Qué sabemos: el caso relata más volumen comercial sin aumento proporcional de clientes nuevos, y plantea distinguir cambios de ingreso al introducir descuentos."
+  - "Qué nos impide cerrar la explicación: las fuentes muestran pagos, industria y gasto, pero no toda la historia de quienes entraron ni los componentes del valor recurrente."
+  - "Cómo proponemos avanzar: usar los pagos para describir lo que sí vemos, revisar con los ejemplos qué distingue el modelo y dejar claras las preguntas que requieren más evidencia."
+  - "Qué tan seguros estamos: la separación de preguntas es defendible bajo las definiciones que explicamos; todavía tenemos poca evidencia para elegir una causa real del desempeño."
+  - "Qué cambiaría el plan: descubrir eventos completos de entradas y compras, o información separada de suscripciones, tarifas y descuentos."
+
+decisions_needed:
+  - "Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente)."
+  - "Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa."
+
+parked:
+  - "Inferir canales mediante grupos de pagos; benchmarks generales; atribución multicanal; estimar LTV o CAC causal; modelar quién comprará «algún día»; adivinar descuentos históricos; diseñar o mostrar funciones de la herramienta. (brief v0.3 §08 · Lo que dejamos fuera por ahora)"
+
+# brief v0.3 §11 · decisiones de estructura y su origen
+decisions:
+  - {title: "CRO pasa de cuatro a tres ramas", origin: "Aporte aplicado con Bulletproof.", choice: "Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente podemos separar con el histórico.", kind: framework}
+  - {title: "CFO conserva tres grupos", origin: "Propuesta del asistente en la revisión MECE; confirmada y afinada con Bulletproof.", choice: "Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.", kind: framework}
+  - {title: "Calidad, atención, post-SQL y oferta son explicaciones para contrastar", origin: "Las tres primeras vienen del caso y de las notas de Hugo; la alternativa de oferta se añadió en Bulletproof.", choice: "Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.", kind: framing}
+  - {title: "Preguntas de pagos separadas de causas", origin: "Pregunta de Hugo sobre qué permite la data, afinada con Partner y Bulletproof.", choice: "HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin datos.", kind: framing}
+  - {title: "Prioridad por importancia × capacidad", origin: "Criterio solicitado por Hugo; escala y ranking propuestos con Bulletproof.", choice: "Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.", kind: scope}
+  - {title: "Plan completo W0–W9", origin: "Hugo lo pidió en la iteración de Bulletproof; tareas concretas propuestas por el asistente.", choice: "Planeado, no ejecutado ni enviado al agente.", kind: scope, superseded_note: "W0–W5 se ejecutaron después en el workspace (28-sep-2026)."}
+  - {title: "Solución fuera de esta etapa", origin: "Hugo pidió mantenerla fuera.", choice: "Sin dashboards, métricas definitivas, modelo de datos ni deck.", kind: scope}
+  - {title: "Versiones del brief conservadas", origin: "Memoria de trabajo del asistente.", choice: "v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.", kind: other}
+
+# Decisions recorded in the project notes (Claude's session memory, not a document by Hugo): imported as PROPOSED
+memory_decisions:
+  - {title: "El brief v0.3 es la fuente de verdad del caso", date: "2026-09-28", note: "Registrada en las notas del proyecto."}
+  - {title: "Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta", date: "2026-09-27", note: "Registrada en las notas del proyecto."}
+  - {title: "La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA", date: "2026-09-27", note: "Registrada en las notas del proyecto (el sistema agéntico era «un machete para una rebanada de jamón»)."}
+  - {title: "Sin deck ni narrativa final todavía", date: "2026-09-28", note: "Registrada en las notas del proyecto; CaseOS respeta este gate: el Story Package solo se genera cuando Hugo lo pide."}

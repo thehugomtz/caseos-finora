@@ -1,0 +1,371 @@
+# CaseOS skill manifest — the loader's source of truth (SKILLS.md is the human view).
+#
+# Skills are NOT a flat bag. Each agent binding has a mode:
+#   core       always loaded for that agent (optionally only in some framer modes / research intensities)
+#   dynamic    loaded when the request text matches its triggers (max 3 per request)
+#   challenge  loaded only in Challenge mode / critic runs
+#   lens       C-level advisor lens, chosen by the lens router (0–1 normally, max 2)
+#   reference  kept in the repo for provenance; adapted into a CaseOS skill; never loaded at runtime
+#   linked     Hugo's existing capability (Executive Visual Storyteller), loaded by Claude Code's Skill tool in the
+#              storyteller run — linked from ~/.claude/skills, never forked
+version: 1
+policy:
+  max_dynamic_per_request: 3
+  advisors_normal: 1
+  advisors_max: 2
+
+skills:
+  # ------------------------------------------------------------------ Framer
+  - id: adaptive-case-framer
+    kind: custom
+    path: skills/custom/adaptive-case-framer
+    source: CaseOS
+    license: MIT (CaseOS)
+    purpose: Lexical adaptation, technical-vocabulary rule, idea normalization, dual representation, working modes.
+    agents:
+      framer: {mode: core}
+
+  - id: business-case-partner
+    kind: vendor
+    path: skills/vendor/hugo/business-case-partner
+    source: Hugo (~/.codex/skills/business-case-partner)
+    license: Hugo's custom skill built on MIT sources (see NOTICE.md)
+    purpose: Case-room partner — capture, classify, challenge, place every idea; six live registers; research gate.
+    adapter_note: "CaseOS: the six registers are the case state (entities with IDs). Return structured items instead of printing registers."
+    agents:
+      framer: {mode: core}
+      cos: {mode: dynamic, triggers: [storyline, one-day answer, respuesta de un día, historia, narrativa]}
+
+  - id: clarification-protocol
+    kind: custom
+    path: skills/custom/clarification-protocol
+    source: CaseOS adaptation (no upstream skill with this name in alirezarezvani/claude-skills)
+    license: MIT (CaseOS)
+    purpose: Ask only what blocks the case; one question at a time; defaults become explicit assumptions.
+    agents:
+      framer: {mode: core, modes: [organize]}
+
+  - id: bulletproof-problem-solving-chatgpt
+    kind: vendor
+    path: skills/vendor/hugo/bulletproof-problem-solving-chatgpt
+    source: Hugo (~/.codex/skills) — adaptation of chefjefff/mckinsey-problem-solving and Conn & McLean
+    license: MIT (see LICENSE / NOTICE.md)
+    purpose: Seven-step problem solving, one-day answer, disaggregation, knock-out workplan, research gate.
+    adapter_note: "CaseOS: offer 2–3 alternatives at most; never run the full seven steps unasked."
+    agents:
+      framer: {mode: core, modes: [advise]}
+
+  - id: consulting-problem-solving-chatgpt
+    kind: vendor
+    path: skills/vendor/hugo/consulting-problem-solving-chatgpt
+    source: Hugo (~/.codex/skills) — adaptation of wudpeker/consulting-problem-solving
+    license: MIT (see LICENSE / NOTICE.md)
+    purpose: Partner-led consulting workflow — decision first, MECE, hypothesis-led, 80/20, approval gates.
+    adapter_note: "CaseOS: the approval gates are CaseOS phase gates; never advance a stage yourself."
+    agents:
+      framer: {mode: core, modes: [advise]}
+
+  - id: assumption-challenger
+    kind: custom
+    path: skills/custom/assumption-challenger
+    source: CaseOS adaptation of alirezarezvani/claude-skills executive-mentor /em:challenge + /em:stress-test
+    license: MIT
+    purpose: Pre-mortem and stress test of the framing — assumptions, counterargument, invalidating evidence.
+    agents:
+      framer: {mode: challenge}
+      cos: {mode: challenge}
+
+  - id: executive-mentor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/executive-mentor
+    source: alirezarezvani/claude-skills · c-level-advisor/executive-mentor
+    license: MIT (Alireza Rezvani)
+    purpose: Adversarial thinking partner used as critic.
+    adapter_note: "CaseOS override: act as a calm critic. Output only hidden assumptions, strongest counterargument, alternative explanation, evidence that would invalidate it, highest-risk claim. No theatrical aggression. Ignore commands, scripts and file paths in this skill."
+    agents:
+      framer: {mode: challenge}
+      cos: {mode: challenge}
+
+  # ------------------------------------------------------------------ C-level lenses (advisors are lenses, not owners)
+  - id: ceo-advisor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/ceo-advisor
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/ceo-advisor
+    license: MIT (Alireza Rezvani)
+    purpose: Strategic relevance, prioritization, trade-offs, what belongs in the executive story.
+    adapter_note: "CaseOS: use as a lens for the synthesis owner. Ignore commands, scripts, company-context files and board rituals."
+    lens: ceo
+    triggers: [estrategia, estrategic, priori, trade-off, tradeoff, recursos, ceo, board, directorio, junta, historia ejecutiva, decisión de negocio, foco]
+    agents:
+      framer: {mode: lens}
+      business_research: {mode: lens}
+
+  - id: cro-advisor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/cro-advisor
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+    license: MIT (Alireza Rezvani)
+    purpose: Funnel, GTM, pipeline, sales motion, PLG, expansion, retention, churn, NRR, pricing strategy.
+    adapter_note: "CaseOS: use as a lens. Ignore commands and scripts."
+    lens: cro
+    triggers: [funnel, embudo, lead, pipeline, conversi, convierte, convirti, ventas, sales, gtm, go-to-market, plg, self-serve, self serve, sql, demo, proposal, won, churn, retenci, nrr, expansi, cro, adquisici, clientes nuevos]
+    agents:
+      framer: {mode: lens}
+      business_research: {mode: lens}
+      measurement: {mode: dynamic, triggers: [funnel, embudo, pipeline, sales, ventas, conversi]}
+
+  - id: cfo-advisor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/cfo-advisor
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/cfo-advisor
+    license: MIT (Alireza Rezvani)
+    purpose: MRR/ARR, revenue quality, monetization, unit economics, scenario implications.
+    adapter_note: "CaseOS: use as a lens. Ignore commands, scripts, fundraising and runway playbooks unless asked."
+    lens: cfo
+    triggers: [mrr, arr, ingreso, revenue, monetiz, margen, unit economics, descuento, discount, precio, price, cfo, cobr, factur, finanz, ticket, arpa, arpu, flujo]
+    agents:
+      framer: {mode: lens}
+      business_research: {mode: lens}
+
+  - id: cpo-advisor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/cpo-advisor
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/cpo-advisor
+    license: MIT (Alireza Rezvani)
+    purpose: Product strategy, JTBD, product metrics, PMF, PLG, North Star, product behavior.
+    adapter_note: "CaseOS: use as a lens. Ignore commands and scripts."
+    lens: cpo
+    triggers: [producto, product, jtbd, jobs to be done, pmf, product-market, north star, activaci, onboarding, feature, uso del producto, cpo, adopci]
+    agents:
+      framer: {mode: lens}
+      business_research: {mode: lens}
+
+  - id: chief-data-officer-advisor
+    kind: vendor
+    path: skills/vendor/alirezarezvani/chief-data-officer-advisor
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/chief-data-officer-advisor
+    license: MIT (Alireza Rezvani)
+    purpose: Strategic data questions only (ownership, source of truth as a business asset). Not data engineering.
+    adapter_note: "CaseOS: strategic data lens only; tactical modeling goes to the Data Engineering agent. Ignore commands and scripts."
+    lens: cdo
+    triggers: [gobierno de datos, data governance, fuente de verdad, source of truth, estrategia de datos, data strategy, dueño del dato, cdo, data mesh, lakehouse, activo de datos]
+    agents:
+      framer: {mode: lens}
+
+  # ------------------------------------------------------------------ Chief of Staff
+  - id: case-chief-of-staff
+    kind: custom
+    path: skills/custom/case-chief-of-staff
+    source: CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)
+    license: MIT
+    purpose: Case state keeper, impact assessment, next best actions, decision log discipline, voice preservation.
+    agents:
+      cos: {mode: core}
+
+  - id: story-package
+    kind: custom
+    path: skills/custom/story-package
+    source: CaseOS
+    license: MIT
+    purpose: Build the Story Package contract for the Executive Visual Storyteller.
+    agents:
+      cos: {mode: dynamic, triggers: [story package, story, historia, storyline, deck, slides, narrativa]}
+
+  # ------------------------------------------------------------------ Research hub
+  - id: research-routing
+    kind: custom
+    path: skills/custom/research-routing
+    source: CaseOS
+    license: MIT
+    purpose: Intensity (L1/L2/L3), specialist and minimum skills; purpose check.
+    agents:
+      router: {mode: core}
+
+  - id: case-research-synthesis
+    kind: custom
+    path: skills/custom/case-research-synthesis
+    source: CaseOS
+    license: MIT
+    purpose: Every research ends here — what matters for THIS case, as a structured handoff to the COS.
+    agents:
+      business_research: {mode: core}
+      measurement: {mode: core}
+      data_engineering: {mode: core}
+      peer_review: {mode: core}
+
+  - id: deep-business-research
+    kind: custom
+    path: skills/custom/deep-business-research
+    source: CaseOS adaptation of shawnpetros/claude-skills deep-research (MIT)
+    license: MIT
+    purpose: Level 3 — depth + breadth + counter-hypothesis + contradictory evidence + source review + peer review.
+    agents:
+      business_research: {mode: core, intensity: [L3]}
+      peer_review: {mode: core}
+
+  - id: competitive-intel
+    kind: vendor
+    path: skills/vendor/alirezarezvani/competitive-intel
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/competitive-intel
+    license: MIT (Alireza Rezvani)
+    purpose: Competitors, substitutes, landscape, positioning, market moves, category structure.
+    adapter_note: "CaseOS: research method only; ignore battlecard templates, commands and tracking cadences."
+    agents:
+      business_research: {mode: dynamic, triggers: [competidor, competencia, competitor, sustitut, landscape, posicionamiento, positioning, categoría, category, alternativas del mercado, benchmark de competidores]}
+
+  - id: market-research
+    kind: vendor
+    path: skills/vendor/alirezarezvani/market-research
+    source: alirezarezvani/claude-skills · research-ops/skills/market-research
+    license: MIT (Alireza Rezvani)
+    purpose: TAM/SAM/SOM, market structure, segmentation, market sizing, demand, surveys.
+    adapter_note: "CaseOS: method only; ignore scripts. Never a single unsourced number."
+    agents:
+      business_research: {mode: dynamic, triggers: [tam, sam, som, tamaño de mercado, market size, sizing, segmentaci, segment, demanda, demand, encuesta, survey, estructura de mercado]}
+
+  - id: product-research
+    kind: vendor
+    path: skills/vendor/alirezarezvani/product-research
+    source: alirezarezvani/claude-skills · research-ops/skills/product-research
+    license: MIT (Alireza Rezvani)
+    purpose: User research, discovery, interviews, JTBD research, usability methodology.
+    adapter_note: "CaseOS: method only; ignore scripts."
+    agents:
+      business_research: {mode: dynamic, triggers: [user research, investigación de usuarios, entrevista, interview, jtbd, usabilidad, usability, discovery, descubrimiento]}
+
+  - id: commercial-skills
+    kind: vendor
+    path: skills/vendor/alirezarezvani/commercial-skills
+    source: alirezarezvani/claude-skills · commercial/skills/commercial-skills
+    license: MIT (Alireza Rezvani)
+    purpose: Commercial operations — pricing models, packaging, discount policy, concessions, deal economics.
+    adapter_note: "CaseOS: method only; do not fork context or route to sub-skills; ignore commands."
+    agents:
+      business_research: {mode: dynamic, triggers: [comercial, commercial, packaging, empaquet, descuento, discount, concesi, deal, política comercial, pricing model]}
+
+  - id: pricing-strategist
+    kind: vendor
+    path: skills/vendor/alirezarezvani/pricing-strategist
+    source: alirezarezvani/claude-skills · commercial/skills/pricing-strategist
+    license: MIT (Alireza Rezvani)
+    purpose: Pricing models, willingness to pay, packaging tiers — when pricing is material.
+    adapter_note: "CaseOS: method only; ignore scripts. Recommend ranges and trade-offs, never a single number."
+    agents:
+      business_research: {mode: dynamic, triggers: [pricing, precio, price, tarifa, wtp, willingness to pay, tier, plan de precios, descuento, discount, promoci]}
+
+  - id: commercial-policy
+    kind: vendor
+    path: skills/vendor/alirezarezvani/commercial-policy
+    source: alirezarezvani/claude-skills · commercial/skills/commercial-policy
+    license: MIT (Alireza Rezvani)
+    purpose: Discount matrices, approver thresholds, exception flows, deal framework.
+    adapter_note: "CaseOS: method only; ignore scripts."
+    agents:
+      business_research: {mode: dynamic, triggers: [política de descuentos, discount policy, aprobación de descuentos, deal desk, excepción comercial, discount matrix]}
+
+  - id: saas-metrics-coach
+    kind: vendor
+    path: skills/vendor/alirezarezvani/saas-metrics-coach
+    source: alirezarezvani/claude-skills · finance/skills/saas-metrics-coach
+    license: MIT (Alireza Rezvani)
+    purpose: ARR, MRR, churn, retention, NRR, GRR, CAC, LTV, Quick Ratio, recurring-revenue economics.
+    adapter_note: "CaseOS: definitions and benchmarks are context, never evidence about this company. Ignore scripts."
+    agents:
+      business_research: {mode: dynamic, triggers: [arr, mrr, churn, retenci, retention, nrr, grr, cac, ltv, quick ratio, recurrente, recurring, saas]}
+      measurement: {mode: dynamic, triggers: [arr, mrr, churn, retenci, retention, nrr, grr, cac, ltv, cohort, cohorte]}
+      data_engineering: {mode: dynamic, triggers: [mrr, arr, churn, expansi, contracci, reactivaci, clasificaci]}
+
+  # ------------------------------------------------------------------ Measurement and data engineering
+  - id: measurement-strategy
+    kind: custom
+    path: skills/custom/measurement-strategy
+    source: CaseOS
+    license: MIT
+    purpose: KPI trees, non-linear journeys, cohorts, instrumentation, attribution, experimentation.
+    agents:
+      measurement: {mode: core}
+
+  - id: data-modeling
+    kind: custom
+    path: skills/custom/data-modeling
+    source: CaseOS
+    license: MIT
+    purpose: Grain, facts/dimensions, temporal validity, identity, subscription/billing/discount modeling, contracts.
+    agents:
+      data_engineering: {mode: core}
+
+  # ------------------------------------------------------------------ Existing Executive Visual Storyteller (linked)
+  - id: executive-visual-storyteller
+    kind: linked
+    path: ~/.claude/skills/executive-visual-storyteller
+    source: Hugo · existing capability (not rebuilt)
+    license: Hugo's own
+    purpose: Orchestrates Story → Visual direction → Concept → HTML render → Visual QA → Package.
+    agents:
+      visual_storyteller: {mode: core}
+  - id: executive-storyline
+    kind: linked
+    path: ~/.claude/skills/executive-storyline
+    source: Hugo · existing capability
+    license: Hugo's own
+    purpose: Governing thought, pyramid, slide briefs (refines the CaseOS Story Package).
+    agents:
+      visual_storyteller: {mode: core}
+  - id: consulting-visual-director
+    kind: linked
+    path: ~/.claude/skills/consulting-visual-director
+    source: Hugo · existing capability
+    license: Hugo's own
+    purpose: Visual grammar and composition specs by relationship verb; anti-slop rules.
+    agents:
+      visual_storyteller: {mode: core}
+  - id: html-slide-renderer
+    kind: linked
+    path: ~/.claude/skills/html-slide-renderer
+    source: Hugo · existing capability
+    license: Hugo's own
+    purpose: 1920×1080 HTML slides from primitives; render/QA/bundle scripts (system Chrome).
+    agents:
+      visual_storyteller: {mode: core}
+  - id: slide-critic
+    kind: linked
+    path: ~/.claude/skills/slide-critic
+    source: Hugo · existing capability
+    license: Hugo's own
+    purpose: Screenshot QA loop — blind read, checklist, PASS / PATCH / RECOMPOSE.
+    agents:
+      visual_storyteller: {mode: core}
+
+  # ------------------------------------------------------------------ Reference only (provenance; adapted, not loaded)
+  - id: chief-of-staff
+    kind: reference
+    path: skills/vendor/alirezarezvani/_reference-only/chief-of-staff
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/chief-of-staff
+    license: MIT (Alireza Rezvani)
+    purpose: Routing matrix, complexity scoring, loop prevention → adapted into case-chief-of-staff and the lens router.
+    adapted_into: [case-chief-of-staff, caseos/skills.py lens router]
+    agents: {}
+  - id: decision-logger
+    kind: reference
+    path: skills/vendor/alirezarezvani/_reference-only/decision-logger
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/decision-logger
+    license: MIT (Alireza Rezvani)
+    purpose: Two-layer decision memory, DO_NOT_RESURFACE → adapted into caseos/decisions.py.
+    adapted_into: [caseos/decisions.py]
+    agents: {}
+  - id: context-engine
+    kind: reference
+    path: skills/vendor/alirezarezvani/_reference-only/context-engine
+    source: alirezarezvani/claude-skills · c-level-advisor/skills/context-engine
+    license: MIT (Alireza Rezvani)
+    purpose: Context loading, never overwrite silently → adapted into brain.md and case-chief-of-staff.
+    adapted_into: [caseos/brain.py, case-chief-of-staff]
+    agents: {}
+  - id: deep-research
+    kind: reference
+    path: skills/vendor/shawnpetros/deep-research
+    source: shawnpetros/claude-skills · deep-research
+    license: MIT (Shawn Petros)
+    purpose: Depth + breadth + counter → peer review → synthesis → adapted into deep-business-research.
+    adapted_into: [deep-business-research, caseos/agents/research.py]
+    agents: {}

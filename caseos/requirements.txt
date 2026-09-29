@@ -1,0 +1,17 @@
+# CaseOS — Python 3.13. Setup (same pattern as finora-eda):
+#   uv venv --system-site-packages --python 3.13 .venv
+#   uv pip install --python .venv/bin/python -r requirements.txt
+claude-agent-sdk==0.2.160      # agents run on your Claude subscription via the local Claude Code session
+fastapi==0.141.1
+uvicorn==0.54.0
+pydantic==2.13.5
+PyYAML==6.0.3
+httpx==0.28.1                  # FastAPI TestClient (tests)
+pytest==9.1.1
+
+# The Business Exploration Workspace (../finora-eda) is mounted in-process, so its runtime deps live here too.
+duckdb==1.5.5
+sqlglot==30.20.0
+pandas==3.0.3
+numpy==2.4.4
+scipy==1.17.1
