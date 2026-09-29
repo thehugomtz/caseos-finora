@@ -2028,6 +2028,7 @@ function showDoc(kicker, statusNode) {
 function closeInvestigation() {
   if (!invOpen) return;
   clearTimeout(CST.timer);
+  setTimeout(refreshLivePill, 50);
   invOpen = false;
   $("invdoc").hidden = true;
   document.body.style.overflow = "";
@@ -2301,7 +2302,42 @@ function staticAnswer(text, routes) {
   }
   $("invBack").focus();
 }
-let liveES = null, LIVE_REQ = null;
+let liveES = null, LIVE_REQ = null, PILL_T = null;
+const LIVE_KEY = "finora.enCurso";
+function rememberLive(id, pregunta, caseId) { try { localStorage.setItem(LIVE_KEY, JSON.stringify({ id: id, pregunta: pregunta, caso: caseId || null })); } catch (e) { /* sin almacenamiento */ } }
+function forgetLive(id) { try { const x = JSON.parse(localStorage.getItem(LIVE_KEY) || "null"); if (x && (!id || x.id === id)) localStorage.removeItem(LIVE_KEY); } catch (e) { /* sin almacenamiento */ } }
+async function runningNow() {
+  // el servidor dice qué corre; con un servidor anterior, la última corrida que abrió este navegador
+  if (!LIVE) return [];
+  try { const r = await fetch(LIVE.api + "/investigations/en-curso"); if (r.ok) return await r.json(); } catch (e) { return []; }
+  let x = null;
+  try { x = JSON.parse(localStorage.getItem(LIVE_KEY) || "null"); } catch (e) { x = null; }
+  if (!x || !x.id) return [];
+  const d = await fetch(LIVE.api + "/investigations/" + x.id).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  if (d && d.status !== "publicada" && d.status !== "error") return [{ id: d.id, pregunta: d.pregunta, status: d.status, caso_id: d.caso_id, started_ms: d.started_ms }];
+  forgetLive(x.id);
+  return [];
+}
+async function refreshLivePill() {
+  // "Investigación en curso · Ver en vivo": visible desde cualquier vista mientras algo corre
+  clearTimeout(PILL_T);
+  if (!LIVE) return;
+  const runs = await runningNow();
+  let pill = $("livePill");
+  if (!runs.length || (invOpen && $("liveSteps"))) { if (pill) pill.hidden = true; }
+  else {
+    if (!pill) { pill = H("button", "live-pill", document.body); pill.id = "livePill"; pill.type = "button"; }
+    const r = runs[0], q = r.caso_id && CQ[r.caso_id];
+    pill.replaceChildren();
+    H("span", "dot", pill);
+    pill.append("Investigación en curso · " + Math.max(1, Math.round((Date.now() - r.started_ms) / 60000)) + " min · ");
+    H("b", null, pill, "Ver en vivo");
+    pill.title = r.pregunta;
+    pill.onclick = () => attachLive(r.id, r.pregunta, q || null);
+    pill.hidden = false;
+  }
+  PILL_T = setTimeout(refreshLivePill, runs.length ? 8000 : 30000);
+}
 async function startLive(body, pregunta, routes, caseQ) {
   if (!LIVE) return;
   LIVE_REQ = { body: body, pregunta: pregunta, routes: routes, caseQ: caseQ };
@@ -2311,10 +2347,18 @@ async function startLive(body, pregunta, routes, caseQ) {
   } catch (err) { alert("No se pudo conectar con el servidor local."); return; }
   if (!r.ok) {
     const t = await r.json().catch(() => ({}));
-    alert(r.status === 409 ? "Ya hay una investigación en curso; espera a que termine." : "Error " + r.status + ": " + (t.detail || ""));
+    if (r.status === 409) {
+      const runs = await runningNow();
+      if (runs.length && confirm("Ya hay una investigación en curso: «" + cut(runs[0].pregunta, 140) + "». El servidor corre una a la vez. ¿Quieres verla en vivo?"))
+        attachLive(runs[0].id, runs[0].pregunta, CQ[runs[0].caso_id] || null);
+      else if (!runs.length) alert(typeof t.detail === "string" ? t.detail : "Ya hay una investigación en curso; espera a que termine.");
+      return;
+    }
+    alert("Error " + r.status + ": " + (t.detail || ""));
     return;
   }
   const id = (await r.json()).id;
+  rememberLive(id, pregunta, caseQ && caseQ.id);
   attachLive(id, pregunta, caseQ, routes);
 }
 function attachLive(id, pregunta, caseQ, routes) {
@@ -2322,6 +2366,9 @@ function attachLive(id, pregunta, caseQ, routes) {
   if (!id) return;
   if (!LIVE_REQ || LIVE_REQ.pregunta !== pregunta) LIVE_REQ = { body: caseQ ? { pregunta_id: caseQ.id } : { pregunta: pregunta }, pregunta: pregunta, routes: routes, caseQ: caseQ };
   liveShell(pregunta, caseQ ? [] : routes || routeQuestion(pregunta), caseQ);
+  setHash("#en-vivo/" + id);                      // recargar la página vuelve a esta corrida
+  const pill = $("livePill");
+  if (pill) pill.hidden = true;
   if (liveES) liveES.close();
   liveES = new EventSource(LIVE.api + "/investigations/" + id + "/stream");
   liveES.onmessage = m => onLiveEvent(JSON.parse(m.data), id);
@@ -2401,6 +2448,7 @@ async function pollLive(id) {
 }
 function liveLost() {
   if (liveES) { liveES.close(); liveES = null; }
+  forgetLive();
   const b = $("invBody");
   if (!invOpen || !b || !$("liveSteps")) return;          // ya no está abierta la vista en vivo
   $("invLive").hidden = true;
@@ -2435,6 +2483,7 @@ function onLiveEvent(ev, id) {
   else if (ev.tipo === "composicion") liveLine(t + "respuesta, intento " + d.intento + ": " + (d.errores.length ? d.errores.length + " correcciones del validador" : "aprobada"), d.errores.length ? "e" : "c");
   else if (ev.tipo === "final") {
     if (liveES) { liveES.close(); liveES = null; }
+    forgetLive(id);
     fetch(LIVE.api + "/investigations/" + id).then(x => x.json()).then(doc => openInvestigation(doc));
   }
 }
@@ -3755,6 +3804,7 @@ function wireControls() {
 }
 
 function init() {
+  if (LIVE) setTimeout(refreshLivePill, 600);
   $("palette").inert = true;
   $("drawer").inert = true;
   buildTables();
@@ -3794,12 +3844,16 @@ function init() {
   document.querySelectorAll("[data-chart]").forEach(mount);
   wireNav();
   const m = location.hash.match(/^#(investigacion|respuesta)\/(Q\d)$/);
-  const run = location.hash.match(/^#investigacion\/(INV-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);
   const cr = location.hash.match(/^#caso(?:\/(W\d))?$/);
+  const lv = location.hash.match(/^#(?:en-vivo|investigacion)\/(INV-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);
   if (m && m[1] === "investigacion" && GOLDEN_INV[m[2]]) openInvestigation(GOLDEN_INV[m[2]], { golden: true });
   else if (m && m[1] === "respuesta" && (ANS.preguntas || {})[m[2]]) openAnswer(m[2]);
   else if (cr) (cr[1] ? openCaseQuestion(cr[1]) : openCaseQueue());
-  else if (run && LIVE) fetch(LIVE.api + "/investigations/" + run[1]).then(r => (r.ok ? r.json() : null)).then(d => { if (d) openInvestigation(d); }).catch(() => {});
+  else if (lv && LIVE) fetch(LIVE.api + "/investigations/" + lv[1]).then(r => (r.ok ? r.json() : null)).then(d => {
+    if (!d) return;
+    if (d.status !== "publicada" && d.status !== "error") attachLive(d.id, d.pregunta, CQ[d.caso_id] || null);   // sigue corriendo: en vivo
+    else openInvestigation(d);
+  }).catch(() => {});
   else if (NARR_ON) {
     const nr = location.hash.match(/^#(narrativa|presentacion)\/(NAR-[0-9]{8}-[0-9]{6}-[0-9a-f]{4})$/);
     if (location.hash === "#narrativas") openStudio();

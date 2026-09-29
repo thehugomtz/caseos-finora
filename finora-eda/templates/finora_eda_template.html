@@ -634,6 +634,17 @@ span.nar-pill { cursor: default; justify-self: start; }
 .dr-tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .dr-pre { font-family: var(--mono); font-size: 11px; white-space: pre-wrap; word-break: break-word; background: rgba(12,19,34,0.04); border-radius: 10px; padding: 10px 12px; margin: 6px 0 0; }
 
+/* ---------- investigación en curso ---------- */
+.live-pill { all: unset; cursor: pointer; position: fixed; right: 22px; bottom: 22px; z-index: 85; display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--ink-2); padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(47,109,242,0.35); box-shadow: 0 10px 30px rgba(12,19,34,0.14); }
+.live-pill b { color: var(--accent); font-weight: 600; }
+.live-pill:hover { border-color: var(--accent); }
+.live-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.live-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: livepulse 1.4s ease-in-out infinite; }
+@keyframes livepulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .live-pill .dot { animation: none; } }
+
 /* ---------- preguntas del caso (W0–W7) ---------- */
 .askbtn.case-entry { margin-top: -4px; }
 .askbtn.case-entry .spark-ic { font-family: var(--mono); font-size: 10px; }
@@ -758,6 +769,7 @@ span.nar-pill { cursor: default; justify-self: start; }
   .cq-q { font-size: 17px; }
   .cq-mrow dl { grid-template-columns: 1fr; gap: 2px; }
   .cq-mrow dt { margin-top: 6px; }
+  .live-pill { left: 16px; right: 16px; bottom: 16px; justify-content: center; }
 }
 @media print {
   .side, .progress, .tbtn, .askline, .palette, .drawer, .scrim { display: none !important; }

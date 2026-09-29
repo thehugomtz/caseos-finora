@@ -134,6 +134,13 @@ def list_runs():
     return out
 
 
+@app.get("/api/investigations/en-curso")
+def running():
+    """Investigaciones que corren ahora en este servidor: la vista siempre puede volver a ellas."""
+    return [{"id": i.id, "pregunta": i.pregunta, "status": i.status, "caso_id": i.caso_id, "started_ms": i.started_ms}
+            for i in LIVE.values() if i.status not in ("publicada", "error")]
+
+
 @app.get("/api/investigations/{inv_id}")
 def get_one(inv_id: str):
     return _load(inv_id)
