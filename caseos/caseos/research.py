@@ -590,6 +590,66 @@ def _persist(store: CaseStore, rid: str, out: dict, job) -> list[str]:
     return created
 
 
+# ------------------------------------------------------------------------------------------ how a result was reached
+_TRACE_FIELD = {"search": re.compile(r'"query":\s*"((?:[^"\\]|\\.)*)'), "read": re.compile(r'"url":\s*"((?:[^"\\]|\\.)*)'),
+                "sql": re.compile(r'"sql":\s*"((?:[^"\\]|\\.)*)')}
+
+
+def _step(tool: str, inp) -> tuple[str, str]:
+    """One tool call of a run as (kind, text): what the agent looked at, in its own terms."""
+    kind = ("search" if tool in ("WebSearch", "web_search") else "read" if tool in ("WebFetch", "web_fetch")
+            else "sql" if tool.endswith("consultar_modelo") else "catalog" if tool.endswith("catalogo_modelo") else "tool")
+    if kind == "catalog":
+        return kind, "Leyó el catálogo del modelo de datos"
+    if kind == "tool":
+        return kind, tool
+    key = {"search": "query", "read": "url", "sql": "sql"}[kind]
+    if isinstance(inp, dict):
+        return kind, " ".join(str(inp.get(key) or "").split())
+    m = _TRACE_FIELD[kind].search(str(inp or ""))                  # long inputs are stored truncated, as text
+    return kind, " ".join((m.group(1) if m else str(inp or "")).replace('\\"', '"').split())
+
+
+def process(store: CaseStore, r: dict) -> dict | None:
+    """How a specialist reached its result, from the run records: every search, reading and query of the data model,
+    in order and timed from when it started working (not the model's private reasoning, which is never stored)."""
+    runs = []
+    for run_id in r.get("run_ids") or []:
+        rec = read_json(store.root / "audit" / "runs" / f"{run_id}.json", {}) or {}
+        if not rec:
+            continue
+        trace = rec.get("tool_trace") or []
+        t0 = trace[0].get("t", 0) if trace else 0
+        steps = []
+        for t in trace:
+            kind, text = _step(str(t.get("tool") or ""), t.get("input"))
+            steps.append({"s": max(0, round((t.get("t", t0) - t0) / 1000)), "kind": kind, "text": clip(text, 400),
+                          "error": bool(t.get("is_error"))})
+        u = rec.get("usage") or {}
+        runs.append({"run_id": run_id, "role": rec.get("role"), "purpose": rec.get("purpose"), "steps": steps,
+                     "work_s": round((u.get("ms") or rec.get("duration_ms") or 0) / 1000), "turns": u.get("turns"),
+                     "output_tokens": u.get("output_tokens"), "cost_usd": rec.get("cost_usd"), "model": rec.get("model"),
+                     "effort": rec.get("effort")})
+    if not runs:
+        return None
+    all_steps = [x for rn in runs for x in rn["steps"]]
+    count = lambda k: sum(1 for x in all_steps if x["kind"] == k)
+    return {"runs": runs, "counts": {"sql": count("sql"), "catalog": count("catalog"), "search": count("search"),
+                                     "read": count("read"), "total": len(all_steps)},
+            "work_s": sum(rn["work_s"] for rn in runs), "cost_usd": round(sum(rn["cost_usd"] or 0 for rn in runs), 2)}
+
+
+def proposals(store: CaseStore) -> list[dict]:
+    """Every completed research that answers with a proposal (not only with data), with how it got there."""
+    out = []
+    for r in sorted(store.list("research"), key=lambda e: e["id"]):
+        work = (r.get("task") or {}).get("work")
+        if r.get("status") != "completed" or r.get("specialty") == "analytics" or work == "datos":
+            continue
+        out.append({"research": r, "process": process(store, r)})
+    return out
+
+
 # ------------------------------------------------------------------------------------------ Hugo's actions on research
 def accept(store: CaseStore, rid: str, *, note: str = "", actor: str = "hugo") -> dict:
     r = store.require(rid)

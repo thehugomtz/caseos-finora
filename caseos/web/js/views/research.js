@@ -113,12 +113,14 @@ async function hub(root) {
     };
     const ph = room.health.phases.find(p => p.id === "research");
     app.crumbs(["Research"]);
+    groups.proposals = all.filter(r => r.status === "completed" && r.specialty !== "analytics" && r.work !== "datos");
     const shown = filter === "all" ? all : groups[filter];
     put(list,
-      tabs([{ id: "all", label: "Todo", count: all.length }, { id: "running", label: "En curso", count: groups.running.length }, { id: "review", label: "Por revisar", count: groups.review.length },
+      tabs([{ id: "all", label: "Todo", count: all.length }, { id: "proposals", label: "Propuestas · cómo llegaron", count: groups.proposals.length },
+        { id: "running", label: "En curso", count: groups.running.length }, { id: "review", label: "Por revisar", count: groups.review.length },
         { id: "accepted", label: "Aceptadas", count: groups.accepted.length }, { id: "blocked", label: "Bloqueadas / fallidas", count: groups.blocked.length },
         { id: "rejected", label: "Rechazadas", count: groups.rejected.length }], filter, f => { filter = f; paint(); }),
-      shown.length ? h("div.list.rq", shown.map(r => h("div.item", { on: { click: () => app.go("#/research/" + r.id) } },
+      filter === "proposals" ? proposalsBox() : shown.length ? h("div.list.rq", shown.map(r => h("div.item", { on: { click: () => app.go("#/research/" + r.id) } },
         h("div.row", { style: { paddingTop: "2px" } }, idTag(r.id, { alias: r.alias })),
         h("div.body", h("div.t", r.question), r.short_answer ? h("div.small.muted.clamp2", { style: { marginTop: "4px" } }, r.short_answer) : null,
           h("div.m", h("span.chip", icon(SPEC_ICON[r.specialty] || "globe"), SPEC[r.specialty] || r.specialty), r.intensity && r.intensity !== "analytics" ? h("span.chip.accent", r.intensity) : null,
@@ -129,6 +131,19 @@ async function hub(root) {
       h("p.lede", "No se investigan temas: se investigan incertidumbres que importan al caso. Cada solicitud se mapea a una pregunta, hipótesis, decisión o claim.")),
       h("div.actions", statusChip(ph.status), btn("Analytics workspace", { icon: "chart", onClick: () => app.go("#/analytics") }),
         btn(ph.status === "ready" ? "Research aprobado" : "Mark Research Ready", { variant: "human", human: true, disabled: ph.status === "ready", onClick: () => app.markReady("research") }))));
+  };
+  const proposalsBox = () => {
+    const box = h("div.stack.lg", { style: { marginTop: "12px" } }, h("div.row", thinking(), h("span.small.muted", "Cargando el proceso de cada propuesta…")));
+    api.cget("/research-proposals").then(({ proposals }) => {
+      put(box, h("div.small.muted", "Cada propuesta, de la respuesta de arranque a lo que concluyó: cómo leyó el problema, qué revisó en orden (modelo de datos, búsquedas, lecturas), qué alternativas descartó y qué hizo el COS con el resultado. Es la traza operativa de la corrida, no el razonamiento interno del modelo."),
+        proposals.length ? proposals.map(({ research: r, process: pr }) => h("div.panel.pad.propcard",
+          h("div.row.between.wrap", h("div.row.wrap", idTag(r.id), r.shaping_task ? h("span.chip.ghost", r.shaping_task) : null,
+            h("span.chip.work-" + ((r.task || {}).work || "propuesta"), WORK_LABEL[(r.task || {}).work] || "Propuesta"),
+            h("span.chip", icon(SPEC_ICON[r.specialty] || "globe"), SPEC[r.specialty] || r.specialty), (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x))),
+            btn("Ver completo", { sm: true, variant: "ghost", icon: "arrow", onClick: () => app.go("#/research/" + r.id) })),
+          h("div.propq", r.research_question), processLadder(r, pr, { compact: true }))) : empty("Todavía no hay propuestas terminadas", "Aparecen aquí cuando un especialista termina una tarea de propuesta."));
+    }).catch(e => put(box, h("div.corr", "No pude cargar las propuestas: " + e.message)));
+    return box;
   };
   const headBox = h("div");
   put(root, headBox, planBox,
@@ -176,6 +191,7 @@ async function detail(root, rid) {
           h("tbody", r.missing_evidence.map(m => h("tr", h("td", m.dato), h("td", m.fuente || "—"))))) : null) : null,
       r.short_answer && r.status === "completed" ? h("div.panel.pad.glow", h("div.eyebrow.accent", "Respuesta corta"), h("div.answer", { style: { marginTop: "10px" } }, r.short_answer),
         r.why_it_matters ? h("div.small.muted.mt", "Por qué importa: " + r.why_it_matters) : null) : null,
+      r.status === "completed" && r.specialty !== "analytics" ? sec("Cómo llegó a esta propuesta", h("div.panel.pad", processLadder(r, d.process))) : null,
       sec(`Hallazgos clave · ${findings.length}`, findings.length ? h("div.stack", findings.map(f => findingCard(f, paint))) : null),
       (r.visuals || []).length ? sec("Visualizaciones del análisis", h("div.grid2", r.visuals.map(v => { const w = h("div.viz", h("div.vt.clamp3", v.title || ""), h("div.legend"), h("div.chart")); requestAnimationFrame(() => renderVisual(w.querySelector(".chart"), v.spec, w.querySelector(".legend"))); return w; }))) : null,
       (r.what_is_established || []).length || (r.what_remains_unknown || []).length ? sec("Qué sabemos y qué no",
@@ -210,12 +226,67 @@ async function detail(root, rid) {
         onClick: () => researchAction(r, a, paint) })), (r.sources || []).some(s => s.url) ? btn("Open sources", { icon: "link", onClick: () => r.sources.filter(s => s.url).slice(0, 5).forEach(s => window.open(s.url, "_blank", "noopener")) }) : null) : null);
   };
   await paint();
-  const onJob = () => paint();
+  // repaint for this research's own job, or when a COS assessment finishes — not for every job of the case
+  const onJob = ev => { const e = app.byId[rid] || {}; if (ev.job.id === e.job_id || ["queued", "running"].includes(e.status)
+    || (ev.job.kind === "cos_impact" && ["succeeded", "failed"].includes(ev.event.kind))) paint(); };
   app.on("job", onJob);
   return { update: paint, destroy: () => { app.listeners.job = (app.listeners.job || []).filter(f => f !== onJob); } };
 }
 
 const WORK_LABEL = { propuesta: "Investigación y propuesta", datos: "Investigar datos", research: "Research externo" };
+const TRACE_ICON = { sql: "db", catalog: "table", search: "search", read: "link", tool: "bolt" };
+const TRACE_VERB = { sql: "Consultó el modelo", catalog: "Catálogo", search: "Buscó", read: "Leyó", tool: "Usó" };
+const clock = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const dur = s => s >= 60 ? `${Math.round(s / 60)} min` : `${s} s`;
+const pageOf = u => { try { const x = new URL(u); return x.hostname.replace(/^www\./, "") + (x.pathname.length > 1 ? x.pathname.replace(/\/$/, "") : ""); } catch (e) { return u; } };
+
+// What the specialist did, in order: every query of the data model, search and reading, timed from when it started
+// working. It is the operational trace of the run, not the model's private reasoning (never stored).
+const OPEN_TRACES = new Set();          // a trace Hugo opened stays open when the page repaints with live events
+
+function traceView(proc, key) {
+  const runs = proc.runs || [];
+  return h("details.tracebox", { open: OPEN_TRACES.has(key), on: { toggle: e => { e.target.open ? OPEN_TRACES.add(key) : OPEN_TRACES.delete(key); } } },
+    h("summary", h("span.small", `Ver los ${proc.counts.total} pasos en orden`)),
+    h("div.runsteps", runs.map(rn => [runs.length > 1 ? h("div.rh", rn.purpose || rn.role) : null,
+      rn.steps.map(st => h(`div.rs.${st.kind}${st.error ? ".err" : ""}`, h("span.tt", clock(st.s)), icon(TRACE_ICON[st.kind] || "bolt"),
+        h("span.tx", h("b", TRACE_VERB[st.kind] || st.kind), " ",
+          st.kind === "search" ? `«${st.text}»` : st.kind === "read" ? h("a", { href: st.text, target: "_blank", rel: "noopener" }, pageOf(st.text))
+            : st.kind === "catalog" ? "" : st.text,
+          st.error ? h("span.faint", " · dio error y lo corrigió en el siguiente paso") : null)))])));
+}
+
+export function processLadder(r, proc, { compact = false } = {}) {
+  const t = r.task || {}, sp = r.specialist || {};
+  const m = sp.measurement, dm = sp.data_model;
+  const interp = m ? m.problem_interpretation : dm ? dm.conceptual_model : r.why_it_matters;
+  const chosen = m ? m.recommended_framework : null;
+  const alts = m ? m.alternative_frameworks || [] : [];
+  const unknown = (r.what_remains_unknown || []).slice(0, compact ? 2 : 4);
+  const c = proc && proc.counts;
+  const clamp = compact ? ".clamp3" : "";
+  const rungs = [
+    ["Arrancó de", t.draft_answer ? h("div.stack", { style: { gap: "4px" } }, h(`div.small${clamp}`, t.draft_answer),
+      (t.hugo_said || []).length ? h("div.small.muted", "Con tus palabras: ", t.hugo_said.map(x => `“${x.text}”`).join(" · ")) : null)
+      : h("div.small.faint", "Sin respuesta de arranque (la tarea es anterior al plan desde el guion).")],
+    ["Leyó el problema como", interp ? h(`div.small${compact ? ".clamp3" : ""}`, { style: { whiteSpace: "pre-line" } }, interp) : null],
+    ["Revisó", proc ? h("div.stack", { style: { gap: "4px" } },
+      h("div.small", [c.sql ? `${c.sql} consultas al modelo` : null, c.catalog ? "el catálogo" : null, c.search ? `${c.search} búsquedas` : null,
+        c.read ? `${c.read} lecturas` : null].filter(Boolean).join(" · ") + ` · ${dur(proc.work_s)} de trabajo` + (proc.cost_usd ? ` · US$${proc.cost_usd} equiv.` : "")),
+      traceView(proc, r.id)) : h("div.small.faint", "Sin traza registrada.")],
+    ["Pesó", alts.length || chosen ? h("div.stack", { style: { gap: "6px" } },
+      alts.map(a => h("div.small", h("span.chip.ghost", "descartó"), " ", h("b", a.name),
+        a.when_better ? " — mejor cuando " + a.when_better.replace(/^\s*cuando\s+/i, "") : "",
+        a.tradeoff ? h("span.muted", " · costo: " + a.tradeoff) : null)),
+      chosen ? h("div.small", h("span.chip.good", "eligió"), " ", h("b", chosen.name), chosen.why ? " — " + chosen.why : "") : null)
+      : (r.alternative_explanations || []).length ? h("div.stack", { style: { gap: "4px" } }, h("div.small.muted", "Explicaciones alternativas que puso sobre la mesa:"),
+        h("ul.bl", r.alternative_explanations.slice(0, compact ? 2 : 4).map(x => h("li.small", x)))) : null],
+    ["Llegó a", h("div.stack", { style: { gap: "4px" } }, h(`div.small${clamp}`, r.short_answer),
+      unknown.length ? h("div.small.muted", h("b", "Sigue sin saberse: "), unknown.join(" · ")) : null)],
+    ["El COS", r.cos_assessment ? h(`div.small${clamp}`, r.cos_assessment.summary) : h("div.small.faint", "Sin evaluación del COS todavía.")],
+  ].filter(x => x[1]);
+  return h("ol.ladder", rungs.map(([k, v]) => h("li", h("div.lk", k), h("div.lv", v))));
+}
 const STEP_LABEL = { data: "Investigar datos en el modelo", research: "Research", proposal: "Proponer" };
 const STEP_ICON = { data: "db", research: "globe", proposal: "spark" };
 

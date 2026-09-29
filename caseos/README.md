@@ -66,7 +66,10 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
 4. **Research** — arriba, las tareas aprobadas del plan de investigación, con qué sale, su respuesta de arranque, sus
    pasos y un botón **Lanzar** (lanzarlas es tu clic). El especialista recibe la respuesta de arranque para validarla o
    refutarla y, si la tarea tiene pasos de datos, **consulta el modelo de datos en solo lectura**; una cifra del modelo
-   solo cuenta si su consulta corrió en esa corrida (quedan listadas en el detalle). Abajo puedes pedir cualquier otra investigación; el Router elige especialista (Business
+   solo cuenta si su consulta corrió en esa corrida (quedan listadas en el detalle). La pestaña **Propuestas · cómo
+   llegaron** muestra, para cada propuesta, de dónde arrancó, cómo leyó el problema, qué revisó en orden (cada consulta
+   al modelo, búsqueda y lectura, con su minuto), qué alternativas descartó y por qué, a qué llegó y qué hizo el COS. Es la
+   traza operativa de la corrida, no el razonamiento interno del modelo (que no se guarda). Abajo puedes pedir cualquier otra investigación; el Router elige especialista (Business
    Research, Measurement, Data Engineering, Analytics) e intensidad (L1 lookup · L2 · L3 deep research con peer review).
    Las citas solo cuentan si la URL se recuperó en la corrida. Aceptas, rechazas, cuestionas o profundizas cada resultado.
 5. **Datos** — el modelo de datos del caso en tres capas reales: **raw** (los CSV tal cual), **staging** (tipado con las

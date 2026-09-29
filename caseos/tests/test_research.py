@@ -98,3 +98,21 @@ def test_specialist_run_persists_proposed_findings_with_lineage(case, monkeypatc
     assert f2["unverified"] and f2["confidence"] == "low"                          # invented citation → low confidence
     research.accept(case, r["id"], note="ok")
     assert case.get(f1["id"])["review"]["state"] == "accepted"
+
+
+def test_the_process_of_a_result_comes_from_its_run_record(case):
+    from caseos.util import write_json
+    write_json(case.root / "audit" / "runs" / "RUN-x.json", {
+        "role": "measurement", "purpose": "R-001 · Measurement L2", "cost_usd": 1.5, "usage": {"ms": 90000, "turns": 9},
+        "tool_trace": [{"t": 1000, "tool": "mcp__caseos_datos__catalogo_modelo", "input": {}},
+                       {"t": 4000, "tool": "mcp__caseos_datos__consultar_modelo", "input": {"sql": "SELECT n FROM mart.x"}, "is_error": True},
+                       {"t": 9000, "tool": "WebSearch", "input": {"query": "bowtie funnel saas"}},
+                       {"t": 70000, "tool": "WebFetch", "input": '{"url": "https://www.example.org/bowtie", "prompt": "…'}]})
+    r = case.create("research", {"research_question": "q", "status": "completed", "specialty": "measurement", "run_ids": ["RUN-x"]},
+                    actor="measurement")
+    p = research.process(case, r)
+    kinds = [(x["kind"], x["s"]) for x in p["runs"][0]["steps"]]
+    assert kinds == [("catalog", 0), ("sql", 3), ("search", 8), ("read", 69)]
+    assert p["runs"][0]["steps"][1]["error"] and p["runs"][0]["steps"][3]["text"] == "https://www.example.org/bowtie"   # truncated input
+    assert p["counts"] == {"sql": 1, "catalog": 1, "search": 1, "read": 1, "total": 4} and p["work_s"] == 90
+    assert [x["research"]["id"] for x in research.proposals(case)] == [r["id"]]

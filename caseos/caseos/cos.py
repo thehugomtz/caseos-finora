@@ -96,7 +96,8 @@ def _row(e: dict) -> dict:
 def _research_row(r: dict) -> dict:
     return {**_row(r), "specialty": r.get("specialty"), "intensity": r.get("intensity"),
             "question": r.get("research_question"), "short_answer": clip(r.get("short_answer", ""), 260),
-            "purpose_ok": r.get("purpose_ok", True), "job_id": r.get("job_id"), "shaping_task": r.get("shaping_task")}
+            "purpose_ok": r.get("purpose_ok", True), "job_id": r.get("job_id"), "shaping_task": r.get("shaping_task"),
+            "work": (r.get("task") or {}).get("work")}
 
 
 def _alert_row(x: dict, ents: dict) -> dict:

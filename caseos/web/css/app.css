@@ -878,6 +878,27 @@ details.fold[open] > summary::before { transform: rotate(90deg); }
 .planrun.failed { border-color: var(--bad-line); background: var(--bad-soft); }
 .planrun > summary { cursor: pointer; }
 .taskctx { border: 1px solid var(--accent-line); }
+.ladder { list-style: none; margin: 0; padding: 0; display: grid; counter-reset: rung; }
+.ladder > li { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); counter-increment: rung; }
+.ladder > li:first-child { border-top: 0; padding-top: 2px; }
+.ladder .lk { font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding-top: 2px; }
+.ladder .lk::before { content: counter(rung) " · "; color: var(--accent-ink); }
+.ladder .lv { min-width: 0; display: grid; gap: 6px; }
+.tracebox > summary { cursor: pointer; color: var(--accent-ink); }
+/* the steps of one run (not .trace: that is the floating operational-trace drawer) */
+.runsteps { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: 6px 0; margin-top: 8px; }
+.runsteps .rh { font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding: 10px 12px 4px; }
+.runsteps .rs { display: grid; grid-template-columns: 44px 16px minmax(0, 1fr); gap: 8px; padding: 4px 12px; font-size: 12.5px; line-height: 1.45; align-items: start; }
+.runsteps .rs .tt { font: 500 11px var(--mono); color: var(--ink-4); padding-top: 1px; }
+.runsteps .rs svg { width: 13px; height: 13px; stroke: var(--ink-3); margin-top: 2px; }
+.runsteps .rs .tx { min-width: 0; overflow-wrap: anywhere; color: var(--ink-2); }
+.runsteps .rs.sql .tx { font: 12px/1.5 var(--mono); }
+.runsteps .rs .tx b { font: 600 12px var(--sans); color: var(--ink); margin-right: 2px; }
+.runsteps .rs.err .tx { color: var(--bad-ink); }
+.propcard { display: grid; gap: 10px; }
+.propcard .propq { font-size: 15px; font-weight: 600; line-height: 1.45; }
+.clamp4 { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 860px) { .ladder > li { grid-template-columns: 1fr; gap: 4px; } }
 .gcov { display: grid; gap: 2px; }
 .gcov .gr { display: grid; grid-template-columns: 50px 1fr auto; gap: 10px; align-items: start; padding: 8px 4px; border-top: 1px solid var(--line); font-size: 13px; }
 .gcov .gr:first-child { border-top: 0; }
