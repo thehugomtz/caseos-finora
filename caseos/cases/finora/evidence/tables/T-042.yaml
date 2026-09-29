@@ -1,0 +1,126 @@
+id: T-042
+type: table
+table_key: FIN-F-098
+title: La mediana del ticket de entrada pasó de COP 63,0 mil en 2022 a COP 42,0 mil en 2024 y su cola alta (decil
+  su…
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- Año de alta
+- Altas
+- Promedio
+- P25
+- Mediana
+- P75
+- P90
+rows:
+- - '2022'
+  - 272
+  - 128694.73080882353
+  - 37800.0
+  - 63000.0
+  - 94500.0
+  - 189000.0
+- - '2023'
+  - 650
+  - 47944.68807692308
+  - 21000.0
+  - 36750.0
+  - 58537.5
+  - 88305.00000000003
+- - '2024'
+  - 554
+  - 50841.9086101083
+  - 25200.0
+  - 42000.0
+  - 60900.0
+  - 84000.0
+units:
+  Altas: int
+  Promedio: cop
+  P25: cop
+  Mediana: cop
+  P75: cop
+  P90: cop
+definitions: {}
+message: La mediana del ticket de entrada pasó de COP 63,0 mil en 2022 a COP 42,0 mil en 2024 y su cola alta (decil
+  superior) de COP 189,0 mil a COP 84,0 mil, con 272 altas en 2022 y 554 en 2024.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-005
+  tools:
+  - run_analysis
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-005
+
+  run_analysis(''ticket_distribution'', {})'
+transformation: E-005 · run_analysis · Percentiles y bandas de precio del primer monto pagado
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-011
+limitations:
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  apiladas: false
+  x:
+  - <15 mil
+  - 15–30 mil
+  - 30–45 mil
+  - 45–60 mil
+  - 60–75 mil
+  - 75–100 mil
+  - 100–150 mil
+  - ≥150 mil
+  formato: pct
+  series:
+  - nombre: '2022'
+    valores:
+    - 0.09191176470588236
+    - 0.10294117647058823
+    - 0.16911764705882354
+    - 0.06985294117647059
+    - 0.20588235294117646
+    - 0.11764705882352941
+    - 0.10661764705882353
+    - 0.13602941176470587
+  - nombre: '2023'
+    valores:
+    - 0.18615384615384614
+    - 0.20615384615384616
+    - 0.24153846153846154
+    - 0.12615384615384614
+    - 0.08615384615384615
+    - 0.07692307692307693
+    - 0.055384615384615386
+    - 0.021538461538461538
+  - nombre: '2024'
+    valores:
+    - 0.10288808664259928
+    - 0.2111913357400722
+    - 0.2527075812274368
+    - 0.17689530685920576
+    - 0.10649819494584838
+    - 0.0740072202166065
+    - 0.04693140794223827
+    - 0.02888086642599278
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-098
+links:
+- F-098
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

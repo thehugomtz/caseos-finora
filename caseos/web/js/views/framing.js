@@ -93,7 +93,8 @@ export async function mount(root) {
           t.challenge && (t.challenge.strongest_counterargument || (t.challenge.hidden_assumptions || []).length) ? challengeView(t.challenge) : null,
           (t.advisors || []).length ? h("div.stack", { style: { marginTop: "10px", gap: "6px" } }, t.advisors.map(a => h("div.small", lensChip(a.lens), " ", h("span.muted", a.contribution || a.why)))) : null,
           shp.length ? h("div.captured", h("div.eyebrow", `Propuso para el documento · ${shp.length}`), h("div.row.wrap", { style: { gap: "6px" } },
-            shp.map(k => h("button.chip.agent", { type: "button", style: { cursor: "pointer" }, on: { click: () => focusCard(k) } }, keyLabel(k))))) : null,
+            shp.map(k => exists(k) ? h("button.chip.agent", { type: "button", style: { cursor: "pointer" }, on: { click: () => focusCard(k) } }, keyLabel(k))
+              : h("span.chip.ghost", { title: "Ya no está en el documento: la reemplazó un plan posterior o se descartó", style: { textDecoration: "line-through" } }, keyLabel(k))))) : null,
           cap.length ? h("div.captured", h("div.eyebrow", `Capturado · ${cap.length}`), cap.map(id => {
             const e = app.byId[id] || {};
             return h("div.ci", idTag(id), e.type === "note" ? kindChip(e.kind) : h("span.kind." + ({ hypothesis: "HYPOTHESIS", question: "QUESTION", decision: "DECISION" }[e.type] || "OBSERVATION"), ({ hypothesis: "Hipótesis", question: "Pregunta", decision: "Decisión" }[e.type]) || ""), h("span.x.clamp2", e.title || ""));
@@ -121,6 +122,7 @@ export async function mount(root) {
     if (kind === "guion") { const e = (data.shaping.guion || []).find(x => x.key === k); const s = e && (e.approved || (e.pending || {}).value); return `Guion ${id}${s && s.title ? " · " + s.title : ""}`; }
     return `Tarea ${id}`;
   };
+  const exists = k => k === "problem" || !!document.getElementById(domId(k)) || [...(data.shaping.guion || []), ...(data.shaping.plan || [])].some(e => e.key === k);
   const focusCard = k => { const el = document.getElementById(domId(k)); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1400); } };
 
   // ------------------------------------------------------------ the Shaping document
@@ -189,7 +191,8 @@ export async function mount(root) {
 
   // ------------------------------------------------------------ shared pieces
   const stateChip = st => h(`span.chip.${STATE[st][1]}`, STATE[st][0]);
-  const metaLine = m => m && m.state === "approved" && m.by ? h("div.small.faint", `Aprobado por ${m.by === "hugo" ? "ti" : m.by} · ${hhmm(m.at)}` + (m.version > 1 ? ` · v${m.version}` : "")) : null;
+  const metaLine = m => m && m.state === "approved" && m.by ? h("div.small.faint", `Aprobado por ${m.by === "hugo" ? "ti" : m.by}`
+    + (m.via ? ` · ${m.via}` : "") + ` · ${hhmm(m.at)}` + (m.version > 1 ? ` · v${m.version}` : "")) : null;
   const source = p => p.by === "framer" ? "del Framer" : /brief/i.test(p.basis || "") ? "de tu brief" : /research necesario/i.test(p.basis || "") ? "del research necesario" : "";
   const proposalBox = (key, p, body) => h("div.proposal",
     h("div.row.wrap", h("span.eyebrow.agent", p.revises ? "Cambio propuesto" : "Propuesta"), source(p) ? h("span.chip.ghost", source(p)) : null),

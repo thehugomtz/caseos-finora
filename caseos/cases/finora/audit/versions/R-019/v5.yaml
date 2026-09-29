@@ -1,0 +1,1152 @@
+id: R-019
+type: research
+research_question: ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones
+  le permitiría tomar? Capa técnica (CRM, analítica digital) y capa de decision making (dashboards por foro, análisis
+  ad hoc, agentes de IA).
+case_question: Q-003 (¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?) y Q-016 (¿Qué
+  evidencia mínima permitiría distinguir las explicaciones del CRO?). Alimenta la parte de la pregunta ejecutiva
+  sobre huecos en el WoW y modelos propuestos.
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 1
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-003
+    - Q-016
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-003
+- Q-016
+- F-145
+- F-146
+- F-147
+- F-148
+- F-149
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T11:06:06-06:00'
+version: 5
+job_id: JOB-20260929-103203-033b
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-019
+slides:
+- S2.7
+task_why: Sin decisiones del CRO, la solución es un catálogo de dashboards; atada a decisiones y foros, es la acción
+  con la que cierra Growth.
+task:
+  work: propuesta
+  draft_answer: 'Dos capas y en ese orden, como lo planteaste. La técnica: que cada lead tenga fecha de entrada,
+    puerta y canal, etapa con fecha y dueño, y que se pueda unir con el primer pago. Si el CRM ya lo registra, es
+    cuestión de conectarlo; si no, de pulirlo. A eso se suma analítica digital para ver el recorrido de Self Service.
+    La de decision making: dashboards automatizados por foro, análisis ad hoc para lo que salga y agentes de IA
+    encima de las mismas definiciones. El hueco es que no sabemos qué decisiones quiere tomar el CRO ni qué foros
+    tiene, así que la propuesta arranca de decisiones candidatas (dónde poner capacidad, qué canal escalar o cortar,
+    qué leads priorizar) para que Finora las confirme.'
+  hugo_said:
+  - text: Dashboards automatizados con métricas de acuerdo a los foros / Análisis Adhoc / Agentes de inteligencia
+      artificial como el mío jaja
+    ref: N-009
+  - text: Técnica… Pulir su CRM / Implementación de Analítica Digital
+    ref: N-010
+  steps:
+  - kind: research
+    what: Cómo organizan sus foros y cadencias los equipos comerciales SaaS con modelo híbrido (revisión semanal
+      de pipeline, revisión mensual del negocio), qué métricas viven en cada foro y cómo se usan agentes de IA sobre
+      una capa común de definiciones. El objetivo es proponer una forma de operar, no una lista de dashboards.
+    where: []
+  - kind: proposal
+    what: 'Mapa de decisiones: decisión candidata del CRO → pregunta → métrica o vista → foro y cadencia → dueño.
+      Todas marcadas como candidatas a confirmar con Finora.'
+    where: []
+  - kind: proposal
+    what: 'Capa técnica: campos y eventos mínimos del CRM (del inventario de RT-001), eventos de analítica digital
+      para Self Service y definiciones comunes antes de dashboards, ad hoc y agentes. Todo en papel: en esta etapa
+      no se construyen dashboards.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: Define qué puede decidir el CRO cada semana, cada mes y cada trimestre, y qué datos faltan para
+  distinguir sus explicaciones (Q-016). Sin unir motion y canal con el MRR contratado de cada cuenta, no hay forma
+  de mostrar cómo la manera de conseguir clientes se convierte en ingreso recurrente (Q-003).
+short_answer: 'Propongo dos capas. La técnica: CRM con motion e historial de etapas, analítica digital que registre
+  el canal desde la primera visita, y facturación con MRR contratado y estado de suscripción, todo unido por un
+  ID de cuenta en el modelo analítico que ya existe. La de decisión: un bowtie por motion (Self Service, Assisted,
+  Executive/KAM), un tablero por foro (semanal, mensual y trimestral), análisis ad hoc por hipótesis y agentes de
+  IA que trabajen solo sobre métricas gobernadas, es decir, con una sola definición aprobada. Con eso el CRO decidiría
+  cada semana qué oportunidades intervenir, cada mes cómo mover la Inversión en Marketing y las reglas de enrutamiento
+  entre motions, y cada trimestre el reparto entre Generación de Demanda, Team y Habilitación. Hoy los datos solo
+  alimentan el lado Revenue, y con ruido (el 44% del churn observado vuelve a pagar al mes siguiente); el lado Growth
+  no se puede medir. Confianza alta en ese diagnóstico de datos y media en el diseño, porque las fuentes son de
+  práctica y de proveedores y no hay evidencia de impacto.'
+claims:
+- claim: El modelo del caso no tiene leads, oportunidades, motion, canal de adquisición, owner, plan ni estado contractual.
+    Solo tiene pagos cliente × mes, la industria de cada cliente y el gasto S&M mensual por rubro.
+  source_id: DM-0
+  source_type: data_model
+  confidence: low
+  freshness: Modelo consultado el 2026-09-29; datos hasta oct-24
+  supports_or_contests: supports
+  notes: 'Que falte en el modelo no significa que falte en Finora: puede existir en un CRM que no se entregó. Soporta
+    la necesidad de la capa técnica. · fuente no recuperada en la corrida (CaseOS)'
+  unverified: true
+- claim: La ventana cubre 34 meses (2022-01 a 2024-10) con 1.584 altas, 751 churn observados y 468 reactivaciones.
+  source_id: DM-1
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29; datos hasta oct-24
+  supports_or_contests: context
+  notes: Churn observado = pagaba el mes anterior y este mes paga cero; no es cancelación confirmada.
+- claim: El gasto S&M viene en 7 rubros × 34 meses (2022-01 a 2024-10), con grano mensual, sin geografía y con unidad
+    no documentada.
+  source_id: DM-3
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Lo de la unidad no documentada viene del catálogo. Impide calcular CAC o payback en COP.
+- claim: El puente de MRR pagado y el de clientes cuadran en 33 de 33 meses (feb-22 a oct-24).
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Es una base consistente para el lado Revenue, pero de pagos observados, no de contrato.
+- claim: De 751 churn observados, 330 (44%) vuelven a pagar al mes siguiente con el mismo monto y 468 (62%) vuelven
+    antes de oct-24.
+  source_id: DM-4
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con cobros tardíos, prepagos o pausas; no confirma cancelaciones. Soporta la necesidad de tener
+    el estado contractual.
+- claim: De 1.294 expansiones observadas, 194 (15%) se revierten al mes siguiente y 126 (10%) tienen firma de pago
+    de varios meses. De 1.247 contracciones, 17 se revierten.
+  source_id: DM-5
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Parte de la expansión observada puede ser el momento del cobro y no upsell.
+- claim: 325 de 1.961 clientes (17%) tienen al menos un mes en que pagan k veces su monto usual (firma de pago de
+    varios meses).
+  source_id: DM-9
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: La firma es una heurística del mart (±0,5% y monto usual repetido 3 veces o más); no confirma un plan trimestral
+    o anual.
+- claim: De 1.476 altas limpias, 879 (60%) tienen un primer pago observado (M0) menor a 50.000 COP, 439 (30%) entre
+    50.000 y 100.000, 116 (8%) entre 100.000 y 200.000 y 42 (3%) de 200.000 COP o más.
+  source_id: DM-8
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'M0 es el primer pago observado: no es ticket contratado ni adquisición confirmada. La dispersión es compatible
+    con varios motions, pero no lo prueba.'
+- claim: De las 42 altas con M0 de 200.000 COP o más, 12 (29%) tienen un M0 compatible con pagar varios meses juntos,
+    frente a 74 de 1.434 (5%) por debajo de ese umbral.
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: 'La cola alta de M0 mezcla prepagos con clientes más grandes: el tamaño deducido de los pagos no sustituye
+    el motion.'
+- claim: 'Mezcla anual del gasto S&M (en unidades del archivo): Generación de Demanda 60,0% (2022), 57,3% (2023)
+    y 60,9% (2024, ene–oct); capacidad comercial (Team + Payroll + Travel) 28,7%, 35,5% y 34,8%; Habilitación (SoftwareTools
+    + Freelance) 11,3%, 7,2% y 4,3%.'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Son participaciones dentro del archivo; no dicen nada de eficiencia ni de causalidad.
+- claim: 377 clientes ya pagaban en ene-22 (su inicio real es desconocido) y 108 aparecen en feb-22 con sospecha
+    de arrastre; 1.476 tienen cohorte limpia.
+  source_id: DM-6
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Limita reconstruir cohortes por motion de la base previa aunque aparezca un CRM.
+- claim: 'La única dimensión de segmento disponible es la industria, con 6 valores: Restaurantes 529, Producción
+    454, Retail 428, Tecnología 241, Servicios profesionales 165 y Salud 144 clientes.'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Sirve de puente con el histórico, pero no reemplaza motion ni canal.
+- claim: 'Winning by Design presenta el Bowtie como «the modern data model for recurring revenue—designed to replace
+    the funnel»: conecta métricas de volumen, conversión y velocidad en todas las etapas (adquisición, onboarding,
+    retención y expansión).'
+  source_id: WBD-1
+  source_type: industry
+  confidence: medium
+  freshness: Publicado el 2026-01-22
+  supports_or_contests: supports
+  notes: 'Marco propietario de una consultora: describe una práctica, no prueba resultados. El PDF no se pudo leer;
+    se usa la página resumen.'
+- claim: Quienes implementan el Bowtie numeran métricas de volumen, conversión y tiempo entre etapas en cada etapa,
+    antes y después de la venta.
+  source_id: DT-1
+  source_type: marketing
+  confidence: medium
+  freshness: '2025-08-08'
+  supports_or_contests: supports
+  notes: Blog de un proveedor (Drivetrain).
+- claim: 'Para operar el Bowtie se amarran sus etapas a los datos del CRM: lifecycle stages, objetos de ingreso
+    e hitos de adopción o de CS.'
+  source_id: RP-1
+  source_type: marketing
+  confidence: low
+  freshness: Publicado el 2022-10-31, actualizado el 2026-01-09
+  supports_or_contests: supports
+  notes: Contenido de una agencia, sin detalle técnico.
+- claim: Para embudos híbridos se recomienda medir la conversión de cada camino (self-serve, asistido e híbrido)
+    por separado, y unir producto, CRM, automatización de marketing y facturación en un registro único por cliente.
+  source_id: AB-1
+  source_type: marketing
+  confidence: low
+  freshness: 2025, sin fecha exacta ni autor
+  supports_or_contests: supports
+  notes: Guía de un proveedor.
+- claim: El B2B Revenue Waterfall de Forrester propone dejar de gestionar leads individuales y pasar a oportunidades
+    con buying groups.
+  source_id: FR-1
+  source_type: industry
+  confidence: medium
+  freshness: Página con referencia 26Q3, sin fecha explícita
+  supports_or_contests: context
+  notes: Es la alternativa si el motion Executive/KAM pesa mucho. La página no detalla métricas ni cadencia.
+- claim: HubSpot genera para cada etapa las propiedades de fecha de entrada, fecha de salida, tiempo desde la última
+    entrada y tiempo acumulado, y las sigue actualizando si el registro se cierra y se reabre.
+  source_id: HS-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29; sin fecha de publicación
+  supports_or_contests: supports
+  notes: Describe una capacidad del producto; no dice qué usa Finora.
+- claim: El reporte Opportunity History de Salesforce incluye, por cada cambio, la etapa de origen, la de destino,
+    el monto, la fecha de cierre y la probabilidad.
+  source_id: SF-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: La página no muestra la duración en etapa como columna nativa; se calcula entre cambios.
+- claim: Stripe define el MRR como el valor mensual normalizado de las suscripciones active y past_due (un plan
+    anual se divide entre 12). Una suscripción cancelada o unpaid pasa a churn. Los descuentos se pueden restar
+    del MRR y hay un log por cliente con cada cambio de MRR (nuevo, upgrade, downgrade, reactivación y churn).
+  source_id: ST-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: Es la definición de un proveedor de facturación; no sabemos qué sistema usa Finora. No implica que haya
+    habido descuentos en el histórico.
+- claim: GA4 define la atribución como «assigning credit» (asignar crédito) a las interacciones del camino. Su modelo
+    data-driven usa un enfoque contrafactual, y las visitas directas no reciben crédito salvo en caminos solo directos.
+  source_id: GA-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: context
+  notes: 'Inferencia propia: el contrafactual se modela sobre datos observados, no es un experimento; sigue asignando
+    crédito, no prueba causa.'
+- claim: Google describe Meridian (su MMM) como una medición del impacto incremental con datos agregados, que necesita
+    al menos dos años de datos y se calibra con resultados de experimentos de incrementalidad.
+  source_id: GM-1
+  source_type: company
+  confidence: medium
+  freshness: Julio de 2025
+  supports_or_contests: context
+  notes: 'Contenido de Google sobre su propia herramienta. Inferencia: con 34 meses de gasto mensual, sin geografía
+    y con unidad no documentada, un MMM sería frágil.'
+- claim: Una cadencia de RevOps separa revisiones semanales (inspección de pipeline, forecast, excepciones de SLA,
+    riesgo de renovación), mensuales (conversión del funnel, calidad de fuente, antigüedad en etapa, handoffs, señales
+    de expansión, razones de churn) y trimestrales (supuestos del funnel, cobertura, segmentos, precisión del forecast,
+    capacidad). El CRO es dueño de las decisiones de forecast y funnel; RevOps, de procesos, datos y definiciones.
+  source_id: RW-1
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: Contenido de un proveedor, sin cifras de impacto.
+- claim: En la revisión semanal se decide avanzar, deslizar o descalificar oportunidades; en la mensual se mira
+    la composición (cobertura por segmento, antigüedad, concentración, mezcla de fuentes); en la trimestral se revisan
+    los supuestos de win rate, ciclo y ticket. Hay revisiones fuera de ciclo que se activan con disparadores, como
+    varios cambios de fecha de cierre en una semana o una caída del 50% en la creación de una fuente frente al plan.
+  source_id: ORM-1
+  source_type: marketing
+  confidence: medium
+  freshness: '2026-07-03'
+  supports_or_contests: supports
+  notes: 'Blog de un proveedor: describe una práctica, no evidencia resultados.'
+- claim: En un preprint de 2026, limitar la analítica hecha con LLM a una capa semántica gobernada fue el único
+    sistema sin alucinaciones medidas en seis categorías, con cero violaciones de filtros y de seguridad por fila.
+    Rechazar métricas no definidas siguió fallando.
+  source_id: GR-1
+  source_type: academic
+  confidence: medium
+  freshness: Enviado el 2026-07-06
+  supports_or_contests: supports
+  notes: Preprint de un solo autor, no revisado por pares; benchmark sintético de 100 preguntas más datos de NHTSA.
+- claim: Gartner predice que para 2028 los agentes de IA superarán a los vendedores 10 a 1, pero menos del 40% de
+    los vendedores dirá que los agentes mejoraron su productividad.
+  source_id: GT-1
+  source_type: industry
+  confidence: low
+  freshness: '2026-07-28'
+  supports_or_contests: contests
+  notes: Solo el título del comunicado (el cuerpo devolvió 403). Es una predicción, no evidencia; modera las expectativas
+    sobre los agentes.
+- claim: Gartner reporta que las organizaciones de ventas que dan next best actions habilitadas por IA tienen 2,6
+    veces más probabilidad de lograr crecimiento comercial.
+  source_id: GT-2
+  source_type: industry
+  confidence: low
+  freshness: '2026-05-20'
+  supports_or_contests: context
+  notes: Solo el título (el cuerpo devolvió 403). Probablemente es una asociación de encuesta, no una causa; no
+    verificado.
+sources:
+- id: DM-0
+  title: Qué tablas y columnas existen en el modelo (¿hay datos de funnel, motion o canal?)
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta; datos hasta 2024-10)
+  source_type: data_model
+  quality: A
+  note: 'catalogo_modelo(): llamada al catálogo, sin SQL. Tablas: raw.transactions, raw.industry, raw.sm_spend,
+    staging.stg_customers, staging.stg_customer_month, staging.stg_sm_spend, mart.customer_month, mart.monthly_metrics,
+    mart.monthly_metrics_phase1, mart.new_customers, mart.churn_events, mart.sm_monthly, mart.vintage_month. Ninguna
+    tiene columnas de lead, oportunidad, motion, canal, owner, plan o estado contractual.'
+  verified: false
+- id: DM-1
+  title: Ventana del modelo y totales de altas, churn observado y reactivaciones
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta; datos hasta 2024-10)
+  source_type: data_model
+  quality: A
+  note: SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS total_new,
+    SUM(churned_customers) AS total_churn_events, SUM(reactivated_customers) AS total_reactivations FROM mart.monthly_metrics
+  verified: true
+- id: DM-2
+  title: Clientes por industria
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT industry, COUNT(*) AS customers FROM staging.stg_customers GROUP BY industry ORDER BY customers DESC
+  verified: true
+- id: DM-3
+  title: Rubros de gasto S&M y meses cubiertos
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT rubro, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM staging.stg_sm_spend
+    GROUP BY rubro ORDER BY rubro
+  verified: true
+- id: DM-4
+  title: ¿Cuántos churn observados vuelven a pagar?
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS churn_events, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS returned_next_month,
+    SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_any_time_before_oct24 FROM mart.churn_events
+  verified: true
+- id: DM-5
+  title: ¿Cuántas expansiones y contracciones se revierten al mes siguiente o tienen firma de pago de varios meses?
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS events, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month,
+    SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS multi_month_signature FROM mart.customer_month
+    WHERE movement_type IN ('expansion','contraction') GROUP BY movement_type
+  verified: true
+- id: DM-6
+  title: Clientes por bandera de cohorte (base previa, arrastre, limpia)
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS customers FROM mart.customer_month WHERE cohort_flag
+    IS NOT NULL GROUP BY cohort_flag
+  verified: true
+- id: DM-7
+  title: Mezcla anual del gasto S&M por grupo (Generación de Demanda, capacidad comercial, Habilitación)
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT SUBSTR(month,1,4) AS year, ROUND(SUM(demand_gen_spend)/SUM(total_sm_spend),3) AS demand_gen_share,
+    ROUND(SUM(sales_capacity_spend)/SUM(total_sm_spend),3) AS sales_capacity_share, ROUND(SUM(enablement_spend)/SUM(total_sm_spend),3)
+    AS enablement_share, COUNT(*) AS months FROM mart.sm_monthly GROUP BY SUBSTR(month,1,4) ORDER BY year
+  verified: true
+- id: DM-8
+  title: Distribución por tramos del primer pago observado (M0) de las altas limpias
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT bucket, COUNT(*) AS altas FROM (SELECT CASE WHEN m0_cop < 50000 THEN 'a_<50k' WHEN m0_cop < 100000
+    THEN 'b_50k-100k' WHEN m0_cop < 200000 THEN 'c_100k-200k' WHEN m0_cop < 500000 THEN 'd_200k-500k' ELSE 'e_>=500k'
+    END AS bucket FROM mart.new_customers WHERE clean = 1) t GROUP BY bucket ORDER BY bucket
+  verified: true
+- id: DM-9
+  title: Clientes con al menos un mes de firma de pago de varios meses
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS rows_with_signature, COUNT(DISTINCT customer_id) AS customers_with_signature, (SELECT
+    COUNT(DISTINCT customer_id) FROM mart.customer_month WHERE active_customer = 1) AS customers_ever_active FROM
+    mart.customer_month WHERE multi_month_payment_signature > 0
+  verified: true
+- id: DM-10
+  title: ¿Cuadran los puentes de MRR pagado y de clientes?
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS months_negative_bridge_check, SUM(CASE WHEN ABS(mrr_bridge_diff_cop) < 0.01 THEN 1 ELSE
+    0 END) AS months_bridge_ok, SUM(CASE WHEN customer_bridge_diff = 0 THEN 1 ELSE 0 END) AS months_customer_bridge_ok
+    FROM mart.monthly_metrics_phase1 WHERE month > '2022-01'
+  verified: true
+- id: DM-11
+  title: ¿Cuántas altas con M0 alto tienen un M0 compatible con pagar varios meses juntos?
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: 2026-09-29 (consulta)
+  source_type: data_model
+  quality: A
+  note: SELECT CASE WHEN n.m0_cop >= 200000 THEN 'm0_>=200k' ELSE 'm0_<200k' END AS tramo, COUNT(*) AS altas, SUM(CASE
+    WHEN c.multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS m0_con_firma_multimes FROM mart.new_customers
+    n JOIN mart.customer_month c ON c.customer_id = n.customer_id AND c.month = n.cohort_month WHERE n.clean = 1
+    GROUP BY 1 ORDER BY 1
+  verified: true
+- id: WBD-1
+  title: The Bowtie Standard | Winning by Design Research
+  url: https://winningbydesign.com/resources/research/bowtie-standard/
+  publisher: Winning by Design
+  date: '2026-01-22'
+  source_type: industry
+  quality: B
+  note: Origen del marco Bowtie. Se leyó la página resumen; el PDF enlazado no se pudo extraer.
+  verified: true
+- id: DT-1
+  title: 'Essential bowtie funnel metrics: What they are and how to use them for better growth'
+  url: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics
+  publisher: Drivetrain
+  date: '2025-08-08'
+  source_type: marketing
+  quality: C
+  note: Blog de un proveedor. Detalla métricas de volumen, conversión y tiempo por etapa del bowtie.
+  verified: true
+- id: RP-1
+  title: 'From Bowtie Model to RPM: How to Measure and Improve Revenue Growth'
+  url: https://blog.revpartners.io/en/revops-articles/bowtie-funnel
+  publisher: RevPartners
+  date: 2022-10-31 (actualizado 2026-01-09)
+  source_type: marketing
+  quality: C
+  note: Agencia de RevOps. Amarra las etapas del bowtie al CRM; poco detalle técnico.
+  verified: true
+- id: AB-1
+  title: Measuring a Hybrid Product-Led + Sales-Led Funnel in SaaS | Complete Guide 2025
+  url: https://www.airbook.io/guides/hybrid-plg-sales-funnel
+  publisher: Airbook
+  date: 2025 (sin fecha exacta)
+  source_type: marketing
+  quality: C
+  note: Guía de un proveedor sobre embudos híbridos. Sin autor.
+  verified: true
+- id: FR-1
+  title: Put The Forrester B2B Revenue Waterfall Into Practice
+  url: https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/
+  publisher: Forrester
+  date: Sin fecha explícita (referencia 26Q3)
+  source_type: industry
+  quality: B
+  note: Página de la guía; no detalla etapas, métricas ni cadencia.
+  verified: true
+- id: HS-1
+  title: Stage calculated properties
+  url: https://knowledge.hubspot.com/properties/stage-calculated-properties
+  publisher: HubSpot Knowledge Base
+  date: Sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: Documentación oficial del producto. Describe capacidades, no a Finora.
+  verified: true
+- id: SF-1
+  title: Opportunity History Report
+  url: https://help.salesforce.com/s/articleView?id=sf.reports_opp_history.htm&language=en_US&type=5
+  publisher: Salesforce Help
+  date: Sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: Documentación oficial del producto.
+  verified: true
+- id: ST-1
+  title: Analytics (definiciones de métricas de Billing)
+  url: https://docs.stripe.com/billing/subscriptions/view-metrics
+  publisher: Stripe Docs
+  date: Sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: 'Documentación oficial: definiciones de MRR, churn, puente de MRR, cohortes y descuentos.'
+  verified: true
+- id: GA-1
+  title: Get started with attribution
+  url: https://support.google.com/analytics/answer/10596866?hl=en
+  publisher: Google Analytics Help
+  date: Sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: Documentación oficial de GA4 sobre modelos de atribución.
+  verified: true
+- id: GM-1
+  title: 'Meridian: The future of marketing mix modelling is now'
+  url: https://business.google.com/uk/think/measurement/meridian-marketing-mix-model/
+  publisher: Think with Google
+  date: 2025-07
+  source_type: company
+  quality: B
+  note: 'Contenido de Google sobre su propio MMM: requisitos de datos y calibración con experimentos.'
+  verified: true
+- id: RW-1
+  title: 'Revenue Cadence: Weekly, Monthly, and Quarterly RevOps Rhythm'
+  url: https://resources.rework.com/libraries/revenue-operations/revenue-cadence
+  publisher: Rework
+  date: Sin fecha visible (consultado 2026-09-29)
+  source_type: marketing
+  quality: C
+  note: Contenido de un proveedor sobre cadencia y roles (RevOps vs. CRO). Sin cifras de impacto.
+  verified: true
+- id: ORM-1
+  title: 'Pipeline Review Cadence: How Often to Review at Each Level'
+  url: https://orm-tech.com/blog/pipeline-review-cadence
+  publisher: ORM
+  date: '2026-07-03'
+  source_type: marketing
+  quality: C
+  note: 'Blog de un proveedor: decisiones por nivel de revisión y disparadores fuera de ciclo.'
+  verified: true
+- id: GR-1
+  title: 'GROUND: Reducing Hallucinations in LLM-Based Enterprise Analytics Through Governed Semantic Definitions'
+  url: https://arxiv.org/abs/2608.26157
+  publisher: arXiv (preprint)
+  date: '2026-07-06'
+  source_type: academic
+  quality: B
+  note: Preprint no revisado por pares, de un solo autor.
+  verified: true
+- id: GT-1
+  title: Gartner Predicts AI Agents Will Outnumber Sellers 10 to 1 by 2028, Yet Fewer Than 40% of Sellers Will Say
+    Agents Improved Productivity
+  url: https://www.gartner.com/en/newsroom/press-releases/2026-07-28-gartner-predicts-ai-agents-will-outnumber-sellers-10-to-1-by-2028-yet-fewer-than-40-percent-of-sellers-will-say-agents-improved-productivity
+  publisher: Gartner
+  date: '2026-07-28'
+  source_type: industry
+  quality: C
+  note: Solo se recuperó el título en la búsqueda; el cuerpo devolvió 403. Es una predicción.
+  verified: true
+- id: GT-2
+  title: Gartner Survey Finds Sales Organizations That Provide AI-Enabled Next Best Actions Are 2.6x More Likely
+    to Achieve Commercial Growth
+  url: https://www.gartner.com/en/newsroom/press-releases/2026-05-20-gartner-survey-finds-sales-organizations-that-provide-ai-enabled-next-best-actions-are-two-point-six-times-more-likely-to-achieve-commercial-growth
+  publisher: Gartner
+  date: '2026-05-20'
+  source_type: industry
+  quality: C
+  note: Solo el título; el cuerpo devolvió 403. Probablemente una asociación de encuesta.
+  verified: true
+alternative_explanations:
+- El ruido del churn observado (44% vuelve al mes siguiente con el mismo monto) puede ser cobro tardío, fallo de
+  pago, pausa voluntaria o prepago. Sin el estado contractual no se sabe cuál domina.
+- Las expansiones que se revierten al mes siguiente pueden ser pagos atrasados acumulados o prepagos, no upsell
+  real.
+- La cola de primeros pagos altos puede ser prepago de varios meses (12 de 42 casos) o clientes más grandes, y no
+  necesariamente otro motion.
+- El mayor peso de la capacidad comercial desde 2023 puede reflejar más Team o KAM, cambios de nómina o una reclasificación
+  contable. Sin headcount por motion no se sabe.
+- Que el funnel no esté en el modelo puede ser un problema de integración (Finora ya tendría un CRM con historial)
+  y no de instrumentación. Eso cambia el costo y el plazo, no el diseño.
+what_is_established:
+- El modelo del caso no tiene eventos del funnel (leads, oportunidades, motion ni canal), así que hoy no se puede
+  calcular ninguna conversión ni CAC por motion (DM-0).
+- El puente mensual de MRR pagado cuadra en 33 de 33 meses (DM-10). El lado Revenue tiene una base consistente,
+  pero de pagos, no de contrato.
+- 'El churn observado mes a mes mezcla el momento del cobro: el 44% vuelve a pagar al mes siguiente con el mismo
+  monto (DM-4) y el 17% de los clientes tiene al menos un pago de varios meses (DM-9).'
+- HubSpot y Salesforce guardan de forma nativa las fechas de entrada y salida de cada etapa o el historial de la
+  oportunidad (HS-1, SF-1). Un sistema de facturación como Stripe distingue el estado de la suscripción y normaliza
+  el MRR (ST-1).
+- Los marcos de práctica miden volumen, conversión y tiempo por etapa de punta a punta y separan los caminos self-serve
+  y asistido (WBD-1, DT-1, AB-1).
+what_is_contested:
+- Si los agentes de IA mejoran la productividad comercial. Gartner anticipa que menos del 40% de los vendedores
+  lo percibirá (GT-1), mientras otro comunicado asocia la IA con crecimiento (GT-2), probablemente como correlación.
+- 'Qué tan causal es la atribución data-driven: Google la describe como contrafactual (GA-1), pero sigue siendo
+  un modelo sobre datos observados.'
+- Si el marco principal debe ser el Bowtie o el Revenue Waterfall. Depende del peso del motion Executive/KAM, que
+  no conocemos.
+- Las cifras de mejora por instalar una cadencia comercial que circulan en blogs de proveedores no tienen fuente
+  verificable, así que no las uso.
+what_remains_unknown:
+- Qué CRM, qué sistema de facturación y qué analítica digital usa Finora, y desde cuándo guardan historial.
+- Cómo se asigna hoy una cuenta a Self Service, Assisted o Executive, y si eso queda registrado.
+- Qué evento del producto define la «activación» en Self Service.
+- La unidad del gasto S&M y el margen bruto, que se necesitan para CAC y payback.
+- Cuánto pesa cada motion en las altas y en el MRR.
+- Si se puede reconstruir el motion y el canal de los clientes actuales, sobre todo de los 377 de la base previa.
+case_implication: 'Para Finora, la respuesta al bloque Growth/CRO no es una tasa de conversión: es una Propuesta
+  de Modelo de datos más un WoW (forma de trabajo) por foro. La instrumentación iría en este orden. Primero la facturación:
+  arregla el lado Revenue que ya existe y permite hablar de MRR contratado en vez de pagado. Después, el motion
+  y el historial de etapas en el CRM. Luego, el canal en la analítica digital. Encima van los tableros por foro,
+  el análisis ad hoc y, al final, los agentes de IA. Esto responde Q-003: solo uniendo, para cada cuenta, motion,
+  canal y MRR contratado se puede ver cómo la manera de conseguir clientes se convierte en ingreso recurrente. Y
+  concreta Q-016: la evidencia mínima son cuatro campos por cuenta (motion, canal, fecha de cada hito y estado contractual
+  con MRR). Sin ellos, ninguna explicación del CRO sobre el funnel se puede distinguir de otra con los datos actuales.
+  Lo que sí se puede mostrar hoy es la mezcla de gasto (más peso de la capacidad comercial desde 2023 y menos Habilitación)
+  y la salud del lado Revenue, con la salvedad del churn observado. Nada de esto afirma conversiones del funnel.'
+changes_current_story:
+  value: maybe
+  why: No cambia el diagnóstico, pero agrega la sección de solución (Propuesta de Modelo de datos + WoW por foro)
+    y obliga a presentar Growth como «qué hay que instrumentar y qué decisiones habilita», no como conversiones.
+    También refuerza la salvedad del churn observado en Revenue. Hugo decide si entra a la historia.
+affected_hypotheses:
+- id: Q-016
+  effect: changes_framing
+  why: 'Es una pregunta, no una hipótesis. La evidencia mínima para distinguir las explicaciones del CRO queda definida
+    como cuatro campos por cuenta: motion, canal, fecha de cada hito y estado contractual con MRR contratado. Sin
+    ellos, ninguna explicación sobre el funnel se distingue de otra con los datos actuales.'
+- id: Q-003
+  effect: requires_research
+  why: Es una pregunta, no una hipótesis. Solo se responde uniendo, para cada cuenta, motion y canal con MRR contratado
+    (el nudo del bowtie). Con los datos actuales se puede mostrar el lado Revenue y la mezcla de gasto, pero no
+    la conexión.
+affected_claims: []
+suggested_action: Propongo armar una lámina «Propuesta de Modelo de datos» con las dos capas y una matriz foro ×
+  métricas × decisiones, y pedir a Data Engineering un borrador de algo equivalente a account_milestones (cuenta
+  × hito × fecha × motion × canal) y subscription_month (MRR contratado), conectados al modelo actual. Antes, conviene
+  verificar en el material del caso qué sistemas y reglas de motion existen; si no aparecen, se presentan como supuestos
+  explícitos.
+new_questions:
+- ¿Qué CRM y qué sistema de facturación usa Finora, y desde qué fecha guardan historial de etapas y estado de suscripción?
+- ¿Con qué regla se asigna hoy una cuenta a Self Service, Assisted o Executive, y en qué campo o sistema queda registrada?
+- ¿Qué acción en el producto define que un cliente Self Service está «activado»?
+handoff_to_cos:
+  summary: 'R-019 propone una solución en dos capas. La técnica: CRM con motion e historial de etapas, analítica
+    digital con canal y facturación con MRR contratado y estado de suscripción, unidos por un ID de cuenta en el
+    modelo actual. La de decisión: bowtie por motion, un tablero por foro (semanal, mensual, trimestral), análisis
+    ad hoc por hipótesis y agentes de IA sobre una capa semántica. Hoy solo el lado Revenue es medible, y con ruido
+    (el 44% del churn observado vuelve al mes siguiente); el lado Growth no está en los datos. Afecta Q-003 y Q-016.'
+  recommended_next: Llevar a Hugo la propuesta de lámina (dos capas + matriz foro × decisión) para que decida si
+    entra al bloque Growth/CRO. En paralelo, pedir a Data Engineering el borrador de account_milestones y subscription_month,
+    y verificar en el caso qué sistemas y reglas de motion existen.
+confidence_buckets:
+  high_confidence:
+  - Hoy no se puede medir el lado Growth con el modelo del caso.
+  - 'El churn observado mes a mes tiene ruido de cobro: el 44% vuelve al mes siguiente con el mismo monto.'
+  - HubSpot, Salesforce y Stripe ya traen de forma nativa el historial de etapas y el estado de suscripción.
+  plausible:
+  - Un bowtie por motion, con alcance por cohorte y tiempo entre hitos, es la estructura adecuada para Finora.
+  - Un tablero por foro (semanal, mensual, trimestral) como WoW del CRO.
+  - Los agentes de IA sirven para vigilancia, pre-lecturas e higiene del CRM si trabajan sobre una capa semántica.
+  contested:
+  - El impacto de los agentes de IA en la productividad comercial.
+  - El carácter causal de la atribución data-driven.
+  - Bowtie o Revenue Waterfall, según el peso de Executive/KAM.
+  unknown:
+  - Qué sistemas usa Finora hoy y qué historial tienen.
+  - Las reglas de asignación de motion y la definición de activación.
+  - La unidad del gasto S&M y el margen bruto.
+  - El peso de cada motion en altas y en MRR.
+specialist:
+  measurement:
+    problem_interpretation: 'El CRO no tiene un funnel, tiene varios. Self Service, Assisted y Executive/KAM entran
+      por hitos distintos, se saltan etapas y terminan en los mismos resultados económicos: MRR contratado, retención
+      y expansión. Hoy Finora solo tiene pagos observados cliente × mes, la industria y el gasto S&M mensual por
+      rubro. El lado Revenue se ve mes a mes, pero con ruido de cobro (el 44% del churn observado vuelve al mes
+      siguiente), y el lado Growth no se ve. La solución tiene que hacer dos cosas: (a) registrar los hitos que
+      faltan en el CRM, la analítica digital y la facturación, unidos por un ID de cuenta dentro del modelo analítico
+      que ya existe; y (b) organizar el uso de los datos por foro y por decisión (tableros por foro, análisis ad
+      hoc y agentes de IA) sobre definiciones únicas.'
+    measurement_objective: Que el CRO pueda decidir cada semana qué oportunidades y cuentas intervenir; cada mes,
+      cómo mover la Inversión en Marketing entre canales y entre ToFu y BoFu y cómo ajustar el enrutamiento entre
+      Self Service, Assisted y Executive; y cada trimestre, cómo repartir el presupuesto entre Generación de Demanda,
+      Team y Habilitación. Para eso necesita ver, por motion y por canal, cuántas cuentas entran (volumen), qué
+      parte llega a cada hito y en cuánto tiempo (tasa y tiempo), y cuánto MRR contratado retiene y expande cada
+      cohorte (valor).
+    recommended_framework:
+      name: Bowtie por motion con hitos + WoW por foro
+      structure: 'Unidades: la cuenta como unidad principal, la oportunidad para Assisted y Executive, y la suscripción
+        para Revenue. Lado izquierdo, uno por motion: Self Service = registro → activación → primer contrato; Assisted
+        = lead o SQL directo (solicitud de demo) → oportunidad → contrato; Executive (con KAM en la post-venta)
+        = cuenta objetivo → oportunidad → contrato. En cada hito se mide el volumen, el alcance de la cohorte a
+        30, 60 y 90 días y el tiempo entre hitos. Nudo común: el primer contrato, con MRR contratado normalizado.
+        Lado derecho, común a todos los motions: activación y onboarding, retención de logos y de MRR por cohorte
+        (NRR y GRR), expansión (KAM vs. upgrade Self Service), churn contractual y payback por motion. Capa de decisión:
+        foro semanal (pipeline, estancamiento, handoffs), foro mensual Growth & Revenue (motion × canal × cohorte),
+        foro trimestral de planeación (inversión, capacidad, supuestos), análisis ad hoc por hipótesis y agentes
+        de IA de vigilancia, pre-lectura e higiene del CRM sobre una capa semántica.'
+      why: '(1) Evita una tasa mezclada que no describe a nadie: cada motion tiene su propio hito de entrada. (2)
+        Conecta la adquisición con el ingreso recurrente (Q-003), porque el nudo une motion y canal con el MRR contratado
+        de cada cuenta. (3) Usa la taxonomía volumen–conversión–tiempo del Bowtie (WBD-1, DT-1), que ya separa volumen,
+        tasa y valor. (4) Reutiliza el modelo actual: el puente de MRR, que ya cuadra en 33 de 33 meses (DM-10),
+        pasa de pagos a contrato. (5) El alcance por cohorte tolera que una cuenta se salte etapas; la conversión
+        etapa a etapa no.'
+    alternative_frameworks:
+    - name: B2B Revenue Waterfall (Forrester), centrado en oportunidades y buying groups
+      when_better: Si el motion Executive/KAM concentra el MRR nuevo y cada compra involucra a varios decisores.
+      tradeoff: No cubre bien Self Service ni la post-venta (retención y expansión), y exige registrar en el CRM
+        los contactos y roles del buying group.
+    - name: Funnel lineal de leads (MQL → SQL → oportunidad → ganado) con atribución multi-touch
+      when_better: Si casi todo el ingreso entra por Assisted y se necesita algo rápido con los reportes nativos
+        del CRM.
+      tradeoff: Fuerza un camino lineal, mezcla los motions en una sola tasa y deja fuera Self Service y la retención.
+        La atribución reparte crédito; no prueba qué canal causa el alta.
+    metric_definitions:
+    - metric: '[Volumen] Entradas por motion'
+      definition: Cuentas que entran a un motion en el periodo, contadas en el hito de entrada propio de ese motion.
+      formula: COUNT(DISTINCT account_id) con fecha_entrada en el periodo, por motion y canal
+      grain: cuenta × mes de entrada × motion × canal
+      milestone: 'Self Service: registro. Assisted: lead calificado o SQL directo (solicitud de demo). Executive:
+        oportunidad abierta sobre una cuenta objetivo. Hitos a validar con Finora.'
+      notes: 'Se muestran lado a lado; nunca se suman como si fueran el mismo hito. Eventos: registro_self_service,
+        lead_creado, etapa_ciclo_de_vida_cambiada, oportunidad_creada, motion_asignado.'
+    - metric: '[Tasa] Alcance a hito a N días'
+      definition: Parte de una cohorte de entrada que llega a un hito dado dentro de N días, aunque se salte etapas
+        intermedias.
+      formula: COUNT(cuentas de la cohorte con fecha_hito ≤ fecha_entrada + N) / COUNT(cuentas de la cohorte); N
+        = 30, 60 o 90
+      grain: cohorte (mes de entrada) × motion × canal
+      milestone: Desde la entrada al motion hasta la activación, la oportunidad o el primer contrato
+      notes: Reemplaza la conversión etapa a etapa y tolera los saltos. Solo se lee cuando la cohorte ya cumplió
+        N días; las cohortes abiertas se marcan.
+    - metric: '[Tiempo] Tiempo entre hitos (Δt)'
+      definition: Días entre dos hitos, para las cuentas que alcanzaron ambos.
+      formula: Mediana y p75 de (fecha_hito_B − fecha_hito_A)
+      grain: cuenta; se reporta por cohorte × motion
+      milestone: 'Pares por motion: registro → activación, SQL → oportunidad, oportunidad → contrato, contrato →
+        primer pago'
+      notes: Se lee siempre junto al alcance, porque solo mide a quien llegó (sesgo de supervivencia).
+    - metric: '[Tiempo] Estancamiento'
+      definition: Parte de las cuentas u oportunidades abiertas que llevan en su etapa actual más tiempo que el
+        p75 histórico de su motion y etapa.
+      formula: COUNT(abiertas con tiempo_en_etapa > p75_motion_etapa) / COUNT(abiertas)
+      grain: oportunidad o cuenta × semana (foto semanal)
+      milestone: Fecha de entrada a la etapa actual
+      notes: Métrica del foro semanal y disparador para los agentes de vigilancia. El umbral se recalibra cada trimestre.
+    - metric: '[Tasa] Win rate por motion'
+      definition: Oportunidades ganadas sobre oportunidades cerradas, por cohorte de creación.
+      formula: COUNT(ganadas) / COUNT(ganadas + perdidas), por motion y mes de creación
+      grain: oportunidad; se reporta por cohorte de creación × motion
+      milestone: Creación de la oportunidad
+      notes: Solo aplica a Assisted y Executive (Self Service no tiene oportunidad). Se mide por cohorte de creación
+        y no por mes de cierre, para no mezclar periodos.
+    - metric: '[Volumen/valor] Pipeline creado y cobertura'
+      definition: MRR esperado de las oportunidades creadas en el periodo, y qué parte del objetivo de nuevo MRR
+        cubre el pipeline abierto.
+      formula: pipeline_creado = SUM(mrr_esperado) de las oportunidades creadas; cobertura = SUM(mrr_esperado de
+        las abiertas con cierre esperado en el periodo) / objetivo_nuevo_MRR
+      grain: oportunidad × semana
+      milestone: Creación de la oportunidad y fecha de cierre esperada
+      notes: Solo Assisted y Executive. Los cambios de fecha de cierre alimentan el disparador de revisión fuera
+        de ciclo.
+    - metric: '[Valor] Nuevo MRR contratado por motion y canal'
+      definition: MRR mensual normalizado de las suscripciones nuevas del periodo.
+      formula: SUM(mrr_normalizado) de las suscripciones cuyo primer periodo facturable cae en el periodo (plan
+        anual ÷ 12; neto de descuentos recurrentes)
+      grain: suscripción × mes, con motion y canal heredados de la cuenta
+      milestone: Inicio del primer periodo facturable
+      notes: No es lo mismo que el monto pagado observado del modelo actual; se reconcilia mes a mes contra los
+        pagos.
+    - metric: '[Valor] Ticket inicial por motion'
+      definition: MRR contratado mediano de las altas del periodo, por motion.
+      formula: Mediana (y p25/p75) de mrr_normalizado en M0, por motion
+      grain: alta × mes × motion
+      milestone: Primer contrato
+      notes: 'Separa el valor del volumen. Hoy el primer pago observado mezcla prepagos: 12 de las 42 altas con
+        M0 de 200.000 COP o más (DM-11).'
+    - metric: '[Tasa] Cruce entre motions'
+      definition: Parte de las cuentas que cierran en un motion distinto al de entrada (por ejemplo, Self Service
+        → Assisted).
+      formula: COUNT(cuentas con motion_al_cierre ≠ motion_de_entrada) / COUNT(cuentas de la cohorte que cerraron)
+      grain: cohorte de entrada × motion de entrada
+      milestone: De la entrada al primer contrato
+      notes: Alimenta la decisión sobre las reglas de enrutamiento. Requiere el historial del evento motion_asignado.
+    - metric: '[Tasa] Retención de logos por cohorte'
+      definition: Parte de las cuentas de una cohorte con suscripción activa (active o past_due) k meses después
+        de su M0.
+      formula: COUNT(cuentas de la cohorte activas en M_k) / COUNT(cuentas de la cohorte)
+      grain: cohorte (mes del primer contrato) × motion × canal × k
+      milestone: Primer periodo facturable (M0)
+      notes: Churn = suscripción cancelada o unpaid según el estado contractual, no «no pagó este mes».
+    - metric: '[Valor] NRR y GRR por cohorte y motion'
+      definition: MRR contratado que conserva una cohorte frente a su MRR inicial, con expansión (NRR) y sin ella
+        (GRR).
+      formula: 'NRR_k = MRR_Mk / MRR_M0 de la cohorte; GRR_k = (MRR_M0 − contracción acumulada − churn acumulado)
+        / MRR_M0. Versión anual: (inicio + expansión − contracción − churn) / inicio'
+      grain: cohorte × motion × k
+      milestone: M0 de la cohorte
+      notes: La expansión se separa por origen (KAM vs. upgrade Self Service) cuando exista suscripcion_modificada
+        con el campo iniciado_por.
+    - metric: '[Calidad de dato] Churn observado vs. contractual'
+      definition: Parte de los meses sin pago que corresponden a suscripciones todavía activas o past_due.
+      formula: COUNT(churn observado con estado active o past_due) / COUNT(churn observado)
+      grain: cliente × mes
+      milestone: Mes del churn observado
+      notes: Métrica de transición. Hoy 330 de 751 churn observados (44%) vuelven al mes siguiente con el mismo
+        monto (DM-4); esta métrica dice cuánto del churn histórico era en realidad un tema de cobro.
+    - metric: '[Eficiencia] Costo por hito y payback por motion'
+      definition: Gasto S&M asignado a un motion o canal dividido por el volumen de un hito, y meses que tarda en
+        recuperarse ese gasto con el nuevo MRR contratado.
+      formula: costo_por_hito = gasto_asignado / COUNT(hito); payback_meses = gasto_asignado / (nuevo_MRR_contratado
+        × margen_bruto)
+      grain: motion × canal × trimestre
+      milestone: Entrada (costo por entrada) y primer contrato (costo por alta)
+      notes: Requiere confirmar la unidad del gasto, conocer el margen bruto y acordar reglas para asignar Team
+        y Payroll a cada motion; nada de eso está en el modelo. Asignar crédito no prueba causa.
+    required_events:
+    - event: visita_con_campana
+      trigger: Sesión web con parámetros UTM o un referido identificable
+      properties:
+      - anonymous_id
+      - utm_source / utm_medium / utm_campaign
+      - etapa objetivo de la campaña (ToFu o BoFu)
+      - landing_page
+      - referrer
+      - timestamp
+    - event: lead_creado
+      trigger: Formulario, solicitud de demo, evento, referido o prospección outbound
+      properties:
+      - lead_id
+      - account_id (cruce por dominio)
+      - tipo de entrada (demo, contacto, contenido, outbound, referido)
+      - canal de primer toque y de último toque
+      - industria
+      - tamaño declarado
+      - timestamp
+    - event: registro_self_service
+      trigger: Creación de una cuenta o una prueba en el producto
+      properties:
+      - account_id
+      - user_id
+      - plan de prueba
+      - canal (UTM heredado)
+      - industria
+      - timestamp
+    - event: activacion_alcanzada
+      trigger: Primera vez que la cuenta completa la acción de valor definida por Producto
+      properties:
+      - account_id
+      - evento de activación
+      - días desde el registro
+      - timestamp
+    - event: etapa_ciclo_de_vida_cambiada
+      trigger: Cambio de lifecycle stage en el CRM (MQL, PQL, SQL, cliente)
+      properties:
+      - account_id
+      - etapa_origen
+      - etapa_destino
+      - origen del cambio (regla o manual)
+      - criterio de calificación
+      - owner
+      - timestamp
+    - event: motion_asignado
+      trigger: Regla de enrutamiento o decisión manual, incluida la reasignación
+      properties:
+      - account_id
+      - motion (Self Service, Assisted, Executive)
+      - motion previo
+      - regla o motivo
+      - owner
+      - timestamp
+    - event: oportunidad_creada
+      trigger: Apertura de una oportunidad en el CRM
+      properties:
+      - opportunity_id
+      - account_id
+      - motion
+      - owner
+      - fuente
+      - mrr_esperado
+      - fecha_cierre_esperada
+      - timestamp
+    - event: oportunidad_etapa_cambiada
+      trigger: Cambio de etapa, de monto o de fecha de cierre
+      properties:
+      - opportunity_id
+      - etapa_origen
+      - etapa_destino
+      - mrr_esperado
+      - fecha de cierre esperada anterior y nueva
+      - probabilidad
+      - timestamp
+    - event: oportunidad_cerrada
+      trigger: Cierre ganado o perdido
+      properties:
+      - opportunity_id
+      - resultado (ganada o perdida)
+      - motivo de pérdida
+      - mrr_contratado
+      - plan
+      - descuento
+      - timestamp
+    - event: suscripcion_iniciada
+      trigger: Inicio del primer periodo facturable
+      properties:
+      - subscription_id
+      - account_id
+      - plan
+      - intervalo de facturación (mensual, trimestral, anual)
+      - mrr_normalizado
+      - descuento (recurrente o único)
+      - motion al cierre
+      - opportunity_id si aplica
+      - fecha_inicio
+    - event: suscripcion_modificada
+      trigger: Upgrade, downgrade o cambio de cantidad
+      properties:
+      - subscription_id
+      - mrr_anterior
+      - mrr_nuevo
+      - motivo
+      - iniciado_por (cliente Self Service, KAM, Assisted)
+      - fecha_efectiva
+    - event: factura_pagada / pago_fallido
+      trigger: Resultado de cada intento de cobro
+      properties:
+      - invoice_id
+      - account_id
+      - monto
+      - periodo cubierto (desde–hasta)
+      - estado
+      - días de mora
+    - event: suscripcion_cancelada
+      trigger: Solicitud de cancelación o paso a unpaid
+      properties:
+      - subscription_id
+      - fecha de solicitud
+      - fecha efectiva
+      - motivo
+      - voluntaria o involuntaria (impago)
+      - timestamp
+    - event: gasto_mensual_asignado
+      trigger: Cierre contable mensual (es un registro, no un evento de usuario)
+      properties:
+      - mes
+      - rubro
+      - canal
+      - motion
+      - etapa (ToFu o BoFu)
+      - monto
+      - unidad y moneda
+    required_dimensions:
+    - dimension: Motion (Self Service, Assisted, Executive)
+      why: Es la unidad de comparación del lado izquierdo. Se guarda al entrar y al cerrar para medir los cruces
+        y no mezclar tasas.
+    - dimension: 'Canal de adquisición (Digital: paid media, orgánico, directo; no digital: PublicidadNoWeb, eventos,
+        referidos, outbound)'
+      why: Decide la Inversión en Marketing. Hay que guardar el primer toque y la fuente del lead, no solo el último
+        clic.
+    - dimension: Etapa objetivo de la inversión (ToFu o BoFu)
+      why: Permite decidir cómo repartir la Generación de Demanda entre crear demanda y convertirla.
+    - dimension: Cohorte de entrada y cohorte de cliente (mes de M0)
+      why: Las tasas y la retención dependen de la antigüedad; sin cohorte se mezclan periodos.
+    - dimension: Antigüedad k (meses desde M0)
+      why: Es el eje de la retención de logos, del NRR y del GRR.
+    - dimension: Industria
+      why: Es la única dimensión de segmento que ya existe (6 valores) y sirve de puente con el histórico.
+    - dimension: Tamaño o segmento de la cuenta
+      why: Es criterio de enrutamiento y de comparación de ticket. No se puede deducir de los pagos, porque los
+        prepagos contaminan el M0.
+    - dimension: Estado contractual (active, past_due, canceled, unpaid)
+      why: Separa el churn real del momento del cobro.
+    - dimension: Plan e intervalo de facturación
+      why: Normaliza el MRR y explica los pagos de varios meses.
+    - dimension: Owner y rol (SDR, AE, KAM)
+      why: Solo para el foro semanal (gestión de oportunidades y capacidad); no sirve para comparar motions.
+    - dimension: Grupo de gasto (Generación de Demanda, Team, Habilitación)
+      why: Conecta el gasto con las decisiones trimestrales; ya existe en mart.sm_monthly.
+    decision_enabled: 'Semanal (CRO + líderes de Assisted y Executive + RevOps): qué oportunidades avanzar, deslizar
+      o descalificar; dónde reasignar capacidad; qué handoffs de Self Service a Assisted se están cayendo; cómo
+      ajustar el forecast del mes. Mensual (CRO + Marketing + CS/KAM + Finanzas): cómo mover la Inversión en Marketing
+      entre canales (Digital vs. no digital) y entre ToFu y BoFu según el alcance y la retención por cohorte; cómo
+      ajustar las reglas de enrutamiento entre Self Service, Assisted y Executive; qué cuentas KAM priorizar para
+      expansión o rescate; qué análisis ad hoc lanzar. Trimestral (CEO + CFO + CRO): cómo repartir entre Generación
+      de Demanda, Team y Habilitación según el payback por motion; contratación; metas por motion; supuestos del
+      forecast; qué experimentos correr (holdouts de medios, pruebas de enrutamiento, política de descuentos). Ad
+      hoc: responder hipótesis concretas con la pregunta, el dato y la decisión explícitos. Agentes de IA: vigilar
+      los disparadores, preparar la pre-lectura de cada foro y mantener la higiene del CRM; no deciden ni afirman
+      causas.'
+    limitations:
+    - 'Con los datos actuales no se puede calcular ninguna métrica del lado Growth: no hay leads, oportunidades,
+      motion ni canal (DM-0).'
+    - 'Probablemente no se puede reconstruir el histórico por motion ni por canal: 377 clientes ya pagaban en ene-22
+      y 108 tienen sospecha de arrastre (DM-6). Salvo que el CRM tenga historial, las cohortes por motion empiezan
+      el día que empiece la instrumentación.'
+    - Las métricas de alcance por cohorte necesitan que la cohorte cumpla N días, así que las primeras lecturas
+      mensuales serán parciales (inferencia).
+    - La atribución reparte crédito, no prueba causa; para mover presupuesto hacen falta experimentos (holdouts).
+      Un MMM con 34 meses de gasto mensual, sin geografía y con unidad no documentada sería frágil (inferencia a
+      partir de GM-1 y DM-3).
+    - El payback por motion depende de cómo se asignen Team y Payroll a cada motion y del margen bruto, que no están
+      en el modelo. Una regla arbitraria distorsiona la comparación.
+    - Los agentes de IA solo son confiables sobre definiciones gobernadas y, aun así, fallan en juicios como rechazar
+      métricas no definidas (GR-1). Su efecto en la productividad es incierto (GT-1).
+    - Las fuentes sobre cadencia y embudos híbridos son de práctica y de proveedores. El diseño se justifica porque
+      encaja con el problema, no por evidencia de impacto.
+    implementation_implications:
+    - 'Orden propuesto: (1) facturación: MRR contratado y estado de suscripción, reconciliados contra los pagos;
+      (2) CRM: campo motion obligatorio, historial de etapas y oportunidades con MRR esperado y motivo de pérdida;
+      (3) analítica digital: UTM y canal capturados desde la primera visita y heredados al lead y a la cuenta; (4)
+      tableros por foro; (5) agentes de IA.'
+    - Data Engineering necesita una llave de cuenta que cruce CRM, facturación, producto y el «Cliente N» del modelo
+      actual, y tablas equivalentes a account_milestones (cuenta × hito × fecha × motion × canal), opportunity_history
+      y subscription_month (MRR contratado). customer_month (pagado) se conserva para reconciliar.
+    - Una capa semántica con una sola definición de MRR contratado, churn contractual, motion, alcance y tiempo
+      entre hitos, que usen por igual los tableros, el análisis ad hoc y los agentes.
+    - 'Un tablero por foro, no por área: cada tablero responde solo las preguntas de su foro, con disparadores explícitos
+      y enlaces al análisis ad hoc.'
+    - 'Gobierno del CRM: campos obligatorios al cambiar de etapa (motion, fuente, MRR esperado, fecha de cierre,
+      motivo de pérdida) y reglas de validación. RevOps es dueño de las definiciones; el CRO, de las decisiones.'
+    - 'Gasto: registrar cada mes el gasto por rubro × canal × motion, con unidad y moneda explícitas; mapear PaidMedia
+      a Digital y PublicidadNoWeb a no digital, y asignar Team y Payroll por motion con una regla acordada.'
+    - 'Análisis ad hoc con una ficha por hipótesis: pregunta, decisión que cambiaría, dato, método (cohorte o experimento)
+      y umbral de acción.'
+    - 'Diseño experimental desde el primer día: holdouts de medios por periodo o región y pruebas de umbrales de
+      enrutamiento, con una métrica primaria (alcance a contrato a 60 días o MRR contratado por cuenta) y métricas
+      de resguardo (retención en M3).'
+    - 'Agentes de IA en piloto, con grupo de control y alcance limitado: vigilancia de disparadores, pre-lectura
+      de los foros, higiene del CRM y preguntas sobre la capa semántica. Nunca sobre tablas crudas.'
+sql_runs:
+- SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS total_new,
+  SUM(churned_customers) AS total_churn_events, SUM(reactivated_customers) AS total_reactivations FROM mart.monthly_metrics
+- SELECT industry, COUNT(*) AS customers FROM staging.stg_customers GROUP BY industry ORDER BY customers DESC
+- SELECT movement_type, COUNT(*) AS rows_n FROM mart.customer_month GROUP BY movement_type ORDER BY rows_n DESC
+- SELECT rubro, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM staging.stg_sm_spend
+  GROUP BY rubro ORDER BY rubro
+- SELECT COUNT(*) AS churn_events, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS returned_next_month,
+  SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_any_time_before_oct24 FROM mart.churn_events
+- SELECT movement_type, COUNT(*) AS events, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month,
+  SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS multi_month_signature FROM mart.customer_month
+  WHERE movement_type IN ('expansion','contraction') GROUP BY movement_type
+- SELECT cohort_flag, COUNT(DISTINCT customer_id) AS customers FROM mart.customer_month WHERE cohort_flag IS NOT
+  NULL GROUP BY cohort_flag
+- SELECT month, active_customers, new_customers, churned_customers, reactivated_customers, total_paid_mrr_cop, new_mrr_cop,
+  expansion_mrr_cop, contraction_mrr_cop, churned_mrr_cop, reactivation_mrr_cop FROM mart.monthly_metrics WHERE
+  month IN ('2022-01','2022-12','2023-06','2023-12','2024-06','2024-10') ORDER BY month
+- SELECT SUBSTR(month,1,4) AS year, ROUND(SUM(demand_gen_spend)/SUM(total_sm_spend),3) AS demand_gen_share, ROUND(SUM(sales_capacity_spend)/SUM(total_sm_spend),3)
+  AS sales_capacity_share, ROUND(SUM(enablement_spend)/SUM(total_sm_spend),3) AS enablement_share, COUNT(*) AS months
+  FROM mart.sm_monthly GROUP BY SUBSTR(month,1,4) ORDER BY year
+- SELECT COUNT(*) AS altas_clean, MIN(m0_cop) AS min_m0, MAX(m0_cop) AS max_m0, ROUND(AVG(m0_cop),0) AS avg_m0 FROM
+  mart.new_customers WHERE clean = 1
+- SELECT bucket, COUNT(*) AS altas FROM (SELECT CASE WHEN m0_cop < 50000 THEN 'a_<50k' WHEN m0_cop < 100000 THEN
+  'b_50k-100k' WHEN m0_cop < 200000 THEN 'c_100k-200k' WHEN m0_cop < 500000 THEN 'd_200k-500k' ELSE 'e_>=500k' END
+  AS bucket FROM mart.new_customers WHERE clean = 1) t GROUP BY bucket ORDER BY bucket
+- SELECT COUNT(*) AS rows_with_signature, COUNT(DISTINCT customer_id) AS customers_with_signature, (SELECT COUNT(DISTINCT
+  customer_id) FROM mart.customer_month WHERE active_customer = 1) AS customers_ever_active FROM mart.customer_month
+  WHERE multi_month_payment_signature > 0
+- SELECT COUNT(*) AS months_negative_bridge_check, SUM(CASE WHEN ABS(mrr_bridge_diff_cop) < 0.01 THEN 1 ELSE 0 END)
+  AS months_bridge_ok, SUM(CASE WHEN customer_bridge_diff = 0 THEN 1 ELSE 0 END) AS months_customer_bridge_ok FROM
+  mart.monthly_metrics_phase1 WHERE month > '2022-01'
+- SELECT CASE WHEN n.m0_cop >= 200000 THEN 'm0_>=200k' ELSE 'm0_<200k' END AS tramo, COUNT(*) AS altas, SUM(CASE
+  WHEN c.multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS m0_con_firma_multimes FROM mart.new_customers n
+  JOIN mart.customer_month c ON c.customer_id = n.customer_id AND c.month = n.cohort_month WHERE n.clean = 1 GROUP
+  BY 1 ORDER BY 1
+completed_at: '2026-09-29T11:06:06-06:00'
+findings:
+- F-145
+- F-146
+- F-147
+- F-148
+- F-149
+run_ids:
+- RUN-20260929-103203-measurement-e10a
+usage:
+  RUN-20260929-103203-measurement-e10a:
+    cost_usd: 3.1623882000000005
+    turns: 48
+    ms: 1044101
+    input_tokens: 48
+    output_tokens: 99299
+    cache_read: 919141
+    cache_write: 65061
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: measurement-strategy
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: cro-advisor
+  mode: dynamic
+  why: 1 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+  kind: vendor
+  digest: cd712605d907
+validation:
+  unverified_sources:
+  - DM-0
+  bare_claims: []
+  seen_urls: 127
+  ok: false

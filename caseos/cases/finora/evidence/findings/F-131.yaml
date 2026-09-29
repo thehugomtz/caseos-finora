@@ -1,0 +1,91 @@
+id: F-131
+type: finding
+headline: Más de la mitad del COP de «contracción» observada tiene forma de efecto de cobro (el cliente vuelve a
+  su monto usual después de un mes más alto), no necesariamente de suscripciones más pequeñas.
+evidence_text: Hay 1.247 contracciones (−90,9 M COP) frente a 1.294 expansiones (+41,2 M COP). De ellas, 366 contracciones
+  (−52,4 M COP; 57,6 %) ocurren el mes siguiente a un primer pago observado (165) o a una reactivación (201). Hay
+  608 contracciones (−47,0 M COP; 51,7 %) que regresan al monto usual desde un mes más alto; 312 de ellas vienen
+  de un mes que era un múltiplo exacto (k×) del usual. De 330 reactivaciones tras un solo mes en cero, 117 pagan
+  exactamente el doble del monto previo. Además, 194 expansiones vuelven al monto anterior al mes siguiente.
+confidence: medium
+limitations:
+- 'Los patrones se detectan con reglas aproximadas sobre el monto. Caben explicaciones reales: cargo de instalación,
+  upgrade temporal o add-on puntual. Además, 105 meses «planos» tienen firma k×, lo que muestra que la regla también
+  marca aumentos que se sostienen. No reclasifica nada: es sensibilidad.'
+kind: data_engineering
+claims:
+- claim: El panel de monto pagado clasifica 1.294 expansiones (+41,2 M COP) y 1.247 contracciones (−90,9 M COP)
+    solo por la variación del monto; además registra 751 churns observados y 468 reactivaciones.
+  source_id: D1
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29; datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Son movimientos de monto pagado observado, no de MRR contratado.
+- claim: 366 contracciones (−52,4 M COP; 57,6 % del COP de contracción) ocurren el mes siguiente a un primer pago
+    observado (165; −20,7 M) o a una reactivación (201; −31,7 M); en 226 de ellas el mes previo tenía firma k× del
+    monto usual.
+  source_id: D2
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: El conteo es firme. La lectura como efecto de cobro es una interpretación con alternativas.
+- claim: 608 contracciones (−47,0 M COP; 51,7 %) son un regreso al monto usual del cliente desde un mes más alto;
+    312 de ellas (−27,4 M) vienen de un mes que era un múltiplo exacto (k×) del usual.
+  source_id: D3
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Se solapa con el claim anterior; no hay que sumarlos.
+- claim: De 330 reactivaciones tras un solo mes en cero, 117 pagan exactamente el doble del monto previo al hueco
+    y 87 pagan lo mismo; 21 reactivaciones tras dos meses en cero pagan el triple.
+  source_id: D4
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con pago de atrasos sin cancelación (mora). También con recontratación con cargo o con dos periodos
+    facturados juntos.
+- claim: De 1.584 primeros pagos observados, 165 tienen M1 menor que M0 y en 75 el M0 es exactamente el doble del
+    M1.
+  source_id: D9
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con cargo de instalación, prorrata o prepago. El primer pago observado no es necesariamente
+    el inicio del contrato.
+- claim: 194 expansiones vuelven al monto anterior al mes siguiente (pico de un mes), frente a solo 17 contracciones
+    que revierten al mes siguiente.
+  source_id: D10
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Los picos de un mes son frecuentes; son compatibles con cobros puntuales o de varios periodos.
+- claim: 105 meses clasificados como flat tienen firma k× del monto usual (el cliente se mantiene en 2× u otro múltiplo),
+    así que la regla de firma multimes también marca aumentos sostenidos.
+  source_id: D11
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: contests
+  notes: 'Pone en duda que toda firma k× sea un pago de varios meses: puede haber duplicaciones reales.'
+unverified: false
+source_ref:
+  research: R-011
+links:
+- R-011
+- H-016
+- H-015
+- H-013
+phase: research
+review:
+  state: proposed
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T10:48:41-06:00'
+updated_at: '2026-09-29T10:48:41-06:00'
+version: 1

@@ -97,6 +97,7 @@ def save_run(spec: RunSpec, result: RunResult | None, error: str | None, started
 # ------------------------------------------------------------------------------------------ data model tools
 DATA_SERVER = "caseos_datos"
 DATA_TOOLS = [f"mcp__{DATA_SERVER}__consultar_modelo", f"mcp__{DATA_SERVER}__catalogo_modelo"]
+CATALOG_CALL = "catalogo_modelo()"
 
 
 def data_tool_handlers(model, sql_log: list[str]) -> dict:
@@ -114,6 +115,7 @@ def data_tool_handlers(model, sql_log: list[str]) -> dict:
         return {"content": [{"type": "text", "text": body[:60000]}]}
 
     async def catalogo_modelo(args: dict) -> dict:
+        sql_log.append(CATALOG_CALL)                    # reading the catalog is citable too ("no hay tablas de leads")
         lines = []
         for t in model.catalog()["tables"]:
             cols = ", ".join(c["name"] + (f" ({c['definition']})" if c.get("definition") else "") for c in t["columns"])

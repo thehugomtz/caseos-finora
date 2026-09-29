@@ -222,7 +222,8 @@ const STEP_ICON = { data: "db", research: "globe", proposal: "spark" };
 function taskContext(r) {
   const t = r.task;
   return h("div.panel.pad.taskctx", h("div.row.wrap", h("span.eyebrow.accent", `Tarea ${r.shaping_task || ""} del plan`), h("span.chip.work-" + (t.work || "propuesta"), WORK_LABEL[t.work] || t.work),
-      (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x)), h("span.small.faint", "aprobada por ti en Framing & Shaping")),
+      (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x)), h("span.small.faint", "aprobada en Framing & Shaping")),
+    r.requested_via ? h("div.small.faint", { style: { marginTop: "6px" } }, "Lanzamiento: " + r.requested_via) : null,
     t.draft_answer ? h("div.draft", { style: { marginTop: "10px" } }, h("div.flab", "Respuesta de arranque", h("span.faint", " · la investigación la valida o la corrige")), h("div.dt", t.draft_answer)) : null,
     (t.hugo_said || []).length ? h("div.said", { style: { marginTop: "8px" } }, h("div.flab", "Lo que ya dijiste"), t.hugo_said.map(x => h("div.sq2", h("span.voice", "“" + x.text + "”"), x.ref ? idTag(x.ref) : null))) : null,
     (t.steps || []).length ? h("div", { style: { marginTop: "8px" } }, h("div.flab", "Cómo se trabaja"), h("ol.stepl", t.steps.map(st => h("li",

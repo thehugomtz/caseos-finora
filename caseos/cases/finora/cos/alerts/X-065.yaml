@@ -1,0 +1,49 @@
+id: X-065
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-020
+target: H-017
+title: R-020 debilita H-017
+finding_text: El ticket de entrada es medible; el descuento no es verificable aquí
+why: 'H-017 supone que los montos se pueden comparar entre periodos sin distorsiones importantes. R-020 muestra
+  que la forma del monto cambia dentro del periodo. Los meses-cliente fuera de la grilla pasan de 19% (2022 S2)
+  a 42% (2024 S2) y los ajustes pequeños, de 9% a 75% de los eventos de expansión (F-091). Los pagos por debajo
+  del monto usual del cliente bajan de 20,7% a 2,9% (F-089). Además, el 29% del MRR de expansión observado se revierte
+  al mes siguiente (F-090). Por eso, comparar 2022 con 2024 mezcla un cambio de nivel con un cambio en cómo se forma
+  el monto. R-020 trata estas medidas como señal direccional: con otro criterio, el monto coincide con el usual
+  del propio cliente en el 78,8% de 2024. Aun así, confirma la evaluación del agente (No soportada) y añade algo:
+  la distorsión no es constante en el tiempo.'
+options:
+- key: A
+  label: Una sola limitación para toda la historia
+  consequence: No hace falta otra corrida. En Overview se dice una vez que el monto es observado y que su forma
+    cambia en el periodo. En Revenue, la expansión se cuenta como «3 de cada 4 eventos de 2024 S2 son ajustes pequeños»,
+    no como ampliación de lo contratado.
+- key: B
+  label: Puente neto de reversiones
+  consequence: 'Una corrida más: el puente de R-004 sin los movimientos que se deshacen al mes siguiente y con los
+    ajustes pequeños aparte. Deja cifras de expansión y contracción defendibles ante el CFO.'
+- key: C
+  label: Dejar el puente como está, con un aviso genérico
+  consequence: Es rápido, pero el CFO puede leer los COP 39,8 millones de expansión de R-004 como upsell.
+recommended: A
+recommended_why: Las reversiones inflan a la vez la expansión y la contracción, y también las bajas y las reactivaciones.
+  Por eso afectan más a los movimientos brutos que a la conclusión principal de R-004; lo que sí podría exagerarla
+  es el primer cobro, y eso ya lo cubre Q-012. A también respeta el «no afirmar» del framing sobre etiquetas contractuales.
+  B solo vale la pena si la sección CFO va a mostrar montos de expansión o contracción.
+detected_by: cos
+links:
+- R-020
+- H-017
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-150b
+created_at: '2026-09-29T11:55:06-06:00'
+updated_at: '2026-09-29T11:55:06-06:00'
+version: 1

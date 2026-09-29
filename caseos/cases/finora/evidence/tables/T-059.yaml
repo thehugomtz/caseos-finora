@@ -1,0 +1,63 @@
+id: T-059
+type: table
+table_key: FIN-F-091
+title: Los meses-cliente activos con monto fuera de la grilla de montos pasan de 19% en 2022 S2 a 42% en 2024 S2,
+  y…
+question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos,
+  sin leerla como descuento?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - offgrid_2022s2
+  - Meses-cliente activos con monto fuera de la grilla de COP 2.100, 2022 S2
+  - 19%
+- - offgrid_2024s2
+  - Meses-cliente activos con monto fuera de la grilla de COP 2.100, 2024 S2
+  - 42%
+units: {}
+definitions: {}
+message: Los meses-cliente activos con monto fuera de la grilla de montos pasan de 19% en 2022 S2 a 42% en 2024
+  S2, y los ajustes pequeños pasan de 9% de los eventos de expansión en 2022 S1 a 75% en 2024 S2.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-05
+  - EC-DAT-04
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-DAT-05 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-DAT-04 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-30ce · C-013
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '9.4'
+  claim_fase1: C-DAT-05
+  cubre:
+  - C-DAT-05
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-091
+links:
+- F-091
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 1

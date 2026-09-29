@@ -1,0 +1,66 @@
+id: F-142
+type: finding
+headline: Con el modelo actual no se puede medir el lado izquierdo, y la premisa «llega más gente» de Q-001 no es
+  observable. El nudo y el lado derecho sí se pueden medir.
+evidence_text: 'El modelo solo tiene pagos cliente × mes, industria y gasto por rubro: no hay leads, etapas, canales
+  ni puertas. Sí muestra altas planas en torno a 54–55 por mes (650 en 2023 y 554 en ene–oct 2024). Los activos
+  en M3 son 90,1%, 95,8% y 95,2% por cosecha. Las reactivaciones equivalen al 37,9%, 17,7% y 22,6% de las entradas
+  a pago.'
+confidence: low
+limitations:
+- «Alta» es la primera aparición con pago, no una adquisición confirmada. El churn y la reactivación se observan
+  en los pagos; no son eventos de contrato.
+kind: measurement
+claims:
+- claim: 'El modelo de Finora no tiene datos pre-venta: no hay tablas ni columnas de leads, etapas (MQL/SQL/oportunidad),
+    fecha de entrada, canal de adquisición ni puerta. Solo tiene pagos cliente × mes, industria por cliente y gasto
+    S&M mensual por rubro.'
+  source_id: DM-01
+  source_type: data_model
+  confidence: low
+  freshness: Catálogo consultado el 2026-09-29; datos de ene-2022 a oct-2024
+  supports_or_contests: context
+  notes: 'Confirma la regla del caso: con estos datos no se puede afirmar nada sobre conversión del funnel. · fuente
+    no recuperada en la corrida (CaseOS)'
+  unverified: false
+- claim: 'Altas (primera aparición con pago) por año: 272 en mar–dic 2022, 650 en 2023 y 554 en ene–oct 2024. En
+    promedio son ~54 por mes en 2023 y ~55 por mes en 2024.'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Los promedios salen del resultado (650/12 y 554/10). No dicen nada sobre cuánta gente llega antes de pagar.
+- claim: 'Reactivaciones (clientes que vuelven a pagar tras al menos un mes en cero): 166 en mar–dic 2022, 140 en
+    2023 y 162 en ene–oct 2024. Equivalen al 37,9%, 17,7% y 22,6% de las entradas a pago (altas + reactivaciones).'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Si algún reporte las cuenta como entradas nuevas, inflan el volumen. Deben ir como tipo de entrada aparte.
+- claim: 'Activos en el mes 3 de tenure: 90,1% (cosecha mar–dic 2022, n=272), 95,8% (2023, n=650) y 95,2% (2024
+    con M3 observable, n=399). En M1: 91,9%, 96,9% y 96,2%.'
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Cohortes hasta jul-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Es el lado derecho del bowtie y ya se puede medir hoy, aunque sin puerta. Es una foto de si pagan en M3,
+    no una retención continua.
+unverified: true
+source_ref:
+  research: R-016
+links:
+- R-016
+- H-003
+- Q-001
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:02:42-06:00'
+updated_at: '2026-09-29T11:02:42-06:00'
+version: 1

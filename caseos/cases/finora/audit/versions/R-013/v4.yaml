@@ -1,0 +1,87 @@
+id: R-013
+type: research
+research_question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools
+  + Freelance va en Habilitación comercial o en producto?
+case_question: Q-018, Q-022
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-018
+    - Q-022
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-018
+- Q-022
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:32:02-06:00'
+version: 4
+job_id: JOB-20260929-103202-d29f
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-004
+slides:
+- S2.2
+task_why: 'Define si el cruce de S2.2 puede usar montos o solo formas en el tiempo, y si Habilitación se queda como
+  gasto comercial o sale como producto (versión mejorada de RT-004: suma S2.2, respuesta de arranque y pasos).'
+task:
+  work: datos
+  draft_answer: 'El archivo no documenta la unidad (viene en texto con «$») y no sabemos si está en la misma escala
+    que los pagos. Por eso, por ahora solo se comparan formas y tiempos, no ratios. Tu duda de si Software Tools
+    + Freelance es producto es válida: mi arranque es dejarlo en Habilitación, con el supuesto a la vista, hasta
+    que Finora lo confirme. Del archivo sí sale qué meses cubre cada rubro, cómo se mueve cada uno y con qué otros
+    rubros se mueve junto; eso es una pista, no una prueba.'
+  hugo_said:
+  - text: Habilitación ¿producto tal vez? (Software Tools + Freelance)
+    ref: N-023
+  steps:
+  - kind: data
+    what: 'Describir el archivo: meses cubiertos por rubro, vacíos, formato del texto con «$», magnitud y tendencia
+      de cada rubro. El orden de magnitud se compara con el monto pagado solo como pista, nunca como conversión
+      a COP.'
+    where:
+    - raw.sm_spend
+    - staging.stg_sm_spend
+    - mart.sm_monthly
+    - mart.monthly_metrics
+  - kind: data
+    what: Revisar si Software Tools y Freelance se mueven con Team / Payroll Expenses (gente) o con Paid Media /
+      Publicidad no web (campañas). Validar también la agrupación que ya trae el mart (demand_gen_spend, sales_capacity_spend,
+      enablement_spend).
+    where:
+    - mart.sm_monthly
+  - kind: proposal
+    what: 'Clasificación de rubros (Generación de Demanda ToFu, Team, Habilitación) con el supuesto de Software
+      Tools + Freelance a la vista. Incluye las dos preguntas para Finora: unidad y moneda del archivo, y naturaleza
+      de esos dos rubros.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

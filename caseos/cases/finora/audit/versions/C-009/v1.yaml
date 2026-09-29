@@ -1,0 +1,58 @@
+id: C-009
+type: claim
+key: metricas-semaforo
+question: ¿Qué métricas propondrías que hoy no existen y cuáles se pueden calcular ya?
+headline: 'Proponemos un árbol de ingreso recurrente con semáforo: qué se mide hoy y qué no'
+answer: 'En verde, con nombre honesto: MRR pagado observado y su puente, clientes activos, ARPA por cliente (lo
+  que se pide como ARPU; no hay datos por usuario), churn observado junto a uno con ventana de gracia, NRR/GRR de
+  la base y métricas por cohorte; el ARR, solo como run-rate anualizado. El churn muestra por qué importa el nombre:
+  el observado baja de 3,52% en 2022 a 2,04% en 2024, mientras el que no vuelve a pagar en un trimestre pasa de
+  0,98% a 0,96%. En rojo, porque piden datos nuevos: CAC en COP y por motion o canal, payback, LTV con margen, LTV:CAC
+  y UCM. Hoy solo cabe un «LTV empírico de ingreso» por cohorte, a horizonte fijo.'
+role_in_story: recommendation
+evidence_ids:
+- F-135
+- F-136
+- F-139
+- F-033
+- F-137
+- F-138
+table_ids:
+- T-002
+- T-034
+research_ids:
+- R-018
+framework_ids: []
+confidence: medium
+limitations:
+- Propuesta de especialista (R-018), pendiente de tu aceptación. F-137 y F-138 vienen de fuente sin verificar.
+- 'Churn observado 2024: T-002 da 2,04% y T-034, 1,9%. Hay que reconciliar la ventana o el denominador antes de
+  mostrarlo.'
+- NRR/GRR y retención se calculan sobre pagos observados, no son retención contractual.
+- 'Antes de llamar churn o MRR a lo observado hacen falta una regla de normalización y una ventana de gracia: los
+  atrasos y los pagos multimes inflan churn, reactivación y expansión (F-136).'
+- El ARPA de entrada se mide con monto estabilizado (segundo pago o monto usual), no con el primer pago (F-139).
+- 'D-007 (activa) dejó las métricas definitivas fuera de etapa: esto es una propuesta.'
+visual_intent: 'Jerarquía: del resultado (MRR) a los drivers y la economía unitaria, con cada métrica marcada según
+  qué tan medible es hoy.'
+hugo_wording: Qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas,
+  robustecerlo y bajar lo que tenga sentido.
+links:
+- F-135
+- F-136
+- F-139
+- F-033
+- F-137
+- F-138
+- T-002
+- T-034
+- R-018
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T11:54:06-06:00'
+version: 1

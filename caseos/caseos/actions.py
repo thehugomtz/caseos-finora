@@ -87,6 +87,10 @@ def run(store: CaseStore, eid: str, action: str, payload: dict | None = None) ->
         return research.follow_up(store, eid, question=p["question"], launch=bool(p.get("launch")))
     if action == "retry":
         return research.retry(store, eid)
+    if action == "reverify":
+        return research.reverify_model_sources(store, eid)
+    if action == "recover":
+        return analytics.recover_research(store, eid)
     if action == "send_to_cos":
         if t == "finding":
             return analytics.send_to_cos(store, eid)

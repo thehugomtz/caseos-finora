@@ -1,0 +1,56 @@
+id: F-126
+type: finding
+headline: Con el modelo actual no se puede validar ni descartar ninguna de H-001 a H-008. El gasto sube mientras
+  las altas bajan, pero eso no dice nada de los leads.
+evidence_text: 'El catálogo no tiene tablas de entradas, etapas, actividades comerciales, roster de SDR/AE ni vínculo
+  CRM→pago. En jul–oct 2024 frente a 2023, el gasto subió: Generación de Demanda +46%, capacidad comercial +27%,
+  Team +8% y total S&M +38% (la unidad no está documentada). La industria solo existe para quienes pagan, y esa
+  mezcla casi no cambió.'
+confidence: low
+limitations:
+- Gasto no es volumen de leads ni FTE. La mezcla de quienes compran no es la mezcla de quienes entran.
+kind: measurement
+claims:
+- claim: El modelo no contiene entradas/leads, etapas, actividades comerciales, roster de SDR/AE ni un vínculo CRM→pago.
+    Solo tiene pagos (cliente × mes), la industria de los clientes y el gasto S&M mensual.
+  source_id: DM-01
+  source_type: data_model
+  confidence: low
+  freshness: Modelo con datos hasta 2024-10; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Por eso ninguna de H-001 a H-008 se puede probar hoy con el modelo. · fuente no recuperada en la corrida
+    (CaseOS)
+  unverified: false
+- claim: 'Gasto jul–oct 2024 frente a 2023, en promedio mensual: Generación de Demanda 0,746→1,092 (+46%), capacidad
+    comercial 0,569→0,72 (+27%), Team 0,418→0,45 (+8%) y total S&M 1,364→1,888 (+38%).'
+  source_id: DM-05
+  source_type: data_model
+  confidence: medium
+  freshness: Datos 2023-07 a 2024-10
+  supports_or_contests: context
+  notes: 'La unidad no está documentada: solo vale la comparación relativa. Es compatible con «más inversión en
+    ToFu sin más altas», pero no mide leads ni FTE.'
+- claim: 'La mezcla por industria de las altas de mar–oct casi no cambió entre 2023 y 2024: Restaurantes 108→121,
+    Retail 120→115, Producción 97→94, Tecnología 42→52, Servicios profesionales 42→47 y Salud 24→36.'
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Datos 2022-03 a 2024-10
+  supports_or_contests: context
+  notes: Es la mezcla de quienes pagan, no de quienes entran. No sirve para probar H-002.
+unverified: true
+source_ref:
+  research: R-010
+links:
+- R-010
+- H-001
+- H-002
+- H-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:47:15-06:00'
+updated_at: '2026-09-29T10:47:15-06:00'
+version: 1

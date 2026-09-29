@@ -1,0 +1,70 @@
+id: F-130
+type: finding
+headline: 'El monto pagado no identifica los componentes: con los campos actuales no se puede separar suscripción,
+  tarifa, descuento ni momento de cobro.'
+evidence_text: 'El modelo solo tiene cliente × mes × monto, más industria y gasto S&M. No hay plan, cantidad, tarifa
+  de lista, precio pactado, descuento, periodo de servicio, factura ni estado de pago. En los casos de Q-025 las
+  alternativas producen la misma secuencia de montos (100→100, 100→80, 80→100). En datos reales, Cliente 10 pasa
+  de 42.000 a 0, luego a 84.000 y vuelve a 42.000 COP (may–ago 2023): el panel lo registra como churn, reactivación
+  y contracción, pero es igual de compatible con un pago atrasado sin ningún cambio. Cliente 378 acumula 5 expansiones
+  y 5 contracciones en 33 meses, aunque sus niveles estables solo cambian dos veces (84.000 → 96.600 → 149.520 COP).'
+confidence: low
+limitations:
+- Demuestra que no se puede distinguir, no qué pasó en cada caso. Los dos clientes son ejemplos, no una muestra
+  representativa.
+kind: data_engineering
+claims:
+- claim: El modelo del caso solo tiene cliente × mes × monto (más industria por cliente y gasto S&M por mes). No
+    existe ningún campo de plan, cantidad, tarifa de lista, precio pactado, descuento, periodo de servicio, factura
+    o estado de pago.
+  source_id: D8
+  source_type: data_model
+  confidence: low
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Apoya H-016: el monto es la única señal de valor disponible. · fuente no recuperada en la corrida (CaseOS)'
+  unverified: true
+- claim: 'Inferencia: con solo el monto, cada caso de Q-025 da la misma secuencia para sus alternativas (A: 100→100;
+    B: 100→80; C: 80→100), así que ninguna regla sobre el monto puede clasificarlos. Con la convención solo neto,
+    la expansión de A no se ve y B1/B2 y C1/C2 quedan iguales.'
+  source_id: I1, S1
+  source_type: internal + company (inferencia)
+  confidence: low
+  freshness: estado del caso; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Los montos son los ilustrativos de Q-025, no datos del caso. Es una simulación: prueba qué se puede distinguir,
+    no qué pasó.'
+  unverified: true
+- claim: Cliente 10 paga 42.000 COP en may-23, 0 en jun-23, 84.000 en jul-23 y 42.000 en ago-23; el panel lo clasifica
+    como flat, churn, reactivación y contracción.
+  source_id: D6
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Es un ejemplo real de H-016: también es compatible con una suscripción sin cambios y un pago atrasado.'
+- claim: 'Cliente 378 registra 5 expansiones y 5 contracciones entre feb-22 y oct-24, pero sus niveles estables
+    solo cambian dos veces: 84.000 → 96.600 → 149.520 COP. El paso a 96.600 (+15 %) puede ser tarifa, plan o fin
+    de descuento.'
+  source_id: D7
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Ilustra H-013/H-014/H-015: el dato no dice cuál de las tres.'
+unverified: true
+source_ref:
+  research: R-011
+links:
+- R-011
+- H-016
+- H-015
+- H-013
+phase: research
+review:
+  state: proposed
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T10:48:41-06:00'
+updated_at: '2026-09-29T10:48:41-06:00'
+version: 1

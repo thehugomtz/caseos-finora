@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 
-from . import cos, workspaces
+from . import config, cos, workspaces
 from .evidence import validate_table
 from .model import title_of
 from .store import CaseStore, StoreError
@@ -153,6 +153,8 @@ async def investigate_for_research(store: CaseStore, r: dict, job) -> dict:
            "nota": "\n".join(["Pregunta enviada desde CaseOS; responde con evidencia del workspace.", *task_lines(r)]),
            "claim_ids": [], "narrativa_id": "", "pieza_id": ""}
     inv = ws.new_investigation(r["research_question"], ctx)
+    store.update(r["id"], {"workspace_run_started": inv.id}, actor="analytics", material=False,
+                 summary=f"{r['id']}: investigación {inv.id} en el workspace")
     task = asyncio.create_task(ws.run_investigation(inv))
     sent = 0
     await job.event("workspace", {"summary": f"Investigación en vivo {inv.id} en el Business Exploration Workspace"})
@@ -166,6 +168,11 @@ async def investigate_for_research(store: CaseStore, r: dict, job) -> dict:
     if d.get("status") != "publicada":
         from .llm import AgentError
         raise AgentError("unknown", d.get("error") or "La investigación del workspace no se publicó.")
+    return result_from_run(store, r, d, ws)
+
+
+def result_from_run(store: CaseStore, r: dict, d: dict, ws) -> dict:
+    """A published workspace run → the research result: validated claims become findings (with their tables)."""
     comp = d.get("narrativa") or {}
     head = comp.get("respuesta_ejecutiva") or {}
     fids = []
@@ -177,6 +184,13 @@ async def investigate_for_research(store: CaseStore, r: dict, job) -> dict:
                 continue
             if f["id"] not in fids:
                 fids.append(f["id"])
+    # an analytics finding travels with its EvidenceTable: without it, its numbers cannot reach the story. The table is
+    # proposed evidence like the finding (nothing is accepted here); a qualitative finding simply has no rows.
+    for fid in fids:
+        try:
+            to_table(store, fid, actor="analytics")
+        except StoreError:
+            pass
     return {
         "research_question": r["research_question"], "case_question": r.get("case_question", ""),
         "why_it_matters": "", "short_answer": f"{head.get('titular', '')}. {head.get('texto', '')}".strip(". "),
@@ -206,11 +220,59 @@ def _event_text(e: dict) -> str:
         return f"Workspace · {d.get('tool', '')} {clip(str(d.get('resumen') or d.get('params') or ''), 100)}"
     if t == "claim":
         return f"Workspace · afirmación {d.get('id', '')} {'validada' if d.get('aceptada') else 'rechazada'}"
+    if t == "tool_error":
+        return f"Workspace · {d.get('tool', '')} falló (el investigador lo corrige): {clip(str(d.get('error', '')), 140)}"
     if t == "hipotesis":
         return "Workspace · hipótesis actualizadas"
     if t == "composicion":
         return f"Workspace · composición (intento {d.get('intento')})"
     return f"Workspace · {t}"
+
+
+def workspace_run_of(store: CaseStore, rid: str) -> str | None:
+    """The workspace investigation behind a research: recorded on the research, else in its job's trace."""
+    import json
+    import re
+    r = store.require(rid)
+    if r.get("workspace_run_started"):
+        return r["workspace_run_started"]
+    for f in sorted((store.root / "audit" / "jobs").glob("*.json"), reverse=True):
+        try:
+            j = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if (j.get("params") or {}).get("research_id") != rid:
+            continue
+        for ev in j.get("progress") or []:
+            m = re.search(r"Investigación en vivo (\S+)", ev.get("summary") or "")
+            if m:
+                return m.group(1)
+    return None
+
+
+def recover_research(store: CaseStore, rid: str) -> dict:
+    """A research whose workspace investigation was published but whose result could not be saved: rebuild the
+    result from the published run (no new investigation, no duplicated findings) and hand it to the COS."""
+    from . import research
+    r = store.require(rid)
+    if r.get("specialty") != "analytics" or r.get("status") == "completed":
+        raise StoreError(f"{rid} no es una investigación de Analytics pendiente de recuperar.")
+    inv_id = workspace_run_of(store, rid)
+    ws = adapter_or_fail(store)
+    d = ws.run(inv_id) if inv_id else None
+    if not d or d.get("status") != "publicada":
+        raise StoreError(f"No encuentro publicada la investigación del workspace de {rid}; relánzala.")
+    out = result_from_run(store, r, d, ws)
+    created = research._persist(store, rid, out, None)
+    store.log("system", "recovered", [rid], f"{rid} recuperada desde la investigación publicada {inv_id} (no se volvió a correr)",
+              material=True)
+    if config.AUTO_COS:
+        cos.flag_impact(store, rid)
+        try:
+            cos.submit_assessment(store, rid, reason="research recuperado")
+        except Exception:  # noqa: BLE001 - best effort, as after any research
+            pass
+    return {"research": rid, "workspace_run": inv_id, "findings": created}
 
 
 def finding_view(store: CaseStore, fid: str) -> dict:

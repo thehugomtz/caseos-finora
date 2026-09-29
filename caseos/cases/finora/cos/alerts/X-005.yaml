@@ -1,0 +1,46 @@
+id: X-005
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-015
+target: framing
+title: R-015 cambia el framing
+finding_text: Altas y gasto de S&M no se mueven en el mismo sentido
+why: 'R-015 trae dos lecturas que el «No afirmar todavía» no cubre y que el CEO puede malinterpretar con facilidad.
+  (1) El S&M por alta −66% (F-108) suena a «el CAC bajó 66%», pero la unidad no está documentada (T-005), el gasto
+  no se liga a clientes ni a canal (F-119) y la primera aparición no es el hito de adquisición. (2) Antes de jun-23,
+  el gasto por categoría es un reparto hecho desde arriba y no gasto observado: Team pesa un porcentaje fijo durante
+  17 meses (F-115; T-008). Además, F-107–F-111, F-113 y F-118 hablan de «altas», una etiqueta que el framing ya
+  pide no usar sin vigencia verificada. T-012 también la usa, y R-004 y R-009 hacen algo parecido con «MRR».'
+options:
+- key: A
+  label: Añadir dos límites y corregir la etiqueta
+  consequence: 'Se suman al «No afirmar todavía»: «Que el S&M por primer pagador observado sea CAC» y «Que el reparto
+    por categoría antes de jun-23 sea gasto observado». F-107–F-111, F-113 y F-118 cambian «altas» por «primeras
+    apariciones de pago» antes de revisarlos. El −66% solo entra como un cociente en las unidades del archivo.'
+- key: B
+  label: Solo corregir la etiqueta
+  consequence: Se cambia «altas» y los límites de CAC y categorías quedan como advertencia dentro de cada finding.
+    El framing cambia menos, pero el riesgo de leer el −66% como CAC hay que vigilarlo lámina por lámina.
+- key: C
+  label: No tocar nada ahora
+  consequence: Se resuelve al armar la story. Es más rápido hoy, pero siete findings entran a revisión con una etiqueta
+    que el framing ya prohíbe y el −66% queda sin límite escrito.
+recommended: A
+recommended_why: El Framing está en needs_review, así que es el momento de sumar límites. El −66% es la cifra con
+  más riesgo de llegar al CEO como CAC. Corregir la etiqueta antes de revisar evita aceptar findings que después
+  haya que reescribir.
+detected_by: cos
+links:
+- R-015
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103957-cos-6a2b
+created_at: '2026-09-29T11:19:36-06:00'
+updated_at: '2026-09-29T11:19:36-06:00'
+version: 1

@@ -147,9 +147,26 @@ def supported(n: Num, pool: list[float]) -> bool:
     return False
 
 
+def _derived(n: Num, pairs: list[tuple[float, float]]) -> bool:
+    """A multiple (4,5×) or a change/share (−38%, 84%) written next to its own figures — de 377 a 1.678 (4,5×) — is backed
+    when those figures are: it is their ratio, rounded as written. Only consecutive figures of the claim count, never an
+    arbitrary pair of table cells (that would let almost any ratio pass)."""
+    tol = max(0.5 * 10 ** (-n.decimals), abs(n.value) * 0.006)
+    for a, b in pairs:
+        r = b / a
+        if n.times and abs(r - n.value) <= tol:
+            return True
+        if n.pct and (abs((r - 1) * 100 - n.value) <= tol or (n.value > 0 and abs(r * 100 - n.value) <= tol)):
+            return True
+    return False
+
+
 def unsupported_numbers(text: str, tables: list[dict]) -> list[str]:
     pool = [v for t in tables for v in table_numbers(t)]
-    return [n.raw for n in numbers_in(text) if not supported(n, pool)]
+    nums = numbers_in(text)
+    figs = [n for n in nums if not n.pct and not n.times and n.value and supported(n, pool)]
+    pairs = [(a.value, b.value) for a, b in zip(figs, figs[1:]) if (a.value > 0) == (b.value > 0)]
+    return [n.raw for n in nums if not supported(n, pool) and not ((n.times or n.pct) and _derived(n, pairs))]
 
 
 # ------------------------------------------------------------------------------------------ quantities in words

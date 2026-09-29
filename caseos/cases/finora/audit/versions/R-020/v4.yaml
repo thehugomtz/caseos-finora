@@ -1,0 +1,94 @@
+id: R-020
+type: research
+research_question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de
+  los pagos, sin leerla como descuento?
+case_question: Q-011, Q-012, H-009, H-010, H-016
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 1
+    business: 1
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: pricing-strategist
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-011
+    - Q-012
+    - H-009
+    - H-010
+    - H-016
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-011
+- Q-012
+- H-009
+- H-010
+- H-016
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T10:32:03-06:00'
+version: 4
+job_id: JOB-20260929-103203-feea
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-020
+slides:
+- S3.1
+task_why: Si el monto muestra patrones que parecen precio de entrada, se vuelven preguntas concretas para Finora;
+  si no, la lámina muestra el límite del monto y pasa directo al mecanismo de S3.2.
+task:
+  work: datos
+  draft_answer: 'Del pago sale la forma, no el precio. Se puede ver cuánto pagan en su primer pago observado (M0),
+    si en los meses siguientes el monto sube, baja o se queda, si los montos se repiten en valores que parezcan
+    una lista de precios y qué tan seguido un cambio se revierte al mes siguiente. Lo investigado ya dice que el
+    primer pago mediano bajó (R-003) y que hay subidas del monto que coinciden con ajustes sincronizados con firma
+    de cobro retroactivo (R-002). El límite: un primer pago más bajo puede ser prorrateo del primer mes, un plan
+    más chico o un precio de entrada, y con el monto solo no se distingue. Por eso se muestra como patrón y como
+    pregunta para Finora, nunca como descuento.'
+  hugo_said:
+  - text: Revisar Data observable de pricing y comportamiento actual, observaciones generales
+    ref: N-028
+  steps:
+  - kind: data
+    what: 'Trayectoria de entrada por cosecha: primer pago (M0) contra M1 y run-rate temprano. Qué parte de los
+      pagadores nuevos sube, baja o se queda después de M0, y si eso cambió entre cosechas.'
+    where:
+    - mart.new_customers
+  - kind: data
+    what: 'Forma del monto: si los montos se repiten en valores fijos que parezcan una lista de precios, qué tan
+      seguido cambia el monto y qué parte de los cambios se revierte al mes siguiente. Partir de R-002 sin repetirlo.'
+    where:
+    - mart.customer_month
+    - staging.stg_customer_month
+  - kind: proposal
+    what: Lista de patrones observables, cada uno con sus lecturas posibles (prorrateo, plan, precio de entrada,
+      descuento) y el campo que las separaría (RT-002), planteados como preguntas para Finora.
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

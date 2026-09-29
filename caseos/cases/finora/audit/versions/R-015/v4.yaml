@@ -1,0 +1,95 @@
+id: R-015
+type: research
+research_question: ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría
+  (Generación de Demanda ToFu, Team, Habilitación) a lo largo del tiempo? ¿Hasta dónde se pueden relacionar cruzando
+  fechas sin pasar de asociación a efecto?
+case_question: Q-018, Q-022, Q-020, Q-012, H-022
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 1
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - Q-018
+    - Q-022
+    - Q-020
+    - Q-012
+    - H-022
+    suggested:
+    - Q-014
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-018
+- Q-022
+- Q-020
+- Q-012
+- H-022
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:32:02-06:00'
+version: 4
+job_id: JOB-20260929-103202-4197
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-015
+slides:
+- S2.2
+task_why: Si las series divergen, la lámina lo describe y justifica pedir atribución por canal; si no agrega nada
+  que cambie la historia, sale (H-022).
+task:
+  work: datos
+  draft_answer: 'Se pueden poner lado a lado dos cosas: cuántos pagadores nuevos entran por mes y de qué industria,
+    y cómo se mueve cada categoría de gasto. Sobre los pagadores, lo investigado (R-003, R-005) dice que entran
+    más, con un primer pago más bajo y sin una industria que concentre el cambio. Cruzando fechas se describe dirección
+    y momento, por ejemplo si después de subir Generación de Demanda suben las primeras apariciones de pago uno
+    o varios meses más tarde. Eso es asociación, no efecto: con 34 meses, sin canal y con la unidad del gasto sin
+    documentar, no se puede decir que una categoría «generó» ventas ni sacar un CAC. Mi arranque: la lámina sirve
+    para mostrar si las series van juntas o divergen (H-022) y por qué hace falta atribución por canal.'
+  hugo_said:
+  - text: Entradas y Actividad económica de los clientes y de diferentes segmentos
+    ref: N-022
+  - text: Inversión en Generación de Demanda para ToFu (Paid Media y Publicidad no web) / Team + Payroll Expenses
+      + Travel / Habilitación ¿producto tal vez? (Software Tools + Freelance)
+    ref: N-023
+  - text: ¿Hasta donde si podemos determinar y relacionar un incremento en ventas con la inversión en las diferentes
+      categorías? (Cruzar con fechas)
+    ref: Q-018
+  steps:
+  - kind: data
+    what: Primeras apariciones de pago por mes e industria, con su primer pago mediano. Reutilizar R-003 y R-005
+      sin rehacerlos.
+    where:
+    - mart.new_customers
+    - mart.monthly_metrics
+  - kind: data
+    what: Gasto por grupo y mes como índices contra un mes base, porque la unidad no está documentada (la clasificación
+      sale de RT-004). Compararlo con primeras apariciones, monto nuevo y monto pagado total, con rezagos de uno
+      a pocos meses. Revisar si la relación se sostiene en las dos mitades del periodo o si es solo una tendencia
+      compartida.
+    where:
+    - mart.sm_monthly
+    - mart.monthly_metrics
+  - kind: proposal
+    what: 'La vista de S2.2 con sus reglas de lectura: qué se puede decir (dirección y momento), qué no (efecto,
+      CAC por canal) y qué dato permitiría ir más lejos (gasto y canal por cliente, pruebas controladas).'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

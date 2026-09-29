@@ -1,0 +1,40 @@
+id: C-006
+type: claim
+key: funnel-conversion
+question: ¿Qué conversion rate usar si hay entradas recientes y leads que se estancan semanas?
+headline: Proponemos medir conversión por cohorte de entrada y ventana fija, por puerta y canal
+answer: 'La tasa es «% de las entradas del mes que pagan dentro de W días», por puerta y Canal de adquisición, calculada
+  solo en las cohortes que ya cumplieron la ventana. La tasa de período y el promedio de solo los que convirtieron
+  castigan a las entradas recientes y confunden «compran más tarde» con «compran menos», que es justo lo que hay
+  que separar en la premisa del CRO (H-003, H-004). Para medirla hay que instrumentar en origen: fechas por etapa
+  en el CRM, puerta y canal por cuenta, y gasto por canal.'
+role_in_story: recommendation
+evidence_ids:
+- F-141
+- F-144
+table_ids: []
+research_ids:
+- R-016
+framework_ids: []
+confidence: medium
+limitations:
+- Propuesta de especialista (R-016), pendiente de tu aceptación.
+- W y el umbral de «estancado» son parámetros a acordar con Finora, no estándares de mercado.
+- 'Con los datos del caso no se calcula ninguna conversión: los pagos no incluyen a quien no compró.'
+- La atribución por canal reparte crédito; no prueba causa (F-144).
+visual_intent: 'Maduración: cada cohorte de entrada se compara solo cuando cumplió su ventana; las recientes todavía
+  no son comparables.'
+hugo_wording: Funnel propuesto, AAARRR, conversion rate y métricas clave.
+links:
+- F-141
+- F-144
+- R-016
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T11:54:06-06:00'
+version: 1

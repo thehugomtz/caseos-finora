@@ -1,0 +1,49 @@
+id: X-011
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-014
+target: H-006
+title: R-014 requiere más investigación H-006
+finding_text: 'No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE
+  ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo
+  son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al…'
+why: 'Sin reps, roster ni tiempos de contacto, H-006 no se puede probar ni descartar. R-014 también cierra el atajo
+  del gasto: Team/Payroll no mide capacidad (la unidad no está documentada y PayrollExpenses es negativo en 5 meses).
+  La prueba de F-122 tiene un punto flojo que el propio R-014 señala: que un rep siga una entrada depende de la
+  calidad que percibe y del volumen (Sabnis et al., 2013). O sea, una ''entrada lenta'' puede ser simplemente una
+  entrada que el rep vio peor. Lo más limpio es comparar, dentro de la misma banda de ajuste, semanas con más y
+  menos carga, y mejor si la carga cambia por el lado del equipo (ramp, bajas) que por picos de volumen, que pueden
+  traer peor intención. Además, la tasa dentro de una banda también cae por H-007 u H-008. El diseño es de confianza
+  media: un método publicado, no un resultado. Falta definir ''New'' y los meses de la caída.'
+options:
+- key: A
+  label: Reformular F-122 antes de aceptarla
+  consequence: 'La señal de H-006 pasa a ser que, dentro de la misma banda de ajuste, la compra cae en las semanas
+    de más carga (con Self Service estable, si sirve de comparación: ver F-123). Que caiga en entradas lentas o
+    sin trabajar queda como apoyo, no como prueba. Mezcla y tasa no se presentan como ''% calidad'' y ''% capacidad''
+    (D-003). Así la prueba aguanta la objeción de que los reps eligieron no atender las peores.'
+- key: B
+  label: Aceptar F-122 como está
+  consequence: Más rápido, pero una caída concentrada en entradas lentas podría ser que los reps priorizan por calidad
+    percibida (H-005) y se lea como falta de capacidad (H-006).
+- key: C
+  label: Devolver el diseño a R-010 (en curso)
+  consequence: Queda un solo diseño, revisado junto con H-007 y H-008, pero tarda más cerrar el bloque CRO.
+recommended: A
+recommended_why: Es un ajuste de redacción con lo que R-014 ya trae; no hace falta research nuevo.
+detected_by: cos
+links:
+- R-014
+- H-006
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104559-cos-afa0
+created_at: '2026-09-29T11:22:25-06:00'
+updated_at: '2026-09-29T11:22:25-06:00'
+version: 1

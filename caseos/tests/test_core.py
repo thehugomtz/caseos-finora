@@ -98,3 +98,12 @@ def test_brain_sections_present(case):
                 "## Open Questions", "## Research Queue", "## Accepted Frameworks", "## Key Tables",
                 "## Contradictions", "## Risks", "## Artifacts", "## Language Profile", "## Recent Material Changes"]:
         assert sec in text, sec
+
+
+
+def test_numbers_from_numpy_are_written_as_plain_numbers(case):
+    import numpy as np
+    from caseos.util import yaml_dump
+    e = case.create("note", {"kind": "OBSERVATION", "text": "x", "spec": {"y": [np.float64(92839.01), np.int64(3)], "z": np.float32(1.5)}},
+                    actor="analytics")
+    assert case.get(e["id"])["spec"]["y"] == [92839.01, 3] and "numpy" not in yaml_dump({"a": np.float64(2.0)})

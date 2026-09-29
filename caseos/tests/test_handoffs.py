@@ -229,3 +229,15 @@ def test_storyteller_run_is_confined_to_its_deck(tmp_path):
     assert asyncio.run(check()) == ["PermissionResultAllow", "PermissionResultDeny", "PermissionResultAllow",
                                     "PermissionResultDeny", "PermissionResultDeny", "PermissionResultDeny"]
     assert len(denied) == 4                                                                 # every denial is reported
+
+
+
+def test_a_multiple_written_next_to_its_backed_figures_is_backed():
+    from caseos.evidence import unsupported_numbers
+    t = {"columns": ["mes", "clientes", "mrr"], "rows": [["ene-22", 377, 35.0e6], ["oct-24", 1678, 97.0e6]]}
+    text = "Los clientes pasan de 377 a 1.678 (4,5×) y el MRR pagado de COP 35,0 millones a COP 97,0 millones (2,8×)."
+    assert unsupported_numbers(text, [t]) == []
+    assert unsupported_numbers("Los clientes pasan de 377 a 1.678 (5,2×).", [t]) == ["5,2×"]        # a wrong multiple still fails
+    assert unsupported_numbers("Crecieron 3,1×.", [t]) == ["3,1×"]                                    # no figures next to it: not backed
+    t2 = {"columns": ["mes", "mrr_por_cliente"], "rows": [["ene-22", 92.8e3], ["oct-24", 57.8e3]]}
+    assert unsupported_numbers("Baja de COP 92,8 mil a COP 57,8 mil (−38%).", [t2]) == []

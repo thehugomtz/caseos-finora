@@ -1,0 +1,81 @@
+id: F-146
+type: finding
+headline: El lado Growth no existe en los datos. Sin motion, canal ni fechas de hitos no se puede calcular ninguna
+  conversión ni CAC por motion; hoy solo se ve la mezcla de gasto.
+evidence_text: 'El modelo cubre 34 meses con pagos cliente × mes, industria (6 valores) y gasto S&M en 7 rubros
+  con unidad no documentada. No tiene leads, oportunidades, motion, canal, owner ni estado contractual (DM-0, DM-1,
+  DM-2, DM-3). Del lado de la inversión solo se ve la mezcla: Generación de Demanda pesa entre 57% y 61% cada año;
+  la capacidad comercial pasa de 28,7% (2022) a 35,5% (2023) y 34,8% (2024); Habilitación baja de 11,3% a 4,3% (DM-7).
+  Además, 377 clientes ya pagaban en ene-22 y 108 aparecen en feb-22 con sospecha de arrastre, así que no se conoce
+  su inicio real (DM-6).'
+confidence: low
+limitations:
+- 'La mezcla está en las unidades del archivo: no permite hablar de montos ni de eficiencia por motion. Que falte
+  en el modelo no significa que falte en Finora: puede existir en un CRM que no se entregó.'
+kind: measurement
+claims:
+- claim: El modelo del caso no tiene leads, oportunidades, motion, canal de adquisición, owner, plan ni estado contractual.
+    Solo tiene pagos cliente × mes, la industria de cada cliente y el gasto S&M mensual por rubro.
+  source_id: DM-0
+  source_type: data_model
+  confidence: low
+  freshness: Modelo consultado el 2026-09-29; datos hasta oct-24
+  supports_or_contests: supports
+  notes: 'Que falte en el modelo no significa que falte en Finora: puede existir en un CRM que no se entregó. Soporta
+    la necesidad de la capa técnica. · fuente no recuperada en la corrida (CaseOS)'
+  unverified: false
+- claim: La ventana cubre 34 meses (2022-01 a 2024-10) con 1.584 altas, 751 churn observados y 468 reactivaciones.
+  source_id: DM-1
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29; datos hasta oct-24
+  supports_or_contests: context
+  notes: Churn observado = pagaba el mes anterior y este mes paga cero; no es cancelación confirmada.
+- claim: El gasto S&M viene en 7 rubros × 34 meses (2022-01 a 2024-10), con grano mensual, sin geografía y con unidad
+    no documentada.
+  source_id: DM-3
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Lo de la unidad no documentada viene del catálogo. Impide calcular CAC o payback en COP.
+- claim: 'Mezcla anual del gasto S&M (en unidades del archivo): Generación de Demanda 60,0% (2022), 57,3% (2023)
+    y 60,9% (2024, ene–oct); capacidad comercial (Team + Payroll + Travel) 28,7%, 35,5% y 34,8%; Habilitación (SoftwareTools
+    + Freelance) 11,3%, 7,2% y 4,3%.'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Son participaciones dentro del archivo; no dicen nada de eficiencia ni de causalidad.
+- claim: 377 clientes ya pagaban en ene-22 (su inicio real es desconocido) y 108 aparecen en feb-22 con sospecha
+    de arrastre; 1.476 tienen cohorte limpia.
+  source_id: DM-6
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Limita reconstruir cohortes por motion de la base previa aunque aparezca un CRM.
+- claim: 'La única dimensión de segmento disponible es la industria, con 6 valores: Restaurantes 529, Producción
+    454, Retail 428, Tecnología 241, Servicios profesionales 165 y Salud 144 clientes.'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Sirve de puente con el histórico, pero no reemplaza motion ni canal.
+unverified: true
+source_ref:
+  research: R-019
+links:
+- R-019
+- Q-016
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:06:06-06:00'
+updated_at: '2026-09-29T11:06:06-06:00'
+version: 1

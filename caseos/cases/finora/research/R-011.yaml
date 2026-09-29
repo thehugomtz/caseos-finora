@@ -1,0 +1,1666 @@
+id: R-011
+type: research
+research_question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio
+  y el fin de un descuento sin confundirlos con contracción o expansión reales? Propuesta de modelo de datos (campos,
+  tablas, definiciones) y qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado.
+case_question: 'Bloque Revenue / CFO: Q-002 (por qué cambió el ingreso recurrente y cuánto es suscripción, tarifa
+  o descuento), Q-011 (¿el monto identifica los escenarios del CFO?), Q-017 (qué distinguiría los componentes del
+  valor), Q-025 (los tres casos donde el pago no alcanza) y Q-026 (negocio subyacente antes de descuentos y revenue
+  no capturado); prueba H-016 y fija cómo se medirían H-012 a H-015. Toca también Q-009 (qué cambió en quienes permanecen).'
+specialty: data_engineering
+intensity: L2
+route:
+  specialty: data_engineering
+  intensity: L2
+  agent: data_engineering
+  scores:
+    measurement: 0
+    data_engineering: 3
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: data-modeling
+    mode: core
+    why: núcleo del agente
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-002
+    - Q-009
+    - Q-011
+    - Q-017
+    - Q-025
+    - Q-026
+    - H-012
+    - H-013
+    - H-014
+    - H-015
+    - H-016
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Data Engineering; intensidad L3.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-002
+- Q-009
+- Q-011
+- Q-017
+- Q-025
+- Q-026
+- H-012
+- H-013
+- H-014
+- H-015
+- H-016
+- F-130
+- F-131
+- F-132
+- F-133
+- F-134
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T11:57:06-06:00'
+version: 7
+job_id: JOB-20260929-103202-7ad4
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-002
+slides:
+- S3.3
+- S3.4
+task_why: 'Es lo que le da una sola lectura a cada ejemplo del CFO; sin esto, el MRR con descuentos sigue siendo
+  ambiguo (versión mejorada de RT-002: la amplío a S3.3 y S3.4 porque la evidencia que pedía son justo los campos
+  del modelo, y S3.4 va dentro, como dijiste).'
+task:
+  work: propuesta
+  draft_answer: 'Pasar de un número a una cadena: valor de la suscripción (plan y características a tarifa de lista,
+    con vigencia) → descuento (monto o %, inicio, fin, motivo) → monto facturado → monto pagado. Con esa cadena,
+    cada cambio del mes se parte en componentes: expansión o contracción real, cambio de tarifa, inicio/cambio/fin
+    de descuento, churn o reactivación, y diferencias de cobro. Así el fin de un descuento sale como «fin de descuento»
+    y no como expansión, y en el 100→130 con −30 la expansión queda registrada aunque el pago siga en 100. En tablas:
+    suscripción con vigencia, lista de precios con vigencia, descuento con fechas y un corte mensual por cliente
+    con el puente ya clasificado. Lo que no sabemos es qué sistema de Finora (billing, contratos, CRM) tiene hoy
+    vigencia, tarifa y descuento.'
+  hugo_said:
+  - text: ¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones
+      agregarías? → Propuesta de Modelo de datos / ¿Cómo clasificarías el inicio y el fin de un descuento…? También
+      entra dentro de Propuesta de Modelo de datos
+    ref: N-029
+  - text: Hoy existe un histórico con cliente + mes + monto pagado, y los cambios entre meses se usan para clasificar
+      movimientos como crecimiento, contracción, churn o reactivación.
+    ref: N-030
+  - text: ¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? /
+      Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el
+      descuento, eso cuenta como expansión?
+    ref: Q-025
+  steps:
+  - kind: data
+    what: Mapear el grano y las banderas actuales (movement_type, expanded_customer, contracted_customer, churned_customer,
+      reactivated_customer) y el puente mensual, y marcar cuáles cambian de significado cuando existan descuentos.
+      Partir de R-002 y R-008 sin repetirlos.
+    where:
+    - mart.customer_month
+    - mart.monthly_metrics
+  - kind: research
+    what: Cómo modelan suscripción, lista de precios, descuento y factura los sistemas de cobro por suscripción
+      (objetos, vigencias, prorrateo), para apoyar el diseño en prácticas comunes y no inventarlo.
+    where: []
+  - kind: proposal
+    what: 'Modelo en papel: entidades, grano, campos y definiciones (suscripción con vigencia y características,
+      lista de precios con vigencia, descuento con inicio/fin/motivo, factura y pago, corte mensual por cliente),
+      y qué fuente de Finora confirmaría cada campo.'
+    where: []
+  - kind: proposal
+    what: 'Reglas de clasificación: los movimientos del valor de la suscripción (nuevo, expansión, contracción,
+      churn, reactivación) van separados de los comerciales (cambio de tarifa, inicio/cambio/fin de descuento) y
+      de las diferencias de cobro. El descuento de quien se va se cierra con la salida, no como fin de descuento.
+      Probarlas con los tres ejemplos de Q-025 (construidos, no observados) y con la métrica de revenue no capturado
+      hacia adelante.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: Decide si el bloque de Revenue puede mostrar al CFO un puente por componente (suscripción, tarifa,
+  descuento) y cuánto revenue se deja de capturar por descuentos, o si solo puede mostrar el puente de monto pagado
+  observado con salvedades. También define qué campos hay que pedirle a Finora.
+short_answer: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto → facturado → cobrado) y una
+  clasificación por componente comparando cierres de mes: si la suscripción no cambia, el inicio o el fin de un
+  descuento va a una línea «Descuento» y no es contracción ni expansión; si el cliente sale, su descuento se cuenta
+  dentro del churn. Ojo con el histórico: el 57,6 % del COP de «contracción» observada ocurre el mes siguiente a
+  un primer pago o a una reactivación, con forma de pago de varios meses o de atrasos, así que también hay que separar
+  el momento de cobro (confianza media en esa lectura).'
+claims:
+- claim: El modelo del caso solo tiene cliente × mes × monto (más industria por cliente y gasto S&M por mes). No
+    existe ningún campo de plan, cantidad, tarifa de lista, precio pactado, descuento, periodo de servicio, factura
+    o estado de pago.
+  source_id: D8
+  source_type: data_model
+  confidence: low
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Apoya H-016: el monto es la única señal de valor disponible. · cita del modelo re-verificada (CaseOS)'
+  unverified: false
+- claim: El panel de monto pagado clasifica 1.294 expansiones (+41,2 M COP) y 1.247 contracciones (−90,9 M COP)
+    solo por la variación del monto; además registra 751 churns observados y 468 reactivaciones.
+  source_id: D1
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29; datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Son movimientos de monto pagado observado, no de MRR contratado.
+- claim: 366 contracciones (−52,4 M COP; 57,6 % del COP de contracción) ocurren el mes siguiente a un primer pago
+    observado (165; −20,7 M) o a una reactivación (201; −31,7 M); en 226 de ellas el mes previo tenía firma k× del
+    monto usual.
+  source_id: D2
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: El conteo es firme. La lectura como efecto de cobro es una interpretación con alternativas.
+- claim: 608 contracciones (−47,0 M COP; 51,7 %) son un regreso al monto usual del cliente desde un mes más alto;
+    312 de ellas (−27,4 M) vienen de un mes que era un múltiplo exacto (k×) del usual.
+  source_id: D3
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Se solapa con el claim anterior; no hay que sumarlos.
+- claim: De 330 reactivaciones tras un solo mes en cero, 117 pagan exactamente el doble del monto previo al hueco
+    y 87 pagan lo mismo; 21 reactivaciones tras dos meses en cero pagan el triple.
+  source_id: D4
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con pago de atrasos sin cancelación (mora). También con recontratación con cargo o con dos periodos
+    facturados juntos.
+- claim: Cliente 10 paga 42.000 COP en may-23, 0 en jun-23, 84.000 en jul-23 y 42.000 en ago-23; el panel lo clasifica
+    como flat, churn, reactivación y contracción.
+  source_id: D6
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Es un ejemplo real de H-016: también es compatible con una suscripción sin cambios y un pago atrasado.'
+- claim: 'Cliente 378 registra 5 expansiones y 5 contracciones entre feb-22 y oct-24, pero sus niveles estables
+    solo cambian dos veces: 84.000 → 96.600 → 149.520 COP. El paso a 96.600 (+15 %) puede ser tarifa, plan o fin
+    de descuento.'
+  source_id: D7
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Ilustra H-013/H-014/H-015: el dato no dice cuál de las tres.'
+- claim: El patrón que dejaría un descuento temporal limpio (baja y regreso exacto al monto previo después de 1
+    a 6 meses planos) aparece en 34 de 1.247 contracciones; 434 contracciones se mantienen al menos 6 meses.
+  source_id: D5
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: 'No afirma que hubo o no hubo descuentos: que no aparezca la huella no prueba que no existieran.'
+- claim: De 1.584 primeros pagos observados, 165 tienen M1 menor que M0 y en 75 el M0 es exactamente el doble del
+    M1.
+  source_id: D9
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con cargo de instalación, prorrata o prepago. El primer pago observado no es necesariamente
+    el inicio del contrato.
+- claim: 105 meses clasificados como flat tienen firma k× del monto usual (el cliente se mantiene en 2× u otro múltiplo),
+    así que la regla de firma multimes también marca aumentos sostenidos.
+  source_id: D11
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: contests
+  notes: 'Pone en duda que toda firma k× sea un pago de varios meses: puede haber duplicaciones reales.'
+- claim: 194 expansiones vuelven al monto anterior al mes siguiente (pico de un mes), frente a solo 17 contracciones
+    que revierten al mes siguiente.
+  source_id: D10
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Los picos de un mes son frecuentes; son compatibles con cobros puntuales o de varios periodos.
+- claim: 'ChartMogul reporta el MRR solo neto de descuentos: aplicar un descuento es contracción, su vencimiento
+    es expansión, cancelar una de varias suscripciones (sin cancelar la última) es contracción, y un cambio de plan
+    sin cambio de MRR es un movimiento neutral.'
+  source_id: S1, S2
+  source_type: company
+  confidence: low
+  freshness: blog 2025-01-20; ayuda con fecha 2026-09-17; consultado 2026-09-29
+  supports_or_contests: context
+  notes: 'Convención de un proveedor: contexto, no recomendación.'
+  unverified: true
+- claim: ProfitWell (Paddle) siempre resta descuentos y créditos antes de calcular el MRR; cuando el descuento termina,
+    el MRR vuelve al precio completo. Lo justifica en no reescribir el MRR histórico y en la consistencia.
+  source_id: S10
+  source_type: company
+  confidence: high
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Aporta el argumento a favor de congelar el histórico.
+- claim: En Stripe se configura si se restan del MRR los descuentos recurrentes y los de una vez; los descuentos
+    recurrentes permanentes siempre se restan. Si se restan descuentos, un cupón del 100 % cuenta como churn.
+  source_id: S4, S5
+  source_type: company
+  confidence: low
+  freshness: consultado 2026-09-29
+  supports_or_contests: context
+  notes: Muestra que la convención es una elección.
+  unverified: true
+- claim: Chargebee incluye en el MRR los descuentos recurrentes y excluye por defecto los de una vez (configurable
+    con included_in_mrr). Excluye cargos de instalación, ajustes de crédito, cargos puntuales e impuestos.
+  source_id: S8, S9
+  source_type: company
+  confidence: low
+  freshness: consultado 2026-09-29
+  supports_or_contests: context
+  notes: Otra convención distinta; también separa lo recurrente de lo puntual.
+  unverified: true
+- claim: Stripe define el MRR como el valor normalizado a mes de las suscripciones active y past_due (un plan anual
+    se divide entre 12); una suscripción cancelada o impaga (unpaid) cuenta como churn y excluye del MRR los productos
+    por uso (metered).
+  source_id: S4
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Apoya separar el periodo facturado del MRR y no tratar la mora como churn inmediato.
+- claim: Por defecto, ChartMogul mantiene las suscripciones morosas en el MRR y como activas hasta que se cancelan
+    en el sistema de facturación, con opción de pasarlas a churn tras X días de mora.
+  source_id: S3
+  source_type: company
+  confidence: high
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Cuándo la mora se vuelve churn es una política por decidir.
+- claim: En Stripe el descuento es un objeto propio con fecha de inicio y de fin (fin nulo si es de una vez o permanente),
+    ligado a la suscripción o a un ítem. La línea de factura trae el subtotal antes de descuentos, los montos de
+    descuento por cada descuento y el periodo de servicio; los descuentos de línea se aplican antes que los de factura.
+  source_id: S6, S7
+  source_type: company
+  confidence: low
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Referencia para los campos de discount_grant e invoice_line.
+  unverified: true
+- claim: Chargebee modela el descuento con tipo (porcentaje, monto fijo o unidades gratis), duración (una vez, para
+    siempre o periodo limitado con periodo y unidad) y alcance (factura completa o ítem específico).
+  source_id: S9
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Confirma los campos mínimos de un descuento.
+- claim: Los snapshots de dbt implementan historia SCD2 con dbt_valid_from / dbt_valid_to; valid_to nulo significa
+    que la fila está vigente.
+  source_id: S11
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: context
+  notes: Forma de historizar fuentes que cambian (CRM, suscripciones).
+- claim: 'Inferencia: con solo el monto, cada caso de Q-025 da la misma secuencia para sus alternativas (A: 100→100;
+    B: 100→80; C: 80→100), así que ninguna regla sobre el monto puede clasificarlos. Con la convención solo neto,
+    la expansión de A no se ve y B1/B2 y C1/C2 quedan iguales.'
+  source_id: I1, S1
+  source_type: internal + company (inferencia)
+  confidence: low
+  freshness: estado del caso; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Los montos son los ilustrativos de Q-025, no datos del caso. Es una simulación: prueba qué se puede distinguir,
+    no qué pasó.'
+  unverified: true
+- claim: 'Inferencia: como las plataformas divergen, cómo tratar el inicio y el fin de un descuento en el MRR oficial
+    es una decisión de negocio, no un hecho técnico.'
+  source_id: S1, S4, S8, S10
+  source_type: company (inferencia)
+  confidence: low
+  freshness: consultado 2026-09-29
+  supports_or_contests: context
+  notes: La decisión es de Hugo y del CFO; el modelo debe soportar cualquiera de las opciones.
+  unverified: true
+sources:
+- id: D1
+  title: Conteo y COP de movimientos del panel de monto pagado (expansión, contracción, churn, reactivación)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, SUM(COALESCE(expansion_mrr_cop,0))
+    AS expansion_cop, SUM(COALESCE(contraction_mrr_cop,0)) AS contraction_cop FROM mart.customer_month GROUP BY
+    movement_type ORDER BY filas DESC
+  verified: true
+- id: D2
+  title: Contracciones según el movimiento del mes previo y firma k× del mes previo
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: WITH x AS (SELECT customer_id, month, movement_type, contraction_mrr_cop, amount_vs_usual_ratio, LAG(movement_type)
+    OVER (PARTITION BY customer_id ORDER BY month) AS prev_mov, LAG(multi_month_payment_signature) OVER (PARTITION
+    BY customer_id ORDER BY month) AS prev_sig FROM mart.customer_month) SELECT prev_mov AS movimiento_mes_previo,
+    COUNT(*) AS contracciones, SUM(CASE WHEN prev_sig > 0 THEN 1 ELSE 0 END) AS previo_con_firma_multimes, ROUND(SUM(contraction_mrr_cop),0)
+    AS contraction_cop FROM x WHERE movement_type = 'contraction' GROUP BY prev_mov ORDER BY contracciones DESC
+  verified: true
+- id: D3
+  title: Patrones de contracción y expansión respecto al monto usual del cliente
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: WITH x AS (SELECT customer_id, month, movement_type, expansion_mrr_cop, contraction_mrr_cop, amount_vs_usual_ratio,
+    multi_month_payment_signature, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month)
+    AS prev_sig, LAG(amount_vs_usual_ratio) OVER (PARTITION BY customer_id ORDER BY month) AS prev_ratio FROM mart.customer_month)
+    SELECT movement_type, CASE WHEN movement_type='expansion' AND multi_month_payment_signature > 0 THEN 'sube a
+    k x usual (firma multimes)' WHEN movement_type='contraction' AND prev_sig > 0 AND ABS(amount_vs_usual_ratio-1)
+    < 0.005 THEN 'baja de k x usual a usual' WHEN movement_type='contraction' AND ABS(amount_vs_usual_ratio-1) <
+    0.005 AND prev_ratio > 1.005 THEN 'otra vuelta a usual desde arriba' WHEN movement_type='contraction' AND ABS(prev_ratio-1)
+    < 0.005 THEN 'baja desde usual' WHEN movement_type='expansion' AND ABS(prev_ratio-1) < 0.005 THEN 'sube desde
+    usual' ELSE 'otro' END AS patron, COUNT(*) AS eventos, ROUND(SUM(COALESCE(expansion_mrr_cop,0) + COALESCE(contraction_mrr_cop,0)),0)
+    AS cop FROM x WHERE movement_type IN ('contraction','expansion') GROUP BY 1,2 ORDER BY 1,3 DESC
+  verified: true
+- id: D4
+  title: Reactivaciones tras 1–2 meses en cero que pagan k× el monto previo
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: WITH x AS (SELECT customer_id, month, movement_type, paid_mrr_cop, multi_month_payment_signature, LAG(paid_mrr_cop,1)
+    OVER (PARTITION BY customer_id ORDER BY month) AS m_1, LAG(paid_mrr_cop,2) OVER (PARTITION BY customer_id ORDER
+    BY month) AS m_2, LAG(paid_mrr_cop,3) OVER (PARTITION BY customer_id ORDER BY month) AS m_3 FROM mart.customer_month)
+    SELECT COUNT(*) AS reactivaciones, SUM(CASE WHEN m_1 = 0 AND m_2 > 0 THEN 1 ELSE 0 END) AS hueco_de_1_mes, SUM(CASE
+    WHEN m_1 = 0 AND m_2 > 0 AND ABS(paid_mrr_cop / m_2 - 2) < 0.01 THEN 1 ELSE 0 END) AS hueco_1_y_paga_2x_previo,
+    SUM(CASE WHEN m_1 = 0 AND m_2 > 0 AND ABS(paid_mrr_cop / m_2 - 1) < 0.005 THEN 1 ELSE 0 END) AS hueco_1_y_paga_igual,
+    SUM(CASE WHEN m_1 = 0 AND m_2 = 0 AND m_3 > 0 AND ABS(paid_mrr_cop / m_3 - 3) < 0.01 THEN 1 ELSE 0 END) AS hueco_2_y_paga_3x_previo
+    FROM x WHERE movement_type = 'reactivation'
+  verified: true
+- id: D5
+  title: Contracciones que vuelven exactamente al monto previo (patrón en V) o se mantienen 6 meses
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: WITH x AS (SELECT customer_id, month, movement_type, paid_mrr_cop, previous_month_mrr, LEAD(paid_mrr_cop,1)
+    OVER w AS n1, LEAD(paid_mrr_cop,2) OVER w AS n2, LEAD(paid_mrr_cop,3) OVER w AS n3, LEAD(paid_mrr_cop,4) OVER
+    w AS n4, LEAD(paid_mrr_cop,5) OVER w AS n5, LEAD(paid_mrr_cop,6) OVER w AS n6 FROM mart.customer_month WINDOW
+    w AS (PARTITION BY customer_id ORDER BY month)) SELECT COUNT(*) AS contracciones, SUM(CASE WHEN n1 = previous_month_mrr
+    THEN 1 ELSE 0 END) AS vuelve_en_1, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = previous_month_mrr THEN 1 ELSE 0
+    END) AS vuelve_en_2, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = previous_month_mrr THEN
+    1 ELSE 0 END) AS vuelve_en_3, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = paid_mrr_cop AND
+    (n4 = previous_month_mrr OR (n4 = paid_mrr_cop AND (n5 = previous_month_mrr OR (n5 = paid_mrr_cop AND n6 = previous_month_mrr))))
+    THEN 1 ELSE 0 END) AS vuelve_en_4_a_6, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = paid_mrr_cop
+    AND n4 = paid_mrr_cop AND n5 = paid_mrr_cop AND n6 = paid_mrr_cop THEN 1 ELSE 0 END) AS se_mantiene_6_meses
+    FROM x WHERE movement_type = 'contraction'
+  verified: true
+- id: D6
+  title: Historia mensual de Cliente 10 (monto pagado y movimiento del panel)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: WITH r AS (SELECT customer_id, month FROM mart.customer_month WHERE movement_type = 'reactivation' AND multi_month_payment_signature
+    = 2 ORDER BY customer_id, month LIMIT 1) SELECT c.customer_id, c.month, c.paid_mrr_cop, c.movement_type, c.usual_amount_cop,
+    c.multi_month_payment_signature FROM mart.customer_month c JOIN r ON c.customer_id = r.customer_id WHERE c.month
+    BETWEEN '2022-01' AND '2024-12' ORDER BY c.month LIMIT 40
+  verified: true
+- id: D7
+  title: Movimientos no planos de Cliente 378
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT customer_id, month, paid_mrr_cop, movement_type, ROUND(amount_vs_usual_ratio,3) AS ratio_vs_usual
+    FROM mart.customer_month WHERE customer_id = 378 AND month >= '2022-02' AND (movement_type <> 'flat' OR month
+    IN ('2022-02','2024-10')) ORDER BY month LIMIT 40
+  verified: true
+- id: D8
+  title: Tablas y columnas disponibles en el modelo del caso (raw, staging, mart)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: 'Herramienta catalogo_modelo (sin SQL): listado de tablas, grano y columnas. Ninguna columna de plan, cantidad,
+    tarifa, descuento, periodo de servicio, factura o estado de pago.'
+  verified: true
+- id: D9
+  title: 'Primeros pagos observados: M0 frente a M1'
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS altas, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > 0 AND m1_cop < m0_cop THEN 1 ELSE
+    0 END) AS m1_menor_que_m0, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > 0 AND ABS(m0_cop / m1_cop - 2) < 0.01
+    THEN 1 ELSE 0 END) AS m0_igual_2x_m1, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > m0_cop THEN 1 ELSE 0 END)
+    AS m1_mayor_que_m0, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop = m0_cop THEN 1 ELSE 0 END) AS m1_igual_m0 FROM
+    mart.new_customers
+  verified: true
+- id: D10
+  title: Expansiones y contracciones que revierten al mes siguiente
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, reverts_next_month, COUNT(*) AS eventos FROM mart.customer_month WHERE movement_type
+    IN ('expansion','contraction') GROUP BY movement_type, reverts_next_month ORDER BY movement_type, reverts_next_month
+  verified: true
+- id: D11
+  title: Meses con firma de pago k× por tipo de movimiento
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS meses_con_firma_multimes, SUM(CASE WHEN multi_month_payment_signature
+    = 2 THEN 1 ELSE 0 END) AS k2, SUM(CASE WHEN multi_month_payment_signature = 3 THEN 1 ELSE 0 END) AS k3, SUM(CASE
+    WHEN multi_month_payment_signature BETWEEN 4 AND 11 THEN 1 ELSE 0 END) AS k4_11, SUM(CASE WHEN multi_month_payment_signature
+    = 12 THEN 1 ELSE 0 END) AS k12 FROM mart.customer_month WHERE multi_month_payment_signature > 0 GROUP BY movement_type
+    ORDER BY meses_con_firma_multimes DESC
+  verified: true
+- id: I1
+  title: Q-025 · pregunta del caso con los tres casos ilustrativos (100→130 con −30; 100→80; fin de descuento vs
+    expansión)
+  url: ''
+  publisher: CaseOS · estado del caso Finora
+  date: '2026-09-29'
+  source_type: internal
+  quality: B
+  note: Texto del estado del caso. Los montos 100/130/80 son ilustrativos, no datos de Finora.
+  verified: true
+- id: S1
+  title: Should discounts be included in MRR?
+  url: https://chartmogul.com/blog/should-discounts-be-included-in-mrr/
+  publisher: ChartMogul (blog, Jordan van Everdingen)
+  date: '2025-01-20'
+  source_type: company
+  quality: B
+  note: 'Postura del proveedor: MRR solo neto de descuentos; al expirar el descuento hay expansión.'
+  verified: true
+- id: S2
+  title: Understanding MRR movements
+  url: https://help.chartmogul.com/article/163-understanding-mrr-movements
+  publisher: ChartMogul Help Center
+  date: 2026-09-17 (fecha mostrada)
+  source_type: company
+  quality: A
+  note: Definiciones de new, expansion (incluye descuento que expira), contraction (incluye aplicar descuento),
+    churn, reactivation y neutral.
+  verified: true
+- id: S3
+  title: Handling past-due subscriptions
+  url: https://help.chartmogul.com/article/303-handling-past-due-subscriptions
+  publisher: ChartMogul Help Center
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Las morosas siguen en MRR hasta cancelarse; opción de auto-churn tras X días.
+  verified: true
+- id: S4
+  title: Billing analytics (definiciones de MRR, descuentos, suscriptores activos, churn)
+  url: https://docs.stripe.com/billing/subscriptions/analytics.md
+  publisher: Stripe Docs
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: MRR normalizado a mes de active y past_due; descuentos configurables; permanentes siempre restados; cupón
+    del 100 % = churn si se restan descuentos.
+  verified: true
+- id: S5
+  title: Impact of discounts and coupons on Monthly Recurring Revenue (MRR) in Billing
+  url: https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-(mrr)-in-billing
+  publisher: Stripe Support
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Confirma las dos opciones de configuración y que los descuentos permanentes siempre se restan.
+  verified: true
+- id: S6
+  title: The Discount object
+  url: https://docs.stripe.com/api/discounts/object
+  publisher: Stripe API Reference
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Descuento con start/end (end nulo si es once o forever), ligado a customer, subscription, subscription_item
+    o invoice.
+  verified: true
+- id: S7
+  title: The Invoice Line Item object
+  url: https://docs.stripe.com/api/invoice-line-item/object
+  publisher: Stripe API Reference
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Subtotal antes de descuentos, discount_amounts por descuento, periodo de servicio y cantidad; los descuentos
+    de línea se aplican antes que los de factura.
+  verified: true
+- id: S8
+  title: What is included/excluded in the MRR calculation?
+  url: https://www.chargebee.com/docs/billing/2.0/kb/reports-and-analytics/what-is-includedexcluded-in-the-mrr-calculation
+  publisher: Chargebee Docs
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Incluye cupones recurrentes; los de una vez según configuración; excluye cargos de instalación, ajustes
+    de crédito, cargos puntuales e impuestos.
+  verified: true
+- id: S9
+  title: Discounts (API)
+  url: https://apidocs.chargebee.com/docs/api/discounts
+  publisher: Chargebee API documentation
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: Campos type, percentage/amount, duration_type (one_time, forever, limited_period), period/period_unit, apply_on,
+    included_in_mrr.
+  verified: true
+- id: S10
+  title: Discounts and Credits (ProfitWell Metrics)
+  url: https://www.paddle.com/help/profitwell-metrics/measure/subscription-metrics/discounts
+  publisher: Paddle Help Center
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: 'Siempre resta descuentos y créditos; el MRR vuelve al terminar el descuento; justificación: no reescribir
+    el MRR histórico.'
+  verified: true
+- id: S11
+  title: Snapshots (type-2 slowly changing dimensions)
+  url: https://docs.getdbt.com/docs/build/snapshots
+  publisher: dbt Docs
+  date: sin fecha visible; consultado 2026-09-29
+  source_type: company
+  quality: A
+  note: dbt_valid_from / dbt_valid_to; valid_to nulo = vigente; estrategias timestamp y check.
+  verified: true
+alternative_explanations:
+- Un primer pago igual al doble del M1 (75 casos) puede ser un cargo de instalación u onboarding, una prorrata más
+  el mes siguiente, un prepago de dos meses o un plan inicial más alto que luego baja (en ese caso sí sería contracción
+  real).
+- Una reactivación que paga el doble tras un mes en cero (117 casos) puede ser un pago de atrasos sin cancelación
+  (mora), una recontratación con cargo de reactivación o dos periodos facturados juntos.
+- Un regreso al monto usual desde un mes más alto puede ser el fin de un add-on o de un servicio puntual (contracción
+  real o cargo no recurrente), la reversión de un ajuste de tarifa o el final de un pago de varios meses.
+- Que casi no aparezca la «V» puede significar que no hubo descuentos temporales. También puede ser que existieran
+  pero fueran permanentes, se dieran como créditos fuera de ciclo o terminaran el mismo mes que otro cambio.
+- Un cambio de nivel estable (por ejemplo, 84.000 → 96.600 COP en Cliente 378) puede ser un aumento de tarifa, un
+  upgrade de plan o cantidad, o el fin de un descuento.
+what_is_established:
+- El modelo actual (raw, staging, mart) solo tiene cliente × mes × monto. No hay plan, cantidad, tarifa de lista,
+  precio pactado, descuento, periodo de servicio, factura ni estado de pago (D8).
+- El panel clasifica 1.294 expansiones (+41,2 M COP) y 1.247 contracciones (−90,9 M COP) solo por la variación del
+  monto pagado (D1).
+- 366 contracciones (57,6 % del COP de contracción) ocurren el mes siguiente a un primer pago observado o a una
+  reactivación (D2); 608 regresan al monto usual desde un mes más alto (D3).
+- 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble del monto previo (D4).
+- 'En los tres casos de Q-025 las alternativas producen el mismo monto observado: con solo el monto no se distinguen
+  (I1).'
+- Los sistemas de facturación tratan el descuento como un registro propio con inicio, fin y alcance, y la línea
+  de factura separa subtotal, descuento y periodo de servicio (S6, S7, S9).
+- 'No hay una convención única de mercado: ChartMogul y ProfitWell siempre restan los descuentos; Stripe y Chargebee
+  lo dejan configurable (S1, S4, S8, S10).'
+what_is_contested:
+- Si un descuento temporal debe bajar el MRR oficial (inicio = contracción y fin = expansión, como en ChartMogul
+  y ProfitWell) o reportarse como línea aparte sobre un MRR bruto (opción configurable en Stripe y Chargebee). Es
+  una decisión de negocio.
+- Si un precio pactado permanente por debajo de lista es «tarifa negociada» o «descuento permanente». Cambia cuánto
+  revenue no capturado se reporta en Q-026.
+- Si las contracciones posteriores a primeros pagos y reactivaciones son efectos de cobro (pagos de varios meses
+  o atrasos) o cambios reales de suscripción. La regla de firma k× tiene falsos positivos (105 meses planos con
+  firma).
+- 'Si un cliente moroso sigue activo: ChartMogul, por defecto, sí hasta que se cancela; Stripe cuenta past_due como
+  activo y unpaid como churn.'
+what_remains_unknown:
+- Qué representa cada fila de raw.transactions (factura emitida, pago recibido o valor del periodo de servicio)
+  y a qué fecha corresponde el campo month.
+- Si Finora tiene un sistema de facturación o CRM con plan, cantidad, catálogo con fechas y registro de descuentos
+  por suscripción, y desde qué mes.
+- Si hubo descuentos o cambios de tarifa entre 2022 y 2024 (el caso habla de introducir descuentos).
+- Frecuencias de facturación, cargos de instalación, pagos parciales y política de mora de Finora.
+case_implication: 'Para el bloque de Revenue, el puente que pide el CFO no se puede construir con el modelo actual.
+  Ese puente separa suscripción, tarifa y descuento (Q-002) y mide cuánto revenue se deja de capturar por descuentos
+  (Q-026); hoy solo existe el puente de monto pagado observado. Además, la línea de «contracción» de ese puente
+  no debería presentarse como «clientes que reducen su suscripción» sin salvedad: más de la mitad de su COP ocurre
+  justo después de un primer pago o una reactivación, con forma de efecto de cobro. Lo que sí se puede defender
+  ante el CFO: (1) la demostración de que el monto no identifica los escenarios (H-016, Q-011, Q-025), con los casos
+  ilustrativos y dos clientes reales; (2) una Propuesta de Modelo de datos con escalera de valor, vigencias y reglas
+  de clasificación que resuelve los tres casos de Q-025 y la regla de H-012; (3) la lista mínima de campos que hay
+  que pedir a Finora. La convención oficial del descuento en el MRR queda abierta como decisión, porque el modelo
+  guarda bruto, descuento y neto por separado y soporta cualquier opción.'
+changes_current_story:
+  value: maybe
+  why: No cambia los hechos del caso. Sí cambia cómo leer la línea de contracción del puente observado, porque más
+    de la mitad de su COP tiene forma de efecto de cobro. Y convierte el puente por componente de Revenue en una
+    propuesta de modelo, no en un análisis ya hecho. Si alguna lámina de Overview o Revenue presenta la contracción
+    como señal de salud de clientes que reducen su suscripción, necesita salvedad.
+affected_hypotheses:
+- id: H-016
+  effect: supports
+  why: Los tres casos de Q-025 dan la misma secuencia de montos para sus alternativas. En datos reales, Cliente
+    10 (42.000 → 0 → 84.000 → 42.000 COP) es compatible tanto con churn + reactivación + contracción como con un
+    pago atrasado sin cambios. Los campos que resolverían la distinción (descuento con inicio y fin, periodo de
+    servicio, fecha efectiva de cancelación) no están en el modelo.
+- id: H-015
+  effect: requires_research
+  why: 'No hay ningún campo de descuento. La huella de un descuento temporal limpio aparece en 34 de 1.247 contracciones,
+    lo que no confirma ni descarta nada. Siguiendo su propia regla, no se elige una explicación por la forma del
+    pago: se necesita discount_grant más el snapshot mensual.'
+- id: H-013
+  effect: requires_research
+  why: Sin plan, cantidad ni características no se puede probar. Además, las expansiones y contracciones observadas
+    están mezcladas con efectos de cobro, así que cualquier prueba hecha solo con el monto saldría contaminada.
+- id: H-014
+  effect: requires_research
+  why: No hay catálogo con fechas ni precio pactado. Los cambios de nivel estables (por ejemplo, +15 % en Cliente
+    378) son compatibles con tarifa, plan o fin de descuento; se necesitan price_book_entry y subscription_item_version
+    para comparar configuraciones equivalentes.
+- id: H-012
+  effect: requires_research
+  why: 'El modelo fija la regla: el descuento vigente al salir se reporta dentro del churn (churn bruto −100 + descuento
+    liberado +20 = churn neto −80) y nunca como fin de descuento. Medirlo requiere discount_grant y la fecha efectiva
+    de cancelación, que hoy no existen.'
+affected_claims: []
+suggested_action: 'Propongo llevarle a Hugo cuatro puntos. (1) Aprobar la escalera de valor y las reglas de clasificación
+  como Propuesta de Modelo de datos del bloque Revenue. (2) Elegir la convención del descuento en el MRR oficial:
+  neto, como ChartMogul y ProfitWell, o bruto con una línea «Descuentos»; el modelo soporta ambas. (3) Enviar a
+  Finora la lista mínima de campos, empezando por qué representa cada fila de raw.transactions. (4) Poner salvedad
+  en la línea de contracción del puente observado. Si Hugo lo aprueba, se puede agregar a mart.customer_month una
+  bandera de «candidato a efecto de cobro» para mostrar la sensibilidad sin reclasificar nada.'
+new_questions:
+- ¿Cada fila de raw.transactions es una factura emitida, un pago recibido o el valor de un periodo de servicio,
+  y a qué fecha corresponde el campo month?
+- ¿Finora tiene en su sistema de facturación o CRM plan, cantidad, tarifa de lista con fechas y registro de descuentos
+  por suscripción, y desde qué mes?
+- ¿El CFO quiere el MRR oficial neto de descuentos (el inicio de un descuento cuenta como contracción) o bruto con
+  una línea separada de descuentos?
+handoff_to_cos:
+  summary: 'R-011: con cliente × mes × monto no se pueden separar suscripción, tarifa, descuento ni momento de cobro.
+    Se entrega la Propuesta de Modelo de datos: escalera lista → pactado → descuento → neto → facturado → cobrado,
+    con vigencias y reglas por componente, que resuelve Q-025 y la regla de H-012. Dato nuevo: el 57,6 % del COP
+    de contracción observada ocurre el mes siguiente a un primer pago o a una reactivación, con forma de efecto
+    de cobro; podría ser una nueva hipótesis sobre el momento de cobro.'
+  recommended_next: 'Llevar a Hugo dos decisiones: aprobar el modelo y elegir la convención del descuento en el
+    MRR. Proponer la solicitud de campos mínimos a Finora y la salvedad en la lámina del puente observado.'
+confidence_buckets:
+  high_confidence:
+  - 'El modelo actual no distingue suscripción, tarifa, descuento ni momento de cobro: solo tiene cliente × mes
+    × monto.'
+  - Los tres casos de Q-025 no se pueden distinguir con el monto.
+  - 'Conteos del panel: 1.294 expansiones y 1.247 contracciones; el 57,6 % del COP de contracción ocurre tras un
+    primer pago o una reactivación.'
+  - Los sistemas de facturación modelan precio, descuento y periodo de servicio como registros separados y con fechas.
+  plausible:
+  - Buena parte de la contracción observada es efecto de cobro (pagos de varios meses o atrasos), no reducción de
+    la suscripción.
+  - Parte del churn observado son moras que luego se pagan (117 reactivaciones pagan el doble tras un mes en cero).
+  contested:
+  - 'Convención del descuento en el MRR oficial: neto o bruto con línea aparte.'
+  - Si un precio pactado permanente por debajo de lista es tarifa o descuento.
+  - La regla de firma k× como señal de pago de varios meses (105 meses planos con firma).
+  unknown:
+  - Qué representa el monto de raw.transactions y a qué fecha corresponde.
+  - Si hubo descuentos o cambios de tarifa en 2022–2024.
+  - Si Finora tiene los campos necesarios y desde cuándo.
+specialist:
+  data_model:
+    conceptual_model: 'Primero el grano. El panel actual es cliente × mes con el monto pagado observado: es caja,
+      no contrato. La propuesta separa seis peldaños de valor por suscripción y mes, cada uno con su fuente y su
+      vigencia. (1) Lista: price_book_entry, la tarifa de catálogo por versión de plan, periodo y moneda, con valid_from/valid_to.
+      (2) Precio pactado: subscription_item_version, con plan, cantidad, add-ons y precio unitario acordado antes
+      de descuentos; se historiza con SCD2. (3) Descuento: discount_grant, una decisión comercial con tipo, valor,
+      duración, inicio, fin, motivo y aprobador. (4) MRR neto recurrente = (2) − (3 recurrente), normalizado a mes.
+      (5) Facturado: invoice_line, con subtotal antes de descuento, descuento, neto, tipo de línea y periodo de
+      servicio. (6) Cobrado: payment_allocation, el pago asignado a cada factura con su fecha. El MRR, bruto y neto,
+      se clasifica sobre (2)–(4) comparando cierres de mes; (5) y (6) son caja y nunca generan movimientos de MRR,
+      solo un «efecto de cobro». Relaciones: customer 1—n subscription; subscription 1—n subscription_item_version
+      (intervalos sin traslape); subscription_item_version n—1 plan_version (características) y n—1 price_book_entry
+      (tarifa); subscription 1—n discount_grant, que puede ligarse a un ítem y al change_event que lo originó; subscription
+      1—n change_event, porque cada versión y cada descuento nace de un evento con evidencia; invoice_line n—1 subscription_item_version
+      y 0..n discount_grant; payment_allocation n—1 factura. subscription_month_snapshot es la foto al cierre, derivada
+      de versiones, descuentos y estado de cobro. mrr_movement es la diferencia entre dos snapshots consecutivos,
+      descompuesta por componente: suscripción, tarifa, descuento, entrada y salida. El mart.customer_month actual
+      se mantiene como capa de «monto pagado observado» y se concilia contra (6).'
+    entities:
+    - name: customer
+      description: Cliente (logo). Es la clave que sobrevive a cambios de cuenta; hoy sale de «Cliente N».
+      grain: una fila por cliente
+      primary_key: customer_id
+    - name: plan_version
+      description: Qué incluye cada plan (características, límites, módulos), versionado.
+      grain: una fila por versión de plan
+      primary_key: plan_version_id
+    - name: price_book_entry
+      description: Tarifa de lista con vigencia.
+      grain: versión de plan × periodo de facturación × moneda × intervalo de vigencia
+      primary_key: price_id
+    - name: subscription
+      description: 'Contrato recurrente: inicio, plazo, periodicidad, cancelación y estado.'
+      grain: una fila por suscripción
+      primary_key: subscription_id
+    - name: subscription_item_version
+      description: Configuración contratada y precio pactado vigentes en un intervalo (SCD2).
+      grain: ítem de suscripción × intervalo de vigencia
+      primary_key: item_version_id
+    - name: discount_grant
+      description: Descuento concedido como decisión comercial, con vigencia, motivo, aprobador y vínculo al cambio
+        que lo originó.
+      grain: una fila por concesión de descuento
+      primary_key: discount_id
+    - name: change_event
+      description: Evento que cambia vigencia, configuración, precio o descuento, con fecha efectiva, fecha de registro
+        y evidencia.
+      grain: una fila por evento
+      primary_key: event_id
+    - name: invoice_line
+      description: 'Lo facturado: subtotal antes de descuento, descuento, neto, tipo de línea y periodo de servicio.'
+      grain: una fila por línea de factura
+      primary_key: line_id
+    - name: payment_allocation
+      description: Lo cobrado y a qué factura se aplica.
+      grain: pago × factura
+      primary_key: payment_id + invoice_id
+    - name: subscription_month_snapshot
+      description: Foto de cierre de mes con las capas de valor (lista, bruto, descuento, neto), caja del mes y
+        estado de cobro.
+      grain: suscripción × mes de cierre (agregable a cliente × mes)
+      primary_key: subscription_id + month
+    - name: mrr_movement
+      description: Puente del mes por componente entre dos cierres consecutivos; suma exacta a la variación del
+        MRR.
+      grain: cliente × mes × componente × tipo de movimiento × base (bruto/neto)
+      primary_key: customer_id + month + component + movement_type + basis
+    - name: mart.customer_month (existente)
+      description: Capa de monto pagado observado; se conserva para conciliar y comparar, no se reemplaza sin decisión.
+      grain: cliente × mes
+      primary_key: customer_id + month
+    grain: 'Grano de análisis: suscripción × mes de cierre, agregable a cliente × mes para métricas de logo. Grano
+      de evidencia: intervalo de vigencia (versión de ítem, descuento, tarifa), evento de cambio, línea de factura
+      y asignación de pago. Grano actual: cliente × mes de monto pagado observado, que es caja y no el grano del
+      contrato; por eso hoy no se pueden separar los componentes.'
+    fields:
+    - entity: customer
+      field: customer_id
+      type: integer
+      definition: Clave del cliente (logo); hoy sale de «Cliente N».
+      example: '10'
+    - entity: customer
+      field: first_subscription_start
+      type: date
+      definition: Inicio de la primera suscripción vigente. No es el primer pago observado.
+      example: '2022-02-01'
+    - entity: plan_version
+      field: plan_version_id
+      type: text
+      definition: Versión de plan con sus características.
+      example: PRO-2022
+    - entity: plan_version
+      field: features
+      type: json
+      definition: 'Límites y módulos incluidos: lo que efectivamente se contrata.'
+      example: '{"usuarios": 5, "empresas": 1}'
+    - entity: plan_version
+      field: valid_from / valid_to
+      type: date
+      definition: Vigencia de la versión; valid_to nulo = vigente.
+      example: 2022-01-01 / nulo
+    - entity: price_book_entry
+      field: price_id
+      type: text
+      definition: Entrada del catálogo de tarifas.
+      example: PB-PRO-M-2022
+    - entity: price_book_entry
+      field: list_unit_price_cop
+      type: numeric(14,2)
+      definition: Tarifa de lista por unidad y periodo de facturación.
+      example: '84000'
+    - entity: price_book_entry
+      field: billing_period_months
+      type: integer
+      definition: Periodo al que corresponde la tarifa (1 = mensual, 12 = anual).
+      example: '1'
+    - entity: price_book_entry
+      field: valid_from / valid_to
+      type: date
+      definition: Desde y hasta cuándo rige esa tarifa.
+      example: 2022-01-01 / 2022-10-31
+    - entity: subscription
+      field: subscription_id
+      type: text
+      definition: Contrato recurrente del cliente.
+      example: SUB-0042
+    - entity: subscription
+      field: billing_account_id
+      type: text
+      definition: Entidad que factura y paga; puede no coincidir con el cliente.
+      example: BA-0042
+    - entity: subscription
+      field: start_date
+      type: date
+      definition: Inicio de la vigencia contractual.
+      example: '2022-02-01'
+    - entity: subscription
+      field: term_months / billing_period_months
+      type: integer
+      definition: Plazo contratado y cada cuántos meses se factura.
+      example: 12 / 1
+    - entity: subscription
+      field: cancel_requested_at
+      type: timestamp
+      definition: Cuándo el cliente pidió cancelar.
+      example: 2023-05-20 09:30
+    - entity: subscription
+      field: cancel_effective_date
+      type: date
+      definition: Desde cuándo deja de estar vigente; es lo que define el churn.
+      example: '2023-06-30'
+    - entity: subscription
+      field: status
+      type: enum(active, past_due, paused, cancelled)
+      definition: Estado contractual y de cobro actual; su historia queda en change_event.
+      example: past_due
+    - entity: subscription_item_version
+      field: item_version_id
+      type: text
+      definition: Versión de un ítem recurrente (SCD2).
+      example: IV-0042-3
+    - entity: subscription_item_version
+      field: plan_version_id / quantity / addons
+      type: text / numeric / json
+      definition: 'Configuración contratada: plan, unidades y add-ons.'
+      example: PRO-2022 / 3 / ["modulo_x"]
+    - entity: subscription_item_version
+      field: contracted_unit_price_cop
+      type: numeric(14,2)
+      definition: Precio pactado por unidad antes de cualquier descuento.
+      example: '84000'
+    - entity: subscription_item_version
+      field: price_id
+      type: text
+      definition: Tarifa de catálogo de referencia para ese precio.
+      example: PB-PRO-M-2022
+    - entity: subscription_item_version
+      field: valid_from / valid_to
+      type: date
+      definition: Vigencia de esta configuración, sin traslapes con otras versiones.
+      example: 2022-02-01 / 2022-10-31
+    - entity: subscription_item_version
+      field: change_event_id
+      type: text
+      definition: Evento que creó la versión (evidencia).
+      example: EVT-0917
+    - entity: discount_grant
+      field: discount_id
+      type: text
+      definition: Descuento concedido; una fila por concesión.
+      example: DSC-0001
+    - entity: discount_grant
+      field: scope / item_version_id
+      type: enum(subscription, item, invoice) / text
+      definition: 'A qué se aplica: toda la suscripción, un ítem o una factura.'
+      example: item / IV-0042-3
+    - entity: discount_grant
+      field: discount_type / discount_value
+      type: enum(percentage, fixed_amount) / numeric
+      definition: 'Tipo y valor: porcentaje o COP por periodo.'
+      example: percentage / 10
+    - entity: discount_grant
+      field: duration_type
+      type: enum(once, limited_period, forever)
+      definition: Duración del descuento.
+      example: limited_period
+    - entity: discount_grant
+      field: start_date / end_date
+      type: date
+      definition: Vigencia del descuento; end_date nulo = permanente.
+      example: 2026-03-01 / 2026-08-31
+    - entity: discount_grant
+      field: reason_code
+      type: enum
+      definition: 'Motivo, de una lista cerrada: promo_entrada, retencion, compensa_expansion, negociacion, reactivacion,
+        correccion.'
+      example: compensa_expansion
+    - entity: discount_grant
+      field: approved_by / linked_change_event_id
+      type: text
+      definition: Quién lo aprobó y qué cambio lo originó.
+      example: gerencia_comercial / EVT-0917
+    - entity: discount_grant
+      field: included_in_mrr
+      type: boolean
+      definition: Si cuenta en el MRR; es una decisión, relevante sobre todo para los descuentos «once».
+      example: 'false'
+    - entity: change_event
+      field: event_id / event_type
+      type: text / enum
+      definition: 'Tipo de evento: new, plan_change, quantity_change, price_change, discount_start, discount_change,
+        discount_end, cancel, reactivation o pause.'
+      example: EVT-0917 / quantity_change
+    - entity: change_event
+      field: effective_date / recorded_at
+      type: date / timestamp
+      definition: 'Desde cuándo rige y cuándo se registró. Es bitemporal: permite detectar cambios retroactivos.'
+      example: 2026-03-01 / 2026-03-04 10:12
+    - entity: change_event
+      field: evidence_ref
+      type: text
+      definition: 'Documento que lo respalda: orden, enmienda, correo o ticket.'
+      example: OF-2026-118
+    - entity: invoice_line
+      field: line_id / invoice_id
+      type: text
+      definition: Línea de factura y factura a la que pertenece.
+      example: INV-0107-1 / INV-0107
+    - entity: invoice_line
+      field: line_type
+      type: enum(recurring, one_time, setup, proration, arrears, credit)
+      definition: Naturaleza de la línea; solo recurring alimenta el MRR.
+      example: recurring
+    - entity: invoice_line
+      field: service_period_start / service_period_end
+      type: date
+      definition: Periodo de servicio que cubre la línea.
+      example: 2023-06-01 / 2023-07-31
+    - entity: invoice_line
+      field: subtotal_before_discount_cop / discount_amount_cop / net_amount_cop
+      type: numeric(14,2)
+      definition: Monto antes de descuentos, descuento aplicado (por discount_id) y neto.
+      example: 84000 / 0 / 84000
+    - entity: payment_allocation
+      field: payment_id / paid_at / amount_allocated_cop
+      type: text / date / numeric(14,2)
+      definition: Pago recibido, su fecha y cuánto se asigna a cada factura.
+      example: PAY-5521 / 2023-07-15 / 84000
+    - entity: subscription_month_snapshot
+      field: in_force / billing_status
+      type: boolean / enum(current, past_due, unpaid)
+      definition: Si la suscripción está vigente al cierre y su estado de cobro.
+      example: true / past_due
+    - entity: subscription_month_snapshot
+      field: list_mrr_cop
+      type: numeric(14,2)
+      definition: Configuración vigente × tarifa de lista vigente, normalizado a mes.
+      example: '42000'
+    - entity: subscription_month_snapshot
+      field: contracted_mrr_gross_cop
+      type: numeric(14,2)
+      definition: 'Valor de la suscripción antes de descuentos: precio pactado × cantidad, normalizado a mes.'
+      example: '42000'
+    - entity: subscription_month_snapshot
+      field: discount_mrr_cop
+      type: numeric(14,2)
+      definition: Descuento recurrente vigente al cierre, normalizado a mes.
+      example: '0'
+    - entity: subscription_month_snapshot
+      field: net_mrr_cop
+      type: numeric(14,2)
+      definition: Bruto menos descuento recurrente.
+      example: '42000'
+    - entity: subscription_month_snapshot
+      field: invoiced_month_cop / collected_month_cop
+      type: numeric(14,2)
+      definition: Facturado y cobrado dentro del mes (caja, no MRR).
+      example: 84000 / 84000
+    - entity: subscription_month_snapshot
+      field: observed_paid_cop
+      type: numeric(14,2)
+      definition: Monto del panel actual (paid_mrr_cop), para conciliar.
+      example: '84000'
+    - entity: mrr_movement
+      field: component / movement_type
+      type: enum
+      definition: Componente (suscripcion, tarifa, descuento, entrada, salida) y tipo de movimiento (new, expansion,
+        contraction, neutral, price_increase, price_decrease, discount_start, discount_increase, discount_decrease,
+        discount_end, churn, churn_discount_release, reactivation).
+      example: descuento / discount_start
+    - entity: mrr_movement
+      field: basis / amount_cop
+      type: enum(bruto, neto) / numeric(14,2)
+      definition: Base del movimiento y monto con signo (+ sube el MRR, − lo baja).
+      example: neto / -8400
+    temporal_behavior: 'Hay tres tipos de tiempo y cada uno responde una pregunta distinta. (a) Registros con vigencia
+      (valid_from/valid_to; valid_to nulo = vigente, patrón SCD2 como los snapshots de dbt) para catálogo, versión
+      de ítem y descuento. Responden: ¿qué estaba contratado, a qué tarifa y con qué descuento el día X? (b) Eventos
+      de cambio con fecha efectiva y fecha de registro (bitemporal). Responden: ¿qué cambió, desde cuándo rige,
+      quién lo decidió y con qué evidencia? También dejan ver cambios retroactivos. (c) Snapshot de cierre de mes
+      (último día del mes). Responde: ¿cuánto era el MRR bruto, el descuento y el neto al cierre? La diferencia
+      entre dos snapshots consecutivos es el puente del mes. Aparte, las transacciones responden qué se facturó
+      o cobró y para qué periodo: la factura tiene periodo de servicio y el pago tiene fecha. Convenciones propuestas,
+      que son decisiones y no hechos: los cambios a mitad de mes cuentan en el mes en que rigen, sin prorratear
+      el MRR; el snapshot cerrado se congela («as-reported») y las correcciones retroactivas van a una versión «restated»
+      con su diferencia explicada. Ese es el mismo motivo por el que ProfitWell no reescribe el MRR histórico.'
+    business_definitions:
+    - term: Monto pagado observado
+      definition: Lo que hoy trae raw.transactions por cliente × mes (paid_mrr_cop = amount × 10.000). Es caja observada;
+        no se sabe si es factura o cobro. No es MRR contratado.
+    - term: Valor de lista (MRR de lista)
+      definition: Configuración contratada × tarifa de catálogo vigente al cierre, normalizada a mes.
+    - term: Valor de la suscripción antes de descuentos (MRR bruto contratado)
+      definition: Precio pactado × cantidad de los ítems recurrentes vigentes al cierre, normalizado a mes. Es el
+        «negocio subyacente» de Q-026.
+    - term: Descuento recurrente vigente (MRR de descuento)
+      definition: 'Suma normalizada de los descuentos con inicio ≤ cierre < fin aplicados a ítems recurrentes. Subtipos:
+        temporal (tiene fin), permanente (sin fin) y de una vez (solo la primera factura; fuera del MRR por defecto,
+        a decidir).'
+    - term: MRR neto
+      definition: MRR bruto contratado menos el descuento recurrente vigente.
+    - term: Tarifa
+      definition: Precio de lista de catálogo para una configuración, con vigencia.
+    - term: Precio pactado
+      definition: Precio unitario acordado en el contrato antes de descuentos. Si difiere de lista, hay que decidir
+        si esa diferencia es «tarifa negociada» o «descuento permanente».
+    - term: Configuración comparable
+      definition: Misma versión o familia de plan, misma cantidad y mismos add-ons. Es la condición para decir que
+        un cambio es de tarifa (H-014) y no de suscripción (H-013).
+    - term: Vigente vs al día
+      definition: 'Vigente: el contrato está activo al cierre. Al día: no tiene facturas vencidas. Estar en mora
+        no es churn.'
+    - term: Revenue no capturado por descuentos
+      definition: Suma del MRR de descuento y, si se decide, también lista − pactado. Es valor al que se renuncia
+        por decisión comercial, no una pérdida contable (Q-026).
+    - term: Efecto de cobro
+      definition: Diferencia entre lo cobrado en el mes y el MRR neto, causada por periodicidad, prepagos, atrasos
+        o pagos parciales. No es un movimiento de MRR.
+    classification_logic:
+    - case: Base de comparación
+      rule: Todas las reglas comparan dos snapshots consecutivos del mismo cliente (t−1 y t) al cierre; el cliente
+        es la suma de sus suscripciones. Cada mes, la suma de movimientos debe dar exactamente Δneto, y lo mismo
+        para Δbruto.
+    - case: Nuevo
+      rule: Nunca tuvo una suscripción vigente y tiene una vigente al cierre de t, según la fecha de inicio del
+        contrato, no el primer pago. Entrada = +bruto(t). Si arranca con descuento, se registra además discount_start
+        = −descuento(t).
+    - case: Expansión (suscripción)
+      rule: Vigente en t−1 y en t, y el cambio de configuración valorado al precio pactado de t−1, Σ(q_t − q_t−1)
+        × p_t−1, es mayor que 0 por plan, cantidad o add-ons (change_event plan_change o quantity_change).
+    - case: Contracción (suscripción)
+      rule: La misma regla con resultado menor que 0. Incluye cancelar una de varias suscripciones sin cancelar
+        la última (convención ChartMogul).
+    - case: Neutral
+      rule: Cambia la configuración pero no el valor, por ejemplo un cambio a un plan de igual precio. Se registra
+        con monto 0 porque sirve de evidencia para H-013.
+    - case: Cambio de tarifa
+      rule: 'Con configuración comparable, cambia el precio pactado o el de lista: price_increase o price_decrease
+        = Σ(p_t − p_t−1) × q_t. Meterlo dentro de expansión o darle línea propia es una decisión; se propone línea
+        propia «Tarifa».'
+    - case: Inicio o aumento de descuento
+      rule: 'Vigente en t−1 y en t, con descuento(t) > descuento(t−1) por un discount_grant nuevo o más grande:
+        discount_start/increase = −Δdescuento. No es contracción, porque el bruto no cambia.'
+    - case: Fin o reducción de descuento
+      rule: 'Vigente en t−1 y en t, con descuento(t) < descuento(t−1) porque el descuento terminó (end_date antes
+        del cierre de t) o se redujo: discount_end/decrease = +Δdescuento. No es expansión.'
+    - case: Descuento porcentual que escala
+      rule: Si un porcentaje sin cambios se aplica a un bruto que cambió, la parte d × Δbruto va con el movimiento
+        de suscripción (expansión neta) y solo el cambio de tasa, (d_t − d_t−1) × bruto_t, va a la línea Descuento.
+        Es una decisión y debe documentarse.
+    - case: Churn
+      rule: Vigente en t−1 y no vigente en t (cancel_effective_date ≤ cierre de t). Churn bruto = −bruto(t−1); el
+        descuento vigente en t−1 se libera dentro del churn (churn_discount_release = +descuento(t−1)); churn neto
+        = −neto(t−1). A quien sale nunca se le registra discount_end (H-012).
+    - case: Reactivación
+      rule: No vigente en t−1, vigente en t y con una suscripción previa. Si vuelve con una oferta, se registra
+        además discount_start.
+    - case: Mora (past_due)
+      rule: 'Vigente con una factura vencida: no hay movimiento de MRR y billing_status = past_due. Pasar a churn
+        tras N días sin pago es una política por decidir: ChartMogul lo permite y Stripe cuenta unpaid como churn.'
+    - case: Pago de varios periodos, atrasos o pagos parciales
+      rule: Se normaliza por el periodo de servicio de la línea (Stripe divide el anual entre 12). No genera expansión,
+        contracción, churn ni reactivación; va a la capa de efecto de cobro (cobrado − neto del mes).
+    - case: Descuento de una vez y créditos
+      rule: Un descuento solo en la primera factura queda fuera del MRR por defecto (included_in_mrr = false, como
+        Chargebee) y solo se ve en facturado y cobrado. Si los créditos fuera de ciclo cuentan como descuento es
+        una decisión (ProfitWell los resta).
+    - case: Descuento del 100 %
+      rule: Neto = 0 con la suscripción vigente. Se propone clasificarlo como «activo con MRR neto cero», no como
+        churn (Stripe lo cuenta como churn si se restan descuentos). Es una decisión.
+    - case: Cambio combinado en el mismo mes
+      rule: 'Orden fijo: (1) volumen a precio anterior, (2) tarifa sobre la configuración nueva, (3) descuento.
+        La suma debe igualar Δneto exactamente. Ejemplo, caso A de Q-025: +30 suscripción, −30 descuento, Δneto
+        0.'
+    - case: Datos actuales (solo monto)
+      rule: Mientras no existan los campos, las etiquetas del panel se llaman «movimiento de monto pagado observado»
+        y ninguna regla sobre el monto puede asignar componente. Las firmas heurísticas (k×, regreso al usual, pago
+        doble tras un hueco) son «candidatos a efecto de cobro», no clasificación.
+    example_records:
+    - entity: 'subscription_month_snapshot · casos de Q-025 y H-012 (ILUSTRATIVO: no son datos del caso)'
+      columns:
+      - caso
+      - bruto t−1
+      - descuento t−1
+      - neto t−1
+      - bruto t
+      - descuento t
+      - neto t
+      - monto pagado t−1 → t
+      - lectura del panel actual
+      - clasificación propuesta
+      rows:
+      - - A · expansión compensada por descuento
+        - '100'
+        - '0'
+        - '100'
+        - '130'
+        - '30'
+        - '100'
+        - 100 → 100
+        - flat
+        - expansión +30 (suscripción) e inicio de descuento −30 (descuento); neto 0
+      - - B1 · contracción real
+        - '100'
+        - '0'
+        - '100'
+        - '80'
+        - '0'
+        - '80'
+        - 100 → 80
+        - contraction −20
+        - contracción −20
+      - - B2 · descuento con suscripción estable
+        - '100'
+        - '0'
+        - '100'
+        - '100'
+        - '20'
+        - '80'
+        - 100 → 80
+        - contraction −20
+        - inicio de descuento −20; bruto sin cambio
+      - - C1 · fin de descuento
+        - '100'
+        - '20'
+        - '80'
+        - '100'
+        - '0'
+        - '100'
+        - 80 → 100
+        - expansion +20
+        - fin de descuento +20; no es expansión
+      - - C2 · expansión real
+        - '80'
+        - '0'
+        - '80'
+        - '100'
+        - '0'
+        - '100'
+        - 80 → 100
+        - expansion +20
+        - expansión +20
+      - - H-012 · sale un cliente con descuento
+        - '100'
+        - '20'
+        - '80'
+        - '0'
+        - '0'
+        - '0'
+        - 80 → 0
+        - churn −80
+        - churn bruto −100 y descuento liberado +20 dentro del churn (neto −80); sin fin de descuento
+    - entity: mrr_movement · caso A (ILUSTRATIVO)
+      columns:
+      - month
+      - customer_id
+      - component
+      - movement_type
+      - basis
+      - amount
+      rows:
+      - - t
+        - X
+        - suscripcion
+        - expansion
+        - bruto
+        - '+30'
+      - - t
+        - X
+        - descuento
+        - discount_start
+        - neto
+        - −30
+      - - t
+        - X
+        - total
+        - net_mrr_change
+        - neto
+        - '0'
+    - entity: mart.customer_month · DATO REAL, Cliente 10 (D6)
+      columns:
+      - month
+      - paid_mrr_cop
+      - movement_type (panel)
+      - qué campo lo decidiría
+      rows:
+      - - 2023-05
+        - '42000'
+        - flat
+        - —
+      - - 2023-06
+        - '0'
+        - churn
+        - 'subscription.cancel_effective_date y billing_status: ¿canceló o quedó en mora?'
+      - - 2023-07
+        - '84000'
+        - reactivation
+        - 'invoice_line.service_period y payment_allocation: ¿pagó junio y julio juntos?'
+      - - 2023-08
+        - '42000'
+        - contraction
+        - Si julio cubría dos periodos, no hubo contracción y el MRR estuvo plano los tres meses
+    - entity: 'invoice_line · pago de dos periodos (ILUSTRATIVO: cómo se vería si ese fuera el caso de Cliente 10;
+        el dato no lo confirma)'
+      columns:
+      - invoice_id
+      - line_type
+      - service_period_start
+      - service_period_end
+      - quantity
+      - unit_price
+      - subtotal_before_discount
+      - discount_amount
+      - net_amount
+      - MRR normalizado
+      rows:
+      - - INV-0107
+        - recurring
+        - '2023-06-01'
+        - '2023-07-31'
+        - '1'
+        - '42000'
+        - '84000'
+        - '0'
+        - '84000'
+        - '42000'
+    - entity: 'subscription_item_version · SCD2 (ILUSTRATIVO: cómo se registraría si el +15 % de Cliente 378 fuera
+        tarifa; el dato no lo dice)'
+      columns:
+      - item_version_id
+      - subscription_id
+      - plan_version_id
+      - quantity
+      - price_id
+      - contracted_unit_price
+      - valid_from
+      - valid_to
+      - change_event_id
+      rows:
+      - - IV-1
+        - SUB-7
+        - PRO-2022
+        - '1'
+        - PB-PRO-M-2022
+        - '84000'
+        - '2022-02-01'
+        - '2022-10-31'
+        - EVT-1 (inicio de contrato)
+      - - IV-2
+        - SUB-7
+        - PRO-2022
+        - '1'
+        - PB-PRO-M-2022-11
+        - '96600'
+        - '2022-11-01'
+        - ''
+        - EVT-2 (price_change, configuración comparable)
+    - entity: discount_grant (ILUSTRATIVO)
+      columns:
+      - discount_id
+      - subscription_id
+      - item_version_id
+      - discount_type
+      - discount_value
+      - duration_type
+      - start_date
+      - end_date
+      - reason_code
+      - approved_by
+      - linked_change_event_id
+      rows:
+      - - DSC-0001
+        - SUB-0042
+        - IV-0042-3
+        - fixed_amount
+        - '30'
+        - limited_period
+        - '2026-03-01'
+        - '2026-08-31'
+        - compensa_expansion
+        - gerencia_comercial
+        - EVT-0917
+    edge_cases:
+    - 'Expansión y descuento en el mismo mes que se compensan (caso A de Q-025): con MRR solo neto la expansión
+      no se ve; por eso se guarda el bruto.'
+    - 'Cliente que sale con descuento (H-012): el descuento se libera dentro del churn, no como fin de descuento.'
+    - 'Descuento que vence el mismo mes de un downgrade: se descomponen ambos movimientos y el neto puede no moverse.'
+    - 'Precio pactado permanente por debajo de lista: ¿tarifa negociada o descuento permanente? Es una decisión
+      y cambia el revenue no capturado de Q-026.'
+    - 'Ajuste general de tarifas frente a renegociación individual: las dos van a «Tarifa», pero conviene distinguirlas
+      con reason_code.'
+    - 'Descuentos apilados en una misma línea: un registro por descuento y un orden de aplicación explícito (en
+      Stripe los de línea se aplican antes que los de factura).'
+    - 'Pagos de varios meses y prepagos: en el histórico, 312 contracciones vuelven al usual desde un mes k×.'
+    - 'Pagos de atrasos: en el histórico, 117 reactivaciones pagan el doble tras un mes en cero. Con fecha efectiva
+      de cancelación y asignación de pagos no serían churn + reactivación.'
+    - 'Pagos parciales o montos atípicos (por ejemplo, 5.601,96 COP en Cliente 378 en jun-22): son caja, no MRR.'
+    - 'Primer pago más alto que el recurrente (165 casos con M1 < M0): el tipo de línea (setup, proration) lo resuelve.'
+    - 'Falsos positivos de la firma multimes: 105 meses «planos» tienen firma k×, así que la regla puede marcar
+      una duplicación real como prepago.'
+    - 'Cambios retroactivos (enmiendas registradas después del cierre): se tratan con registro bitemporal, snapshot
+      congelado y restatement aparte.'
+    - 'Varias suscripciones por cliente, fusiones o separaciones de cuentas: el cliente es la clave de logo, la
+      suscripción es la clave de componente y la billing_account puede ser otra.'
+    - 'Censura a la izquierda (ene-22) y posible arrastre de feb-22: la primera aparición no es el inicio del contrato.'
+    - 'Componentes por uso: Stripe los excluye del MRR; si Finora cobra por uso, necesitan una línea propia.'
+    - 'Suscripciones pausadas (inferencia, sin fuente): decidir si son churn o vigentes con MRR cero.'
+    data_quality_rules:
+    - 'Sin traslapes: para cada ítem, los intervalos [valid_from, valid_to) no se traslapan ni dejan huecos mientras
+      la suscripción está vigente.'
+    - valid_to > valid_from o nulo, y como máximo una versión con valid_to nulo por ítem y por descuento.
+    - 'discount_grant: si duration_type = limited_period, end_date no es nulo; si es forever, end_date es nulo;
+      si es once, está ligado a una factura.'
+    - 'discount_value: porcentaje en (0, 100]; monto fijo > 0 y ≤ subtotal de la línea.'
+    - 'invoice_line: subtotal_before_discount − Σ discount_amount = net_amount, con tolerancia de 1 COP.'
+    - 'Snapshot: 0 ≤ discount_mrr ≤ contracted_mrr_gross y net_mrr = bruto − discount_mrr.'
+    - 'Puente cerrado: Σ mrr_movement por cliente y mes = net_mrr(t) − net_mrr(t−1), exacto y también en bruto,
+      igual que hoy se valida al centavo en monthly_metrics.'
+    - 'El churn exige un evento de cancelación o una regla de auto-churn por mora aprobada: un mes con cobro cero
+      no basta para generar churn en la vista contractual.'
+    - Todo price_change con configuración comparable referencia un price_book_entry o una enmienda (evidence_ref
+      no nulo).
+    - Todo descuento tiene reason_code de la lista cerrada y approved_by no nulo.
+    - 'Conciliación de caja: Σ payment_allocation por cliente y mes frente a raw.transactions × 10.000. Las diferencias
+      de más de 1 COP se listan, no se ajustan.'
+    - Líneas recurrentes de un mismo ítem sin traslape de periodo de servicio (evita contar dos veces un prepago).
+    - 'Dueño por dato: catálogo = Pricing; suscripción y descuento = RevOps/Ventas; factura y cobro = Finanzas.'
+    - 'Moneda y escala explícitas: COP con la escala documentada (×10.000). Nunca se mezclan con el gasto S&M, cuya
+      unidad no está documentada.'
+    implementation_considerations:
+    - 'Versión mínima, si Finora solo puede ampliar el archivo actual (cliente × mes): plan, cantidad, precio de
+      lista unitario, precio pactado unitario antes de descuento, monto de descuento del mes, tipo y motivo del
+      descuento, fecha de inicio y fin del descuento, meses cubiertos por el pago (periodo de servicio), fecha de
+      factura o pago, y estado de la suscripción con su fecha efectiva de cancelación. Con eso los tres casos de
+      Q-025 y la regla de H-012 ya se pueden clasificar.'
+    - 'Qué evidencia confirma cada cosa. Vigencia: contrato u orden, más el evento de cancelación con fecha efectiva.
+      Características contratadas: versión del ítem, más el evento de upgrade o downgrade. Tarifa: catálogo con
+      fechas, más su referencia en la versión del ítem. Descuento aplicado: el registro de descuento, más la línea
+      de factura con subtotal y monto descontado. Momento de cobro: periodo de servicio, más el pago asignado a
+      la factura.'
+    - Mantener mart.customer_month como capa de monto pagado observado. Construir en paralelo mart.subscription_month_snapshot
+      y mart.mrr_movement y conciliarlos. No se reemplaza ninguna métrica sin decisión.
+    - Guardar bruto, descuento y neto por separado para poder presentar cualquier convención (neto como ChartMogul
+      y ProfitWell, o configurable como Stripe y Chargebee) y un puente con línea «Descuentos».
+    - Si las fuentes cambian con el tiempo (CRM, suscripciones), historizar con snapshots tipo SCD2 (dbt snapshots
+      con valid_from/valid_to).
+    - Congelar el snapshot al cierre (as-reported) y publicar los restatements aparte, con su diferencia explicada.
+    - Documentar el orden de descomposición (volumen, tarifa, descuento) y probar que la suma es exacta.
+    - 'Backfill: si Finora no tiene histórico de descuentos y tarifas de 2022–2024, el histórico queda como monto
+      pagado observado y la clasificación por componente aplica desde que existan los campos. Hay que decirlo en
+      la lámina.'
+    - Sobre el histórico, las banderas heurísticas (firma k×, regreso al usual, pago doble tras un hueco) solo sirven
+      como «candidatos a efecto de cobro» para revisión y sensibilidad; no reclasifican.
+    - 'Gobierno del descuento: motivo de una lista cerrada, aprobador y vínculo con el evento que lo originó. Es
+      lo que permite medir cuánto revenue se deja de capturar (Q-026) y separar «descuento que compensa expansión»
+      de «descuento de retención».'
+sql_runs:
+- SELECT movement_type, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, SUM(COALESCE(expansion_mrr_cop,0))
+  AS expansion_cop, SUM(COALESCE(contraction_mrr_cop,0)) AS contraction_cop FROM mart.customer_month GROUP BY movement_type
+  ORDER BY filas DESC
+- SELECT movement_type, reverts_next_month, COUNT(*) AS eventos FROM mart.customer_month WHERE movement_type IN
+  ('expansion','contraction') GROUP BY movement_type, reverts_next_month ORDER BY movement_type, reverts_next_month
+- SELECT movement_type, ROUND(paid_mrr_cop / previous_month_mrr, 2) AS ratio_vs_mes_anterior, COUNT(*) AS eventos
+  FROM mart.customer_month WHERE movement_type IN ('contraction','expansion') AND previous_month_mrr > 0 GROUP BY
+  movement_type, ROUND(paid_mrr_cop / previous_month_mrr, 2) ORDER BY eventos DESC LIMIT 30
+- SELECT movement_type, COUNT(*) AS eventos, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END)
+  AS con_firma_multimes, SUM(CASE WHEN ABS(amount_vs_usual_ratio - 1) < 0.005 THEN 1 ELSE 0 END) AS vuelve_al_monto_usual
+  FROM mart.customer_month WHERE movement_type IN ('expansion','contraction') GROUP BY movement_type
+- WITH x AS (SELECT customer_id, month, movement_type, paid_mrr_cop, previous_month_mrr, amount_vs_usual_ratio,
+  multi_month_payment_signature, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month)
+  AS prev_sig, LAG(amount_vs_usual_ratio) OVER (PARTITION BY customer_id ORDER BY month) AS prev_ratio FROM mart.customer_month)
+  SELECT movement_type, COUNT(*) AS eventos, SUM(CASE WHEN prev_sig > 0 THEN 1 ELSE 0 END) AS mes_previo_con_firma_multimes,
+  SUM(CASE WHEN prev_sig > 0 AND ABS(amount_vs_usual_ratio-1) < 0.005 THEN 1 ELSE 0 END) AS deshace_pago_multimes,
+  SUM(CASE WHEN ABS(amount_vs_usual_ratio-1) < 0.005 AND prev_ratio > 1.005 THEN 1 ELSE 0 END) AS vuelve_a_usual_desde_arriba,
+  SUM(CASE WHEN ABS(prev_ratio-1) < 0.005 AND amount_vs_usual_ratio < 0.995 THEN 1 ELSE 0 END) AS baja_desde_usual
+  FROM x WHERE movement_type IN ('contraction','expansion') GROUP BY movement_type
+- WITH x AS (SELECT customer_id, month, movement_type, expansion_mrr_cop, contraction_mrr_cop, amount_vs_usual_ratio,
+  multi_month_payment_signature, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month)
+  AS prev_sig, LAG(amount_vs_usual_ratio) OVER (PARTITION BY customer_id ORDER BY month) AS prev_ratio FROM mart.customer_month)
+  SELECT movement_type, CASE WHEN movement_type='expansion' AND multi_month_payment_signature > 0 THEN 'sube a k
+  x usual (firma multimes)' WHEN movement_type='contraction' AND prev_sig > 0 AND ABS(amount_vs_usual_ratio-1) <
+  0.005 THEN 'baja de k x usual a usual' WHEN movement_type='contraction' AND ABS(amount_vs_usual_ratio-1) < 0.005
+  AND prev_ratio > 1.005 THEN 'otra vuelta a usual desde arriba' WHEN movement_type='contraction' AND ABS(prev_ratio-1)
+  < 0.005 THEN 'baja desde usual' WHEN movement_type='expansion' AND ABS(prev_ratio-1) < 0.005 THEN 'sube desde
+  usual' ELSE 'otro' END AS patron, COUNT(*) AS eventos, ROUND(SUM(COALESCE(expansion_mrr_cop,0) + COALESCE(contraction_mrr_cop,0)),0)
+  AS cop FROM x WHERE movement_type IN ('contraction','expansion') GROUP BY 1,2 ORDER BY 1,3 DESC
+- SELECT movement_type, COUNT(*) AS meses_con_firma_multimes, SUM(CASE WHEN multi_month_payment_signature = 2 THEN
+  1 ELSE 0 END) AS k2, SUM(CASE WHEN multi_month_payment_signature = 3 THEN 1 ELSE 0 END) AS k3, SUM(CASE WHEN multi_month_payment_signature
+  BETWEEN 4 AND 11 THEN 1 ELSE 0 END) AS k4_11, SUM(CASE WHEN multi_month_payment_signature = 12 THEN 1 ELSE 0 END)
+  AS k12 FROM mart.customer_month WHERE multi_month_payment_signature > 0 GROUP BY movement_type ORDER BY meses_con_firma_multimes
+  DESC
+- SELECT COUNT(*) AS altas, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > 0 AND m1_cop < m0_cop THEN 1 ELSE 0 END)
+  AS m1_menor_que_m0, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > 0 AND ABS(m0_cop / m1_cop - 2) < 0.01 THEN 1
+  ELSE 0 END) AS m0_igual_2x_m1, SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop > m0_cop THEN 1 ELSE 0 END) AS m1_mayor_que_m0,
+  SUM(CASE WHEN m1_cop IS NOT NULL AND m1_cop = m0_cop THEN 1 ELSE 0 END) AS m1_igual_m0 FROM mart.new_customers
+- WITH x AS (SELECT customer_id, month, movement_type, paid_mrr_cop, multi_month_payment_signature, LAG(paid_mrr_cop,1)
+  OVER (PARTITION BY customer_id ORDER BY month) AS m_1, LAG(paid_mrr_cop,2) OVER (PARTITION BY customer_id ORDER
+  BY month) AS m_2, LAG(paid_mrr_cop,3) OVER (PARTITION BY customer_id ORDER BY month) AS m_3 FROM mart.customer_month)
+  SELECT COUNT(*) AS reactivaciones, SUM(CASE WHEN m_1 = 0 AND m_2 > 0 THEN 1 ELSE 0 END) AS hueco_de_1_mes, SUM(CASE
+  WHEN m_1 = 0 AND m_2 > 0 AND ABS(paid_mrr_cop / m_2 - 2) < 0.01 THEN 1 ELSE 0 END) AS hueco_1_y_paga_2x_previo,
+  SUM(CASE WHEN m_1 = 0 AND m_2 > 0 AND ABS(paid_mrr_cop / m_2 - 1) < 0.005 THEN 1 ELSE 0 END) AS hueco_1_y_paga_igual,
+  SUM(CASE WHEN m_1 = 0 AND m_2 = 0 AND m_3 > 0 AND ABS(paid_mrr_cop / m_3 - 3) < 0.01 THEN 1 ELSE 0 END) AS hueco_2_y_paga_3x_previo
+  FROM x WHERE movement_type = 'reactivation'
+- WITH x AS (SELECT customer_id, month, movement_type, paid_mrr_cop, previous_month_mrr, LEAD(paid_mrr_cop,1) OVER
+  w AS n1, LEAD(paid_mrr_cop,2) OVER w AS n2, LEAD(paid_mrr_cop,3) OVER w AS n3, LEAD(paid_mrr_cop,4) OVER w AS
+  n4, LEAD(paid_mrr_cop,5) OVER w AS n5, LEAD(paid_mrr_cop,6) OVER w AS n6 FROM mart.customer_month WINDOW w AS
+  (PARTITION BY customer_id ORDER BY month)) SELECT COUNT(*) AS contracciones, SUM(CASE WHEN n1 = previous_month_mrr
+  THEN 1 ELSE 0 END) AS vuelve_en_1, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = previous_month_mrr THEN 1 ELSE 0 END)
+  AS vuelve_en_2, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = previous_month_mrr THEN 1 ELSE
+  0 END) AS vuelve_en_3, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = paid_mrr_cop AND (n4 = previous_month_mrr
+  OR (n4 = paid_mrr_cop AND (n5 = previous_month_mrr OR (n5 = paid_mrr_cop AND n6 = previous_month_mrr)))) THEN
+  1 ELSE 0 END) AS vuelve_en_4_a_6, SUM(CASE WHEN n1 = paid_mrr_cop AND n2 = paid_mrr_cop AND n3 = paid_mrr_cop
+  AND n4 = paid_mrr_cop AND n5 = paid_mrr_cop AND n6 = paid_mrr_cop THEN 1 ELSE 0 END) AS se_mantiene_6_meses FROM
+  x WHERE movement_type = 'contraction'
+- WITH x AS (SELECT customer_id, month, movement_type, contraction_mrr_cop, amount_vs_usual_ratio, LAG(movement_type)
+  OVER (PARTITION BY customer_id ORDER BY month) AS prev_mov, LAG(multi_month_payment_signature) OVER (PARTITION
+  BY customer_id ORDER BY month) AS prev_sig FROM mart.customer_month) SELECT prev_mov AS movimiento_mes_previo,
+  COUNT(*) AS contracciones, SUM(CASE WHEN prev_sig > 0 THEN 1 ELSE 0 END) AS previo_con_firma_multimes, ROUND(SUM(contraction_mrr_cop),0)
+  AS contraction_cop FROM x WHERE movement_type = 'contraction' GROUP BY prev_mov ORDER BY contracciones DESC
+- WITH r AS (SELECT customer_id, month FROM mart.customer_month WHERE movement_type = 'reactivation' AND multi_month_payment_signature
+  = 2 ORDER BY customer_id, month LIMIT 1) SELECT c.customer_id, c.month, c.paid_mrr_cop, c.movement_type, c.usual_amount_cop,
+  c.multi_month_payment_signature FROM mart.customer_month c JOIN r ON c.customer_id = r.customer_id WHERE c.month
+  BETWEEN '2022-01' AND '2024-12' ORDER BY c.month LIMIT 40
+- WITH n AS (SELECT customer_id, cohort_month FROM mart.new_customers WHERE m1_cop > 0 AND ABS(m0_cop / m1_cop -
+  2) < 0.01 ORDER BY customer_id LIMIT 1) SELECT c.customer_id, c.month, c.paid_mrr_cop, c.movement_type, c.usual_amount_cop,
+  c.multi_month_payment_signature FROM mart.customer_month c JOIN n ON c.customer_id = n.customer_id WHERE c.month
+  >= n.cohort_month ORDER BY c.month LIMIT 6
+- SELECT customer_id, month, paid_mrr_cop, movement_type, ROUND(amount_vs_usual_ratio,3) AS ratio_vs_usual FROM
+  mart.customer_month WHERE customer_id = 378 AND month >= '2022-02' AND (movement_type <> 'flat' OR month IN ('2022-02','2024-10'))
+  ORDER BY month LIMIT 40
+completed_at: '2026-09-29T10:48:41-06:00'
+findings:
+- F-130
+- F-131
+- F-132
+- F-133
+- F-134
+run_ids:
+- RUN-20260929-103202-data_engineering-33d1
+usage:
+  RUN-20260929-103202-data_engineering-33d1:
+    cost_usd: 3.1222696
+    turns: 39
+    ms: 996113
+    input_tokens: 48
+    output_tokens: 105526
+    cache_read: 888453
+    cache_write: 65918
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: data-modeling
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 9260e3c616c5
+- id: saas-metrics-coach
+  mode: dynamic
+  why: 2 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · finance/skills/saas-metrics-coach
+  kind: vendor
+  digest: bc6fcf0302ee
+validation:
+  unverified_sources: []
+  bare_claims:
+  - 'ChartMogul reporta el MRR solo neto de descuentos: aplicar un descuento es cont…'
+  - En Stripe se configura si se restan del MRR los descuentos recurrentes y los de…
+  - Chargebee incluye en el MRR los descuentos recurrentes y excluye por defecto lo…
+  - En Stripe el descuento es un objeto propio con fecha de inicio y de fin (fin nu…
+  - 'Inferencia: con solo el monto, cada caso de Q-025 da la misma secuencia para su…'
+  - 'Inferencia: como las plataformas divergen, cómo tratar el inicio y el fin de un…'
+  seen_urls: 94
+  ok: false
+cos_assessment:
+  summary: 'R-011 sigue en revisión (proposed); todo lo que sigue asume que lo aceptas. Confirma con confianza alta
+    que con cliente × mes × monto no se puede separar suscripción, tarifa ni descuento. Eso refuerza H-016. También
+    responde la parte diagnóstica de Q-011 y Q-025 y dice qué datos harían falta para Q-017. En cambio, H-010 y
+    H-012 a H-015 no se pueden evaluar sobre 2022–2024. Lo nuevo e importante es el momento de cobro: 366 contracciones
+    (57,6 % del COP de contracción) caen el mes siguiente a un primer pago o a una reactivación. Además, 117 de
+    330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Esto cambia cómo se cuenta el puente
+    (T-003), abre una duda sobre el ticket de entrada (T-004), contradice H-017 y afecta la definición de cliente
+    activo que revisa R-012. En el bloque Revenue (CFO), Q-002 y Q-026 ya no pueden dar una atribución histórica.
+    Se responden con lo observado más la Propuesta de Modelo de datos, y para usar esa propuesta hay que aclarar
+    D-007.'
+  run_id: RUN-20260929-104841-cos-f5e7
+  at: '2026-09-29T11:34:16-06:00'
+  impacts:
+  - target: Q-002
+    effect: changes_story
+    why: 'R-011 confirma con confianza alta que con cliente × mes × monto no se puede separar suscripción, tarifa
+      ni descuento. Además, el monto mezcla una cuarta cosa: el momento de cobro. La parte «cuánto se explica por
+      lo que el cliente contrata, por la tarifa o por descuentos» no tendrá cifra histórica con los datos actuales.
+      Lo que sí se sostiene: la escalera de R-011 es consistente con D-002 (entrantes, salientes y continuos, con
+      suscripción y descuento dentro de cada grupo).'
+  - target: T-003
+    effect: changes_story
+    why: 'Según R-011, 366 contracciones (57,6 % del COP de contracción) caen el mes siguiente a un primer pago
+      o a una reactivación, y 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Si
+      se confirma que es momento de cobro (confianza media), las líneas del puente —nuevo, reactivación, contracción
+      y churn observado— pueden estar infladas aunque el total cuadre. Parte de la expansión podría ser el mismo
+      pico visto desde el otro lado (es una inferencia, no está medido). Además, las cifras no cuadran: R-011 da
+      expansión +41,2 M y contracción −90,9 M COP, y R-004/T-003 da +39,8 M y −89,5 M; no se sabe si es por ventana
+      o por definición. Y las cifras de R-011 todavía no tienen tabla.'
+  - target: Q-026
+    effect: changes_framing
+    why: 'Q-026 pregunta por el negocio subyacente (valor antes de descuentos) y por cuánto revenue se deja de capturar
+      por decisiones comerciales. Según R-011, el modelo no tiene tarifa de lista, precio pactado ni descuento,
+      y no se puede concluir si hubo descuentos o cambios de tarifa en 2022–2024. Con los datos actuales no hay
+      respuesta histórica. Sí hay una forma de medirlo: la distancia entre tarifa de lista, precio pactado y MRR
+      neto en la escalera.'
+  - target: D-007
+    effect: changes_framing
+    why: D-007 (activa) deja fuera de «esta etapa» los dashboards, las métricas definitivas y el modelo de datos.
+      Pero R-011 entrega una Propuesta de Modelo de datos (escalera con vigencias y reglas de clasificación). El
+      brief le pide al CFO «mecanismo, modelo de datos y clasificación», y D-015 (propuesta) metería este tipo de
+      propuestas en el research. Si «esta etapa» era Framing, no hay choque, pero D-007 no lo dice. R-016, R-018,
+      R-019 y R-021 van a toparse con lo mismo.
+  - target: H-017
+    effect: contradicts
+    why: 'H-017 dice que se pueden comparar montos y primeras apariciones sin distorsiones importantes. R-011 documenta
+      una distorsión concreta: el momento de cobro. Una caída del monto no es necesariamente una suscripción más
+      pequeña (el 57,6 % del COP de contracción cae el mes siguiente a un primer pago o a una reactivación). Y el
+      primer pago no es necesariamente el valor mensual de entrada. Coincide con la evaluación del agente (No soportada).'
+  - target: T-004
+    effect: opens_new_hypothesis
+    why: 'T-004 y T-018 miden el ticket de entrada con el primer pago (mediana COP 63,0 mil en 2022 y 36,8 mil en
+      2023). R-011 muestra que parte de los primeros pagos y reactivaciones va seguida de una bajada el mes siguiente,
+      como si fueran pagos de varios meses o de atrasos. Si esa proporción cambió entre años, parte de la caída
+      se debería a la forma de cobro y no a suscripciones más pequeñas. No está evaluado: R-011 no separa las 366
+      contracciones entre primer pago y reactivación, ni por año. Afecta a R-003 y R-006; a R-009 menos, porque
+      usa todos los meses del cliente y no solo el primero.'
+  - target: R-012
+    effect: requires_research
+    why: R-012 (en curso) revisa la definición de cliente activo detrás del 4,5×, el 2,8× y el −38%. R-011 muestra
+      que 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Si son atrasos, definir
+      activo como «pagó ese mes» saca de la base a clientes que seguían y, a la vez, infla el churn observado y
+      la reactivación.
+  - target: H-016
+    effect: supports
+    why: 'Es la segunda línea de evidencia, después de R-002: en los tres casos de Q-025 las alternativas dan exactamente
+      el mismo monto (confianza alta), y el modelo no tiene plan, cantidad, tarifa, descuento, periodo de servicio
+      ni factura. Al contarlo, ojo: prueba qué no se puede distinguir, no qué pasó.'
+  - target: Q-025
+    effect: supports
+    why: 'R-011 responde la parte diagnóstica: con el pago observado, los tres casos no se pueden distinguir (confianza
+      alta). La regla propuesta resuelve dos casos: contracción vs descuento y fin de descuento vs expansión. Si
+      la suscripción no cambia, el movimiento va a la línea «Descuento». El caso 1 —la suscripción sube y el descuento
+      empieza el mismo mes— no queda explícito en lo que se ve de R-011.'
+  - target: Q-017
+    effect: supports
+    why: 'R-008 (W7) quedó bloqueada con «la respuesta es la lista de evidencia que falta». R-011 da esa lista:
+      tarifa de lista, precio pactado, descuento con inicio, fin y motivo, MRR neto, facturado y cobrado, todo con
+      vigencias. La pertenencia recurrente queda cubierta solo si la escalera incluye el periodo de servicio, que
+      R-011 marca como faltante. Lo que no se sabe es si Finora tiene esos datos (F-133).'
+  - target: Q-011
+    effect: supports
+    why: 'Confirma la respuesta de R-002 (el monto no identifica los escenarios del CFO) y suma algo que no estaba
+      en esos escenarios: el momento de cobro.'
+  - target: Q-009
+    effect: requires_research
+    why: En quienes permanecen solo se ve la variación del monto, y más de la mitad del COP de contracción parece
+      efecto del momento de cobro (confianza media). La respuesta observada necesita el puente con el cobro separado
+      (alerta en T-003). La parte «qué cambió» en plan, tarifa o descuento no se puede identificar con estos datos
+      (H-013, H-014, H-015).
+  - target: H-015
+    effect: requires_research
+    why: 'No se puede evaluar como explicación de 2022–2024: no hay campo de descuento y R-011 no puede concluir
+      si hubo descuentos. F-134 (propuesto: 34 de 1.247 contracciones tienen la huella limpia de un descuento temporal)
+      es consistente con que no los hubo, pero no lo prueba. Además, un descuento que compensa un cambio de suscripción
+      no deja huella. Hacia adelante, la regla de R-011 lo resuelve con la línea «Descuento».'
+  - target: H-012
+    effect: requires_research
+    why: 'No se puede evaluar en el histórico: no hay descuento ni valor antes de descuento por cliente. R-011 propone
+      contar el descuento de quien sale dentro del churn. Si ese churn se reporta por lo que el cliente pagaba (neto)
+      o por lo que valía su suscripción (bruto) es justo la distinción de H-012, y sigue sin decidirse (F-132).'
+  - target: H-013
+    effect: requires_research
+    why: 'Sin plan ni cantidad no se puede ver si cambió lo que el cliente contrata. Y la contracción observada
+      no sirve como indicio: más de la mitad de su COP parece efecto del momento de cobro (confianza media).'
+  - target: H-014
+    effect: requires_research
+    why: No hay tarifa de lista ni catálogo con fechas, y R-011 no puede concluir si hubo cambios de tarifa en 2022–2024.
+  - target: H-010
+    effect: requires_research
+    why: 'Es lo mismo que H-012 y H-015, pero a la entrada: sin tarifa de lista, precio pactado ni descuento no
+      se ve si hubo descuentos documentados al entrar ni cuánto reducían el precio. La escalera de R-011 lo haría
+      visible desde el primer mes.'

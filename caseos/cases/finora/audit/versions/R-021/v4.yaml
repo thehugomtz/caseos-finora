@@ -1,0 +1,105 @@
+id: R-021
+type: research
+research_question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió
+  nuestro MRR?»? Mecanismo propuesto, implicaciones multidisciplinarias y las preguntas del CFO contestadas con
+  el modelo.
+case_question: Q-002, Q-025, Q-026, H-015
+specialty: business
+intensity: L2
+route:
+  specialty: business
+  intensity: L2
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  - id: pricing-strategist
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-002
+    - Q-025
+    - Q-026
+    - H-015
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-002
+- Q-025
+- Q-026
+- H-015
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T10:32:03-06:00'
+version: 4
+job_id: JOB-20260929-103203-664b
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-021
+slides:
+- S3.2
+task_why: 'Es la decisión de Revenue: el mecanismo define si el CFO puede seguir respondiendo por qué cambió el
+  MRR cuando existan descuentos, y cuánto revenue deja de capturar.'
+task:
+  work: propuesta
+  draft_answer: 'Mi arranque: el descuento entra como un objeto propio (monto o %, inicio, fin, motivo como adquisición,
+    retención o campaña, y quién lo aprobó), aplicado sobre una suscripción que conserva su valor. Así cada ejemplo
+    del CFO tiene una sola lectura: 100→80 es contracción si bajó la suscripción y descuento si la suscripción sigue
+    en 100; en 100→130 con −30 se ve la expansión aunque el pago siga en 100, y cuando termina el descuento el salto
+    es «fin de descuento», no expansión. Hacia adelante, el revenue que se deja de capturar por decisiones comerciales
+    se vuelve medible como la suma de descuentos vigentes. El mecanismo toca a Finanzas (cómo reporta el MRR), Ventas
+    (quién puede dar cuánto y por cuánto tiempo), Producto/Billing (que se pueda cobrar así) y Datos (el modelo
+    de S3.3). No sabemos qué tiene ya definido Finora sobre descuentos, así que asumo que se diseña desde cero.'
+  hugo_said:
+  - text: Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo? Mecanismo Propuesto / Implicaciones
+      Multidisciplinarias
+    ref: N-028
+  - text: ¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? /
+      Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el
+      descuento, eso cuenta como expansión?
+    ref: Q-025
+  - text: Quiero saber qué está pasando con el negocio subyacente y cuánto revenue estamos dejando de capturar por
+      decisiones comerciales
+    ref: Q-026
+  steps:
+  - kind: research
+    what: 'Prácticas de descuentos temporales en SaaS de suscripción mensual: tipos (entrada, retención, campaña),
+      profundidad y duración, elegibilidad, aprobación, qué pasa al terminar y el riesgo de churn en ese momento.
+      También cómo se reporta el MRR con descuentos (valor antes y después de descuento). Lo contable queda como
+      pregunta para Finanzas de Finora.'
+    where: []
+  - kind: proposal
+    what: 'Mecanismo: el descuento como objeto propio y sus reglas (quién puede darlo, cuánto, por cuánto tiempo,
+      quién aprueba, cómo se comunica y cómo termina), con parámetros por acordar con Finora, no presentados como
+      estándar de mercado.'
+    where: []
+  - kind: proposal
+    what: Implicaciones por área (Finanzas, Ventas/CRO, Producto/Billing, CS, Datos), y las tres preguntas del CFO
+      más el revenue no capturado, contestadas con el mecanismo y la clasificación de RT-002.
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T09:21:46-06:00 · motivo: Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
+> Actualizado: 2026-09-29T11:56:40-06:00 · motivo: cambios en lote
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -18,23 +18,25 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | Fase | Estado | Ready |
 |---|---|---|
 | 01 Briefing | ready | v1 · 2026-09-29T00:13 |
-| 02 Framing | review | — |
+| 02 Framing | needs_review | v1 · 2026-09-29T09:49 |
 | 03 Research | in_progress | — |
-| 04 Synthesis | not_started | — |
-| 05 Story | not_started | — |
+| 04 Synthesis | in_progress | — |
+| 05 Story | in_progress | — |
 | 06 Slides | not_started | — |
 
 ## Current Status
-7 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 8 decisiones activas · 0 alertas abiertas.
+19 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 10 decisiones activas · 74 alertas abiertas.
+
+COS: El research está casi cerrado: 19 de 21 completados (R-007 y R-008, bloqueadas por falta de datos). Con R-021, los tres bloques (Overview, Growth y Revenue/CFO) ya tienen respuesta o propuesta; en descuentos, solo de aquí en adelante. Pero todo sigue en proposed: 0 findings aceptados y 154 sin revisar, D-009 a D-012 y D-015 sin confirmar, y Framing en needs_review con X-001 a X-004 abiertas. Para abrir Story falta revisar los findings núcleo (empezando por el puente de R-004 y F-150 a F-154) y decidir si las propuestas entran a la historia (D-007 vs D-015).
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
 
 ## Approved Framing
-_Pendiente de aprobación (framing vivo en `framing/current.md`)._
+v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
 
 ## Governing Question
-¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué sigue siendo solo una posibilidad y qué información permitiría elegir entre ellas?
+¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
 
 ## Executive Questions
 - **Q-001** (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?
@@ -42,14 +44,21 @@ _Pendiente de aprobación (framing vivo en `framing/current.md`)._
 - **Q-003** (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?
 
 ## Current Story
-- Situación (Overview): Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente activo, periodo por fijar). Esa brecha abre Growth y Revenue.
-- Growth, lo que sí vemos: los primeros pagadores observados y su actividad económica por industria, y el gasto de Marketing por categoría en el tiempo, descritos sin atribuir ventas al gasto.
-- Growth, lo que no vemos: no todos recorren el funnel igual (propuesta: Assisted, Self Service, Executive). Demanda, calidad, capacidad/atención y post-SQL quedan como explicaciones a contrastar, cada una con el dato que permitiría elegir.
-- Growth, cómo operarlo: primero definiciones y fuentes comunes; después, seguimiento recurrente por foros (dashboards, análisis ad hoc, agentes), atado a decisiones del CRO que aún no están definidas.
-- Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento). Proponemos cómo introducir descuentos temporales y un modelo de datos que separe el valor de la suscripción del precio pagado.
-- Qué tan seguros estamos y qué cambiaría: la separación de preguntas es defendible bajo las definiciones que explicamos. Para elegir causas faltan eventos de entradas y compras, y datos separados de suscripción, tarifa y descuento.
+**Governing thought:** La brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos: proponemos medir por puerta y separar descuento de suscripción.
+- **C-001** Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8× · pending
+- **C-002** La caída por cliente se asocia a quién entra; la base previa sostiene su monto · pending
+- **C-003** Entran más primeros pagadores, con menor ticket, en las 6 industrias · pending
+- **C-004** Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas · pending
+- **C-005** Proponemos un bowtie por puertas: Self Service, Assisted y Executive con nudo común · pending
+- **C-006** Proponemos medir conversión por cohorte de entrada y ventana fija, por puerta y canal · pending
+- **C-007** La pérdida se concentra en cosechas de menor ticket, no en una industria · pending
+- **C-008** Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar · pending
+- **C-009** Proponemos un árbol de ingreso recurrente con semáforo: qué se mide hoy y qué no · pending
+- **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-016** Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling · 2026-09-29 → «Vale, voy a desayunar ahorita que acabes lo corres, creo q…
+- **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-013** Briefing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-001** CRO pasa de cuatro a tres ramas · 2026-09-28 → Cantidad, mezcla y compra según tiempo. Se deja de tratar c…
 - **D-002** CFO conserva tres grupos · 2026-09-28 → Entrantes, salientes y continuos, con suscripción y descuen…
@@ -59,7 +68,7 @@ _Pendiente de aprobación (framing vivo en `framing/current.md`)._
 - **D-007** Solución fuera de esta etapa · 2026-09-28 → Sin dashboards, métricas definitivas, modelo de datos ni de…
 - **D-008** Versiones del brief conservadas · 2026-09-28 → v0.3 técnica y v0.4 corta siguen accesibles; esta edición n…
 
-_Por confirmar:_ D-009, D-010, D-011, D-012
+_Por confirmar:_ D-009, D-010, D-011, D-012, D-015
 
 ## Active Hypotheses
 - **H-001** (HC1) New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía. · open
@@ -72,7 +81,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 12 más
+- … y 39 más
 
 ## Evidence We Trust
 _Todavía no hay evidencia aceptada._
@@ -88,7 +97,7 @@ _Todavía no hay evidencia aceptada._
 - Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
 - Descuentos a partir del tamaño de un salto del monto.
 - Una lectura del puente si las contribuciones no concilian con el total.
-- … y 8 más
+- … y 11 más
 
 ## Open Questions
 - **Q-004** (C1) ¿Realmente aumentó igual la entrada total?
@@ -101,7 +110,7 @@ _Todavía no hay evidencia aceptada._
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 12 más
+- … y 49 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -113,6 +122,8 @@ _Todavía no hay evidencia aceptada._
 - **R-007** (W6) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-008** (W7) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-009** (Q2) La caída se concentra en quién entra, no en la base previa · completed · por revisar
+- **R-010** Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (… · completed · por revisar
+- … y 11 más
 
 ## Accepted Frameworks
 - **D-001** CRO pasa de cuatro a tres ramas
@@ -124,15 +135,24 @@ _Todavía no hay evidencia aceptada._
 _Sin tablas aceptadas._
 
 ## Contradictions
-_Sin contradicciones abiertas._
+- **X-040** R-011 contradice H-017
 
 ## Risks
-- El esqueleto (Overview + 4 láminas de Growth + Revenue) es material de soporte; si se usa como la presentación de ≤5 min, no cabe.
-- La Lámina 4 carga tres preguntas del brief (concentración + métricas, hipótesis + datos, solución analítica) y puede quedar como una lista de frameworks sin respuesta.
-- El agente propio dentro de «Seguimiento» puede leerse como demo de herramienta si no se ata a una decisión concreta del CRO.
+- **X-001** R-013 cambia el framing Q-018
+- **X-004** R-013 cambia el framing
+- **X-005** R-015 cambia el framing
+- **X-006** R-015 abre una hipótesis nueva Q-020
+- **X-007** R-015 cambia la historia Q-022
+- **X-016** R-010 cambia el framing Q-001
+- **X-031** R-018 debilita H-017
+- **X-036** R-011 cambia la historia Q-002
+- **X-037** R-011 cambia la historia T-003
+- **X-038** R-011 cambia el framing Q-026
+- … y 14 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
+- Framing v1: `framing/approved/current.v1.md`
 - **A-001** Brief de trabajo v0.3 (fuente de verdad) (`brief/sources/alegra_brief_de_trabajo.html`)
 - **A-002** Business Exploration Workspace (Finora) (`/ws/finora/`)
 - **A-003** Propuesta de arquitectura v1.2 del workspace agentic (`finora-eda/docs/propuesta_arquitectura_v1.md`)
@@ -148,19 +168,19 @@ language:
   preserve_user_vocabulary: true
   avoid_unnecessary_jargon: true
 ```
-Registro observado: Conversacional y directo, informal («jaja»); piensa en láminas, columnas y bloques de deck; español con términos de negocio en inglés. · nivel técnico: Analítico / de negocio: maneja frameworks de Growth (AAARRR, CAC, LTV, UCM), ToFu/BoFu y roles comerciales (SDR, AE, KAM). · vocabulario de Hugo: entrada directa a SQL, Paid Media, Métricas Clave, low tickets, CRM, Analítica Digital, Decision Making, Análisis Adhoc, pricing introductorio, descuentos temporales, contracción, expansión, Propuesta de Modelo de datos, CEO
+Registro observado: Conversacional y directo; pega el texto literal del caso y piensa en láminas, secciones y bloques de deck. · nivel técnico: Negocio y análisis: maneja funnel, SQL, MRR, churn, contracción y expansión sin necesidad de explicación. · vocabulario de Hugo: expansión, Propuesta de Modelo de datos, CEO, Overview, Growth, Revenue, insights, salud, Inversión en Marketing, Generación de Demanda, ToFu, BoFu, Team, Habilitación
 
 ## Recent Material Changes
-- 2026-09-29 09:21 · Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
-- 2026-09-29 09:21 · Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
-- 2026-09-29 00:26 · Framing actualizado (storyline inicial, decisions_needed, should_not_claim, language_notes, risks, research necesario)
-- 2026-09-29 00:26 · Framer capturó propuesta: Una propuesta de modelo de datos que resuelva dos cosas: separar el valor de la suscripci…
-- 2026-09-29 00:26 · Framer capturó pregunta: Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (10…
-- 2026-09-29 00:26 · Framer capturó propuesta: Sección Revenue: primero, lo observable de pricing y comportamiento actual en los pagos;…
-- 2026-09-29 00:26 · Framer capturó desconocido: No sabemos qué decisiones quiere tomar el CRO con el funnel. La columna «Decision Making»…
-- 2026-09-29 00:26 · Framer refinó N-009: Seguimiento recurrente: dashboards automatizados con métricas según los foros, análisis a…
-- 2026-09-29 00:26 · Framer refinó N-010: Base técnica de la solución para el CRO: pulir el CRM e implementar analítica digital.
-- 2026-09-29 00:26 · Framer capturó intuición de hugo: Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analí…
+- 2026-09-29 11:56 · COS evaluó R-021: R-021 le da mecanismo a la parte de propuesta del bloque CFO. El descuento tiene que existir como o…
+- 2026-09-29 11:56 · COS propone hipótesis: De aquí en adelante, las cohortes que Finora consiga con descuento temporal van…
+- 2026-09-29 11:56 · COS propone hipótesis: Un puente de tres capas (MRR de lista, descuento y MRR neto), con líneas propia…
+- 2026-09-29 11:56 · COS: R-021 cambia el framing
+- 2026-09-29 11:56 · COS: R-021 cambia el framing D-007
+- 2026-09-29 11:56 · COS: R-021 cambia el framing Q-026
+- 2026-09-29 11:56 · COS: R-021 cambia la historia Q-002
+- 2026-09-29 11:56 · COS: R-021 cambia el framing H-015
+- 2026-09-29 11:55 · COS evaluó R-020: R-020 deja una cosa firme y dos cuidados. Todo se apoya en los findings F-083 a F-093, que siguen p…
+- 2026-09-29 11:55 · COS propone hipótesis: El aumento de montos fuera de la grilla (de 19% a 42%) y de ajustes pequeños (d…
 
 
-<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 13, Observación 4, Desconocido 8, Supuesto 1 -->
+<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 15, Observación 4, Desconocido 8, Supuesto 1, Hecho 1 -->

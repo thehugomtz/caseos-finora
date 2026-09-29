@@ -1,0 +1,127 @@
+id: R-011
+type: research
+research_question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio
+  y el fin de un descuento sin confundirlos con contracción o expansión reales? Propuesta de modelo de datos (campos,
+  tablas, definiciones) y qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado.
+case_question: Q-002, Q-009, Q-011, Q-017, Q-025, Q-026, H-012, H-013, H-014, H-015, H-016
+specialty: data_engineering
+intensity: L2
+route:
+  specialty: data_engineering
+  intensity: L2
+  agent: data_engineering
+  scores:
+    measurement: 0
+    data_engineering: 3
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: data-modeling
+    mode: core
+    why: núcleo del agente
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-002
+    - Q-009
+    - Q-011
+    - Q-017
+    - Q-025
+    - Q-026
+    - H-012
+    - H-013
+    - H-014
+    - H-015
+    - H-016
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Data Engineering; intensidad L3.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-002
+- Q-009
+- Q-011
+- Q-017
+- Q-025
+- Q-026
+- H-012
+- H-013
+- H-014
+- H-015
+- H-016
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:32:02-06:00'
+version: 4
+job_id: JOB-20260929-103202-7ad4
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-002
+slides:
+- S3.3
+- S3.4
+task_why: 'Es lo que le da una sola lectura a cada ejemplo del CFO; sin esto, el MRR con descuentos sigue siendo
+  ambiguo (versión mejorada de RT-002: la amplío a S3.3 y S3.4 porque la evidencia que pedía son justo los campos
+  del modelo, y S3.4 va dentro, como dijiste).'
+task:
+  work: propuesta
+  draft_answer: 'Pasar de un número a una cadena: valor de la suscripción (plan y características a tarifa de lista,
+    con vigencia) → descuento (monto o %, inicio, fin, motivo) → monto facturado → monto pagado. Con esa cadena,
+    cada cambio del mes se parte en componentes: expansión o contracción real, cambio de tarifa, inicio/cambio/fin
+    de descuento, churn o reactivación, y diferencias de cobro. Así el fin de un descuento sale como «fin de descuento»
+    y no como expansión, y en el 100→130 con −30 la expansión queda registrada aunque el pago siga en 100. En tablas:
+    suscripción con vigencia, lista de precios con vigencia, descuento con fechas y un corte mensual por cliente
+    con el puente ya clasificado. Lo que no sabemos es qué sistema de Finora (billing, contratos, CRM) tiene hoy
+    vigencia, tarifa y descuento.'
+  hugo_said:
+  - text: ¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones
+      agregarías? → Propuesta de Modelo de datos / ¿Cómo clasificarías el inicio y el fin de un descuento…? También
+      entra dentro de Propuesta de Modelo de datos
+    ref: N-029
+  - text: Hoy existe un histórico con cliente + mes + monto pagado, y los cambios entre meses se usan para clasificar
+      movimientos como crecimiento, contracción, churn o reactivación.
+    ref: N-030
+  - text: ¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? /
+      Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el
+      descuento, eso cuenta como expansión?
+    ref: Q-025
+  steps:
+  - kind: data
+    what: Mapear el grano y las banderas actuales (movement_type, expanded_customer, contracted_customer, churned_customer,
+      reactivated_customer) y el puente mensual, y marcar cuáles cambian de significado cuando existan descuentos.
+      Partir de R-002 y R-008 sin repetirlos.
+    where:
+    - mart.customer_month
+    - mart.monthly_metrics
+  - kind: research
+    what: Cómo modelan suscripción, lista de precios, descuento y factura los sistemas de cobro por suscripción
+      (objetos, vigencias, prorrateo), para apoyar el diseño en prácticas comunes y no inventarlo.
+    where: []
+  - kind: proposal
+    what: 'Modelo en papel: entidades, grano, campos y definiciones (suscripción con vigencia y características,
+      lista de precios con vigencia, descuento con inicio/fin/motivo, factura y pago, corte mensual por cliente),
+      y qué fuente de Finora confirmaría cada campo.'
+    where: []
+  - kind: proposal
+    what: 'Reglas de clasificación: los movimientos del valor de la suscripción (nuevo, expansión, contracción,
+      churn, reactivación) van separados de los comerciales (cambio de tarifa, inicio/cambio/fin de descuento) y
+      de las diferencias de cobro. El descuento de quien se va se cierra con la salida, no como fin de descuento.
+      Probarlas con los tres ejemplos de Q-025 (construidos, no observados) y con la métrica de revenue no capturado
+      hacia adelante.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

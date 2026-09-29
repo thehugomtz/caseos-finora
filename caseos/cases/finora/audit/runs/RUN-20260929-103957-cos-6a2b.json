@@ -1,0 +1,354 @@
+{
+ "run_id": "RUN-20260929-103957-cos-6a2b",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-015",
+ "started_at": "2026-09-29T11:19:36-06:00",
+ "duration_ms": 2378528,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-015\nTipo: research · revisión: proposed\nTexto: Altas y gasto de S&M no se mueven en el mismo sentido\nRespuesta corta: Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y 2024. El paso de asociación a efecto no es evaluable con estos datos: faltan funnel con fechas y fuente del lead, y la unidad del gasto no está documentada\nEstablecido: En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El mes de mayor gasto de la ventana limpia, oct-22, registra 32 altas. | Hay señal de un escalón temporal: las altas mensuales pasan de 26 en dic-22 a 60 en ene-23, con el punto más alto en jun-24 con 84. La lectura por industria es direccional y muestra altas anuales mayores en 2023 que en 2022 mar-dic en Retail, Servicios profesionales, Restaurantes, Producción, Tecno… | Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% por run-rate temprano y +17% por monto habitual. El ticket de entrada mediano pasa de COP 63,0 mil en 2022 a COP 42,0 mil en 2024. | Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23, y después su participación se mueve entre 30% en 2023 jun-dic y 23% en 2024 ene-oct. El descenso del gasto de habilitación coincide con el componente de freelance en cero desde may-23.\nNo podemos concluir: No se puede atribuir el movimiento de las altas al gasto de S&M: faltan etapas del funnel con fechas y fuente del lead, y la unidad del gasto no está documentada. | El cruce de fechas solo admite lectura de asociación y en sentido negativo o nulo; no sostiene que reducir gasto se relacione con más altas. | La lectura por categoría está limitada por la construcción del archivo: participación constante de Team hasta may-23, cambios de participación posteriores y descenso de habilitación que coincide con freelance en cero desde may-23.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- H-022 (HO5) [hypothesis] Gasto agregado y resultados pagados evolucionan de forma diferente.\n- Q-012 (W2) [question] ¿Qué cambió en los primeros pagadores observados?\n- Q-018 (W8) [question] ¿Qué relación entre el gasto de Marketing por categoría y los nuevos pagadores o el monto pagado se puede describir cruzando fechas, y hasta dónde llega (asociación, no efecto)?\n- Q-020 (U02) [question] U02 · ¿Qué cambió y desde cuándo?\n- Q-022 (U07) [question] U07 · ¿La data actual da alguna pista?\nMotivo de Hugo: research completado\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [running · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc…\n- R-011 [running · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent…\n- R-012 [running · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [running · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d…\n- R-015 [completed · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem… → Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y…\n- R-016 [running · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se…\n- R-017 [running · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti…\n- R-018 [running · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los…\n- R-019 [running · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?…\n- R-020 [running · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-107 [proposed] En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación de demanda por mes baja de 1,73 u a 0,82 u y el S&M total por mes de 3,01 u a 1,44 u.\n- F-108 [proposed] El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45 u en may-23 a 1,10 u en ago-23.\n- F-109 [proposed] El mes de mayor S&M total de la ventana limpia es oct-22, con 3,75 u y 32 altas; el mes con más altas es jun-24, con 84 altas y 2,00 u; y el mes de menor gasto, ago-23, coincide con 66 altas.\n- F-110 [proposed] Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24 con 84.\n- F-111 [proposed] Las altas anuales de primeros pagadores son mayores en 2023 que en 2022 mar-dic en Retail (de 49 a 169), Servicios profesionales (de 17 a 61), Restaurantes (de 78 a 164), Producción (de 70 a 155), Tecnología (de 37 a 64) y Salud (de 21 a 37).\n- F-112 [proposed] El ticket de entrada mediano es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el promedio pasa de COP 128,7 mil a COP 50,8 mil entre 2022 y 2024.\n- F-113 [proposed] Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% medido por run-rate temprano y +17% medido por monto habitual.\n- F-114 [proposed] Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.\n- F-115 [proposed] Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23.\n- F-116 [proposed] La participación de Team en el S&M total es 12% en 2022 mar-dic, 30% en 2023 jun-dic y 23% en 2024 ene-oct, y se mantiene fija en 17 meses hasta may-23.\n- F-117 [proposed] El gasto de habilitación por mes pasa de 0,34 u en 2022 mar-dic a 0,07 u en 2023 jun-dic y 0,09 u en 2024 ene-oct, y su descenso coincide con el componente de freelance en cero desde may-23.\n- F-118 [proposed] La correlación en niveles entre el S&M total y las altas del mismo mes es −0,57; en cambios mes a mes el mayor valor absoluto observado es 0,27 con un valor p mínimo de 0,14, y de 48 pruebas de correlación 9 resultan significativas, todas ellas negativas en n…\n- F-119 [proposed] El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados no es evaluable con estos datos: no hay etapas del funnel con fechas ni fuente del lead que liguen el gasto de un mes con clientes concretos, y la unidad del ga…\n\n## Findings propuestos sin revisar: 119 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n- T-005 `FIN-F-063` [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala\n- T-006 `FIN-F-064` [proposed] Ningún rubro del archivo de S&M tiene meses ausentes\n- T-007 `FIN-F-065` [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero…\n- T-008 `FIN-F-066` [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo\n- T-009 `FIN-F-067` [proposed] La serie de Habilitación cambia de composición dentro del panel\n- T-010 `FIN-F-068` [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a ga…\n- T-011 `FIN-F-069` [proposed] El peso de Habilitación en el S&M total no es estable\n- T-012 `FIN-F-070` [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-015 respalda H-022, pero solo como descripción. El gasto de S&M registrado baja mientras suben las primeras apariciones de pago. Aun así, la asociación solo aparece en niveles (−0,57), desaparece al comparar mes a mes, y no se puede evaluar si el gasto causa el cambio (F-119). Lo más útil para Growth es F-113: las primeras apariciones por mes suben +104% y el valor inicial que traen sube entre +6% y +17%. La pista está en el valor, no en el número. Hay tres decisiones grandes: (1) sumar límites al framing: el −66% no es CAC, antes de jun-23 las categorías son un reparto y no gasto observado, y «altas» debe cambiarse; (2) qué explica los cambios de ene-23 y de jun–dic-23 (Q-020); (3) si F-113 entra como la pista de Q-022.",
+  "impacts": [
+   {
+    "target": "framing",
+    "effect": "changes_framing",
+    "why": "R-015 trae dos lecturas que el «No afirmar todavía» no cubre y que el CEO puede malinterpretar con facilidad. (1) El S&M por alta −66% (F-108) suena a «el CAC bajó 66%», pero la unidad no está documentada (T-005), el gasto no se liga a clientes ni a canal (F-119) y la primera aparición no es el hito de adquisición. (2) Antes de jun-23, el gasto por categoría es un reparto hecho desde arriba y no gasto observado: Team pesa un porcentaje fijo durante 17 meses (F-115; T-008). Además, F-107–F-111, F-113 y F-118 hablan de «altas», una etiqueta que el framing ya pide no usar sin vigencia verificada. T-012 también la usa, y R-004 y R-009 hacen algo parecido con «MRR».",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Añadir dos límites y corregir la etiqueta",
+      "consequence": "Se suman al «No afirmar todavía»: «Que el S&M por primer pagador observado sea CAC» y «Que el reparto por categoría antes de jun-23 sea gasto observado». F-107–F-111, F-113 y F-118 cambian «altas» por «primeras apariciones de pago» antes de revisarlos. El −66% solo entra como un cociente en las unidades del archivo."
+     },
+     {
+      "key": "B",
+      "label": "Solo corregir la etiqueta",
+      "consequence": "Se cambia «altas» y los límites de CAC y categorías quedan como advertencia dentro de cada finding. El framing cambia menos, pero el riesgo de leer el −66% como CAC hay que vigilarlo lámina por lámina."
+     },
+     {
+      "key": "C",
+      "label": "No tocar nada ahora",
+      "consequence": "Se resuelve al armar la story. Es más rápido hoy, pero siete findings entran a revisión con una etiqueta que el framing ya prohíbe y el −66% queda sin límite escrito."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "El Framing está en needs_review, así que es el momento de sumar límites. El −66% es la cifra con más riesgo de llegar al CEO como CAC. Corregir la etiqueta antes de revisar evita aceptar findings que después haya que reescribir."
+   },
+   {
+    "target": "Q-020",
+    "effect": "opens_new_hypothesis",
+    "why": "R-015 le da a Q-020 dos fechas que ninguna hipótesis actual explica. (1) Las primeras apariciones saltan de 26 en dic-22 a 60 en ene-23, con el S&M todavía en 3,01 u/mes (ene–may-23). El salto no se sostiene igual en feb–may: el promedio de ene–may es 45,2 (F-107, F-110). (2) El tramo jun–dic-23 (60,6/mes) coincide con el cambio en cómo se arma el archivo de gasto: Team deja de ser un porcentaje fijo después de may-23, Freelance está en cero desde may-23 y el S&M baja de 3,45 u (may-23) a 1,10 u (ago-23) (F-108, F-115, F-117). El salto de enero llega antes que la caída del gasto. Si parte de ese salto fuera un efecto de cómo se registran los datos, habría que revisar R-003, R-009 y F-113.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Abrir las hipótesis y revisarlas con los pagos",
+      "consequence": "Se abren las dos hipótesis nuevas (registro en ene-23; cambio de operación a mitad de 2023) y se hacen tres chequeos con data que ya tenemos: (1) serie mensual de primeras apariciones y ticket alrededor de ene-23 y jun-23; (2) salidas de nov–dic-22 que coincidan con las entradas de ene-23; (3) ene-24 frente a dic-23, para ver si es estacional. En paralelo, se pregunta a Finora qué pasó en esas fechas."
+     },
+     {
+      "key": "B",
+      "label": "Solo preguntar a Finora",
+      "consequence": "No hay análisis extra, pero Q-020 queda abierta y R-003, R-009 y F-113 siguen apoyados en un salto que nadie revisó."
+     },
+     {
+      "key": "C",
+      "label": "Registrar las fechas sin abrir hipótesis",
+      "consequence": "Q-020 avanza con «cambios en ene-23 y en jun–dic-23» como observación. Es rápido, pero el riesgo de registro queda sin revisar y la coincidencia con el gasto se puede leer como causa."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Los chequeos son baratos y usan data que ya tenemos. Buena parte de la historia de entrada (R-003, R-009, F-113) se apoya en el salto de ene-23, así que conviene descartar un efecto de registro antes de aceptar esos findings."
+   },
+   {
+    "target": "Q-022",
+    "effect": "changes_story",
+    "why": "R-015 le da a Q-022 su pista más concreta. Entre 2022 y 2024, las primeras apariciones de pago por mes suben +104% y el valor inicial que traen sube +6% (run-rate temprano) o +17% (monto habitual) (F-113). El ticket de entrada mediano pasa de COP 63,0 mil a 42,0 mil (F-112). En los pagos, lo que no crece al ritmo del volumen es el valor, no el número. Eso cambia cómo se cuenta Growth. Si el CRO mide «ventas» como un conteo, la diferencia con los pagos viene del hito, del periodo o del registro (Q-001, Q-020). Si mide valor, los pagos coinciden con su «no más ventas». Respeta D-004: es una observación de pagos, no una respuesta sobre leads ni conversión.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Usar F-113 como la pista, con límites escritos",
+      "consequence": "Growth dice «más primeras apariciones de pago, casi el mismo valor inicial». No dice nada sobre leads ni conversión ni llama a la primera aparición el hito del CRO. Versión ejecutiva: «Desde 2022, los primeros pagos por mes se duplicaron; el valor que traen creció entre 6% y 17%». Se pregunta a Finora cómo mide el CRO «ventas» y para qué periodo."
+     },
+     {
+      "key": "B",
+      "label": "Responder Q-022 de forma estricta",
+      "consequence": "La respuesta es «la data actual no da pistas sobre el funnel» y F-113 pasa a Overview o Revenue. Es más conservador, pero Growth se queda sin ninguna lectura de datos."
+     },
+     {
+      "key": "C",
+      "label": "Esperar la definición de «ventas»",
+      "consequence": "F-113 no se usa hasta que Finora defina la métrica y el hito del CRO. Evita mezclar definiciones, pero Growth queda frenado por una respuesta externa."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es la única pista que no necesita funnel ni leads, coincide con R-003, R-006 y R-009 y cabe en el framing si los límites viajan con ella. Depende de que aceptes F-113 y de confirmar que el «monto habitual» de las entradas de 2024 cubre un periodo comparable. Si no, queda solo el +6%."
+   },
+   {
+    "target": "H-022",
+    "effect": "supports",
+    "why": "R-015 es la prueba directa de H-022 y va a favor. En 2023, el tramo con más primeras apariciones (60,6/mes en jun–dic frente a 45,2 en ene–may) tiene menos gasto en Generación de Demanda (0,82 u frente a 1,73 u) y menos S&M total (1,44 u frente a 3,01 u) (F-107). El mes de más gasto (oct-22, 3,75 u) tiene 32 primeras apariciones y el de más primeras apariciones (jun-24, 84) tiene 2,00 u (F-109). Hay dos límites. Primero, la asociación aparece en niveles (−0,57) pero desaparece al comparar cambios mes a mes (máximo |0,27|, p mínimo 0,14; F-118). Eso encaja más con dos tendencias opuestas que con una relación entre gasto y pagadores. Segundo, los contrastes más fuertes cruzan el cambio del archivo en may-23 (F-115, F-117): suponen que el archivo mide lo mismo antes y después.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Tratarla como soportada en lo descriptivo",
+      "consequence": "H-022 avanza ya, con el límite escrito: van en sentidos distintos en niveles, no hay relación mes a mes y la comparación cruza el cambio del archivo en may-23."
+     },
+     {
+      "key": "B",
+      "label": "Repetir el cruce dentro de cada tramo",
+      "consequence": "Es un chequeo barato con la misma data: mar-22–may-23 y jun-23–oct-24 por separado. Si la divergencia solo aparece al cruzar may-23, H-022 se reformula como «un cambio simultáneo a mitad de 2023». Si también aparece dentro de cada tramo, H-022 queda más sólida."
+     },
+     {
+      "key": "C",
+      "label": "Dejarla abierta hasta que Finora explique el archivo",
+      "consequence": "Es lo más seguro, pero depende de una respuesta externa sin fecha."
+     }
+    ],
+    "recommended": "B",
+    "recommended_why": "Cuesta poco y decide si H-022 es una tendencia o un solo cambio a mitad de 2023, lo que se cuenta distinto ante el CEO. F-109 insinúa que, dentro del tramo posterior, el gasto y las primeras apariciones podrían subir juntos (ago-23: 1,10 u y 66; jun-24: 2,00 u y 84), pero dos meses no alcanzan para afirmarlo."
+   },
+   {
+    "target": "R-018",
+    "effect": "requires_research",
+    "why": "R-015 deja el único cociente de gasto por pagador que se puede calcular hoy (F-108: 0,105 u → 0,036 u entre 2022 y 2024), pero no es CAC. La unidad y la moneda no están documentadas (T-005), el gasto no se liga a clientes ni a Canal de adquisición (F-119), la primera aparición no es el hito de adquisición y las categorías antes de jun-23 son un reparto (F-115). R-018 debería marcar el CAC como «no calculable hoy» y listar lo mínimo para calcularlo: unidad y moneda del archivo, canal o fuente de cada cliente y el hito de adquisición acordado.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "No requiere decisión ahora: es insumo para R-018, que sigue corriendo."
+   },
+   {
+    "target": "Q-018",
+    "effect": "supports",
+    "why": "R-015 responde Q-018 dentro de lo que pregunta. En niveles, la asociación es negativa (−0,57). En cambios mes a mes no hay nada significativo (máximo |0,27|, p mínimo 0,14). Por categoría, la lectura queda limitada por cómo se armó el archivo: Team es fijo hasta may-23 y Habilitación cambia de composición cuando Freelance pasa a cero (F-117). El paso a efecto no se puede evaluar (F-119). Ojo: con 48 pruebas, las 9 significativas sirven para explorar, no suman evidencia. Falta el cruce dentro de cada tramo (opción B en H-022).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "No necesita decisión propia: depende de lo que decidas sobre H-022."
+   },
+   {
+    "target": "Q-003",
+    "effect": "supports",
+    "why": "F-113 es la conexión observada más directa entre cómo se consiguen clientes y qué mueve el ingreso: más primeras apariciones de pago (+104% por mes) con casi el mismo valor inicial (+6% a +17%). Coincide con R-009, que atribuye a la composición de entrada el 108% del cambio del monto por cliente activo. La conexión con la Inversión en Marketing no se puede evaluar con estos datos (F-119). Eso no quiere decir que no exista.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "No necesita decisión aparte: cómo se usa en el Overview se decide junto con Q-022."
+   },
+   {
+    "target": "Q-012",
+    "effect": "supports",
+    "why": "Refuerza R-003 (más primeras apariciones y un primer pago menor) y suma tres cosas: el salto de dic-22 a ene-23 (F-110), el aumento en 6 industrias (F-111) con la mediana del ticket bajando en 6 (F-114), y el contraste entre volumen y valor (F-113). La mediana no baja en línea recta (63,0 → 36,8 → 42,0 mil) y el promedio cae bastante más (128,7 → 50,8 mil, F-112). Eso apunta a un cambio en la mezcla de tickets, que queda como hipótesis nueva. Antes de aceptar F-112, hay que confirmar que coincide con T-004.",
+    "severity": "low",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "No es material: refuerza lo que ya propone R-003."
+   },
+   {
+    "target": "H-009",
+    "effect": "supports",
+    "why": "Respalda la parte observable de H-009: entraron más pagadores (+104% por mes) y pagaron menos al entrar (F-112, F-113). No dice nada sobre «suscripciones o tarifas distintas»: R-002 ya mostró que el monto no separa plan, tarifa ni descuento.",
+    "severity": "low",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "No es material: suma evidencia observada, pero la parte de tarifa sigue sin poder probarse con los pagos."
+   },
+   {
+    "target": "H-019",
+    "effect": "weakens",
+    "why": "Por industria, R-015 va en la misma línea que R-005: el aumento de primeras apariciones (F-111) y la caída del ticket (F-114) aparecen repartidos en 6 industrias, no concentrados. Pero H-019 habla de «grupos» en general, y la distancia entre el promedio y la mediana del ticket (F-112) sugiere que el cambio podría concentrarse en una banda de ticket. Eso es lo que está mirando R-017.",
+    "severity": "low",
+    "options": [
+     {
+      "key": "A",
+      "label": "Cerrar solo el corte por industria",
+      "consequence": "H-019 queda «no soportada por industria» y sigue abierta para las bandas de ticket hasta que termine R-017."
+     },
+     {
+      "key": "B",
+      "label": "Cerrar H-019 completa",
+      "consequence": "Simplifica, pero deja fuera justo el corte donde sí podría aparecer concentración."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Cerrarla entera descartaría un corte que R-017 está mirando y que F-112 hace plausible."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "Parte del salto de primeras apariciones de dic-22 (26) a ene-23 (60) no es entrada nueva, sino un efecto de registro: pagadores que ya existían y reaparecen con otro identificador o por un cambio de sistema de cobro.",
+    "falsifier": "Se descarta si no hay salidas observadas en nov–dic-22 que coincidan en industria y monto con las primeras apariciones de ene-23, y si Finora confirma que no cambiaron el sistema de cobro ni los identificadores."
+   },
+   {
+    "statement": "El aumento de primeras apariciones en jun–dic-23 frente a ene–may-23 y la caída del S&M registrado desde may-23 vienen de un mismo cambio en la operación comercial a mitad de 2023 (por ejemplo, un giro hacia Self Service o una reorganización de Team), y no de que menos gasto traiga más pagadores.",
+    "falsifier": "Se descarta si Finora confirma que en may/jun-23 solo cambió cómo se registra el gasto y no la operación, o si la serie mensual muestra que el aumento fue gradual a lo largo de 2023 y no se concentra alrededor de may/jun-23."
+   },
+   {
+    "statement": "El volumen extra de primeras apariciones entre 2022 y 2024 es sobre todo de ticket bajo: las entradas de ticket alto por mes no crecen al ritmo del total (+104%).",
+    "falsifier": "Se descarta si, con bandas de ticket fijas en COP según los cortes de 2022, las primeras apariciones por mes de la banda alta crecen en una proporción parecida al total. En ese caso, la caída del ticket sería una baja pareja de todos los tickets y no un cambio de mezcla."
+   }
+  ],
+  "new_questions": [
+   "Para Finora: ¿en qué unidad y moneda está el archivo de S&M? ¿Qué cambió en may/jun-23, cuando Team deja de ser un porcentaje fijo y Freelance pasa a cero: cambió lo que incluye el archivo o cambió la operación?",
+   "Para Finora: ¿qué pasó alrededor de ene-23 y de jun-23? Por ejemplo: plan o precio de entrada, empuje de Self Service, cambios en Team, sistema de cobro o identificadores.",
+   "Para el CRO: ¿cómo mide «ventas» (conteo de Won, primeros pagos o valor nuevo) y a qué periodo se refiere con «más leads, pero no más ventas»?",
+   "¿Finora puede marcar el Canal de adquisición (Digital, KAM) o la modalidad de venta (Self Service, Assisted, Executive) de cada primer pagador? Sin eso, ni el gasto ni la mezcla de tickets se pueden ligar a un canal.",
+   "Antes de revisar F-107–F-118: ¿F-108 se puede rastrear hasta T-012 (0,11 → 0,04) y F-112 hasta T-004? El resto de las cifras de R-015 no tiene tabla propia.",
+   "¿Team (F-116) y Habilitación (T-012) pesan ambos 12% del S&M en 2022, o hay rubros con la etiqueta cruzada?"
+  ],
+  "status_note": "El research sigue en marcha: 9 investigaciones completadas, 2 bloqueadas (R-007, R-008) y 10 corriendo; hay 0 findings aceptados de 119. R-015 deja el cruce entre gasto y primeros pagadores como asociación, no como efecto. Su mejor aporte es F-113: el volumen sube +104% y el valor inicial, entre +6% y +17%. Faltan dos cosas: explicar los cambios de ene-23 y jun–dic-23, y reemplazar la etiqueta «altas». Lo que más desbloquea: sumar al framing los límites y el vocabulario, revisar ene-23 con los pagos y hacerle a Finora las preguntas sobre el archivo de gasto."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 807598,
+  "input_tokens": 2,
+  "output_tokens": 88741,
+  "cache_read": 3781,
+  "cache_write": 8767,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.8533672,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

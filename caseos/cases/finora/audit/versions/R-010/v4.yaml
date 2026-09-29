@@ -1,0 +1,112 @@
+id: R-010
+type: research
+research_question: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información
+  mínima validaría o descartaría cada una (entradas únicas con fecha, señales iniciales, recorrido, atención, vínculo
+  con pago)?
+case_question: Q-001, Q-004, Q-005, Q-006, Q-016, Q-021, Q-023, H-001, H-002, H-003, H-004, H-005, H-006, H-007,
+  H-008
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  purpose:
+    mapped:
+    - Q-001
+    - Q-004
+    - Q-005
+    - Q-006
+    - Q-016
+    - Q-021
+    - Q-023
+    - H-001
+    - H-002
+    - H-003
+    - H-004
+    - H-005
+    - H-006
+    - H-007
+    - H-008
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-001
+- Q-004
+- Q-005
+- Q-006
+- Q-016
+- Q-021
+- Q-023
+- H-001
+- H-002
+- H-003
+- H-004
+- H-005
+- H-006
+- H-007
+- H-008
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:32:02-06:00'
+version: 4
+job_id: JOB-20260929-103202-4550
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-001
+slides:
+- S2.6
+task_why: 'Convierte «más leads, pero no más ventas» en hipótesis con el dato que las decide, y la que no tenga
+  dato posible sale de la historia (versión mejorada de RT-001: suma S2.6, respuesta de arranque y pasos, sin research
+  en data, como pediste).'
+task:
+  work: propuesta
+  draft_answer: 'Las ordenaría por la parte del motor donde pegan. En ToFu: la entrada total no creció tanto como
+    New (H-001), la mezcla cambió hacia gente que compra menos o más tarde (H-002), o bajó la calidad de la máquina
+    de leads (H-005). En medio: la capacidad instalada no alcanza y la atención se demora (H-006). En BoFu: el deterioro
+    aparece más abajo, por ejemplo después de SQL (H-007), o cambiaron precio, producto o alternativas (H-008).
+    Y aparte está el tiempo: lo reciente todavía no tuvo oportunidad de comprar (H-003, H-004). Cada una se valida
+    con un dato que no está en el caso: entradas únicas con fecha y canal, señales al entrar, etapa y fecha por
+    lead, carga por SDR/AE y el vínculo lead → primer pago. Con los pagos solo se ve a quien ya compró, así que
+    hoy no se puede elegir entre ellas (R-007). La lámina es la matriz hipótesis → dato → qué la valida o la descarta.'
+  hugo_said:
+  - text: La calidad de la máquina de leads bajó
+    ref: H-005
+  - text: La capacidad comercial instalada no alcanza la demanda generada
+    ref: H-006
+  - text: Mucho de eso se responde con propuestas por que no hay data
+    ref: D-015
+  steps:
+  - kind: proposal
+    what: Árbol de hipótesis sin huecos ni traslapes (ToFu, capacidad/atención, BoFu y tiempo), amarrado a H-001…H-008,
+      con H-005 y H-006 como ramas en tus palabras.
+    where: []
+  - kind: proposal
+    what: 'Para cada hipótesis: dato mínimo, comparación justa (mismo grupo de entrada, misma ventana de maduración),
+      qué la valida, qué la descarta y si hace falta un experimento.'
+    where: []
+  - kind: proposal
+    what: 'Inventario consolidado de información mínima (campos y grano: lead, evento de etapa con fecha, dueño,
+      puerta/canal, vínculo con el primer pago), que después alimenta la capa técnica de S2.7.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

@@ -142,3 +142,42 @@ hipótesis y tareas de investigación tipadas (datos, research u otro agente)—
   primero; la etiqueta «El Briefer propone» aparecía en propuestas que no eran del Briefer.
 - **Límite de la herramienta, no de la app:** la tecla Enter del navegador automatizado no inserta salto de línea en un
   textarea; con un teclado real sí.
+
+## 9. Cuarta ronda (29-sep-2026, mañana): el plan sale de las preguntas del guion
+
+Lo que Hugo notó: el plan «se fue a ver cosas de research» cuando casi todo era trabajar propuestas. Una pregunta como
+«¿cómo definirías el funnel si no todos lo recorren igual?» ya es investigación y propuesta: con el contexto del caso se
+puede poner una respuesta sobre la mesa («todo depende del punto de entrada…») y el preview debería decir «investigar
+datos» en el modelo.
+
+- **Plan desde el guion en vivo** (sandbox `finora-plan`, copia idéntica del caso real a las 10:13): 12 tareas para 11
+  láminas (7 de propuesta, 5 de datos), cada una con respuesta de arranque en el registro de Hugo, sus palabras
+  textuales con ID y pasos con tablas reales; S2.1 queda fuera con su razón («por precisar»). RT-001…RT-005 llegaron
+  como versión mejorada. Sin correcciones de las guardas. US$2.28 equivalentes, 14 min, 102 mil tokens de salida.
+- **Herramienta del modelo en vivo:** un agente llamó `mcp__caseos_datos__consultar_modelo`, recibió 34 meses de
+  `mart.monthly_metrics` y la consulta quedó registrada (US$0.015 con esfuerzo bajo). En la corrida real, Data
+  Engineering consultó `mart.new_customers` / `mart.customer_month` por su cuenta.
+- **Encontrado y corregido:** las paráfrasis del Framer importadas del brief v0.3 («Separaste…», «Tu lectura fue…») no
+  se pueden citar como palabras de Hugo; el plan completo necesitaba su propio tope de gasto (rol `planner`, US$8); una
+  reconstrucción del plan también reemplaza los cambios propuestos a tareas aprobadas; los chips de un turno apuntaban a
+  propuestas ya reemplazadas; el Story Package solo sabía usar evidencia aceptada (0 en el caso) — ahora hay borrador.
+
+### Corrida en el caso real (29-sep, 10:31 → ~12:00) — delegada por Hugo en el chat (D-016)
+
+Plan aplicado y aprobado «vía Claude», 12 investigaciones lanzadas (R-010…R-021), evaluación del COS de cada una y
+borrador del Story Package. Encontrado y corregido sobre la marcha:
+
+- **Números de numpy en YAML:** tres investigaciones de Analytics (R-012, R-017, R-020) terminaron en el workspace pero
+  su resultado no se pudo guardar (`np.float64` en las visualizaciones) y la research quedó «running» para siempre.
+  Ahora `util.plain` convierte numpy/Decimal antes de escribir, un resultado que no se puede guardar marca la research
+  como fallida, y `analytics.recover_research` (acción *recover*) la reconstruye desde la investigación publicada — sin
+  volver a correrla y sin duplicar findings (36 findings reutilizados, 36 tablas).
+- **Findings de Analytics sin tabla:** sus cifras no podían llegar a la historia hasta un clic por finding. Ahora la
+  tabla de evidencia se crea al terminar la investigación (queda propuesta, como el finding).
+- **Citas del modelo:** citar el catálogo («no hay tablas de leads») y poner un comentario después del SQL no se podía
+  verificar; 7 citas legítimas quedaron «sin verificar». Regla corregida, el catálogo se registra, y la acción
+  *reverify* las revisa leyendo `sql_runs` y la traza de herramientas de la corrida (la confianza no se toca).
+- **Story Package:** 15 min no alcanzan para una historia completa con esfuerzo max; ahora 40 min.
+- **Cola del COS:** con 3 corridas simultáneas y esfuerzo max, cada evaluación tarda ~10 min y cuesta ~US$1.25; doce
+  evaluaciones son la parte más lenta del ciclo.
+- **Traza del workspace:** los errores de herramienta del investigador ahora dicen qué falló (el investigador los corrige).

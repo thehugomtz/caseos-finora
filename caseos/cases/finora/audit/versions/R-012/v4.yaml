@@ -1,0 +1,95 @@
+id: R-012
+type: research
+research_question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×,
+  el 2,8× y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+case_question: H-017, H-018, Q-010, Q-020
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  purpose:
+    mapped:
+    - H-017
+    - H-018
+    - Q-010
+    - Q-020
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-017
+- H-018
+- Q-010
+- Q-020
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:32:02-06:00'
+version: 4
+job_id: JOB-20260929-103202-d073
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-003
+slides:
+- S1.1
+task_why: 'Si al fijar la ventana las cifras cambian de tamaño, cambia el arranque de toda la historia; si se sostienen,
+  el Overview abre Growth y Revenue con números defendibles (versión mejorada de RT-003: suma S1.1, respuesta de
+  arranque, pasos y la selección de señales).'
+task:
+  work: datos
+  draft_answer: 'Mi arranque es contar el Overview como una observación, no como un diagnóstico. Finora suma clientes
+    (pagadores observados) mucho más rápido que monto pagado, y lo investigado (R-003 y R-009, todavía sin aceptar)
+    apunta a que la brecha viene de quién entra, con un primer pago más bajo, más que de la base previa. Antes de
+    ponerlo en lámina hay que fijar una sola ventana: R-005 compara dic-22 contra oct-24 y R-003 usa periodos comparables
+    con un chequeo mar–oct. Después hay que confirmar que el 4,5× y el 2,8× salen de esa ventana. En la lámina se
+    habla de monto pagado observado, no de MRR contratado, y no se usa la palabra «deterioro» hasta separar mezcla,
+    precio y salidas.'
+  hugo_said:
+  - text: 'Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%,
+      de COP 92,8 mil a COP 57,8 mil.'
+    ref: N-020
+  - text: 'el storytelling lo visualizo más o menos así: Sección 1 Overview… Sección 2 Growth… Revenue…'
+    ref: N-021
+  steps:
+  - kind: data
+    what: 'Fijar la ventana del Overview: primer y último mes completos, meses con cobertura parcial (window_flag),
+      escala ×10.000 a COP y definición de cliente activo. Con esa ventana, recalcular el 4,5×, el 2,8×, el −38%
+      y el paso de COP 92,8 mil a COP 57,8 mil.'
+    where:
+    - mart.monthly_metrics_phase1
+    - mart.monthly_metrics
+    - staging.stg_customer_month
+    - mart.customer_month
+  - kind: data
+    what: 'Sobre la misma ventana, juntar las señales de salud que ya están calculadas, sin rehacerlas: puente del
+      monto (R-004), peso de las cosechas recientes (R-009) y churn observado con regresos.'
+    where:
+    - mart.monthly_metrics
+    - mart.vintage_month
+    - mart.churn_events
+  - kind: proposal
+    what: Entregar 3–4 señales para el Overview. Cada una lleva periodo, fuente y advertencia de nombre (monto pagado
+      observado, primera aparición), más el puente explícito hacia Growth (quién entra) y hacia Revenue (qué explica
+      el monto).
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

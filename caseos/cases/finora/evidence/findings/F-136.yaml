@@ -1,0 +1,102 @@
+id: F-136
+type: finding
+headline: 'El monto pagado mezcla fecha de cobro con mes de servicio: los atrasos y los pagos multimes inflan el
+  churn, la reactivación y la expansión observados. Antes de llamarlos churn o MRR hace falta una regla de normalización
+  y una ventana de gracia.'
+evidence_text: De 751 churns observados, 330 vuelven a pagar al mes siguiente, 117 de ellos con un pago aproximadamente
+  doble. Con una regla de 3 meses en cero, 392 eventos dejarían de contar como churn. De las 512 filas con firma
+  multimes, 262 llegan justo después de un mes en cero. El 16,5% de las expansiones vuelve al monto anterior al
+  mes siguiente, frente al 1,5% de las contracciones. El estándar de ChartMogul reparte los pagos multi-periodo
+  entre los meses que cubren y trata la mora como una política configurable.
+confidence: high
+limitations:
+- 'El patrón es sólido, pero cuánto cambian las cifras depende de la regla. Sin periodo de servicio en la factura,
+  la normalización es una inferencia: la ventana G es una política que debes aprobar tú, con sensibilidad G=1/2/3.
+  Además, con G=3 los 56 churns de sep–oct 24 quedan abiertos.'
+kind: measurement
+claims:
+- claim: El 3,07% del monto pagado del periodo (1,55% de las filas con pago, 325 clientes) corresponde a pagos que
+    son k veces el monto usual del cliente (firma multimes).
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: En el MRR total el peso es bajo; a nivel de movimientos (churn, reactivación, expansión) sí distorsiona.
+- claim: De las 512 filas con firma multimes, 262 llegan después de un mes en cero (patrón de puesta al día), 66
+    antes de un mes en cero (patrón de prepago) y 183 están rodeadas de pagos.
+  source_id: DM-13
+  source_type: data_model
+  confidence: medium
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: 'Los conteos son firmes. Leerlos como atraso o prepago es inferencia: sin factura no se puede confirmar.'
+- claim: 'De 751 eventos de churn observado, 330 vuelven a pagar al mes siguiente: 117 con un pago aproximadamente
+    doble del anterior y 87 con el mismo monto.'
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: El pago doble tras un mes en cero es compatible con un atraso de cobro, no con una cancelación.
+- claim: Tras un churn observado, 330 eventos vuelven en 1 mes, 62 en 2, 24 en 3, 52 en 4 o más, y 283 no vuelven
+    antes de oct-24. Con una regla de 3 o más meses en cero, 392 eventos dejarían de contar como churn.
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: 392 = 330 + 62 (aritmética sobre la consulta). Los 283 incluyen eventos recientes que aún podrían volver.
+- claim: 'Hay 23 churns observados en sep-24 y 33 en oct-24: con una ventana de gracia de 3 meses, esos 56 eventos
+    no se pueden cerrar.'
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Censura a la derecha: los últimos G−1 meses quedan abiertos.'
+- claim: El 16,5% de las expansiones vuelve al monto anterior al mes siguiente, frente al 1,5% de las contracciones.
+  source_id: DM-14
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–sep-24 (se excluye el último mes); consulta 2026-09-29
+  supports_or_contests: contests
+  notes: Parte de la expansión observada son picos de un mes, no upgrades; la contracción parece persistente.
+- claim: 'Estándar: el MRR es ingreso recurrente normalizado; los pagos de periodos largos se dividen entre los
+    meses del intervalo y se excluyen los cargos únicos o de setup.'
+  source_id: EXT-01
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29; fecha de publicación no visible
+  supports_or_contests: context
+  notes: Es la base del MRR normalizado. Es definición, no evidencia sobre Finora.
+- claim: Por defecto, las suscripciones en mora siguen sumando al MRR y a los clientes activos hasta que se cancelan;
+    se pueden dar de baja automáticamente tras un periodo de mora que elige la empresa.
+  source_id: EXT-03
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Muestra que la ventana de gracia es una decisión de política, no un dato.
+- claim: El momento de reconocer el churn (al pedir la cancelación, al final del periodo pagado o cuando termina
+    en el sistema de cobro) es una elección que cambia el MRR reportado.
+  source_id: EXT-04
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: No trata el churn involuntario ni los pagos fallidos.
+unverified: false
+source_ref:
+  research: R-018
+links:
+- R-018
+- H-017
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:01:40-06:00'
+updated_at: '2026-09-29T11:01:40-06:00'
+version: 1

@@ -1,0 +1,452 @@
+id: R-001
+type: research
+research_question: ¿Qué podemos nombrar y comparar válidamente?
+case_question: ¿Qué podemos nombrar y comparar válidamente?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W0
+why_it_matters: 'Desbloquea o recorta W2–W5. Hay alta incertidumbre semántica sobre el monto: fijar qué se puede
+  nombrar elimina trabajo mal definido antes de construir precisión sobre él.'
+short_answer: 'Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación
+  no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual
+  ni como salida definitiva. Sí se sostiene una comparación de nivel, porque clientes activos y monto pagado cubren
+  el panel sin interrupción. El vocabulario válido queda en monto pagado observado, primera aparición observada
+  y churn persistente junto al observado.'
+headline: Solo monto pagado observado y primera aparición observada son comparables
+answer_states:
+- Hecho observado
+- Direccional
+findings:
+- F-032
+- F-015
+- F-028
+- F-034
+- F-009
+- F-040
+what_is_established:
+- El vocabulario válido para seguir el caso es monto pagado observado y primera aparición observada; el comportamiento
+  del monto es consistente con un dato de cobro y no con un nivel contractual estable.
+- En retención conviene reportar el churn persistente junto al churn observado, porque el observado coincide con
+  pausas y atrasos y el regreso de clientes aporta una entrada de monto comparable a la de la expansión.
+- Se sostiene una comparación de nivel entre los extremos del panel para clientes activos y monto pagado por cliente
+  activo, con cobertura sin interrupción; la lectura del ticket de entrada, en cambio, debe declarar la medida usada.
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede distinguir una pausa de una cancelación ni un descuento de un crédito puntual: el panel no trae estado
+  de suscripción, precios, descuentos, créditos ni motivos de churn.'
+- La serie de gasto comercial no admite comparación en pesos ni cruce con el monto del panel, por falta de escala
+  documentada y por señales de construcción de arriba hacia abajo.
+- 'No podemos fijar una magnitud única del cambio del ticket de entrada: el resultado depende de la medida elegida.'
+- No podemos reconstruir la historia previa de los clientes ya activos al inicio del panel ni de la cohorte marcada
+  del segundo mes, cuyo patrón de pago en el primer mes se aparta del de cohortes posteriores.
+cannot_claim:
+- 'Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.'
+- 'Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera
+  aparición observada.'
+- 'Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.'
+alternative_explanations: []
+case_implication: El vocabulario válido para seguir el caso es monto pagado observado y primera aparición observada;
+  el comportamiento del monto es consistente con un dato de cobro y no con un nivel contractual estable.
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-017
+  alias: HG
+  question: ¿La interpretación y la cobertura permiten nombrar el monto como MRR y la primera transacción como adquisición,
+    y comparar periodos sin distorsiones materiales?
+  state: No soportada
+  effect: debilitada
+  reading: El retorno exacto al nivel previo al mes siguiente y el churn observado que vuelve a pagar coinciden
+    con un vocabulario que no admite nombrar el monto como nivel contractual ni la primera transacción como adquisición,
+    aun con una comparación de nivel que cubre el panel sin interrupción.
+- id: null
+  alias: rival
+  question: ¿El comportamiento del monto contradice la lectura contractual, de modo que solo se puede nombrar monto
+    pagado observado?
+  state: Soportada
+  effect: fortalecida
+  reading: La reversión del movimiento bruto del monto y la firma de ajuste sincronizado con cobro retroactivo son
+    consistentes con nombrar el dato como monto pagado observado.
+- id: null
+  alias: ''
+  question: ¿La expansión y la contracción del monto son cambios de nivel duraderos o artefactos de cobro que se
+    revierten?
+  state: Soportada
+  effect: fortalecida
+  reading: El desplazamiento de la composición de la expansión hacia ajustes pequeños, el alejamiento respecto de
+    la grilla de precios y el tramo de subida que se revierte son consistentes con artefactos de cobro antes que
+    con cambios de nivel duraderos.
+- id: null
+  alias: ''
+  question: ¿La primera transacción observada puede leerse como fecha de adquisición del cliente?
+  state: No soportada
+  effect: debilitada
+  reading: La presencia de clientes ya activos al inicio del panel sin historia previa conocida y la sensibilidad
+    del ticket de entrada a la medida elegida coinciden con una primera aparición observada que no equivale a adquisición.
+- id: null
+  alias: ''
+  question: ¿El churn observado y la reactivación nombran salida y regreso reales, o pausas y atrasos de cobro?
+  state: No soportada
+  effect: debilitada
+  reading: El retorno al pago tras el churn observado, la liquidación exacta de meses pendientes y el tamaño del
+    monto de reactivación frente al de expansión coinciden con pausas y atrasos de cobro antes que con salida y
+    regreso reales.
+- id: null
+  alias: ''
+  question: ¿Qué parte de la pregunta de interpretación depende de datos que no existen en el panel?
+  state: No evaluable
+  effect: no evaluable
+  reading: La semántica del campo de monto, el estado de la suscripción, los precios, los descuentos, los créditos
+    y los motivos de churn no están en el panel, de modo que esta parte queda fuera de evaluación.
+- id: null
+  alias: ''
+  question: ¿La serie de gasto comercial admite comparación en unidades monetarias y está libre de solapamiento
+    entre Team y Payroll?
+  state: Direccional
+  effect: señal direccional
+  reading: La agregación interna del gasto comercial reconstruye el total sin desvío, señal parcial que convive
+    con indicios de proporciones fijas, bloques en cero, valores negativos y ausencia de escala documentada.
+affected_claims: []
+suggested_action: Es el siguiente paso del brief y pone a prueba, con el vocabulario ya acotado a monto pagado observado,
+  si ese dato distingue los escenarios planteados.
+next_question: W1
+new_questions:
+- ¿Qué define exactamente el campo de monto y qué estado de suscripción corresponde a cada mes sin pago?
+- ¿Qué proporción del monto pagado se mantiene estable durante meses consecutivos como aproximación a un nivel recurrente?
+- ¿Cómo cambian las lecturas de retención al adoptar el churn persistente como métrica de cabecera?
+- ¿En qué unidad está expresado el gasto comercial y cómo se asignan sus bloques?
+handoff_to_cos:
+  summary: Solo monto pagado observado y primera aparición observada son comparables
+  recommended_next: ¿El monto identifica los escenarios del CFO?
+visuals:
+- id: V-01
+  title: 'El panel tiene un grano único de cliente por mes: 66.674 pares cliente-mes sin duplicados para 1.961 clientes
+    y 34 meses de 6 industrias, con 0 filas de ID o fecha nulas, 0 filas de monto negativo, 0 meses-cliente activos
+    con monto no positivo y un desvío máximo de COP 0 entre el monto observado escalado y el monto en COP.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: filas_panel
+      nombre: filas_panel
+      formato: int
+    - id: pares_cliente_mes_unicos
+      nombre: pares_cliente_mes_unicos
+      formato: int
+    - id: clientes
+      nombre: clientes
+      formato: int
+    - id: meses_cubiertos
+      nombre: meses_cubiertos
+      formato: int
+    - id: industrias
+      nombre: industrias
+      formato: int
+    - id: filas_con_id_o_fecha_nula
+      nombre: filas_con_id_o_fecha_nula
+      formato: int
+    - id: activos_con_monto_no_positivo
+      nombre: activos_con_monto_no_positivo
+      formato: int
+    - id: filas_monto_negativo
+      nombre: filas_monto_negativo
+      formato: int
+    - id: max_desvio_escala_cop
+      nombre: max_desvio_escala_cop
+      formato: num2
+    - id: clientes_sin_historia_censurados
+      nombre: clientes_sin_historia_censurados
+      formato: int
+    - id: clientes_feb22_marcados
+      nombre: clientes_feb22_marcados
+      formato: int
+    filas:
+    - filas_panel: 66674
+      pares_cliente_mes_unicos: 66674
+      clientes: 1961
+      meses_cubiertos: 34
+      industrias: 6
+      filas_con_id_o_fecha_nula: 0
+      activos_con_monto_no_positivo: 0
+      filas_monto_negativo: 0
+      max_desvio_escala_cop: 0.0
+      clientes_sin_historia_censurados: 377
+      clientes_feb22_marcados: 108
+  claim: C-001
+- id: V-02
+  title: 'Sí hay una comparación de nivel que se sostiene: los clientes activos y el monto pagado cubren los 34
+    meses del panel sin interrupción, y entre ene-22 y oct-24 los activos pasaron de 377 a 1.678 mientras el monto
+    pagado por cliente activo pasó de COP 92,8 mil a COP 57,8 mil.'
+  spec:
+    tipo: linea
+    x:
+    - ene-22
+    - feb-22
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Clientes activos
+      valores:
+      - 377.0
+      - 457.0
+      - 467.0
+      - 499.0
+      - 532.0
+      - 520.0
+      - 586.0
+      - 609.0
+      - 629.0
+      - 654.0
+      - 669.0
+      - 697.0
+      - 733.0
+      - 763.0
+      - 792.0
+      - 822.0
+      - 861.0
+      - 899.0
+      - 959.0
+      - 1021.0
+      - 1078.0
+      - 1133.0
+      - 1203.0
+      - 1241.0
+      - 1283.0
+      - 1292.0
+      - 1320.0
+      - 1397.0
+      - 1457.0
+      - 1530.0
+      - 1566.0
+      - 1602.0
+      - 1645.0
+      - 1678.0
+    formato: int
+  claim: C-014
+- id: V-03
+  title: 'El monto pagado no se comporta como un nivel contractual estable: 25,3% del movimiento bruto del monto
+    sin contar altas vuelve exacto al nivel previo al mes siguiente entre mar-22 y sep-24, y 29% del MRR de expansión
+    se revierte al mes siguiente.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-002
+- id: V-04
+  title: 'El churn observado no nombra una salida definitiva: de 751 eventos de churn observado, 44% vuelve a pagar
+    al mes siguiente, 32% de los retornos tras meses sin pago liquidan exactamente los meses pendientes, y mientras
+    el churn observado pasó de 3,52% en 2022 a 2,04% en 2024, el churn persistente pasó de 0,98% a 0,96%.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-010
+- id: V-05
+  title: Existe una firma de ajuste sincronizado con cobro retroactivo exacto en 260 eventos de 249 clientes, cuyo
+    tramo de subida equivale a 8,5% de la expansión de 2023 y 8,3% de la de 2024, mientras el aumento que persiste
+    al mes siguiente es COP 477,25 mil en 2023 y COP 490,54 mil en 2024.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Tramo de subida con cobro retroactivo exacto
+      valores:
+      - 0.08537936689506388
+      - 0.08286568820750435
+    - nombre: Resto de la expansión
+      valores:
+      - 0.9146206331049361
+      - 0.9171343117924956
+    claim_fase1: C-DAT-07
+  claim: C-004
+- id: V-07
+  title: 'La magnitud del cambio del ticket de entrada entre 2022 y 2024 depende de la medida elegida: −60% con
+    el primer pago promedio, −33% con la mediana del primer pago y −18% con el pago del segundo mes.'
+  spec:
+    tipo: barras
+    x:
+    - Promedio
+    - Mediana
+    - Winsorizado
+    - Run-rate temprano
+    - Segundo mes (M1)
+    formato: pct_signed
+    series:
+    - nombre: Cambio del ticket de entrada, 2022 → 2024
+      valores:
+      - -0.6049418007203875
+      - -0.33333333333333337
+      - -0.5125863798144088
+      - -0.48037809551425426
+      - -0.1783926076015293
+    claim_fase1: C-ADQ-02
+  claim: C-007
+- id: V-08
+  title: 'La primera aparición no equivale a la adquisición para una parte de la base: de 1.961 clientes del panel,
+    377 ya estaban activos en ene-22 sin historia previa conocida y 108 son altas de feb-22 marcadas, cohorte en
+    la que la firma de pago acumulado en el primer mes llega a 30% frente a 3,0% en las cohortes posteriores.'
+  spec:
+    tipo: barras
+    x:
+    - clientes
+    - clientes sin historia censurados
+    - clientes feb22 marcados
+    formato: int
+    series:
+    - nombre: ''
+      valores:
+      - 1961.0
+      - 377.0
+      - 108.0
+  claim: C-009
+- id: V-09
+  title: 'El regreso de clientes es una entrada de monto de tamaño comparable al de la expansión: el MRR de reactivación
+    fue COP 41,6 millones en 2022, COP 23,2 millones en 2023 y COP 21,7 millones en 2024, frente a un MRR de expansión
+    de COP 11,3 millones, COP 15,0 millones y COP 13,6 millones en los mismos años.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    series:
+    - nombre: MRR de reactivación
+      valores:
+      - 41635606.74
+      - 23192944.53
+      - 21674875.74
+    - nombre: MRR de expansión
+      valores:
+      - 11308086.93
+      - 14979540.45
+      - 13556214.21
+    formato: cop
+  claim: C-011
+- id: V-10
+  title: 'No se puede establecer si el monto observado corresponde a MRR contratado, ni distinguir una pausa de
+    una cancelación, ni separar un descuento de un crédito puntual: el panel no contiene la definición del campo
+    de monto, el estado de la suscripción, los precios de lista, los descuentos, los créditos ni los motivos de
+    churn.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Motivos de churn, downgrade o reactivación
+      estado: No existe
+      campos: churn_reason
+  claim: C-012
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-161629-98d3
+  path: investigations/caso/W0.json
+  modelo: claude-opus-5
+  finished_ms: 1790634189289
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-161629-98d3
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W0.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-010
+- H-017
+- F-032
+- F-015
+- F-028
+- F-034
+- F-009
+- F-040
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W0.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-161629-98d3
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

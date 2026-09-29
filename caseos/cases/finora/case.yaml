@@ -18,23 +18,12 @@ language:
   avoid_unnecessary_jargon: true
   structured_language: es
   observed:
-    register: Conversacional y directo, informal («jaja»); piensa en láminas, columnas y bloques de deck; español
-      con términos de negocio en inglés.
-    technical_level: 'Analítico / de negocio: maneja frameworks de Growth (AAARRR, CAC, LTV, UCM), ToFu/BoFu y roles
-      comerciales (SDR, AE, KAM).'
-    formality: Tú; informal; tolera coloquialismos; sin rodeos.
+    register: Conversacional y directo; pega el texto literal del caso y piensa en láminas, secciones y bloques
+      de deck.
+    technical_level: 'Negocio y análisis: maneja funnel, SQL, MRR, churn, contracción y expansión sin necesidad
+      de explicación.'
+    formality: Tú, informal; español con términos de negocio en inglés.
     preserved_terms:
-    - entrada directa a SQL
-    - Paid Media
-    - Métricas Clave
-    - low tickets
-    - CRM
-    - Analítica Digital
-    - Decision Making
-    - Análisis Adhoc
-    - pricing introductorio
-    - descuentos temporales
-    - contracción
     - expansión
     - Propuesta de Modelo de datos
     - CEO
@@ -64,6 +53,17 @@ language:
     - Análisis Ad hoc
     - Mecanismo Propuesto
     - Implicaciones Multidisciplinarias
+    - research
+    - data
+    - funnel
+    - self-serve
+    - estancamientos
+    - churn
+    - reactivación
+    - negocio subyacente
+    - revenue que dejamos de capturar
+    - MRR
+    - pricing
     notes:
     - Perfil inicial derivado del brief v0.3 (sección «Lo tuyo») y de las notas del proyecto.
     introduced_terms:
@@ -88,6 +88,13 @@ language:
     - term: primeros pagadores observados
       plain: clientes cuyo primer pago aparece en los datos; no son leads ni necesariamente clientes recién ganados
       at: '2026-09-29T00:26:18-06:00'
+    - term: puente en capas
+      plain: el cambio del MRR de un mes separado en lo que hizo el cliente, los cambios de tarifa y los descuentos,
+        y que suma exactamente a lo cobrado
+      at: '2026-09-29T10:04:07-06:00'
+    - term: MRR antes de descuento vs MRR cobrado
+      plain: lo que vale la suscripción contratada vs lo que efectivamente se cobra ese mes
+      at: '2026-09-29T10:04:07-06:00'
 workspace:
   type: finora-eda
   path: /Users/hugomartinez/GitHub/Claude Prueba/finora-eda
@@ -121,14 +128,32 @@ phases:
     approved_artifact: brief/approved/brief.v1.md
     decision: D-013
   framing:
-    status: review
-    ready_count: 0
+    status: needs_review
+    ready_count: 1
     history:
     - at: '2026-09-28T22:22:27-06:00'
       from: not_started
       to: review
       by: import
       note: framing v0.3 importado; pendiente de Mark Ready
+    - at: '2026-09-29T09:49:56-06:00'
+      from: review
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/framing/v1-20260929-094956
+    - at: '2026-09-29T10:04:07-06:00'
+      from: ready
+      to: needs_review
+      by: framer
+      note: el framing cambió después de aprobarse
+    ready_at: '2026-09-29T09:49:56-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/framing/v1-20260929-094956
+    approved_artifact: framing/approved/current.v1.md
+    decision: D-014
   research:
     status: in_progress
     ready_count: 0
@@ -139,18 +164,28 @@ phases:
       by: import
       note: W0–W5 respondidas en el workspace antes de CaseOS; W6/W7 bloqueadas
   synthesis:
-    status: not_started
+    status: in_progress
     ready_count: 0
-    history: []
+    history:
+    - at: '2026-09-29T11:11:30-06:00'
+      from: not_started
+      to: in_progress
+      by: cos
+      note: trabajo iniciado
   story:
-    status: not_started
+    status: in_progress
     ready_count: 0
-    history: []
+    history:
+    - at: '2026-09-29T11:54:07-06:00'
+      from: not_started
+      to: in_progress
+      by: cos
+      note: trabajo iniciado
   slides:
     status: not_started
     ready_count: 0
     history: []
-updated_at: '2026-09-29T00:26:18-06:00'
+updated_at: '2026-09-29T11:54:07-06:00'
 data_model:
   id: finora
   label: Finora · modelo analítico

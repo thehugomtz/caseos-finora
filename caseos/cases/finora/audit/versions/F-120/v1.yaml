@@ -1,0 +1,47 @@
+id: F-120
+type: finding
+headline: 'Con el modelo actual no se puede separar H-005 de H-006: faltan las entradas, los reps y los tiempos
+  de contacto.'
+evidence_text: El catálogo solo tiene pagos cliente × mes, industria y gasto S&M por rubro. Lo único parecido a
+  capacidad es el gasto de Team, PayrollExpenses y Travel, en una unidad que no está documentada. Team sube de 0,24
+  a 0,453 entre ene-22 y oct-24, y PayrollExpenses es negativo en 5 meses, así que no mide personas (FTE) ni carga.
+confidence: low
+limitations:
+- Finora puede tener CRM y roster fuera del modelo del caso; no lo sabemos.
+kind: measurement
+claims:
+- claim: El modelo del caso no tiene entradas ni leads, grupo de entrada, canal, SDR/AE, asignaciones ni tiempos
+    de contacto; solo pagos cliente × mes, industria y gasto S&M mensual por rubro.
+  source_id: SRC-D1
+  source_type: data_model
+  confidence: low
+  freshness: Catálogo consultado el 2026-09-29; datos de ene-22 a oct-24
+  supports_or_contests: context
+  notes: Por eso ninguna prueba de H-005 o H-006 se puede correr hoy. · fuente no recuperada en la corrida (CaseOS)
+  unverified: false
+- claim: Lo único parecido a capacidad es el gasto de Team, PayrollExpenses y Travel, en una unidad que no está
+    documentada. Team pasa de 0,24 (ene-22) a 0,453 (oct-24) y PayrollExpenses es negativo en 5 meses (nov-23, dic-23,
+    feb-24, mar-24, jul-24).
+  source_id: SRC-D2
+  source_type: data_model
+  confidence: low
+  freshness: Datos de ene-22 a oct-24
+  supports_or_contests: context
+  notes: No mide personas (FTE) ni ramp. Que suba el gasto de Team ni apoya ni debilita H-006. · fuente no recuperada
+    en la corrida (CaseOS)
+  unverified: false
+unverified: true
+source_ref:
+  research: R-014
+links:
+- R-014
+- H-005
+- H-006
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:45:59-06:00'
+updated_at: '2026-09-29T10:45:59-06:00'
+version: 1

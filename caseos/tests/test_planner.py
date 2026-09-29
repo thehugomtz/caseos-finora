@@ -141,7 +141,7 @@ def test_data_tools_are_read_only_and_log_what_ran():
     bad = asyncio.run(tools["consultar_modelo"]({"sql": "DELETE FROM mart.x"}))
     ok = asyncio.run(tools["consultar_modelo"]({"sql": "SELECT n FROM mart.x"}))
     cat = asyncio.run(tools["catalogo_modelo"]({}))
-    assert bad["is_error"] and "solo lectura" in bad["content"][0]["text"] and log == ["SELECT n FROM mart.x"]
+    assert bad["is_error"] and "solo lectura" in bad["content"][0]["text"] and log == ["SELECT n FROM mart.x", "catalogo_modelo()"]
     assert '"rows": [[5]]' in ok["content"][0]["text"] and "mart.x" in cat["content"][0]["text"]
 
 
@@ -162,3 +162,28 @@ def test_a_new_plan_can_improve_an_approved_task_but_not_a_launched_one(case, mo
     assert fr["research_plan"][0]["draft_answer"] == ""                                                    # the approved task is untouched
     assert "RT-002" in " ".join(res["corrections"]) and "plan:RT-002" not in fr["pending"]
     assert "RT-001" not in (fr.get("retired_ids") or [])                                                   # an approved id is not retired
+
+
+def test_catalog_citations_and_trailing_comments_verify():
+    out = {"_seen_urls": [], "_sql_runs": ["SELECT n FROM mart.x", "catalogo_modelo()"],
+           "sources": [{"id": "D1", "source_type": "data_model", "url": "", "note": "catalogo_modelo() — no hay tablas de leads"},
+                       {"id": "D2", "source_type": "data_model", "url": "", "note": "SELECT n FROM mart.x — la unidad no está documentada"},
+                       {"id": "D3", "source_type": "data_model", "url": "", "note": "SELECT n FROM mart.xyz"}],
+           "claims": [{"claim": "a", "source_id": "D1", "confidence": "high"}, {"claim": "b", "source_id": "D2", "confidence": "high"},
+                      {"claim": "c", "source_id": "D3", "confidence": "high"}]}
+    v = research.verify_citations(out)
+    assert v["unverified_sources"] == ["D3"]                       # a different table is not the query that ran
+
+
+def test_reverify_clears_model_citations_after_the_rule_is_fixed(case):
+    r = case.create("research", {"research_question": "q", "status": "completed", "specialty": "measurement",
+                                 "sql_runs": ["catalogo_modelo()"], "validation": {"ok": False, "unverified_sources": ["D1"], "bare_claims": []},
+                                 "sources": [{"id": "D1", "source_type": "data_model", "note": "catalogo_modelo()", "verified": False}],
+                                 "claims": [{"claim": "no hay leads", "source_id": "D1", "unverified": True, "confidence": "low",
+                                             "notes": "fuente no recuperada en la corrida (CaseOS)"}]}, actor="measurement")
+    f = case.create("finding", {"headline": "El modelo no tiene leads", "unverified": True,
+                                "claims": [{"claim": "no hay leads", "source_id": "D1", "unverified": True}]}, actor="measurement")
+    case.update(r["id"], {"findings": [f["id"]]}, actor="measurement")
+    out = research.reverify_model_sources(case, r["id"])
+    assert out["fixed"] == ["D1"] and case.get(r["id"])["validation"]["ok"]
+    assert case.get(f["id"])["unverified"] is False and case.get(r["id"])["claims"][0]["confidence"] == "low"   # confidence untouched

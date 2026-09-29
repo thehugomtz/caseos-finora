@@ -1,0 +1,78 @@
+id: T-014
+type: table
+table_key: FIN-F-108
+title: El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45
+  u…
+question: ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación
+  de Demanda ToFu, Team, Habilitación) a lo largo del tiempo? ¿Hasta dónde se pueden relacionar cruzando fechas
+  sin pasar de asociación a efecto?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - sm_peak
+  - S&M total en su pico, may-23 (unidad reportada, sin escala en COP)
+  - 3,45 u
+- - sm_trough
+  - S&M total en su valle, ago-23 (unidad reportada)
+  - 1,10 u
+- - sm_drop
+  - Caída del S&M total de pico a valle
+  - −68%
+units: {}
+definitions: {}
+message: El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45
+  u en may-23 a 1,10 u en ago-23.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-INV-01
+  - EC-INV-02
+  - E-007
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-007\nWITH m AS (SELECT substr(CAST(month AS VARCHAR),1,7) AS ym, new_customers, new_mrr_cop FROM mart.monthly_metrics),\ns
+  AS (SELECT substr(CAST(month AS VARCHAR),1,7) AS ym, demand_gen_spend, sales_capacity_spend, enablement_spend,
+  total_sm_spend, team FROM mart.sm_monthly),\nj AS (SELECT m.ym, m.new_customers, m.new_mrr_cop, s.demand_gen_spend,
+  s.sales_capacity_spend, s.enablement_spend, s.total_sm_spend, s.team FROM m JOIN s ON m.ym = s.ym WHERE m.ym >=
+  '2022-03')\nSELECT CASE WHEN ym <= '2022-12' THEN '1. 2022 mar-dic' WHEN ym <= '2023-05' THEN '2. 2023 ene-may'
+  WHEN ym <= '2023-12' THEN '3. 2023 jun-dic' ELSE '4. 2024 ene-oct' END AS ventana,\n COUNT(*) AS meses,\n ROUND(AVG(new_customers),1)
+  AS altas_por_mes,\n ROUND(AVG(demand_gen_spend),2) AS demanda_por_mes,\n ROUND(AVG(sales_capacity_spend),2) AS
+  capacidad_por_mes,\n ROUND(AVG(enablement_spend),3) AS habilitacion_por_mes,\n ROUND(AVG(total_sm_spend),2) AS
+  sm_total_por_mes,\n ROUND(AVG(total_sm_spend)/AVG(new_customers),4) AS sm_por_alta,\n ROUND(AVG(demand_gen_spend)/AVG(new_customers),4)
+  AS demanda_por_alta,\n ROUND(AVG(team/total_sm_spend),3) AS part_team_en_sm\nFROM j GROUP BY 1 ORDER BY 1"
+transformation: EC-INV-01 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-INV-02 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); E-007 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-2167 · C-008
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '4.6'
+  claim_fase1: C-INV-02
+  cubre:
+  - C-INV-02
+created_at: '2026-09-29T10:47:36-06:00'
+status: valid
+validation_errors: []
+finding: F-108
+links:
+- F-108
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+updated_at: '2026-09-29T10:47:36-06:00'
+version: 1

@@ -16,7 +16,7 @@ from .agents import base
 from .llm import AgentError, RunSpec, get_llm
 from .model import title_of, type_of
 from .store import CaseStore
-from .util import clip, norm, now_iso
+from .util import read_json, clip, norm, now_iso
 
 SPECIALTIES = {"analytics": "Analytics", "business": "Business Research", "measurement": "Measurement",
                "data_engineering": "Data Engineering"}
@@ -238,7 +238,12 @@ async def _research_job(job, params):
         store.update(rid, {"status": "failed", "error": f"{type(e).__name__}: {e}", "failed_at": now_iso()}, actor=job.agent,
                      summary=f"{rid} falló; la solicitud se conservó", verb="failed")
         raise
-    created = _persist(store, rid, out, job)
+    try:
+        created = _persist(store, rid, out, job)
+    except Exception as e:  # noqa: BLE001 - the investigation ran; saving its result failed: say so, never stay "running"
+        store.update(rid, {"status": "failed", "error": f"No se pudo guardar el resultado: {type(e).__name__}: {e}",
+                           "failed_at": now_iso()}, actor=job.agent, summary=f"{rid}: el resultado no se pudo guardar", verb="failed")
+        raise
     if config.AUTO_COS and store.get(rid).get("status") == "completed":
         cos.flag_impact(store, rid)
         try:
@@ -326,8 +331,8 @@ def _data_access(store: CaseStore, r: dict):
 DATA_RULES = ("## Modelo de datos del caso (solo lectura)\nTienes `consultar_modelo` (una SELECT sobre raw.*, staging.*, "
               "mart.*; máx. 200 filas) y `catalogo_modelo`. Úsalas en los pasos de datos: comprueba qué existe antes de proponer, "
               "y si un dato no está en el modelo, dilo. Cada cifra que saques del modelo va en `sources` con source_type "
-              "\"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste; el claim cita ese source_id. "
-              "Una cita del modelo solo cuenta si la consulta corrió en esta corrida.")
+              "\"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste (si citas el catálogo, note = "
+              "catalogo_modelo()); el claim cita ese source_id. Una cita del modelo solo cuenta si la consulta corrió en esta corrida.")
 
 
 async def _specialist(store: CaseStore, r: dict, job) -> dict:
@@ -451,6 +456,59 @@ def _norm_sql(q: str) -> str:
     return " ".join((q or "").replace(";", " ").split()).lower()
 
 
+def model_source_ran(source: dict, ran: set[str]) -> bool:
+    """A citation of the data model counts when its note starts with a query that ran in the run (a comment after
+    the SQL is fine), or when it cites the catalog and the catalog was read."""
+    note = _norm_sql(source.get("note"))
+    if not note or not ran:
+        return False
+    if "catalogo_modelo" in note and "select " not in note:        # "catalogo_modelo() — …", "Herramienta catalogo_modelo…"
+        return _norm_sql("catalogo_modelo()") in ran
+    return any(note == q or note.startswith(q + " ") for q in ran)
+
+
+def reverify_model_sources(store: CaseStore, rid: str, *, actor: str = "system") -> dict:
+    """Re-check the data-model citations of a completed research with the current rule (its queries are kept in
+    sql_runs). Only flags change: a claim cleared here keeps the confidence it had."""
+    r = store.require(rid)
+    ran = {_norm_sql(q) for q in r.get("sql_runs") or []}
+    # runs before the catalog was logged: the run's own tool trace says whether the catalog was read
+    for run_id in r.get("run_ids") or []:
+        rec = read_json(store.root / "audit" / "runs" / f"{run_id}.json", {}) or {}
+        if any(str(t.get("tool", "")).endswith("catalogo_modelo") for t in rec.get("tool_trace") or []):
+            ran.add(_norm_sql("catalogo_modelo()"))
+    sources = r.get("sources") or []
+    fixed = [s["id"] for s in sources if s.get("source_type") == "data_model" and not s.get("verified") and model_source_ran(s, ran)]
+    if not fixed:
+        return {"research": rid, "fixed": []}
+    for s in sources:
+        if s.get("id") in fixed:
+            s["verified"] = True
+    bad = {s.get("id") for s in sources if not s.get("verified")}
+    claims = r.get("claims") or []
+    for c in claims:
+        if c.get("source_id") in fixed and c.get("unverified"):
+            c["unverified"] = False
+            c["notes"] = (c.get("notes", "").replace(" · fuente no recuperada en la corrida (CaseOS)", "") +
+                          " · cita del modelo re-verificada (CaseOS)").strip(" ·")
+    v = {**(r.get("validation") or {}), "unverified_sources": [i for i in (r.get("validation") or {}).get("unverified_sources") or [] if i not in fixed]}
+    v["ok"] = not v["unverified_sources"] and not v.get("bare_claims")
+    store.update(rid, {"sources": sources, "claims": claims, "validation": v}, actor=actor, material=False,
+                 summary=f"{rid}: {len(fixed)} cita(s) del modelo re-verificadas ({', '.join(fixed)})")
+    for fid in r.get("findings") or []:
+        f = store.get(fid)
+        if f and f.get("unverified"):
+            cl = f.get("claims") or []
+            for c in cl:
+                if c.get("source_id") in fixed:
+                    c["unverified"] = False
+            still = any(c.get("unverified") or c.get("source_id") in bad for c in cl)
+            if not still:
+                store.update(fid, {"claims": cl, "unverified": False}, actor=actor, material=False,
+                             summary=f"{fid}: su cita del modelo quedó verificada")
+    return {"research": rid, "fixed": fixed}
+
+
 def verify_citations(out: dict) -> dict:
     """Citations must be URLs retrieved in the run — or, for the case's data model, a query that actually ran in the
     run (its exact SQL in the source's note). Returns validation info and mutates claims/sources."""
@@ -464,7 +522,7 @@ def verify_citations(out: dict) -> dict:
             s["verified"] = True
             continue
         if s.get("source_type") == "data_model":
-            s["verified"] = bool(ran) and _norm_sql(s.get("note")) in ran
+            s["verified"] = model_source_ran(s, ran)
             if not s["verified"]:
                 unverified.append(s.get("id"))
             continue

@@ -1,0 +1,103 @@
+id: R-016
+type: research
+research_question: ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa
+  a SQL, leads estancados semanas)? Qué puertas (Assisted / Self Service / Executive) y canales, qué funnel por
+  puerta, cómo encaja AAARRR y con qué conversion rate y métricas clave.
+case_question: Q-001, Q-003, Q-016, H-003
+specialty: measurement
+intensity: L3
+route:
+  specialty: measurement
+  intensity: L3
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-001
+    - Q-003
+    - Q-016
+    - H-003
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-001
+- Q-003
+- Q-016
+- H-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T10:32:03-06:00'
+version: 4
+job_id: JOB-20260929-103203-818f
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-016
+slides:
+- S2.3
+task_why: 'Es la columna de Growth: sin una definición por puerta no se puede medir ninguna hipótesis de S2.6 ni
+  hay nada que operar en S2.7.'
+task:
+  work: propuesta
+  draft_answer: 'Mi arranque: no hay un funnel, hay uno por puerta. Self Service se registra, usa y paga sin hablar
+    con ventas. Assisted entra por campañas, referidos, partners o prospección, y lo trabajan SDR y luego AE (New
+    → Working → Engaged → SQL → Demo → Proposal → Won). Executive está por definir: ¿son las entradas directas a
+    SQL, las cuentas que atiende un KAM, o ambas? Además hace falta una regla para quien cambia de puerta, como
+    un Self Service que pide demo. Todas las puertas se juntan en un mismo hito de compra (Won, primer pago o suscripción
+    activa, por acordar), con una vista AAARRR común encima. La conversión se mide por grupo de entrada (de los
+    que entraron en un mes, cuántos llegan al hito en cierto plazo) y el estancamiento como tiempo en etapa, con
+    plazos que se acuerdan con Finora. Lo primero es poder decir por qué puerta y canal entró cada cliente, y eso
+    no viene en los datos del caso.'
+  hugo_said:
+  - text: 'Assisted / Self Service / Executive · Canales: Canal de adquisición 3, Canal de adquisición 2, Digital,
+      WoM, Clientes que no requirieron un KAM · Funnel Propuesto · AAARRR · Conversion Rate · Métricas Clave'
+    ref: N-008
+  - text: Assisted / Self Service / Executive
+    ref: N-024
+  steps:
+  - kind: data
+    what: 'Dejar claro el límite: el modelo no trae leads, etapas ni canal, y no hay proxy válido para asignar puerta
+      (ni la industria ni el ticket la sustituyen). Solo sirve para dimensionar lo que el funnel tendría que explicar:
+      primeras apariciones de pago por mes y su primer pago.'
+    where:
+    - mart.new_customers
+  - kind: research
+    what: 'Cómo definen y miden el funnel las empresas SaaS con modelo híbrido (self-serve + ventas): puertas de
+      entrada, entrada directa a SQL, leads que cambian de puerta, conversión por grupo de entrada vs por etapa,
+      y tiempo en etapa. Sirve para apoyar la propuesta en prácticas y no inventarla; los plazos siguen siendo parámetros
+      de Finora.'
+    where: []
+  - kind: proposal
+    what: Taxonomía de puertas (Assisted / Self Service / Executive) con su regla de entrada y de cambio de puerta,
+      y el mapa de canales (Digital, WoM, clientes que no requirieron KAM y los dos canales por nombrar).
+    where: []
+  - kind: proposal
+    what: 'Funnel por puerta con vista AAARRR común: hito de compra por acordar, conversion rate por grupo de entrada,
+      tiempo en etapa, métricas clave por etapa y los campos mínimos para etiquetar puerta y canal.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

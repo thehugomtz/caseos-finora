@@ -1,0 +1,522 @@
+id: R-013
+type: research
+research_question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools
+  + Freelance va en Habilitación comercial o en producto?
+case_question: Q-018, Q-022
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-018
+    - Q-022
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-018
+- Q-022
+- F-063
+- F-064
+- F-065
+- F-066
+- F-067
+- F-068
+- F-069
+- F-070
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T10:36:18-06:00'
+version: 5
+job_id: JOB-20260929-103202-d29f
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-004
+slides:
+- S2.2
+task_why: 'Define si el cruce de S2.2 puede usar montos o solo formas en el tiempo, y si Habilitación se queda como
+  gasto comercial o sale como producto (versión mejorada de RT-004: suma S2.2, respuesta de arranque y pasos).'
+task:
+  work: datos
+  draft_answer: 'El archivo no documenta la unidad (viene en texto con «$») y no sabemos si está en la misma escala
+    que los pagos. Por eso, por ahora solo se comparan formas y tiempos, no ratios. Tu duda de si Software Tools
+    + Freelance es producto es válida: mi arranque es dejarlo en Habilitación, con el supuesto a la vista, hasta
+    que Finora lo confirme. Del archivo sí sale qué meses cubre cada rubro, cómo se mueve cada uno y con qué otros
+    rubros se mueve junto; eso es una pista, no una prueba.'
+  hugo_said:
+  - text: Habilitación ¿producto tal vez? (Software Tools + Freelance)
+    ref: N-023
+  steps:
+  - kind: data
+    what: 'Describir el archivo: meses cubiertos por rubro, vacíos, formato del texto con «$», magnitud y tendencia
+      de cada rubro. El orden de magnitud se compara con el monto pagado solo como pista, nunca como conversión
+      a COP.'
+    where:
+    - raw.sm_spend
+    - staging.stg_sm_spend
+    - mart.sm_monthly
+    - mart.monthly_metrics
+  - kind: data
+    what: Revisar si Software Tools y Freelance se mueven con Team / Payroll Expenses (gente) o con Paid Media /
+      Publicidad no web (campañas). Validar también la agrupación que ya trae el mart (demand_gen_spend, sales_capacity_spend,
+      enablement_spend).
+    where:
+    - mart.sm_monthly
+  - kind: proposal
+    what: 'Clasificación de rubros (Generación de Demanda ToFu, Team, Habilitación) con el supuesto de Software
+      Tools + Freelance a la vista. Incluye las dos preguntas para Finora: unidad y moneda del archivo, y naturaleza
+      de esos dos rubros.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: ''
+short_answer: 'El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible
+  decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo
+  solo trae el nombre del rubro y su monto mensual, sin centro de costo ni atribución funcional. Sí está documentada
+  la cobertura de 34 meses de ene-22 a oct-24 sin valores ausentes, en unidades reportadas (u) sin factor de escala,
+  que no se pueden leer como COP'
+headline: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+what_is_established:
+- 'El archivo no documenta moneda ni factor de escala: los montos están en unidades reportadas (u) y sus magnitudes
+  no admiten lectura como COP.'
+- 'La cobertura formal del panel está íntegra: 34 meses de ene-22 a oct-24 sin valores ausentes. La cobertura efectiva
+  es desigual, porque Freelance queda en cero en 17 meses y PayrollExpenses toma valor negativo en 5.'
+- Que Team equivalga a 12% del S&M total en 17 meses hasta may-23 y luego se mueva entre 19% y 38% con 17 valores
+  distintos en 17 meses es consistente con una asignación por porcentaje fijo en el primer tramo y con un cambio
+  de método desde jun-23.
+- Freelance registra su último valor distinto de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde
+  ese corte Habilitación coincide con SoftwareTools. La serie no mide lo mismo antes y después.
+- 'La pregunta queda No evaluable: el archivo solo trae el nombre del rubro y su monto mensual. Faltan centro de
+  costo, proveedor y atribución funcional; agruparlos en Habilitación es una convención del catálogo de métricas.'
+- 'Habilitación pasa de 12% en 2022 a 7% en 2023 y 4% en 2024, así que el nivel del gasto por alta depende de si
+  el rubro se cuenta como comercial. La dirección de la tendencia coincide en ambos criterios: baja de 0,11 a 0,04
+  incluyéndola y de 0,09 a 0,03 excluyéndola.'
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto:
+  falta centro de costo, proveedor y atribución funcional, y la agrupación actual es una convención del catálogo
+  de métricas.'
+- No se puede expresar ningún monto en COP ni comparar contra el estado de resultados, porque el archivo no documenta
+  unidad ni factor de escala.
+- No se puede tratar cada rubro como una medición independiente en el tramo hasta may-23, donde Team equivale a
+  12% del S&M total en 17 meses.
+alternative_explanations: []
+case_implication: Si el archivo va a alimentar decisiones de presupuesto, convendría exigir primero el factor de
+  escala, la moneda de origen y una conciliación contra el estado de resultados. Si la asignación de SoftwareTools
+  tiene efecto en el presupuesto comercial, podría resolverse solo con el libro mayor con centro de costo y proveedor
+  por línea.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Puede finanzas entregar el libro mayor de S&M con centro de costo y proveedor por línea, para verificar si SoftwareTools
+  corresponde a herramientas comerciales o a infraestructura de producto?
+- ¿Cuál es el factor de escala y la moneda de origen del archivo de gasto, y existe una conciliación contra el estado
+  de resultados?
+- '¿Qué ocurrió en jun-23 con Freelance y con Team: reclasificación contable, cambio de proveedor de datos o cambio
+  de proceso presupuestal?'
+- ¿Cómo cambia la lectura de eficiencia comercial si PayrollExpenses se trata como partida de ajuste y se excluye
+  del total de S&M?
+handoff_to_cos:
+  summary: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-103202-c958
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes,
+    pero Freelance queda en cero en 17 de esos meses y PayrollExpenses toma valor negativo en 5.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: rubro
+      nombre: rubro
+      formato: texto
+    - id: meses_en_archivo
+      nombre: meses_en_archivo
+      formato: int
+    - id: meses_nulos
+      nombre: meses_nulos
+      formato: num2
+    - id: meses_positivos
+      nombre: meses_positivos
+      formato: num2
+    - id: meses_en_cero
+      nombre: meses_en_cero
+      formato: num2
+    - id: meses_negativos
+      nombre: meses_negativos
+      formato: num2
+    - id: primer_mes
+      nombre: primer_mes
+      formato: texto
+    - id: ultimo_mes
+      nombre: ultimo_mes
+      formato: texto
+    - id: ultimo_mes_no_cero
+      nombre: ultimo_mes_no_cero
+      formato: texto
+    - id: minimo
+      nombre: minimo
+      formato: num2
+    - id: maximo
+      nombre: maximo
+      formato: num2
+    filas:
+    - rubro: freelance
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 17.0
+      meses_en_cero: 17.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2023-06
+      minimo: 0.0
+      maximo: 0.338
+    - rubro: paid_media
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 34.0
+      meses_en_cero: 0.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: 0.4
+      maximo: 1.505
+    - rubro: payroll_expenses
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 29.0
+      meses_en_cero: 0.0
+      meses_negativos: 5.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: -0.053
+      maximo: 0.863
+    - rubro: publicidad_no_web
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 34.0
+      meses_en_cero: 0.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: 0.156
+      maximo: 0.63
+    - rubro: software_tools
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 34.0
+      meses_en_cero: 0.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: 0.033
+      maximo: 0.195
+    - rubro: team
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 34.0
+      meses_en_cero: 0.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: 0.24
+      maximo: 0.453
+    - rubro: travel
+      meses_en_archivo: 34
+      meses_nulos: 0.0
+      meses_positivos: 34.0
+      meses_en_cero: 0.0
+      meses_negativos: 0.0
+      primer_mes: 2022-01
+      ultimo_mes: 2024-10
+      ultimo_mes_no_cero: 2024-10
+      minimo: 0.066
+      maximo: 0.263
+  claim: C-004
+- id: V-02
+  title: 'El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo: Team equivale a 12%
+    del S&M total en 17 meses hasta may-23, y desde jun-23 su participación se mueve entre 19% y 38% con 17 valores
+    distintos en 17 meses.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: rubro
+      nombre: rubro
+      formato: texto
+    - id: tramo
+      nombre: tramo
+      formato: texto
+    - id: meses
+      nombre: meses
+      formato: int
+    - id: share_min
+      nombre: share_min
+      formato: num2
+    - id: share_max
+      nombre: share_max
+      formato: num2
+    - id: valores_distintos_de_share
+      nombre: valores_distintos_de_share
+      formato: int
+    - id: meses_share_multiplo_de_medio_punto
+      nombre: meses_share_multiplo_de_medio_punto
+      formato: num2
+    filas:
+    - rubro: freelance
+      tramo: hasta_may23
+      meses: 17
+      share_min: 0.0
+      share_max: 0.0901
+      valores_distintos_de_share: 10
+      meses_share_multiplo_de_medio_punto: 10.0
+    - rubro: freelance
+      tramo: desde_jun23
+      meses: 17
+      share_min: 0.0
+      share_max: 0.04
+      valores_distintos_de_share: 2
+      meses_share_multiplo_de_medio_punto: 17.0
+    - rubro: paid_media
+      tramo: hasta_may23
+      meses: 17
+      share_min: 0.3899
+      share_max: 0.52
+      valores_distintos_de_share: 11
+      meses_share_multiplo_de_medio_punto: 9.0
+    - rubro: paid_media
+      tramo: desde_jun23
+      meses: 17
+      share_min: 0.3636
+      share_max: 0.51
+      valores_distintos_de_share: 15
+      meses_share_multiplo_de_medio_punto: 8.0
+    - rubro: software_tools
+      tramo: hasta_may23
+      meses: 17
+      share_min: 0.03
+      share_max: 0.06
+      valores_distintos_de_share: 6
+      meses_share_multiplo_de_medio_punto: 9.0
+    - rubro: software_tools
+      tramo: desde_jun23
+      meses: 17
+      share_min: 0.03
+      share_max: 0.06
+      valores_distintos_de_share: 7
+      meses_share_multiplo_de_medio_punto: 9.0
+    - rubro: team
+      tramo: hasta_may23
+      meses: 17
+      share_min: 0.1199
+      share_max: 0.12
+      valores_distintos_de_share: 2
+      meses_share_multiplo_de_medio_punto: 9.0
+    - rubro: team
+      tramo: desde_jun23
+      meses: 17
+      share_min: 0.1893
+      share_max: 0.3782
+      valores_distintos_de_share: 17
+      meses_share_multiplo_de_medio_punto: 0.0
+    - rubro: travel
+      tramo: hasta_may23
+      meses: 17
+      share_min: 0.06
+      share_max: 0.0701
+      valores_distintos_de_share: 3
+      meses_share_multiplo_de_medio_punto: 9.0
+    - rubro: travel
+      tramo: desde_jun23
+      meses: 17
+      share_min: 0.0599
+      share_max: 0.0702
+      valores_distintos_de_share: 4
+      meses_share_multiplo_de_medio_punto: 9.0
+  claim: C-005
+- id: V-03
+  title: Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndola
+    y de 0,09 a 0,03 excluyéndola.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2024'
+    formato: num2
+    series:
+    - nombre: sm por alta con habilitacion
+      valores:
+      - 0.1054
+      - 0.0357
+    - nombre: sm por alta sin habilitacion
+      valores:
+      - 0.093
+      - 0.0341
+  claim: C-009
+- id: V-05
+  title: 'La serie de Habilitación cambia de composición dentro del panel: Freelance registra su último valor distinto
+    de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde ese corte Habilitación coincide con SoftwareTools,
+    que tiene valor positivo en 34 meses.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: anio
+      nombre: anio
+      formato: int
+    - id: sm_total
+      nombre: sm_total
+      formato: num2
+    - id: habilitacion
+      nombre: habilitacion
+      formato: num2
+    - id: software_tools
+      nombre: software_tools
+      formato: num2
+    - id: freelance
+      nombre: freelance
+      formato: num2
+    - id: share_habilitacion
+      nombre: share_habilitacion
+      formato: num2
+    - id: altas
+      nombre: altas
+      formato: num2
+    - id: sm_por_alta_con_habilitacion
+      nombre: sm_por_alta_con_habilitacion
+      formato: num2
+    - id: sm_por_alta_sin_habilitacion
+      nombre: sm_por_alta_sin_habilitacion
+      formato: num2
+    filas:
+    - anio: 2022
+      sm_total: 28.656
+      habilitacion: 3.352
+      software_tools: 1.224
+      freelance: 2.128
+      share_habilitacion: 0.117
+      altas: 272.0
+      sm_por_alta_con_habilitacion: 0.1054
+      sm_por_alta_sin_habilitacion: 0.093
+    - anio: 2023
+      sm_total: 25.107
+      habilitacion: 1.805
+      software_tools: 1.077
+      freelance: 0.728
+      share_habilitacion: 0.0719
+      altas: 650.0
+      sm_por_alta_con_habilitacion: 0.0386
+      sm_por_alta_sin_habilitacion: 0.0358
+    - anio: 2024
+      sm_total: 19.755
+      habilitacion: 0.853
+      software_tools: 0.853
+      freelance: 0.0
+      share_habilitacion: 0.0432
+      altas: 554.0
+      sm_por_alta_con_habilitacion: 0.0357
+      sm_por_alta_sin_habilitacion: 0.0341
+  claim: C-007
+- id: V-06
+  title: 'No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial
+    o a gasto de producto: el archivo solo trae el nombre del rubro y su monto mensual, sin centro de costo, proveedor
+    ni atribución funcional; agruparlos en Habilitación es una convención del catálogo de métricas.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Fuente del lead y atribución por canal
+      estado: No existe
+      campos: lead_source, channel
+  claim: C-008
+- id: V-07
+  title: 'El peso de Habilitación en el S&M total no es estable: pasa de 12% en 2022 a 7% en 2023 y 4% en 2024,
+    por lo que el nivel del gasto por alta depende de si el rubro se cuenta como comercial.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct0
+    series:
+    - nombre: habilitacion
+      valores:
+      - 0.117
+      - 0.0719
+      - 0.0432
+  claim: C-011
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-103202-c958
+  path: investigations/runs/INV-20260929-103202-c958.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T10:36:18-06:00'
+findings:
+- F-063
+- F-064
+- F-065
+- F-066
+- F-067
+- F-068
+- F-069
+- F-070
+run_ids:
+- INV-20260929-103202-c958
+usage:
+  INV-20260929-103202-c958:
+    cost_usd: 1.2490804999999998
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true

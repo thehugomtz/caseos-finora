@@ -49,8 +49,26 @@ def atomic_write(path: Path, text: str) -> None:
         raise
 
 
+def plain(obj: Any) -> Any:
+    """Values from pandas/numpy (np.float64, arrays, Decimal…) as plain Python, so any result can be written to YAML."""
+    if isinstance(obj, dict):
+        return {k: plain(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple, set)):
+        return [plain(v) for v in obj]
+    if type(obj).__module__ == "numpy":         # np.float64 subclasses float, yet YAML cannot write it: convert first
+        return plain(obj.tolist() if hasattr(obj, "tolist") else obj.item())
+    if obj is None or type(obj) in (str, int, float, bool):
+        return obj
+    for t in (bool, int, float, str):           # subclasses of the plain types
+        if isinstance(obj, t):
+            return t(obj)
+    if type(obj).__name__ == "Decimal":
+        return float(obj)
+    return obj
+
+
 def yaml_dump(data: Any) -> str:
-    return yaml.dump(data, Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=110, default_flow_style=False)
+    return yaml.dump(plain(data), Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=110, default_flow_style=False)
 
 
 def yaml_load(text: str) -> Any:

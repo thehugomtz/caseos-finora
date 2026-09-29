@@ -1,0 +1,91 @@
+id: R-018
+type: research
+research_question: ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden
+  calcular hoy con los datos del caso y cuáles necesitan datos nuevos?
+case_question: Q-003, Q-010, H-017
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 2
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 5 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-003
+    - Q-010
+    - H-017
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L2.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-003
+- Q-010
+- H-017
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T10:32:03-06:00'
+version: 4
+job_id: JOB-20260929-103203-8054
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-018
+slides:
+- S2.5
+task_why: Separa lo que CEO, CRO y CFO pueden ver hoy de lo que requiere datos nuevos, y evita poner CAC, LTV o
+  UCM en la lámina sin base.
+task:
+  work: propuesta
+  draft_answer: Como no sabemos qué mide hoy Finora, propondría un set de métricas y no una lista de «lo que falta».
+    Con el modelo del caso ya salen MRR y ARR (como monto pagado observado), ARPU o MRR por cliente activo, churn
+    observado de clientes y de monto, y expansión y contracción del monto. El CAC combinado depende de documentar
+    la unidad del gasto (RT-004) y de acordar qué cuenta como «adquirir» un cliente. LTV y UCM necesitan margen
+    y costo por cliente, que no tenemos, así que van como definición y dato requerido, sin cifra. Cuando existan
+    descuentos, el MRR se parte en antes y después de descuento, amarrado al modelo de S3.3.
+  hugo_said:
+  - text: No es posible determinar las métricas actuales, pero típicamente pensaría en abordar estos frameworks
+      de Growth (MRR, ARR, ARPU, CAC, LTV, Churn, UCM)
+    ref: N-025
+  steps:
+  - kind: data
+    what: 'Qué métricas salen hoy y con qué nombre, respetando lo que R-001 dice que se puede nombrar: monto pagado
+      (MRR/ARR observados), MRR por cliente activo, churn observado de clientes y de monto, expansión, contracción,
+      reactivación y retención de monto por cosecha.'
+    where:
+    - mart.monthly_metrics
+    - mart.customer_month
+    - mart.vintage_month
+  - kind: research
+    what: Definiciones estándar para SaaS de suscripción mensual (MRR/ARR, ARPU, churn de clientes vs de ingreso,
+      CAC combinado vs pagado, LTV, UCM o margen de contribución, payback), para anclar las fórmulas y no inventarlas.
+    where: []
+  - kind: proposal
+    what: 'Árbol de métricas: definición, fórmula, grano, fuente, dueño y estado (hoy / con dato X / no calculable),
+      y cómo baja a Growth (por puerta) y a Revenue (por componente).'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

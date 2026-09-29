@@ -1,0 +1,99 @@
+id: R-017
+type: research
+research_question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados
+  (industria, banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto
+  y poco volumen?
+case_question: Q-014, Q-012, Q-015, Q-008, H-011, H-019, H-021
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 5
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - Q-014
+    - Q-012
+    - Q-015
+    - Q-008
+    - H-011
+    - H-019
+    - H-021
+    suggested:
+    - Q-018
+    - Q-013
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-014
+- Q-012
+- Q-015
+- Q-008
+- H-011
+- H-019
+- H-021
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T10:32:03-06:00'
+version: 4
+job_id: JOB-20260929-103203-1ee0
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-017
+slides:
+- S2.4
+task_why: Si la pérdida se concentra en un segmento, Growth tiene dónde enfocar y el CRO una prioridad; si está
+  difundida, la lámina lo dice sin inventar grupos (H-019).
+task:
+  work: datos
+  draft_answer: 'Lo investigado (R-005 y R-009, todavía sin aceptar) dice que la industria no parece ser el eje:
+    el patrón aparece difundido, y la caída del MRR por cliente activo viene de quién entra, no de la base previa.
+    Mi arranque: la pérdida se concentra más en el ticket de entrada (pagadores de ticket bajo en las cosechas 2023
+    y 2024) que en una industria. La matriz de burbuja (churn observado × ticket × volumen por industria) va a servir
+    más para ubicar dónde vale la pena crecer que para explicar la caída. Todo esto es sobre pagadores observados,
+    no sobre leads ni canal, y si no hay concentración clara no inventamos grupos.'
+  hugo_said:
+  - text: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento? (este si se podría investigar algo en
+      la data)
+    ref: D-015
+  steps:
+  - kind: data
+    what: 'Cruzar bandas de ticket de entrada (primer pago por cuartiles) × cosecha × industria: cuántos pagadores
+      nuevos y cuánto monto trae cada banda, y cómo cambió la mezcla. Extender R-005 y R-009 sin rehacerlos.'
+    where:
+    - mart.new_customers
+    - mart.vintage_month
+  - kind: data
+    what: Churn observado y regresos por industria, cosecha y banda de ticket de entrada, con un tamaño mínimo por
+      celda para no leer ruido.
+    where:
+    - mart.churn_events
+    - mart.customer_month
+    - mart.new_customers
+  - kind: data
+    what: 'Matriz de burbuja por industria sobre la ventana fijada en RT-003: tasa de churn observado, MRR por cliente
+      activo y clientes activos.'
+    where:
+    - mart.customer_month
+    - mart.churn_events
+  - kind: proposal
+    what: 'La vista de S2.4 (matriz o tabla de concentración) con su límite de lectura: pagadores observados, no
+      leads ni canal, y sin inventar grupos si no hay concentración clara.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)

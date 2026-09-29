@@ -1,0 +1,1177 @@
+id: R-018
+type: research
+research_question: ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden
+  calcular hoy con los datos del caso y cuáles necesitan datos nuevos?
+case_question: Q-010 ¿Qué podemos nombrar y comparar válidamente? Sirve también a Q-003 (¿cómo se conectan cómo
+  conseguimos clientes y qué mueve el ingreso recurrente?) y pone a prueba H-017 (las definiciones y los datos permiten
+  comparar montos y primeras apariciones sin distorsiones importantes).
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 2
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 5 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-003
+    - Q-010
+    - H-017
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-003
+- Q-010
+- H-017
+- F-135
+- F-136
+- F-137
+- F-138
+- F-139
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T11:01:40-06:00'
+version: 5
+job_id: JOB-20260929-103203-8054
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-018
+slides:
+- S2.5
+task_why: Separa lo que CEO, CRO y CFO pueden ver hoy de lo que requiere datos nuevos, y evita poner CAC, LTV o
+  UCM en la lámina sin base.
+task:
+  work: propuesta
+  draft_answer: Como no sabemos qué mide hoy Finora, propondría un set de métricas y no una lista de «lo que falta».
+    Con el modelo del caso ya salen MRR y ARR (como monto pagado observado), ARPU o MRR por cliente activo, churn
+    observado de clientes y de monto, y expansión y contracción del monto. El CAC combinado depende de documentar
+    la unidad del gasto (RT-004) y de acordar qué cuenta como «adquirir» un cliente. LTV y UCM necesitan margen
+    y costo por cliente, que no tenemos, así que van como definición y dato requerido, sin cifra. Cuando existan
+    descuentos, el MRR se parte en antes y después de descuento, amarrado al modelo de S3.3.
+  hugo_said:
+  - text: No es posible determinar las métricas actuales, pero típicamente pensaría en abordar estos frameworks
+      de Growth (MRR, ARR, ARPU, CAC, LTV, Churn, UCM)
+    ref: N-025
+  steps:
+  - kind: data
+    what: 'Qué métricas salen hoy y con qué nombre, respetando lo que R-001 dice que se puede nombrar: monto pagado
+      (MRR/ARR observados), MRR por cliente activo, churn observado de clientes y de monto, expansión, contracción,
+      reactivación y retención de monto por cosecha.'
+    where:
+    - mart.monthly_metrics
+    - mart.customer_month
+    - mart.vintage_month
+  - kind: research
+    what: Definiciones estándar para SaaS de suscripción mensual (MRR/ARR, ARPU, churn de clientes vs de ingreso,
+      CAC combinado vs pagado, LTV, UCM o margen de contribución, payback), para anclar las fórmulas y no inventarlas.
+    where: []
+  - kind: proposal
+    what: 'Árbol de métricas: definición, fórmula, grano, fuente, dueño y estado (hoy / con dato X / no calculable),
+      y cómo baja a Growth (por puerta) y a Revenue (por componente).'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: 'Define qué métricas entran al Overview como salud y con qué nombre, y qué tiene que pedir la Propuesta
+  de Modelo de datos. Si en una lámina aparecen un CAC, un LTV o un ARR calculados con la fórmula estándar a partir
+  de estos datos, el CFO puede rechazarla: el S&M no tiene unidad, no hay margen y lo que llamamos MRR es monto
+  pagado.'
+short_answer: 'Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado»
+  y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn
+  (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acumulado por cohorte. El ARR
+  solo se puede dar como run-rate anualizado. El CAC existe solo como «S&M por alta en unidades reportadas», porque
+  la unidad del gasto no está documentada; el CAC en COP y por motion o canal, el payback, el LTV con margen, el
+  LTV:CAC y el UCM necesitan datos nuevos: unidad del S&M, margen o costo de servir, facturación con periodo de
+  servicio, y motion y canal por cliente. Confianza alta en esta clasificación y media en los proxies (MRR normalizado
+  y churn con gracia), que dependen de reglas que tienes que aprobar tú.'
+claims:
+- claim: 'El panel cubre 1.961 clientes × 34 meses (ene-22 a oct-24), con 33.703 filas en cero explícitas y ninguna
+    negativa: el estado de pago de cada cliente se puede observar mes a mes.'
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Sin montos negativos no hay notas crédito ni reembolsos visibles.
+- claim: 'El mart ya calcula el MRR pagado y su puente de movimientos: en ene-22 había 35,0 millones de COP y 377
+    clientes activos; en oct-24, 97,0 millones de COP y 1.678.'
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Según el catálogo, cuadra al centavo con la Fase 1. Es monto pagado observado, no MRR contratado.
+- claim: El 3,07% del monto pagado del periodo (1,55% de las filas con pago, 325 clientes) corresponde a pagos que
+    son k veces el monto usual del cliente (firma multimes).
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: En el MRR total el peso es bajo; a nivel de movimientos (churn, reactivación, expansión) sí distorsiona.
+- claim: De las 512 filas con firma multimes, 262 llegan después de un mes en cero (patrón de puesta al día), 66
+    antes de un mes en cero (patrón de prepago) y 183 están rodeadas de pagos.
+  source_id: DM-13
+  source_type: data_model
+  confidence: medium
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: 'Los conteos son firmes. Leerlos como atraso o prepago es inferencia: sin factura no se puede confirmar.'
+- claim: 'De 751 eventos de churn observado, 330 vuelven a pagar al mes siguiente: 117 con un pago aproximadamente
+    doble del anterior y 87 con el mismo monto.'
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: El pago doble tras un mes en cero es compatible con un atraso de cobro, no con una cancelación.
+- claim: Tras un churn observado, 330 eventos vuelven en 1 mes, 62 en 2, 24 en 3, 52 en 4 o más, y 283 no vuelven
+    antes de oct-24. Con una regla de 3 o más meses en cero, 392 eventos dejarían de contar como churn.
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: 392 = 330 + 62 (aritmética sobre la consulta). Los 283 incluyen eventos recientes que aún podrían volver.
+- claim: 'Hay 23 churns observados en sep-24 y 33 en oct-24: con una ventana de gracia de 3 meses, esos 56 eventos
+    no se pueden cerrar.'
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Censura a la derecha: los últimos G−1 meses quedan abiertos.'
+- claim: El 16,5% de las expansiones vuelve al monto anterior al mes siguiente, frente al 1,5% de las contracciones.
+  source_id: DM-14
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–sep-24 (se excluye el último mes); consulta 2026-09-29
+  supports_or_contests: contests
+  notes: Parte de la expansión observada son picos de un mes, no upgrades; la contracción parece persistente.
+- claim: El ARPA (MRR pagado por cliente activo) pasa de 92.839 COP en ene-22 a 57.811 COP en oct-24.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es ARPA por cuenta. Aquí no se separa si es efecto mezcla o precio.
+- claim: Por cosecha, el ARPA mensual de la base previa se mueve entre 82.884 y 110.073 COP, y el de la cosecha
+    2024 entre 40.593 y 52.238 COP.
+  source_id: DM-17
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es compatible con un efecto mezcla en el ARPA total; separarlo le toca a Analytics.
+- claim: 22.865 de 32.971 pagos (69%) son múltiplos exactos de 2.100 COP, y hay 395 montos usuales distintos.
+  source_id: DM-09
+  source_type: data_model
+  confidence: medium
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Es compatible con un precio por unidad (¿usuarios o licencias?), pero el modelo no lo confirma: no hay
+    ARPU por usuario.'
+- claim: El modelo no tiene usuarios o licencias, plan, intervalo de facturación, periodo de servicio, motion, canal,
+    margen ni costo de servir, y la unidad del S&M no está documentada.
+  source_id: DM-00
+  source_type: data_model
+  confidence: low
+  freshness: Catálogo consultado 2026-09-29
+  supports_or_contests: context
+  notes: Por esto CAC en COP, payback, LTV con margen, LTV:CAC, UCM y ARPU por usuario quedan en rojo. · fuente
+    no recuperada en la corrida (CaseOS)
+  unverified: true
+- claim: M1 es menor que M0 en 66 de las 272 altas de la cosecha 2022, en 48 de 650 de 2023 y en 68 de 554 de 2024
+    (y en 56 de las 108 altas de feb-22).
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: El ARPA de entrada debe usar M1 o el monto usual. En 2024 hay 50 altas sin M1 (oct-24).
+- claim: El ingreso observado acumulado por alta en sus primeros 12 meses es de 706.688 COP en la cosecha 2022 (272
+    altas) y de 496.402 COP en la cosecha 2023 con alta hasta oct-23 (523 altas). En M12 siguen pagando el 87,1%
+    y el 89,1%, respectivamente.
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Es un LTV empírico de ingreso a 12 meses, no un LTV con margen. «Paga en M12» subestima la retención cuando
+    hay huecos de cobro.
+- claim: 1.476 clientes están en cohortes limpias (desde mar-22), 377 son base previa (ya activos en ene-22) y 108
+    son altas de feb-22 con sospecha de arrastre.
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Define el alcance comparable para el ARPA de entrada, la retención y el S&M por alta (Q-010).
+- claim: El gasto S&M llega como texto con «$» y tres decimales (por ejemplo, «$1.040» en Paid Media de ene-22),
+    sin unidad ni moneda.
+  source_id: DM-18
+  source_type: data_model
+  confidence: high
+  freshness: Archivo crudo; consulta 2026-09-29
+  supports_or_contests: context
+  notes: El catálogo lo marca como unidad no documentada y no lo convierte a COP.
+- claim: 'Entre mar-22 y oct-24 el S&M suma 73,518 unidades para 1.476 altas limpias: 0,0498 unidades por alta.'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos mar-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Es una razón en unidades del archivo: no es un CAC en COP y no se puede comparar con el ARPA.'
+- claim: En los 34 meses, Team + PayrollExpenses son el 26% del S&M y Paid Media el 44%. Generación de Demanda suma
+    46,181 unidades, la capacidad comercial 25,24 y Habilitación 6,397.
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: No sabemos si Team incluye KAM o retención; eso cambia qué entra en el CAC.
+- claim: 'La industria es la única dimensión de segmentación disponible: Restaurantes 529, Producción 454, Retail
+    428, Tecnología 241, Servicios profesionales 165 y Salud 144 clientes.'
+  source_id: DM-15
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: No hay motion ni canal de adquisición.
+- claim: Los montos usuales más frecuentes son 42.000 COP (146 clientes), 63.000 COP (122) y 31.500 COP (106).
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: El tramo de monto usual sirve hoy como proxy de plan.
+- claim: 'Estándar: el MRR es ingreso recurrente normalizado; los pagos de periodos largos se dividen entre los
+    meses del intervalo y se excluyen los cargos únicos o de setup.'
+  source_id: EXT-01
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29; fecha de publicación no visible
+  supports_or_contests: context
+  notes: Es la base del MRR normalizado. Es definición, no evidencia sobre Finora.
+- claim: ChartMogul clasifica los movimientos de MRR en new business, expansión, contracción, churn, reactivación
+    y neutral.
+  source_id: EXT-02
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: supports
+  notes: El puente del mart sigue esta misma lógica.
+- claim: Por defecto, las suscripciones en mora siguen sumando al MRR y a los clientes activos hasta que se cancelan;
+    se pueden dar de baja automáticamente tras un periodo de mora que elige la empresa.
+  source_id: EXT-03
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Muestra que la ventana de gracia es una decisión de política, no un dato.
+- claim: El momento de reconocer el churn (al pedir la cancelación, al final del periodo pagado o cuando termina
+    en el sistema de cobro) es una elección que cambia el MRR reportado.
+  source_id: EXT-04
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: No trata el churn involuntario ni los pagos fallidos.
+- claim: ARPA = MRR ÷ clientes activos. ARPA y ARPU usan la misma fórmula, pero la unidad cambia (cuenta frente
+    a usuario). Se recomienda seguir aparte el precio promedio de los clientes nuevos.
+  source_id: EXT-05
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Justifica llamar ARPA a lo que se pide como ARPU.
+- claim: El churn bruto de MRR = (churn + contracción) ÷ MRR al inicio del periodo; el churn neto resta además la
+    expansión y la reactivación.
+  source_id: EXT-06
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Base de las definiciones de GRR y NRR.
+- claim: LTV simple = ARPA × margen bruto ÷ churn de clientes. Asume churn lineal e ignora la expansión.
+  source_id: EXT-07
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29; la página cita un análisis de 2026
+  supports_or_contests: context
+  notes: Necesita margen, que no existe en el caso.
+- claim: Multiplicar por 12 los bookings de un mes para llegar al ARR es un error común cuando incluye cargos no
+    recurrentes.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29; fecha de publicación no verificada
+  supports_or_contests: context
+  notes: Por eso el ARR aquí solo puede ser run-rate.
+- claim: El CAC debe ser el costo completo de adquisición. El CAC blended no dice si la adquisición pagada es rentable;
+    por eso importa el paid CAC.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Para el paid CAC hace falta el canal por cliente.
+- claim: Un error común es estimar el LTV como valor presente del ingreso, o incluso del margen bruto, en lugar
+    de la utilidad neta del cliente.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Refuerza no llamar LTV al ingreso acumulado.
+- claim: Conviene examinar qué segmentos recuperan antes el CAC o tienen mayor LTV:CAC, y medir cohortes por clientes
+    y por revenue. Como referencia, Skok menciona payback de 5–7 meses y LTV:CAC mayor que 3 en los mejores SaaS.
+  source_id: EXT-09
+  source_type: expert
+  confidence: medium
+  freshness: Consultado 2026-09-29; fecha no verificada
+  supports_or_contests: context
+  notes: Son benchmarks de contexto, no metas para Finora.
+- claim: CAC = S&M total ÷ clientes nuevos; CAC payback = CAC ÷ (ingreso mensual por cliente × margen bruto).
+  source_id: EXT-10
+  source_type: industry
+  confidence: medium
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: El payback exige margen y un CAC en moneda conocida.
+- claim: Margen de contribución = ingreso por unidad − costo variable por unidad. En SaaS, los costos variables
+    incluyen infraestructura, procesamiento de pagos, onboarding/implementación, customer success y herramientas
+    por usuario.
+  source_id: EXT-11
+  source_type: industry
+  confidence: medium
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Leo UCM como Unit Contribution Margin (inferencia; conviene confirmarlo con Finora).
+sources:
+- id: DM-00
+  title: Qué tablas y columnas existen en el modelo (catálogo)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: catalogo_modelo() — listado de tablas y columnas (no es SQL). No hay usuarios/licencias, plan, intervalo
+    de facturación, periodo de servicio, motion, canal, margen ni costo de servir; S&M con unidad no documentada.
+  verified: false
+- id: DM-01
+  title: 'Métricas mensuales: MRR pagado, movimientos, ARPA, churn, NRR y S&M (ene-22–oct-24)'
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT month, window_flag, active_customers, new_customers, churned_customers, reactivated_customers, expanded_customers,
+    contracted_customers, total_paid_mrr_cop, new_mrr_cop, expansion_mrr_cop, reactivation_mrr_cop, contraction_mrr_cop,
+    churned_mrr_cop, mrr_per_active_customer_cop, logo_churn_rate, gross_mrr_churn_rate, net_mrr_retention_existing,
+    quick_ratio, total_sm_spend, multi_month_payment_signatures, share_churn_returning_next_month FROM mart.monthly_metrics_phase1
+    ORDER BY month
+  verified: true
+- id: DM-02
+  title: Cobertura del panel cliente × mes
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month)
+    AS primer_mes, MAX(month) AS ultimo_mes, SUM(CASE WHEN observed_amount = 0 THEN 1 ELSE 0 END) AS filas_en_cero,
+    SUM(CASE WHEN observed_amount > 0 THEN 1 ELSE 0 END) AS filas_con_pago, SUM(CASE WHEN observed_amount < 0 THEN
+    1 ELSE 0 END) AS filas_negativas, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS filas_firma_multimes
+    FROM mart.customer_month
+  verified: true
+- id: DM-03
+  title: Peso de los pagos con firma multimes en el monto total
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT ROUND(SUM(CASE WHEN multi_month_payment_signature > 0 THEN paid_mrr_cop ELSE 0 END)/SUM(paid_mrr_cop),4)
+    AS share_monto_firma_multimes, ROUND(1.0*SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END)/SUM(CASE
+    WHEN observed_amount > 0 THEN 1 ELSE 0 END),4) AS share_filas_firma_multimes, COUNT(DISTINCT CASE WHEN multi_month_payment_signature
+    > 0 THEN customer_id END) AS clientes_con_firma FROM mart.customer_month
+  verified: true
+- id: DM-04
+  title: Meses hasta volver a pagar tras un churn observado
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT CASE WHEN months_to_return IS NULL THEN 'no vuelve antes de oct-24' WHEN months_to_return = 1 THEN
+    '1 mes' WHEN months_to_return = 2 THEN '2 meses' WHEN months_to_return = 3 THEN '3 meses' WHEN months_to_return
+    BETWEEN 4 AND 6 THEN '4-6 meses' ELSE '7+ meses' END AS vuelve_en, COUNT(*) AS eventos_churn FROM mart.churn_events
+    GROUP BY 1 ORDER BY 1
+  verified: true
+- id: DM-05
+  title: Churn observado que vuelve en t+1 y con qué monto
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS churn_rows, SUM(c.returned_next_month) AS vuelve_t1, SUM(c.returned_same_amount_next_month)
+    AS vuelve_t1_mismo_monto, SUM(CASE WHEN n.observed_amount > 0 AND ABS(n.observed_amount*10000 - 2*c.previous_month_mrr)
+    <= 0.005*2*c.previous_month_mrr THEN 1 ELSE 0 END) AS vuelve_t1_con_doble_pago, SUM(CASE WHEN c.month_index
+    >= 31 THEN 1 ELSE 0 END) AS churn_en_ultimos_3_meses FROM mart.customer_month c LEFT JOIN mart.customer_month
+    n ON n.customer_id = c.customer_id AND n.month_index = c.month_index + 1 WHERE c.churned_customer = 1
+  verified: true
+- id: DM-06
+  title: Composición del gasto S&M del periodo (unidades reportadas)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT ROUND(SUM(demand_gen_spend),3) AS generacion_demanda, ROUND(SUM(sales_capacity_spend),3) AS capacidad_comercial_team,
+    ROUND(SUM(enablement_spend),3) AS habilitacion, ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(team + payroll_expenses)/SUM(total_sm_spend),3)
+    AS share_team_payroll, ROUND(SUM(paid_media)/SUM(total_sm_spend),3) AS share_paid_media, COUNT(*) AS meses FROM
+    mart.sm_monthly
+  verified: true
+- id: DM-07
+  title: S&M por alta en la ventana limpia (mar-22–oct-24)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT ROUND(SUM(total_sm_spend),3) AS sm_mar22_oct24_unidades, SUM(new_customers) AS altas_mar22_oct24,
+    ROUND(SUM(total_sm_spend)/SUM(new_customers),5) AS sm_por_alta_unidades, ROUND(SUM(new_mrr_cop),0) AS new_mrr_cop_total
+    FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean'
+  verified: true
+- id: DM-08
+  title: Montos usuales más frecuentes por cliente (proxy de plan)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT usual_amount_cop, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY usual_amount_cop
+    ORDER BY clientes DESC LIMIT 12
+  verified: true
+- id: DM-09
+  title: Pagos que son múltiplos de 2.100 COP y número de montos usuales
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS filas_con_pago, SUM(CASE WHEN CAST(ROUND(observed_amount*100) AS BIGINT) % 21 = 0 THEN
+    1 ELSE 0 END) AS filas_multiplo_2100_cop, COUNT(DISTINCT usual_amount_cop) AS montos_usuales_distintos FROM
+    mart.customer_month WHERE observed_amount > 0
+  verified: true
+- id: DM-10
+  title: Clientes por bandera de cohorte (limpia, base previa, arrastre feb-22)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag
+    ORDER BY 1
+  verified: true
+- id: DM-11
+  title: Primer pago (M0) frente a segundo mes (M1) por cosecha
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT vintage, COUNT(*) AS altas, SUM(CASE WHEN m1_cop IS NULL THEN 1 ELSE 0 END) AS sin_m1, SUM(CASE WHEN
+    m1_cop > m0_cop THEN 1 ELSE 0 END) AS m1_mayor_m0, SUM(CASE WHEN m1_cop = m0_cop THEN 1 ELSE 0 END) AS m1_igual_m0,
+    SUM(CASE WHEN m1_cop < m0_cop THEN 1 ELSE 0 END) AS m1_menor_m0, ROUND(MEDIAN(m0_cop),0) AS mediana_m0, ROUND(MEDIAN(early_run_rate_cop),0)
+    AS mediana_run_rate FROM mart.new_customers GROUP BY vintage ORDER BY vintage
+  verified: true
+- id: DM-12
+  title: Ingreso observado acumulado a 12 meses por alta y % pagando en M12 (cohortes limpias hasta oct-23)
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT vintage, COUNT(DISTINCT customer_id) AS altas, ROUND(SUM(CASE WHEN tenure_month BETWEEN 0 AND 11
+    THEN paid_mrr_cop ELSE 0 END)/COUNT(DISTINCT customer_id),0) AS ingreso_obs_12m_por_alta_cop, ROUND(1.0*COUNT(DISTINCT
+    CASE WHEN tenure_month = 12 AND observed_amount > 0 THEN customer_id END)/COUNT(DISTINCT customer_id),3) AS
+    share_pagando_m12 FROM mart.customer_month WHERE cohort_flag = 'clean' AND cohort_month <= '2023-10' GROUP BY
+    vintage ORDER BY vintage
+  verified: true
+- id: DM-13
+  title: 'Contexto de los pagos multimes: mes previo o siguiente en cero'
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT c.multi_month_payment_signature >= 2 AS firma, COUNT(*) AS filas, SUM(CASE WHEN p.observed_amount
+    = 0 THEN 1 ELSE 0 END) AS mes_previo_en_cero, SUM(CASE WHEN n.observed_amount = 0 THEN 1 ELSE 0 END) AS mes_siguiente_en_cero,
+    SUM(CASE WHEN p.observed_amount > 0 AND (n.observed_amount > 0) THEN 1 ELSE 0 END) AS rodeado_de_pagos FROM
+    mart.customer_month c LEFT JOIN mart.customer_month p ON p.customer_id = c.customer_id AND p.month_index = c.month_index
+    - 1 LEFT JOIN mart.customer_month n ON n.customer_id = c.customer_id AND n.month_index = c.month_index + 1 WHERE
+    c.multi_month_payment_signature >= 2 GROUP BY 1
+  verified: true
+- id: DM-14
+  title: Expansiones y contracciones que vuelven al monto anterior en t+1
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS filas, SUM(reverts_next_month) AS revierte_t1, ROUND(1.0*SUM(reverts_next_month)/COUNT(*),3)
+    AS share_revierte FROM mart.customer_month WHERE movement_type IN ('expansion','contraction') AND month_index
+    < 33 GROUP BY movement_type
+  verified: true
+- id: DM-15
+  title: Clientes por industria
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC
+  verified: true
+- id: DM-17
+  title: Rango de ARPA mensual por cosecha
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT vintage, MIN(month) AS desde, MAX(month) AS hasta, ROUND(MIN(arpa_cop),0) AS arpa_min, ROUND(MAX(arpa_cop),0)
+    AS arpa_max FROM mart.vintage_month GROUP BY vintage ORDER BY vintage
+  verified: true
+- id: DM-18
+  title: Formato crudo del archivo de gasto S&M
+  url: ''
+  publisher: Finora · modelo analítico (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT * FROM raw.sm_spend LIMIT 5
+  verified: true
+- id: EXT-01
+  title: MRR (Monthly Recurring Revenue) — definición y cálculo
+  url: https://chartmogul.com/saas-metrics/mrr/
+  publisher: ChartMogul
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: MRR normalizado; pagos multi-periodo ÷ meses del intervalo; excluye cargos únicos o de setup.
+  verified: true
+- id: EXT-02
+  title: Understanding MRR movements
+  url: https://help.chartmogul.com/hc/en-us/articles/4416682609426-Understanding-MRR-movements
+  publisher: ChartMogul Help Center
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: 'Taxonomía de movimientos: new business, expansión, contracción, churn, reactivación y neutral.'
+  verified: true
+- id: EXT-03
+  title: Handling past-due subscriptions
+  url: https://help.chartmogul.com/article/303-handling-past-due-subscriptions
+  publisher: ChartMogul Help Center
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: La mora sigue en el MRR por defecto; opción de dar de baja automáticamente tras un periodo elegido.
+  verified: true
+- id: EXT-04
+  title: When should you recognize churn?
+  url: https://chartmogul.com/blog/when-should-you-recognize-churn/
+  publisher: ChartMogul
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: Tres momentos posibles para reconocer el churn; la elección cambia el MRR reportado. No trata el churn involuntario.
+  verified: true
+- id: EXT-05
+  title: Average Revenue Per Account (ARPA)
+  url: https://chartmogul.com/saas-metrics/arpa/
+  publisher: ChartMogul
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: ARPA = MRR ÷ clientes; ARPA frente a ARPU; seguir aparte el ARPA de los nuevos.
+  verified: true
+- id: EXT-06
+  title: Revenue churn (net and gross revenue churn rate)
+  url: https://chartmogul.com/saas-metrics/revenue-churn/
+  publisher: ChartMogul
+  date: Sin fecha visible; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: Fórmulas de churn bruto y neto de MRR.
+  verified: true
+- id: EXT-07
+  title: Customer Lifetime Value (LTV)
+  url: https://chartmogul.com/saas-metrics/ltv/
+  publisher: ChartMogul
+  date: Contenido que cita un análisis de 2026; consultado 2026-09-29
+  source_type: industry
+  quality: B
+  note: LTV = ARPA × margen ÷ churn; advierte que asume churn lineal e ignora la expansión.
+  verified: true
+- id: EXT-08
+  title: 16 Startup Metrics
+  url: https://a16z.com/16-startup-metrics/
+  publisher: Andreessen Horowitz (a16z)
+  date: Fecha de publicación no verificada; consultado 2026-09-29
+  source_type: expert
+  quality: B
+  note: ARR frente a mes × 12; blended CAC frente a paid CAC; CAC como costo completo; LTV como utilidad neta.
+  verified: true
+- id: EXT-09
+  title: SaaS Metrics 2.0 (David Skok)
+  url: https://www.forentrepreneurs.com/saas-metrics-2/
+  publisher: For Entrepreneurs (David Skok)
+  date: Fecha no verificada; consultado 2026-09-29
+  source_type: expert
+  quality: B
+  note: Análisis por segmento y cohortes; benchmarks de payback y LTV:CAC (solo contexto).
+  verified: true
+- id: EXT-10
+  title: How to Calculate Unit Economics for Startups (LTV, CAC & More)
+  url: https://kruzeconsulting.com/blog/unit-economics/
+  publisher: Kruze Consulting
+  date: Fecha no verificada; consultado 2026-09-29
+  source_type: industry
+  quality: C
+  note: Fórmulas de CAC, CAC payback con margen y LTV con margen.
+  verified: true
+- id: EXT-11
+  title: What contribution margin tells you about your SaaS cost structure and profit potential
+  url: https://www.drivetrain.ai/strategic-finance-glossary/contribution-margin
+  publisher: Drivetrain
+  date: Fecha no verificada; consultado 2026-09-29
+  source_type: industry
+  quality: C
+  note: Margen de contribución = ingreso por unidad − costo variable por unidad; lista de costos variables en SaaS.
+  verified: true
+alternative_explanations:
+- 'Los meses en cero seguidos de un pago doble pueden ser atrasos de cobro con el servicio activo o pausas reales
+  del servicio que luego se pagan: los pagos no permiten distinguirlos.'
+- Los pagos multimes rodeados de pagos (183 filas) pueden ser cargos únicos, add-ons o consumo variable, y no varios
+  meses de suscripción.
+- La caída del ARPA total es compatible con un efecto mezcla (cosechas nuevas con ARPA menor), pero también con
+  cambios de precio o de plan dentro de las cohortes; aquí no se separó.
+- Que M0 sea mayor que M1 puede deberse a un cargo de alta, al prorrateo del primer mes o a pagos de arrastre (sobre
+  todo en feb-22), y no necesariamente a un cliente que vale menos.
+- Una razón S&M por alta estable puede esconder rezagos entre el gasto y la alta, y «altas» que en realidad son
+  clientes anteriores a 2022 que vuelven a pagar.
+what_is_established:
+- El panel cliente × mes está completo (1.961 × 34 meses, ene-22–oct-24), con ceros explícitos y sin montos negativos.
+- El puente de MRR pagado (altas, expansión, reactivación, contracción y churn) ya se calcula en el mart y cuadra
+  con la Fase 1.
+- 'La unidad es el cliente (cuenta): el modelo no tiene usuarios o licencias, plan, intervalo de facturación, periodo
+  de servicio, motion, canal, margen ni costo de servir.'
+- 'El gasto S&M no tiene unidad documentada: hoy no hay CAC en COP.'
+- 'El churn observado incluye muchos regresos rápidos: 330 de 751 eventos vuelven a pagar al mes siguiente.'
+- Según el estándar externo (ChartMogul, a16z), el MRR normaliza los pagos multi-periodo y excluye cargos únicos,
+  el ARR no es un mes × 12 cuando hay cargos no recurrentes, y el LTV requiere margen.
+what_is_contested:
+- Si el monto pagado equivale a MRR recurrente (la recurrencia no está confirmada).
+- 'Qué ventana de gracia define el churn (1, 2 o 3 meses): es una política, no un hecho.'
+- Si Team y PayrollExpenses son gasto de adquisición o incluyen KAM o retención.
+- Si la caída del ARPA se debe a la mezcla de cohortes o a cambios de precio o plan.
+- Si la «alta» (primera aparición) equivale a la adquisición del cliente.
+what_remains_unknown:
+- Unidad y moneda del archivo de S&M.
+- Margen bruto y costos variables por cliente (necesarios para LTV con margen y UCM).
+- Plan, precio de lista, intervalo de facturación y licencias por cliente.
+- Motion (Self Service, Assisted, Executive) y canal (Digital, KAM) de cada cliente.
+- Historia de los clientes antes de ene-22.
+- Qué entiende Finora por UCM (aquí se asume Unit Contribution Margin).
+case_implication: 'Para el Overview, el set defendible es este: MRR pagado observado con su puente, clientes activos,
+  ARPA por cliente (también por cohorte), churn observado mostrado junto a un churn con ventana de gracia, NRR/GRR
+  de la base, y retención e ingreso acumulado por cohorte limpia. El ARR solo tiene sentido como run-rate anualizado,
+  y únicamente si el CEO lo necesita. CAC, payback, LTV con margen, LTV:CAC y UCM pasan a la Propuesta de Modelo
+  de datos como huecos del WoW, cada uno con el dato que lo destraba. Respecto de Q-010: el monto pagado y las primeras
+  apariciones se pueden nombrar y comparar dentro de cohortes limpias (desde mar-22), pero el churn, la reactivación
+  y la expansión observados tienen distorsiones de cobro que hay que neutralizar con una regla o declarar abiertamente.
+  Respecto de Q-003: hoy el vínculo entre cómo conseguimos clientes y el ingreso recurrente solo se puede mostrar
+  por cohorte e industria, no por motion ni por canal de adquisición.'
+changes_current_story:
+  value: maybe
+  why: 'No cambia la dirección del Overview. Pero si alguna lámina usa hoy «churn» como sinónimo de churn observado,
+    la cifra cambia al aplicar una ventana de gracia: 392 de 751 eventos vuelven en 1–2 meses. Y si se mencionan
+    CAC o LTV como números, deben salir de la lámina y pasar a los huecos de datos.'
+affected_hypotheses:
+- id: H-017
+  effect: weakens
+  why: 'H-017 se sostiene para el MRR total: los pagos multimes pesan el 3,07% del monto. Se debilita a nivel de
+    movimiento: el 44% del churn observado vuelve en t+1 (117 casos con pago doble), el 16,5% de las expansiones
+    revierte al mes siguiente, y en parte de las altas M0 ≠ M1. Hay que ajustar nombres y alcance (churn con regla
+    explícita, ARPA de entrada con M1) antes de interpretar.'
+affected_claims: []
+suggested_action: 'Te propongo tres pasos. (1) Aprobar los nombres del Overview: MRR pagado observado, ARPA por
+  cliente, churn observado frente a churn con gracia, y ARR run-rate. (2) Decidir la regla de churn (propuesta base:
+  3 meses en cero, con sensibilidad a 1 y 2) y si se construye el MRR normalizado. (3) Pedir a Finora, dentro de
+  la Propuesta de Modelo de datos: la unidad del S&M y la asignación de Team, el margen bruto o costo de servir,
+  un export de facturación con periodo de servicio y concepto, y el motion y canal de cada cliente.'
+new_questions:
+- ¿En qué unidad y moneda está el archivo de S&M, y qué parte de Team/PayrollExpenses es adquisición y qué parte
+  KAM o retención?
+- ¿Los meses en cero seguidos de un pago doble son atrasos de cobro con el servicio activo o pausas del servicio?
+  (Se responde con facturación o con uso del producto).
+- ¿Qué entiende Finora por UCM y qué costos variables por cliente tiene (infraestructura, pasarela de pagos, soporte/onboarding)?
+handoff_to_cos:
+  summary: 'R-018: de las 7 métricas, se pueden calcular hoy el MRR (como pagado observado), el ARPA (no ARPU por
+    usuario), el churn y las cohortes. El ARR solo como run-rate y el CAC solo como S&M por alta en unidades sin
+    documentar; LTV con margen, payback, LTV:CAC y UCM necesitan datos nuevos. Las distorsiones de cobro (atrasos
+    y pagos multimes) inflan el churn y la expansión observados, lo que debilita H-017 a nivel de movimiento.'
+  recommended_next: 'Llevar a Hugo dos decisiones: los nombres de las métricas del Overview y la regla de churn
+    con ventana de gracia (G=3 como base, sensibilidad 1–2). Pasar a Data Engineering la construcción de las vistas
+    de MRR normalizado y churn con gracia, y a la Propuesta de Modelo de datos la lista de eventos en rojo (S&M
+    con unidad, costo de servir, facturación con periodo de servicio, motion y canal).'
+confidence_buckets:
+  high_confidence:
+  - MRR pagado observado, puente de MRR, clientes activos, ARPA por cliente, churn observado, NRR/GRR de la base
+    y cohortes se pueden calcular hoy.
+  - CAC en COP, payback, LTV con margen, LTV:CAC y UCM no se pueden calcular con el modelo actual.
+  - 'El churn observado está inflado por regresos rápidos: 330 de 751 vuelven en t+1.'
+  plausible:
+  - Una parte de los ceros son atrasos de cobro (117 regresos con pago doble).
+  - La caída del ARPA total refleja en parte la mezcla de cohortes.
+  - Los montos múltiplos de 2.100 COP sugieren un precio por unidad (usuarios o licencias).
+  contested:
+  - Que el monto pagado equivalga a MRR recurrente.
+  - Cuál es la ventana de gracia correcta para el churn.
+  - Que Team/Payroll sea íntegramente gasto de adquisición.
+  unknown:
+  - Unidad del S&M.
+  - Margen bruto y costo de servir.
+  - Motion y canal de cada cliente.
+  - Qué significa UCM para Finora.
+specialist:
+  measurement:
+    problem_interpretation: 'Pides un set de métricas SaaS (MRR, ARR, ARPU, CAC, LTV, Churn, UCM). Las definiciones
+      estándar ya existen; el problema real es cuáles se sostienen con lo que hay (pagos observados por cliente
+      y mes, y gasto S&M sin unidad) y con qué nombre. Unidad: cliente (cuenta, «Cliente N»). Grano: cliente × mes.
+      Hito de inicio: la primera aparición con pago dentro de ene-22–oct-24, que no es la adquisición. Dinero: monto
+      × 10.000 = COP, y es monto pagado observado, no contratado. No hay datos de leads, motion, canal, plan, usuarios,
+      margen ni costo de servir.'
+    measurement_objective: Dar al Overview un set mínimo de salud separado en volumen (clientes activos, altas),
+      tasa (churn, retención, NRR/GRR) y valor (MRR, ARPA, ingreso acumulado por alta), todo con nombre honesto.
+      Y convertir CAC, payback, LTV con margen y UCM en requerimientos concretos (evento + dimensión) para la Propuesta
+      de Modelo de datos.
+    recommended_framework:
+      name: Árbol de ingreso recurrente con semáforo de medibilidad
+      structure: 'Resultado: MRR (el pagado observado y, como proxy, el normalizado). Puente mensual: altas + expansión
+        + reactivación − contracción − churn. Drivers: clientes activos × ARPA; altas × ARPA de entrada; retención
+        de logos e ingreso por cohorte. Economía unitaria: ingreso acumulado por alta (hoy) × margen = LTV (dato
+        nuevo); S&M ÷ altas (hoy, en unidades del archivo) → CAC en COP por motion y canal (dato nuevo) → payback
+        y LTV:CAC; UCM = ARPA − costo variable (dato nuevo). Cada métrica lleva semáforo: VERDE = se calcula hoy
+        con nombre honesto; AMARILLO = hoy como proxy, con una regla a aprobar y sensibilidad; ROJO = requiere datos
+        nuevos (y se dice cuáles).'
+      why: Responde exactamente a la pregunta (qué se mide, cómo, qué sale hoy y qué necesita datos nuevos). Respeta
+        las reglas del caso (monto observado ≠ MRR contratado; primera aparición ≠ adquisición), separa volumen,
+        tasa y valor, y conecta cada métrica en rojo con el evento que la habilita, que es justo el insumo de la
+        Propuesta de Modelo de datos. Evita una tasa de conversión mezclada que no describe a nadie.
+    alternative_frameworks:
+    - name: Tablero SaaS clásico con benchmarks (MRR/ARR/ARPU/CAC/LTV/Churn con estado HEALTHY/WATCH/CRITICAL)
+      when_better: Cuando hay facturación contractual (plan, intervalo, periodo de servicio), S&M en moneda conocida
+        y margen bruto.
+      tradeoff: Aquí presentaría proxies como hechos e invitaría a comparar con benchmarks (LTV:CAC mayor que 3,
+        payback de 5–7 meses) que no aplican a datos sin margen ni unidad.
+    - name: Cohortes primero (grid de logos e ingreso + ingreso acumulado por alta)
+      when_better: Cuando la decisión es sobre la calidad de la retención y el valor por cosecha, y el CAC no se
+        puede medir.
+      tradeoff: No da una foto mensual de salud para el CEO, y las cohortes recientes están censuradas a la derecha.
+    metric_definitions:
+    - metric: MRR pagado observado (lo que hoy se llama MRR)
+      definition: Suma de lo que pagaron los clientes en el mes, en COP. Es monto cobrado observado, no MRR contratado.
+      formula: MRR_obs(m) = Σ_c amount(c,m) × 10.000
+      grain: mes (agregado de cliente × mes)
+      milestone: mes calendario de cobro
+      notes: 'VERDE. Ya existe en el mart: 35,0 millones de COP en ene-22 y 97,0 millones en oct-24. Incluye atrasos
+        y pagos multimes (3,07% del monto). No compararlo con benchmarks de MRR contractual.'
+    - metric: Puente de MRR (altas, expansión, reactivación, contracción, churn)
+      definition: Descompone el cambio mensual del MRR pagado en cinco movimientos, clasificados cliente por cliente.
+      formula: ΔMRR_obs(m) = new + expansión + reactivación − contracción − churn
+      grain: cliente × mes → mes
+      milestone: 'mes calendario; primer mes clasificable: feb-22 (con posible arrastre)'
+      notes: 'VERDE (cuadra con la Fase 1). Leer los movimientos con cuidado: el 44% del churn observado vuelve
+        en t+1 y el 16,5% de las expansiones revierte al mes siguiente. El quick ratio está disponible, pero es
+        muy ruidoso mes a mes (de 0,33 a 8,07): mejor usarlo trimestral.'
+    - metric: MRR normalizado (proxy de MRR recurrente)
+      definition: 'MRR re-expresado por mes de servicio: los pagos que son k veces el monto usual se reparten entre
+        los k meses que cubren, y los excedentes sin patrón se reportan aparte.'
+      formula: Si hay firma k≥2 y los k−1 meses previos están en cero → amount/k en cada uno (puesta al día). Si
+        los ceros vienen después → amount/k hacia adelante (prepago). Si está rodeado de pagos → monto usual en
+        el MRR y el excedente en «no clasificado». En el resto de filas, monto observado.
+      grain: cliente × mes → mes
+      milestone: mes de servicio inferido (no de cobro)
+      notes: AMARILLO. Es una regla que tienes que aprobar; mostrarlo siempre junto al observado. Sigue el estándar
+        de repartir los pagos multi-periodo entre los meses del intervalo (EXT-01). Sin periodo de servicio en la
+        factura, es inferencia.
+    - metric: ARR (run-rate anualizado)
+      definition: Foto anualizada del MRR normalizado. Se llama run-rate, no ARR contractual.
+      formula: 'ARR_rr(m) = 12 × MRR_norm(m); sensibilidad: 12 × promedio de 3 meses del MRR_obs'
+      grain: mes (cierre)
+      milestone: cierre de mes
+      notes: AMARILLO. Según a16z, multiplicar un mes × 12 cuando hay cargos no recurrentes no es ARR. Si no se
+        aprueba el MRR normalizado, mejor no mostrar ARR.
+    - metric: ARPA por cliente (lo que se pide como ARPU)
+      definition: 'Monto mensual promedio por cliente activo. Unidad: cuenta («Cliente N»), no usuario.'
+      formula: ARPA(m) = MRR(m) ÷ clientes con pago > 0 en m; también por cohorte y por industria
+      grain: mes; mes × cohorte; mes × industria
+      milestone: mes calendario
+      notes: 'VERDE. Pasa de 92.839 COP (ene-22) a 57.811 COP (oct-24). Reportarlo por cohorte: la base previa se
+        mueve entre 82.884 y 110.073 COP y la cosecha 2024 entre 40.593 y 52.238 COP. El ARPU por usuario está en
+        ROJO (no hay usuarios ni licencias).'
+    - metric: ARPA de entrada (altas)
+      definition: Monto mensual estabilizado con el que entra una cohorte.
+      formula: Mediana de M1 (o del monto usual) de las altas de la cohorte; no usar M0
+      grain: cohorte mensual o anual
+      milestone: primera aparición (M0) → M1
+      notes: VERDE, solo en cohortes limpias (desde mar-22). M1 es menor que M0 en 66 de 272 altas de 2022, 48 de
+        650 de 2023 y 68 de 554 de 2024. ChartMogul y Skok recomiendan seguirlo aparte del ARPA total.
+    - metric: Churn de logos observado
+      definition: Clientes que pagaron el mes anterior y este mes pagan cero, sobre los activos del mes anterior.
+        No es cancelación.
+      formula: 'churn_obs(m) = #c{pago(m−1) > 0 y pago(m) = 0} ÷ activos(m−1)'
+      grain: mes
+      milestone: primer mes en cero
+      notes: 'VERDE como dato, pero sesgado al alza como «churn»: 330 de 751 eventos vuelven a pagar al mes siguiente
+        (117 con pago doble). Rango mensual entre 1,0% y 11,3% (mar-22–oct-24).'
+    - metric: Churn de logos con ventana de gracia G
+      definition: Cliente que pagó en m−1 y no paga en ninguno de los G meses siguientes. Si vuelve después, cuenta
+        como reactivación.
+      formula: 'churn_G(m) = #c{pago(m−1) > 0 y pago = 0 en m…m+G−1} ÷ activos(m−1); base G=3, sensibilidad G=1
+        (= observado) y G=2'
+      grain: mes (del primer mes sin pago)
+      milestone: último mes con pago
+      notes: 'AMARILLO: política a aprobar. Con G=3, 392 de 751 eventos (los que vuelven en 1–2 meses) dejan de
+        ser churn, y los 56 eventos de sep–oct 24 quedan abiertos (censura a la derecha). ChartMogul trata la mora
+        como una política configurable.'
+    - metric: Churn bruto de MRR y GRR
+      definition: 'MRR perdido por churn y contracción sobre el MRR del mes anterior. El GRR es su complemento:
+        retención sin contar la expansión.'
+      formula: gross_churn(m) = (|churn_MRR| + |contracción_MRR|) ÷ MRR(m−1); GRR = 1 − gross_churn; GRR 12m = Σ_c
+        min(MRR_c(m), MRR_c(m−12)) ÷ Σ_c MRR_c(m−12)
+      grain: mes; ventana de 12 meses
+      milestone: mes calendario
+      notes: VERDE sobre el MRR observado, AMARILLO sobre el normalizado. La fórmula del churn bruto sigue a ChartMogul;
+        el GRR a 12 meses es una definición propuesta (sin fuente) y se puede calcular desde ene-23.
+    - metric: NRR de la base existente
+      definition: Cuánto MRR conservan y amplían los clientes que ya pagaban, sin contar las altas.
+      formula: 'Mensual: (MRR(m−1) + expansión − contracción − churn) ÷ MRR(m−1). A 12 meses: MRR(m) de los activos
+        en m−12 ÷ su MRR(m−12)'
+      grain: mes; ventana de 12 meses; cohorte × tenure
+      milestone: mes calendario / M12 de la cohorte
+      notes: VERDE. La versión mensual ya está en el mart y excluye la reactivación (comprobado con feb-22). La
+        reactivación se reporta aparte porque mezcla atrasos de cobro.
+    - metric: Retención por cohorte (logos e ingreso)
+      definition: Porcentaje de las altas de una cohorte que pagan en Mn, y MRR de la cohorte en Mn sobre su MRR
+        de entrada.
+      formula: 'Logos: activos_cohorte(Mn) ÷ altas_cohorte. Ingreso: MRR_cohorte(Mn) ÷ MRR_cohorte(M1)'
+      grain: cohorte × tenure (Mn)
+      milestone: primera aparición (M0)
+      notes: 'VERDE para cohortes limpias. En M12 pagan el 87,1% (cosecha 2022) y el 89,1% (cosecha 2023, altas
+        hasta oct-23). Con huecos de cobro, «paga en Mn» subestima la retención: calcularla también con la regla
+        G.'
+    - metric: Ingreso acumulado por alta a N meses (LTV empírico de ingreso)
+      definition: Lo que pagó en promedio cada alta de una cohorte en sus primeros N meses.
+      formula: Σ_{c∈cohorte} Σ_{t=0..N−1} pago(c,t) ÷ altas_cohorte; N = 12 (24 para las cosechas 2022)
+      grain: cohorte
+      milestone: primera aparición (M0)
+      notes: 'VERDE. A 12 meses: 706.688 COP (cosecha 2022) y 496.402 COP (cosecha 2023, altas hasta oct-23). No
+        es un LTV de vida completa ni con margen; es la base del LTV cuando exista el margen.'
+    - metric: S&M por alta (proxy de CAC blended)
+      definition: Gasto S&M del periodo dividido entre las altas del periodo, en las unidades del archivo.
+      formula: 'Σ total_sm_spend ÷ Σ altas limpias (también en versión trimestral móvil); por grupo: Generación
+        de Demanda, Team, Habilitación'
+      grain: mes / trimestre móvil
+      milestone: primera aparición
+      notes: AMARILLO-ROJO. Da 0,0498 unidades por alta (mar-22–oct-24). No se puede convertir a COP ni comparar
+        con el ARPA. Incluye Team + PayrollExpenses (26% del S&M) sin saber si es adquisición o KAM.
+    - metric: CAC en COP por motion y canal, y CAC payback
+      definition: Costo de adquisición asignado a cada motion (Self Service, Assisted, Executive) y canal (Digital,
+        KAM) por cliente ganado. El payback son los meses de margen necesarios para recuperarlo.
+      formula: CAC_motion = S&M de adquisición del motion ÷ clientes ganados del motion; payback = CAC ÷ (ARPA de
+        entrada × margen bruto %)
+      grain: motion × canal × trimestre; cohorte
+      milestone: cierre ganado (CRM) o primer pago
+      notes: ROJO. Requiere la unidad y moneda del S&M, la asignación de Team (adquisición frente a KAM), el motion
+        y canal de cada cliente, y el margen bruto. Según a16z, hay que separar el paid CAC del blended.
+    - metric: LTV con margen y LTV:CAC
+      definition: Margen bruto que deja un cliente en un horizonte fijo, comparado con lo que costó adquirirlo.
+      formula: LTV_N = margen bruto % × ingreso acumulado por alta a N meses (N = 24); como referencia, ARPA × margen
+        ÷ churn mensual; LTV:CAC = LTV_N ÷ CAC
+      grain: cohorte × motion
+      milestone: primera aparición / cierre ganado
+      notes: 'ROJO (faltan margen y CAC). La fórmula simple asume churn lineal, ignora la expansión (ChartMogul)
+        y cambia con la regla G: es preferible un horizonte fijo por cohorte.'
+    - metric: UCM (margen de contribución unitario)
+      definition: Lo que queda del ingreso mensual de un cliente después de restar los costos variables de servirlo.
+      formula: UCM = ARPA − costo variable por cliente (infraestructura, pasarela de pagos, soporte/onboarding,
+        success, herramientas por usuario); UCM% = UCM ÷ ARPA
+      grain: cliente × mes, o segmento (industria, tramo de monto, motion) × mes
+      milestone: mes calendario
+      notes: ROJO. El modelo no tiene costos de servir. Confirmar con Finora que UCM significa Unit Contribution
+        Margin.
+    required_events:
+    - event: 'pago_registrado (existe en parte: raw.transactions)'
+      trigger: cobro exitoso
+      properties:
+      - customer_id
+      - fecha_pago
+      - monto
+      - moneda
+      - invoice_id
+      - periodo_servicio_desde
+      - periodo_servicio_hasta
+      - concepto (recurrente / único / setup / add-on)
+    - event: pago_fallido / factura_vencida
+      trigger: intento de cobro fallido o factura vencida
+      properties:
+      - customer_id
+      - invoice_id
+      - fecha
+      - intento_n
+      - motivo
+      - dias_mora
+    - event: suscripcion_iniciada
+      trigger: activación del primer plan pagado
+      properties:
+      - customer_id
+      - plan
+      - precio_lista
+      - intervalo_facturacion
+      - licencias_o_usuarios
+      - fecha_inicio
+      - motion (Self Service/Assisted/Executive)
+      - canal (Digital/KAM)
+      - owner
+    - event: suscripcion_modificada
+      trigger: cambio de plan o de licencias
+      properties:
+      - customer_id
+      - plan_anterior
+      - plan_nuevo
+      - mrr_anterior
+      - mrr_nuevo
+      - licencias
+      - fecha_efectiva
+      - motivo
+    - event: cancelacion_solicitada / suscripcion_terminada
+      trigger: el cliente pide cancelar / termina el servicio
+      properties:
+      - customer_id
+      - fecha_solicitud
+      - fecha_efectiva
+      - motivo
+      - tipo (voluntaria/involuntaria)
+    - event: oportunidad_ganada (CRM)
+      trigger: cierre ganado
+      properties:
+      - customer_id
+      - lead_id
+      - fuente_lead
+      - canal (Digital/KAM)
+      - motion
+      - owner (KAM/AE/SDR)
+      - fecha_creacion_lead
+      - fecha_cierre
+    - event: gasto_sm_registrado
+      trigger: cierre contable mensual
+      properties:
+      - mes
+      - rubro
+      - monto
+      - moneda_y_unidad
+      - asignacion (adquisición / KAM-retención)
+      - motion_o_canal
+    - event: costo_servir_registrado
+      trigger: cierre contable mensual
+      properties:
+      - mes
+      - rubro (infraestructura, pasarela, soporte, onboarding, success)
+      - monto
+      - moneda
+      - driver_asignacion (clientes, usuarios, tickets)
+    required_dimensions:
+    - dimension: Cliente (cuenta)
+      why: Es la unidad de todas las métricas (el ID es «Cliente N»). Sin usuarios no hay ARPU por usuario.
+    - dimension: Mes calendario y tenure (M0…Mn)
+      why: Permite los cortes mensuales y las cohortes; M0 = primera aparición.
+    - dimension: Cohorte y cohort_flag (base previa ene-22 / arrastre feb-22 / limpia)
+      why: Solo las cohortes limpias (1.476 clientes desde mar-22) son comparables para ARPA de entrada, retención
+        y S&M por alta (Q-010).
+    - dimension: Industria (Restaurantes, Producción, Retail, Tecnología, Servicios profesionales, Salud)
+      why: Es la única segmentación disponible hoy.
+    - dimension: Tramo de monto usual
+      why: 'Sirve hoy como proxy de plan: hay 395 montos usuales distintos y los más frecuentes son 42.000, 63.000
+        y 31.500 COP.'
+    - dimension: Estado de pago (al día / hueco ≤ G / churn confirmado / reactivado)
+      why: Separa el cobro del servicio y alimenta el churn con gracia y el MRR normalizado.
+    - dimension: Motion (Self Service / Assisted / Executive)
+      why: Hace falta para el CAC y para medir por motion sin forzar un funnel lineal; hoy no existe.
+    - dimension: Canal de adquisición (Digital / KAM)
+      why: Hace falta para separar paid CAC de blended y para la atribución; hoy no existe.
+    - dimension: Plan, intervalo de facturación y licencias
+      why: Hacen falta para el MRR contractual, un ARR real y el ARPU por usuario; hoy no existen.
+    - dimension: Grupo de S&M (Generación de Demanda, Team, Habilitación)
+      why: Ya existe; falta la unidad y moneda, y la asignación entre adquisición y KAM.
+    decision_enabled: 'Qué métricas entran al Overview como salud y con qué nombre (verde), cuáles se muestran como
+      proxy con sensibilidad (amarillo) y qué se pide a Finora en la Propuesta de Modelo de datos (rojo) para poder
+      hablar de CAC, payback, LTV y UCM ante el CFO. También qué comparaciones sostener ante el CRO y el CFO: cohortes
+      limpias desde mar-22 y churn con una regla explícita.'
+    limitations:
+    - 'Solo hay pagos: nada sobre leads ni sobre la conversión del funnel.'
+    - Monto pagado observado ≠ MRR contratado; la recurrencia no está confirmada.
+    - 'Primera aparición ≠ adquisición: la base de ene-22 está censurada a la izquierda, y los clientes anteriores
+      a 2022 que regresan aparecerían como altas.'
+    - 'La ventana termina en oct-24: el churn reciente y las cohortes jóvenes están censurados a la derecha.'
+    - El S&M no tiene unidad documentada, así que no hay ningún CAC en COP.
+    - Sin margen ni costo de servir no hay LTV con margen ni UCM.
+    - 'Los proxies (MRR normalizado, churn con gracia) son reglas, no hechos: cambian las cifras y necesitan sensibilidad.'
+    - Los benchmarks externos (LTV:CAC mayor que 3, payback de 5–7 meses) son contexto, no metas para Finora.
+    implementation_implications:
+    - 'Renombrar en el mart y en las láminas: «MRR pagado observado», «ARPA por cliente», «churn observado», «ARR
+      run-rate».'
+    - 'Data Engineering: construir vistas de churn con gracia (G = 1, 2, 3) y de MRR normalizado a partir de mart.customer_month
+      (usual_amount_cop, multi_month_payment_signature, months_to_return).'
+    - Crear una tabla cohorte × tenure con logos, MRR e ingreso acumulado, solo para cohortes limpias.
+    - 'Propuesta de Modelo de datos: pedir la unidad y moneda del S&M y la asignación de Team; un export de facturación
+      con periodo de servicio y concepto; los eventos de cancelación y de pago fallido; el motion y canal de cada
+      cliente desde el CRM; y el costo de servir mensual.'
+    - No publicar una tasa de conversión mezclada ni CAC o LTV numéricos hasta tener los datos en rojo.
+sql_runs:
+- SELECT month, window_flag, active_customers, new_customers, churned_customers, reactivated_customers, expanded_customers,
+  contracted_customers, total_paid_mrr_cop, new_mrr_cop, expansion_mrr_cop, reactivation_mrr_cop, contraction_mrr_cop,
+  churned_mrr_cop, mrr_per_active_customer_cop, logo_churn_rate, gross_mrr_churn_rate, net_mrr_retention_existing,
+  quick_ratio, total_sm_spend, multi_month_payment_signatures, share_churn_returning_next_month FROM mart.monthly_metrics_phase1
+  ORDER BY month
+- SELECT * FROM raw.sm_spend LIMIT 5
+- SELECT * FROM raw.transactions LIMIT 5
+- SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month)
+  AS primer_mes, MAX(month) AS ultimo_mes, SUM(CASE WHEN observed_amount = 0 THEN 1 ELSE 0 END) AS filas_en_cero,
+  SUM(CASE WHEN observed_amount > 0 THEN 1 ELSE 0 END) AS filas_con_pago, SUM(CASE WHEN observed_amount < 0 THEN
+  1 ELSE 0 END) AS filas_negativas, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS filas_firma_multimes
+  FROM mart.customer_month
+- SELECT multi_month_payment_signature AS k, COUNT(*) AS filas, ROUND(SUM(paid_mrr_cop),0) AS monto_cop FROM mart.customer_month
+  WHERE observed_amount > 0 GROUP BY multi_month_payment_signature ORDER BY k
+- SELECT CASE WHEN months_to_return IS NULL THEN 'no vuelve antes de oct-24' WHEN months_to_return = 1 THEN '1 mes'
+  WHEN months_to_return = 2 THEN '2 meses' WHEN months_to_return = 3 THEN '3 meses' WHEN months_to_return BETWEEN
+  4 AND 6 THEN '4-6 meses' ELSE '7+ meses' END AS vuelve_en, COUNT(*) AS eventos_churn FROM mart.churn_events GROUP
+  BY 1 ORDER BY 1
+- SELECT ROUND(SUM(demand_gen_spend),3) AS generacion_demanda, ROUND(SUM(sales_capacity_spend),3) AS capacidad_comercial_team,
+  ROUND(SUM(enablement_spend),3) AS habilitacion, ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(team + payroll_expenses)/SUM(total_sm_spend),3)
+  AS share_team_payroll, ROUND(SUM(paid_media)/SUM(total_sm_spend),3) AS share_paid_media, COUNT(*) AS meses FROM
+  mart.sm_monthly
+- SELECT ROUND(SUM(CASE WHEN multi_month_payment_signature > 0 THEN paid_mrr_cop ELSE 0 END)/SUM(paid_mrr_cop),4)
+  AS share_monto_firma_multimes, ROUND(1.0*SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END)/SUM(CASE
+  WHEN observed_amount > 0 THEN 1 ELSE 0 END),4) AS share_filas_firma_multimes, COUNT(DISTINCT CASE WHEN multi_month_payment_signature
+  > 0 THEN customer_id END) AS clientes_con_firma FROM mart.customer_month
+- SELECT COUNT(*) AS churn_rows, SUM(c.returned_next_month) AS vuelve_t1, SUM(c.returned_same_amount_next_month)
+  AS vuelve_t1_mismo_monto, SUM(CASE WHEN n.observed_amount > 0 AND ABS(n.observed_amount*10000 - 2*c.previous_month_mrr)
+  <= 0.005*2*c.previous_month_mrr THEN 1 ELSE 0 END) AS vuelve_t1_con_doble_pago, SUM(CASE WHEN c.month_index >=
+  31 THEN 1 ELSE 0 END) AS churn_en_ultimos_3_meses FROM mart.customer_month c LEFT JOIN mart.customer_month n ON
+  n.customer_id = c.customer_id AND n.month_index = c.month_index + 1 WHERE c.churned_customer = 1
+- SELECT usual_amount_cop, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY usual_amount_cop
+  ORDER BY clientes DESC LIMIT 12
+- SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag ORDER
+  BY 1
+- SELECT COUNT(*) AS filas_con_pago, SUM(CASE WHEN CAST(ROUND(observed_amount*100) AS BIGINT) % 21 = 0 THEN 1 ELSE
+  0 END) AS filas_multiplo_2100_cop, COUNT(DISTINCT usual_amount_cop) AS montos_usuales_distintos FROM mart.customer_month
+  WHERE observed_amount > 0
+- SELECT vintage, COUNT(*) AS altas, SUM(CASE WHEN m1_cop IS NULL THEN 1 ELSE 0 END) AS sin_m1, SUM(CASE WHEN m1_cop
+  > m0_cop THEN 1 ELSE 0 END) AS m1_mayor_m0, SUM(CASE WHEN m1_cop = m0_cop THEN 1 ELSE 0 END) AS m1_igual_m0, SUM(CASE
+  WHEN m1_cop < m0_cop THEN 1 ELSE 0 END) AS m1_menor_m0, ROUND(MEDIAN(m0_cop),0) AS mediana_m0, ROUND(MEDIAN(early_run_rate_cop),0)
+  AS mediana_run_rate FROM mart.new_customers GROUP BY vintage ORDER BY vintage
+- SELECT vintage, MIN(month) AS desde, MAX(month) AS hasta, ROUND(MIN(arpa_cop),0) AS arpa_min, ROUND(MAX(arpa_cop),0)
+  AS arpa_max FROM mart.vintage_month GROUP BY vintage ORDER BY vintage
+- SELECT vintage, COUNT(DISTINCT customer_id) AS altas, ROUND(SUM(CASE WHEN tenure_month BETWEEN 0 AND 11 THEN paid_mrr_cop
+  ELSE 0 END)/COUNT(DISTINCT customer_id),0) AS ingreso_obs_12m_por_alta_cop, ROUND(1.0*COUNT(DISTINCT CASE WHEN
+  tenure_month = 12 AND observed_amount > 0 THEN customer_id END)/COUNT(DISTINCT customer_id),3) AS share_pagando_m12
+  FROM mart.customer_month WHERE cohort_flag = 'clean' AND cohort_month <= '2023-10' GROUP BY vintage ORDER BY vintage
+- SELECT ROUND(SUM(total_sm_spend),3) AS sm_mar22_oct24_unidades, SUM(new_customers) AS altas_mar22_oct24, ROUND(SUM(total_sm_spend)/SUM(new_customers),5)
+  AS sm_por_alta_unidades, ROUND(SUM(new_mrr_cop),0) AS new_mrr_cop_total FROM mart.monthly_metrics_phase1 WHERE
+  window_flag = 'clean'
+- SELECT c.multi_month_payment_signature >= 2 AS firma, COUNT(*) AS filas, SUM(CASE WHEN p.observed_amount = 0 THEN
+  1 ELSE 0 END) AS mes_previo_en_cero, SUM(CASE WHEN n.observed_amount = 0 THEN 1 ELSE 0 END) AS mes_siguiente_en_cero,
+  SUM(CASE WHEN p.observed_amount > 0 AND (n.observed_amount > 0) THEN 1 ELSE 0 END) AS rodeado_de_pagos FROM mart.customer_month
+  c LEFT JOIN mart.customer_month p ON p.customer_id = c.customer_id AND p.month_index = c.month_index - 1 LEFT
+  JOIN mart.customer_month n ON n.customer_id = c.customer_id AND n.month_index = c.month_index + 1 WHERE c.multi_month_payment_signature
+  >= 2 GROUP BY 1
+- SELECT movement_type, COUNT(*) AS filas FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC
+- SELECT movement_type, COUNT(*) AS filas, SUM(reverts_next_month) AS revierte_t1, ROUND(1.0*SUM(reverts_next_month)/COUNT(*),3)
+  AS share_revierte FROM mart.customer_month WHERE movement_type IN ('expansion','contraction') AND month_index
+  < 33 GROUP BY movement_type
+- SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC
+completed_at: '2026-09-29T11:01:40-06:00'
+findings:
+- F-135
+- F-136
+- F-137
+- F-138
+- F-139
+run_ids:
+- RUN-20260929-103203-measurement-d0ef
+usage:
+  RUN-20260929-103203-measurement-d0ef:
+    cost_usd: 2.9112716
+    turns: 40
+    ms: 863371
+    input_tokens: 34
+    output_tokens: 95515
+    cache_read: 597843
+    cache_write: 74652
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: measurement-strategy
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: saas-metrics-coach
+  mode: dynamic
+  why: 5 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · finance/skills/saas-metrics-coach
+  kind: vendor
+  digest: bc6fcf0302ee
+validation:
+  unverified_sources:
+  - DM-00
+  bare_claims: []
+  seen_urls: 48
+  ok: false

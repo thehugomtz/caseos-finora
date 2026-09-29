@@ -1,0 +1,600 @@
+id: R-017
+type: research
+research_question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados
+  (industria, banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto
+  y poco volumen?
+case_question: Q-014, Q-012, Q-015, Q-008, H-011, H-019, H-021
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 5
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - Q-014
+    - Q-012
+    - Q-015
+    - Q-008
+    - H-011
+    - H-019
+    - H-021
+    suggested:
+    - Q-018
+    - Q-013
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-014
+- Q-012
+- Q-015
+- Q-008
+- H-011
+- H-019
+- H-021
+- F-094
+- F-095
+- F-096
+- F-097
+- F-098
+- F-099
+- F-100
+- F-101
+- F-102
+- F-103
+- F-104
+- F-105
+- F-106
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T11:52:09-06:00'
+version: 6
+job_id: JOB-20260929-103203-1ee0
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-017
+slides:
+- S2.4
+task_why: Si la pérdida se concentra en un segmento, Growth tiene dónde enfocar y el CRO una prioridad; si está
+  difundida, la lámina lo dice sin inventar grupos (H-019).
+task:
+  work: datos
+  draft_answer: 'Lo investigado (R-005 y R-009, todavía sin aceptar) dice que la industria no parece ser el eje:
+    el patrón aparece difundido, y la caída del MRR por cliente activo viene de quién entra, no de la base previa.
+    Mi arranque: la pérdida se concentra más en el ticket de entrada (pagadores de ticket bajo en las cosechas 2023
+    y 2024) que en una industria. La matriz de burbuja (churn observado × ticket × volumen por industria) va a servir
+    más para ubicar dónde vale la pena crecer que para explicar la caída. Todo esto es sobre pagadores observados,
+    no sobre leads ni canal, y si no hay concentración clara no inventamos grupos.'
+  hugo_said:
+  - text: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento? (este si se podría investigar algo en
+      la data)
+    ref: D-015
+  steps:
+  - kind: data
+    what: 'Cruzar bandas de ticket de entrada (primer pago por cuartiles) × cosecha × industria: cuántos pagadores
+      nuevos y cuánto monto trae cada banda, y cómo cambió la mezcla. Extender R-005 y R-009 sin rehacerlos.'
+    where:
+    - mart.new_customers
+    - mart.vintage_month
+  - kind: data
+    what: Churn observado y regresos por industria, cosecha y banda de ticket de entrada, con un tamaño mínimo por
+      celda para no leer ruido.
+    where:
+    - mart.churn_events
+    - mart.customer_month
+    - mart.new_customers
+  - kind: data
+    what: 'Matriz de burbuja por industria sobre la ventana fijada en RT-003: tasa de churn observado, MRR por cliente
+      activo y clientes activos.'
+    where:
+    - mart.customer_month
+    - mart.churn_events
+  - kind: proposal
+    what: 'La vista de S2.4 (matriz o tabla de concentración) con su límite de lectura: pagadores observados, no
+      leads ni canal, y sin inventar grupos si no hay concentración clara.'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: ''
+short_answer: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada. El MRR por cliente activo
+  cae en las industrias observadas, con caídas mayores en Servicios profesionales, Restaurantes y Retail. La descomposición
+  ubica la concentración en la composición de cosechas, que explica 84% del cambio del MRR por cliente activo entre
+  dic-22 y oct-24. Como señal, Salud aparece con menor churn persistente, mayor ticket mediano de 2024 y menor volumen'
+headline: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+what_is_established:
+- 'No hay un sector único donde se concentre la pérdida: el MRR por cliente activo bajó en las 6 industrias, aunque
+  con intensidad desigual, y el aporte al crecimiento también se reparte.'
+- La señal apunta a las cosechas recientes y a un ticket de entrada más bajo, con caída de la mediana y de la cola
+  alta; a la vez la cosecha 2022 también baja, así que no se limita a las altas nuevas.
+- 'El cambio del ticket de entrada 2022 a 2024 no viene de vender a industrias distintas: el efecto dentro de las
+  industrias explica 97% del cambio.'
+- En promedio quienes hacen churn pagaban más, pero por mediana no, de modo que la diferencia se concentra en pocas
+  cuentas grandes; el churn observado por industria tampoco marca un sector único.
+- Como señal, Salud combina el menor churn persistente, el mayor ticket de entrada mediano de 2024 y el menor volumen,
+  con 124 clientes activos en oct-24; Tecnología acompaña con menor caída del MRR por cliente.
+- 'No es evaluable si la pérdida se concentra en un tipo de cliente más allá de la industria observada: faltan tamaño
+  de cliente, segmentación adicional, precios, descuentos y motivos de churn.'
+what_is_contested: []
+what_remains_unknown:
+- 'No es evaluable con estos datos si la pérdida se concentra en un tipo de cliente más allá de la industria observada:
+  faltan tamaño de cliente, segmentación adicional, precios, descuentos y motivos de churn.'
+- 'La lectura del churn caro depende de la medida: por mediana quienes hacen churn no pagaban más, de modo que la
+  diferencia de promedios se concentra en pocas cuentas grandes.'
+- Las comparaciones por industria se apoyan en `amount` como monto cobrado, no como MRR contractual, y el ticket
+  de entrada de 2022 incluye pagos iniciales grandes.
+alternative_explanations: []
+case_implication: Si la caída del ticket de entrada ocurre dentro de cada industria y no por mix, convendría revisar
+  la política de precio y el empaquetado de las altas de forma transversal. Si Salud sostiene el menor churn persistente,
+  el mayor ticket mediano de 2024 y solo 124 clientes activos en oct-24, podría convenir una prueba de asignación
+  comercial hacia ese segmento.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Cuánto del MRR por cliente de Salud y Tecnología se sostiene por retención de cohortes y cuánto por su menor
+  peso de altas recientes?
+- ¿Qué participación de las altas de Retail y Servicios profesionales sigue pagando al año, y con qué monto usual,
+  frente a las altas de Salud?
+- ¿El churn persistente por industria se mantiene igual si se excluyen los retornos con liquidación de meses pendientes?
+- ¿Qué campos habría que capturar (tamaño de cliente, plan, motivo de salida) para separar segmentos accionables
+  dentro de cada industria?
+handoff_to_cos:
+  summary: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-103203-505c
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: 'Salud combina el menor churn persistente (0,56 puntos porcentuales mensuales), el mayor ticket de entrada
+    mediano de 2024 (COP 52,5 mil, igualado con Restaurantes) y el menor volumen: 124 clientes activos en oct-24
+    frente a 459 en Restaurantes.'
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: Salud
+      x: 0.005600000000000001
+      y: 52500.0
+      tam: 124.0
+    - etiqueta: Restaurantes
+      x: 0.0062
+      y: 52500.0
+      tam: 459.0
+    - etiqueta: Servicios profesionales
+      x: 0.0087
+      y: 31500.0
+      tam: 140.0
+    - etiqueta: Tecnología
+      x: 0.0091
+      y: 49350.0
+      tam: 206.0
+    - etiqueta: Producción
+      x: 0.010700000000000001
+      y: 39900.0
+      tam: 389.0
+    - etiqueta: Retail
+      x: 0.013300000000000001
+      y: 26250.0
+      tam: 360.0
+    ejes:
+      x:
+        columna: churn_persistente_pct
+        nombre: Churn persistente mensual (puntos porcentuales)
+        formato: pct2
+      y:
+        columna: ticket_mediano_2024
+        nombre: Ticket de entrada mediano 2024
+        formato: cop
+      tamano:
+        columna: activos_oct24
+        nombre: Clientes activos oct-24
+        formato: int
+    etiqueta: industry
+  claim: C-025
+- id: V-02
+  title: Entre dic-22 y oct-24 el MRR por cliente activo cambia −COP 31,7 mil (−35%), de lo cual la composición
+    de cosechas explica −COP 26,6 mil (84%) y el efecto dentro de las cosechas −COP 5,2 mil; las cosechas 2023 y
+    2024 son 65% de los clientes activos y 50% del MRR en oct-24.
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: dic-22
+      valor: 89543.71829268293
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -26550.904842566866
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: -5181.462538316295
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179976
+      tipo: total
+  claim: C-010
+- id: V-03
+  title: Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes
+    y −43,1% en Retail, frente a −18,8% en Producción, −15,5% en Tecnología y −14,4% en Salud.
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: Servicios profesionales
+      x: -0.466
+      y: 0.052000000000000005
+      tam: 140.0
+    - etiqueta: Restaurantes
+      x: -0.456
+      y: 0.195
+      tam: 459.0
+    - etiqueta: Retail
+      x: -0.431
+      y: 0.158
+      tam: 360.0
+    - etiqueta: Producción
+      x: -0.188
+      y: 0.308
+      tam: 389.0
+    - etiqueta: Tecnología
+      x: -0.155
+      y: 0.17
+      tam: 206.0
+    - etiqueta: Salud
+      x: -0.14400000000000002
+      y: 0.11699999999999999
+      tam: 124.0
+    ejes:
+      x:
+        columna: arpa_var_pct
+        nombre: Variación del MRR por cliente dic-22 a oct-24 (%)
+        formato: pct2
+      y:
+        columna: aporte_crecimiento_mrr_pct
+        nombre: Aporte al crecimiento del MRR (%)
+        formato: pct2
+      tamano:
+        columna: activos_oct24
+        nombre: Clientes activos oct-24
+        formato: int
+    etiqueta: industry
+  claim: C-007
+- id: V-04
+  title: 'Quienes hacen churn pagaban en promedio más que el cliente activo del mes previo: la razón de medias es
+    1,70 en 2022, 1,58 en 2023 y 1,37 en 2024, con límites inferiores del intervalo bootstrap de 1,26, 1,18 e 1,10.'
+  spec:
+    tipo: puntos
+    filas:
+    - 2022 · medias
+    - 2022 · medianas
+    - 2023 · medias
+    - 2023 · medianas
+    - 2024 · medias
+    - 2024 · medianas
+    - total · medias
+    - total · medianas
+    formato: num2
+    referencia: 1.0
+    series:
+    - nombre: IC 90% inferior
+      valores:
+      - 1.2634790795200008
+      - 0.87876
+      - 1.178530933374979
+      - 0.7761115001327191
+      - 1.095458963426737
+      - 0.9654208351271151
+      - 1.3104627355800427
+      - 0.966042846185038
+    - nombre: Razón
+      valores:
+      - 1.696338280232295
+      - 1.0
+      - 1.5770772720964885
+      - 0.9695267189897904
+      - 1.373072530255609
+      - 1.1112046013740944
+      - 1.5490242541706507
+      - 1.0409724208594457
+    - nombre: IC 90% superior
+      valores:
+      - 2.224080525675505
+      - 1.124964583333333
+      - 2.034690726227998
+      - 1.1631226077499652
+      - 1.7079014682480618
+      - 1.2624007474082342
+      - 1.7983999176874217
+      - 1.153745014943061
+  claim: C-017
+- id: V-06
+  title: Del crecimiento del MRR pagado entre dic-22 y oct-24, Producción aporta 30,8%, Restaurantes 19,5%, Tecnología
+    17,0% y Retail 15,8%, mientras Servicios profesionales aporta 5,2%.
+  spec:
+    tipo: barras
+    x:
+    - Producción
+    - Restaurantes
+    - Tecnología
+    - Retail
+    - Servicios profesionales
+    formato: num1
+    series:
+    - nombre: aporte crecimiento mrr pct
+      valores:
+      - 30.8
+      - 19.5
+      - 17.0
+      - 15.8
+      - 5.2
+  claim: C-008
+- id: V-07
+  title: La mediana del ticket de entrada pasó de COP 63,0 mil en 2022 a COP 42,0 mil en 2024 y su cola alta (decil
+    superior) de COP 189,0 mil a COP 84,0 mil, con 272 altas en 2022 y 554 en 2024.
+  spec:
+    tipo: barras
+    apiladas: false
+    x:
+    - <15 mil
+    - 15–30 mil
+    - 30–45 mil
+    - 45–60 mil
+    - 60–75 mil
+    - 75–100 mil
+    - 100–150 mil
+    - ≥150 mil
+    formato: pct
+    series:
+    - nombre: '2022'
+      valores:
+      - 0.09191176470588236
+      - 0.10294117647058823
+      - 0.16911764705882354
+      - 0.06985294117647059
+      - 0.20588235294117646
+      - 0.11764705882352941
+      - 0.10661764705882353
+      - 0.13602941176470587
+    - nombre: '2023'
+      valores:
+      - 0.18615384615384614
+      - 0.20615384615384616
+      - 0.24153846153846154
+      - 0.12615384615384614
+      - 0.08615384615384615
+      - 0.07692307692307693
+      - 0.055384615384615386
+      - 0.021538461538461538
+    - nombre: '2024'
+      valores:
+      - 0.10288808664259928
+      - 0.2111913357400722
+      - 0.2527075812274368
+      - 0.17689530685920576
+      - 0.10649819494584838
+      - 0.0740072202166065
+      - 0.04693140794223827
+      - 0.02888086642599278
+  claim: C-011
+- id: V-08
+  title: 'La pérdida no se limita a las cosechas nuevas: entre dic-22 y oct-24 el MRR por cliente de la cosecha
+    2022 pasó de COP 81,0 mil a COP 65,4 mil y el de las altas de feb-22 de COP 85,8 mil a COP 69,9 mil, con contribuciones
+    dentro de −COP 3,7 mil y −COP 1,6 mil.'
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: dic-22
+      valor: 89543.71829268293
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -26550.904842566866
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: -5181.462538316295
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179976
+      tipo: total
+  claim: C-015
+- id: V-10
+  title: 'Medido por la mediana, quienes hacen churn no pagaban más: la razón de medianas es 1,00 en 2022, 0,97
+    en 2023 y 1,11 en 2024, con intervalos que van de 0,97 a 1,15 en el total, de modo que la diferencia de promedios
+    se concentra en pocas cuentas grandes.'
+  spec:
+    tipo: puntos
+    filas:
+    - 2022 · medias
+    - 2022 · medianas
+    - 2023 · medias
+    - 2023 · medianas
+    - 2024 · medias
+    - 2024 · medianas
+    - total · medias
+    - total · medianas
+    formato: num2
+    referencia: 1.0
+    series:
+    - nombre: IC 90% inferior
+      valores:
+      - 1.2634790795200008
+      - 0.87876
+      - 1.178530933374979
+      - 0.7761115001327191
+      - 1.095458963426737
+      - 0.9654208351271151
+      - 1.3104627355800427
+      - 0.966042846185038
+    - nombre: Razón
+      valores:
+      - 1.696338280232295
+      - 1.0
+      - 1.5770772720964885
+      - 0.9695267189897904
+      - 1.373072530255609
+      - 1.1112046013740944
+      - 1.5490242541706507
+      - 1.0409724208594457
+    - nombre: IC 90% superior
+      valores:
+      - 2.224080525675505
+      - 1.124964583333333
+      - 2.034690726227998
+      - 1.1631226077499652
+      - 1.7079014682480618
+      - 1.2624007474082342
+      - 1.7983999176874217
+      - 1.153745014943061
+  claim: C-018
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-103203-505c
+  path: investigations/runs/INV-20260929-103203-505c.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T11:09:18-06:00'
+findings:
+- F-094
+- F-095
+- F-096
+- F-097
+- F-098
+- F-099
+- F-100
+- F-101
+- F-102
+- F-103
+- F-104
+- F-105
+- F-106
+run_ids:
+- INV-20260929-103203-505c
+usage:
+  INV-20260929-103203-505c:
+    cost_usd: 2.2527375
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-017 responde Q-014: la pérdida no es sectorial. Lo que paga en promedio cada cliente cae en las 6
+    industrias, con más fuerza en Servicios profesionales, Restaurantes y Retail. El 97% del cambio del ticket de
+    entrada ocurre dentro de cada industria. Lo que más pesa es la composición por cosechas (84%) y un ticket de
+    entrada más bajo.
+
+
+    Quedan cuatro cosas para que decidas:
+
+    1) Cerrar H-019 como no soportada por industria y dejar lo de cosechas en H-021.
+
+    2) Cómo reportar la composición: R-009 da 108% con base ene-22 y R-017 da 84% con base dic-22.
+
+    3) Un chequeo corto para saber si «la cosecha 2022 también baja» es real o se debe a pagos iniciales grandes
+    (H-021, Q-015).
+
+    4) Antes de decir que «se van los que más pagan» (H-011), medirlo sobre churn persistente. Hoy solo se sostiene
+    por promedio y lo explican pocas cuentas.
+
+
+    La señal de Salud queda como hipótesis, no como hallazgo. Los dos chequeos son cortos y, si te parece, entran
+    en lo que delegaste en D-016.'
+  run_id: RUN-20260929-110925-cos-5c65
+  at: '2026-09-29T11:52:09-06:00'
+  impacts:
+  - target: Q-014
+    effect: supports
+    why: 'R-017 responde Q-014 dentro del alcance que ya tenía (industria y pagadores observados). No es sectorial:
+      el MRR por cliente cae en las 6 industrias (F-096), con más fuerza en Servicios profesionales, Restaurantes
+      y Retail (F-094). El aporte al crecimiento se reparte (F-095) y el 97% del cambio del ticket de entrada ocurre
+      dentro de cada industria (F-100). Lo que más pesa es la composición por cosechas (84%, F-097) y un ticket
+      de entrada más bajo (F-098). El límite queda escrito: más allá de la industria no se puede evaluar (F-106).
+      Dos ajustes menores: la nota de alcance de Q-014 puede sumar cosecha y banda de ticket de entrada, que salen
+      de los pagos. Y en la story hay que decir «MRR pagado observado», como pide el framing. Versión ejecutiva
+      posible: «No es un tema de un sector: lo que paga en promedio cada cliente cae en las seis industrias, y la
+      mayor parte viene de que quienes entraron en 2023–2024 empiezan pagando menos».'
+  - target: H-019
+    effect: weakens
+    why: 'Por industria no hay un subconjunto que explique el cambio. El MRR por cliente bajó en las 6 (F-096),
+      aunque con intensidad desigual: de −46,6% en Servicios profesionales a −14,4% en Salud (F-094). El aporte
+      al crecimiento se reparte (F-095) y el 97% del cambio del ticket de entrada ocurre dentro de cada industria
+      (F-100). Esto refuerza el «No soportada» que ya venía de R-005. Pero si «grupos» incluye cosechas, la composición
+      por cosechas explica 84% (F-097) y H-019 pasaría a soportada. La respuesta depende de qué entendemos por grupo,
+      y hoy eso no está definido.'
+  - target: framing
+    effect: changes_framing
+    why: 'La cifra de composición depende de desde cuándo se mide. R-009 asigna 108% a la composición de entrada.
+      Su descomposición (F-075) va de ene-22 a oct-24 (−COP 35,0 mil), la misma ventana con la que R-012 reproduce
+      las cifras del Overview (−38%, 4,5×, 2,8×). R-017 asigna 84% entre dic-22 y oct-24 (F-097: −COP 31,7 mil,
+      −35%). Con la base cambia también el matiz: R-009 dice «no en la base previa» y R-017 dice «la cosecha 2022
+      también baja». No se contradicen del todo porque hablan de grupos distintos, pero en láminas seguidas parecen
+      mensajes opuestos y el CFO vería dos cifras para el mismo claim. La dirección, que la composición es lo que
+      más pesa, se sostiene en las dos bases.'
+  - target: H-021
+    effect: requires_research
+    why: 'H-021 (agente: No soportada) lee la diferencia entre cosechas como fijada en la entrada, en línea con
+      R-006 («concentrado en la entrada»). R-017 lo respalda en lo grueso: composición 84% (F-097) y ticket de entrada
+      más bajo (F-098). Pero también ve bajar a la cosecha 2022 dentro de la ventana (efecto dentro de −COP 5,2
+      mil) y advierte que su ticket de entrada incluye pagos iniciales grandes. Si esa baja es real, hay diferencias
+      después de la entrada y H-021 se acercaría a soportada. Si es el paso de un primer pago grande al pago recurrente
+      (F-085, F-086), no. R-017 no compara las cosechas a igual edad, así que no permite decidirlo.'
+  - target: Q-015
+    effect: requires_research
+    why: R-017 no mide a igual edad. Aporta la composición por cosechas (84%) y la señal de que la cosecha 2022
+      también baja, que puede ser real o deberse al primer pago. Se resuelve con el mismo chequeo de H-021, así
+      que no abro una segunda alerta.
+  - target: H-011
+    effect: requires_research
+    why: 'H-011 es de la rama CFO (HF2a): habla de clientes que salen y de su valor antes de descuentos. R-017 solo
+      ve churn observado. Por promedio, quienes hacen churn pagaban 1,70×, 1,58× y 1,37× lo del cliente activo del
+      mes previo (2022–2024), con límite inferior del intervalo por encima de 1 (F-101). Por mediana no pagaban
+      más (1,00; 0,97; 1,11; F-102), así que la diferencia la ponen pocas cuentas grandes. «Antes de descuentos»
+      no se puede evaluar, porque los pagos no permiten separar precio y descuento (F-093). Y, por D-004, el pago
+      observado no sustituye la respuesta a una pregunta del CFO. Además, el churn observado incluye a quienes vuelven
+      (reactivación de COP 86,5 millones en R-004), y el churn persistente es bastante menor que el observado (F-103).
+      Esas cuentas grandes podrían estar saltándose un pago, no saliendo.'
+  - target: Q-008
+    effect: supports
+    why: Da una respuesta parcial, observada y en términos relativos. Por promedio, el churn observado se lleva
+      1,37–1,70× el monto del cliente activo (F-101). Por mediana, no (F-102). El churn persistente por industria
+      va de 0,56 a 1,33 pp mensuales (F-103). No da el monto absoluto (eso está en el puente de R-004) ni el valor
+      antes de descuentos. Queda condicionada al chequeo que propongo en H-011.
+  - target: Q-012
+    effect: supports
+    why: 'Confirma y amplía R-003 y R-020. Hay más altas: 272 en 2022 y 554 en 2024, que cuadra con F-077 (27,2
+      y 55,4 por mes, 10 meses en cada año). El primer pago es menor: la mediana pasa de COP 63,0 a 42,0 mil y el
+      decil superior de 189,0 a 84,0 mil (F-098), dentro de cada industria (97%, F-100). Dos cuidados. Primero,
+      el ticket de 2022 incluye pagos iniciales grandes, así que el promedio y la cola alta pueden exagerar la caída;
+      la mediana es la cifra más firme. Segundo, 2023 (COP 36,8 mil, F-112) queda por debajo de 2024, y comparar
+      solo 2022 contra 2024 esconde esa caída intermedia. Además, «ticket de entrada» es el primer pago observado,
+      no el precio recurrente.'

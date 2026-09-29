@@ -1,0 +1,116 @@
+id: T-012
+type: table
+table_key: FIN-F-070
+title: Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…
+question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance
+  va en Habilitación comercial o en producto?
+columns:
+- anio
+- sm_total
+- habilitacion
+- software_tools
+- freelance
+- share_habilitacion
+- altas
+- sm_por_alta_con_habilitacion
+- sm_por_alta_sin_habilitacion
+rows:
+- - 2022
+  - 28.656
+  - 3.352
+  - 1.224
+  - 2.128
+  - 0.117
+  - 272.0
+  - 0.1054
+  - 0.093
+- - 2023
+  - 25.107
+  - 1.805
+  - 1.077
+  - 0.728
+  - 0.0719
+  - 650.0
+  - 0.0386
+  - 0.0358
+- - 2024
+  - 19.755
+  - 0.853
+  - 0.853
+  - 0.0
+  - 0.0432
+  - 554.0
+  - 0.0357
+  - 0.0341
+units:
+  anio: int
+  sm_total: num2
+  habilitacion: num2
+  software_tools: num2
+  freelance: num2
+  share_habilitacion: num2
+  altas: num2
+  sm_por_alta_con_habilitacion: num2
+  sm_por_alta_sin_habilitacion: num2
+definitions: {}
+message: Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndola
+  y de 0,09 a 0,03 excluyéndola.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-004
+  - EC-INV-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-004\nWITH sm AS (\n  SELECT CAST(substr(month,1,4) AS INT) AS anio, month,\n         total_sm_spend,
+  enablement_spend, software_tools, freelance\n  FROM mart.sm_monthly WHERE month >= '2022-03'\n), alt AS (\n  SELECT
+  CAST(substr(month,1,4) AS INT) AS anio, SUM(new_customers) AS altas\n  FROM mart.monthly_metrics WHERE month >=
+  '2022-03' GROUP BY 1\n)\nSELECT sm.anio,\n  ROUND(SUM(sm.total_sm_spend),3) AS sm_total,\n  ROUND(SUM(sm.enablement_spend),3)
+  AS habilitacion,\n  ROUND(SUM(sm.software_tools),3) AS software_tools,\n  ROUND(SUM(sm.freelance),3) AS freelance,\n
+  \ ROUND(SUM(sm.enablement_spend)/SUM(sm.total_sm_spend),4) AS share_habilitacion,\n  alt.altas,\n  ROUND(SUM(sm.total_sm_spend)/alt.altas,4)
+  AS sm_por_alta_con_habilitacion,\n  ROUND((SUM(sm.total_sm_spend)-SUM(sm.enablement_spend))/alt.altas,4) AS sm_por_alta_sin_habilitacion\nFROM
+  sm JOIN alt ON alt.anio = sm.anio\nGROUP BY sm.anio, alt.altas ORDER BY sm.anio"
+transformation: E-004 · run_sql · SQL ad hoc de solo lectura; EC-INV-02 · search_evidence · Afirmación canónica
+  verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-c958 · C-009
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2022'
+  - '2024'
+  formato: num2
+  series:
+  - nombre: sm por alta con habilitacion
+    valores:
+    - 0.1054
+    - 0.0357
+  - nombre: sm por alta sin habilitacion
+    valores:
+    - 0.093
+    - 0.0341
+created_at: '2026-09-29T10:37:12-06:00'
+status: valid
+validation_errors: []
+finding: F-070
+links:
+- F-070
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+updated_at: '2026-09-29T10:37:12-06:00'
+version: 1

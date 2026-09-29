@@ -203,8 +203,10 @@ async def _job(job, params):
                  "se cubre con 1–2 claims; en guion_map di por lámina (slide_id S#.#) qué claims la cubren y si queda covered, partial "
                  "o missing. Una lámina sin evidencia aceptada NO se rellena: coverage missing y su pregunta va a unresolved_questions."
                  if fr.get("storyline_guide") else "Máximo 8 claims; guion_map vacío."))
+    # a whole story (every slide of the guion, its claims and coverage) is a long answer at max effort: 15 min was not enough
     spec = RunSpec(agent="cos", role="story", system=system, prompt=prompt, schema=SCHEMA, max_turns=4,
-                   skills=skills.record(selected), purpose="Story Package", case_id=store.id, case_root=store.root)
+                   skills=skills.record(selected), purpose="Story Package" + (" (borrador)" if draft else ""), case_id=store.id,
+                   case_root=store.root, timeout_s=2400)
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
     return apply_package(store, res.output, run_id=res.run_id, actor="cos", draft=draft)
 

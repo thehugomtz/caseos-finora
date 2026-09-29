@@ -1,0 +1,60 @@
+id: C-016
+type: claim
+key: monto-dos-lecturas
+question: ¿Por qué con los datos actuales no se puede contestar cuánto cambió el MRR por suscripción, tarifa o descuento?
+headline: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas
+answer: 'El dato es cliente × mes × monto pagado: en los ejemplos construidos del CFO, un cambio de suscripción
+  y un descuento dan exactamente el mismo monto, y no hay catálogo de precios, descuentos, créditos ni pausas. Además,
+  el monto es consistente con cobro más que con contrato: 25,3% del movimiento bruto sin primeros pagadores (COP
+  282,8 millones entre mar-22 y sep-24) vuelve exacto al nivel previo al mes siguiente. Es una prueba de lo que
+  se puede distinguir, no una lectura de lo que pasó.'
+role_in_story: diagnosis
+evidence_ids:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+table_ids:
+- T-058
+- T-061
+- T-028
+research_ids:
+- R-002
+- R-011
+- R-020
+- R-001
+framework_ids: []
+confidence: high
+limitations:
+- 'Pendiente de tu aceptación: F-093, F-090, F-073, F-130 y F-082 están propuestos. F-130 viene de fuente sin verificar.'
+- 'Los ejemplos del CFO (Q-025) son construidos: prueban un límite del modelo, no describen a Finora.'
+- No se afirma que hubo descuentos, ni se infieren del tamaño de un salto del monto.
+- 'No hay cifra histórica de revenue no capturado ni puente histórico por tarifa y descuento: se propone hacia adelante.'
+visual_intent: 'Mismo resultado, causas distintas: historias diferentes (cambia la suscripción vs empieza un descuento)
+  que producen el mismo monto observado.'
+hugo_wording: Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
+links:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+- T-058
+- T-061
+- T-028
+- R-002
+- R-011
+- R-020
+- R-001
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T11:54:06-06:00'
+version: 1

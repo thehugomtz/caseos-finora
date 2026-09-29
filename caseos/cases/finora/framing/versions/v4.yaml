@@ -1,0 +1,488 @@
+version: 4
+executive_question: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos
+  en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
+executive_question_history:
+- text: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué sigue siendo solo
+    una posibilidad y qué información permitiría elegir entre ellas?
+  by: hugo
+hugo_thinking: []
+structured_interpretation: []
+candidate_frames:
+- name: CRO por cuánto entra, quién entra y cómo compra con el tiempo
+  description: Incluye rutas distintas sin asumir que sabemos quién comprará en el futuro. C1, C2 y C3.
+  when_it_wins: Es el corte elegido.
+  chosen: true
+- name: CFO por clientes que entran / salen / permanecen
+  description: Evita contar la misma cuenta en dos grupos entre las mismas fechas; dentro de cada grupo distinguimos
+    suscripción y descuento.
+  when_it_wins: Es el corte elegido.
+  chosen: true
+- name: CRO por etapas comerciales
+  description: Dónde se detiene el avance cuando sí hay historial de etapas.
+  when_it_wins: No sirve igual para self-serve ni entradas directas; las etapas quedan como lugar donde investigar
+    dentro de C3.
+  chosen: false
+- name: CFO por comportamiento / precio / descuentos
+  description: Se parece a la pregunta del ejecutivo.
+  when_it_wins: 'No separa causas limpiamente: un precio o descuento puede cambiar el comportamiento. Se investigan
+    dentro de los grupos.'
+  chosen: false
+initial_storyline:
+- 'Situación (Overview): Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente
+  activo, periodo por fijar). Esa brecha abre Growth y Revenue.'
+- 'Growth, lo que sí vemos: los primeros pagadores observados y su actividad económica por industria, y el gasto
+  de Marketing por categoría en el tiempo, descritos sin atribuir ventas al gasto.'
+- 'Growth, lo que no vemos: no todos recorren el funnel igual (propuesta: Assisted, Self Service, Executive). Demanda,
+  calidad, capacidad/atención y post-SQL quedan como explicaciones a contrastar, cada una con el dato que permitiría
+  elegir.'
+- 'Growth, cómo operarlo: primero definiciones y fuentes comunes; después, seguimiento recurrente por foros (dashboards,
+  análisis ad hoc, agentes), atado a decisiones del CRO que aún no están definidas.'
+- 'Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
+  Proponemos cómo introducir descuentos temporales y un modelo de datos que separe el valor de la suscripción del
+  precio pagado.'
+- 'Qué tan seguros estamos y qué cambiaría: la separación de preguntas es defendible bajo las definiciones que explicamos.
+  Para elegir causas faltan eventos de entradas y compras, y datos separados de suscripción, tarifa y descuento.'
+research_needed:
+- id: RN-W6
+  question: ¿Qué información mínima falta para contestar al CRO (entradas únicas con fecha, señales iniciales, recorrido,
+    atención, vínculo con pago)?
+  why: 'HC1–HC3 tienen capacidad 0 con los datos actuales: sin esto la respuesta al CRO queda como propuesta.'
+  links:
+  - Q-016
+  - H-001
+  - H-002
+  - H-003
+  status: pending
+  proposed_by: import (brief v0.3 W6)
+- id: RN-W7
+  question: ¿Qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado?
+  why: 'HF1–HF3 tienen capacidad 0: sin componentes explícitos no se separa suscripción, tarifa y descuento.'
+  links:
+  - Q-017
+  - H-009
+  - H-010
+  - H-011
+  status: pending
+  proposed_by: import (brief v0.3 W7)
+- id: RN-5eff9f
+  question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el
+    2,8× y el −38% del Overview?
+  why: 'Es el titular que abre toda la historia: si cambian el periodo o la definición, cambia la magnitud y quizá
+    el mensaje.'
+  links:
+  - H-017
+  - H-018
+  - N-016
+  - N-017
+  status: pending
+  proposed_by: framer
+  at: '2026-09-29T00:26:18-06:00'
+- id: RN-66535e
+  question: ¿Qué documenta el archivo de gasto de Marketing (unidad, moneda y periodo por categoría)? ¿Software
+    Tools + Freelance es gasto de Marketing o de producto?
+  why: Decide si la Lámina 2 puede agrupar el gasto en los tres bloques de Hugo y cruzarlo por fechas con los nuevos
+    pagadores, o si solo describe tendencias por separado.
+  links:
+  - H-022
+  - Q-018
+  status: pending
+  proposed_by: framer
+  at: '2026-09-29T00:26:18-06:00'
+- id: RN-86a650
+  question: '¿Qué dato mínimo separaría una capacidad comercial insuficiente de una caída de calidad: la carga por
+    SDR/AE y el tiempo a primer contacto por cohorte de entrada, frente a las señales de ajuste al entrar?'
+  why: 'Son las dos hipótesis de la Lámina 4 y llevan a acciones distintas: sumar o reasignar capacidad, o cambiar
+    cómo se generan los leads.'
+  links:
+  - H-005
+  - H-006
+  - Q-016
+  - Q-021
+  status: pending
+  proposed_by: framer
+  at: '2026-09-29T00:26:18-06:00'
+decisions_needed:
+- Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente).
+- 'Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa.'
+- 'Qué es «Executive» en la Lámina 3: la ruta de entrada directa a SQL o un segmento de cuentas con KAM. Define
+  si las columnas separan cómo compra el cliente o quién es.'
+- Qué decisiones del CRO asumimos explícitamente para la columna «Decision Making», dado que el caso no las define.
+should_not_claim:
+- 'Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.'
+- 'Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera
+  aparición observada.'
+- 'Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.'
+- 'Que hubo descuentos en el histórico: el caso habla de introducirlos.'
+- 'Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.'
+- 'Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.'
+- Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por
+  acordar).
+- Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
+- Descuentos a partir del tamaño de un salto del monto.
+- Una lectura del puente si las contribuciones no concilian con el total.
+- 'Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto
+  de canal o ruta.'
+- Un segmento fabricado por clustering cuando no hay concentración clara.
+- La calidad de los leads a partir de lo que pasa después del pago.
+- Retención contractual a partir de la continuidad de pago.
+- 'Que Finora «tiene un problema» de CRM o analítica digital: que los datos del caso no traigan canal ni etapas
+  no prueba que Finora no los registre.'
+- Valores de LTV o UCM (no hay margen ni costo por cliente) ni de CAC por canal (no hay canal). Un CAC combinado
+  depende de documentar la unidad del gasto y de acordar qué es adquirir un cliente.
+- Que una categoría de gasto (ToFu, Team, Habilitación) generó ventas porque las dos series se mueven en las mismas
+  fechas.
+- 'Que el ~−38% por cliente activo sea deterioro de la salud del negocio: todavía no separamos la mezcla de quienes
+  entran, el precio y las salidas.'
+language_notes:
+- Hugo usa «monto observado» y «primer pagador observado» en lugar de MRR y cliente nuevo mientras la semántica
+  no esté confirmada.
+- 'Términos en inglés que Hugo usa tal cual: leads, funnel, churn, self-serve, SQL, MRR.'
+- 'Overview: «MRR pagado por cliente activo» (o «monto pagado por cliente activo») en lugar de «MRR» a secas; es
+  el ARPU observado de Hugo.'
+- «Entradas» en la Lámina 2 = primeros pagadores observados; «entradas» y «leads» del funnel quedan para L3–L4.
+- «Executive» se puede confundir con Account Executive (el rol que entra después de SQL en el caso), y «KAM» no
+  aparece en el caso, que habla de SDRs y AEs. Conservar los términos de Hugo y definirlos en la lámina.
+- «Foros» = espacios recurrentes donde se toman decisiones (p. ej., la revisión comercial semanal); se conserva
+  el término.
+risks:
+- El esqueleto (Overview + 4 láminas de Growth + Revenue) es material de soporte; si se usa como la presentación
+  de ≤5 min, no cabe.
+- La Lámina 4 carga tres preguntas del brief (concentración + métricas, hipótesis + datos, solución analítica) y
+  puede quedar como una lista de frameworks sin respuesta.
+- El agente propio dentro de «Seguimiento» puede leerse como demo de herramienta si no se ata a una decisión concreta
+  del CRO.
+mode: organize
+updated_at: '2026-09-29T09:39:03-06:00'
+executive_question_note: Formulada como pregunta desde brief v0.3 §01 · Qué estamos tratando de conseguir.
+stress_test:
+- n: 1
+  point: No sabemos quién comprará algún día
+  risk: Separar «nunca compra» de «compra más tarde» exigía observar un futuro que todavía no tenemos.
+  resolution: Juntar ambas cosas en la evolución de compra a lo largo del tiempo; retraso y pérdida siguen como
+    explicaciones posibles.
+- n: 2
+  point: Ordenar ramas no separa automáticamente las causas
+  risk: Atención, demanda, precio y producto pueden afectarse entre sí.
+  resolution: No sumar dos causas como si fueran independientes sólo porque tienen nombres distintos.
+- n: 3
+  point: «Peor calidad» puede ser una mezcla que no vemos
+  risk: Dentro de un grupo amplio puede haber personas distintas que no identificamos.
+  resolution: Comparar características conocidas al entrar y dejar la parte que no podemos explicar abierta; no
+    culpar por descarte.
+- n: 4
+  point: El recorrido final no es un dato inicial
+  risk: Que alguien termine hablando con ventas puede depender de lo que pasó durante el proceso.
+  resolution: Separar cómo entró de lo que ocurrió después.
+- n: 5
+  point: Ser reciente no es lo mismo que tardar más
+  risk: Muchas entradas nuevas pueden parecer lentas aunque el proceso siga igual.
+  resolution: Comparar personas con el mismo tiempo desde que entraron.
+- n: 6
+  point: Más volumen no explica solo una peor proporción
+  risk: La cantidad total aclara cuánto creció la demanda, pero no por qué menos de ella termina comprando.
+  resolution: Usar C1 para verificar la escala de la entrada; C2 y C3 para investigar cómo se traduce en clientes.
+- n: 7
+  point: Entradas y ventas del mismo mes no necesariamente corresponden
+  risk: Quien compra hoy pudo haber entrado semanas antes.
+  resolution: No dividir sin más compradores del mes entre leads del mes. Seguir grupos desde su entrada.
+- n: 8
+  point: Entrar/salir/permanecer no explica el porqué del monto
+  risk: Esos grupos separan clientes, pero no distinguen suscripción de tarifa o descuento.
+  resolution: Dentro de cada grupo, preguntar por valor antes de descuento y descuento aplicado.
+- n: 9
+  point: No pagar no prueba haber cancelado
+  risk: Puede haber atraso, descuento total o un dato faltante.
+  resolution: Separar relación activa de pago observado. Cuando sólo vemos pagos, decirlo así.
+- n: 10
+  point: No asumir descuentos históricos
+  risk: El caso habla de introducirlos; no confirma que expliquen cambios pasados.
+  resolution: Separar lo que ocurrió en el histórico de si el modelo permitiría entender descuentos futuros.
+- n: 11
+  point: Un neto estable puede esconder cambios
+  risk: Altas y bajas, o crecimiento y descuentos, pueden compensarse.
+  resolution: Mirar las partes cuando existan.
+- n: 12
+  point: «Necesitamos CRM» es demasiado general
+  risk: No dice qué dato distinguiría calidad de atención.
+  resolution: Precisar qué comparación haríamos, qué esperaríamos ver y qué explicación alternativa seguiría abierta.
+- n: 13
+  point: Importancia no significa que podamos calcularlo
+  risk: Las preguntas centrales del funnel requieren personas y eventos que no están en Transactions.
+  resolution: Separar trabajo posible con la data actual de preguntas importantes que necesitan más evidencia.
+- n: 14
+  point: Descuento no equivale a dinero recuperable
+  risk: Sin el descuento quizá el cliente no habría comprado o habría cancelado.
+  resolution: Distinguir cuánto se redujo el precio de cuánto se habría ganado sin ofrecer esa reducción.
+perspectives:
+- who: CEO
+  question: ¿Y si estamos comparando leads recientes con compras de personas que llegaron antes?
+  changes: Antes de afirmar que algo empeoró, revisar si la comparación tiene sentido.
+- who: Cliente
+  question: ¿Y si no soy un lead malo, sino que el producto, precio o experiencia no me convence?
+  changes: No aceptar como hecho la explicación de Sales.
+- who: Competidor
+  question: ¿Y si apareció una alternativa mejor, aunque nuestra atención no haya cambiado?
+  changes: Dejar esa posibilidad abierta; investigar afuera sólo si aparece una señal que lo justifique.
+- who: CFO
+  question: ¿Y si cambió cuándo cobramos o cómo registramos, y no la suscripción?
+  changes: Aclarar el significado del monto antes de explicar su cambio.
+- who: Lectura del enunciado
+  question: ¿Y si no había descuentos y el reto pide prepararnos para cuando existan?
+  changes: Dar espacio a la prueba de si el modelo distingue escenarios, sin atribuir descuentos al pasado.
+parked:
+- Inferir canales mediante grupos de pagos; benchmarks generales; atribución multicanal; estimar LTV o CAC causal;
+  modelar quién comprará «algún día»; adivinar descuentos históricos; diseñar o mostrar funciones de la herramienta.
+  (brief v0.3 §08 · Lo que dejamos fuera por ahora)
+source: brief v0.3 (importado)
+pending:
+  guion:S1:
+    value:
+      id: S1
+      title: Overview
+      purpose: 'Situación (Overview): Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38%
+        por cliente activo, periodo por fijar). Esa brecha abre Growth y Revenue.'
+      slides:
+      - id: S1.1
+        title: Overview
+        question: ''
+        intent: observaciones generales y salud del negocio que introducen las secciones siguientes (p. ej. clientes
+          4,5× vs ingreso 2,8×; MRR por cliente activo −38%)
+        notes: Migrado de Entregables del brief.
+        links: []
+    basis: brief · Entregables aprobados
+    why: Tu estructura estaba dentro de Entregables del brief; aquí queda como Guion para que el COS y el Storyteller
+      la sigan.
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  guion:S2:
+    value:
+      id: S2
+      title: Growth
+      purpose: 'Growth, lo que sí vemos: los primeros pagadores observados y su actividad económica por industria,
+        y el gasto de Marketing por categoría en el tiempo, descritos sin atribuir ventas al gasto.
+
+        Growth, lo que no vemos: no todos recorren el funnel igual (propuesta: Assisted, Self Service, Executive).
+        Demanda, calidad, capacidad/atención y post-SQL quedan como explicaciones a contrastar, cada una con el
+        dato que permitiría elegir.
+
+        Growth, cómo operarlo: primero definiciones y fuentes comunes; después, seguimiento recurrente por foros
+        (dashboards, análisis ad hoc, agentes), atado a decisiones del CRO que aún no están definidas.'
+      slides:
+      - id: S2.1
+        title: Las relaciones que comentó Hugo
+        question: ''
+        intent: las relaciones que comentó Hugo (por precisar)
+        notes: Migrado de Entregables del brief (L1).
+        links: []
+      - id: S2.2
+        title: Entradas y actividad económica de clientes y segmentos
+        question: ''
+        intent: 'entradas y actividad económica de clientes y segmentos; inversión de S&M por categoría (generación
+          de demanda ToFu: Paid Media y publicidad no web · Team: Payroll Expenses y Travel · habilitación, ¿producto?:
+          Software Tools y Freelance) y hasta dónde se puede relacionar con ventas cruzando fechas'
+        notes: Migrado de Entregables del brief (L2).
+        links: []
+      - id: S2.3
+        title: Cómo definir y medir el funnel si no todos lo recorren igual
+        question: ¿Cómo definir y medir el funnel si no todos lo recorren igual?
+        intent: 'cómo definir y medir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL,
+          estancamientos de semanas): Assisted / Self Service / Executive, con canales (incl. digital, WoM, clientes
+          que no requirieron KAM), funnel propuesto, AAARRR, conversion rate y métricas clave'
+        notes: Migrado de Entregables del brief (L3).
+        links: []
+      - id: S2.4
+        title: Dónde y en qué segmentos se concentra la pérdida de crecimiento
+        question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?
+        intent: 'dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets,
+          mix; quizá una matriz de burbuja: industrias de bajo churn, ticket alto y poco volumen)'
+        notes: Migrado de Entregables del brief (L4).
+        links: []
+      - id: S2.5
+        title: Qué métricas propondrías que hoy no existen
+        question: ¿Qué métricas propondrías que hoy no existen?
+        intent: qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas
+        notes: Migrado de Entregables del brief (L5).
+        links: []
+      - id: S2.6
+        title: Hipótesis ToFu y BoFu
+        question: ''
+        intent: hipótesis ToFu y BoFu (demanda, calidad, velocidad de atención, conversión post-SQL; p. ej. la capacidad
+          comercial instalada no alcanza la demanda generada, la calidad de la máquina de leads bajó) y qué datos
+          validan o descartan cada una
+        notes: Migrado de Entregables del brief (L6).
+        links: []
+      - id: S2.7
+        title: Solución analítica para que el CRO opere el funnel de forma recurrente y qué decisiones le permite
+          tomar
+        question: ''
+        intent: 'solución analítica para que el CRO opere el funnel de forma recurrente y qué decisiones le permite
+          tomar (técnica: pulir CRM, analítica digital · decision making: dashboards automatizados por foro, análisis
+          ad hoc, agentes de IA)'
+        notes: Migrado de Entregables del brief (L7).
+        links: []
+    basis: brief · Entregables aprobados
+    why: Tu estructura estaba dentro de Entregables del brief; aquí queda como Guion para que el COS y el Storyteller
+      la sigan.
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  guion:S3:
+    value:
+      id: S3
+      title: Revenue
+      purpose: 'Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción
+        o descuento). Proponemos cómo introducir descuentos temporales y un modelo de datos que separe el valor
+        de la suscripción del precio pagado.'
+      slides:
+      - id: S3.1
+        title: Qué data observable de pricing introductorio podemos sacar
+        question: ¿Qué data observable de pricing introductorio podemos sacar?
+        intent: qué data observable de pricing introductorio podemos sacar
+        notes: Migrado de Entregables del brief (L1).
+        links: []
+      - id: S3.2
+        title: Cómo debería Finora introducir descuentos temporales
+        question: ¿Cómo debería Finora introducir descuentos temporales?
+        intent: cómo debería Finora introducir descuentos temporales (mecanismo propuesto, implicaciones multidisciplinarias,
+          preguntas del CFO contestadas con el modelo propuesto)
+        notes: Migrado de Entregables del brief (L2).
+        links: []
+      - id: S3.3
+        title: Cómo separar el valor de la suscripción del precio efectivamente pagado
+        question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado?
+        intent: 'cómo separar el valor de la suscripción del precio efectivamente pagado: propuesta de modelo de
+          datos (campos, tablas, definiciones)'
+        notes: Migrado de Entregables del brief (L3).
+        links: []
+      - id: S3.4
+        title: Cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión
+          reales
+        question: ¿Cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión
+          reales?
+        intent: 'cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión
+          reales (Hugo: probablemente lo integra la misma propuesta de modelo de datos)'
+        notes: Migrado de Entregables del brief (L4).
+        links: []
+    basis: brief · Entregables aprobados
+    why: Tu estructura estaba dentro de Entregables del brief; aquí queda como Guion para que el COS y el Storyteller
+      la sigan.
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  plan:RT-001:
+    value:
+      id: RT-001
+      question: ¿Qué información mínima falta para contestar al CRO (entradas únicas con fecha, señales iniciales,
+        recorrido, atención, vínculo con pago)?
+      kind: research
+      agent: business
+      intensity: L2
+      why: 'HC1–HC3 tienen capacidad 0 con los datos actuales: sin esto la respuesta al CRO queda como propuesta.'
+      links:
+      - Q-016
+      - H-001
+      - H-002
+      - H-003
+      slides: []
+    basis: research necesario del Framer
+    why: 'Tipo sugerido por el Router: Research. Cámbialo si no es.'
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  plan:RT-002:
+    value:
+      id: RT-002
+      question: ¿Qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado?
+      kind: data_model
+      agent: data_engineering
+      intensity: L2
+      why: 'HF1–HF3 tienen capacidad 0: sin componentes explícitos no se separa suscripción, tarifa y descuento.'
+      links:
+      - Q-017
+      - H-009
+      - H-010
+      - H-011
+      slides: []
+    basis: research necesario del Framer
+    why: 'Tipo sugerido por el Router: Modelo de datos. Cámbialo si no es.'
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  plan:RT-003:
+    value:
+      id: RT-003
+      question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×,
+        el 2,8× y el −38% del Overview?
+      kind: research
+      agent: business
+      intensity: L2
+      why: 'Es el titular que abre toda la historia: si cambian el periodo o la definición, cambia la magnitud y
+        quizá el mensaje.'
+      links:
+      - H-017
+      - H-018
+      - N-016
+      - N-017
+      slides: []
+    basis: research necesario del Framer
+    why: 'Tipo sugerido por el Router: Research. Cámbialo si no es.'
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  plan:RT-004:
+    value:
+      id: RT-004
+      question: ¿Qué documenta el archivo de gasto de Marketing (unidad, moneda y periodo por categoría)? ¿Software
+        Tools + Freelance es gasto de Marketing o de producto?
+      kind: research
+      agent: business
+      intensity: L2
+      why: Decide si la Lámina 2 puede agrupar el gasto en los tres bloques de Hugo y cruzarlo por fechas con los
+        nuevos pagadores, o si solo describe tendencias por separado.
+      links:
+      - H-022
+      - Q-018
+      slides: []
+    basis: research necesario del Framer
+    why: 'Tipo sugerido por el Router: Research. Cámbialo si no es.'
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false
+  plan:RT-005:
+    value:
+      id: RT-005
+      question: '¿Qué dato mínimo separaría una capacidad comercial insuficiente de una caída de calidad: la carga
+        por SDR/AE y el tiempo a primer contacto por cohorte de entrada, frente a las señales de ajuste al entrar?'
+      kind: data
+      agent: analytics
+      intensity: analytics
+      why: 'Son las dos hipótesis de la Lámina 4 y llevan a acciones distintas: sumar o reasignar capacidad, o cambiar
+        cómo se generan los leads.'
+      links:
+      - H-005
+      - H-006
+      - Q-016
+      - Q-021
+      slides: []
+    basis: research necesario del Framer
+    why: 'Tipo sugerido por el Router: Datos. Cámbialo si no es.'
+    hugo_wording: ''
+    turn_id: ''
+    by: caseos
+    at: '2026-09-29T09:21:46-06:00'
+    revises: false

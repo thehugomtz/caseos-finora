@@ -1,0 +1,43 @@
+id: X-012
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-014
+target: F-123
+title: R-014 debilita F-123
+finding_text: 'No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE
+  ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo
+  son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al…'
+why: 'F-123 afirma sin condición que Self Service ''funciona como grupo de control''. Pero el propio R-014 no sabe
+  si Self Service existía sin SDR/AE en ambos periodos, ni si cambió el reparto de entradas. Además, quien entra
+  por Self Service lo elige él mismo: sirve para comparar, pero no es un control como el de un experimento.'
+options:
+- key: A
+  label: Reformular como condicional
+  consequence: 'Quedaría así: ''Self Service puede servir como grupo de comparación si existió sin SDR/AE en ambos
+    periodos y el reparto no cambió; los experimentos naturales van antes que uno aleatorio (Q-023).'' Se conserva
+    la idea y la story no promete un control que no sabemos si existe.'
+- key: B
+  label: Aceptar como está
+  consequence: La respuesta a Q-023 y la prueba de H-006 quedarían apoyadas en un supuesto sin verificar.
+- key: C
+  label: Dejarla en revisión hasta saber si Self Service existía en ambos periodos
+  consequence: Q-023 queda sin respuesta mientras tanto.
+recommended: A
+recommended_why: Conserva lo útil (experimentos naturales primero) y deja a la vista la condición que R-014 no pudo
+  cerrar.
+detected_by: cos
+links:
+- R-014
+- F-123
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104559-cos-afa0
+created_at: '2026-09-29T11:22:25-06:00'
+updated_at: '2026-09-29T11:22:25-06:00'
+version: 1

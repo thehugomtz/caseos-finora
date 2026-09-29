@@ -1,0 +1,518 @@
+id: R-012
+type: research
+research_question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×,
+  el 2,8× y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+case_question: H-017, H-018, Q-010, Q-020
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  purpose:
+    mapped:
+    - H-017
+    - H-018
+    - Q-010
+    - Q-020
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-017
+- H-018
+- Q-010
+- Q-020
+- F-071
+- F-072
+- F-073
+- F-074
+- F-075
+- F-076
+- F-077
+- F-078
+- F-079
+- F-080
+- F-081
+- F-082
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 5
+job_id: JOB-20260929-103202-d073
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-003
+slides:
+- S1.1
+task_why: 'Si al fijar la ventana las cifras cambian de tamaño, cambia el arranque de toda la historia; si se sostienen,
+  el Overview abre Growth y Revenue con números defendibles (versión mejorada de RT-003: suma S1.1, respuesta de
+  arranque, pasos y la selección de señales).'
+task:
+  work: datos
+  draft_answer: 'Mi arranque es contar el Overview como una observación, no como un diagnóstico. Finora suma clientes
+    (pagadores observados) mucho más rápido que monto pagado, y lo investigado (R-003 y R-009, todavía sin aceptar)
+    apunta a que la brecha viene de quién entra, con un primer pago más bajo, más que de la base previa. Antes de
+    ponerlo en lámina hay que fijar una sola ventana: R-005 compara dic-22 contra oct-24 y R-003 usa periodos comparables
+    con un chequeo mar–oct. Después hay que confirmar que el 4,5× y el 2,8× salen de esa ventana. En la lámina se
+    habla de monto pagado observado, no de MRR contratado, y no se usa la palabra «deterioro» hasta separar mezcla,
+    precio y salidas.'
+  hugo_said:
+  - text: 'Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%,
+      de COP 92,8 mil a COP 57,8 mil.'
+    ref: N-020
+  - text: 'el storytelling lo visualizo más o menos así: Sección 1 Overview… Sección 2 Growth… Revenue…'
+    ref: N-021
+  steps:
+  - kind: data
+    what: 'Fijar la ventana del Overview: primer y último mes completos, meses con cobertura parcial (window_flag),
+      escala ×10.000 a COP y definición de cliente activo. Con esa ventana, recalcular el 4,5×, el 2,8×, el −38%
+      y el paso de COP 92,8 mil a COP 57,8 mil.'
+    where:
+    - mart.monthly_metrics_phase1
+    - mart.monthly_metrics
+    - staging.stg_customer_month
+    - mart.customer_month
+  - kind: data
+    what: 'Sobre la misma ventana, juntar las señales de salud que ya están calculadas, sin rehacerlas: puente del
+      monto (R-004), peso de las cosechas recientes (R-009) y churn observado con regresos.'
+    where:
+    - mart.monthly_metrics
+    - mart.vintage_month
+    - mart.churn_events
+  - kind: proposal
+    what: Entregar 3–4 señales para el Overview. Cada una lleva periodo, fuente y advertencia de nombre (monto pagado
+      observado, primera aparición), más el puente explícito hacia Growth (quién entra) y hacia Revenue (qué explica
+      el monto).
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: ''
+short_answer: Las cifras del Overview se reproducen con ventana completa; el resto es composición. Los múltiplos
+  4,5× y 2,8× coinciden con medir clientes activos y MRR pagado de punta a punta entre ene-22 y oct-24 sobre la
+  ventana completa. El −38% corresponde al MRR por cliente activo, con pago mayor que cero en el mes y la escala
+  fija del campo amount. La descomposición atribuye 108% del cambio a la composición de la base
+headline: Las cifras del Overview se reproducen con ventana completa; el resto es composición
+what_is_established:
+- 'Medir de punta a punta entre ene-22 y oct-24, con la escala fija del campo amount y ''activo'' como cliente con
+  pago mayor que cero en el mes, reproduce los múltiplos 4,5× y 2,8× y la variación de −38%. La lectura queda como
+  señal: parte del movimiento del monto pagado se revierte al mes siguiente.'
+- Las cifras de titular se construyen sobre métricas de stock con ene-22 como mes base, mientras las métricas de
+  flujo se miden desde mar-22. Son ventanas distintas dentro del mismo panel.
+- La descomposición atribuye 108% del cambio a la composición de la base y −8% al efecto dentro de las cosechas.
+  El MRR por cliente de los activos en ene-22 pasa de COP 92,8 mil a COP 97,4 mil, es decir que la caída agregada
+  no coincide con un menor pago de ese grupo.
+- 'Entre 2022 y 2024 las altas por mes pasan de 27,2 a 55,4 y el ticket de entrada promedio de COP 128,7 mil a COP
+  50,8 mil. Entre 2023 y 2024 ese patrón no continúa: el ticket promedio pasa de COP 47,9 mil a COP 50,8 mil y las
+  altas por mes se mantienen en 54,2 y 55,4.'
+- El churn mensual observado baja de 3,5% a 1,9%, mientras el churn que no vuelve a pagar en un plazo de un trimestre
+  pasa de 0,98% a 0,96%. El churn observado y la salida definitiva no describen lo mismo.
+- El gasto comercial por alta es menor en 2024 que en 2022, con un cambio de −66% en la unidad reportada, y la correlación
+  en niveles entre gasto total y altas del mismo mes es −0,57. Es una señal direccional, no una medida de eficiencia
+  comparable.
+- El panel no permite verificar la equivalencia entre amount y un importe contractual en COP, ni si un cliente sin
+  pago está cancelado, pausado o en atraso. Las señales de Growth y Revenue se pueden describir, no calificar.
+what_is_contested: []
+what_remains_unknown:
+- No se puede verificar con el panel la equivalencia entre el campo amount y un importe contractual en COP, ni si
+  un cliente sin pago en el mes está cancelado, pausado o en atraso; por eso las señales se describen pero no se
+  califican como deterioro comercial ni como artefacto de cobro.
+- Parte del movimiento del monto pagado se deshace al mes siguiente, lo que limita leer los movimientos mensuales
+  como cambios de contrato.
+- La lectura de eficiencia comercial queda como señal direccional porque la unidad del gasto de S&M no está documentada
+  y el archivo parece construido de arriba hacia abajo.
+- La señal de adquisición no se sostiene en el tramo reciente, de modo que no puede extenderse como tendencia única
+  del periodo.
+alternative_explanations: []
+case_implication: Si el Overview mantiene estos múltiplos, convendría publicar junto a ellos el mes base, la escala
+  aplicada al campo amount y la definición de cliente activo usada. Si Revenue se sigue leyendo en agregado, podría
+  convenir reportar el MRR por cliente abierto por cosecha, dado que la composición de la base concentra el cambio.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Cómo cambian las cifras del Overview si el mes base se mueve de ene-22 al primer mes de la ventana limpia de
+  flujos?
+- ¿Qué parte de la brecha de MRR por cliente entre las cosechas recientes y la base previa persiste al comparar
+  cada cosecha en el mismo mes de vida?
+- ¿La caída del ticket de entrada se concentra en algunas industrias o aparece de forma pareja, separando el mix
+  de entrada del efecto dentro de cada industria?
+- ¿Qué proporción del churn observado corresponde a clientes que retoman el pago liquidando meses pendientes, y
+  cómo queda la retención si esos casos se tratan como continuidad?
+handoff_to_cos:
+  summary: Las cifras del Overview se reproducen con ventana completa; el resto es composición
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-103202-db67
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: Medidos de punta a punta entre ene-22 y oct-24 sobre la ventana completa, los clientes activos pasan de
+    377 a 1.678 (índice 445 en base ene-22) y el MRR pagado de COP 35,0 millones a COP 97,0 millones (índice 277),
+    lo que coincide con los múltiplos 4,5× y 2,8× publicados en el Overview.
+  spec:
+    tipo: linea
+    x:
+    - ene-22
+    - feb-22
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Clientes activos
+      valores:
+      - 100.0
+      - 121.22015915119363
+      - 123.87267904509284
+      - 132.3607427055703
+      - 141.11405835543766
+      - 137.93103448275863
+      - 155.43766578249335
+      - 161.53846153846155
+      - 166.84350132625994
+      - 173.47480106100795
+      - 177.45358090185675
+      - 184.88063660477454
+      - 194.42970822281168
+      - 202.3872679045093
+      - 210.07957559681697
+      - 218.0371352785146
+      - 228.3819628647215
+      - 238.46153846153845
+      - 254.3766578249337
+      - 270.82228116710877
+      - 285.9416445623342
+      - 300.53050397877985
+      - 319.0981432360743
+      - 329.17771883289123
+      - 340.3183023872679
+      - 342.7055702917772
+      - 350.13262599469493
+      - 370.55702917771885
+      - 386.47214854111405
+      - 405.83554376657827
+      - 415.38461538461536
+      - 424.9336870026525
+      - 436.3395225464191
+      - 445.0928381962865
+    formato: idx
+  claim: C-001
+- id: V-02
+  title: El MRR por cliente activo, definido como MRR pagado dividido entre los clientes con pago mayor que cero
+    en el mes y expresado en COP tras aplicar la escala fija del campo amount, pasa de COP 92,8 mil en ene-22 a
+    COP 57,8 mil en oct-24, una variación de −38%.
+  spec:
+    tipo: linea
+    x:
+    - ene-22
+    - feb-22
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: MRR por cliente activo
+      valores:
+      - 92839.01419098144
+      - 95882.95385120349
+      - 84679.31042826553
+      - 97785.41464929859
+      - 92667.65763157894
+      - 76048.455
+      - 84263.42994880547
+      - 90461.4048275862
+      - 80228.56559618442
+      - 75334.00931192661
+      - 75148.32421524664
+      - 89543.71829268293
+      - 76893.68079126877
+      - 72763.91284403669
+      - 71579.38640151515
+      - 73093.43923357663
+      - 72034.96
+      - 68980.66288097887
+      - 67232.73197080292
+      - 66718.99901077374
+      - 64238.77928571428
+      - 63420.15254192409
+      - 63902.53950124688
+      - 62786.46672038679
+      - 59630.55491036633
+      - 58539.54116099072
+      - 59120.31061363637
+      - 60215.23539727988
+      - 58786.32895676047
+      - 58885.613980392154
+      - 57109.778927203064
+      - 56921.83353932584
+      - 56330.51234042553
+      - 57811.35091179976
+    formato: cop
+  claim: C-004
+- id: V-03
+  title: Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición
+    de la base, que explica 108% del cambio, y el efecto dentro de las cosechas, que explica −8%; el MRR por cliente
+    de los clientes activos en ene-22 pasa de COP 92,8 mil a COP 97,4 mil.
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: ene-22
+      valor: 92839.01419098144
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -37705.98731473553
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: 2678.324035553832
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179977
+      tipo: total
+  claim: C-006
+- id: V-04
+  title: En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente
+    de COP 46,3 mil y COP 43,0 mil, frente a COP 97,4 mil de los clientes activos en ene-22, que conservan 17,8%
+    de los clientes activos.
+  spec:
+    tipo: puntos
+    filas:
+    - Base previa (activos en ene-22)
+    - Altas de feb-22 (marcadas)
+    - Cosecha 2022 (mar–dic)
+    - Cosecha 2023
+    - Cosecha 2024
+    formato: cop
+    series:
+    - nombre: ene-22
+      valores:
+      - 92839.01419098144
+      - null
+      - null
+      - null
+      - null
+    - nombre: oct-24
+      valores:
+      - 97387.82768456376
+      - 69859.96888888889
+      - 65436.706829268296
+      - 46297.025157894735
+      - 42983.56385496183
+  claim: C-011
+- id: V-05
+  title: Las altas por mes pasan de 27,2 en 2022 (mar–dic) a 55,4 en 2024, mientras el ticket de entrada promedio
+    de esas altas pasa de COP 128,7 mil a COP 50,8 mil y su mediana de COP 63,0 mil a COP 42,0 mil.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: Ticket de entrada (M0)
+      valores:
+      - 128694.73080882353
+      - 50841.90861010831
+    - nombre: mediana
+      valores:
+      - 63000.0
+      - 42000.0
+  claim: C-007
+- id: V-06
+  title: 'La señal de adquisición no continúa en el último tramo: entre 2023 y 2024 el ticket de entrada promedio
+    pasa de COP 47,9 mil a COP 50,8 mil y la mediana de COP 36,8 mil a COP 42,0 mil, mientras las altas por mes
+    se mantienen en 54,2 y 55,4.'
+  spec:
+    tipo: barras
+    x:
+    - '2023'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: Ticket de entrada (M0)
+      valores:
+      - 47944.68807692307
+      - 50841.90861010831
+    - nombre: mediana
+      valores:
+      - 36750.0
+      - 42000.0
+  claim: C-008
+- id: V-07
+  title: El churn mensual observado de logos baja de 3,5% en 2022 a 1,9% en 2024, mientras el churn que no vuelve
+    a pagar en un plazo de un trimestre pasa de 0,98% a 0,96%, y 44% de los churns observados vuelve a pagar al
+    mes siguiente.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-009
+- id: V-08
+  title: 'Las reactivaciones por mes se mantienen en un rango estrecho a lo largo del periodo: 16,6 en 2022 (mar–dic),
+    11,7 en 2023 y 16,2 en 2024, frente a 198 y 279 eventos de churn observado en esos mismos años.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: promedio mensual
+      valores:
+      - 16.6
+      - 11.666666666666666
+      - 16.2
+  claim: C-010
+- id: V-10
+  title: 'Parte del movimiento del monto pagado corresponde a movimientos que se deshacen: 25,3% del movimiento
+    bruto sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte al mes
+    siguiente, lo que es consistente con que amount registre cobro y no importe contractual.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-013
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-103202-db67
+  path: investigations/runs/INV-20260929-103202-db67.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T11:09:17-06:00'
+findings:
+- F-071
+- F-072
+- F-073
+- F-074
+- F-075
+- F-076
+- F-077
+- F-078
+- F-079
+- F-080
+- F-081
+- F-082
+run_ids:
+- INV-20260929-103202-db67
+usage:
+  INV-20260929-103202-db67:
+    cost_usd: 1.4221380000000001
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true

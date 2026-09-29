@@ -1,0 +1,170 @@
+id: T-038
+type: table
+table_key: FIN-F-094
+title: Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes…
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- industry
+- arpa_dic22
+- arpa_oct24
+- arpa_var_pct
+- activos_dic22
+- activos_oct24
+- mrr_dic22_millones
+- mrr_oct24_millones
+- aporte_crecimiento_mrr_pct
+rows:
+- - Servicios profesionales
+  - 86036.0
+  - 45956.0
+  - -46.6
+  - 54.0
+  - 140.0
+  - 4.65
+  - 6.43
+  - 5.2
+- - Restaurantes
+  - 125387.0
+  - 68234.0
+  - -45.6
+  - 196.0
+  - 459.0
+  - 24.58
+  - 31.32
+  - 19.5
+- - Retail
+  - 60929.0
+  - 34654.0
+  - -43.1
+  - 115.0
+  - 360.0
+  - 7.01
+  - 12.48
+  - 15.8
+- - Producción
+  - 72595.0
+  - 58963.0
+  - -18.8
+  - 169.0
+  - 389.0
+  - 12.27
+  - 22.94
+  - 30.8
+- - Tecnología
+  - 87841.0
+  - 74192.0
+  - -15.5
+  - 107.0
+  - 206.0
+  - 9.4
+  - 15.28
+  - 17.0
+- - Salud
+  - 80639.0
+  - 69020.0
+  - -14.4
+  - 56.0
+  - 124.0
+  - 4.52
+  - 8.56
+  - 11.7
+units:
+  industry: texto
+  arpa_dic22: num2
+  arpa_oct24: num2
+  arpa_var_pct: num2
+  activos_dic22: num2
+  activos_oct24: num2
+  mrr_dic22_millones: num2
+  mrr_oct24_millones: num2
+  aporte_crecimiento_mrr_pct: num2
+definitions: {}
+message: Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes
+  y −43,1% en Retail, frente a −18,8% en Producción, −15,5% en Tecnología y −14,4% en Salud.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-012
+  - EC-MON-05
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-012\nWITH b AS (\n  SELECT industry,\n         SUM(CASE WHEN month = '2022-12' THEN active_customer
+  ELSE 0 END) AS activos_dic22,\n         SUM(CASE WHEN month = '2022-12' THEN paid_mrr_cop ELSE 0 END) AS mrr_dic22,\n
+  \        SUM(CASE WHEN month = '2024-10' THEN active_customer ELSE 0 END) AS activos_oct24,\n         SUM(CASE
+  WHEN month = '2024-10' THEN paid_mrr_cop ELSE 0 END) AS mrr_oct24\n  FROM mart.customer_month\n  WHERE active_customer
+  = 1 AND month IN ('2022-12', '2024-10')\n  GROUP BY 1\n)\nSELECT industry,\n       ROUND(mrr_dic22 / activos_dic22,
+  0) AS arpa_dic22,\n       ROUND(mrr_oct24 / activos_oct24, 0) AS arpa_oct24,\n       ROUND(100.0 * ((mrr_oct24
+  / activos_oct24) / (mrr_dic22 / activos_dic22) - 1), 1) AS arpa_var_pct,\n       activos_dic22,\n       activos_oct24,\n
+  \      ROUND(mrr_dic22 / 1000000.0, 2) AS mrr_dic22_millones,\n       ROUND(mrr_oct24 / 1000000.0, 2) AS mrr_oct24_millones,\n
+  \      ROUND(100.0 * (mrr_oct24 - mrr_dic22) / (SELECT SUM(mrr_oct24) - SUM(mrr_dic22) FROM b), 1) AS aporte_crecimiento_mrr_pct\nFROM
+  b\nORDER BY arpa_var_pct"
+transformation: E-012 · run_sql · SQL ad hoc de solo lectura; EC-MON-05 · search_evidence · Afirmación canónica
+  verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-007
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: scatter
+visual_artifact:
+  tipo: dispersion
+  puntos:
+  - etiqueta: Servicios profesionales
+    x: -0.466
+    y: 0.052000000000000005
+    tam: 140.0
+  - etiqueta: Restaurantes
+    x: -0.456
+    y: 0.195
+    tam: 459.0
+  - etiqueta: Retail
+    x: -0.431
+    y: 0.158
+    tam: 360.0
+  - etiqueta: Producción
+    x: -0.188
+    y: 0.308
+    tam: 389.0
+  - etiqueta: Tecnología
+    x: -0.155
+    y: 0.17
+    tam: 206.0
+  - etiqueta: Salud
+    x: -0.14400000000000002
+    y: 0.11699999999999999
+    tam: 124.0
+  ejes:
+    x:
+      columna: arpa_var_pct
+      nombre: Variación del MRR por cliente dic-22 a oct-24 (%)
+      formato: pct2
+    y:
+      columna: aporte_crecimiento_mrr_pct
+      nombre: Aporte al crecimiento del MRR (%)
+      formato: pct2
+    tamano:
+      columna: activos_oct24
+      nombre: Clientes activos oct-24
+      formato: int
+  etiqueta: industry
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-094
+links:
+- F-094
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

@@ -1,0 +1,249 @@
+id: T-026
+type: table
+table_key: FIN-F-071
+title: Medidos de punta a punta entre ene-22 y oct-24 sobre la ventana completa, los clientes activos pasan de 377
+  a…
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Periodo
+- Clientes activos
+- Índice (primer periodo = 100)
+rows:
+- - ene-22
+  - 377.0
+  - 100.0
+- - feb-22
+  - 457.0
+  - 121.22015915119363
+- - mar-22
+  - 467.0
+  - 123.87267904509284
+- - abr-22
+  - 499.0
+  - 132.3607427055703
+- - may-22
+  - 532.0
+  - 141.11405835543766
+- - jun-22
+  - 520.0
+  - 137.93103448275863
+- - jul-22
+  - 586.0
+  - 155.43766578249335
+- - ago-22
+  - 609.0
+  - 161.53846153846155
+- - sep-22
+  - 629.0
+  - 166.84350132625994
+- - oct-22
+  - 654.0
+  - 173.47480106100795
+- - nov-22
+  - 669.0
+  - 177.45358090185675
+- - dic-22
+  - 697.0
+  - 184.88063660477454
+- - ene-23
+  - 733.0
+  - 194.42970822281168
+- - feb-23
+  - 763.0
+  - 202.3872679045093
+- - mar-23
+  - 792.0
+  - 210.07957559681697
+- - abr-23
+  - 822.0
+  - 218.0371352785146
+- - may-23
+  - 861.0
+  - 228.3819628647215
+- - jun-23
+  - 899.0
+  - 238.46153846153845
+- - jul-23
+  - 959.0
+  - 254.3766578249337
+- - ago-23
+  - 1021.0
+  - 270.82228116710877
+- - sep-23
+  - 1078.0
+  - 285.9416445623342
+- - oct-23
+  - 1133.0
+  - 300.53050397877985
+- - nov-23
+  - 1203.0
+  - 319.0981432360743
+- - dic-23
+  - 1241.0
+  - 329.17771883289123
+- - ene-24
+  - 1283.0
+  - 340.3183023872679
+- - feb-24
+  - 1292.0
+  - 342.7055702917772
+- - mar-24
+  - 1320.0
+  - 350.13262599469493
+- - abr-24
+  - 1397.0
+  - 370.55702917771885
+- - may-24
+  - 1457.0
+  - 386.47214854111405
+- - jun-24
+  - 1530.0
+  - 405.83554376657827
+- - jul-24
+  - 1566.0
+  - 415.38461538461536
+- - ago-24
+  - 1602.0
+  - 424.9336870026525
+- - sep-24
+  - 1645.0
+  - 436.3395225464191
+- - oct-24
+  - 1678.0
+  - 445.0928381962865
+units:
+  Clientes activos: int
+  Índice (primer periodo = 100): idx
+definitions:
+  Clientes activos: Clientes con MRR pagado mayor que cero en el mes.
+  MRR pagado: Suma del monto pagado en el mes, multiplicado por 10.000 para expresarlo en COP. Es monto observado;
+    la lectura "cobrado" es hipótesis.
+message: Medidos de punta a punta entre ene-22 y oct-24 sobre la ventana completa, los clientes activos pasan de
+  377 a 1.678 (índice 445 en base ene-22) y el MRR pagado de COP 35,0 millones a COP 97,0 millones (índice 277),
+  lo que coincide con los múltiplos 4,5× y 2,8× publicados en el Overview.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-001
+  - E-002
+  - EC-RES-01
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-001
+
+  WITH m AS (SELECT month, month AS periodo, SUM(active_customer) AS valor FROM mart.customer_month WHERE month
+  BETWEEN ''2022-01'' AND ''2024-10'' GROUP BY ALL) SELECT periodo, arg_max(valor, month) AS valor, max(month) AS
+  mes_cierre, COUNT(*) AS meses FROM m GROUP BY ALL ORDER BY periodo
+
+
+  -- E-002
+
+  WITH m AS (SELECT month, month AS periodo, SUM(paid_mrr_cop)::DOUBLE AS valor FROM mart.customer_month WHERE month
+  BETWEEN ''2022-01'' AND ''2024-10'' GROUP BY ALL) SELECT periodo, arg_max(valor, month) AS valor, max(month) AS
+  mes_cierre, COUNT(*) AS meses FROM m GROUP BY ALL ORDER BY periodo'
+transformation: E-001 · query_metric · Métrica del catálogo · Clientes activos; E-002 · query_metric · Métrica del
+  catálogo · MRR pagado; EC-RES-01 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters:
+- periodo 2022-01–2024-10
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: month
+analysis_id: INV-20260929-103202-db67 · C-001
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: annotated_line
+visual_artifact:
+  tipo: linea
+  x:
+  - ene-22
+  - feb-22
+  - mar-22
+  - abr-22
+  - may-22
+  - jun-22
+  - jul-22
+  - ago-22
+  - sep-22
+  - oct-22
+  - nov-22
+  - dic-22
+  - ene-23
+  - feb-23
+  - mar-23
+  - abr-23
+  - may-23
+  - jun-23
+  - jul-23
+  - ago-23
+  - sep-23
+  - oct-23
+  - nov-23
+  - dic-23
+  - ene-24
+  - feb-24
+  - mar-24
+  - abr-24
+  - may-24
+  - jun-24
+  - jul-24
+  - ago-24
+  - sep-24
+  - oct-24
+  series:
+  - nombre: Clientes activos
+    valores:
+    - 100.0
+    - 121.22015915119363
+    - 123.87267904509284
+    - 132.3607427055703
+    - 141.11405835543766
+    - 137.93103448275863
+    - 155.43766578249335
+    - 161.53846153846155
+    - 166.84350132625994
+    - 173.47480106100795
+    - 177.45358090185675
+    - 184.88063660477454
+    - 194.42970822281168
+    - 202.3872679045093
+    - 210.07957559681697
+    - 218.0371352785146
+    - 228.3819628647215
+    - 238.46153846153845
+    - 254.3766578249337
+    - 270.82228116710877
+    - 285.9416445623342
+    - 300.53050397877985
+    - 319.0981432360743
+    - 329.17771883289123
+    - 340.3183023872679
+    - 342.7055702917772
+    - 350.13262599469493
+    - 370.55702917771885
+    - 386.47214854111405
+    - 405.83554376657827
+    - 415.38461538461536
+    - 424.9336870026525
+    - 436.3395225464191
+    - 445.0928381962865
+  formato: idx
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-071
+links:
+- F-071
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

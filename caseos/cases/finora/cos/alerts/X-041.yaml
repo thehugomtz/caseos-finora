@@ -1,0 +1,46 @@
+id: X-041
+type: alert
+kind: new_hypothesis
+status: open
+severity: medium
+effect: opens_new_hypothesis
+source: R-011
+target: T-004
+title: R-011 abre una hipótesis nueva T-004
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'T-004 y T-018 miden el ticket de entrada con el primer pago (mediana COP 63,0 mil en 2022 y 36,8 mil en 2023).
+  R-011 muestra que parte de los primeros pagos y reactivaciones va seguida de una bajada el mes siguiente, como
+  si fueran pagos de varios meses o de atrasos. Si esa proporción cambió entre años, parte de la caída se debería
+  a la forma de cobro y no a suscripciones más pequeñas. No está evaluado: R-011 no separa las 366 contracciones
+  entre primer pago y reactivación, ni por año. Afecta a R-003 y R-006; a R-009 menos, porque usa todos los meses
+  del cliente y no solo el primero.'
+options:
+- key: A
+  label: Añadir la comprobación a R-020
+  consequence: Separar las 366 contracciones entre primer pago y reactivación por año de entrada, y recalcular el
+    ticket con el monto usual (el segundo mes pagado, comparando solo a quienes lo tienen). Si la caída se mantiene,
+    el mensaje de entrada queda más fuerte; si no, cambia lo que se le dice al CEO y al CRO.
+- key: B
+  label: Mantener T-004 con la advertencia «primer pago observado; puede incluir más de un mes»
+  consequence: No requiere trabajo extra, pero deja la duda abierta en el mensaje central de entrada.
+- key: C
+  label: Esperar a que Finora explique qué representa cada fila
+  consequence: Depende de un dato externo sin fecha.
+recommended: A
+recommended_why: 'Se calcula con los datos actuales, es barato y protege la conclusión que más se repite en el research:
+  el cambio se concentra en la entrada (R-003, R-004, R-006, R-009).'
+detected_by: cos
+links:
+- R-011
+- T-004
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

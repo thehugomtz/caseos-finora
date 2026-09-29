@@ -1,0 +1,56 @@
+id: X-019
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-010
+target: H-006
+title: R-010 requiere más investigación H-006
+finding_text: 'Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002)
+  y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad
+  (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede v…'
+why: 'Sin roster de SDR/AE, hora del primer contacto ni tiempos de atención, H-006 no se puede probar ni descartar
+  (R-010, R-014). La evidencia externa la hace plausible, pero no es evidencia de Finora (F-128).
+
+
+  Hay además un problema de redacción. R-010 llama «capacidad comercial» a un gasto que sube 27% en jul–oct, en
+  una unidad no documentada (T-005):
+
+  - R-014 ya dijo, con confianza alta, que el gasto de Team/Payroll no mide capacidad.
+
+  - Si ese gasto incluye Habilitación, T-010 muestra que ni siquiera se sabe si una parte es gasto de producto.
+
+
+  Puesto al lado del +46% de Generación de Demanda, invita a leer «la demanda creció más que la capacidad». Eso
+  sería H-006 apoyada en un sustituto que no mide capacidad.'
+options:
+- key: A
+  label: Renombrar y blindar
+  consequence: 'En R-010 y F-126 se usa el nombre del rubro del archivo (Team y/o Habilitación, unidad no documentada)
+    y se suma a «No afirmar»: «que el gasto de Team mide capacidad de SDR/AE». H-006 sigue abierta sin un sustituto
+    falso.'
+- key: B
+  label: Mantener la etiqueta con caveat
+  consequence: Menos edición, con el riesgo de una lámina con «demanda +46% vs capacidad +27%» que se lea como evidencia
+    de H-006.
+- key: C
+  label: Sacar el gasto del bloque CRO
+  consequence: El bloque CRO queda limpio (F-126 ya dice que el gasto no dice nada de los leads), y el contraste
+    entre gasto y primeros pagadores pasa a Overview, con H-022 y R-015.
+recommended: A
+recommended_why: Alinea R-010 con R-014 sin perder el dato, y es compatible con llevar el contraste a Overview (opción
+  C) si Hugo lo prefiere ahí.
+detected_by: cos
+links:
+- R-010
+- H-006
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104715-cos-fbed
+created_at: '2026-09-29T11:27:18-06:00'
+updated_at: '2026-09-29T11:27:18-06:00'
+version: 1
