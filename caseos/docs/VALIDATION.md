@@ -212,3 +212,9 @@ Package. Encontrado y corregido:
   clasificación y ejemplos.
 - **Instrucciones delegadas etiquetadas como de Hugo:** el prompt de Story decía «Instrucciones de Hugo» aunque las
   escribiera Claude por delegación; ahora dice de quién son (`via`), y lo textual de Hugo va entre comillas con su ID.
+- **Límite de sesión de la suscripción (14:58 → 16:20):** a media corrida, el CLI respondió «You've hit your session
+  limit · resets 4:20pm». Cayeron R-029, tres evaluaciones del COS y el primer intento del borrador 2; se reintentaron
+  a las 16:21 (research: acción *retry*; COS: *send_to_cos* con nota de reintento). El servidor de vista previa se
+  apaga cuando termina el turno de Claude: mientras haya trabajos, el turno sigue abierto.
+- **Tope de presupuesto del Story Package:** con el diseño completo de los especialistas en el prompt, el borrador 2
+  topó los US$6 equivalentes a los 32 min (sin resultado). Story: US$15 y 60 min.

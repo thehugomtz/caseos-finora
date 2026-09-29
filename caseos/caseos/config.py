@@ -39,7 +39,7 @@ EFFORT = {r: os.environ.get(f"CASEOS_EFFORT_{r.upper()}", DEFAULT_EFFORT) for r 
 BUDGET_USD = {
     "framer": 8.0, "planner": 8.0, "briefer": 3.0, "cos": 4.0, "cos_impact": 3.0, "router": 1.0, "command": 1.0, "business_research": 8.0,
     "deep_research": 8.0, "peer_review": 4.0, "measurement": 8.0, "data_engineering": 8.0, "synthesis": 4.0,
-    "story": 6.0, "storyteller": 45.0,
+    "story": 15.0, "storyteller": 45.0,          # story: a whole guion with every specialist design in the prompt (6 cut v2 at 32 min)
 }
 
 
