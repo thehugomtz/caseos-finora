@@ -159,10 +159,14 @@ def readiness(store: CaseStore, phase: str) -> dict:
         if not pkg:
             blockers.append("No hay Story Package generado.")
         else:
-            from .story import validate_package  # late import: story depends on phases for gates
+            from .story import pending_acceptance, validate_package  # late import: story depends on phases for gates
             errs, warns = validate_package(store, pkg)
             blockers += errs
             warnings += warns
+            pend = pending_acceptance(store, pkg)
+            if pend:
+                blockers.append(f"La historia se apoya en evidencia que no has aceptado: {', '.join(pend[:12])}"
+                                + ("…" if len(pend) > 12 else "") + ". Acéptala (o recházala) en Research.")
     elif phase == "slides":
         decks = store.read_data("slides/decks.yaml", {}) or {}
         if not [d for d in (decks.get("decks") or []) if d.get("status") == "completed"]:

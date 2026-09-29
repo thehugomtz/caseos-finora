@@ -15,7 +15,7 @@ export const STATUS_LABEL = { open: "abierta", supported: "soportada", weakened:
   proposed: "propuesta", active: "activa", superseded: "reemplazada", reverted: "revertida", resolved: "resuelta", dismissed: "descartada",
   answered: "respondida", parked: "aparcada", valid: "válida", invalid: "inválida", weak: "débil", unsupported: "sin soporte", passed: "pasó QA",
   rendered: "renderizada", escalated: "escalada", not_started: "sin iniciar", in_progress: "en curso", review: "por revisar", ready: "Ready",
-  reopened: "reabierta", needs_review: "needs_review" };
+  reopened: "reabierta", needs_review: "needs_review", pending: "espera tu aceptación" };
 export const PHASE_LABEL = { briefing: "Briefing", framing: "Framing & Shaping", research: "Research", synthesis: "Chief of Staff", story: "Story", slides: "Slides" };
 
 export function idTag(id, opts = {}) {
@@ -37,7 +37,7 @@ export function kindChip(kind) { return h(`span.kind.${kind}`, KIND_LABEL[kind] 
 export function statusChip(status, cls) {
   const map = { completed: "good", supported: "good", ready: "good", active: "human", resolved: "good", passed: "good", running: "agent", queued: "agent",
     in_progress: "accent", review: "human", failed: "bad", blocked: "warn", weakened: "warn", contested: "bad", reopened: "warn", needs_review: "warn",
-    weak: "warn", unsupported: "bad", proposed: "", open: "", invalid: "bad" };
+    weak: "warn", unsupported: "bad", proposed: "", open: "", invalid: "bad", pending: "human" };
   return h(`span.chip.${cls || map[status] || "ghost"}`, STATUS_LABEL[status] || status || "—");
 }
 

@@ -104,7 +104,9 @@ def test_messy_text_is_classified_guarded_and_keeps_hugo_words(case):
     fr = case.read_data("framing/current.yaml")
     assert fr["executive_question"] == "¿Por qué cae el ingreso por cliente?"
     task = fr["pending"]["plan:RT-001"]["value"]
-    assert task["question"] == "¿El monto de entrada bajó?" and task["kind"] == "data" and task["agent"] == "analytics"
+    # a data task needs a data model: this case has none, so it becomes research and the turn says why
+    assert task["question"] == "¿El monto de entrada bajó?" and task["kind"] == "research" and task["agent"] == "business"
+    assert "modelo de datos" in corrections
     assert "Que hubo descuentos en el histórico" in fr["should_not_claim"]
     assert "MRR" in case.meta()["language"]["observed"]["preserved_terms"]
     assert "¿Por qué cae el ingreso por cliente?" in case.read_text("framing/current.md")

@@ -35,9 +35,15 @@ En cada turno:
    - `storyline_guide`: el guion de la historia de Hugo — secciones con láminas; cada lámina dice qué pregunta responde y
      qué debe mostrar. Respeta su estructura y sus palabras; tú la ordenas, no la reemplazas. Usa el id S# existente
      para revisar una sección.
-   - `research_plan`: una tarea por incertidumbre que importa (nunca un tema), tipada: `data` (Analytics sobre el modelo
-     de datos del caso, solo si ese dato existe), `research` (Business Research), `measurement` (cómo medirlo),
-     `data_model` (cómo modelarlo); con intensidad, por qué importa y a qué H/Q/lámina sirve.
+   - `research_plan`: una tarea por pregunta del guion que haya que trabajar (nunca un tema). La mayoría no es un
+     lookup sino **investigación y propuesta**: con el contexto del caso ya se puede poner una respuesta sobre la mesa.
+     Cada tarea trae `work` (propuesta · datos · research), `draft_answer` (tu respuesta de arranque, hipótesis de
+     trabajo en el registro de Hugo, sin cifras que no estén en el contexto), `hugo_said` (sus palabras textuales con el
+     ID, nunca paráfrasis), `steps` (data = qué buscar en el modelo y en qué tablas reales; si no existe, dilo y nombra
+     el proxy · research = qué buscar afuera · proposal = qué se entrega), `kind` = agente que la lidera (`data`
+     Analytics · `measurement` · `data_model` · `research`), intensidad, por qué importa y a qué H/Q/lámina sirve. Si Hugo
+     pide "agrega a research lo que hay que proponer", no le regreses preguntas: propón las respuestas de arranque.
+     El botón «Armar el plan desde el guion» corre esto mismo sobre todo el guion.
    - Además: pregunta ejecutiva, frames candidatos (máx. 3), decisiones necesarias, lo que no debemos afirmar todavía,
      riesgos, notas de lenguaje.
    Todo lo de shaping queda como propuesta: Hugo aprueba, edita o descarta cada sección.

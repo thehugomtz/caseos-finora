@@ -54,14 +54,19 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
    2. **Pregunta ejecutiva**.
    3. **Guion de la historia** — secciones → láminas; cada lámina dice qué pregunta responde y qué debe mostrar.
    4. **Hipótesis** con falsificador.
-   5. **Plan de investigación** — una tarea por incertidumbre, tipada por agente: *Datos* (Analytics sobre el modelo del
-      caso), *Research* (Business Research, L1–L3), *Medición* (Measurement) o *Modelo de datos* (Data Engineering).
+   5. **Plan de investigación** — **Armar el plan desde el guion**: cada pregunta de tus láminas se vuelve una tarea con
+      *qué sale* (investigación y propuesta · investigar datos · research externo), una **respuesta de arranque** escrita
+      con el contexto del caso y lo que ya dijiste (con tus palabras textuales citadas), y los **pasos**: qué investigar
+      en el modelo de datos (tablas reales), qué buscar afuera y qué se entrega. La lidera un agente: Analytics,
+      Measurement, Data Engineering o Business Research. Cada lámina del guion muestra qué tarea la trabaja.
    6–8. Lo que no afirmamos todavía, decisiones necesarias y riesgos.
 
    *Mark Ready* pide el problema aprobado. Si tu estructura vivía en Entregables del brief, **Traer como propuestas** la
    convierte en Guion (y el research necesario en tareas tipadas) sin aprobar nada por ti.
-4. **Research** — arriba, las tareas aprobadas del plan de investigación, cada una con su agente y un botón **Lanzar**
-   (lanzarlas es tu clic). Abajo puedes pedir cualquier otra investigación; el Router elige especialista (Business
+4. **Research** — arriba, las tareas aprobadas del plan de investigación, con qué sale, su respuesta de arranque, sus
+   pasos y un botón **Lanzar** (lanzarlas es tu clic). El especialista recibe la respuesta de arranque para validarla o
+   refutarla y, si la tarea tiene pasos de datos, **consulta el modelo de datos en solo lectura**; una cifra del modelo
+   solo cuenta si su consulta corrió en esa corrida (quedan listadas en el detalle). Abajo puedes pedir cualquier otra investigación; el Router elige especialista (Business
    Research, Measurement, Data Engineering, Analytics) e intensidad (L1 lookup · L2 · L3 deep research con peer review).
    Las citas solo cuentan si la URL se recuperó en la corrida. Aceptas, rechazas, cuestionas o profundizas cada resultado.
 5. **Datos** — el modelo de datos del caso en tres capas reales: **raw** (los CSV tal cual), **staging** (tipado con las

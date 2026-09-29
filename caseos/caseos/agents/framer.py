@@ -14,6 +14,7 @@ from ..model import EPISTEMIC_KINDS, KIND_LABELS, title_of, type_of
 from ..store import CaseStore
 from ..util import append_jsonl, clip, norm, now_iso, read_jsonl, write_jsonl_replace
 from . import base
+from .planner import TASK as PLAN_TASK
 
 MODES = ["organize", "advise", "challenge"]
 MODE_LABELS = {"organize": "Organize", "advise": "Advise", "challenge": "Challenge"}
@@ -42,8 +43,7 @@ FRAME = _obj({"name": _S, "description": _S, "when_it_wins": _S, "cost": _S})
 PROBLEM = _obj({"statement": _S, "situation": _S, "why_it_matters": _S, "in_scope": _SA, "out_of_scope": _SA})
 SLIDE = _obj({"title": _S, "question": _S, "intent": _S, "notes": _S, "links": _SA})
 SECTION = _obj({"id": _S, "title": _S, "purpose": _S, "slides": {"type": "array", "items": SLIDE}, "why": _S})
-TASK = _obj({"id": _S, "question": _S, "kind": {"type": "string", "enum": list(shaping.KINDS)},
-             "intensity": {"type": "string", "enum": ["L1", "L2", "L3", "auto"]}, "why": _S, "links": _SA, "slides": _SA})
+TASK = {**PLAN_TASK, "required": ["id", *PLAN_TASK["required"]], "properties": {"id": _S, **PLAN_TASK["properties"]}}
 SCHEMA = _obj({
     "reply": _S,
     "items": {"type": "array", "items": ITEM},
@@ -164,7 +164,9 @@ def build_prompt(store: CaseStore, message: str, mode: str, lenses: list[dict]) 
                   "cambio (si lo envías, la lista completa, máx. 3); problem con campos vacíos = sin cambio en esos campos; "
                   "storyline_guide = SOLO las secciones que cambian, completas con sus láminas (usa el id S# existente para revisar "
                   "una; id vacío = sección nueva); research_plan = SOLO tareas nuevas o revisadas (id RT-### para revisar; vacío = "
-                  "nueva); decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo. Todo lo de shaping queda "
+                  "nueva), cada una con work, draft_answer (tu respuesta de arranque desde el contexto: hipótesis de trabajo, sin "
+                  "cifras que no estén arriba), hugo_said (sus palabras textuales con el ID) y steps (data con tablas reales del "
+                  "modelo · research · proposal); decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo. Todo lo de shaping queda "
                   "como propuesta hasta que Hugo lo apruebe."]
     return "\n".join(lines)
 
@@ -218,7 +220,7 @@ def guard(out: dict, mode: str, existing: dict[str, dict]) -> tuple[dict, list[s
     return out, notes
 
 
-def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: str) -> dict:
+def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: str, context: str = "") -> dict:
     existing = store.all()
     created, updated = [], []
     actor = "framer"
@@ -293,8 +295,9 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
                 proposed.append(f"guion:{sid}")
                 known_secs.add(sid)
         known_tasks = {x["id"] for x in fr.get("research_plan") or []} | {k.split(":", 1)[1] for k in (fr.get("pending") or {}) if k.startswith("plan:")}
-        for t in p.get("research_plan") or []:
-            t = {**t, "links": [l for l in t.get("links") or [] if l in existing or l in created]}
+        tasks, task_notes = shaping.guard_tasks(store, p.get("research_plan") or [], fr, context=context or message)
+        out.setdefault("_corrections", []).extend(task_notes)
+        for t in tasks:
             tid = t.get("id") if t.get("id") in known_tasks else shaping.next_task_id(fr)
             if shaping.propose(store, f"plan:{tid}", t, basis="framer", why=t.get("why", ""), turn_id=run_id, fr=fr, save=False):
                 proposed.append(f"plan:{tid}")
@@ -420,7 +423,8 @@ async def _job(job, params):
         _patch_turn(store, turn["turn_id"], {"status": "failed", "error": str(e), "error_kind": e.kind})
         raise
     out, corrections = guard(dict(res.output), mode, store.all())
-    applied = apply_turn(store, out, message=message, mode=mode, run_id=res.run_id)
+    applied = apply_turn(store, out, message=message, mode=mode, run_id=res.run_id, context=prompt)
+    corrections = corrections + out.pop("_corrections", [])
     lang_check = language.assess(out.get("reply", ""), store.meta().get("language"), message)
     if not lang_check["ok"]:
         corrections = corrections + [f"Disciplina de lenguaje: {i}" for i in lang_check["issues"]]

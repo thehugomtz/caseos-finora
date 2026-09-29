@@ -20,13 +20,14 @@ export async function mount(root, param) {
   const meta = (app.summary || {}).meta || {};
   const models = (await api.get("/api/datamodels")).models || [];
   const bound = (meta.data_model || {}).id;
-  const mid = param || bound || (models.find(m => m.available) || {}).id;
+  const [pModel, pTable] = (param || "").split("/");                 // #/data/<model>/<table> opens a table directly
+  const mid = pModel || bound || (models.find(m => m.available) || {}).id;
   if (!mid) { put(root, h("div.head", h("div", h("div.eyebrow", "Modelo de datos"), h("h1.title", "Datos"))), empty("Sin modelos de datos", "No encontré un workspace analítico junto a CaseOS.")); return {}; }
   const d = await api.get(`/api/datamodels/${mid}`);
   const cat = d.catalog, tables = cat.tables;
   const byId = Object.fromEntries(tables.map(t => [t.id, t]));
   const children = id => tables.filter(t => (t.parents || []).includes(id)).map(t => t.id);
-  let sel = byId["mart.customer_month"] ? "mart.customer_month" : tables[0].id;
+  let sel = pTable && byId[pTable] ? pTable : byId["mart.customer_month"] ? "mart.customer_month" : tables[0].id;
 
   const strip = h("div.lstrip");
   const detail = h("div.panel.pad");

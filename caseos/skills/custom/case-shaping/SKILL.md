@@ -25,14 +25,28 @@ on: a document with clear edges, a story skeleton and a plan. Nothing here is a 
 ## 3 · Hypotheses
 Falsifiable, each with the result that would weaken it, linked to the slide(s) it would feed.
 
-## 4 · Research plan (one task per uncertainty)
-Type every task by what would answer it, which names the agent:
-- `data` → Analytics over the case's data model (only if the data exists there; otherwise it is a gap)
-- `research` → Business Research (market, practices, benchmarks, definitions; L1 lookup · L2 · L3 deep)
-- `measurement` → Measurement (how to measure it: events, metrics, funnels, cohorts, experiments)
-- `data_model` → Data Engineering (how to model it: grain, entities, subscription vs price vs discount)
-Each task: the question, why it matters, and what it serves (H/Q/slide ids). Tasks are proposals; Hugo approves them
-and launches them from Research.
+## 4 · Research plan (built from the guion's questions)
+The guion is already the research agenda: every slide asks a question. A question like "how would you define the
+funnel if not every customer walks it the same way?" is not a lookup, it is **investigation and proposal** — the case
+has enough context (the business model, what Hugo said) to put a first answer on the table and then prove or fix it.
+
+One task per question of the guion that needs work (merge slides that ask the same thing; a context slide that already
+has accepted evidence needs no task — say so). Each task:
+- **work** — what comes out: `propuesta` (define, design, propose, decide: most of a guion), `datos` (the answer is in
+  the case's data model), `research` (only outside information answers it).
+- **draft_answer** — the starting answer you would give today with the context, 2–4 sentences in Hugo's register. It is
+  a working hypothesis: no numbers the context does not contain; say what is unknown. Start from what Hugo already said.
+- **hugo_said** — his words it builds on, verbatim, with the ID where he said them. Never attribute to him what he did
+  not say.
+- **steps** (1–4, in order): `data` = what to look for in the data model and in which tables (only tables the model has;
+  if the data is not there, say it and name the proxy that is) · `research` = what to look for outside and why ·
+  `proposal` = what gets delivered (the definition, the metrics, the mechanism, the model).
+- **kind** — the agent that leads it: `data` → Analytics · `measurement` → Measurement (funnels, metrics, events) ·
+  `data_model` → Data Engineering (grain, entities, subscription vs price vs discount) · `research` → Business Research
+  (market, practices, pricing). Specialists can query the data model read-only when the task has data steps.
+- **why**, **links** (H/Q/N ids), **slides** (S#.# ids).
+Tasks are proposals; Hugo approves them and launches them from Research. The specialist receives the starting answer
+to validate, refine or refute — never to rubber-stamp.
 
 ## Discipline
 - Propose only what changed; revise by id. Everything waits for Hugo's approval.

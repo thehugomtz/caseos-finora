@@ -50,9 +50,19 @@ SCHEMA = _obj({
 
 
 # ------------------------------------------------------------------------------------------ validation
+def pending_acceptance(store: CaseStore, pkg: dict) -> list[str]:
+    """Evidence the package leans on that Hugo has not accepted yet (a draft shows the story; it cannot be Ready)."""
+    ents = store.all()
+    ids = [i for c in pkg.get("claims") or [] for i in c.get("evidence_ids") or []]
+    return sorted({i for i in ids if i in ents and (ents[i].get("review") or {}).get("state") not in ("accepted", "rejected")})
+
+
 def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]:
+    """Errors block Story Ready. In a draft (`pkg.draft`), evidence still waiting for Hugo is not an error of the
+    package: it is listed apart (pending_acceptance) and blocks Ready through the phase gate."""
     ents = store.all()
     errors, warnings = [], []
+    draft = bool(pkg.get("draft"))
     for k in ("audience", "objective", "governing_thought", "claims"):
         if not pkg.get(k):
             errors.append(f"El Story Package no tiene '{k}'.")
@@ -67,11 +77,14 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
             if i not in ents:
                 errors.append(f"{cid}: {i} no existe.")
         acc = [i for i in ev if i in ents and (ents[i].get("review") or {}).get("state") == "accepted"]
-        if role not in ("recommendation", "limitation") and not acc:
+        pend = [i for i in ev if i in ents and (ents[i].get("review") or {}).get("state") not in ("accepted", "rejected")]
+        rej = [i for i in ev if i in ents and (ents[i].get("review") or {}).get("state") == "rejected"]
+        if role not in ("recommendation", "limitation") and not acc and not (draft and pend):
             errors.append(f"{cid}: claim sin evidencia aceptada (unsupported claim).")
-        notacc = [i for i in ev if i in ents and (ents[i].get("review") or {}).get("state") != "accepted"]
-        if notacc:
-            errors.append(f"{cid}: evidencia no aceptada {', '.join(notacc)}.")
+        if rej:
+            errors.append(f"{cid}: cita evidencia que rechazaste ({', '.join(rej)}).")
+        if pend and not draft:
+            errors.append(f"{cid}: evidencia no aceptada {', '.join(pend)}.")
         tables = [ents[t] for t in tb if t in ents]
         all_tables += tables
         for t in tables:
@@ -113,21 +126,44 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
 
 
 # ------------------------------------------------------------------------------------------ generation (COS)
-def submit_package(store: CaseStore, *, instructions: str = "") -> dict:
-    job = jobs.submit(store.id, "story_package", "COS prepara el Story Package", {"instructions": instructions}, agent="cos")
-    store.log("hugo", "requested", ["story"], "Hugo pidió preparar el Story Package")
+def submit_package(store: CaseStore, *, instructions: str = "", draft: bool = False, actor: str = "hugo", via: str = "") -> dict:
+    job = jobs.submit(store.id, "story_package", "COS prepara el " + ("borrador del Story Package" if draft else "Story Package"),
+                      {"instructions": instructions, "draft": draft}, agent="cos")
+    store.log(actor, "requested", ["story"], ("Hugo pidió el borrador del Story Package (con evidencia por revisar)" if draft
+                                              else "Hugo pidió preparar el Story Package") + (f" · {via}" if via else ""))
     return {"job_id": job.id}
 
 
-def _evidence_block(store: CaseStore) -> str:
+def _evidence_block(store: CaseStore, *, draft: bool = False) -> str:
     ents = store.all()
     acc_f = [f for f in ents.values() if f.get("type") == "finding" and (f.get("review") or {}).get("state") == "accepted"]
+    prop_f = [f for f in ents.values() if f.get("type") == "finding" and (f.get("review") or {}).get("state") not in ("accepted", "rejected")]
     tabs = [t for t in ents.values() if t.get("type") == "table" and (t.get("review") or {}).get("state") != "rejected" and t.get("status") == "valid"]
     lines = ["## Findings aceptados (solo estos pueden sostener claims)"]
     for f in sorted(acc_f, key=lambda e: e["id"]):
         tids = [l for l in f.get("links") or [] if type_of(l) == "table"]
         lines.append(f"- {f['id']}{' (' + f['alias'] + ')' if f.get('alias') else ''} [{f.get('confidence', '')}] {clip(title_of(f), 260)}"
                      + (f" · tablas: {', '.join(tids)}" if tids else " · sin tabla"))
+    if draft:
+        lines.append("\n## Findings por revisar (propuestos: Hugo todavía no los acepta; en este BORRADOR se pueden citar)")
+        for f in sorted(prop_f, key=lambda e: e["id"]):
+            tids = [l for l in f.get("links") or [] if type_of(l) == "table"]
+            src = (f.get("source_ref") or {}).get("research") or ""
+            lines.append(f"- {f['id']} [{f.get('confidence', '')}{' · fuente sin verificar' if f.get('unverified') else ''}] {clip(title_of(f), 260)}"
+                         + (f" · de {src}" if src else "") + (f" · tablas: {', '.join(tids)}" if tids else " · sin tabla"))
+        lines.append("\n## Research completado (propuestas y diseños de los especialistas; se citan en research_ids)")
+        for r in sorted([e for e in ents.values() if e.get("type") == "research" and e.get("status") == "completed"
+                         and (e.get("review") or {}).get("state") != "rejected"], key=lambda e: e["id"]):
+            sp = r.get("specialist") or {}
+            extra = ""
+            if sp.get("measurement"):
+                fw = (sp["measurement"].get("recommended_framework") or {})
+                extra = f" · marco propuesto: {fw.get('name', '')} — {clip(fw.get('structure', ''), 400)}"
+            elif sp.get("data_model"):
+                extra = f" · modelo propuesto: {clip(sp['data_model'].get('conceptual_model', ''), 400)}"
+            lines.append(f"- {r['id']} [{r.get('specialty')}{' · tarea ' + r['shaping_task'] if r.get('shaping_task') else ''}"
+                         f"{' · láminas ' + ', '.join(r.get('slides') or []) if r.get('slides') else ''}] {clip(r.get('research_question', ''), 160)}"
+                         f" → {clip(r.get('short_answer', ''), 500)}{extra}")
     lines.append("\n## Tablas canónicas válidas (toda cifra que escribas debe estar en una de las tablas del claim)")
     for t in sorted(tabs, key=lambda e: e["id"]):
         cols = t.get("columns") or []
@@ -145,13 +181,21 @@ async def _job(job, params):
                                 extra="Tarea: redacta el Story Package para el Executive Visual Storyteller (skill story-package).")
     prev = store.read_data("story/package.yaml") or {}
     fr = store.read_data("framing/current.yaml", {}) or {}
+    draft = bool(params.get("draft"))
     prompt = (f"Instrucciones de Hugo: {params.get('instructions') or '—'}\n\n"
-              f"Pregunta ejecutiva: {fr.get('executive_question')}\nNo afirmar todavía: {'; '.join(fr.get('should_not_claim') or [])}\n\n"
+              + ("## BORRADOR — Hugo quiere ver cómo quedaría la historia antes de revisar la evidencia\n"
+                 "Puedes citar findings por revisar (propuestos) además de los aceptados; cada claim que dependa de ellos queda "
+                 "marcado como pendiente de su aceptación y el paquete no puede marcarse Ready hasta que la acepte. No subas la "
+                 "confianza por eso: si la fuente está sin verificar o la evidencia es débil, dilo en limitations. Las propuestas "
+                 "de los especialistas (marcos, modelos, mecanismos) van como claims de rol recommendation citando su research "
+                 "en research_ids. Una lámina sin evidencia ni propuesta sigue siendo missing.\n\n" if draft else "")
+              + f"Pregunta ejecutiva: {fr.get('executive_question')}\nNo afirmar todavía: {'; '.join(fr.get('should_not_claim') or [])}\n\n"
               + (("## Guion de la historia de Hugo (aprobado en Shaping; síguelo)\n" + shaping.guide_text(store) + "\n\n")
                  if fr.get("storyline_guide") else "")
-              + _evidence_block(store) + "\n\n" + cos.digest(store) +
+              + _evidence_block(store, draft=draft) + "\n\n" + cos.digest(store) +
               ("\n\n## Paquete anterior (mejóralo, conserva las keys de los claims que sigan vigentes)\n" + yaml_dump(prev)[:12000] if prev else "") +
-              "\n\nReglas: cada claim de evidencia cita findings ACEPTADOS (evidence_ids) y las tablas (table_ids) donde está cada cifra "
+              "\n\nReglas: cada claim de evidencia cita findings " + ("aceptados o por revisar" if draft else "ACEPTADOS")
+              + " (evidence_ids) y las tablas (table_ids) donde está cada cifra "
               "que escribas; si una cifra no está en una tabla, no la escribas. Nada de cantidades con letras («a la mitad», «el doble», "
               "«por cuatro») salvo que coincidan con las cifras de la tabla: prefiere la cifra. Lenguaje asociativo, no causal. Recomendaciones condicionales. "
               "keys de claims estables y cortas (p. ej. 'arpa-mix'). "
@@ -162,10 +206,10 @@ async def _job(job, params):
     spec = RunSpec(agent="cos", role="story", system=system, prompt=prompt, schema=SCHEMA, max_turns=4,
                    skills=skills.record(selected), purpose="Story Package", case_id=store.id, case_root=store.root)
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
-    return apply_package(store, res.output, run_id=res.run_id, actor="cos")
+    return apply_package(store, res.output, run_id=res.run_id, actor="cos", draft=draft)
 
 
-def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, actor: str = "cos") -> dict:
+def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, actor: str = "cos", draft: bool = False) -> dict:
     ents = store.all()
     existing = {c.get("key"): c for c in ents.values() if c.get("type") == "claim" and c.get("key")}
     claim_ids, key_to_id = [], {}
@@ -197,12 +241,12 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
         ents = store.all()
         for cid in claim_ids:
             s = cos.claim_strength(store, ents[cid], ents)
-            store.update(cid, {"status": {"supported": "supported", "weak": "weak", "unsupported": "unsupported",
+            store.update(cid, {"status": {"supported": "supported", "weak": "weak", "unsupported": "unsupported", "pending": "pending",
                                           "proposal": "supported"}[s["level"]], "strength": s}, actor="system", material=False,
                          verb="scored", summary=f"{cid}: {s['level']}")
         meta = store.meta()
         pkg = {"story_package": True, "version": int((store.read_data("story/package.yaml") or {}).get("version") or 0) + 1,
-               "generated_at": now_iso(), "generated_by": actor, "run_id": run_id,
+               "generated_at": now_iso(), "generated_by": actor, "run_id": run_id, "draft": draft,
                "audience": out.get("audience") or [], "objective": out.get("objective", ""), "from_to": out.get("from_to") or {},
                "governing_thought": out.get("governing_thought", ""),
                "executive_questions": out.get("executive_questions") or [], "story_arc": out.get("story_arc") or {},
@@ -224,18 +268,20 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
                                   "visual_intent": c.get("visual_intent"), "hugo_wording": c.get("hugo_wording") or "",
                                   "strength": (c.get("strength") or {}).get("level")})
         errors, warnings = validate_package(store, pkg)
-        pkg["validation"] = {"ok": not errors, "errors": errors, "warnings": warnings, "checked_at": now_iso()}
+        pend = pending_acceptance(store, pkg)
+        pkg["validation"] = {"ok": not errors, "errors": errors, "warnings": warnings, "pending": pend, "checked_at": now_iso()}
         prev = store.read_data("story/package.yaml")
         if prev:
             store.write_data(f"story/versions/package.v{prev.get('version', 0)}.yaml", prev)
         store.write_data("story/package.yaml", pkg)
         render_md(store)
         phases.touch(store, "story", actor=actor)
-        if not errors:
+        if not errors and not pend:
             phases.propose_review(store, "story", actor=actor, note="Story Package válido listo para revisión")
-        store.log(actor, "story", claim_ids, f"Story Package v{pkg['version']}: {len(claim_ids)} claims · "
-                  + ("válido" if not errors else f"{len(errors)} problema(s) a resolver"), material=True, run_id=run_id)
-    return {"version": pkg["version"], "claims": claim_ids, "errors": errors, "warnings": warnings}
+        store.log(actor, "story", claim_ids, f"Story Package v{pkg['version']}{' (borrador)' if draft else ''}: {len(claim_ids)} claims · "
+                  + ("válido" if not errors else f"{len(errors)} problema(s) a resolver")
+                  + (f" · {len(pend)} evidencia(s) esperan tu aceptación" if pend else ""), material=True, run_id=run_id)
+    return {"version": pkg["version"], "claims": claim_ids, "errors": errors, "warnings": warnings, "pending": pend}
 
 
 def revalidate(store: CaseStore) -> dict:
@@ -250,7 +296,8 @@ def revalidate(store: CaseStore) -> dict:
                 c[k] = e.get(k, c.get(k))
             c["strength"] = cos.claim_strength(store, e, ents)["level"]
     errors, warnings = validate_package(store, pkg)
-    pkg["validation"] = {"ok": not errors, "errors": errors, "warnings": warnings, "checked_at": now_iso()}
+    pkg["validation"] = {"ok": not errors, "errors": errors, "warnings": warnings, "pending": pending_acceptance(store, pkg),
+                         "checked_at": now_iso()}
     store.write_data("story/package.yaml", pkg)
     render_md(store)
     return pkg["validation"]

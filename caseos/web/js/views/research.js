@@ -41,6 +41,8 @@ async function hub(root) {
     put(preview,
       h("div.row.wrap", h("span.eyebrow.accent", "Ruta propuesta"), h("span.chip.accent", INT[eff.intensity] || eff.intensity),
         h("span.chip.agent", icon(SPEC_ICON[eff.specialty] || "globe"), SPEC[eff.specialty]),
+        ((app.summary || {}).meta || {}).data_model && ["analytics", "measurement", "data_engineering"].includes(eff.specialty)
+          ? h("span.chip.work-datos", icon("db"), "Investiga datos en el modelo · solo lectura") : null,
         (route.skills || []).map(s => h("span.chip", s.id)), h("span.small.faint", "· el Research Router confirma o ajusta al lanzar")),
       h("div.row.wrap", h("span.small.muted", "Cambiar:"),
         ["L1", "L2", "L3"].map(l => h("button.btn.sm" + (eff.intensity === l ? ".primary" : ".ghost"), { type: "button", on: { click: () => { override = { ...override, intensity: l, specialty: eff.specialty === "analytics" ? "business" : eff.specialty }; paintPreview(); } } }, l)),
@@ -78,6 +80,9 @@ async function hub(root) {
       catch (e) { toast(e.message, "err", 7000); }
     };
     const kindChip = t => h("span.chip.kind-" + t.kind, icon(SPEC_ICON[t.agent] || "globe"), `${(sh.kinds[t.kind] || {}).label || t.kind} · ${SPEC[t.agent] || t.agent}`);
+    const workChip = t => h("span.chip.work-" + (t.work || "propuesta"), ((sh.work || {})[t.work || "propuesta"] || {}).label || t.work);
+    const stepsLine = t => (t.steps || []).length ? h("div.small.muted", { style: { marginTop: "4px" } }, t.steps.map((st, i) =>
+      `${i + 1}. ${(sh.step_kinds || {})[st.kind] || st.kind}${(st.where || []).length ? " (" + st.where.join(", ") + ")" : ""}`).join("  →  ")) : null;
     put(planBox, h("div.panel.pad.plan",
       h("div.row.between.wrap",
         h("div", h("div.eyebrow.accent", "Plan de investigación · aprobado en Framing & Shaping"),
@@ -89,8 +94,10 @@ async function hub(root) {
       ready.length ? h("div.list", { style: { marginTop: "8px" } }, ready.map(e => { const t = e.approved;
         return h("div.item", { style: { gridTemplateColumns: "64px 1fr auto" } },
           h("span.sid", { style: { justifySelf: "start" } }, t.id),
-          h("div.body", h("div.t", t.question), h("div.m", kindChip(t), t.intensity && t.intensity !== "analytics" ? h("span.chip.accent", t.intensity) : null,
-            (t.links || []).map(i => idTag(i)), (t.slides || []).map(x => h("span.chip.ghost", x))), t.why ? h("div.small.muted", { style: { marginTop: "4px" } }, t.why) : null),
+          h("div.body", h("div.t", t.question), h("div.m", workChip(t), kindChip(t), t.intensity && t.intensity !== "analytics" ? h("span.chip.accent", t.intensity) : null,
+            (t.links || []).map(i => idTag(i)), (t.slides || []).map(x => h("span.chip.ghost", x))),
+            t.draft_answer ? h("div.small.clamp2", { style: { marginTop: "6px", color: "var(--ink-2)" } }, h("span.faint", "Arranque: "), t.draft_answer) : null,
+            stepsLine(t)),
           h("div.side", btn("Lanzar", { sm: true, variant: "primary", icon: "send", onClick: () => launch1(t.id) }))); })) : null,
       sent.length ? h("div.row.wrap", { style: { gap: "6px", marginTop: "10px" } }, h("span.small.faint", "Ya en Research:"),
         sent.map(e => h("button.chip", { type: "button", style: { cursor: "pointer" }, on: { click: () => app.go("#/research/" + e.approved.research_id) } },
@@ -156,6 +163,7 @@ async function detail(root, rid) {
           r.shaping_task ? h("button.chip.ghost", { type: "button", style: { cursor: "pointer" }, on: { click: () => app.go("#/framing") } }, `tarea ${r.shaping_task} del plan`) : null,
           (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x)), !r.purpose_ok ? h("span.chip.warn", "RESEARCH WITHOUT CASE PURPOSE") : null)),
         h("div.actions", btn("Volver", { icon: "back", variant: "ghost", onClick: () => app.go("#/research") }))),
+      r.task && (r.task.draft_answer || (r.task.steps || []).length) ? taskContext(r) : null,
       running ? h("div.panel.pad.agentwork", h("div.row", thinking(), h("span", { style: { fontWeight: 560 } }, r.status === "queued" ? "En cola" : "Investigando…"), h("span.small.muted", SPEC[r.specialty])),
         h("div.progress.mt", ((job || {}).progress || []).slice(-24).map(p => h("div", h("span.t", hhmm(p.t)), h("span", p.summary || p.kind + (p.phase ? " · " + p.phase : "") + (p.role ? " · " + p.role : "")))))) : null,
       r.status === "failed" ? h("div.panel.pad.alert", h("div.eyebrow", { style: { color: "var(--bad-ink)" } }, "La investigación falló"), h("p.prose", r.error || ""), h("div.small.muted", "La solicitud se conservó."),
@@ -193,6 +201,9 @@ async function detail(root, rid) {
         bucketList("Corroborado", r.peer_review.corroborated, "hc"), bucketList("Contradicciones", r.peer_review.contradictions, "co")), h("p.small.muted", r.peer_review.verdict || "")) : null,
       (r.new_questions || []).length ? sec("Preguntas nuevas", h("div.list", r.new_questions.map(q => h("div.item", { style: { gridTemplateColumns: "1fr auto" } }, h("div.t", q),
         btn("Crear seguimiento", { sm: true, variant: "ghost", onClick: async () => { await api.action(rid, "follow_up", { question: q }); toast("Pregunta creada", "ok"); app.refresh(); } }))))) : null,
+      (r.sql_runs || []).length ? sec(`Consultas al modelo de datos · ${r.sql_runs.length}`, h("div.panel.pad",
+        h("div.small.muted", "Lo que el especialista consultó en solo lectura durante la corrida. Una cita del modelo solo cuenta si su consulta está aquí."),
+        r.sql_runs.map(q => h("pre.sql", q)))) : null,
       r.workspace_run ? h("div.small.faint.mt2", `Investigación del workspace: ${r.workspace_run.run_id} · ${r.workspace_run.path}`) : null,
       (r.run_ids || []).length ? h("div.small.faint", `Corridas: ${r.run_ids.join(" · ")}`) : null,
       r.status === "completed" ? h("div.actionbar", d.actions.map(a => btn(a.label, { sm: false, variant: a.id === "accept" ? "primary" : a.id === "reject" ? "danger" : "", icon: { accept: "check", challenge: "flag", research_deeper: "search", follow_up: "plus", send_to_cos: "orbit", reject: "x" }[a.id],
@@ -202,6 +213,22 @@ async function detail(root, rid) {
   const onJob = () => paint();
   app.on("job", onJob);
   return { update: paint, destroy: () => { app.listeners.job = (app.listeners.job || []).filter(f => f !== onJob); } };
+}
+
+const WORK_LABEL = { propuesta: "Investigación y propuesta", datos: "Investigar datos", research: "Research externo" };
+const STEP_LABEL = { data: "Investigar datos en el modelo", research: "Research", proposal: "Proponer" };
+const STEP_ICON = { data: "db", research: "globe", proposal: "spark" };
+
+function taskContext(r) {
+  const t = r.task;
+  return h("div.panel.pad.taskctx", h("div.row.wrap", h("span.eyebrow.accent", `Tarea ${r.shaping_task || ""} del plan`), h("span.chip.work-" + (t.work || "propuesta"), WORK_LABEL[t.work] || t.work),
+      (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x)), h("span.small.faint", "aprobada por ti en Framing & Shaping")),
+    t.draft_answer ? h("div.draft", { style: { marginTop: "10px" } }, h("div.flab", "Respuesta de arranque", h("span.faint", " · la investigación la valida o la corrige")), h("div.dt", t.draft_answer)) : null,
+    (t.hugo_said || []).length ? h("div.said", { style: { marginTop: "8px" } }, h("div.flab", "Lo que ya dijiste"), t.hugo_said.map(x => h("div.sq2", h("span.voice", "“" + x.text + "”"), x.ref ? idTag(x.ref) : null))) : null,
+    (t.steps || []).length ? h("div", { style: { marginTop: "8px" } }, h("div.flab", "Cómo se trabaja"), h("ol.stepl", t.steps.map(st => h("li",
+      h(`span.sk.${st.kind}`, icon(STEP_ICON[st.kind] || "spark"), STEP_LABEL[st.kind] || st.kind), h("span.sw", st.what),
+      (st.where || []).length ? h("span.where", st.where.map(w => h("button.tbl-chip", { type: "button",
+        on: { click: () => app.go(`#/data/${(((app.summary || {}).meta || {}).data_model || {}).id || "finora"}/${w}`) } }, w))) : null)))) : null);
 }
 
 async function researchAction(r, a, paint) {

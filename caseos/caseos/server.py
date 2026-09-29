@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, framing_doc, jobs, shaping, slidestyle,
                lineage, phases, research, search, skills, story, storyteller)
 from .agents import base as agents_base
-from .agents import briefer, framer
+from .agents import briefer, framer, planner
 from .model import PHASES, TYPES, title_of, type_of
 from .phases import GateError
 from .store import StoreError
@@ -36,6 +36,7 @@ async def lifespan(_app):
     n = jobs.mark_interrupted_on_boot()
     for c in cases.list_cases():
         framer.recover_turns(cases.get(c["id"]))
+        planner.recover(cases.get(c["id"]))
         briefer.recover_turns(cases.get(c["id"]))
         storyteller.recover_decks(cases.get(c["id"]))
     if n:
@@ -440,6 +441,11 @@ def shaping_remove(cid: str, key: str):
     return shaping.remove(S(cid), key, actor="hugo")
 
 
+@app.post("/api/cases/{cid}/shaping/plan")
+def shaping_plan(cid: str):
+    return planner.start(S(cid), actor="hugo")
+
+
 @app.post("/api/cases/{cid}/shaping/approve-all")
 def shaping_approve_all(cid: str):
     return shaping.approve_all(S(cid), actor="hugo")
@@ -450,14 +456,18 @@ def shaping_migrate(cid: str):
     return shaping.migrate(S(cid), actor="hugo")
 
 
+class SendBody(BaseModel):
+    via: str = ""          # when Hugo delegated the click (e.g. "delegado a Claude en el chat"): recorded on the research
+
+
 @app.post("/api/cases/{cid}/shaping/tasks/{task_id}/send")
-def shaping_send(cid: str, task_id: str):
-    return shaping.send_task(S(cid), task_id, actor="hugo")
+def shaping_send(cid: str, task_id: str, body: SendBody | None = None):
+    return shaping.send_task(S(cid), task_id, actor="hugo", via=(body.via if body else ""))
 
 
 @app.post("/api/cases/{cid}/shaping/tasks/send-all")
-def shaping_send_all(cid: str):
-    return {"sent": shaping.send_all(S(cid), actor="hugo")}
+def shaping_send_all(cid: str, body: SendBody | None = None):
+    return {"sent": shaping.send_all(S(cid), actor="hugo", via=(body.via if body else ""))}
 
 
 @app.post("/api/cases/{cid}/framer")
@@ -608,11 +618,12 @@ def story_get(cid: str):
 
 class PackageBody(BaseModel):
     instructions: str = ""
+    draft: bool = False
 
 
 @app.post("/api/cases/{cid}/story/package")
 def story_package(cid: str, body: PackageBody):
-    return story.submit_package(S(cid), instructions=body.instructions)
+    return story.submit_package(S(cid), instructions=body.instructions, draft=body.draft)
 
 
 @app.post("/api/cases/{cid}/story/validate")

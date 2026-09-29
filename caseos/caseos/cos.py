@@ -116,15 +116,18 @@ def claim_strength(store: CaseStore, c: dict, ents: dict | None = None) -> dict:
     from .evidence import unsupported_numbers
     text = f"{c.get('headline', '')} {c.get('answer', '')}"
     unsup = unsupported_numbers(text, [ents[t] for t in tb])
+    pend = [i for i in ev if _rv(ents[i]) not in ("accepted", "rejected")]
     if c.get("role_in_story") in ("recommendation", "limitation") and not ev:
         level = "proposal"
+    elif not acc and pend:
+        level = "pending"                     # it has evidence, but Hugo has not accepted it yet
     elif not acc:
         level = "unsupported"
     elif unsup or stale:
         level = "weak"
     else:
         level = "supported"
-    return {"level": level, "evidence": ev, "accepted": acc, "tables": tb, "unsupported_numbers": unsup, "stale": stale}
+    return {"level": level, "evidence": ev, "accepted": acc, "pending": pend, "tables": tb, "unsupported_numbers": unsup, "stale": stale}
 
 
 # ------------------------------------------------------------------------------------------ next best actions

@@ -49,6 +49,7 @@ class RunSpec:
     case_root: Path | None = None
     budget_usd: float | None = None
     timeout_s: float = 900
+    data_model: Any = None                                 # the case's data model → read-only query tools for the agent
 
 
 @dataclass
@@ -62,6 +63,7 @@ class RunResult:
     seen_urls: list[str]
     auth: str
     model: str
+    sql_runs: list[str] = field(default_factory=list)      # queries that actually ran against the data model
 
 
 def _prompt_hash(text: str) -> str:
@@ -83,11 +85,51 @@ def save_run(spec: RunSpec, result: RunResult | None, error: str | None, started
            "effort": config.EFFORT.get(spec.role, config.DEFAULT_EFFORT), "system_prompt": f"audit/prompts/{h}.md", "system_prompt_hash": h,
            "prompt": spec.prompt, "schema": spec.schema, "tools": spec.tools, "skills": spec.skills,
            "lenses": spec.lenses, "max_turns": spec.max_turns, "status": "error" if error else "ok", "error": error}
+    if spec.data_model is not None:
+        rec["data_model"] = getattr(spec.data_model, "id", str(spec.data_model))
     if result:
         rec.update({"output": result.output, "usage": result.usage, "cost_usd": result.cost_usd,
                     "tool_trace": result.tool_trace, "seen_urls": result.seen_urls, "auth": result.auth,
-                    "model": result.model})
+                    "model": result.model, "sql_runs": result.sql_runs})
     write_json(spec.case_root / "audit" / "runs" / f"{run_id}.json", rec)
+
+
+# ------------------------------------------------------------------------------------------ data model tools
+DATA_SERVER = "caseos_datos"
+DATA_TOOLS = [f"mcp__{DATA_SERVER}__consultar_modelo", f"mcp__{DATA_SERVER}__catalogo_modelo"]
+
+
+def data_tool_handlers(model, sql_log: list[str]) -> dict:
+    """Read-only access to the case's data model for a specialist: the same guard as the Datos console (one SELECT
+    over raw/staging/mart, row and time limits). Every query that ran is logged, so a data citation can be checked."""
+    async def consultar_modelo(args: dict) -> dict:
+        sql = (args or {}).get("sql", "")
+        try:
+            res = await asyncio.to_thread(model.query, sql, 200)
+        except ValueError as e:
+            return {"content": [{"type": "text", "text": f"Consulta rechazada: {e}"}], "is_error": True}
+        sql_log.append(res["sql"])
+        body = json.dumps({"columns": res["columns"], "rows": res["rows"], "truncated": res["truncated"], "ms": res["ms"]},
+                          ensure_ascii=False, default=str)
+        return {"content": [{"type": "text", "text": body[:60000]}]}
+
+    async def catalogo_modelo(args: dict) -> dict:
+        lines = []
+        for t in model.catalog()["tables"]:
+            cols = ", ".join(c["name"] + (f" ({c['definition']})" if c.get("definition") else "") for c in t["columns"])
+            lines.append(f"{t['id']} · grano {t.get('grain') or '—'} · {t['rows']} filas · {t.get('desc', '')}\n  {cols}")
+        return {"content": [{"type": "text", "text": "\n".join(lines)[:60000]}]}
+
+    return {"consultar_modelo": consultar_modelo, "catalogo_modelo": catalogo_modelo}
+
+
+def _data_server(model, sql_log: list[str]):
+    from claude_agent_sdk import create_sdk_mcp_server, tool
+    h = data_tool_handlers(model, sql_log)
+    q = tool("consultar_modelo", "Una consulta SELECT de solo lectura sobre el modelo de datos del caso (raw.*, staging.*, "
+                                 "mart.*). Devuelve hasta 200 filas como JSON.", {"sql": str})(h["consultar_modelo"])
+    c = tool("catalogo_modelo", "Tablas y columnas del modelo de datos del caso, con su grano y definiciones.", {})(h["catalogo_modelo"])
+    return create_sdk_mcp_server(name=DATA_SERVER, version="1.0.0", tools=[q, c])
 
 
 class AgentSDKLLM:
@@ -108,8 +150,11 @@ class AgentSDKLLM:
         started = now_ms()
         config.RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
         model = config.model_for(spec.role)
+        sql_log: list[str] = []
+        servers = {DATA_SERVER: _data_server(spec.data_model, sql_log)} if spec.data_model is not None else {}
         opts = ClaudeAgentOptions(
-            tools=list(spec.tools), allowed_tools=list(spec.tools), setting_sources=[], strict_mcp_config=True,
+            tools=list(spec.tools), allowed_tools=list(spec.tools) + (DATA_TOOLS if servers else []), mcp_servers=servers,
+            setting_sources=[], strict_mcp_config=True,
             system_prompt=spec.system, model=model, effort=config.EFFORT.get(spec.role, config.DEFAULT_EFFORT),
             max_turns=spec.max_turns, cwd=str(config.RUNTIME_DIR), verbatim_prompts=True,
             max_budget_usd=spec.budget_usd or config.BUDGET_USD.get(spec.role),
@@ -177,7 +222,8 @@ class AgentSDKLLM:
                 await emit("start", {"run_id": run_id, "agent": spec.agent, "model": model})
                 await asyncio.wait_for(consume(), timeout=spec.timeout_s)
             result = RunResult(run_id=run_id, output=output, usage=usage, cost_usd=cost, duration_ms=now_ms() - started,
-                               tool_trace=trace, seen_urls=sorted(set(_clean_url(u) for u in seen)), auth=auth, model=model)
+                               tool_trace=trace, seen_urls=sorted(set(_clean_url(u) for u in seen)), auth=auth, model=model,
+                               sql_runs=list(sql_log))
             return result
         except AgentError as e:
             error = f"{e.kind}: {e}"
@@ -233,6 +279,10 @@ def _tool_summary(name: str, inp: dict) -> str:
         return f"Ejecutando: {str((inp or {}).get('command', ''))[:120]}"
     if name == "Skill":
         return f"Cargando skill {(inp or {}).get('skill', '')}"
+    if name.endswith("consultar_modelo"):
+        return "Consultando el modelo: " + " ".join(str((inp or {}).get("sql", "")).split())[:140]
+    if name.endswith("catalogo_modelo"):
+        return "Leyendo el catálogo del modelo de datos"
     return name
 
 
@@ -255,8 +305,9 @@ class FakeLLM:
             save_run(spec, None, str(out), now_ms(), run_id)
             raise out
         urls = out.pop("__seen_urls", []) if isinstance(out, dict) else []
+        sqls = out.pop("__sql_runs", []) if isinstance(out, dict) else []
         res = RunResult(run_id=run_id, output=out, usage={"turns": 1}, cost_usd=0.0, duration_ms=1, tool_trace=[],
-                        seen_urls=urls, auth="fake", model="fake")
+                        seen_urls=urls, auth="fake", model="fake", sql_runs=sqls)
         save_run(spec, res, None, now_ms(), run_id)
         return res
 

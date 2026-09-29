@@ -45,6 +45,7 @@ El estado del caso son **archivos** legibles y versionados; no hay base de datos
 | `datamodels.py` | modelos de datos del caso: raw → staging → mart en DuckDB en memoria (warehouse adjunto READ_ONLY, acceso a archivos bloqueado), catálogo, consultas SELECT guardadas, 7 checks de reconciliación, verificación de EvidenceTables |
 | `slidestyle.py` | guía de formato de slides → tema del renderer (tokens, contraste WCAG, Google Fonts OFL descargadas al deck) |
 | `framing_doc.py` | framing vivo (`framing/current.yaml`) y su render: `current.md` **es** el documento de Shaping |
+| `agents/planner.py` | «Armar el plan desde el guion»: el Framer convierte cada pregunta del guion en una tarea con qué sale, respuesta de arranque, palabras de Hugo y pasos; `shaping.guard_tasks` la revisa antes de que sea propuesta |
 | `shaping.py` | documento de Shaping: problema, guion (secciones → láminas), plan de investigación tipado por agente; propuestas → aprobar / editar / descartar (solo Hugo); ids que nunca se reutilizan; `send_task` lanza una tarea aprobada a Research con su ruta; `migrate` convierte una estructura metida en Entregables en propuestas |
 | `agents/` | `base.py` (contratos desde `agents/*.md`, kernel del sistema), `framer.py` |
 | `research.py` | Router, especialistas, L3 (profundidad + amplitud + contraargumento + peer review), aceptar/cuestionar |
@@ -93,7 +94,9 @@ Los endpoints síncronos corren en hilos: `jobs._spawn` agenda en el loop del se
 | De → a | Contrato | Validación en código |
 |---|---|---|
 | Framer → caso | `FramerTurn` (items epistémicos + patch del framing: `problem`, `storyline_guide`, `research_plan`… + perfil de lenguaje) | `framer.guard`, `language.assess`; lo de Shaping entra como propuesta (`shaping.propose`), nunca aprobado |
-| Shaping → Research | tarea aprobada del plan (`RT-###`: pregunta, tipo → especialista, intensidad, H/Q y láminas a las que sirve) | `shaping.send_task`: solo tareas aprobadas; ruta fijada por Hugo; propósito de caso por construcción |
+| Framer (plan) → Shaping | `PlanTurn`: tareas con `work`, `draft_answer`, `hugo_said`, `steps`, `kind`, láminas | `shaping.guard_tasks`: láminas e IDs existentes, citas de Hugo textuales (no paráfrasis) y que coincidan con lo que dijo, tablas que existen en el modelo, cifras de la respuesta de arranque con fuente en el contexto (si no, se marcan) |
+| Shaping → Research | tarea aprobada del plan (`RT-###`: pregunta, qué sale, respuesta de arranque, pasos, especialista, intensidad, H/Q y láminas) | `shaping.send_task`: solo tareas aprobadas; ruta fijada por Hugo; propósito de caso por construcción; el especialista recibe la tarea para validarla o refutarla |
+| Especialista → modelo de datos | herramientas `consultar_modelo` / `catalogo_modelo` (MCP en proceso) cuando la tarea tiene pasos de datos o el especialista es Measurement / Data Engineering | `datamodels.guard_sql` (una SELECT sobre raw/staging/mart); cada consulta queda en `sql_runs`; `verify_citations` solo acepta una fuente `data_model` si su SQL corrió |
 | Research → COS | resultado `case-research-synthesis` (§40) + fuentes | `research.verify_citations` (URLs recuperadas) |
 | Analytics → COS | **EvidenceTable** (§62: table_id, columnas, filas, unidades, definiciones, fuente, query, filtros, periodo, grano, limitaciones, visual preferido) | `evidence.validate_table` |
 | COS → Story | Story Package (§61) siguiendo el Guion aprobado; `guion_map` = por lámina, claims y cobertura (covered · partial · missing) | `story.validate_package`: evidencia aceptada, cifras en tablas, dependencias needs_review, lenguaje causal, avisos por lámina sin evidencia o parcial |
@@ -106,7 +109,11 @@ límites) y, aparte, `pending` (propuestas por clave: `problem`, `guion:S#`, `pl
 qué y en qué versión). El Framer solo propone; Hugo aprueba, edita (queda aprobado como suyo) o descarta. Una propuesta
 sobre algo aprobado es una **revisión**: lo aprobado no se toca hasta que Hugo la acepta. Una tarea aprobada aparece en
 Research lista para lanzar; al lanzarla, la investigación lleva `shaping_task` y las láminas a las que sirve, y la tarea
-queda `sent` con su `R-###` (ya no se puede quitar: se rechaza en Research). El COS lee el Guion (`shaping.guide_text`)
+queda `sent` con su `R-###` (ya no se puede quitar: se rechaza en Research). Cada tarea trae qué sale (`work`), una
+respuesta de arranque (`draft_answer`, hipótesis de trabajo), las palabras de Hugo en que se apoya (`hugo_said`) y los
+pasos (`steps`: data con tablas reales · research · proposal). «Armar el plan desde el guion» (`agents/planner.py`)
+reemplaza las propuestas del plan sin aprobar y puede proponer cambios a tareas aprobadas sin lanzar; editar el guion
+re-apunta las tareas a sus láminas aunque cambie la numeración. El COS lee el Guion (`shaping.guide_text`)
 para armar el Story Package; el Storyteller lo recibe en el handoff. `framing/current.md` es el documento completo:
 1 Problema · 2 Pregunta ejecutiva · 3 Guion · 4 Hipótesis · 5 Plan de investigación · 6–8 límites · anexo con lo capturado.
 
@@ -145,4 +152,5 @@ Fuentes locales (Inter, Newsreader, IBM Plex Mono; OFL). Los estáticos se sirve
 ## Seguridad
 
 Solo `127.0.0.1`. Sin secretos en el repo. Las rutas de archivos pasan por una guarda de ruta del caso. Los agentes de
-Framer y COS no tienen herramientas; los de research solo búsqueda web; el Storyteller escribe solo en su carpeta.
+Framer y COS no tienen herramientas; los de research, búsqueda web y, cuando la tarea lo pide, el modelo de datos en
+solo lectura (una SELECT guardada por `guard_sql`); el Storyteller escribe solo en su carpeta.

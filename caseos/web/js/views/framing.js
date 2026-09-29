@@ -17,6 +17,8 @@ const MODES = [
 const LEDGER = [["FACT", "Hechos"], ["OBSERVATION", "Observaciones"], ["USER_INTUITION", "Intuiciones"], ["ASSUMPTION", "Supuestos"],
   ["QUESTION", "Preguntas"], ["PROPOSAL", "Propuestas"], ["UNKNOWN", "Desconocidos"]];
 const KIND_ICON = { data: "chart", research: "globe", measurement: "ruler", data_model: "db" };
+const WORK_ICON = { propuesta: "spark", datos: "table", research: "globe" };
+const STEP_ICON = { data: "db", research: "globe", proposal: "spark" };
 const STATE = { empty: ["vacío", "ghost"], proposed: ["propuesta", "agent"], revision: ["cambio propuesto", "agent"], approved: ["aprobado", "good"],
   sent: ["en Research", "accent"] };
 const K = k => encodeURIComponent(k);
@@ -295,19 +297,27 @@ export async function mount(root) {
         e.pending ? proposalBox(e.key, e.pending, sectionBody(e.pending.value)) : null,
         metaLine(e.meta)]);
   };
+  const slideTasks = id => {
+    const ts = (data.shaping.slide_tasks || {})[id] || [];
+    return h("div.slt", ts.length ? ts.map(t => h(`button.chip.${t.status === "proposed" ? "agent" : t.status === "sent" ? "accent" : "good"}`,
+      { type: "button", title: t.status === "proposed" ? "tarea propuesta" : t.status === "sent" ? "en Research" : "tarea aprobada",
+        style: { cursor: "pointer" }, on: { click: () => focusCard("plan:" + t.id) } }, "→ " + t.id)) : h("span.chip.ghost", "sin tarea"));
+  };
   const sectionBody = s => h("div.stack", { style: { gap: "8px" } },
     s.purpose ? h("div.small.muted", { style: { whiteSpace: "pre-line" } }, s.purpose) : null,
-    (s.slides || []).length ? h("div.slides", s.slides.map(sl => h("div.slide",
+    (s.slides || []).length ? h("div.slides", s.slides.map(sl => h("div.slide.withtask",
       h("span.slid", sl.id),
       h("div", { style: { minWidth: 0 } },
         h("div.st", sl.title || "—"),
         sl.question ? h("div.sq", sl.question) : null,
         sl.intent && sl.intent !== sl.title ? h("div.si", h("span.flab.inline", "Debe mostrar"), sl.intent) : null,
         sl.notes ? h("div.sn", sl.notes) : null,
-        (sl.links || []).length ? h("div.row.wrap", { style: { gap: "4px", marginTop: "4px" } }, sl.links.map(i => idTag(i))) : null)))) : h("div.small.faint", "Sin láminas."));
+        (sl.links || []).length ? h("div.row.wrap", { style: { gap: "4px", marginTop: "4px" } }, sl.links.map(i => idTag(i))) : null),
+      slideTasks(sl.id)))) : h("div.small.faint", "Sin láminas."));
   const sectionEditor = (key, val) => {
     const d = draft(key, () => ({ title: val.title || "", purpose: val.purpose || "",
-      slides: (val.slides || []).map(s => ({ title: s.title || "", question: s.question || "", intent: s.intent || "", notes: s.notes || "", links: (s.links || []).join(", ") })) }));
+      slides: (val.slides || []).map(s => ({ prev_id: s.id || "", title: s.title || "", question: s.question || "", intent: s.intent || "",
+        notes: s.notes || "", links: (s.links || []).join(", ") })) }));
     const sid = key === "guion:new" ? "S·" : key.split(":")[1];
     // fields are addressed by position, so a move or a removal must not hand the caret to whichever slide lands there
     const settle = () => { if (document.activeElement && board.contains(document.activeElement)) document.activeElement.blur(); paintBoard(); };
@@ -348,27 +358,74 @@ export async function mount(root) {
   const planPanel = () => {
     const tasks = data.shaping.plan;
     const ready = tasks.filter(t => t.approved && t.approved.status === "approved");
+    const run = data.shaping.plan_run;
+    const busy = run && ["pending", "running"].includes(run.status);
+    const hasGuion = (data.shaping.guion || []).length > 0;
     return h("div.stack",
       h("div.row.between.wrap", h("h2.sec.row", h("span.snum", "5"), "Plan de investigación", h("span.count", String(tasks.length))),
         h("div.row", { style: { gap: "6px" } },
+          busy ? null : btn(tasks.length ? "Rehacer el plan desde el guion" : "Armar el plan desde el guion", { sm: true, variant: tasks.length ? "ghost" : "primary",
+            icon: "spark", disabled: !hasGuion, title: hasGuion ? "" : "Primero hace falta un guion", onClick: startPlan }),
           ready.length > 1 ? btn(`Lanzar las ${ready.length} aprobadas`, { sm: true, variant: "primary", icon: "send", onClick: sendAll }) : null,
           editing === "plan:new" ? null : btn("Añadir tarea", { sm: true, variant: "ghost", icon: "plus", onClick: () => startEdit("plan:new") }))),
-      h("div.small.muted", "Una tarea por incertidumbre que importa, con el agente que la resolvería: Datos (Analytics sobre el modelo del caso), Research, Medición o Modelo de datos. Las aprobadas aparecen en Research listas para lanzar; lanzarlas es tu clic."),
-      tasks.length || editing === "plan:new" ? null : h("div.bsec.empty", h("div.small.faint", "Sin tareas todavía. Pídele al Framer el plan de investigación o escribe una tarea.")),
+      h("div.small.muted", "Cada pregunta de tu guion se vuelve una tarea: qué sale (una propuesta, datos o research externo), una respuesta de arranque escrita con el contexto del caso y lo que ya dijiste, y los pasos, incluido qué investigar en el modelo de datos. Las aprobadas aparecen en Research listas para lanzar; lanzarlas es tu clic."),
+      planRun(run),
+      tasks.length || editing === "plan:new" ? null : h("div.bsec.empty", h("div.small.faint", hasGuion ? "Sin tareas todavía. «Armar el plan desde el guion» convierte cada pregunta de tus láminas en una tarea." : "Sin tareas todavía. Cuando tengas guion, el Framer arma el plan desde sus preguntas; también puedes escribir una tarea.")),
       tasks.map(taskCard),
       editing === "plan:new" ? h("div.bsec.editing", { id: domId("plan:new") }, h("div.row", h("span.bn", "Nueva tarea")),
-        taskEditor("plan:new", { question: "", kind: data.data_model ? "data" : "research", intensity: "L2", why: "", links: [], slides: [] })) : null);
+        taskEditor("plan:new", { question: "", work: "propuesta", kind: "measurement", intensity: "L2", why: "", links: [], slides: [], steps: [] })) : null);
+  };
+  const planRun = run => {
+    if (!run) return null;
+    if (["pending", "running"].includes(run.status)) return h("div.planrun.busy", h("div.row", thinking(),
+      h("span", { style: { fontWeight: 560 } }, "El Framer está armando el plan desde tu guion"),
+      h("span.small.muted", run.status === "running" ? "lee el caso, lo que dijiste y el modelo de datos · unos minutos" : "en cola")));
+    if (run.status === "failed") return h("div.planrun.failed", h("div.small", "No se pudo armar el plan: " + (run.error || "error")),
+      h("div.small.muted", "Nada cambió en el documento. Puedes volver a pedirlo."));
+    const np = run.not_planned || [];
+    return h("details.planrun", { open: opened.has("planrun"), on: { toggle: e => { e.target.open ? opened.add("planrun") : opened.delete("planrun"); save("caseos.shaping.open", [...opened]); } } },
+      h("summary", h("span.small", h("b", `Plan del ${hhmm(run.finished_at)}`), ` · ${(run.proposed || []).length} tareas propuestas`
+        + ((run.superseded || []).length ? ` · reemplazó ${run.superseded.length} propuesta(s) sin aprobar` : "")
+        + ((run.corrections || []).length ? ` · ${run.corrections.length} corrección(es) de las guardas` : ""))),
+      run.summary ? h("div.small", { style: { marginTop: "8px" } }, run.summary) : null,
+      np.length ? h("div.small.muted", { style: { marginTop: "6px" } }, "Sin tarea a propósito: ", np.map(x => `${(x.slides || []).join(", ")} (${x.why})`).join(" · ")) : null,
+      (run.corrections || []).map(c => h("div.corr", "⚑ " + c)));
+  };
+  const startPlan = async () => {
+    const tasks = data.shaping.plan || [];
+    const pend = tasks.filter(t => t.pending);
+    if (pend.length) {
+      const changes = pend.filter(t => t.approved).length;
+      const ok = await confirmDialog({ eyebrow: "Framing & Shaping", title: "Rehacer el plan desde el guion",
+        text: `Las ${pend.length} propuesta(s) del plan que no has aprobado${changes ? ` (${pend.length - changes} tareas nuevas y ${changes} cambios a tareas aprobadas)` : ""} se reemplazan por el plan nuevo; la versión anterior del framing las conserva. Lo que ya aprobaste no se toca: si el Framer quiere mejorar una tarea aprobada, te lo propone como cambio.`,
+        confirmLabel: "Armar el plan" });
+      if (!ok) return;
+    }
+    try { await api.cpost("/shaping/plan"); toast("El Framer está armando el plan desde tu guion", "agent"); await paint(); }
+    catch (e) { toast(e.message, "err", 7000); }
   };
   const kindTag = k => { const m = data.shaping.kinds[k] || {}; return h(`span.chip.kind-${k}`, icon(KIND_ICON[k] || "globe"), m.label || k); };
+  const workTag = w => h(`span.chip.work-${w}`, icon(WORK_ICON[w] || "spark"), ((data.shaping.work || {})[w] || {}).label || w);
+  const tableChip = t => h("button.tbl-chip", { type: "button", title: "Ver la tabla en Datos",
+    on: { click: () => app.go(`#/data/${(data.data_model || {}).id || "finora"}/${t}`) } }, t);
   const taskBody = t => {
     const m = data.shaping.kinds[t.kind] || {};
-    return h("div.stack", { style: { gap: "6px" } },
-      h("div.row.wrap", { style: { gap: "6px" } }, kindTag(t.kind), h("span.small.muted", "→ " + (m.agent || t.agent)),
-        t.intensity && t.intensity !== "analytics" ? h("span.chip.accent", t.intensity) : null),
+    const stepName = k => (data.shaping.step_kinds || {})[k] || k;
+    return h("div.stack", { style: { gap: "8px" } },
+      h("div.row.wrap", { style: { gap: "6px" } }, workTag(t.work || "propuesta"), h("span.small.muted", "lidera"), kindTag(t.kind),
+        h("span.small.muted", m.agent || t.agent), t.intensity && t.intensity !== "analytics" ? h("span.chip.accent", t.intensity) : null,
+        (t.slides || []).map(s => h("button.chip.ghost", { type: "button", title: "Ir a la lámina en el guion", style: { cursor: "pointer" },
+          on: { click: () => focusCard("guion:" + s.split(".")[0]) } }, s))),
       h("div.tq", t.question),
-      t.why ? h("div.small.muted", t.why) : null,
-      (t.links || []).length || (t.slides || []).length ? h("div.row.wrap", { style: { gap: "4px" } }, h("span.small.faint", "Sirve a:"),
-        (t.links || []).map(i => idTag(i)), (t.slides || []).map(s => h("button.chip.ghost", { type: "button", style: { cursor: "pointer" }, on: { click: () => focusCard("guion:" + s.split(".")[0]) } }, s))) : null);
+      t.draft_answer ? h("div.draft", h("div.flab", "Respuesta de arranque", h("span.faint", " · propuesta del agente, a validar")), h("div.dt", t.draft_answer)) : null,
+      (t.hugo_said || []).length ? h("div.said", h("div.flab", "Lo que ya dijiste"),
+        t.hugo_said.map(x => h("div.sq2", h("span.voice", "“" + x.text + "”"), x.ref ? idTag(x.ref) : null))) : null,
+      (t.steps || []).length ? h("div", h("div.flab", "Cómo se trabaja"), h("ol.stepl", t.steps.map(st => h("li",
+        h(`span.sk.${st.kind}`, icon(STEP_ICON[st.kind] || "spark"), stepName(st.kind)), h("span.sw", st.what),
+        (st.where || []).length ? h("span.where", st.where.map(tableChip)) : null)))) : null,
+      t.why ? h("div.small.muted", h("span.flab.inline", "Por qué importa"), t.why) : null,
+      (t.links || []).length ? h("div.row.wrap", { style: { gap: "4px" } }, h("span.small.faint", "Sirve a:"), t.links.map(i => idTag(i))) : null,
+      (t.flags || []).map(f => h("div.corr", "⚑ " + f)));
   };
   const taskCard = e => {
     const t = e.approved || e.pending.value;
@@ -390,14 +447,32 @@ export async function mount(root) {
         metaLine(e.meta)]);
   };
   const taskEditor = (key, val) => {
-    const d = draft(key, () => ({ question: val.question || "", kind: val.kind || "research",
-      intensity: val.intensity && val.intensity !== "analytics" ? val.intensity : "L2", why: val.why || "",
-      links: (val.links || []).join(", "), slides: (val.slides || []).join(", ") }));
+    const d = draft(key, () => ({ question: val.question || "", kind: val.kind || "research", work: val.work || "propuesta",
+      intensity: val.intensity && val.intensity !== "analytics" ? val.intensity : "L2", why: val.why || "", draft_answer: val.draft_answer || "",
+      steps: (val.steps || []).map(st => ({ kind: st.kind, what: st.what, where: (st.where || []).join(", ") })),
+      hugo_said: val.hugo_said || [], links: (val.links || []).join(", "), slides: (val.slides || []).join(", ") }));
     const kinds = data.shaping.kinds;
     const dm = data.data_model;
+    const settle = () => { if (document.activeElement && board.contains(document.activeElement)) document.activeElement.blur(); paintBoard(); };
+    const stepRow = (st, i) => h("div.eslide",
+      h("div.row.between", h("div.row.wrap", { style: { gap: "4px" } }, h("span.slid", `${i + 1}`),
+        Object.entries(data.shaping.step_kinds || {}).map(([k, l]) => h("button.btn.sm" + (st.kind === k ? ".primary" : ".ghost"),
+          { type: "button", on: { click: () => { st.kind = k; paintBoard(); } } }, icon(STEP_ICON[k]), l))),
+        miniBtn("×", "Quitar paso", () => { d.steps.splice(i, 1); settle(); })),
+      field(key, st, "what", st.kind === "data" ? "Qué buscar en el modelo (si no existe, dilo y nombra el proxy)" : st.kind === "research" ? "Qué buscar afuera y por qué" : "Qué se entrega", true, `steps.${i}.what`),
+      st.kind === "data" ? field(key, st, "where", "Tablas: mart.new_customers, mart.customer_month", false, `steps.${i}.where`) : null);
     return h("div.editor.shaped",
       lab("Pregunta que hay que resolver"), field(key, d, "question", "¿Qué necesitamos saber para contar la historia con evidencia?", true),
-      lab("Quién la trabaja"),
+      lab("Qué sale"),
+      h("div.row.wrap", { style: { gap: "6px" } }, Object.entries(data.shaping.work || {}).map(([k, w]) =>
+        h("button.btn.sm" + (d.work === k ? ".primary" : ".ghost"), { type: "button", title: w.hint, on: { click: () => { d.work = k; paintBoard(); } } }, icon(WORK_ICON[k]), w.label))),
+      lab("Respuesta de arranque", "lo que respondemos hoy con el contexto; se valida al investigar"),
+      field(key, d, "draft_answer", "Ej.: todo depende del punto de entrada: hay que segmentar por puerta y medir cada una en su orden…", true),
+      lab("Cómo se trabaja", "pasos en orden"),
+      d.steps.map(stepRow),
+      h("div", btn("Añadir paso", { sm: true, variant: "ghost", icon: "plus", onClick: () => {
+        d.steps.push({ kind: "data", what: "", where: "" }); focusNext = `${key}|steps.${d.steps.length - 1}.what`; paintBoard(); } })),
+      lab("Quién la lidera"),
       h("div.row.wrap", { style: { gap: "6px" } }, Object.entries(kinds).map(([k, m]) =>
         h("button.btn.sm" + (d.kind === k ? ".primary" : ".ghost"), { type: "button", on: { click: () => { d.kind = k; paintBoard(); } } }, icon(KIND_ICON[k]), `${m.label} · ${m.agent}`))),
       d.kind === "data" ? h("div.small.muted", dm ? `Analytics la resuelve consultando el modelo de datos del caso: ${dm.label}.` : "Analytics necesita un modelo de datos: elígelo en Briefing.")
@@ -407,7 +482,10 @@ export async function mount(root) {
       lab("Por qué importa", "opcional"), field(key, d, "why", "Qué cambia en la historia según lo que salga", true),
       h("div.grid2", h("div", lab("Sirve a", "H / Q / D, opcional"), field(key, d, "links", "H-003, Q-002", false)),
         h("div", lab("Láminas del guion", "opcional"), field(key, d, "slides", "S2.3, S3.1", false))),
-      saveRow(key, () => ({ question: d.question.trim(), kind: d.kind, intensity: d.intensity, why: d.why.trim(), links: csv(d.links), slides: csv(d.slides) }), "Tarea"));
+      saveRow(key, () => ({ question: d.question.trim(), work: d.work, kind: d.kind, intensity: d.intensity, why: d.why.trim(),
+        draft_answer: d.draft_answer.trim(), hugo_said: d.hugo_said,
+        steps: d.steps.filter(st => st.what.trim()).map(st => ({ kind: st.kind, what: st.what.trim(), where: csv(st.where) })),
+        links: csv(d.links), slides: csv(d.slides) }), "Tarea"));
   };
   const sendTask = async id => {
     try {
@@ -466,7 +544,7 @@ export async function mount(root) {
     h("div", { style: { minWidth: 0 } }, board)));
   hint.style.margin = "0 0 10px";
   await paint();
-  const onJob = ev => { if ((ev.job.kind === "framer_turn" || ev.job.agent === "framer") && ["running", "skills", "succeeded", "failed"].includes(ev.event.kind)) paint(); };
+  const onJob = ev => { if ((ev.job.kind === "framer_turn" || ev.job.kind === "shaping_plan" || ev.job.agent === "framer") && ["running", "skills", "succeeded", "failed"].includes(ev.event.kind)) paint(); };
   app.on("job", onJob);
   return { update: paint, destroy: () => { app.listeners.job = (app.listeners.job || []).filter(f => f !== onJob); } };
 }

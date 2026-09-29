@@ -101,3 +101,21 @@ def test_ids_are_never_reused(case):
     fr = case.read_data("framing/current.yaml")
     assert [t["id"] for t in fr["research_plan"]] == ["RT-002"]                        # RT-001 meant something else
     assert [s["id"] for s in fr["storyline_guide"]] == ["S2"]
+
+
+def test_a_draft_story_can_use_evidence_hugo_has_not_accepted_but_cannot_be_ready(case):
+    from caseos import phases
+    from tests.test_handoffs import _package, _table
+    t = case.create("table", {**_table(), "status": "valid"}, actor="analytics")
+    f = case.create("finding", {"headline": "El monto de entrada cayó 38%", "links": [t["id"]]}, actor="analytics")   # proposed, not accepted
+    pkg = _package(f, t, key="entry")
+    res = story.apply_package(case, pkg, actor="cos")
+    assert any("sin evidencia aceptada" in e for e in res["errors"])               # a normal package still needs accepted evidence
+    res = story.apply_package(case, pkg, actor="cos", draft=True)
+    assert res["errors"] == [] and res["pending"] == [f["id"]]                      # the draft shows the story…
+    rd = phases.readiness(case, "story")
+    assert not rd["ok"] and any("no has aceptado" in b for b in rd["blockers"])      # …and Ready waits for Hugo
+    assert case.get(res["claims"][0])["status"] == "pending"
+    case.set_review(f["id"], "accepted", actor="hugo")
+    v = story.revalidate(case)
+    assert v["ok"] and v["pending"] == [] and not any("no has aceptado" in b for b in phases.readiness(case, "story")["blockers"])

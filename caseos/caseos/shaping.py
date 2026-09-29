@@ -5,9 +5,11 @@ The Shaping document is what Hugo approves at the end of Framing and what the re
   2. Pregunta ejecutiva — framing/current.yaml › executive_question (edited in place, versioned)
   3. Guion de la historia — sections → slides; each slide says which question it answers and what it must show
   4. Hipótesis — the H-xxx entities with their falsifiers
-  5. Plan de investigación — one task per uncertainty, typed (datos · research · medición · modelo de datos), with
-     the agent that would run it, its intensity and what it serves (H/Q/slide). Approved tasks appear in Research,
-     ready to launch; launching stays Hugo's click.
+  5. Plan de investigación — one task per question of the guion that needs work: what comes out (investigación y
+     propuesta · investigar datos · research externo), the agent that leads it, a starting answer written from the case
+     context and Hugo's own words (a working hypothesis, never a fact), and the steps — "investigar datos en el modelo"
+     names real tables of the case's data model. Approved tasks appear in Research, ready to launch; launching stays
+     Hugo's click, and the specialist receives the starting answer to validate or refute.
   6. Lo que no afirmamos todavía · decisiones necesarias · riesgos
 
 The Framer proposes; proposals wait in framing/current.yaml › pending until Hugo approves, edits or discards them (the
@@ -27,6 +29,15 @@ KINDS = {"data": {"label": "Datos", "specialty": "analytics", "agent": "Analytic
          "measurement": {"label": "Medición", "specialty": "measurement", "agent": "Measurement"},
          "data_model": {"label": "Modelo de datos", "specialty": "data_engineering", "agent": "Data Engineering"}}
 INTENSITIES = ["L1", "L2", "L3"]
+# what a task delivers, in Hugo's words: most questions of a guion are "investigación y propuesta", not a lookup
+WORK = {"propuesta": {"label": "Investigación y propuesta",
+                      "hint": "Se responde con una propuesta: contexto del caso, lo que ya dijiste, datos del modelo y research donde haga falta."},
+        "datos": {"label": "Investigar datos", "hint": "La respuesta sale del modelo de datos del caso."},
+        "research": {"label": "Research externo", "hint": "Hace falta información de afuera: prácticas, benchmarks, mercado."}}
+STEP_KINDS = {"data": "Investigar datos en el modelo", "research": "Research", "proposal": "Proponer"}
+
+
+PLAN_RUNS = "framing/plans.jsonl"          # the Framer's "plan desde el guion" runs (status, tasks proposed, notes)
 
 
 def _fr(store: CaseStore) -> dict:
@@ -71,14 +82,47 @@ def clean_section(v: dict, sid: str) -> dict:
             "slides": slides}
 
 
+def clean_steps(v) -> list[dict]:
+    out = []
+    for x in v or []:
+        if not isinstance(x, dict) or x.get("kind") not in STEP_KINDS or not (x.get("what") or "").strip():
+            continue
+        where = x.get("where") or []
+        where = [w.strip() for w in (where.split(",") if isinstance(where, str) else where) if isinstance(w, str) and w.strip()]
+        out.append({"kind": x["kind"], "what": x["what"].strip(), "where": where if x["kind"] == "data" else []})
+    return out[:6]
+
+
+def clean_said(v) -> list[dict]:
+    out = []
+    for x in v or []:
+        x = {"text": x, "ref": ""} if isinstance(x, str) else (x or {})
+        if (x.get("text") or "").strip():
+            out.append({"text": x["text"].strip(), "ref": (x.get("ref") or "").strip()})
+    return out[:4]
+
+
+def infer_work(kind: str, steps: list[dict]) -> str:
+    if kind == "data":
+        return "datos"
+    if kind == "research" and "proposal" not in {x["kind"] for x in steps}:
+        return "research"
+    return "propuesta"
+
+
 def clean_task(v: dict, tid: str) -> dict:
-    kind = (v or {}).get("kind") if (v or {}).get("kind") in KINDS else "research"
-    inten = (v or {}).get("intensity")
+    v = v or {}
+    kind = v.get("kind") if v.get("kind") in KINDS else "research"
+    inten = v.get("intensity")
     inten = "analytics" if kind == "data" else (inten if inten in INTENSITIES else "L2")
-    return {"id": tid, "question": ((v or {}).get("question") or "").strip(), "kind": kind, "agent": KINDS[kind]["specialty"],
-            "intensity": inten, "why": ((v or {}).get("why") or "").strip(),
-            "links": [x for x in ((v or {}).get("links") or []) if isinstance(x, str) and x.strip()],
-            "slides": [x for x in ((v or {}).get("slides") or []) if isinstance(x, str) and x.strip()]}
+    steps = clean_steps(v.get("steps"))
+    return {"id": tid, "question": (v.get("question") or "").strip(), "kind": kind, "agent": KINDS[kind]["specialty"],
+            "intensity": inten, "work": v.get("work") if v.get("work") in WORK else infer_work(kind, steps),
+            "draft_answer": (v.get("draft_answer") or "").strip(), "hugo_said": clean_said(v.get("hugo_said")), "steps": steps,
+            "why": (v.get("why") or "").strip(),
+            "links": [x for x in (v.get("links") or []) if isinstance(x, str) and x.strip()],
+            "slides": [x for x in (v.get("slides") or []) if isinstance(x, str) and x.strip()],
+            "flags": [x for x in (v.get("flags") or []) if isinstance(x, str) and x.strip()]}
 
 
 def next_section_id(fr: dict) -> str:
@@ -152,13 +196,15 @@ def propose(store: CaseStore, key: str, value, *, basis: str = "framer", why: st
     return True
 
 
-def _apply(fr: dict, key: str, val, *, actor: str) -> None:
+def _apply(fr: dict, key: str, val, *, actor: str, via: str = "") -> None:
     st = fr.setdefault("shaping_state", {})
     prev = st.get(key) or {}
     if key == "problem":
         fr["problem"] = clean_problem(val)
     elif key.startswith("guion:"):
         sec = clean_section(val, key.split(":", 1)[1])
+        before = _approved(fr, key) or ((fr.get("pending") or {}).get(key) or {}).get("value")
+        _retarget_slides(fr, *_slide_map(before, val, sec))
         guide = fr.setdefault("storyline_guide", [])
         i = next((n for n, s in enumerate(guide) if s["id"] == sec["id"]), None)
         guide.__setitem__(i, sec) if i is not None else guide.append(sec)
@@ -173,7 +219,35 @@ def _apply(fr: dict, key: str, val, *, actor: str) -> None:
         plan.__setitem__(i, t) if i is not None else plan.append(t)
         plan.sort(key=lambda x: _num(x["id"]))
     st[key] = {"state": "approved", "by": actor, "at": now_iso(), "version": int(prev.get("version") or 0) + 1}
+    if via:
+        st[key]["via"] = via                  # Hugo delegated the click (e.g. to Claude in the chat): recorded, not hidden
     (fr.get("pending") or {}).pop(key, None)
+
+
+def _slide_map(before: dict | None, raw: dict, after: dict) -> tuple[dict, set]:
+    """Slide ids are positions (S2.3 = third slide of S2), so an edit that reorders, inserts or removes slides moves
+    them. Returns old id → new id (by the editor's prev_id, else by the same title) and the old ids that are gone."""
+    if not before:
+        return {}, set()
+    by_title = {norm(x.get("title", "")): x["id"] for x in before.get("slides") or [] if x.get("title")}
+    kept_raw = [x for x in (raw or {}).get("slides") or [] if (x.get("title") or "").strip() or (x.get("question") or "").strip()]
+    mapping, kept = {}, set()
+    for rs, ns in zip(kept_raw, after["slides"]):
+        prev = rs.get("prev_id") or by_title.get(norm(rs.get("title", "")))
+        if prev:
+            kept.add(prev)
+            if prev != ns["id"]:
+                mapping[prev] = ns["id"]
+    gone = {x["id"] for x in before.get("slides") or []} - kept
+    return mapping, gone
+
+
+def _retarget_slides(fr: dict, mapping: dict, gone: set) -> None:
+    if not mapping and not gone:
+        return
+    tasks = list(fr.get("research_plan") or []) + [p["value"] for k, p in (fr.get("pending") or {}).items() if k.startswith("plan:")]
+    for t in tasks:
+        t["slides"] = list(dict.fromkeys(mapping.get(x, x) for x in t.get("slides") or [] if x not in gone or x in mapping))
 
 
 def _save(store: CaseStore, fr: dict, *, actor: str, summary: str, material: bool = True) -> None:
@@ -206,15 +280,16 @@ def approve(store: CaseStore, key: str, *, actor: str = "hugo") -> dict:
     return state(store)
 
 
-def approve_all(store: CaseStore, *, actor: str = "hugo") -> dict:
+def approve_all(store: CaseStore, *, actor: str = "hugo", via: str = "", only: str = "") -> dict:
+    """Approve every pending proposal (or only those whose key starts with `only`, e.g. "plan:")."""
     if actor != "hugo":
         raise ValueError("Solo Hugo aprueba el shaping.")
     fr = _fr(store)
-    keys = list((fr.get("pending") or {}).keys())
+    keys = [k for k in (fr.get("pending") or {}) if k.startswith(only)]
     for key in keys:
-        _apply(fr, key, fr["pending"][key]["value"], actor=actor)
+        _apply(fr, key, fr["pending"][key]["value"], actor=actor, via=via)
     if keys:
-        _save(store, fr, actor=actor, summary=f"Shaping · {len(keys)} propuesta(s) aprobadas")
+        _save(store, fr, actor=actor, summary=f"Shaping · {len(keys)} propuesta(s) aprobadas" + (f" ({via})" if via else ""))
     return state(store)
 
 
@@ -239,6 +314,8 @@ def set_section(store: CaseStore, key: str, value, *, actor: str = "hugo") -> di
         raise ValueError(f"Sección de shaping desconocida: {key}")
     if key.startswith("plan:") and not ((value or {}).get("question") or "").strip():
         raise ValueError("La tarea necesita una pregunta.")
+    if key.startswith("plan:"):
+        value = {**value, "flags": []}
     _apply(fr, key, value, actor=actor)
     _save(store, fr, actor=actor, summary=f"Shaping · Hugo escribió {label(key, fr)}")
     return state(store)
@@ -264,7 +341,7 @@ def remove(store: CaseStore, key: str, *, actor: str = "hugo") -> dict:
 
 
 # ------------------------------------------------------------------------------------------ research plan → Research
-def send_task(store: CaseStore, task_id: str, *, actor: str = "hugo") -> dict:
+def send_task(store: CaseStore, task_id: str, *, actor: str = "hugo", via: str = "") -> dict:
     from . import research
     from .model import type_of
     fr = _fr(store)
@@ -280,7 +357,11 @@ def send_task(store: CaseStore, task_id: str, *, actor: str = "hugo") -> dict:
     r = out["research"]
     # an approved plan task has case purpose by construction: Hugo approved it in the Shaping document
     store.update(r["id"], {"shaping_task": task_id, "slides": t.get("slides") or [], "task_why": t.get("why", ""),
+                           "task": {"work": t.get("work") or infer_work(t["kind"], t.get("steps") or []),
+                                    "draft_answer": t.get("draft_answer", ""), "hugo_said": t.get("hugo_said") or [],
+                                    "steps": t.get("steps") or []},
                            "purpose_ok": True, "purpose_note": "", "forced_without_purpose": False,
+                           **({"requested_via": via} if via else {}),
                            "case_question": r.get("case_question") or f"Plan de investigación {task_id}"
                            + (f" · láminas {', '.join(t['slides'])}" if t.get("slides") else "")},
                  actor="system", material=False, summary=f"{r['id']} viene de la tarea {task_id} del shaping")
@@ -294,8 +375,116 @@ def send_task(store: CaseStore, task_id: str, *, actor: str = "hugo") -> dict:
     return {"task": task_id, "research_id": r["id"], "launched": out.get("launched"), "job_id": out.get("job_id")}
 
 
-def send_all(store: CaseStore, *, actor: str = "hugo") -> list[dict]:
-    return [send_task(store, t["id"], actor=actor) for t in (_fr(store).get("research_plan") or []) if t.get("status") == "approved"]
+def send_all(store: CaseStore, *, actor: str = "hugo", via: str = "") -> list[dict]:
+    return [send_task(store, t["id"], actor=actor, via=via) for t in (_fr(store).get("research_plan") or []) if t.get("status") == "approved"]
+
+
+# ------------------------------------------------------------------------------------------ guards for agent-written tasks
+def slide_ids(fr: dict) -> set[str]:
+    """Every slide of the guion, approved or still proposed (tasks can be planned before Hugo approves the guion)."""
+    ids = {sl["id"] for sec in fr.get("storyline_guide") or [] for sl in sec.get("slides") or []}
+    for k, p in (fr.get("pending") or {}).items():
+        if k.startswith("guion:"):
+            ids |= {sl["id"] for sl in (p.get("value") or {}).get("slides") or []}
+    return ids
+
+
+def data_model(store: CaseStore):
+    """The case's data model: the one Hugo chose in Briefing, else the one behind its analytics workspace; None if none."""
+    from . import datamodels
+    try:
+        m = datamodels.for_case(store)
+        if m is None and (store.meta().get("workspace") or {}).get("type") == "finora-eda":
+            m = datamodels.get("finora")
+        return m
+    except ValueError:
+        return None
+
+
+def model_tables(store: CaseStore) -> set[str] | None:
+    """Tables of the case's data model, or None when the case has none."""
+    m = data_model(store)
+    return {t["id"] for t in m.catalog()["tables"]} if m else None
+
+
+def _tokens(text: str) -> set[str]:
+    return set(re.findall(r"[a-záéíóúñü0-9]{4,}", norm(text or "")))
+
+
+def quote_matches(quote: str, entity: dict) -> bool:
+    """A quote attributed to Hugo must come from what he said in that item (his words, their history, or the item)."""
+    q = _tokens(quote)
+    if not q:
+        return False
+    said = " ".join([entity.get("hugo_wording") or "", *[h.get("text", "") for h in entity.get("hugo_wording_history") or []],
+                     entity.get("text") or "", entity.get("statement") or "", entity.get("structured") or ""])
+    return len(q & _tokens(said)) / len(q) >= 0.6
+
+
+def guard_tasks(store: CaseStore, tasks: list[dict], fr: dict, *, context: str = "") -> tuple[list[dict], list[str]]:
+    """What an agent writes into a task is checked before it becomes a proposal: slides and IDs must exist, a quote of
+    Hugo must be his, "investigar datos" can only name tables the model has, and a number in the starting answer that
+    the case context does not contain is flagged (the answer is a working hypothesis, not evidence)."""
+    from . import evidence
+    ents = store.all()
+    sids = slide_ids(fr)
+    tables = model_tables(store)
+    pool = [n.value for n in evidence.numbers_in(context)]
+    out, notes = [], []
+    for t in tasks:
+        q = (t.get("question") or "").strip()
+        if not q:
+            continue
+        flags = []
+        bad = [x for x in t.get("slides") or [] if x not in sids]
+        if bad:
+            notes.append(f"«{clip(q, 60)}»: láminas que no existen en el guion ({', '.join(bad)}) se quitaron.")
+        said = []
+        for x in clean_said(t.get("hugo_said")):
+            e = ents.get(x["ref"])
+            if not e:
+                notes.append(f"Una cita atribuida a Hugo no tenía referencia válida ({x['ref'] or 'sin ID'}): se quitó.")
+            elif e.get("verbatim") is False:
+                notes.append(f"{x['ref']} es una paráfrasis del Framer, no palabras de Hugo: no se cita como suya.")
+            elif not quote_matches(x["text"], e):
+                notes.append(f"La cita atribuida a {x['ref']} no coincide con lo que Hugo dijo ahí: se quitó.")
+            else:
+                said.append(x)
+        steps = []
+        for st in clean_steps(t.get("steps")):
+            if st["kind"] == "data":
+                if tables is None:
+                    flags.append("El caso no tiene modelo de datos: el paso de datos queda como dato por pedir.")
+                    st = {**st, "where": []}
+                else:
+                    unknown = [w for w in st["where"] if w not in tables]
+                    if unknown:
+                        notes.append(f"«{clip(q, 50)}»: tablas que no existen en el modelo ({', '.join(unknown)}) se quitaron.")
+                    st = {**st, "where": [w for w in st["where"] if w in tables]}
+            steps.append(st)
+        kind = t.get("kind") if t.get("kind") in KINDS else "research"
+        if kind == "data" and tables is None:
+            notes.append(f"«{clip(q, 50)}» pedía datos y el caso no tiene modelo de datos: queda como research.")
+            kind = "research"
+        draft = (t.get("draft_answer") or "").strip()
+        loose = [n.raw for n in evidence.numbers_in(draft) if not evidence.supported(n, pool)] if draft else []
+        if loose:
+            flags.append("Cifra sin fuente en el contexto del caso: " + ", ".join(loose))
+        out.append({**t, "question": q, "kind": kind, "draft_answer": draft, "hugo_said": said, "steps": steps,
+                    "slides": [x for x in t.get("slides") or [] if x in sids],
+                    "links": [x for x in t.get("links") or [] if x in ents], "flags": flags})
+    return out, notes
+
+
+def supersede_pending_tasks(fr: dict) -> list[str]:
+    """A new plan replaces every task proposal Hugo has not approved yet — new tasks and proposed changes to approved
+    ones alike (the previous framing version keeps them). Approved tasks stay as they are."""
+    gone = [k for k in list((fr.get("pending") or {})) if k.startswith("plan:")]
+    for k in gone:
+        fr["pending"].pop(k)
+        if not _approved(fr, k):
+            fr.setdefault("retired_ids", []).append(k.split(":", 1)[1])
+    return [k.split(":", 1)[1] for k in gone]
 
 
 # ------------------------------------------------------------------------------------------ view
@@ -323,8 +512,17 @@ def state(store: CaseStore) -> dict:
     migratable = {"guion": len(parse_structure(structural)) if structural and not fr.get("storyline_guide") and not new_secs else 0,
                   "plan": len(legacy_rn) if legacy_rn and not fr.get("research_plan") and not any(k.startswith("plan:") for k in pend) else 0,
                   "brief_structure": len(structural), "brief_pending": bool((b.get("pending") or {}).get("deliverables"))}
+    slide_tasks: dict[str, list[dict]] = {}
+    for e in tasks:
+        v = e["approved"] or e["pending"]["value"]
+        status = ("sent" if (e["approved"] or {}).get("status") == "sent" else "approved") if e["approved"] else "proposed"
+        for sl in v.get("slides") or []:
+            slide_tasks.setdefault(sl, []).append({"id": v["id"], "status": status})
+    from .util import read_jsonl
+    runs = read_jsonl(store.root / PLAN_RUNS, limit=10)
     return {"problem": {"key": "problem", "approved": fr.get("problem") or None, "pending": pend.get("problem"), "meta": st.get("problem")},
-            "guion": sections, "plan": tasks, "pending": len(pend), "kinds": KINDS,
+            "guion": sections, "plan": tasks, "pending": len(pend), "kinds": KINDS, "work": WORK, "step_kinds": STEP_KINDS,
+            "slide_tasks": slide_tasks, "plan_run": runs[-1] if runs else None,
             "progress": {"problem": not _empty(fr.get("problem") or {}), "guion_sections": len(fr.get("storyline_guide") or []),
                          "slides": sum(len(s.get("slides") or []) for s in fr.get("storyline_guide") or []),
                          "tasks_approved": sum(1 for t in approved_tasks if t.get("status") == "approved"),

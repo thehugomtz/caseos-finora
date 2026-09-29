@@ -23,6 +23,15 @@ export async function mount(root) {
       h("div.head", h("div", h("div.eyebrow", "05 · Story · COS + Story Package"), h("h1.title", "Story"),
         h("p.lede", "Cada claim responde una pregunta de la audiencia, cita evidencia aceptada y trae sus cifras en tablas. Si un número no está en una tabla, no pasa.")),
         h("div.actions", statusChip(ph.status), running.length ? h("span.row", thinking(), h("span.small.muted", "El COS está armando el paquete")) : null,
+          btn("Borrador con evidencia por revisar", { icon: "eye", variant: "ghost", disabled: !!running.length,
+            title: "El COS arma la historia con la evidencia que aún no aceptas, para ver cómo quedaría; no se puede marcar Ready hasta que la aceptes",
+            onClick: async () => {
+              const ins = await confirmDialog({ eyebrow: "Borrador", title: "Ver cómo quedaría la historia",
+                text: "El COS arma el Story Package siguiendo tu guion con la evidencia aceptada y la que todavía espera tu revisión. Cada claim que dependa de evidencia sin aceptar queda marcado; para marcar Ready tendrás que aceptarla (o rechazarla) en Research.",
+                confirmLabel: "Armar el borrador", field: { label: "Instrucciones para el COS (opcional)", placeholder: "Audiencia, tono, qué no puede faltar…" } });
+              if (ins === null) return;
+              await api.cpost("/story/package", { instructions: ins === true ? "" : ins, draft: true }); toast("El COS está armando el borrador de la historia", "agent"); paint();
+            } }),
           btn(pkg ? "Regenerar Story Package" : "Preparar Story Package", { icon: "spark", disabled: !!running.length, onClick: async () => {
             const ins = await confirmDialog({ title: pkg ? "Regenerar el Story Package" : "Preparar el Story Package", text: "El COS arma el paquete con la evidencia aceptada. Las keys de los claims se conservan entre versiones.", confirmLabel: "Preparar", field: { label: "Instrucciones para el COS (opcional)", placeholder: "Audiencia, tono, qué no puede faltar…" } });
             if (ins === null) return;
@@ -33,7 +42,12 @@ export async function mount(root) {
         guide.length ? guionCoverage(null, guide) : storylineFromFraming(sh)) : h("div",
         h("div.panel.pad.glow", h("div.eyebrow.accent", "Governing thought"), h("div.gt", { style: { margin: "12px 0" } }, pkg.governing_thought),
           h("div.row.wrap", h("span.small.muted", "Audiencia:"), (pkg.audience || []).map(a => h("span.chip", a)), h("span.small.muted", "· v" + pkg.version),
-            v.ok ? h("span.chip.good", "paquete válido") : h("span.chip.bad", `${(v.errors || []).length} problema(s)`), (v.warnings || []).length ? h("span.chip.warn", `${v.warnings.length} aviso(s)`) : null),
+            pkg.draft ? h("span.chip.human", "borrador") : null,
+            (v.pending || []).length ? h("span.chip.human", `${v.pending.length} evidencia(s) esperan tu aceptación`) : null,
+            v.ok ? h("span.chip.good", (v.pending || []).length ? "sin errores" : "paquete válido") : h("span.chip.bad", `${(v.errors || []).length} problema(s)`),
+            (v.warnings || []).length ? h("span.chip.warn", `${v.warnings.length} aviso(s)`) : null),
+          (v.pending || []).length ? h("div.small", { style: { marginTop: "10px", color: "var(--human-ink)" } },
+            "Borrador: así quedaría la historia. Para marcar Ready acepta o rechaza en Research la evidencia que usa: ", ids(v.pending, 14)) : null,
           pkg.from_to && pkg.from_to.from ? h("div.grid2.mt", h("div", h("div.eyebrow", "Hoy creen"), h("div.small", { style: { marginTop: "4px" } }, pkg.from_to.from)), h("div", h("div.eyebrow", "Deben salir creyendo"), h("div.small", { style: { marginTop: "4px" } }, pkg.from_to.to))) : null),
         (v.errors || []).length || (v.warnings || []).length ? h("div.panel.pad.mt" + ((v.errors || []).length ? ".alert" : ""), h("div.eyebrow", "Validación del contrato"), h("ul.validation", (v.errors || []).map(e => h("li.e", "✖ " + e)), (v.warnings || []).map(w => h("li.w", "⚠ " + w))),
           h("div.row", btn("Revalidar", { sm: true, icon: "refresh", onClick: async () => { await api.cpost("/story/validate"); paint(); } }))) : null,
@@ -65,7 +79,8 @@ function claimCard(c, ent, i) {
   const lvl = s.level || "unsupported";
   return h("div.claim", h("div.node." + lvl, String(i + 1)),
     h("div.card",
-      h("div.row.between", h("div.row.wrap", idTag(c.claim_id), h("span.chip.ghost", c.role_in_story), h("span.chip", "confianza " + c.confidence)), statusChip(lvl === "supported" ? "supported" : lvl === "weak" ? "weak" : lvl === "proposal" ? "proposed" : "unsupported")),
+      h("div.row.between", h("div.row.wrap", idTag(c.claim_id), h("span.chip.ghost", c.role_in_story), h("span.chip", "confianza " + c.confidence)),
+        statusChip(lvl === "supported" ? "supported" : lvl === "weak" ? "weak" : lvl === "proposal" ? "proposed" : lvl === "pending" ? "pending" : "unsupported")),
       c.question ? h("div.q", c.question) : null,
       h("div.hl", c.headline),
       c.answer ? h("div.small", { style: { color: "var(--ink-2)", lineHeight: 1.55 } }, c.answer) : null,

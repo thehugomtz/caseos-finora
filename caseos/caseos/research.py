@@ -113,7 +113,8 @@ ROUTE_SCHEMA = _obj({"intensity": {"type": "string", "enum": ["L1", "L2", "L3", 
 
 SOURCE = _obj({"id": _S, "title": _S, "url": _S, "publisher": _S, "date": _S,
                "source_type": {"type": "string", "enum": ["primary", "official", "regulatory", "academic", "industry", "company",
-                                                          "expert", "journalism", "community", "marketing", "internal"]},
+                                                          "expert", "journalism", "community", "marketing", "internal",
+                                                          "data_model"]},
                "quality": {"type": "string", "enum": ["A", "B", "C", "D"]}, "note": _S})
 CLAIM = _obj({"claim": _S, "source_id": _S, "source_type": _S, "confidence": {"type": "string", "enum": ["high", "medium", "low"]},
               "freshness": _S, "supports_or_contests": {"type": "string", "enum": ["supports", "contests", "context"]}, "notes": _S})
@@ -289,7 +290,44 @@ def _case_context(store: CaseStore, r: dict) -> str:
     for e in linked:
         lines.append(f"- {e['id']}{' (' + e['alias'] + ')' if e.get('alias') else ''} [{e.get('type')}] {clip(title_of(e), 260)}"
                      + (f" · se debilita si: {clip(e.get('falsifier', ''), 160)}" if e.get("falsifier") else ""))
-    return "\n".join(lines)
+    return "\n".join(lines + task_lines(r))
+
+
+def task_lines(r: dict) -> list[str]:
+    """The plan task behind this research (Framing & Shaping): what must come out, the starting answer to validate or
+    refute, Hugo's own words and the steps."""
+    from .shaping import STEP_KINDS, WORK
+    tk = r.get("task") or {}
+    if not (tk.get("draft_answer") or tk.get("steps")):
+        return []
+    out = ["", f"## Tarea {r.get('shaping_task') or ''} del plan de investigación (aprobada por Hugo)",
+           f"Qué debe salir: {(WORK.get(tk.get('work')) or {}).get('label', 'Investigación y propuesta')}"
+           + (f" · láminas del guion: {', '.join(r.get('slides') or [])}" if r.get("slides") else "")]
+    if tk.get("draft_answer"):
+        out.append("Respuesta de arranque (hipótesis de trabajo del Framer: valídala, afínala o refútala con evidencia; "
+                   f"no la des por buena): {tk['draft_answer']}")
+    out += [f"Lo que Hugo ya dijo ({x.get('ref')}): “{x.get('text')}”" for x in tk.get("hugo_said") or []]
+    for i, st in enumerate(tk.get("steps") or [], 1):
+        out.append(f"Paso {i} · {STEP_KINDS.get(st.get('kind'), st.get('kind'))}: {st.get('what')}"
+                   + (f" (tablas: {', '.join(st['where'])})" if st.get("where") else ""))
+    return out
+
+
+def _data_access(store: CaseStore, r: dict):
+    """The data model a specialist may query: when the task has data steps, or the specialist designs measurement or
+    data models (it has to know what exists before proposing)."""
+    from .shaping import data_model
+    has_data_step = any(st.get("kind") == "data" for st in (r.get("task") or {}).get("steps") or [])
+    if not (has_data_step or r.get("specialty") in ("measurement", "data_engineering")):
+        return None
+    return data_model(store)
+
+
+DATA_RULES = ("## Modelo de datos del caso (solo lectura)\nTienes `consultar_modelo` (una SELECT sobre raw.*, staging.*, "
+              "mart.*; máx. 200 filas) y `catalogo_modelo`. Úsalas en los pasos de datos: comprueba qué existe antes de proponer, "
+              "y si un dato no está en el modelo, dilo. Cada cifra que saques del modelo va en `sources` con source_type "
+              "\"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste; el claim cita ese source_id. "
+              "Una cita del modelo solo cuenta si la consulta corrió en esta corrida.")
 
 
 async def _specialist(store: CaseStore, r: dict, job) -> dict:
@@ -311,13 +349,18 @@ async def _specialist(store: CaseStore, r: dict, job) -> dict:
               "nunca evidencia sobre esta empresa. Termina con la síntesis para el caso (qué cambia para ESTE caso).")
     tools = ["WebSearch", "WebFetch"]
     turns = {"L1": 10, "L2": 24, "L3": 30}.get(r["intensity"], 20)
+    dm = _data_access(store, r)
+    if dm is not None:
+        prompt += "\n\n" + DATA_RULES
+        turns += 10
     spec = RunSpec(agent=agent, role=agent, system=system, prompt=prompt, schema=result_schema(spec_key), tools=tools,
                    max_turns=turns, skills=skills.record(selected), purpose=f"{r['id']} · {SPECIALTIES[spec_key]} {r['intensity']}",
-                   case_id=store.id, case_root=store.root, timeout_s=1200)
+                   case_id=store.id, case_root=store.root, timeout_s=1500 if dm is not None else 1200, data_model=dm)
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
     out = dict(res.output)
     out["_run_ids"] = [res.run_id]
     out["_seen_urls"] = res.seen_urls
+    out["_sql_runs"] = res.sql_runs
     out["_usage"] = {res.run_id: {"cost_usd": res.cost_usd, **(res.usage or {})}}
     out["_skills"] = skills.record(selected)
     return out
@@ -404,15 +447,26 @@ def _norm_url(u: str) -> str:
     return u.lower()
 
 
+def _norm_sql(q: str) -> str:
+    return " ".join((q or "").replace(";", " ").split()).lower()
+
+
 def verify_citations(out: dict) -> dict:
-    """Citations must be URLs retrieved in the run. Returns validation info and mutates claims/sources."""
+    """Citations must be URLs retrieved in the run — or, for the case's data model, a query that actually ran in the
+    run (its exact SQL in the source's note). Returns validation info and mutates claims/sources."""
     seen = {_norm_url(u) for u in out.get("_seen_urls") or []}
+    ran = {_norm_sql(q) for q in out.get("_sql_runs") or []}
     sources = out.get("sources") or []
     unverified = []
     for s in sources:
         url = s.get("url") or ""
         if s.get("source_type") == "internal":
             s["verified"] = True
+            continue
+        if s.get("source_type") == "data_model":
+            s["verified"] = bool(ran) and _norm_sql(s.get("note")) in ran
+            if not s["verified"]:
+                unverified.append(s.get("id"))
             continue
         ok = bool(url) and (_norm_url(url) in seen or any(_norm_url(url).startswith(x) or x.startswith(_norm_url(url)) for x in seen if len(x) > 12))
         s["verified"] = ok
@@ -462,6 +516,8 @@ def _persist(store: CaseStore, rid: str, out: dict, job) -> list[str]:
         patch = {k: v for k, v in out.items() if not k.startswith("_") and k not in ("findings", "research_question")}
         if out.get("research_question") and norm(out["research_question"]) != norm(r["research_question"]):
             patch["worked_question"] = out["research_question"]
+        if out.get("_sql_runs"):
+            patch["sql_runs"] = out["_sql_runs"]
         patch.update({"status": "completed", "completed_at": now_iso(), "findings": created, "links": [l for l in links if l != rid],
                       "affected_hypotheses": aff_h, "affected_claims": aff_c, "run_ids": out.get("_run_ids", []),
                       "usage": out.get("_usage", {}), "skills_loaded": out.get("_skills", []), "validation": validation,

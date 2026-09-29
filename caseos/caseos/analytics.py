@@ -148,8 +148,9 @@ async def investigate_for_research(store: CaseStore, r: dict, job) -> dict:
     ws = adapter_or_fail(store)
     if not ws.available:
         raise StoreError("El workspace analítico no está disponible en esta máquina.")
+    from .research import task_lines
     ctx = {"titulo": f"CaseOS · {r['id']}", "texto": r["research_question"],
-           "nota": "Pregunta enviada desde CaseOS; responde con evidencia del workspace.",
+           "nota": "\n".join(["Pregunta enviada desde CaseOS; responde con evidencia del workspace.", *task_lines(r)]),
            "claim_ids": [], "narrativa_id": "", "pieza_id": ""}
     inv = ws.new_investigation(r["research_question"], ctx)
     task = asyncio.create_task(ws.run_investigation(inv))
