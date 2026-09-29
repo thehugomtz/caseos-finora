@@ -25,7 +25,7 @@ Todos usan `claude-opus-5`. El costo se ajusta con *effort* por rol (`low` para 
 evaluación de impacto, `high` para el resto) y un tope equivalente por corrida (`caseos/config.py › BUDGET_USD`).
 Con suscripción no se factura por corrida; CaseOS muestra el costo equivalente de cada una para que se vea el consumo.
 
-Medido en la validación (28-sep-2026): turno del Framer ≈ 1.5 min y US$0.36–0.39 equivalentes.
+Medido en la validación (28-sep-2026, detalle en docs/VALIDATION.md): turno del Framer 1–1.8 min y US$0.34–0.51; research L1 ~4 min y US$0.6; Measurement L3 ~8 min y US$1.6; evaluación de impacto del COS 1–2 min y US$0.25–0.44; Story Package ~2 min y US$0.42.
 
 ## Topología
 

@@ -200,11 +200,26 @@ def submit_run(store: CaseStore, deck_id: str) -> dict:
     d = next((x for x in decks(store) if x["id"] == deck_id), None)
     if not d:
         raise StoreError("Deck no encontrado.")
+    busy = [x["slug"] for x in decks(store) if x.get("status") == "running"]
+    if busy:
+        raise StoreError(f"El Visual Storyteller ya está trabajando ({', '.join(busy)}); espera a que termine.")
     job = jobs.submit(store.id, "storyteller", f"Visual Storyteller · {d['slug']}", {"deck_id": deck_id}, agent="visual_storyteller")
     d.update({"status": "running", "job_id": job.id, "started_at": now_iso(), "error": None})
     _upsert_deck(store, d)
     store.log("hugo", "handoff", [deck_id], f"Hugo envió el Story Package al Visual Storyteller ({d['slug']})", material=True)
     return {"job_id": job.id}
+
+
+def recover_decks(store: CaseStore) -> int:
+    """Decks left 'running' by a previous server process are marked interrupted (the deck folder is kept; re-run it)."""
+    items, n = decks(store), 0
+    for d in items:
+        if d.get("status") == "running" and d.get("job_id") not in jobs.LIVE:
+            d.update({"status": "interrupted", "error": "El servidor se reinició durante la corrida; la carpeta del deck se conservó."})
+            n += 1
+    if n:
+        _save_decks(store, items)
+    return n
 
 
 def _guard(deck: Path):

@@ -36,13 +36,15 @@ de Hugo.
 |---|---|---|
 | Framer · Organize («creo que están metiendo más leads pero esa madre no está convirtiendo…») | Respuesta en su registro; 9 elementos: intuiciones como USER_INTUITION con sus palabras, hipótesis con falsificador, supuesto «MRR por cliente = recurrente» explícito, una sola pregunta aclaratoria; términos nuevos explicados («mezcla»). Chequeo de lenguaje OK. | US$0.36 · 94 s |
 | Framer · Challenge | Supuestos ocultos con confianza/impacto, contraargumento más fuerte, explicación alternativa (salida de clientes caros + primer pago prorrateado), evidencia que la invalidaría, claim de mayor riesgo. Tono tranquilo. | US$0.39 · 99 s |
+| Framer · Advise («¿cómo separamos mezcla de nivel de entrada sin prometerle al CFO algo que no podemos medir?») | Empieza por lo incómodo (ya hay evidencia que empuja hacia su lectura); 3 alternativas con cuándo gana y qué cuesta; una lente (CFO) ruteada; carga las skills core de Advise (bulletproof, consulting); dice qué **no** prometer (tarifa vs descuento). | US$0.51 · 106 s |
 | Research L1 (Business) «¿Qué significa ARPA…?» | El Router la reformuló para el caso; 3 fuentes, **todas verificadas** contra 17 URLs recuperadas; 5 findings propuestos enlazados a H-024 («respaldo conceptual, no evidencia sobre Finora»). | US$0.59 + ruteo 0.08 · 3.7 min |
 | Research Measurement (Router → L3) sobre la pregunta del CRO | Registro de hitos por cuenta en vez de funnel lineal: 8 eventos, 13 métricas, 6 dimensiones, la decisión del CRO que habilita; 8 fuentes verificadas (65 URLs). | US$1.59 + 0.09 · 8 min |
 | COS · impacto de R-011 (automático) | 5 alertas con opciones A/B/C y recomendación; H-017 y H-023 marcadas needs_review sin reescribirse; conserva el vocabulario de Hugo como opción. | US$0.25 · 79 s |
 | COS · impacto de R-010 | 5 alertas (hipótesis del CRO no contrastables hoy, dividir Q-001). Interrumpida una vez por un reinicio del servidor: la solicitud se conservó y el reintento funcionó. | US$0.44 · 2 min |
 | Ciclo de iteración | Alerta → decisión de Hugo → framing needs_review → Framer aplica el cambio (y detecta que evidencia ya aceptada usa el nombre viejo) → Framing Ready v2. | US$0.34 · 53 s |
 | Compuertas | Briefing → Framing (v1, v2) → Research → Synthesis → Story Ready, cada una con snapshot, decisión y artefacto aprobado. | — |
-| Story Package | 4 claims (contexto · diagnóstico · descarte · limitación), recomendaciones condicionales («no decidir precio con este paquete»); **validación OK sin errores ni avisos** al primer intento. | ver audit/runs · ~3 min |
+| Story Package | 4 claims (contexto · diagnóstico · descarte · limitación), recomendaciones condicionales («no decidir precio con este paquete»); **validación OK sin errores ni avisos** al primer intento. | US$0.42 · 108 s |
+| COS · pregunta libre («qué falta para cerrar la historia para el CFO?», vía command layer) | Detecta que el paquete responde la composición pero no la pregunta literal del CFO (contrato vs tarifa vs descuento); propone opciones A/B/C con recomendación y «tú decides»; señala que el puente (T-003) no está en la historia y que el caveat clave descansa en research sin revisar. | US$0.38 · 99 s |
 | Visual Storyteller | Ver sección 5. | |
 
 ## 4. Errores encontrados y corregidos durante la validación
@@ -60,6 +62,9 @@ de Hugo.
 11. UI: 4 de 8 pestañas del ledger del framing quedaban recortadas; ⌘K no cerraba con Escape si el foco salía del input; fuentes duplicadas por finding; un agente en reposo decía «borrador»; título «cambia el framing framing».
 12. «qué falta para cerrar» sin complemento caía al clasificador → comando determinista.
 13. Rutas relativas de `CASEOS_CASES_DIR` se mostraban mal en la traza → se resuelven a absolutas.
+14. Se podía lanzar un segundo Storyteller mientras corría otro, y un deck quedaba «en curso» para siempre tras un reinicio → bloqueo en servidor y UI; `recover_decks` al arrancar marca interrumpido.
+15. Caracteres de ancho cero al inicio de respuestas rompían los títulos Markdown → se limpian al renderizar.
+16. Demo mode: tres pasos no encontraban qué resaltar en un caso nuevo → selector del decision log y respaldo al estado vacío de la vista.
 
 ## 5. Visual Storyteller en vivo
 

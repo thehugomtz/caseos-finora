@@ -15,7 +15,7 @@ function inline(s, ids) {
 }
 
 export function markdown(src, { ids = true } = {}) {
-  const lines = String(src || "").replace(/\r/g, "").split("\n");
+  const lines = String(src || "").replace(/\r/g, "").replace(/[\u200b\u200c\u200d\ufeff]/g, "").split("\n");   // zero-width chars break headings
   const out = [];
   let i = 0;
   while (i < lines.length) {

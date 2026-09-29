@@ -36,6 +36,7 @@ async def lifespan(_app):
     n = jobs.mark_interrupted_on_boot()
     for c in cases.list_cases():
         framer.recover_turns(cases.get(c["id"]))
+        storyteller.recover_decks(cases.get(c["id"]))
     if n:
         print(f"[caseos] {n} trabajo(s) interrumpido(s) en la sesión anterior; sus solicitudes siguen disponibles para reintentar.")
     try:

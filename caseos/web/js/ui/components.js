@@ -11,7 +11,7 @@ export const TYPE_LABEL = { question: "Pregunta", hypothesis: "Hipótesis", note
 export const KIND_LABEL = { FACT: "Hecho", OBSERVATION: "Observación", USER_INTUITION: "Intuición de Hugo", ASSUMPTION: "Supuesto",
   HYPOTHESIS: "Hipótesis", QUESTION: "Pregunta", PROPOSAL: "Propuesta", DECISION: "Decisión", UNKNOWN: "Desconocido" };
 export const STATUS_LABEL = { open: "abierta", supported: "soportada", weakened: "debilitada", contested: "en disputa", rejected: "rechazada",
-  queued: "en cola", running: "en curso", completed: "completada", failed: "falló", blocked: "bloqueada", draft: "borrador", idle: "en reposo", waiting: "espera a Hugo", cancelled: "cancelada",
+  queued: "en cola", running: "en curso", completed: "completada", failed: "falló", blocked: "bloqueada", draft: "borrador", idle: "en reposo", waiting: "espera a Hugo", interrupted: "interrumpida", incomplete: "incompleto", prepared: "preparado", cancelled: "cancelada",
   proposed: "propuesta", active: "activa", superseded: "reemplazada", reverted: "revertida", resolved: "resuelta", dismissed: "descartada",
   answered: "respondida", parked: "aparcada", valid: "válida", invalid: "inválida", weak: "débil", unsupported: "sin soporte", passed: "pasó QA",
   rendered: "renderizada", escalated: "escalada", not_started: "sin iniciar", in_progress: "en curso", review: "por revisar", ready: "Ready",

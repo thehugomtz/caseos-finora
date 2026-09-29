@@ -29,7 +29,7 @@ export async function mount(root) {
             h("div.small.muted", "Dirección visual (la elige Hugo; «elige tú» deja que el Storyteller decida y lo justifique):"),
             h("div.dirs", Object.entries(d.directions).map(([k, v]) => h("div.dir" + (direction === k ? ".on" : ""), { on: { click: () => { direction = k; paint(); } } }, h("div.n", k === "auto" ? "Elige tú" : k), h("div.small.muted", v.split(" — ")[1] || v)))),
             h("label.row", { style: { cursor: "pointer" } }, h("input", { type: "checkbox", checked: critic, on: { change: e => { critic = e.target.checked; } } }), h("span.small", "Crítica independiente final (agente independent-slide-critic)")),
-            h("div.row", h("span.spacer"), btn("Enviar al Visual Storyteller", { variant: "human", human: true, icon: "send", disabled: !storyReady, onClick: async () => {
+            h("div.row", h("span.spacer"), btn((d.decks || []).some(x => x.status === "running") ? "El Storyteller ya está trabajando" : "Enviar al Visual Storyteller", { variant: "human", human: true, icon: "send", disabled: !storyReady || (d.decks || []).some(x => x.status === "running"), onClick: async () => {
               const ok = await confirmDialog({ eyebrow: "Human gate", title: "Enviar el Story Package al Visual Storyteller", text: `Dirección ${direction}. La corrida es larga (decenas de minutos) y consume tu plan; escribe solo dentro de la carpeta del deck.`, confirmLabel: "Enviar", human: true });
               if (!ok) return;
               try { const out = await api.cpost("/slides/handoff", { direction, critic, run: true }); open = out.deck.id; toast(`Handoff listo (${out.deck.slug}) · el Storyteller está trabajando`, "agent"); paint(); }
@@ -53,10 +53,10 @@ function deckView(x, job, slides, paint) {
   return h("div.mt2",
     h("div.row.between.mb", h("h2.sec", x.title || x.slug), h("div.row", x.presentation ? btn("Abrir presentación", { icon: "eye", onClick: () => window.open(base + "presentation.html", "_blank") }) : null,
       x.index ? btn("Viewer (←/→, G, N)", { variant: "ghost", onClick: () => window.open(base + "index.html", "_blank") }) : null,
-      x.status === "failed" || x.status === "prepared" || x.status === "incomplete" ? btn(x.status === "prepared" ? "Correr el Storyteller" : "Reintentar", { icon: "refresh", onClick: async () => { await api.cpost(`/slides/${x.id}/run`); toast("Storyteller trabajando", "agent"); paint(); } }) : null)),
+      x.status === "failed" || x.status === "interrupted" || x.status === "prepared" || x.status === "incomplete" ? btn(x.status === "prepared" ? "Correr el Storyteller" : "Reintentar", { icon: "refresh", onClick: async () => { await api.cpost(`/slides/${x.id}/run`); toast("Storyteller trabajando", "agent"); paint(); } }) : null)),
     x.status === "running" ? h("div.panel.pad.agentwork", h("div.row", thinking(), h("span", { style: { fontWeight: 560 } }, "El Visual Storyteller está trabajando"), h("span.small.muted", "Story → dirección → composición → render → QA → paquete")),
       h("div.progress.mt", { style: { maxHeight: "300px" } }, ((job || {}).progress || []).slice(-40).map(p => h("div", h("span.t", hhmm(p.t)), h("span", p.summary || p.kind))))) : null,
-    x.status === "failed" ? h("div.panel.pad.alert", h("div.eyebrow", { style: { color: "#ff9aa2" } }, "La corrida falló"), h("p.prose", x.error || ""), h("div.small.muted", "El Story Package y la carpeta del deck se conservaron.")) : null,
+    x.status === "failed" || x.status === "interrupted" ? h("div.panel.pad.alert", h("div.eyebrow", { style: { color: "#ff9aa2" } }, x.status === "interrupted" ? "La corrida se interrumpió" : "La corrida falló"), h("p.prose", x.error || ""), h("div.small.muted", "El Story Package y la carpeta del deck se conservaron.")) : null,
     x.presentation ? h("div.deckframe", h("iframe", { src: base + "presentation.html", title: "Deck" })) : null,
     slides.length ? h("div.mt", h("h2.sec.mb", "Slides y linaje"), h("div.thumbs", slides.map(s => h("div.thumb", { on: { click: () => app.openEntity(s.id) } },
       s.render ? h("img", { src: `/case-files/${app.caseId}/decks/${s.render.split("/decks/")[1]}`, alt: s.title }) : h("div", { style: { aspectRatio: "16/9", display: "grid", placeItems: "center", color: "var(--ink-4)" } }, "sin render"),
