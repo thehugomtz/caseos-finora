@@ -1,0 +1,367 @@
+id: R-004
+type: research
+research_question: ¿Dónde se concentra el cambio del monto observado?
+case_question: ¿Dónde se concentra el cambio del monto observado?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W3
+why_it_matters: Da foco económico y distingue la entrada de la base observada. Permite localizar contribuciones,
+  condicionado a la semántica y la cobertura; no asigna causas económicas.
+short_answer: 'El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total:
+  MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5
+  millones y churn −COP 78,0 millones suman el cambio neto COP 53,2 millones. En oct-24 quienes empezaron a pagar
+  después de ene-22 aportan COP 68,0 millones del monto pagado total COP 97,0 millones. Es una respuesta parcial,
+  limitada a monto observado.'
+headline: El cambio se concentra en la entrada de pagadores nuevos observados
+answer_states:
+- Hecho observado
+findings:
+- F-047
+- F-031
+- F-048
+- F-049
+- F-050
+- F-051
+what_is_established:
+- 'El movimiento del monto observado se asocia con la incorporación de pagadores posteriores a ene-22: el MRR nuevo
+  acumulado COP 94,3 millones es la mayor entrada bruta del puente y supera el cambio neto COP 53,2 millones, y
+  los clientes activos pasaron de 377 en ene-22 a 1.678 en oct-24.'
+- 'La caída del monto por cliente del total, de COP 92,8 mil a COP 57,8 mil, coincide con un recambio de composición:
+  la composición de cosechas explica −COP 37,7 mil del cambio y el efecto dentro de las cosechas COP 2,7 mil, mientras
+  la base previa a ene-22 pasó de COP 92,8 mil a COP 97,4 mil por cliente.'
+- Las ausencias y los retornos mueven magnitudes comparables y se compensan en el neto, con churn −COP 78,0 millones
+  frente a reactivación COP 86,5 millones; como señal, el saldo dentro de los pagadores que ya estaban resta, con
+  contracción −COP 89,5 millones por encima de la expansión COP 39,8 millones.
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede leer el puente neto como un movimiento poblacional estable: el movimiento bruto COP 404 millones
+  supera al cambio neto COP 62 millones en 6,5× y 25,3% del bruto sin altas vuelve exactamente al nivel previo al
+  mes siguiente.'
+- 'Las etiquetas de ausencia y retorno dependen del criterio de medición: el churn observado pasó de 3,52% en 2022
+  a 2,04% en 2024 y el que no vuelve a pagar en el plazo de persistencia pasó de 0,98% a 0,96%, con 32% de los retornos
+  liquidando los meses pendientes.'
+- 'No se puede generalizar el perfil de quienes dejan de pagar: la razón de medias es 1,5× con intervalo entre 1,3×
+  y 1,8× y la razón de medianas es 1,0×, con la brecha concentrada en pocas cuentas grandes.'
+- Sin precios de lista, descuento con vigencia, créditos, estado de suscripción ni definición documentada de amount,
+  no se atribuye el cambio a movimientos contractuales; tampoco se abrió el reparto del puente por industria ni
+  por cosecha de entrada.
+cannot_claim:
+- Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
+- Descuentos a partir del tamaño de un salto del monto.
+- Una lectura del puente si las contribuciones no concilian con el total.
+alternative_explanations: []
+case_implication: 'El movimiento del monto observado se asocia con la incorporación de pagadores posteriores a ene-22:
+  el MRR nuevo acumulado COP 94,3 millones es la mayor entrada bruta del puente y supera el cambio neto COP 53,2
+  millones, y los clientes activos pasaron de 377 en ene-22 a 1.678 en oct-24.'
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-020
+  alias: HO3
+  question: ¿El cambio del monto observado agregado se concentra en la entrada de nuevos pagadores (clientes cuya
+    primera aparición de pago ocurre después de ene-22) más que en el cambio dentro de los pagadores continuos?
+  state: Soportada
+  effect: fortalecida
+  reading: En oct-24 los pagadores que empezaron después de ene-22 aportan COP 68,0 millones del total COP 97,0
+    millones y el MRR nuevo acumulado COP 94,3 millones supera el cambio neto COP 53,2 millones.
+- id: H-020
+  alias: HO3
+  question: ¿El flujo de MRR nuevo (primeros pagos) es la mayor entrada bruta del puente en el periodo limpio?
+  state: Soportada
+  effect: fortalecida
+  reading: El MRR nuevo COP 94,3 millones es la mayor entrada bruta del puente, por encima de la reactivación COP
+    86,5 millones y de la expansión COP 39,8 millones.
+- id: H-020
+  alias: HO3
+  question: ¿Los pagadores continuos (base previa a ene-22 y cosecha 2022) mantienen su monto por cliente, de modo
+    que el cambio dentro de continuos no concentra el movimiento?
+  state: Direccional
+  effect: señal direccional
+  reading: La base previa sostiene su monto por cliente, de COP 92,8 mil a COP 97,4 mil, aunque como señal el saldo
+    dentro de continuos resta, con contracción −COP 89,5 millones frente a expansión COP 39,8 millones.
+- id: H-020
+  alias: HO3
+  question: ¿Las ausencias (churn observado) y los retornos (reactivación) generan movimiento bruto grande pero
+    se compensan entre sí en el neto?
+  state: Direccional
+  effect: señal direccional
+  reading: 'El churn −COP 78,0 millones y la reactivación COP 86,5 millones se compensan, con 44% de los churns
+    pagando de nuevo al mes siguiente, aunque la señal depende de la medida: la razón de medias es 1,5× y el churn
+    observado pasó de 3,52% a 2,04%.'
+- id: null
+  alias: rival
+  question: ¿El cambio del monto observado está dominado por movimiento bruto que se revierte al nivel previo (timing
+    de cobro), de modo que el puente neto no localiza un componente poblacional estable?
+  state: Soportada
+  effect: fortalecida
+  reading: El movimiento bruto COP 404 millones supera al neto COP 62 millones en 6,5× y 25,3% del bruto sin altas
+    regresa al nivel previo al mes siguiente, lo que es consistente con timing de cobro.
+- id: null
+  alias: ''
+  question: ¿Se puede atribuir el cambio del monto observado a altas, bajas, expansiones o descuentos contractuales
+    con vigencia verificada?
+  state: No evaluable
+  effect: no evaluable
+  reading: Faltan precios de lista, vigencia, créditos y estado de suscripción, además de la definición de amount,
+    por lo que la lectura se limita a monto observado.
+affected_claims: []
+suggested_action: El puente concilia y ubica el cambio en la entrada de pagadores nuevos, así que corresponde probar
+  si alguna industria concentra ese recambio de composición.
+next_question: W4
+new_questions:
+- ¿Cómo se reparte el puente del monto observado por industria y por cosecha de entrada, y alguna concentra la contracción
+  neta?
+- ¿Cuánto cambia el puente si se reclasifican como continuos los clientes que vuelven a pagar dentro del plazo de
+  persistencia?
+- ¿Qué parte de la contracción corresponde a caídas que se revierten al mes siguiente y qué parte persiste al menos
+  un trimestre?
+- ¿Qué campos de suscripción, precio de lista y vigencia de descuento permitirían convertir este puente en uno contractual
+  auditable?
+handoff_to_cos:
+  summary: El cambio se concentra en la entrada de pagadores nuevos observados
+  recommended_next: ¿La industria concentra el cambio observado?
+visuals:
+- id: V-01
+  title: 'La composición de la base cambió de forma marcada: los clientes activos pasaron de 377 en ene-22 a 1.678
+    en oct-24, y las cosechas 2023 y 2024 concentran 65% de los clientes activos y 50% del MRR en oct-24, con un
+    monto por cliente de COP 46,3 mil y COP 43,0 mil frente a COP 97,4 mil de la base previa.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ene-22
+    - oct-24
+    formato: pct
+    series:
+    - nombre: Base previa (activos en ene-22)
+      valores:
+      - 1.0
+      - 0.17759237187127533
+    - nombre: Altas de feb-22 (marcadas)
+      valores:
+      - 0.0
+      - 0.048271752085816445
+    - nombre: Cosecha 2022 (mar–dic)
+      valores:
+      - 0.0
+      - 0.12216924910607867
+    - nombre: Cosecha 2023
+      valores:
+      - 0.0
+      - 0.3396901072705602
+    - nombre: Cosecha 2024
+      valores:
+      - 0.0
+      - 0.31227651966626935
+  claim: C-014
+- id: V-02
+  title: 'Quienes dejan de pagar tenían un monto usual mayor que el del cliente activo del mes previo en medias,
+    con razón de 1,5× e intervalo bootstrap entre 1,3× y 1,8×, mientras la razón de medianas es 1,0×: la brecha
+    se concentra en pocas cuentas grandes.'
+  spec:
+    tipo: puntos
+    filas:
+    - 2022 · medias
+    - 2022 · medianas
+    - 2023 · medias
+    - 2023 · medianas
+    - 2024 · medias
+    - 2024 · medianas
+    - total · medias
+    - total · medianas
+    formato: num2
+    referencia: 1.0
+    series:
+    - nombre: IC 90% inferior
+      valores:
+      - 1.2634790795200008
+      - 0.87876
+      - 1.178530933374979
+      - 0.7761115001327191
+      - 1.095458963426737
+      - 0.9654208351271151
+      - 1.3104627355800427
+      - 0.966042846185038
+    - nombre: Razón
+      valores:
+      - 1.696338280232295
+      - 1.0
+      - 1.5770772720964885
+      - 0.9695267189897904
+      - 1.373072530255609
+      - 1.1112046013740944
+      - 1.5490242541706507
+      - 1.0409724208594457
+    - nombre: IC 90% superior
+      valores:
+      - 2.224080525675505
+      - 1.124964583333333
+      - 2.034690726227998
+      - 1.1631226077499652
+      - 1.7079014682480618
+      - 1.2624007474082342
+      - 1.7983999176874217
+      - 1.153745014943061
+  claim: C-009
+- id: V-04
+  title: 'Entre mar-22 y oct-24 el puente del monto observado concilia con el total: el MRR nuevo COP 94,3 millones,
+    la expansión COP 39,8 millones, la reactivación COP 86,5 millones, la contracción −COP 89,5 millones y el MRR
+    de churn −COP 78,0 millones suman el cambio neto de COP 53,2 millones.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: periodo
+      nombre: Periodo
+    - id: valor
+      nombre: Cambio neto del MRR
+      formato: cop
+    - id: promedio_mensual
+      nombre: Cambio neto del MRR por mes
+      formato: cop
+    filas:
+    - periodo: total
+      valor: 53188936.92
+      promedio_mensual: 1662154.27875
+      meses: 32
+      _clave: total
+  claim: C-001
+- id: V-05
+  title: 'El MRR por cliente de la base previa pasó de COP 92,8 mil en ene-22 a COP 97,4 mil en oct-24, un cambio
+    de +5%, mientras el MRR por cliente del total pasó de COP 92,8 mil a COP 57,8 mil: la composición de cosechas
+    explica −COP 37,7 mil del cambio y el efecto dentro de las cosechas COP 2,7 mil.'
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: ene-22
+      valor: 92839.01419098144
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -37705.98731473553
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: 2678.324035553832
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179977
+      tipo: total
+  claim: C-005
+- id: V-06
+  title: En oct-24 los clientes que empezaron a pagar después de ene-22 aportan COP 68,0 millones del monto pagado
+    total de COP 97,0 millones, frente a COP 29,0 millones de los clientes que ya estaban activos en ene-22, cuyo
+    monto total en ene-22 era COP 35,0 millones.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ene-22
+    - oct-24
+    formato: cop
+    series:
+    - nombre: Clientes activos en ene-22
+      valores:
+      - 35000308.35
+      - 29021572.65
+    - nombre: Clientes que empezaron a pagar después
+      valores:
+      - 0.0
+      - 67985874.18
+    claim_fase1: C-RES-08
+  claim: C-003
+- id: V-08
+  title: 'No se puede etiquetar el cambio del monto observado como alta, baja, expansión o descuento contractual:
+    no hay precios de lista, descuentos con vigencia, créditos, estado de suscripción ni una definición documentada
+    de amount, por lo que el puente se limita a monto observado.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+    - dato: Motivos de churn, downgrade o reactivación
+      estado: No existe
+      campos: churn_reason
+  claim: C-012
+- id: V-09
+  title: 'Las etiquetas de ausencia y retorno del puente se mueven con el criterio de medición: el churn observado
+    pasó de 3,52% en 2022 a 2,04% en 2024, mientras el churn que no vuelve a pagar en el plazo de persistencia pasó
+    de 0,98% a 0,96%, y 32% de los retornos tras meses sin pago liquidan exactamente los meses pendientes.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-013
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-173005-0065
+  path: investigations/caso/W3.json
+  modelo: claude-opus-5
+  finished_ms: 1790638527528
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-173005-0065
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W3.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-013
+- H-020
+- F-047
+- F-031
+- F-048
+- F-049
+- F-050
+- F-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W3.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-173005-0065
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

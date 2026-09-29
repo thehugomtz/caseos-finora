@@ -490,7 +490,7 @@ const DEMO = [
   { r: "#/analytics", t: "Analytics Workspace", c: "El workspace de exploración existente, reutilizado: investigaciones con gráficas para mí y tablas canónicas con linaje para el COS.", s: ".runs" },
   { r: "#/cos", t: "COS control room", c: "El Chief of Staff sabe qué pasa en todo el caso: next best actions, alertas de impacto con opciones, hipótesis y readiness. Recomienda; yo decido.", s: ".nbas" },
   { r: "#/artifacts/brain.md", t: "brain.md", c: "La memoria ejecutiva viva: se regenera ante cada cambio material. Solo lo relevante, con IDs.", s: ".paper" },
-  { r: "#/artifacts/decisions", t: "Decision log", c: "Cada decisión material: contexto, opciones, recomendación del agente, mi elección y mi razón, impacto aguas abajo.", s: ".files" },
+  { r: "#/artifacts/decisions", t: "Decision log", c: "Cada decisión material: contexto, opciones, recomendación del agente, mi elección y mi razón, impacto aguas abajo.", s: ".dlog" },
   { r: "#/story", t: "Story Package", c: "Claims con evidencia aceptada y cada cifra en una tabla. Si un número no está en una tabla, no pasa la validación.", s: ".spine" },
   { r: "#/slides", t: "Visual Storyteller", c: "El Story Package aprobado va al Executive Visual Storyteller existente — sus skills, su pipeline, su QA visual.", s: ".handoff" },
   { r: "#/slides", t: "Final HTML presentation", c: "El deck final, trazable: cada slide sabe qué claim prueba y de qué evidencia viene.", s: ".deckframe" },
@@ -509,7 +509,8 @@ function paintDemo() {
 function demoSpot() {
   document.querySelectorAll(".spot").forEach(x => x.classList.remove("spot"));
   const s = DEMO[app.demo.i];
-  setTimeout(() => { const el = document.querySelector(s.s); if (el) { el.classList.add("spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); } }, 500);
+  // falls back to the view's empty state / first panel when the case has not reached that step yet
+  setTimeout(() => { const el = document.querySelector(s.s) || document.querySelector("main .empty, main .panel"); if (el) { el.classList.add("spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); } }, 500);
 }
 function endDemo() { app.demo = null; document.querySelector(".demo")?.remove(); document.querySelectorAll(".spot").forEach(x => x.classList.remove("spot")); }
 app.startDemo = startDemo;

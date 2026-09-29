@@ -332,6 +332,8 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
 
 
 def _tool_line(name: str, inp: dict, deck: Path) -> str:
+    deck = deck.resolve()
+
     def rel(p):
         return str(p).replace(str(deck) + "/", "").replace(str(Path.home()), "~")
     if name == "Skill":

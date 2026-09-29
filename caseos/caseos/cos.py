@@ -278,6 +278,11 @@ def digest(store: CaseStore, *, focus: list[str] | None = None, max_findings: in
     L += ["", "## Decisiones activas"] + [f"- {d['id']} {clip(d.get('title', ''), 150)} → {clip(d.get('user_choice', ''), 120)}" for d in of("decision") if d.get("status") == "active"]
     L += ["", "## Decisiones propuestas"] + [f"- {d['id']} {clip(d.get('title', ''), 150)}" for d in of("decision") if d.get("status") == "proposed"]
     L += ["", "## Alertas abiertas"] + [f"- {x['id']} {x.get('source')} → {x.get('target')}: {clip(x.get('why', ''), 150)}" for x in of("alert") if x.get("status") == "open"]
+    done = [x for x in of("alert") if x.get("status") in ("resolved", "dismissed")]
+    if done:
+        L += ["", "## Alertas resueltas por Hugo (alerta → decisión: opción elegida)"] + [
+            f"- {x['id']} → {(x.get('resolution') or {}).get('decision', '—')}: {clip((x.get('resolution') or {}).get('label', ''), 140)}"
+            for x in done[-25:]]
     L += ["", "## Claims de la story"] + [f"- {c['id']} [{c.get('status', 'draft')}] {clip(title_of(c), 150)} · evidencia: {', '.join(c.get('evidence_ids') or [])} · tablas: {', '.join(c.get('table_ids') or [])}" for c in of("claim")]
     dnr = decisions.do_not_resurface(store)
     if dnr:

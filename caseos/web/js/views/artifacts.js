@@ -28,7 +28,7 @@ export async function mount(root, param) {
     } else if (tab === "decisions") {
       const st = app.entities.filter(e => e.type === "decision").sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
       const full = await Promise.all(st.map(d => api.cget("/entities/" + d.id).then(r => r.entity)));
-      put(body, head, tb, full.length ? h("div.stack", full.map(d => h("div.panel.pad", { style: { cursor: "pointer" }, on: { click: () => app.openEntity(d.id) } },
+      put(body, head, tb, full.length ? h("div.stack.dlog", full.map(d => h("div.panel.pad", { style: { cursor: "pointer" }, on: { click: () => app.openEntity(d.id) } },
         h("div.row.between", h("div.row.wrap", idTag(d.id), statusChip(d.status), h("span.chip.ghost", d.kind), h("span.small.muted", d.date)), h("span.small.faint", (d.origin || {}).actor === "hugo" ? "Hugo" : (d.origin || {}).actor)),
         h("div", { style: { fontSize: "15.5px", fontWeight: 560, margin: "10px 0 6px" } }, d.title),
         d.context ? h("div.small.muted", d.context) : null,

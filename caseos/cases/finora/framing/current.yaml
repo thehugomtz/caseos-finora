@@ -1,0 +1,168 @@
+version: 2
+executive_question: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué sigue
+  siendo solo una posibilidad y qué información permitiría elegir entre ellas?
+executive_question_history: []
+hugo_thinking: []
+structured_interpretation: []
+candidate_frames:
+- name: CRO por cuánto entra, quién entra y cómo compra con el tiempo
+  description: Incluye rutas distintas sin asumir que sabemos quién comprará en el futuro. C1, C2 y C3.
+  when_it_wins: Es el corte elegido.
+  chosen: true
+- name: CFO por clientes que entran / salen / permanecen
+  description: Evita contar la misma cuenta en dos grupos entre las mismas fechas; dentro de cada grupo distinguimos
+    suscripción y descuento.
+  when_it_wins: Es el corte elegido.
+  chosen: true
+- name: CRO por etapas comerciales
+  description: Dónde se detiene el avance cuando sí hay historial de etapas.
+  when_it_wins: No sirve igual para self-serve ni entradas directas; las etapas quedan como lugar donde investigar
+    dentro de C3.
+  chosen: false
+- name: CFO por comportamiento / precio / descuentos
+  description: Se parece a la pregunta del ejecutivo.
+  when_it_wins: 'No separa causas limpiamente: un precio o descuento puede cambiar el comportamiento. Se investigan
+    dentro de los grupos.'
+  chosen: false
+initial_storyline:
+- 'Qué sabemos: el caso relata más volumen comercial sin aumento proporcional de clientes nuevos, y plantea distinguir
+  cambios de ingreso al introducir descuentos.'
+- 'Qué nos impide cerrar la explicación: las fuentes muestran pagos, industria y gasto, pero no toda la historia
+  de quienes entraron ni los componentes del valor recurrente.'
+- 'Cómo proponemos avanzar: usar los pagos para describir lo que sí vemos, revisar con los ejemplos qué distingue
+  el modelo y dejar claras las preguntas que requieren más evidencia.'
+- 'Qué tan seguros estamos: la separación de preguntas es defendible bajo las definiciones que explicamos; todavía
+  tenemos poca evidencia para elegir una causa real del desempeño.'
+- 'Qué cambiaría el plan: descubrir eventos completos de entradas y compras, o información separada de suscripciones,
+  tarifas y descuentos.'
+research_needed:
+- id: RN-W6
+  question: ¿Qué información mínima falta para contestar al CRO (entradas únicas con fecha, señales iniciales, recorrido,
+    atención, vínculo con pago)?
+  why: 'HC1–HC3 tienen capacidad 0 con los datos actuales: sin esto la respuesta al CRO queda como propuesta.'
+  links:
+  - Q-016
+  - H-001
+  - H-002
+  - H-003
+  status: pending
+  proposed_by: import (brief v0.3 W6)
+- id: RN-W7
+  question: ¿Qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado?
+  why: 'HF1–HF3 tienen capacidad 0: sin componentes explícitos no se separa suscripción, tarifa y descuento.'
+  links:
+  - Q-017
+  - H-009
+  - H-010
+  - H-011
+  status: pending
+  proposed_by: import (brief v0.3 W7)
+decisions_needed:
+- Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente).
+- 'Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa.'
+should_not_claim:
+- 'Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.'
+- 'Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera
+  aparición observada.'
+- 'Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.'
+- 'Que hubo descuentos en el histórico: el caso habla de introducirlos.'
+- 'Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.'
+- 'Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.'
+- Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por
+  acordar).
+- Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
+- Descuentos a partir del tamaño de un salto del monto.
+- Una lectura del puente si las contribuciones no concilian con el total.
+- 'Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto
+  de canal o ruta.'
+- Un segmento fabricado por clustering cuando no hay concentración clara.
+- La calidad de los leads a partir de lo que pasa después del pago.
+- Retención contractual a partir de la continuidad de pago.
+language_notes:
+- Hugo usa «monto observado» y «primer pagador observado» en lugar de MRR y cliente nuevo mientras la semántica
+  no esté confirmada.
+- 'Términos en inglés que Hugo usa tal cual: leads, funnel, churn, self-serve, SQL, MRR.'
+risks: []
+mode: organize
+updated_at: '2026-09-28T22:22:26-06:00'
+executive_question_note: Formulada como pregunta desde brief v0.3 §01 · Qué estamos tratando de conseguir.
+stress_test:
+- n: 1
+  point: No sabemos quién comprará algún día
+  risk: Separar «nunca compra» de «compra más tarde» exigía observar un futuro que todavía no tenemos.
+  resolution: Juntar ambas cosas en la evolución de compra a lo largo del tiempo; retraso y pérdida siguen como
+    explicaciones posibles.
+- n: 2
+  point: Ordenar ramas no separa automáticamente las causas
+  risk: Atención, demanda, precio y producto pueden afectarse entre sí.
+  resolution: No sumar dos causas como si fueran independientes sólo porque tienen nombres distintos.
+- n: 3
+  point: «Peor calidad» puede ser una mezcla que no vemos
+  risk: Dentro de un grupo amplio puede haber personas distintas que no identificamos.
+  resolution: Comparar características conocidas al entrar y dejar la parte que no podemos explicar abierta; no
+    culpar por descarte.
+- n: 4
+  point: El recorrido final no es un dato inicial
+  risk: Que alguien termine hablando con ventas puede depender de lo que pasó durante el proceso.
+  resolution: Separar cómo entró de lo que ocurrió después.
+- n: 5
+  point: Ser reciente no es lo mismo que tardar más
+  risk: Muchas entradas nuevas pueden parecer lentas aunque el proceso siga igual.
+  resolution: Comparar personas con el mismo tiempo desde que entraron.
+- n: 6
+  point: Más volumen no explica solo una peor proporción
+  risk: La cantidad total aclara cuánto creció la demanda, pero no por qué menos de ella termina comprando.
+  resolution: Usar C1 para verificar la escala de la entrada; C2 y C3 para investigar cómo se traduce en clientes.
+- n: 7
+  point: Entradas y ventas del mismo mes no necesariamente corresponden
+  risk: Quien compra hoy pudo haber entrado semanas antes.
+  resolution: No dividir sin más compradores del mes entre leads del mes. Seguir grupos desde su entrada.
+- n: 8
+  point: Entrar/salir/permanecer no explica el porqué del monto
+  risk: Esos grupos separan clientes, pero no distinguen suscripción de tarifa o descuento.
+  resolution: Dentro de cada grupo, preguntar por valor antes de descuento y descuento aplicado.
+- n: 9
+  point: No pagar no prueba haber cancelado
+  risk: Puede haber atraso, descuento total o un dato faltante.
+  resolution: Separar relación activa de pago observado. Cuando sólo vemos pagos, decirlo así.
+- n: 10
+  point: No asumir descuentos históricos
+  risk: El caso habla de introducirlos; no confirma que expliquen cambios pasados.
+  resolution: Separar lo que ocurrió en el histórico de si el modelo permitiría entender descuentos futuros.
+- n: 11
+  point: Un neto estable puede esconder cambios
+  risk: Altas y bajas, o crecimiento y descuentos, pueden compensarse.
+  resolution: Mirar las partes cuando existan.
+- n: 12
+  point: «Necesitamos CRM» es demasiado general
+  risk: No dice qué dato distinguiría calidad de atención.
+  resolution: Precisar qué comparación haríamos, qué esperaríamos ver y qué explicación alternativa seguiría abierta.
+- n: 13
+  point: Importancia no significa que podamos calcularlo
+  risk: Las preguntas centrales del funnel requieren personas y eventos que no están en Transactions.
+  resolution: Separar trabajo posible con la data actual de preguntas importantes que necesitan más evidencia.
+- n: 14
+  point: Descuento no equivale a dinero recuperable
+  risk: Sin el descuento quizá el cliente no habría comprado o habría cancelado.
+  resolution: Distinguir cuánto se redujo el precio de cuánto se habría ganado sin ofrecer esa reducción.
+perspectives:
+- who: CEO
+  question: ¿Y si estamos comparando leads recientes con compras de personas que llegaron antes?
+  changes: Antes de afirmar que algo empeoró, revisar si la comparación tiene sentido.
+- who: Cliente
+  question: ¿Y si no soy un lead malo, sino que el producto, precio o experiencia no me convence?
+  changes: No aceptar como hecho la explicación de Sales.
+- who: Competidor
+  question: ¿Y si apareció una alternativa mejor, aunque nuestra atención no haya cambiado?
+  changes: Dejar esa posibilidad abierta; investigar afuera sólo si aparece una señal que lo justifique.
+- who: CFO
+  question: ¿Y si cambió cuándo cobramos o cómo registramos, y no la suscripción?
+  changes: Aclarar el significado del monto antes de explicar su cambio.
+- who: Lectura del enunciado
+  question: ¿Y si no había descuentos y el reto pide prepararnos para cuando existan?
+  changes: Dar espacio a la prueba de si el modelo distingue escenarios, sin atribuir descuentos al pasado.
+parked:
+- Inferir canales mediante grupos de pagos; benchmarks generales; atribución multicanal; estimar LTV o CAC causal;
+  modelar quién comprará «algún día»; adivinar descuentos históricos; diseñar o mostrar funciones de la herramienta.
+  (brief v0.3 §08 · Lo que dejamos fuera por ahora)
+source: brief v0.3 (importado)

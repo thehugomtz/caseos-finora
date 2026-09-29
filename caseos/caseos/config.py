@@ -9,7 +9,8 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CASES_DIR = Path(os.environ.get("CASEOS_CASES_DIR", ROOT / "cases"))
+_cases = Path(os.environ.get("CASEOS_CASES_DIR", ROOT / "cases")).expanduser()
+CASES_DIR = _cases if _cases.is_absolute() else (ROOT / _cases).resolve()   # relative paths are relative to caseos/
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 SCHEMAS_DIR = ROOT / "schemas"
