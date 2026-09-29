@@ -1,28 +1,31 @@
 story_package: true
-version: 1
-generated_at: '2026-09-29T11:54:07-06:00'
+version: 2
+generated_at: '2026-09-29T17:25:22-06:00'
 generated_by: cos
-run_id: RUN-20260929-113242-cos-850b
+run_id: RUN-20260929-165420-cos-56b6
 draft: true
 audience:
-- CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido
-- CRO — cómo definir, medir y operar el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes
-  nuevos
-- CFO — cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»
-objective: 'BORRADOR para que Hugo vea la historia completa siguiendo su guion (Overview → Growth → Revenue) antes
-  de revisar la evidencia. Ante el CEO, el CRO y el CFO se muestran tres cosas: qué explicaciones se pueden defender
-  con los pagos y el gasto (la brecha se asocia a quién entra), qué huecos hay en su WoW (el lado izquierdo del
-  funnel, las causas ToFu/BoFu, la tarifa y el descuento) y qué modelos se proponen para decidir mejor. No hay findings
-  aceptados: todo queda pendiente de la aceptación de Hugo y el paquete no puede marcarse Ready.'
+- 'CEO: contexto de salud general del modelo (Overview) antes de Growth y Revenue. Qué decide todavía no está definido.'
+- 'CRO: cómo definir, medir y operar el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes
+  nuevos.'
+- 'CFO: cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»: mecanismo,
+  modelo de datos y clasificación.'
+objective: 'BORRADOR 2 (D-017). Busca que las 8 preguntas del caso queden respondidas siguiendo tu guion (S1 Overview
+  → S2 Growth → S3 Revenue). Cada lámina cierra con una propuesta concreta: qué definimos, qué medimos, qué decidiría
+  el CRO o el CFO y con qué dato. Todo cita findings propuestos, así que queda pendiente de tu aceptación y el paquete
+  no puede marcarse Ready. Framing sigue en needs_review. Las propuestas de diseño (catálogo de métricas, S2.7,
+  S3.3 y S3.4) van como diseño, no como algo construido. Si D-018 destraba el choque entre D-007 y D-017 lo decides
+  tú.'
 from_to:
-  from: 'Finora suma clientes mucho más rápido que monto pagado y esa brecha se lee con explicaciones que los pagos
-    no pueden confirmar: «más leads que no convierten» y «cambios de suscripción o descuentos».'
-  to: 'La brecha se asocia a quién entra: más primeros pagadores, con menor ticket y en todas las industrias. No
-    se asocia a la base previa ni a más salidas persistentes. El porqué, tanto el del CRO como el del CFO, no está
-    en los datos del caso. Hay modelos concretos para poder decidirlo: bowtie por puerta, árbol de métricas con
-    semáforo, descuento como objeto propio y Propuesta de Modelo de datos.'
+  from: 'Finora suma clientes mucho más rápido que monto pagado. Esa brecha se lee con explicaciones que los pagos
+    no confirman: «más leads que no convierten» y «cambios de suscripción o descuentos».'
+  to: 'La brecha coincide con quién entra: más primeros pagadores, con menor ticket estabilizado, dentro de cada
+    industria. No coincide con la base previa ni con salidas persistentes. El porqué del CRO y del CFO no está en
+    los datos del caso, pero hay un diseño concreto para decidirlo: rutas Executive, Self Service e Hybrid con un
+    loop de Reactivate, una matriz de causas con su dato, un catálogo de métricas por funnel y foro, y una Propuesta
+    de Modelo de datos que separa lista, descuento y cobro.'
 governing_thought: 'La brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos: proponemos
-  medir por puerta y separar descuento de suscripción.'
+  medir por funnel y separar descuento de suscripción.'
 executive_questions:
 - id: Q-003
   text: (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?
@@ -31,20 +34,25 @@ executive_questions:
 - id: Q-002
   text: (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa
     o por descuentos?
+- id: Q-025
+  text: '(CFO) Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100;
+    desaparece el descuento: ¿cómo se lee cada caso?'
+- id: Q-026
+  text: (CFO) ¿Qué pasa con el negocio subyacente y cuánto revenue dejamos de capturar por decisiones comerciales?
 story_arc:
-  archetype: SCR con pilares, siguiendo el guion aprobado de Hugo (Overview → Growth → Revenue)
-  logic: 'Primero la respuesta, bloque por bloque. Overview: la brecha 4,5× vs 2,8× y el −38% por cliente activo
-    se asocian a la composición de quién entra, no a la base previa; esa brecha abre las dos preguntas. Growth:
-    lo que sí vemos (más primeros pagadores con menor ticket en todas las industrias, y un gasto que no se mueve
-    con ellos) → lo que no vemos (el funnel por puerta y las causas ToFu/BoFu, cada una con el dato que la decidiría)
-    → cómo medirlo y operarlo (semáforo de métricas, fuentes comunes, foros). Revenue: qué se observa del pricing
-    de entrada y por qué el monto no separa suscripción de descuento → mecanismo de descuentos temporales → Propuesta
-    de Modelo de datos → regla de clasificación. Cada bloque cierra con una propuesta porque los pagos llegan hasta
-    «qué cambió» y no hasta «por qué».'
+  archetype: SCR con pilares, siguiendo tu guion aprobado (Overview → Growth → Revenue)
+  logic: 'Primero la respuesta, lámina por lámina: lo que vemos → lo que no vemos → propuesta concreta. En Overview,
+    la brecha coincide con quién entra y no con la base previa. En Growth vemos más primeros pagadores, con menor
+    ticket estabilizado dentro de cada industria, y un gasto que no se mueve con ellos. El porqué no está en los
+    pagos, así que proponemos rutas con tus definiciones, un catálogo de métricas por funnel, una matriz de causas
+    con su dato y foros atados a decisiones. En Revenue mostramos qué se puede leer del monto y qué no, el mecanismo
+    de descuentos, el modelo de datos y la regla de clasificación. El remate responde uno por uno los casos del
+    CFO.'
 sections:
 - name: S1 · Overview
-  purpose: 'Situación: Finora suma clientes mucho más rápido que monto pagado. El −38% por cliente activo se asocia
-    a la composición de quién entra; la base previa sostiene su monto. Esa brecha abre Growth y Revenue.'
+  purpose: 'Situación: Finora suma clientes mucho más rápido que monto pagado, y la caída por cliente activo coincide
+    con quién entra. Abre Growth y Revenue y cierra con la propuesta de reportar por cosecha con una base de comparación
+    fija.'
   claim_keys:
   - overview-brecha
   - overview-mezcla
@@ -52,20 +60,23 @@ sections:
   - C-001
   - C-002
 - name: S2 · Growth
-  purpose: 'Lo que sí vemos: primeros pagadores, ticket, industria y gasto de S&M por categoría, sin atribuir ventas
-    al gasto. Lo que no vemos: el funnel por puerta (Assisted, Self Service, Executive) y las hipótesis ToFu/BoFu,
-    cada una con su dato. Cómo operarlo: primero definiciones y fuentes comunes, después foros. Sigue tu orden S2.1–S2.7;
-    S2.1 queda sin contenido.'
+  purpose: 'Tres partes. Lo que sí vemos: primeros pagadores con menor ticket estabilizado y un gasto de S&M que
+    no se mueve con ellos. Lo que no vemos: el funnel por ruta con tus definiciones y las causas ToFu/MoFu/BoFu,
+    cada una con su dato. Cómo operarlo: semáforo y catálogo de métricas, fuentes comunes y foros atados a decisiones.
+    Sigue tu orden S2.1–S2.7; S2.1 queda sin contenido.'
   claim_keys:
   - growth-entradas
   - growth-gasto
   - funnel-puertas
+  - funnel-etapas
   - funnel-conversion
   - perdida-cosechas
   - perdida-burbuja
   - metricas-semaforo
+  - metricas-catalogo
   - metricas-cac-proxy
   - hipotesis-arbol
+  - hipotesis-matriz
   - hipotesis-capacidad
   - operar-fuentes
   - operar-foros
@@ -73,42 +84,49 @@ sections:
   - C-003
   - C-004
   - C-005
+  - C-021
   - C-006
   - C-007
   - C-008
   - C-009
+  - C-022
   - C-010
   - C-011
+  - C-023
   - C-012
   - C-013
   - C-014
 - name: S3 · Revenue
-  purpose: Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
-    Proponemos cómo introducir descuentos temporales y una Propuesta de Modelo de datos que separe el valor de la
-    suscripción del precio pagado, con su regla de clasificación.
+  purpose: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas. Proponemos cómo introducir
+    descuentos temporales, una Propuesta de Modelo de datos que separa el valor de la suscripción del precio pagado
+    y una regla de clasificación. Cerramos respondiendo los casos del CFO con el modelo.
   claim_keys:
   - pricing-entrada
+  - observable-semaforo
   - monto-dos-lecturas
   - descuento-objeto
   - descuento-capas
   - modelo-escalera
   - descuento-clasificacion
+  - cfo-casos
   claim_ids:
   - C-015
+  - C-024
   - C-016
   - C-017
   - C-018
   - C-019
   - C-020
+  - C-025
 claims:
 - claim_id: C-001
   key: overview-brecha
   question: ¿Qué tan sano está el modelo si suma clientes mucho más rápido que monto pagado?
   headline: Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8×
-  answer: Entre ene-22 y oct-24, los clientes con pago en el mes pasan de 377 a 1.678 (4,5×) y el MRR pagado observado,
-    de COP 35,0 millones a COP 97,0 millones (2,8×). En consecuencia, el MRR pagado observado por cliente activo
-    baja de COP 92,8 mil a COP 57,8 mil (−38%). Esa brecha abre Growth (quién entra) y Revenue (qué se paga y por
-    qué cambia).
+  answer: Entre ene-22 y oct-24 (ventana completa), los clientes con pago en el mes pasan de 377 a 1.678 (4,5×)
+    y el MRR pagado observado, de COP 35,0 millones a COP 97,0 millones (2,8×). El MRR pagado observado por cliente
+    activo baja de COP 92,8 mil a COP 57,8 mil (−38%). Esa brecha abre Growth (quién entra) y Revenue (qué se paga
+    y por qué cambia).
   role_in_story: context
   evidence_ids:
   - F-071
@@ -126,13 +144,12 @@ claims:
   confidence: high
   limitations:
   - 'Pendiente de tu aceptación: F-071, F-072, F-001, F-002 y F-074 están propuestos.'
-  - 'Es monto pagado observado (campo amount con escala fija), no MRR contratado: la recurrencia no está confirmada
-    (F-082).'
-  - Cliente activo = pago mayor que cero en el mes. Un cliente sin pago puede estar cancelado, pausado o en atraso
+  - Es monto pagado observado (campo amount con escala fija), no MRR contratado (F-082).
+  - Cliente activo = pago mayor que cero en el mes. Un cliente sin pago puede estar cancelado, en pausa o atrasado
     (F-082).
-  - Son métricas de stock con ventana completa desde ene-22; las de flujo arrancan en mar-22 (F-074).
-  - 'El −38% no se presenta como deterioro de la salud del negocio: no separa la mezcla de quienes entran, el precio
-    ni las salidas.'
+  - Es stock con ventana completa desde ene-22; los flujos arrancan en mar-22 (F-074).
+  - 'El −38% no se presenta como deterioro de la salud: todavía no separa la mezcla de entrada, el precio y las
+    salidas.'
   visual_intent: 'Diverge: clientes activos y MRR pagado observado parten de la misma base y se separan; el monto
     por cliente cae en espejo.'
   hugo_wording: Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente activo).
@@ -142,11 +159,12 @@ claims:
   key: overview-mezcla
   question: ¿El −38% por cliente viene de la base que ya teníamos o de quién entra?
   headline: La caída por cliente se asocia a quién entra; la base previa sostiene su monto
-  answer: Entre ene-22 y oct-24, la descomposición por cosecha asigna a la composición de la base 108% del cambio
-    del MRR pagado observado por cliente activo, y −8% al efecto dentro de las cosechas; con base dic-22, a la composición
-    le asigna 84%. Los clientes activos en ene-22 pasan de COP 92,8 mil a COP 97,4 mil por cliente (+5%). En cambio,
-    las cosechas 2023 y 2024 ya son 65% de los activos y 50% del MRR en oct-24, con COP 46,3 mil y COP 43,0 mil
-    por cliente.
+  answer: 'Con base ene-22, la descomposición por cosecha asigna a la composición de la base 108% del cambio del
+    MRR pagado observado por cliente activo; con base dic-22, 84%. La cifra depende de la ventana, la dirección
+    no. Los clientes activos en ene-22 pasan de COP 92,8 mil a COP 97,4 mil por cliente (+5%), mientras que las
+    cosechas 2023 y 2024 ya son 65% de los activos y 50% del MRR en oct-24, con COP 46,3 mil y COP 43,0 mil por
+    cliente. Propuesta: reportar el monto por cliente siempre partido en base previa y cosechas, con una base de
+    comparación fija que decidas tú, para que el CEO no lea mezcla como deterioro.'
   role_in_story: diagnosis
   evidence_ids:
   - F-075
@@ -154,6 +172,7 @@ claims:
   - F-056
   - F-058
   - F-097
+  - F-092
   - F-019
   table_ids:
   - T-030
@@ -163,72 +182,68 @@ claims:
   research_ids:
   - R-009
   - R-012
+  - R-017
   framework_ids: []
   confidence: high
   limitations:
-  - 'Pendiente de tu aceptación: F-075, F-076, F-056, F-058, F-097 y F-019 están propuestos.'
-  - 'Composición ≠ causa: no separa si las cosechas nuevas pagan menos por tipo de cliente, plan, tarifa o descuento;
+  - 'Pendiente de tu aceptación: F-075, F-076, F-056, F-058, F-097, F-092 y F-019 están propuestos.'
+  - 'Composición no es causa: no separa si las cosechas nuevas pagan menos por tipo de cliente, plan, tarifa o descuento;
     el panel no trae esas tablas (F-062).'
-  - La magnitud depende de la base (108% con ene-22, 84% con dic-22); la dirección se mantiene.
-  - '«Quién entra» describe primeros pagadores observados, no la calidad de los leads: H-005 no se evalúa con pagos.'
+  - La base de comparación (ene-22 o dic-22) es una decisión pendiente (X-060).
   - La salida de pocas cuentas grandes también baja el promedio (F-101, F-102) y aquí no está separada.
+  - «Quién entra» describe primeros pagadores observados, no la calidad de los leads.
   visual_intent: 'Mezcla que arrastra: la base previa se sostiene mientras las cosechas nuevas, de menor monto por
     cliente, ganan peso y bajan el promedio.'
-  hugo_wording: 'Observaciones generales y salud del negocio: el −38% por cliente activo se asocia a la mezcla de
-    quienes entran; la base previa no pierde monto por cliente.'
+  hugo_wording: Observaciones generales y salud del negocio que introducen las secciones siguientes.
   strength: pending
 - claim_id: C-003
   key: growth-entradas
   question: ¿Qué cambió en quién entra y en qué industrias?
-  headline: Entran más primeros pagadores, con menor ticket, en las 6 industrias
+  headline: Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias
   answer: 'Los primeros pagadores observados pasan de 27,2 por mes en 2022 (mar–dic) a 54,7 desde ene-23. Es un
-    escalón a inicios de 2023, sin tendencia distinguible después (pendiente +0,47 por mes; intervalo de 95% de
-    −0,40 a +1,33). El valor que traen crece menos: entre 2022 y 2024 los primeros pagadores por mes suben +104%,
-    mientras el valor inicial incorporado por mes sube +6% (run-rate temprano) o +17% (monto habitual); la mediana
-    del primer pago pasa de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil en 2024. Pasa en las 6 industrias:
-    97% del cambio del ticket ocurre dentro de cada industria, no por mezcla.'
+    escalón sin tendencia distinguible después: pendiente de +0,47 por mes, con intervalo de −0,40 a +1,33. Entre
+    2022 y 2024 suben +104% por mes, mientras el valor inicial que incorporan sube +6% (run-rate temprano) o +17%
+    (monto habitual). Con ticket estabilizado, la mediana del segundo pago baja de COP 52,5 mil en 2022 a COP 36,8
+    mil en 2023 y COP 38,9 mil en 2024. El efecto dentro de cada industria explica 91% del cambio 2022→2023 y 96%
+    del 2022→2024.'
   role_in_story: evidence
   evidence_ids:
   - F-110
   - F-039
-  - F-077
   - F-113
   - F-045
   - F-037
-  - F-112
-  - F-043
-  - F-053
+  - F-160
+  - F-161
+  - F-162
+  - F-163
+  - F-164
   - F-114
-  - F-100
   - F-030
-  - F-078
+  - F-192
+  - F-193
   table_ids:
   - T-016
   - T-019
-  - T-018
+  - T-062
+  - T-066
   - T-020
-  - T-044
-  - T-033
   research_ids:
   - R-003
   - R-015
-  - R-005
+  - R-026
+  - R-024
   framework_ids: []
-  confidence: high
+  confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-110, F-113, F-112, F-114, F-100, F-030 y los demás citados están propuestos (F-039,
-    confianza media).'
-  - 'Primer pago observado ≠ adquisición: no es Won ni suscripción activa. El hito lo acuerda el CRO.'
-  - 'El escalón de inicios de 2023 puede ser en parte un efecto de registro (H-024) o un cambio operativo (H-025):
-    sin confirmar.'
-  - Con la ventana mar–oct igualada el cambio se mantiene (F-043). La magnitud depende de la medida (F-046); por
-    F-139, el ticket de entrada debería medirse con un monto estabilizado.
-  - Entre 2023 y 2024 el ticket no siguió bajando (T-033). Eso concilia R-003 con R-010 (H-030, X-018).
-  - Si las entradas del CRO siguieron creciendo después de ene-23, la meseta sería el tramo de «más leads, no más
-    ventas». Las entradas no están en los datos (Q-001).
-  - 'La industria es la única segmentación disponible: no sustituye al canal ni a la motion.'
-  visual_intent: 'Outgrow: el conteo de primeros pagadores sube en escalón y se aplana, mientras el valor inicial
-    que traen crece mucho menos. Volumen y valor se desacoplan.'
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos; F-160 a F-163 tienen confianza media.'
+  - 'Primer pago observado no es adquisición: no es Won ni suscripción activa. El hito lo acuerda el CRO (X-052).'
+  - El escalón de inicios de 2023 puede ser en parte registro (H-024) o un cambio operativo (H-025, H-068). Sin
+    confirmar.
+  - 'El ticket estabilizado sigue siendo monto pagado: no separa tarifa, plan, empaquetamiento ni descuento (F-167).'
+  - 'La industria es la única segmentación disponible: no sustituye al canal ni a la ruta.'
+  visual_intent: 'Outgrow: el conteo de primeros pagadores sube en escalón y se aplana, mientras el valor que traen
+    crece mucho menos.'
   hugo_wording: Revisar entradas y actividad económica de clientes y segmentos.
   strength: pending
 - claim_id: C-004
@@ -237,10 +252,11 @@ claims:
   headline: Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas
   answer: 'En 2023 jun–dic hay 60,6 primeros pagadores por mes, frente a 45,2 en ene–may. En esos mismos tramos,
     la Generación de Demanda (ToFu) baja de 1,73 u a 0,82 u por mes y el S&M total de 3,01 u a 1,44 u. La correlación
-    en niveles entre el S&M total y los primeros pagadores del mismo mes es −0,57; en cambios mes a mes, el mayor
-    valor absoluto es 0,27 (p mínimo 0,14): no aparece una relación positiva que leer. El archivo viene en unidades
-    reportadas (u), sin escala a COP, y hasta may-23 Team es un 12% fijo del total durante 17 meses, como una asignación
-    de arriba hacia abajo.'
+    en niveles entre S&M total y primeros pagadores del mismo mes es −0,57; en cambios mes a mes, el mayor valor
+    absoluto es 0,27 (p mínimo 0,14). No hay una relación positiva que leer. El archivo viene en unidades reportadas
+    (u), sin escala a COP, y hasta may-23 Team es un 12% fijo del total durante 17 meses. Propuesta: que Finora
+    documente la unidad y la clasificación funcional del gasto y lo registre por canal y funnel. La inversión se
+    decide con gasto por canal y experimentos, no cruzando fechas.'
   role_in_story: evidence
   evidence_ids:
   - F-107
@@ -253,6 +269,7 @@ claims:
   - F-065
   - F-068
   - F-119
+  - F-207
   table_ids:
   - T-013
   - T-024
@@ -262,96 +279,160 @@ claims:
   research_ids:
   - R-015
   - R-013
+  - R-025
   framework_ids: []
   confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-107, F-118, F-063, F-066 y los demás citados están propuestos (la mayoría, de
-    confianza media).'
-  - 'Coincidir en fechas no es causa: no hay etapas del funnel con fechas ni fuente del lead que liguen el gasto
-    de un mes con clientes concretos (F-119).'
-  - 'La unidad no está documentada: no se lee como COP ni se combina con el monto pagado (X-001).'
-  - 'PayrollExpenses es negativo en 5 meses y Freelance queda en cero desde mediados de 2023: el valle puede ser
-    en parte contable (H-023). F-117 fecha ese cero en may-23 y T-009 marca jun-23 como último mes con valor: hay
-    que reconciliarlo.'
-  - 'La columna «capacidad_por_mes» de T-013 es gasto de Team, no capacidad de SDR/AE (X-014): conviene renombrarla
-    antes de mostrarla.'
-  - No se puede decidir con estos datos si SoftwareTools/Freelance son Habilitación o producto (F-068).
-  visual_intent: 'Divergencia sin causa: en 2023 el gasto por categoría baja mientras los primeros pagadores suben.
-    Coinciden en fechas; ninguno mueve al otro.'
-  hugo_wording: 'Inversión de S&M por categoría (Generación de Demanda ToFu: Paid Media y publicidad no web · Team:
-    Payroll Expenses y Travel · Habilitación, ¿producto?: Software Tools y Freelance) y hasta dónde se puede relacionar
-    con ventas cruzando fechas.'
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - 'Asociación no es efecto: no hay etapas con fecha ni fuente del lead que liguen gasto y clientes (F-119).'
+  - No se puede decidir si SoftwareTools y Freelance son habilitación comercial o producto (F-068).
+  - PayrollExpenses es negativo en algunos meses (T-007) y el primer tramo parece una asignación de arriba hacia
+    abajo.
+  visual_intent: 'Diverge: en 2023 el gasto baja mientras los primeros pagadores suben; no hay co-movimiento que
+    atribuir.'
+  hugo_wording: 'inversión de S&M por categoría (ToFu: Paid Media y publicidad no web · Team: Payroll Expenses y
+    Travel · habilitación: Software Tools y Freelance) y hasta dónde se puede relacionar con ventas cruzando fechas'
   strength: pending
 - claim_id: C-005
   key: funnel-puertas
-  question: ¿Cómo definir y medir el funnel si no todos lo recorren igual?
-  headline: 'Proponemos un bowtie por puertas: Self Service, Assisted y Executive con nudo común'
-  answer: 'No es un funnel único: cada puerta tiene sus hitos a la izquierda. Self Service: visita por canal → registro
-    → activación → primer pago. Assisted: entrada (pide ayuda, PQL derivado de Self Service u outbound que responde)
-    → SQL → oportunidad → primer pago. Executive: cuenta objetivo → oportunidad directa, sin MQL → sponsor o business
-    case → primer pago. Todas llegan a un nudo común y a un lado derecho común (retención, expansión, NRR), cortadas
-    por Canal de adquisición (p. ej. Digital, WoM, outbound); la reactivación va aparte como otro tipo de entrada
-    y AAARRR sirve como vocabulario común, no como secuencia.'
+  question: ¿Cómo definir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL, estancamientos
+    de semanas)?
+  headline: Proponemos rutas Executive, Self Service e Hybrid, más un loop de Reactivate
+  answer: 'Con tus definiciones. Executive es el funnel actual SDR→AE (New → Working SDR → Engaged SDR → SQL SDR
+    → Demo AE → Proposal AE → Won); la entrada directa a SQL también es Executive, con etapa de entrada SQL. Self
+    Service es el recorrido sin persona, con sus canales. Hybrid mezcla tramos sin persona y con persona: en A empezó
+    solo y después intervino un SDR/AE; en B lo tocó una persona y terminó solo. Reactivate no es otra ruta: es
+    un loop sobre leads estancados que se reactivan y se asignan a un funnel según el caso. Para que el mix sea
+    MECE: la unidad es la cuenta; la puerta (Producto o CRM/Ventas) y el canal se fijan al entrar y no cambian;
+    la ruta sale de quién movió cada tramo. El formulario de «hablar con ventas» es una entrada por la puerta CRM,
+    y un lead que nadie contactó y compró solo es Self Service con bandera. Un episodio reactivado no cuenta como
+    entrada nueva: conserva su fecha y su puerta originales, y su primer pago cuenta una sola vez, con bandera.
+    El nudo común es el primer pago, como recomendación que decides tú. La vuelta de pagadores que se ve en los
+    pagos no es Reactivate: es otro loop, del lado Revenue.'
   role_in_story: recommendation
   evidence_ids:
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  - F-188
+  - F-190
   - F-140
-  - F-147
-  - F-142
-  - F-143
+  - F-155
   table_ids: []
   research_ids:
+  - R-029
+  - R-023
   - R-016
-  - R-019
+  - R-022
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-016, R-019), pendiente de tu aceptación. F-140 y F-147 son de confianza media.
-  - Los datos del caso no traen puerta, canal ni etapas, así que el lado izquierdo no se puede medir hoy (F-142,
-    fuente sin verificar). Eso no prueba que Finora no los registre.
-  - El hito del nudo (Won, primer pago o suscripción activa) está por acordar con el CRO.
-  - La puerta no se infiere de los pagos y el primer pago no sirve como valor de entrada (F-143).
-  visual_intent: 'Convergencia: caminos de entrada distintos, con hitos propios, que se juntan en un nudo y comparten
-    el lado derecho.'
-  hugo_wording: 'Cómo definir y medir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL,
-    estancamientos de semanas): Assisted / Self Service / Executive, con canales (incl. digital, WoM, clientes que
-    no requirieron KAM).'
+  - 'Pendiente de tu aceptación: F-209 a F-213, F-188, F-190, F-140 y F-155 están propuestos.'
+  - 'No hay CRM para probarla: hoy no se mide ninguna etapa antes del primer pago, ni la puerta (F-191).'
+  - 'Corrige lecturas previas: R-022 y R-023 leían Executive como cuentas nombradas o de KAM y Reactivate como ex-pagadores
+    (F-187, F-189). Aquí mandan tus definiciones (N-033, N-035, N-037, N-038), y el «Assisted» del guion pasa a
+    Hybrid.'
+  - 'Parámetros por decidir: qué cuenta como intervención (Q-063; R-029 propone solo la interacción de ida y vuelta
+    con SDR/AE), el umbral de estancado (Q-064) y el nudo común (X-052).'
+  - No sabemos si en Finora existe Self Service como compra sin persona (Q-046). La ruta de un pagador no se infiere
+    del monto.
+  visual_intent: 'Split and converge: rutas que entran por puertas distintas y se juntan en el primer pago; Reactivate
+    como flecha de retorno a la izquierda y la vuelta de pagadores aparte, a la derecha.'
+  hugo_wording: «el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie / Proposal
+    Account Executive / Won /// ese es el punto de partida»; Self Service «con sus respectivos canales»; Hybrid
+    «en alguna parte del funnel fue por Self Service y en algún otro fue intervenido por una persona»; Reactivate
+    «los que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso».
+  strength: pending
+- claim_id: C-021
+  key: funnel-etapas
+  question: ¿Qué etapas tiene cada funnel, con qué criterio se entra y se sale, y quién es el dueño?
+  headline: Cada funnel tiene sus etapas, criterios de salida y dueño; los tramos se pueden saltar
+  answer: 'Executive, con dueño SDR hasta SQL y AE desde Demo: New → Working SDR → Engaged SDR → SQL SDR → Demo
+    AE → Proposal AE → Won → primer pago. Se sale de cada etapa con un cambio fechado en el CRM; lo primero es acordar
+    qué hace a un lead Engaged o SQL. Self Service, con dueño Producto/Growth: canal → registro → activación (si
+    existe) → checkout → primer pago. Falta saber si hay prueba gratis, freemium o pago al registrarse. Hybrid usa
+    las etapas del tramo que recorre, con dueño por tramo: la persona en los tramos con SDR/AE y el producto en
+    los tramos que el cliente hace solo. Su primer tramo lo marca como A o B. Reactivate: estancado más allá del
+    umbral de su etapa → reactivado (contacto de ida y vuelta o regreso por su cuenta) → asignado a un funnel, con
+    dueño SDR o RevOps. Cada hito se mide como «alcanzó o superó», para que las etapas saltadas no rompan las tasas.'
+  role_in_story: recommendation
+  evidence_ids:
+  - F-209
+  - F-211
+  - F-210
+  - F-191
+  - F-155
+  table_ids: []
+  research_ids:
+  - R-029
+  - R-023
+  - R-016
+  - R-025
+  - R-022
+  framework_ids: []
+  confidence: low
+  limitations:
+  - 'Pendiente de tu aceptación: F-209, F-211, F-210, F-191 y F-155 están propuestos.'
+  - El brief da la secuencia y un traspaso SDR → AE que ocurre «sobre todo» y «normalmente». Los criterios de etapa
+    no están definidos.
+  - Las etapas de Self Service e Hybrid y los dueños son una propuesta, no las de Finora.
+  - Parte de lo que parecen recorridos distintos puede ser cómo se registra en el CRM (H-051).
+  visual_intent: 'Carriles paralelos: cada funnel en su carril con hitos, criterio de salida y dueño; los saltos
+    están permitidos y todos llegan al primer pago.'
+  hugo_wording: funnel propuesto, AAARRR, conversion rate y métricas clave
   strength: pending
 - claim_id: C-006
   key: funnel-conversion
-  question: ¿Qué conversion rate usar si hay entradas recientes y leads que se estancan semanas?
-  headline: Proponemos medir conversión por cohorte de entrada y ventana fija, por puerta y canal
-  answer: 'La tasa es «% de las entradas del mes que pagan dentro de W días», por puerta y Canal de adquisición,
-    calculada solo en las cohortes que ya cumplieron la ventana. La tasa de período y el promedio de solo los que
-    convirtieron castigan a las entradas recientes y confunden «compran más tarde» con «compran menos», que es justo
-    lo que hay que separar en la premisa del CRO (H-003, H-004). Para medirla hay que instrumentar en origen: fechas
-    por etapa en el CRM, puerta y canal por cuenta, y gasto por canal.'
+  question: ¿Cómo se mide la conversión si cada funnel tiene su unidad y sus tiempos?
+  headline: Proponemos medir por cohorte de entrada con ventana fija y comparar entre puertas, no rutas
+  answer: 'La tasa que sirve es el % de las entradas de una cohorte que llega al primer pago dentro de una ventana
+    fija, por puerta y canal, y solo en cohortes que ya cumplieron esa ventana. La tasa de periodo castiga a las
+    entradas recientes. Antes del nudo, cada funnel se lee dentro de sí mismo. Entre funnels solo se compara del
+    primer pago hacia la derecha: ticket estabilizado, permanencia temprana y churn observado y persistente. La
+    conversión de Hybrid no mide lo que aporta la persona, porque los SDR/AE eligen a quién tocar. Por eso se compara
+    entre puertas, que quedan fijas al entrar, y se reporta el mix de rutas dentro de cada puerta. AAARRR queda
+    como vocabulario común, no como secuencia. La ventana se acuerda con Finora.'
   role_in_story: recommendation
   evidence_ids:
   - F-141
+  - F-158
+  - F-155
+  - F-212
   - F-144
+  - F-140
+  - F-213
   table_ids: []
   research_ids:
   - R-016
+  - R-022
+  - R-029
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-016), pendiente de tu aceptación.
-  - W y el umbral de «estancado» son parámetros a acordar con Finora, no estándares de mercado.
-  - 'Con los datos del caso no se calcula ninguna conversión: los pagos no incluyen a quien no compró.'
-  - La atribución por canal reparte crédito; no prueba causa (F-144).
-  visual_intent: 'Maduración: cada cohorte de entrada se compara solo cuando cumplió su ventana; las recientes todavía
-    no son comparables.'
-  hugo_wording: Funnel propuesto, AAARRR, conversion rate y métricas clave.
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - Hoy solo se miden el nudo y la vuelta de pagadores (F-213, F-159).
+  - 'Ventanas y plazos no son estándar de mercado: se calibran con los datos de Finora.'
+  - 'Comparar entradas directas a SQL contra SQL del SDR no es un experimento: solo sirve ver cómo cambia cada grupo
+    en el tiempo, y aun así es asociación.'
+  - La atribución reparte crédito, no prueba causa (F-144).
+  visual_intent: 'Curvas por cohorte: alcance acumulado a primer pago por cohorte de entrada, una familia de curvas
+    por puerta; las cohortes inmaduras, marcadas.'
+  hugo_wording: cómo definir y medir el funnel si no todos lo recorren igual
   strength: pending
 - claim_id: C-007
   key: perdida-cosechas
   question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?
-  headline: La pérdida se concentra en cosechas de menor ticket, no en una industria
-  answer: 'Entre dic-22 y oct-24, el MRR pagado observado por cliente activo cambia −COP 31,7 mil (−35%): la descomposición
-    asigna −COP 26,6 mil (84%) a la composición de cosechas y −COP 5,2 mil al efecto dentro de las cosechas. Bajó
-    en las 6 industrias, más en Servicios profesionales (−46,6%), Restaurantes (−45,6%) y Retail (−43,1%) que en
-    Producción (−18,8%), Tecnología (−15,5%) y Salud (−14,4%). La salida persistente no sube: el churn que no vuelve
-    a pagar en un trimestre es 0,98% en 2022, 1,09% en 2023 y 0,96% en 2024.'
+  headline: La pérdida está en el monto por cliente de cosechas de menor ticket
+  answer: 'Está en el monto por cliente, no en el número de clientes: entre dic-22 y oct-24 los clientes activos
+    suben en las 6 industrias y el MRR por cliente activo baja en las 6, de −46,6% en Servicios profesionales a
+    −14,4% en Salud. Está dentro de cada industria: con el monto usual temprano, el efecto dentro explica 91% del
+    cambio del ticket de entrada 2022→2023 y 96% del 2022→2024. Y está en las cosechas de menor ticket: la composición
+    explica 84% del cambio del MRR por cliente activo desde dic-22 (108% desde ene-22; la ventana la decides tú).
+    Las cosechas 2023 y 2024 ya son 65% de los activos, con COP 46,3 mil y COP 43,0 mil por cliente, frente a COP
+    97,4 mil de la base previa. Las salidas persistentes no la explican: el churn observado baja de 3,52% a 2,04%
+    y el que no vuelve a pagar pasa de 0,98% a 0,96%.'
   role_in_story: diagnosis
   evidence_ids:
   - F-097
@@ -359,81 +440,89 @@ claims:
   - F-096
   - F-094
   - F-020
-  - F-059
+  - F-164
+  - F-163
+  - F-075
   - F-033
-  - F-079
+  - F-183
+  - F-059
   - F-101
   - F-102
   table_ids:
-  - T-041
-  - T-040
   - T-038
+  - T-040
+  - T-066
+  - T-041
+  - T-030
   - T-002
   research_ids:
   - R-017
+  - R-026
   - R-009
-  - R-005
-  - R-006
+  - R-028
   framework_ids: []
-  confidence: high
+  confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-097, F-092, F-096, F-094, F-033 y F-079 están propuestos (F-094, confianza media).'
-  - 'La industria es la única segmentación: no hay tamaño de cliente, canal, precio, descuento ni motivo de churn
-    (F-106). No se fabrican segmentos por clustering.'
-  - Churn persistente = no vuelve a pagar en un trimestre. Es un proxy con ventana de gracia, no retención contractual.
-  - 'Quienes se van pagaban más en promedio, pero no en mediana: pesan pocas cuentas grandes (F-101, F-102).'
-  - 'Medido contra su propio primer pago, el nivel a M6 de las cohortes queda en un rango estrecho: la diferencia
-    está en el punto de partida (R-006).'
-  visual_intent: 'Partición: el cambio del monto por cliente se parte en composición de cosechas vs efecto dentro;
-    las 6 industrias caen a la vez, con distinta intensidad.'
-  hugo_wording: Dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets,
-    mix).
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - La cifra de composición depende de la ventana (X-060).
+  - El churn observado de 2024 tiene dos cifras en el caso (T-034 frente a T-002). Falta conciliarlas (X-099, X-101).
+  - 'Por promedio, quienes se van pagaban más; por mediana, no: el efecto está en pocas cuentas grandes (F-101,
+    F-102).'
+  - La cosecha 2022 también baja (F-059), y puede ser real o efecto de edad (X-062). No hay tamaño de cliente ni
+    otra segmentación (F-106).
+  visual_intent: 'Mezcla que arrastra: las cosechas nuevas de menor ticket ganan peso; por industria, todas bajan
+    con distinta intensidad.'
+  hugo_wording: dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets,
+    mix)
   strength: pending
 - claim_id: C-008
   key: perdida-burbuja
   question: ¿Hay industrias de bajo churn, ticket alto y poco volumen?
   headline: 'Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar'
-  answer: En 2024, Salud tiene el menor churn persistente (0,56 puntos porcentuales mensuales), el mayor ticket
-    de entrada mediano (COP 52,5 mil, igual que Restaurantes) y 124 clientes activos en oct-24, frente a 459 en
-    Restaurantes y 360 en Retail. En el otro extremo, Retail combina el mayor churn persistente (1,33) con el menor
-    ticket mediano (COP 26,2 mil). Salud y Tecnología también muestran las menores caídas del MRR pagado observado
-    por cliente activo entre dic-22 y oct-24 (−14,4% y −15,5%).
-  role_in_story: evidence
+  answer: 'Salud tiene el menor churn persistente (0,56 puntos mensuales), el ticket de entrada mediano de 2024
+    más alto por primer pago (COP 52,5 mil, igual que Restaurantes) y el menor volumen: 124 clientes activos en
+    oct-24, frente a 459 en Restaurantes. También es la industria con menor caída del MRR por cliente (−14,4%) y
+    aporta 11,7% del crecimiento del MRR. Con monto usual temprano, sostuvo COP 63,0 mil en 2023 y bajó a COP 48,8
+    mil en 2024. Propuesta: si con margen, costo de servir y canal se confirma, Salud es candidata a una prueba
+    de Generación de Demanda dirigida. El CRO decidiría con la retención y el valor por cohorte de esa industria,
+    frente a un grupo comparable.'
+  role_in_story: implication
   evidence_ids:
   - F-104
   - F-099
   - F-103
   - F-105
+  - F-165
   table_ids:
   - T-048
   - T-049
+  - T-067
   - T-047
   research_ids:
   - R-017
+  - R-026
   framework_ids: []
   confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-104, F-099, F-103 y F-105 están propuestos, de confianza media.'
-  - 'Es una señal, no un segmento prioritario: poco volumen, un solo año, y el churn persistente de 2024 necesita
-    un trimestre de seguimiento (hay que confirmar qué meses entran).'
-  - 'Benchmark ≠ recomendación: sin CAC ni margen por industria no se puede decir dónde conviene crecer.'
-  - 'F-052 (churn observado 2024: mínimo en Producción, máximo en Tecnología) no coincide con T-047 (mínimo en Restaurantes):
-    hay que reconciliarlo antes de mostrar el churn observado por industria.'
-  - La industria no sustituye al canal ni a la motion.
-  visual_intent: 'Trade-off: churn persistente vs ticket mediano, con el volumen como peso. Salud se aísla con buen
-    perfil y poco volumen.'
-  hugo_wording: 'Quizá una matriz de burbuja: industrias de bajo churn, ticket alto y poco volumen.'
+  - 'Pendiente de tu aceptación: F-104, F-099, F-103, F-105 y F-165 están propuestos, con confianza media.'
+  - Con pocos clientes activos, la señal puede moverse por unas cuantas cuentas.
+  - El ticket de 2024 es por primer pago; con monto usual temprano, Salud también baja en 2024 (T-067).
+  - Sin margen, costo de servir ni canal no hay economía por industria (F-138). H-044 sigue abierta y la industria
+    no es causa.
+  visual_intent: 'Outlier en la burbuja: churn persistente × ticket × volumen; Salud aparece con bajo churn, ticket
+    alto y burbuja pequeña.'
+  hugo_wording: 'quizá una matriz de burbuja: industrias de bajo churn, ticket alto y poco volumen'
   strength: pending
 - claim_id: C-009
   key: metricas-semaforo
-  question: ¿Qué métricas propondrías que hoy no existen y cuáles se pueden calcular ya?
+  question: ¿Qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas?
   headline: 'Proponemos un árbol de ingreso recurrente con semáforo: qué se mide hoy y qué no'
-  answer: 'En verde, con nombre honesto: MRR pagado observado y su puente, clientes activos, ARPA por cliente (lo
-    que se pide como ARPU; no hay datos por usuario), churn observado junto a uno con ventana de gracia, NRR/GRR
-    de la base y métricas por cohorte; el ARR, solo como run-rate anualizado. El churn muestra por qué importa el
-    nombre: el observado baja de 3,52% en 2022 a 2,04% en 2024, mientras el que no vuelve a pagar en un trimestre
-    pasa de 0,98% a 0,96%. En rojo, porque piden datos nuevos: CAC en COP y por motion o canal, payback, LTV con
-    margen, LTV:CAC y UCM. Hoy solo cabe un «LTV empírico de ingreso» por cohorte, a horizonte fijo.'
+  answer: 'En verde, lo que se calcula hoy con nombre honesto: MRR pagado observado y su puente, clientes activos,
+    ARPA por cliente (lo que se pide como ARPU; no hay datos de usuarios), churn observado y retención por cohorte.
+    En amarillo, los proxies con una regla por aprobar: churn persistente con ventana de gracia, MRR normalizado
+    por mes de servicio y ARR solo como run-rate. En rojo, lo que pide datos nuevos: CAC en COP y por funnel o canal,
+    payback, LTV con margen, LTV:CAC y UCM. El churn muestra por qué importa el nombre: el observado baja de 3,52%
+    en 2022 a 2,04% en 2024, mientras el persistente pasa de 0,98% a 0,96%.'
   role_in_story: recommendation
   evidence_ids:
   - F-135
@@ -442,35 +531,73 @@ claims:
   - F-033
   - F-137
   - F-138
+  - F-183
   table_ids:
   - T-002
-  - T-034
   research_ids:
   - R-018
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-018), pendiente de tu aceptación. F-137 y F-138 vienen de fuente sin verificar.
-  - 'Churn observado 2024: T-002 da 2,04% y T-034, 1,9%. Hay que reconciliar la ventana o el denominador antes de
-    mostrarlo.'
-  - NRR/GRR y retención se calculan sobre pagos observados, no son retención contractual.
-  - 'Antes de llamar churn o MRR a lo observado hacen falta una regla de normalización y una ventana de gracia:
-    los atrasos y los pagos multimes inflan churn, reactivación y expansión (F-136).'
-  - El ARPA de entrada se mide con monto estabilizado (segundo pago o monto usual), no con el primer pago (F-139).
-  - 'D-007 (activa) dejó las métricas definitivas fuera de etapa: esto es una propuesta.'
-  visual_intent: 'Jerarquía: del resultado (MRR) a los drivers y la economía unitaria, con cada métrica marcada
-    según qué tan medible es hoy.'
-  hugo_wording: Qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas,
-    robustecerlo y bajar lo que tenga sentido.
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - El MRR normalizado y el churn con gracia son reglas que tienes que aprobar (F-136); se muestran junto al observado.
+  - El MRR pagado observado no se compara con benchmarks de MRR contractual.
+  - La cifra de churn observado de 2024 difiere entre T-034 y T-002 (X-101).
+  visual_intent: 'Árbol con semáforo: resultado → drivers → economía unitaria, cada nodo coloreado según qué tan
+    medible es.'
+  hugo_wording: qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas,
+    robustecerlo y bajar lo que tenga sentido
+  strength: pending
+- claim_id: C-022
+  key: metricas-catalogo
+  question: ¿Qué métricas mide cada funnel, cuáles se calculan hoy y en qué foro se leen?
+  headline: 'Proponemos un catálogo por funnel: definición, si existe hoy, fuente faltante y foro'
+  answer: 'Executive: SQL u oportunidades por cohorte, alcance SQL→Won en ventana fija, ciclo de venta con el %
+    aún abierto, estancamientos por etapa y Won→primer pago. Falta el historial de etapas del CRM; se lee en el
+    foro semanal. Self Service: registros por canal, activación (si existe) y registro→primer pago en ventana. Faltan
+    los eventos de producto y el canal de origen; se lee en el foro mensual. Hybrid: tasa de escalamiento (entradas
+    de producto que reciben a una persona antes de pagar), mix de rutas dentro de cada puerta, tiempo a primer contacto
+    y carga por SDR/AE. Faltan las actividades de ida y vuelta y el roster; se lee en los foros semanal y mensual.
+    Reactivate: estancados por etapa, reactivados, asignados y su primer pago con bandera; foro semanal. Desde el
+    nudo, lo único que se calcula hoy con nombre honesto es: primeros pagos, ticket de entrada estabilizado, permanencia
+    temprana, churn observado y persistente, MRR pagado observado y S&M por alta en unidades reportadas. Se lee
+    en los foros mensual y trimestral.'
+  role_in_story: recommendation
+  evidence_ids:
+  - F-155
+  - F-158
+  - F-159
+  - F-213
+  - F-135
+  - F-139
+  - F-148
+  table_ids: []
+  research_ids:
+  - R-022
+  - R-029
+  - R-018
+  - R-019
+  - R-023
+  framework_ids: []
+  confidence: medium
+  limitations:
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - D-007 deja fuera las métricas definitivas; D-018 (propuesta, la decides tú) lo lee como «no construir en esta
+    etapa». Esto es un catálogo propuesto, no construido.
+  - Hoy no se calcula ninguna métrica por funnel ni nada antes del pago (F-159).
+  - Los nombres siguen a X-032 (MRR pagado observado, S&M por alta, ARPA). Ventanas y umbrales se acuerdan con Finora.
+  visual_intent: Matriz funnel × métrica, con marca de «hoy / pedir» y el foro donde se lee.
+  hugo_wording: cómo medirlas, robustecerlo y bajar lo que tenga sentido
   strength: pending
 - claim_id: C-010
   key: metricas-cac-proxy
-  question: ¿Tenemos hoy un CAC que podamos usar?
+  question: ¿Hay CAC hoy?
   headline: 'Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC'
-  answer: 'El S&M total por primer pagador observado pasa de 0,105 u en 2022 a 0,036 u en 2024 (−66%), en una unidad
-    sin escala a COP. Su nivel depende de si SoftwareTools y Freelance cuentan como Habilitación comercial: sin
-    ellos, queda en 0,093 u y 0,034 u. Leerlo como CAC o como mejora de eficiencia es prematuro: el gasto no se
-    liga a clientes concretos y el denominador cuenta primeros pagos, no adquisiciones acordadas.'
+  answer: 'El S&M total por alta pasa de 0,105 u en 2022 a 0,036 u en 2024 (−66%), en una unidad sin escala a COP.
+    Su nivel depende de si Habilitación cuenta como gasto comercial: pesa 12% del S&M en 2022 y 4% en 2024, y el
+    gasto por alta pasa de 0,11 a 0,04 incluyéndola y de 0,09 a 0,03 sin ella. Propuesta: para tener CAC en COP
+    y por funnel, Finora documenta la unidad del gasto, acordamos qué es adquirir un cliente (Won, primer pago o
+    suscripción activa) y el gasto se registra por canal y funnel. Con eso el CFO decide el payback por funnel.'
   role_in_story: limitation
   evidence_ids:
   - F-081
@@ -482,197 +609,347 @@ claims:
   table_ids:
   - T-036
   - T-011
+  - T-012
   research_ids:
-  - R-015
   - R-018
   - R-013
+  - R-015
   framework_ids: []
   confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-081, F-108, F-069, F-070 y F-022 están propuestos.'
-  - Sin unidad documentada no hay CAC en COP, payback ni LTV:CAC. Sin motion ni canal no hay CAC por Self Service/Assisted/Executive
-    ni por Digital/KAM (F-137, fuente sin verificar).
-  - 'El numerador puede tener efectos contables: Team fijo hasta may-23 y PayrollExpenses negativo (H-023, X-015).'
-  - No leer la caída como mejora de eficiencia (X-005).
-  visual_intent: 'Advertencia: una cifra que cae pero no significa lo que parece (unidad sin escala, no es CAC).'
-  hugo_wording: 'CAC (de la lista MRR, ARR, ARPU, CAC, LTV, Churn, UCM): hoy solo existe como gasto de S&M por alta,
-    en unidades sin escala.'
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - 'El −66% no es eficiencia comercial: la unidad del gasto no está documentada y el hito de adquisición no está
+    acordado (X-005).'
+  - PayrollExpenses es negativo en algunos meses (T-007).
+  visual_intent: 'Cociente con advertencia: un ratio que baja, con la unidad marcada como no documentada.'
+  hugo_wording: CAC y cómo medirlo
   strength: pending
 - claim_id: C-011
   key: hipotesis-arbol
-  question: ¿Qué podría explicar «más leads, pero no más ventas» y qué dato validaría o descartaría cada explicación?
-  headline: Proponemos descartar primero artefactos de medición y después contrastar causas ToFu y BoFu
-  answer: 'Antes de las causas, la premisa: con pagos, «no más ventas» se sostiene en jul–oct del último año frente
-    al anterior, pero no en mar–oct, así que depende de la ventana. El árbol separa los artefactos —conteo, es decir,
-    si la demanda creció de verdad (H-001); mezcla (H-002); y tiempo de exposición (H-003 y la parte de H-004 en
-    que compran más tarde y terminan igual)— de las explicaciones a contrastar: calidad al entrar (H-005, ToFu),
-    atención y capacidad (H-006), el tramo post-SQL (H-007, BoFu) y la oferta, es decir producto, precio o condiciones
-    (H-008, BoFu). Las entradas únicas con fecha (con canal, motion y segmento) y su vínculo con el pago bastan
-    para distinguir H-001 a H-004. H-005 a H-007 necesitan datos que suelen estar en un CRM, aunque no siempre con
-    su historia, y H-008 pide más que las razones de pérdida.'
+  question: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas» y en qué orden se descartan?
+  headline: Proponemos descartar primero artefactos de medición y después contrastar causas ToFu, MoFu y BoFu
+  answer: '«Llega más gente» es lo que dice el CRO, no un dato del caso: los datos no traen leads. El paso 1 ya
+    se hizo con los pagos. Sin oct-24, las altas por mes de 2024 son 56, frente a 54 en 2023. Altas y reactivaciones
+    van en flujos separados: 1.476 clientes distintos con alta, 0 con pago previo y 468 reactivaciones aparte. El
+    cambio de ID no se puede verificar, aunque en 2023 el emparejamiento por monto e industria con churns recientes
+    (175) no supera al placebo (196). El estancamiento de altas queda como señal para contrastar con causas, no
+    como artefacto. Después, en orden: artefactos del lado de leads (necesitan el CRM) → ToFu → MoFu → BoFu → después
+    del cierre. En cada paso se comparan cohortes de entrada a igual edad y el cambio se parte en volumen, mezcla
+    y tasa por funnel.'
   role_in_story: recommendation
   evidence_ids:
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
   - F-125
   - F-126
   - F-127
-  - F-128
-  - F-129
-  table_ids: []
+  - F-204
+  - F-205
+  - F-208
+  table_ids:
+  - T-093
+  - T-094
+  - T-100
   research_ids:
+  - R-024
+  - R-025
   - R-010
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-010), pendiente de tu aceptación. F-126 viene de fuente sin verificar y F-129 es
-    de confianza baja.
-  - 'Con los datos del caso no se valida ni se descarta ninguna de H-001 a H-008: no hay entradas ni vínculo lead→pago.'
-  - 'H-004 no es toda artefacto: solo lo es «compran más tarde y terminan igual». «Compran menos aun con seguimiento
-    comparable» es una diferencia real (X-017).'
-  - La caída del último tramo puede ser en parte un efecto de borde o de rezago de los pagos (H-029).
-  - Calidad, atención, post-SQL y oferta son explicaciones a contrastar, no causas confirmadas (D-003).
-  visual_intent: 'Descarte por eliminación: primero se podan los artefactos; lo que queda son causas, cada una con
-    el dato que la decide.'
-  hugo_wording: Definir qué hipótesis ToFu y BoFu (demanda, calidad, velocidad de atención, conversión post-SQL)
-    podrían estar afectando su motor y qué datos validarían o descartarían cada una; aquí no hay research en data,
-    es una propuesta.
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - Con los pagos solo se acotan los artefactos del lado de pagadores; los del lado de leads necesitan el CRM.
+  - 'La premisa depende de la ventana: con pagos, la caída de primeros pagadores está en jul–oct 2024 (F-125, F-204,
+    X-106). Hay que fijar el periodo con el CRO.'
+  - En 2024 el placebo casi no tiene pares (T-100), probablemente porque el panel termina en oct-24. La prueba de
+    IDs solo sirve para 2022–2023.
+  visual_intent: 'Escalera de descarte: cada peldaño cierra artefactos antes de pasar a causas.'
+  hugo_wording: Definir que hipótesis ToFu y BoFu podrían estar afectando su motor de acuerdo a su problema definido
+    y qué datos validarían o descartarían cada una
+  strength: pending
+- claim_id: C-023
+  key: hipotesis-matriz
+  question: ¿Qué otras causas potenciales hay (por lo menos 3–5 más) y qué datos tendrían que ser ciertos para validar
+    o descartar cada una?
+  headline: 'Proponemos una matriz de causas: qué la valida, qué la descarta y qué palanca mueve'
+  answer: 'Artefacto · no-prospectos en New (clientes actuales por soporte o upgrade, duplicados, spam). Cierta
+    si la brecha se cierra al quitarlos; se descarta si las entradas válidas crecen igual que New. Dato: leads marcados
+    como duplicado, cliente actual o spam (pedir). Palanca: regla de conteo y formularios.
+
+    Artefacto · registro o definición (oportunidades creadas directo en SQL, leads sin estado de salida, estancados
+    que vuelven como New). Cierta si la brecha coincide con un cambio fechado de definición, formulario o reparto.
+    Dato: historial de etapas con autor y bitácora de cambios (pedir). Palanca: higiene del CRM.
+
+    Artefacto · tiempo. Cierta si la brecha desaparece al comparar cohortes a igual edad. Dato: fecha de entrada
+    y de primer pago por cuenta (pedir). Palanca: esperar y volver a medir.
+
+    ToFu · demanda, rebotada: compradores que antes compraban solos ahora entran por ventas. Cierta si crece la
+    puerta CRM y baja la de producto con el mismo perfil. Dato: puerta y canal por cuenta (pedir). Palanca: reparto
+    entre funnels.
+
+    ToFu · calidad o mezcla. Cierta si empeora la mezcla de ajuste congelada al entrar y las tasas por banda se
+    sostienen; se descarta si la caída ocurre dentro de cada banda. Dato: banda al entrar (pedir). Palanca: targeting
+    y criterio de calificación.
+
+    MoFu · velocidad de atención y capacidad. Cierta si sube la carga por SDR/AE, cae la cobertura de primer contacto
+    y la caída se concentra en entradas lentas. Dato: roster con ramp y tiempos de contacto (pedir). Palanca: capacidad,
+    SLA y reparto.
+
+    MoFu · sin seguimiento a quien no compra en el momento. Cierta si crecen los estancados en Working o Engaged
+    y cae su recuperación. Dato: fechas de etapa y estado de salida (pedir). Palanca: cadencias y Reactivate.
+
+    MoFu · meta del SDR en SQL o reuniones. Cierta si SQL→Won cae después de un cambio de meta. Dato: historia de
+    metas y SQL→Won por origen (pedir). Palanca: regla de calificación y metas.
+
+    BoFu · post-SQL, rebotada: eligen otra opción por precio o plan, competidor o funcionalidad. Cierta si, con
+    avance previo comparable, cae Demo→Won o Proposal→Won. Dato: historial de etapas, motivos de pérdida estructurados
+    y bitácora de precio y plan (pedir). Palanca: oferta, precio o plan de entrada.
+
+    Después del cierre · Won que no llega a pagar o se cae al arrancar. Cierta si sube el % de Won sin pago en la
+    ventana. Dato: Won fechado y enlazado al cobro (pedir); en los pagos, casi nadie deja de pagar el mes siguiente
+    al alta. Palanca: cobro y onboarding.
+
+    Hoy ninguna se valida ni se descarta con los datos del caso.'
+  role_in_story: recommendation
+  evidence_ids:
+  - F-205
+  - F-206
+  - F-208
+  - F-127
+  - F-128
+  - F-129
+  - F-122
+  - F-212
+  table_ids: []
+  research_ids:
+  - R-025
+  - R-010
+  - R-014
+  - R-029
+  framework_ids: []
+  confidence: low
+  limitations:
+  - 'Pendiente de tu aceptación: F-205, F-206, F-208, F-127, F-128, F-129, F-122 y F-212 están propuestos.'
+  - 'Mapa de IDs: no-prospectos H-052; registro o definición H-051, H-027 y H-069; tiempo H-003 y H-004; demanda
+    rebotada H-053 (con H-001); calidad o mezcla H-005 y H-002; velocidad y capacidad H-006 y H-028; sin seguimiento
+    H-055; meta del SDR H-054; post-SQL H-007, rebotada por H-056 (con H-008); después del cierre H-057. H-050 no
+    es causa: es la trampa de leer la conversión de Hybrid como efecto.'
+  - Cambios en metas, comisiones, precio o competencia son candidatos sin evidencia en el caso.
+  - 'La caída post-SQL puede nacer antes del traspaso (SQL inflados) o en la oferta: no se atribuye al AE.'
+  visual_intent: 'Matriz etapa × causa con columnas: cierta si / se descarta si / dato mínimo / hoy o pedir / palanca
+    del CRO.'
+  hugo_wording: generar más causas potenciales, por lo menos 3-5 más y definir que datos tendrian que ser ciertos
+    para validar o descartar cada una
   strength: pending
 - claim_id: C-012
   key: hipotesis-capacidad
-  question: ¿La capacidad comercial no alcanza la demanda generada, o bajó la calidad de la máquina de leads?
+  question: ¿Cómo se separa una capacidad comercial insuficiente de una caída en la calidad de la máquina de leads?
   headline: Capacidad y calidad se separan comparando mezcla contra tasa por grupo de entrada
-  answer: Si empeora la mezcla de ajuste al entrar, apunta a calidad (H-005); si cae la tasa dentro de cada banda
-    de ajuste, sobre todo en entradas atendidas lento y en semanas de alta carga, apunta a capacidad (H-006). El
-    dato mínimo es una tabla de entradas con el ajuste congelado al entrar, la fecha del primer contacto humano
-    y la compra en ventana fija, más un roster semanal de SDR/AE que distinga el ramp. H-028 plantea que ambas pueden
-    operar a la vez (con más volumen, los equipos dejarían sin trabajar primero las entradas que perciben peores),
-    así que la comparación se hace por grupo de entrada, entre un periodo base y el periodo de caída.
+  answer: 'Si empeora la mezcla de ajuste al entrar y la velocidad está estable, apunta a calidad. Si la mezcla
+    está estable, suben la carga y la espera, y la caída se concentra en entradas lentas, apunta a capacidad. Si
+    pasan ambas cosas, probablemente interactúan. Si no pasa ninguna, hay que mirar post-SQL o cambios de definición.
+    El dato mínimo es una tabla de entradas con el ajuste congelado al entrar y el primer contacto humano, y un
+    roster semanal de SDR/AE con su ramp. Todo esto es asociación: para saber si más capacidad recupera compras
+    hace falta un experimento o experimentos naturales, como llegadas fuera de horario o reparto por turnos.'
   role_in_story: recommendation
   evidence_ids:
   - F-121
   - F-122
   - F-124
   - F-120
+  - F-159
   table_ids: []
   research_ids:
   - R-014
+  - R-022
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-014), pendiente de tu aceptación. F-120 viene de fuente sin verificar.
-  - 'No se responde con los datos del caso: no hay entradas, grupo de entrada, SDR/AE ni tiempos de contacto.'
-  - El gasto de Team/Payroll no mide la capacidad de SDR/AE (X-011, X-014).
-  - Self Service como grupo de control (F-123, fuente sin verificar) solo vale si existía sin SDR/AE en ambos periodos
-    (X-012). Por eso queda fuera del claim.
-  - Las bandas de ajuste se validan en el periodo base antes de usarlas; los experimentos naturales van antes que
-    uno aleatorio.
-  visual_intent: 'Partición: el cambio de compra se parte en mezcla de ajuste (calidad) vs tasa dentro de banda
-    (capacidad), con la carga semanal como moderador.'
-  hugo_wording: P. ej. la capacidad comercial instalada no alcanza la demanda generada, o la calidad de la máquina
-    de leads bajó.
+  - 'Pendiente de tu aceptación: F-121, F-122, F-124, F-120 y F-159 están propuestos.'
+  - No está sostenido usar Self Service como grupo de control (X-012).
+  - El gasto de Team/Payroll no mide capacidad (X-014).
+  - H-005, H-006 y H-028 siguen abiertas.
+  visual_intent: 'Matriz 2×2: mezcla de ajuste × velocidad de atención, cada cuadrante con su lectura.'
+  hugo_wording: la capacidad comercial instalada no alcanza la demanda generada, la calidad de la máquina de leads
+    bajó
   strength: pending
 - claim_id: C-013
   key: operar-fuentes
-  question: ¿Qué hace falta en la capa técnica para que el CRO opere el funnel de forma recurrente?
+  question: ¿Qué base técnica necesita el CRO para operar el funnel y qué puede operar desde el primer mes?
   headline: Proponemos primero definiciones y fuentes comunes, unidas por un ID de cuenta
-  answer: 'La capa técnica: CRM con motion e historial de etapas; analítica digital que registre el Canal de adquisición
-    desde la primera visita; y facturación con MRR contratado y estado de suscripción. Todo se une por un ID de
-    cuenta en el modelo analítico que ya existe. La facturación va primero: el lado Revenue ya se puede operar mes
-    a mes, pero con pagos observados el CRO confundiría el momento del cobro con churn y expansión. El lado Growth
-    no está en los datos del caso: sin motion, canal ni fechas de hitos no hay conversión ni CAC por motion, y hoy
-    solo se ve la mezcla de gasto.'
+  answer: 'Capa de datos: un CRM con puerta, canal e historial de etapas fechado (quién movió cada tramo); analítica
+    digital que registre el canal desde la primera visita; facturación con suscripción, tarifa, descuento y periodo
+    de servicio; y un ID de cuenta que cruce CRM, producto y cobro. Desde el primer mes, con los pagos, se opera
+    el nudo y el lado derecho: primeros pagos, ticket estabilizado, puente del MRR pagado observado, churn observado
+    junto al persistente y la vuelta de pagadores. Hay que saber que hoy el cobro se confunde con churn y con expansión.
+    Todo el lado izquierdo espera al CRM: entradas por puerta, conversión por cohorte, estancamientos, carga y tiempos.
+    La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores observados.'
   role_in_story: recommendation
   evidence_ids:
   - F-145
   - F-146
   - F-144
+  - F-191
+  - F-213
+  - F-136
   table_ids: []
   research_ids:
   - R-019
-  - R-016
+  - R-023
+  - R-018
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-019), pendiente de tu aceptación. F-146 viene de fuente sin verificar.
-  - 'Que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre: antes de «pulir CRM»
-    hay que saber qué existe.'
-  - 'D-007 (activa) dejó la solución fuera de etapa: hay que confirmar si sigue aplicando.'
-  visual_intent: 'Convergencia: CRM, analítica digital y facturación se unen por un ID de cuenta en un modelo común.'
-  hugo_wording: 'Técnica: pulir CRM, analítica digital.'
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - D-007 deja fuera el modelo de datos y los dashboards; D-018 (propuesta, la decides tú) lo lee como «no construir
+    en esta etapa». Esto es diseño propuesto, no construido.
+  - Que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre.
+  - Para el lado Revenue, la primera pieza técnica es la facturación (F-145).
+  visual_intent: 'Capas: fuentes abajo unidas por un ID de cuenta y métricas gobernadas encima; lo que se enciende
+    primero frente a lo que espera al CRM.'
+  hugo_wording: 'técnica: pulir CRM, analítica digital'
   strength: pending
 - claim_id: C-014
   key: operar-foros
   question: ¿Qué decisiones le permite tomar al CRO y en qué foro?
   headline: 'Proponemos un tablero por foro atado a decisiones: semanal, mensual y trimestral'
-  answer: 'La base es un bowtie por motion (Self Service, Assisted, Executive con KAM en la post-venta) que mide
-    volumen, alcance y tiempo por hito. Cada foro tiene su decisión: el semanal decide oportunidades, el mensual
-    la mezcla de motion y Canal de adquisición, y el trimestral la inversión y la capacidad. El análisis ad hoc
-    se abre por hipótesis (H-001 a H-008). Los agentes de IA y la atribución van encima, no en la base: solo sobre
-    métricas gobernadas y con un piloto controlado; para decidir presupuesto hacen falta experimentos.'
+  answer: 'Semanal · pregunta: ¿qué entradas y oportunidades se están atorando? · métricas: estancamientos por etapa,
+    cobertura de primer contacto y carga por SDR/AE · decisión: reasignar SDR/AE entre funnels, reactivar o descalificar
+    · dueños: el CRO con los líderes de SDR y AE.
+
+    Mensual · pregunta: ¿qué funnel y qué canal traen clientes que se quedan? · métricas: alcance a primer pago
+    por cohorte y puerta, ticket estabilizado y permanencia temprana por canal · decisión: mover inversión entre
+    canales y ajustar la regla de calificación o de reparto · dueños: el CRO con Marketing y Finanzas.
+
+    Trimestral · pregunta: ¿dónde poner capacidad e inversión y qué pasa con el precio de entrada? · métricas: payback
+    por funnel cuando exista CAC en COP, retención por cohorte y mix de rutas · decisión: revisar precio o plan
+    de entrada, y contratar o reasignar capacidad · dueños: CEO, CFO y CRO.
+
+    Los análisis ad hoc se abren por hipótesis de la matriz. Los agentes de IA y la atribución van encima: trabajan
+    solo sobre métricas gobernadas y entran con un piloto controlado, y la atribución reparte crédito, no prueba
+    causa.'
   role_in_story: recommendation
   evidence_ids:
   - F-147
   - F-148
   - F-149
+  - F-144
   table_ids: []
   research_ids:
   - R-019
+  - R-025
+  - R-022
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-019), pendiente de tu aceptación (confianza media).
-  - 'Las decisiones del CRO por foro todavía no están definidas: la cadencia se ajusta cuando se acuerden.'
-  - Depende de la capa técnica (operar-fuentes) y del historial de etapas del CRM.
-  - La atribución reparte crédito; no reemplaza a los experimentos.
-  visual_intent: 'Cadencia → decisión: cada foro con su pregunta y su métrica; los agentes, como capa superior sobre
-    métricas gobernadas.'
-  hugo_wording: 'Decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA.'
+  - 'Pendiente de tu aceptación: F-147, F-148, F-149 y F-144 están propuestos.'
+  - D-007 deja fuera los dashboards; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa».
+    Es un tablero propuesto, no construido.
+  - 'El brief no define las decisiones del CRO: las del tablero son una propuesta para validar con él.'
+  - El payback por funnel solo existe cuando haya CAC en COP.
+  visual_intent: 'Escalera de cadencia: foro → pregunta → métrica → decisión → dueño, de lo táctico a lo estratégico,
+    con agentes y atribución como capa superior.'
+  hugo_wording: 'decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA'
   strength: pending
 - claim_id: C-015
   key: pricing-entrada
   question: ¿Qué data observable de pricing introductorio podemos sacar?
   headline: Lo observable es el primer y segundo pago; el descuento no es verificable
-  answer: 'La mediana del primer pago observado es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en
-    2024; la del segundo pago queda por debajo: COP 46,2 mil, COP 35,0 mil y COP 37,8 mil. El segundo pago coincide
-    exacto con el primero en 73,5%, 90,3% y 77,3% de los primeros pagadores. El primero supera al segundo 1,5× o
-    más en 23,2%, 7,1% y 11,6%, y lo inverso ocurre en 1,1%, 1,5% y 0,9%. Son datos de comportamiento del monto,
-    no de descuento: sin catálogo de precios, ninguno se puede leer como precio introductorio.'
+  answer: 'La mediana del primer pago de las altas es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil
+    en 2024. La del segundo pago, entre quienes lo hacen, es COP 52,5 mil, COP 36,8 mil y COP 38,9 mil. El segundo
+    pago coincide exactamente con el primero en 73,5%, 90,3% y 77,3% de las altas, y el primer pago supera con holgura
+    al segundo en 23,2%, 7,1% y 11,6%: la brecha inicial es sobre todo de 2022. Eso describe la forma del primer
+    cobro, no un descuento: en los datos no hay lista, plan ni descuento.'
   role_in_story: evidence
   evidence_ids:
   - F-083
-  - F-085
+  - F-160
+  - F-166
   - F-086
   - F-087
   - F-134
+  - F-093
   table_ids:
-  - T-053
-  - T-051
+  - T-062
   - T-054
   - T-055
+  - T-051
   research_ids:
   - R-020
+  - R-026
+  - R-011
   framework_ids: []
   confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-083, F-085, F-086 y F-087 están propuestos (de confianza media, salvo F-083).'
-  - 'Solo cohortes de ventana limpia: las altas de feb-22 quedan fuera por su firma de pago atípica (F-026).'
-  - 'El primer pago puede incluir prorrateos, pagos multimes o ajustes: no es precio de lista (F-093).'
-  - Sin catálogo de precios, planes ni descuentos, el menor ticket no se asocia a lista, plan, empaquetamiento o
-    descuento (F-062).
-  - 'F-134 (confianza baja): la huella de un descuento temporal limpio es rara en el histórico. Es consistente con
-    que los descuentos sean algo por introducir, pero no prueba que no existieran.'
-  visual_intent: 'Comparación: primer vs segundo pago por cohorte. La mayoría queda igual y pocos saltan hacia arriba.'
-  hugo_wording: Qué data observable de pricing introductorio podemos sacar.
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - 'T-053 da otras medianas del segundo pago para las mismas cohortes. Parece otra definición (incluir o no a quien
+    no pagó): falta conciliar.'
+  - 'La huella de un descuento limpio casi no aparece (F-134), pero ausencia de evidencia no es evidencia de ausencia:
+    el caso habla de introducir descuentos.'
+  - No se leen descuentos a partir del tamaño de un salto del monto.
+  visual_intent: 'Antes/después por cohorte: primer pago frente a segundo pago; la brecha se cierra después de 2022.'
+  hugo_wording: qué data observable de pricing introductorio podemos sacar
+  strength: pending
+- claim_id: C-024
+  key: observable-semaforo
+  question: ¿Qué puede y qué no puede responder cliente + mes + monto?
+  headline: Con cliente, mes y monto se ve qué cambió, no por qué
+  answer: 'Se puede: clientes activos, MRR pagado observado y su puente, primeros pagos, ticket estabilizado, churn
+    observado y persistente, y cohortes. Con cuidado, el puente, porque el cobro se mezcla con el movimiento: 29%
+    del MRR de expansión se revierte al mes siguiente, 44% de los churns observados vuelve a pagar al mes siguiente
+    y 42,6% del MRR de reactivación llega cubriendo los meses del hueco más el corriente. La contracción, en cambio,
+    casi no revierte: 4,0% regresa al nivel previo y 88,9% sigue igual o más abajo. Eso no descarta que parte de
+    la contracción sea cobro. Si llega justo después de un primer pago o de una reactivación que cubría varios meses,
+    la baja es la vuelta al monto usual y se sostiene; separarla pide el periodo de servicio. No se puede: lista,
+    tarifa, plan, descuento, estado de la suscripción ni nada antes del pago. Además, la vuelta de pagadores es
+    un loop de Revenue, no el Reactivate del funnel.'
+  role_in_story: diagnosis
+  evidence_ids:
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-131
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  table_ids:
+  - T-074
+  - T-076
+  - T-082
+  - T-086
+  research_ids:
+  - R-028
+  - R-027
+  - R-011
+  - R-018
+  framework_ids: []
+  confidence: medium
+  limitations:
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - R-011 ubica buena parte de la contracción justo después de un primer pago o una reactivación (X-037), y R-028
+    solo prueba la reversión al mes siguiente (X-100). Se reconcilian así, sin una cifra conjunta.
+  - Una parte del MRR de reactivación no encaja en firmas de cobro (T-082). Podrían ser regresos reales (H-064).
+  - El puente normalizado exacto no es medible sin periodo de servicio (F-186).
+  visual_intent: 'Semáforo de observabilidad: se puede / con cuidado / no se puede, con el puente en amarillo y
+    la contracción separada de la reactivación.'
+  hugo_wording: qué data observable podemos sacar
   strength: pending
 - claim_id: C-016
   key: monto-dos-lecturas
-  question: ¿Por qué con los datos actuales no se puede contestar cuánto cambió el MRR por suscripción, tarifa o
-    descuento?
+  question: ¿Por qué los ejemplos del CFO no se pueden leer con el monto pagado?
   headline: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas
-  answer: 'El dato es cliente × mes × monto pagado: en los ejemplos construidos del CFO, un cambio de suscripción
-    y un descuento dan exactamente el mismo monto, y no hay catálogo de precios, descuentos, créditos ni pausas.
-    Además, el monto es consistente con cobro más que con contrato: 25,3% del movimiento bruto sin primeros pagadores
-    (COP 282,8 millones entre mar-22 y sep-24) vuelve exacto al nivel previo al mes siguiente. Es una prueba de
-    lo que se puede distinguir, no una lectura de lo que pasó.'
+  answer: 'El dato es un monto por cliente y mes, sin lista, plan, descuento, crédito ni periodo de servicio. Una
+    baja puede ser contracción o descuento, y un monto estable puede esconder una expansión compensada por un descuento.
+    Además, el monto se comporta como caja: 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al
+    mes siguiente, y 29% del MRR de expansión se revierte al mes siguiente. Por eso hoy no se puede asignar la caída
+    por cliente entre precio de lista y descuento.'
   role_in_story: diagnosis
   evidence_ids:
   - F-093
@@ -681,65 +958,68 @@ claims:
   - F-130
   - F-082
   - F-062
+  - F-177
   table_ids:
   - T-058
   - T-061
   - T-028
+  - T-074
   research_ids:
   - R-002
   - R-011
-  - R-020
-  - R-001
+  - R-027
   framework_ids: []
-  confidence: high
+  confidence: medium
   limitations:
-  - 'Pendiente de tu aceptación: F-093, F-090, F-073, F-130 y F-082 están propuestos. F-130 viene de fuente sin
-    verificar.'
-  - 'Los ejemplos del CFO (Q-025) son construidos: prueban un límite del modelo, no describen a Finora.'
-  - No se afirma que hubo descuentos, ni se infieren del tamaño de un salto del monto.
-  - 'No hay cifra histórica de revenue no capturado ni puente histórico por tarifa y descuento: se propone hacia
-    adelante.'
-  visual_intent: 'Mismo resultado, causas distintas: historias diferentes (cambia la suscripción vs empieza un descuento)
-    que producen el mismo monto observado.'
-  hugo_wording: Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - F-130 tiene confianza baja y fuente sin verificar.
+  - Es una prueba de observabilidad, no una lectura del histórico.
+  visual_intent: 'Misma observación, historias distintas: un mismo monto con lecturas alternativas lado a lado.'
+  hugo_wording: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento)
   strength: pending
 - claim_id: C-017
   key: descuento-objeto
-  question: ¿Cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»?
+  question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió el
+    MRR?»?
   headline: Proponemos que el descuento exista como objeto propio, con fecha de fin
-  answer: Cada descuento se registra con tipo, monto, inicio, fin, motivo, Canal y aprobador, separado de la cantidad
-    contratada y del precio de lista, y se lee desde la factura. El puente de MRR suma líneas propias de «descuento
-    nuevo/aumentado» y «descuento reducido/terminado». Las herramientas revisadas (ChartMogul, Chargebee, Stripe),
-    según cómo se configuren, lo mezclan con expansión o contracción o lo excluyen. Usadas tal cual, el fin de un
-    descuento aparecería como expansión, y una subida de suscripción compensada por un descuento, como «sin cambio».
+  answer: 'Mecanismo propuesto: cada descuento se registra como una concesión propia (tipo, valor, inicio, fin,
+    motivo, canal y aprobador), separada del plan, la cantidad y el precio de lista, y se lee desde la factura.
+    El puente de MRR suma líneas propias de «descuento nuevo o aumentado» y «descuento reducido o terminado». Hace
+    falta porque las herramientas revisadas, usadas tal cual, mostrarían el fin de un descuento como expansión,
+    y una expansión compensada por descuento como «sin cambio». Implicaciones multidisciplinarias: Ventas necesita
+    reglas de aprobación y vencimiento; Finanzas, la convención de MRR y la conciliación con revenue y caja; Producto
+    y Facturación, el objeto descuento y el periodo de servicio en la factura; Growth, marcar las cohortes con descuento
+    y medirlas contra un grupo comparable.'
   role_in_story: recommendation
   evidence_ids:
   - F-150
   - F-152
+  - F-153
+  - F-154
   table_ids: []
   research_ids:
   - R-021
+  - R-011
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-021), pendiente de tu aceptación.
-  - La revisión de herramientas es evidencia externa, no de Finora; no sabemos qué facturación usa.
-  - Conviene revisar las trampas concretas que lista F-152 antes de mostrarlas.
-  visual_intent: 'Separación: el descuento se desprende de la suscripción como objeto con inicio y fin, y el puente
-    gana líneas propias.'
-  hugo_wording: 'Cómo debería Finora introducir descuentos temporales: mecanismo propuesto.'
+  - 'Pendiente de tu aceptación: F-150, F-152, F-153 y F-154 están propuestos.'
+  - Las herramientas revisadas (ChartMogul, Chargebee, Stripe) son contexto externo, no validado con Finora.
+  - La evidencia externa asocia la adquisición con descuento a clientes de menor valor. Para Finora es una hipótesis
+    (H-049).
+  visual_intent: 'Objeto separado: el descuento como capa propia con fecha de fin, encima de la suscripción y del
+    precio de lista.'
+  hugo_wording: mecanismo propuesto, implicaciones multidisciplinarias
   strength: pending
 - claim_id: C-018
   key: descuento-capas
-  question: ¿Qué implica, más allá del mecanismo, introducir descuentos temporales?
+  question: ¿Qué convención de MRR usar y qué vistas se separan cuando hay descuentos?
   headline: El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan
-  answer: 'No hay un estándar para tratar los descuentos temporales en el MRR: es una decisión de definición que
-    el CFO toma y declara. Para Finora, lo más útil es mostrar la capa de lista y la de neto. Con descuentos temporales,
-    el MRR neto, el revenue reconocido y la caja pueden separarse, y cuál vista aplica depende de si los contratos
-    son mensuales cancelables o a plazo fijo. Además, cambian las cohortes: la evidencia externa asocia la adquisición
-    con descuento a clientes de menor valor, así que Finora tendría que marcar esas cohortes y medirlas contra un
-    grupo comparable.'
-  role_in_story: implication
+  answer: No hay un estándar de mercado para tratar descuentos temporales en el MRR, y la convención «solo neto»
+    borra justo lo que pregunta el CFO. Proponemos mostrar las capas de MRR de lista, descuento y MRR neto, más
+    revenue reconocido y caja, y que el CFO declare cuál es la oficial. Qué vista aplica depende de si los contratos
+    de Finora son mensuales cancelables o a plazo fijo, algo que el caso no dice.
+  role_in_story: recommendation
   evidence_ids:
   - F-151
   - F-153
@@ -752,23 +1032,27 @@ claims:
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-021, R-011), pendiente de tu aceptación. F-132 viene de fuente sin verificar.
-  - La asociación descuento → clientes de menor valor es evidencia externa; el churn al vencer el descuento tiene
-    otras causas posibles (F-154).
-  - No sabemos si los contratos de Finora son mensuales cancelables o a plazo fijo (F-153).
-  - La convención oficial la decide el CFO; aquí solo se propone mostrar las dos capas.
-  visual_intent: 'Divergencia por capas: lista, neto, revenue y caja se separan cuando hay un descuento temporal.'
-  hugo_wording: Implicaciones multidisciplinarias; preguntas del CFO contestadas con el modelo propuesto.
+  - 'Pendiente de tu aceptación: F-151, F-153, F-154 y F-132 están propuestos.'
+  - F-132 tiene confianza baja y fuente sin verificar.
+  - H-048 (que el puente por capas separa los casos del CFO) sigue abierta hasta tener datos.
+  visual_intent: 'Capas apiladas: lista menos descuento igual a neto; revenue y caja al lado, desfasados.'
+  hugo_wording: cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»
   strength: pending
 - claim_id: C-019
   key: modelo-escalera
   question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado?
   headline: La Propuesta de Modelo de datos separa el valor en una escalera con vigencias
-  answer: 'El panel actual es cliente × mes × monto pagado: caja, no contrato. La propuesta registra, por suscripción
-    y mes, cada peldaño de valor con su fuente y su vigencia: tarifa de lista (price_book_entry, por versión de
-    plan, periodo y moneda, con valid_from/valid_to) → precio pactado (subscription_item_version: plan, cantidad,
-    add-ons) → descuento con inicio, fin y motivo → MRR neto → facturado → cobrado. Así el MRR se guarda en bruto,
-    descuento y neto por separado, y la convención oficial queda como decisión del CFO.'
+  answer: 'Escalera por suscripción y mes, cada peldaño con su tabla y su vigencia. La lista, en price_book_entry:
+    tarifa por versión de plan, periodo y moneda, con valid_from y valid_to. El precio pactado, en subscription_item_version:
+    plan, cantidad, add-ons y precio unitario, en intervalos sin traslape. El descuento, en discount_grant: tipo,
+    valor, inicio, fin, motivo, aprobador y el change_event que lo originó. Después vienen el MRR neto; lo facturado,
+    en invoice_line (subtotal, descuento, neto y periodo de servicio); y lo cobrado, en payment_allocation (llave
+    pago + factura). Todo cuelga de customer_id y subscription_id. Cada cambio nace de un change_event con fecha
+    efectiva, fecha de registro y evidencia. subscription_month_snapshot es la foto al cierre de mes con lista,
+    bruto, descuento, neto y caja. mrr_movement es la diferencia entre snapshots consecutivos, partida por componente:
+    suscripción, tarifa, descuento, entrada y salida. Facturado y cobrado nunca generan movimientos de MRR, solo
+    «efecto de cobro», y el panel actual queda como monto pagado observado, conciliado contra lo cobrado. A facturación
+    se le pide primero: tarifas con vigencia, y plan o cantidad por cliente.'
   role_in_story: recommendation
   evidence_ids:
   - F-130
@@ -776,6 +1060,42 @@ claims:
   - F-133
   - F-151
   - F-152
+  - F-168
+  table_ids: []
+  research_ids:
+  - R-011
+  - R-021
+  - R-027
+  framework_ids: []
+  confidence: medium
+  limitations:
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos. F-130 y F-133 tienen fuente sin verificar.'
+  - D-007 deja fuera el modelo de datos; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa».
+    Es diseño propuesto, no construido.
+  - Se sabe qué forma tiene la evidencia; no se sabe si Finora la tiene (F-133).
+  - El histórico no se puede reconstruir en capas (F-168).
+  visual_intent: 'Escalera: lista → pactado → descuento → neto → facturado → cobrado, cada peldaño con su tabla,
+    su llave y su vigencia.'
+  hugo_wording: propuesta de modelo de datos (campos, tablas, definiciones)
+  strength: pending
+- claim_id: C-020
+  key: descuento-clasificacion
+  question: ¿Cómo clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión
+    reales?
+  headline: Si la suscripción no cambia, inicio o fin de descuento va a «Descuento»
+  answer: 'Se comparan cierres de mes consecutivos del mismo cliente, en este orden. a) ¿Cambió la lista o el precio
+    pactado? → expansión, contracción o cambio de tarifa, con línea propia «Tarifa». b) ¿Cambió el descuento? →
+    descuento nuevo o aumentado, o descuento reducido o terminado. c) ¿Solo cambió el cobro? → momento de cobro,
+    fuera del MRR. El caso mixto se parte en líneas separadas, y cada mes los movimientos suman exactamente el cambio
+    de bruto y de neto. Para los grupos del CFO: al entrar, el alta va por el bruto y el descuento inicial va en
+    su propia línea. Quien sale, sale por su bruto, y su descuento se libera dentro del churn, nunca como fin de
+    descuento. En quien continúa, solo el cambio de descuento va a la línea Descuento.'
+  role_in_story: recommendation
+  evidence_ids:
+  - F-150
+  - F-152
+  - F-151
+  - F-131
   table_ids: []
   research_ids:
   - R-011
@@ -783,435 +1103,427 @@ claims:
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-011), pendiente de tu aceptación. F-130, F-132 y F-133 vienen de fuente sin verificar
-    (confianza baja); F-151 y F-152 (R-021) corroboran el principio de separar capas y tratar el descuento como
-    objeto.
-  - No sabemos si Finora tiene catálogo de precios, versiones de suscripción o facturas con líneas de descuento
-    (F-133).
-  - 'D-007 (activa) dejó el modelo de datos fuera de etapa: hay que confirmar si aplica.'
-  - El detalle de campos y tablas va al anexo.
-  visual_intent: 'Cascada: de la tarifa de lista a lo cobrado, cada peldaño con su vigencia; la distancia entre
-    peldaños es lo que hoy no se ve.'
-  hugo_wording: 'Cómo separar el valor de la suscripción del precio efectivamente pagado: Propuesta de Modelo de
-    datos (campos, tablas, definiciones).'
+  - 'Pendiente de tu aceptación: F-150, F-152, F-151 y F-131 están propuestos.'
+  - D-007 deja fuera el modelo de datos; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa».
+    Es una regla propuesta, no construida.
+  - Cuando un descuento porcentual se aplica a un bruto que cambió, qué parte va a suscripción y qué parte a Descuento
+    es una convención a documentar (R-011). Si Tarifa va en línea propia o dentro de expansión lo decide el CFO.
+  - 'Solo aplica hacia adelante: el histórico no trae descuentos (F-093). Cubre los tres grupos de D-002.'
+  visual_intent: 'Árbol de decisión: lista → descuento → cobro; el caso mixto se parte en líneas que suman al neto.'
+  hugo_wording: probablemente lo integra la misma propuesta de modelo de datos
   strength: pending
-- claim_id: C-020
-  key: descuento-clasificacion
-  question: ¿Cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión reales?
-  headline: Si la suscripción no cambia, inicio o fin de descuento va a «Descuento»
-  answer: 'La clasificación compara cierres de mes por componente (suscripción, tarifa, descuento). Si la suscripción
-    no cambia, el inicio o el fin de un descuento va a una línea «Descuento» del puente y no cuenta como contracción
-    ni expansión; si cambian suscripción y descuento a la vez, cada efecto va a su línea. Hoy el puente observado
-    no puede hacerlo: en 2024 registra COP 13,6 millones de expansión observada y −COP 21,5 millones de contracción
-    observada con lectura indeterminada, y parte de esa contracción tiene forma de efecto de cobro (el cliente vuelve
-    a su monto usual tras un mes más alto).'
+- claim_id: C-025
+  key: cfo-casos
+  question: 'El CFO pregunta: si un cliente pagaba 100 y ahora paga 80, ¿es contracción o descuento? Si la suscripción
+    pasa de 100 a 130 con un descuento de 30 y sigue pagando 100, ¿qué pasó? ¿Y si desaparece el descuento? ¿Qué
+    pasa con el negocio subyacente y cuánto revenue dejamos de capturar?'
+  headline: Con el modelo propuesto, cada caso del CFO se lee en su capa
+  answer: 'Con las cifras del enunciado, como ejemplo. Si pagaba 100 y ahora paga 80, se mira la lista: si el bruto
+    bajó a 80, es contracción; si sigue en 100, es un descuento nuevo en su línea. Si la suscripción pasa de 100
+    a 130 con un descuento de 30 y sigue pagando 100, se registran una expansión de +30 en suscripción y un descuento
+    nuevo de −30, y el neto no cambia. Si después desaparece el descuento y paga 130, esos +30 son fin de descuento,
+    no expansión. El negocio subyacente se lee en el MRR de lista, y el revenue que se deja de capturar, en la capa
+    de descuento, vigente y por vencer. Hacia atrás no se puede medir, porque el histórico no trae lista ni descuentos.
+    El costo real de un descuento pide un grupo comparable, y la convención la decide el CFO. Hoy el puente de monto
+    pagado ya confunde cobro con expansión y churn: 29% de la expansión se revierte al mes siguiente y 44% de los
+    churns vuelve a pagar al mes siguiente. Lo que se ve es composición, no beneficio comercial.'
   role_in_story: recommendation
   evidence_ids:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
   - F-150
-  - F-152
-  - F-131
-  - F-041
+  - F-151
   table_ids:
-  - T-003
+  - T-074
+  - T-076
+  - T-080
   research_ids:
   - R-011
+  - R-027
   - R-021
-  - R-002
   framework_ids: []
   confidence: medium
   limitations:
-  - Propuesta de especialista (R-011, R-021), pendiente de tu aceptación.
-  - T-003 es monto pagado observado por año calendario desde ene-22; los findings con inicio en mar-22 dan otros
-    totales (F-047).
-  - 'F-131 (confianza media): que la contracción tenga forma de efecto de cobro no descarta suscripciones más pequeñas.'
-  - 'Aplica hacia adelante: el histórico no trae tarifas ni descuentos para reclasificarlo.'
-  visual_intent: 'Reclasificación: lo que hoy cae en expansión o contracción observada se reparte entre suscripción,
-    tarifa y descuento.'
-  hugo_wording: Cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión
-    reales; probablemente lo integra la misma Propuesta de Modelo de datos.
+  - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+  - 'Los casos son ejemplos construidos con las cifras del enunciado: prueban un límite del modelo, no describen
+    lo que pasa en Finora.'
+  - 'R-027 no armó la simulación con datos: el panel no trae lista ni descuento (F-168).'
+  - 'F-177 y F-178 están en tensión (X-098): «composición» describe quién entra, no prueba que no haya precio o
+    descuento detrás.'
+  - No hay cifra histórica de revenue no capturado (X-038). El costo del descuento pide un grupo comparable (H-049).
+  visual_intent: 'Libro de cuentas lado a lado: cada caso del CFO en capas lista/descuento/neto, frente a la lectura
+    del panel actual.'
+  hugo_wording: preguntas del CFO contestadas con el modelo propuesto
   strength: pending
 recommendations:
-- text: Pedir a Finora las entradas únicas con fecha, puerta (Self Service, Assisted, Executive), Canal de adquisición
-    y segmento, con su vínculo al primer pago.
-  condition: Si Finora las registra en su CRM o en su analítica digital (los datos del caso no las traen). Con ellas
-    se distinguen H-001 a H-004.
-  type: request_data
-  claim_keys:
-  - hipotesis-arbol
-  - funnel-puertas
-  - funnel-conversion
-  claim_ids:
-  - C-011
-  - C-005
-  - C-006
-- text: Pedir el roster semanal de SDR/AE con ramp y la fecha del primer contacto humano por entrada.
-  condition: Solo si, descartados los artefactos (H-001 a H-004), queda una caída real de compra. Sirve para separar
-    capacidad (H-006) de calidad (H-005).
-  type: request_data
-  claim_keys:
-  - hipotesis-capacidad
-  - hipotesis-arbol
-  claim_ids:
-  - C-012
-  - C-011
-- text: 'Confirmar qué pasó a inicios de 2023: si fue un cambio de registro (H-024) o de la operación comercial
-    (H-025).'
-  condition: Antes de leer el escalón de primeros pagadores como más demanda o de usarlo como premisa de Q-001.
+- text: Revisar y aceptar o rechazar los findings citados. Empezar por los de S1 y S2.4 (F-071, F-072, F-075, F-097,
+    F-164) y los de diseño de S2.3 (F-209 a F-213).
+  condition: 'Antes de marcar el paquete Ready: hoy ningún claim tiene evidencia aceptada.'
   type: validate
   claim_keys:
-  - growth-entradas
-  - growth-gasto
+  - overview-brecha
+  - overview-mezcla
+  - perdida-cosechas
+  - funnel-puertas
   claim_ids:
-  - C-003
-  - C-004
-- text: Documentar la unidad y la escala del archivo de S&M, y la clasificación funcional de SoftwareTools y Freelance.
-  condition: Antes de reportar cualquier CAC combinado o de leer el gasto por primer pagador como eficiencia.
-  type: request_data
-  claim_keys:
-  - metricas-cac-proxy
-  - growth-gasto
-  claim_ids:
-  - C-010
-  - C-004
-- text: Acordar con el CRO el hito de adquisición (Won, primer pago o suscripción activa), la ventana W de conversión
-    y el umbral de «estancado».
-  condition: 'Antes de construir el bowtie y las tasas por cohorte: son parámetros de Finora, no estándares de mercado.'
+  - C-001
+  - C-002
+  - C-007
+  - C-005
+- text: Confirmar o rechazar D-018. Si la confirmas, el catálogo de métricas, S2.7, S3.3 y S3.4 entran como diseño
+    propuesto; si no, pasan a apéndice y esas láminas cierran en diagnóstico.
+  condition: D-007 (activa) choca con D-017; decides tú.
   type: decide
   claim_keys:
-  - funnel-puertas
-  - funnel-conversion
+  - metricas-catalogo
+  - operar-fuentes
   - operar-foros
-  claim_ids:
-  - C-005
-  - C-006
-  - C-014
-- text: Aplicar una regla de normalización (mes de servicio vs fecha de cobro) y una ventana de gracia, y rehacer
-    el puente observado.
-  condition: Mientras la facturación no traiga estado de suscripción. Si se confirma H-031, cambia la lectura de
-    reactivación y contracción.
-  type: validate
-  claim_keys:
-  - metricas-semaforo
-  - monto-dos-lecturas
+  - modelo-escalera
   - descuento-clasificacion
   claim_ids:
-  - C-009
-  - C-016
+  - C-022
+  - C-013
+  - C-014
+  - C-019
   - C-020
-- text: Que el CFO decida y declare la convención de descuentos en el MRR, mostrando la capa de lista y la de neto.
-  condition: Antes de lanzar el primer descuento temporal.
+- text: 'Fijar con Finora los parámetros del funnel: el nudo común (primer pago, X-052), qué cuenta como intervención
+    (Q-063), el umbral de estancado y la caducidad del episodio (Q-064), y la ventana de conversión.'
+  condition: Antes de etiquetar rutas o calcular tasas.
   type: decide
   claim_keys:
-  - descuento-capas
-  - modelo-escalera
+  - funnel-puertas
+  - funnel-etapas
+  - funnel-conversion
   claim_ids:
-  - C-018
-  - C-019
-- text: Crear el descuento como objeto propio (tipo, monto, inicio, fin, motivo, Canal, aprobador) y sumar al puente
-    las líneas de descuento nuevo/aumentado y reducido/terminado.
-  condition: Si Finora decide introducir descuentos temporales y su facturación permite leerlos desde la factura.
-  type: act
+  - C-005
+  - C-021
+  - C-006
+- text: Elegir la base de comparación de la composición (ene-22 o dic-22) y usar la misma en S1 y S2.4 (X-060).
+  condition: Mientras no se elija, mostrar el rango de ambas bases.
+  type: decide
   claim_keys:
-  - descuento-objeto
-  - descuento-clasificacion
-  - modelo-escalera
+  - overview-mezcla
+  - perdida-cosechas
   claim_ids:
-  - C-017
-  - C-020
+  - C-002
+  - C-007
+- text: 'Pedir a Finora, en una sola lista:
+
+    - Q-065: leads del CRM con fechas por etapa, puerta, canal y estado de salida.
+
+    - X-021: entradas únicas por mes y tipo.
+
+    - X-022: mezcla por canal, motion y segmento, con vínculo al pago.
+
+    - X-023: fecha de entrada y de primer pago por cuenta.
+
+    - X-024: señales de ajuste al entrar.
+
+    - X-025: historial de etapas, no solo el estado actual.
+
+    - X-026: motivos de pérdida estructurados.
+
+    - X-027: si «más leads» cuenta registros o entradas únicas, y en qué periodo.
+
+    - X-011: roster semanal de SDR/AE con ramp y tiempos de contacto.
+
+    - X-046: plan y cantidad por cliente.
+
+    - X-047: tarifas de lista con vigencia.
+
+    - Una bitácora con fecha de cambios comerciales: precio, plan, metas y comisiones, formularios y reglas de calificación
+    y reparto (X-110).
+
+    - Además, la unidad y la escala del gasto de S&M (X-001).'
+  condition: Es la condición para pasar cualquier causa de la matriz de posible a validada o descartada, y para
+    tener CAC en COP, capas de MRR y clasificación de descuentos.
+  type: request_data
+  claim_keys:
+  - hipotesis-matriz
+  - hipotesis-arbol
+  - hipotesis-capacidad
+  - metricas-catalogo
+  - metricas-cac-proxy
+  - modelo-escalera
+  - operar-fuentes
+  claim_ids:
+  - C-023
+  - C-011
+  - C-012
+  - C-022
+  - C-010
   - C-019
-- text: Marcar las cohortes adquiridas con descuento y compararlas con un grupo comparable sin descuento.
-  condition: Si se introducen descuentos de adquisición.
+  - C-013
+- text: Pedir a Finora que etiquete hacia atrás, desde el CRM y solo con información previa al contacto, la puerta
+    y la ruta de los pagadores observados.
+  condition: Si una parte relevante queda «sin clasificar» (H-065), ajustar la regla antes de reportar el mix.
+  type: validate
+  claim_keys:
+  - funnel-puertas
+  - operar-fuentes
+  claim_ids:
+  - C-005
+  - C-013
+- text: 'Si la matriz apunta a capacidad (sube la carga y cae la cobertura), probar la palanca antes de contratar:
+    con experimentos naturales (llegadas fuera de horario, reparto por turnos) o con un piloto de reparto al azar.'
+  condition: Solo después de cerrar los artefactos del lado de leads. La conversión de Hybrid por sí sola es asociación.
   type: experiment
   claim_keys:
-  - descuento-capas
+  - hipotesis-capacidad
+  - hipotesis-matriz
   claim_ids:
-  - C-018
-- text: Arrancar los foros con lo que ya está en verde (MRR pagado observado y su puente, ARPA por cohorte, churn
-    con ventana de gracia) y sumar el lado izquierdo del bowtie cuando exista la capa técnica. Agentes de IA, solo
-    sobre métricas gobernadas y con piloto.
-  condition: Una vez definidas las decisiones del CRO por foro.
-  type: act
+  - C-012
+  - C-023
+- text: Antes de lanzar descuentos temporales, que el CFO declare la convención de MRR y que facturación registre
+    el descuento como objeto con fecha de fin, visible en la factura.
+  condition: Si Finora decide introducir descuentos; si no, el modelo igual separa tarifa y plan.
+  type: decide
   claim_keys:
-  - operar-foros
-  - operar-fuentes
-  - metricas-semaforo
+  - descuento-objeto
+  - descuento-capas
+  - descuento-clasificacion
+  - cfo-casos
   claim_ids:
-  - C-014
-  - C-013
-  - C-009
-- text: Tratar Salud como una señal a validar, no como un segmento prioritario.
-  condition: Si con churn normalizado y más de un año de datos se mantiene su perfil, evaluar si amerita una prueba
-    comercial.
+  - C-017
+  - C-018
+  - C-020
+  - C-025
+- text: Lanzar los descuentos con cohortes marcadas y un grupo comparable sin descuento, idealmente asignado al
+    azar, para medir su costo real en MRR de lista, retención y churn al vencer.
+  condition: Si se lanzan descuentos (H-049).
+  type: experiment
+  claim_keys:
+  - cfo-casos
+  - descuento-objeto
+  claim_ids:
+  - C-025
+  - C-017
+- text: 'Conciliar las cifras que chocan: el churn observado de 2024 (T-034 frente a T-002) y las medianas del segundo
+    pago (T-053 frente a T-062).'
+  condition: Antes de que S2.4, S2.5 y S3.1 pasen a láminas.
   type: validate
+  claim_keys:
+  - perdida-cosechas
+  - metricas-semaforo
+  - pricing-entrada
+  claim_ids:
+  - C-007
+  - C-009
+  - C-015
+- text: Aprobar o no la regla de normalización (reparto de pagos multimes y ventana de gracia) para mostrar el MRR
+    normalizado y el churn persistente junto al observado.
+  condition: Si no se aprueba, el ARR no se muestra y el churn persistente va como proxy.
+  type: decide
+  claim_keys:
+  - metricas-semaforo
+  - observable-semaforo
+  claim_ids:
+  - C-009
+  - C-024
+- text: Probar Generación de Demanda dirigida a Salud frente a un grupo comparable.
+  condition: Solo si con margen, costo de servir y canal se confirma H-044; hoy es una señal descriptiva.
+  type: experiment
   claim_keys:
   - perdida-burbuja
   claim_ids:
   - C-008
 appendix_candidates:
-- title: Calidad del archivo de S&M
-  why: 'Explica por qué el gasto no se lee como COP, como CAC ni como efecto por categoría: unidad sin escala, Team
-    fijo en 12%, Freelance en cero y PayrollExpenses negativo.'
+- title: Detalle del archivo de gasto de S&M
+  why: Sostiene los caveats de unidad, cortes y Habilitación; en la lámina distrae.
   ids:
   - T-005
   - T-006
   - T-007
   - T-008
-  - T-009
   - T-011
-  - T-012
   - T-021
   - T-022
   - T-023
-  - F-063
   - F-064
   - F-065
   - F-066
   - F-067
-  - F-068
   - F-069
-  - F-070
-  - F-115
-  - F-116
-  - F-117
-  - R-013
-- title: Puente del monto pagado observado
-  why: 'Contexto para el CFO: el puente concilia con el total y sus movimientos brutos superan varias veces el neto.
-    Hay dos ventanas (ene-22 y mar-22) con totales distintos.'
+- title: Correlaciones gasto–altas
+  why: Respalda que no hay relación positiva sin cargar la lámina de gasto.
   ids:
-  - T-003
-  - F-004
-  - F-040
-  - F-041
-  - F-047
-  - F-048
-  - F-049
-  - F-051
-  - R-004
-- title: 'Comportamiento del monto: reversiones, montos fuera de grilla y cobros retroactivos'
-  why: Respalda que el monto es consistente con cobro más que con contrato; es la base de la regla de normalización.
-  ids:
-  - T-028
-  - T-057
-  - T-058
-  - T-059
-  - F-027
-  - F-028
-  - F-029
-  - F-032
-  - F-034
-  - F-035
-  - F-073
-  - F-089
-  - F-090
-  - F-091
-  - R-002
-- title: Robustez del ticket de entrada
-  why: La dirección se mantiene con promedio, mediana, cuantiles y segundo pago; la magnitud cambia y entre 2023
-    y 2024 se estabiliza.
-  ids:
-  - T-004
-  - T-018
-  - T-019
-  - T-033
-  - T-042
-  - T-052
-  - T-056
-  - F-008
-  - F-009
-  - F-010
-  - F-044
-  - F-046
-  - F-084
-  - F-088
-  - F-098
-  - R-003
-- title: Correlaciones entre gasto y primeros pagadores
-  why: 'Detalle de las pruebas: ninguna relación positiva significativa. No va en el cuerpo porque no decide nada.'
-  ids:
-  - T-015
   - T-024
   - F-023
   - F-024
-  - F-109
   - F-118
-  - R-015
-- title: 'Churn: observado vs persistente, promedio vs mediana'
-  why: Matiza la lectura de las salidas y reúne las discrepancias por reconciliar (T-002 vs T-034; F-052 vs T-047).
+- title: Firmas de cobro en el monto
+  why: 'Sostiene el «con cuidado» del puente: montos fuera de grilla, subidas que revierten, huecos de un mes.'
   ids:
-  - T-002
-  - T-034
-  - T-035
+  - T-057
+  - T-059
+  - T-073
+  - T-075
+  - T-083
+  - F-089
+  - F-091
+  - F-171
+  - F-173
+  - F-181
+  - F-034
+  - F-035
+- title: Churn caro por promedio frente a mediana
+  why: Es un matiz del churn que no cambia la historia principal.
+  ids:
   - T-045
   - T-046
-  - T-047
-  - F-015
-  - F-036
-  - F-052
-  - F-054
-  - F-060
-  - F-061
-  - F-080
   - F-101
   - F-102
-- title: Cosechas y ventana de flujo
-  why: Explica por qué los flujos arrancan en mar-22 y da el detalle por cosecha y por base.
+  - H-043
+- title: Paso 1 en detalle (oct-24 y emparejamiento de IDs)
+  why: Acota los artefactos del lado de pagadores; el detalle es técnico.
   ids:
-  - T-029
-  - T-030
-  - T-031
-  - T-060
-  - F-014
-  - F-016
-  - F-017
-  - F-018
-  - F-026
-  - F-059
-  - R-006
-  - R-009
-- title: Detalle por industria
-  why: 'Primeros pagadores, ticket y aporte al crecimiento por industria: soporta que la industria no concentra
-    el cambio.'
-  ids:
-  - T-017
-  - T-038
-  - T-039
-  - T-043
-  - F-006
-  - F-007
-  - F-012
-  - F-013
-  - F-095
-  - F-111
-  - R-005
-- title: Hipótesis ToFu/BoFu con su dato mínimo
-  why: Detalle de H-001 a H-008 y de H-028, con lo que validaría o descartaría cada una; es demasiado para una lámina.
+  - T-091
+  - T-092
+  - T-095
+  - T-100
+  - F-194
+  - F-195
+  - F-198
+  - F-203
+  - H-029
+  - H-024
+- title: Catálogos completos de métricas y eventos de los especialistas
+  why: Fórmulas, granos y eventos para el equipo de datos; la lámina solo muestra el catálogo resumido.
   ids:
   - R-010
   - R-014
-  - H-001
-  - H-002
-  - H-003
-  - H-004
-  - H-005
-  - H-006
-  - H-007
-  - H-008
-  - H-028
-- title: 'Propuesta de Modelo de datos: tablas y campos'
-  why: Detalle técnico (tablas, campos, objeto descuento, líneas del puente) que no cabe en S3.3.
+  - R-016
+  - R-019
+  - R-022
+  - R-025
+  - R-029
+- title: Ejemplos ilustrativos del modelo de datos
+  why: Filas de snapshot y mrr_movement para los casos A, B y C y para la salida con descuento; son ejemplos construidos.
   ids:
   - R-011
-  - R-021
+  - H-012
 unresolved_questions:
-- 'S2.1 · «Las relaciones que comentó Hugo»: el guion dice «por precisar». ¿Qué relaciones son? No la relleno. Si
-  son volumen vs valor de entrada, o gasto vs primeros pagadores, ya están en S2.2.'
-- 'Readiness: no hay findings aceptados. Orden sugerido de revisión: F-071, F-072, F-075 y F-097 (Overview y S2.4)
-  → F-110, F-113, F-112 y F-107 (S2.2) → findings de R-010…R-021 (propuestas).'
-- D-007 (activa) deja la solución fuera de etapa (sin dashboards, métricas definitivas ni modelo de datos). Tu guion
-  aprobado incluye S2.5, S2.7 y S3.3, y D-016 delegó este borrador. ¿D-007 aplicaba solo a Framing, o hay que superarla
-  con una decisión nueva?
-- 'Churn observado 2024: T-002 da 2,04% y T-034, 1,9%. ¿Distinta ventana o distinto denominador?'
-- 'Churn observado por industria 2024: F-052 (Producción mínimo, Tecnología máximo) no coincide con T-047 (Restaurantes
-  1,46 a Tecnología 2,57).'
-- 'Freelance: F-117 lo pone en cero desde may-23, pero T-006/T-009 marcan jun-23 como último mes con valor.'
-- '¿Qué pasó a inicios de 2023: efecto de registro (H-024) o cambio en la operación comercial (H-025)?'
-- 'Hito de adquisición del CRO (Won, primer pago o suscripción activa), ventana W y umbral de «estancado»: por acordar
-  con Finora.'
-- 'Unidad y escala del archivo de S&M, y clasificación de SoftwareTools/Freelance: sin documentar (X-001, X-002).'
-- ¿Qué decide el CEO con el Overview y qué decisiones tiene el CRO en cada foro? Sin eso, S2.7 queda partial y Q-003
-  se contesta solo en parte.
-- ¿Los contratos de Finora son mensuales cancelables o a plazo fijo? De eso depende qué vista aplica (F-153).
-- ¿Qué registra hoy Finora en su CRM, su analítica digital y su facturación? Los datos del caso no lo dicen.
-- T-053 muestra en mediana el primer pago por encima del segundo; eso parece ir contra la premisa de H-032. Conviene
-  evaluar el impacto.
-- 'Sugerencia, no cambio: poner S2.4 junto a S2.2 dejaría contiguo «lo que sí vemos». El paquete sigue tu orden.'
+- S2.1 · ¿Qué relaciones que comentaste deben mostrarse? Están por precisar; la lámina queda missing.
+- '¿Cuál es el hito de adquisición y nudo común del CRO: Won, primer pago o suscripción activa? (X-052)'
+- ¿Qué cuenta como intervención humana (Q-063), y cuáles son el umbral de estancado y la caducidad del episodio
+  (Q-064)?
+- ¿Existe en Finora Self Service como compra sin persona (prueba gratis, freemium o pago al registrarse)? (Q-046)
+- ¿Qué hace a un lead Engaged o SQL en Finora? El brief solo da la secuencia.
+- ¿En qué periodo ve el CRO «más leads», y cuenta registros o entradas únicas? (X-016, X-027, X-106)
+- ¿Qué decisiones quiere tomar el CRO y en qué foros? El tablero propone algunas y hay que validarlas con él.
+- ¿Qué decide el CEO con el Overview? La audiencia lo deja sin definir.
+- ¿Los contratos de Finora son mensuales cancelables o a plazo fijo? De eso depende qué vista de MRR, revenue y
+  caja aplica (F-153).
+- '¿Qué base de comparación usamos para la composición: ene-22 o dic-22? (X-060)'
+- '¿Cuál es el churn observado de 2024: el de T-034 o el de T-002? (X-099, X-101)'
+- ¿Por qué difieren las medianas del segundo pago entre T-053 y T-062?
+- ¿Se confirma D-018 frente a D-007?
+- ¿Cuál es la unidad y la escala del gasto de S&M, y SoftwareTools y Freelance van en Habilitación o en producto?
+  (X-001, X-002)
+- 'Framing está en needs_review: ¿lo revisas antes de pasar este paquete a láminas?'
 guion_map:
 - slide_id: S1.1
   claim_keys:
   - overview-brecha
   - overview-mezcla
   coverage: covered
-  note: 'Pendiente de aceptación. Periodo fijado por R-012: ene-22 → oct-24, ventana completa; cliente activo =
-    pago mayor que cero en el mes.'
+  note: Cubierta con findings propuestos (pendiente de tu aceptación). La base de comparación de la composición
+    queda por decidir (X-060).
   claim_ids:
   - C-001
   - C-002
 - slide_id: S2.1
   claim_keys: []
   coverage: missing
-  note: 'El guion dice «por precisar»: no se rellena.'
+  note: Las relaciones que comentaste están por precisar y no hay evidencia ni propuesta que las llene. Su pregunta
+    pasa a preguntas sin resolver.
   claim_ids: []
 - slide_id: S2.2
   claim_keys:
   - growth-entradas
   - growth-gasto
   coverage: covered
-  note: Pendiente de aceptación. «Habilitación, ¿producto?» se contesta con un «no se puede decidir con estos datos»
-    (F-068).
+  note: Entradas con ticket estabilizado (R-026) y gasto por categoría sin atribuir ventas. Cierra con la propuesta
+    de registrar el gasto por canal y funnel.
   claim_ids:
   - C-003
   - C-004
 - slide_id: S2.3
   claim_keys:
   - funnel-puertas
+  - funnel-etapas
   - funnel-conversion
   coverage: covered
-  note: Propuesta de R-016/R-019, pendiente de aceptación. El hito del nudo, W y el umbral de «estancado» están
-    por acordar.
+  note: Cubierta como propuesta con tus definiciones (R-029). Pendiente de aceptación y sin CRM para probarla; Q-063,
+    Q-064 y X-052 siguen por decidir.
   claim_ids:
   - C-005
+  - C-021
   - C-006
 - slide_id: S2.4
   claim_keys:
   - perdida-cosechas
   - perdida-burbuja
   coverage: covered
-  note: Pendiente de aceptación. Falta reconciliar el churn observado por industria (F-052 vs T-047).
+  note: La pérdida está en el monto por cliente, dentro de cada industria y en las cosechas de menor ticket. La
+    composición depende de la ventana y el churn 2024 falta conciliarlo.
   claim_ids:
   - C-007
   - C-008
 - slide_id: S2.5
   claim_keys:
   - metricas-semaforo
+  - metricas-catalogo
   - metricas-cac-proxy
   coverage: covered
-  note: Propuesta de R-018 más evidencia de churn y de gasto por primer pagador. No da valores de CAC, LTV ni UCM.
+  note: Semáforo y catálogo por funnel con los nombres de X-032; el CAC en COP queda en rojo.
   claim_ids:
   - C-009
+  - C-022
   - C-010
 - slide_id: S2.6
   claim_keys:
   - hipotesis-arbol
+  - hipotesis-matriz
   - hipotesis-capacidad
   coverage: covered
-  note: 'Propuesta, sin research en data, como pediste: R-010 y R-014.'
+  note: 'Propuesta: el paso 1 ya se hizo con pagos (R-024) y la matriz de causas (R-025) sigue el orden de C-011.
+    Ninguna causa está validada.'
   claim_ids:
   - C-011
+  - C-023
   - C-012
 - slide_id: S2.7
   claim_keys:
   - operar-fuentes
   - operar-foros
-  coverage: partial
-  note: La propuesta está (R-019), pero las decisiones del CRO por foro no están definidas.
+  coverage: covered
+  note: Diseño propuesto, no construido (D-018 por decidir). Las decisiones del CRO son propuestas y hay que validarlas
+    con él.
   claim_ids:
   - C-013
   - C-014
 - slide_id: S3.1
   claim_keys:
   - pricing-entrada
+  - observable-semaforo
   - monto-dos-lecturas
   coverage: covered
-  note: Pendiente de aceptación. El descuento no es verificable en el histórico.
+  note: Se puede / con cuidado / no se puede. Reconcilia R-028 con R-011 sin cifra conjunta.
   claim_ids:
   - C-015
+  - C-024
   - C-016
 - slide_id: S3.2
   claim_keys:
   - descuento-objeto
   - descuento-capas
   coverage: covered
-  note: Propuesta de R-021. Depende del tipo de contrato; los ejemplos del CFO se contestan con la regla de S3.4.
+  note: Mecanismo e implicaciones multidisciplinarias. Las preguntas del CFO se contestan con el modelo en el remate
+    (cfo-casos, al cierre de S3.4).
   claim_ids:
   - C-017
   - C-018
@@ -1219,16 +1531,19 @@ guion_map:
   claim_keys:
   - modelo-escalera
   coverage: covered
-  note: Propuesta de R-011, con fuentes de baja confianza corroboradas por R-021. El detalle va al anexo.
+  note: Propuesta de Modelo de datos de R-011, con tablas, llaves y vigencias. Es diseño, no construido (D-018).
   claim_ids:
   - C-019
 - slide_id: S3.4
   claim_keys:
   - descuento-clasificacion
+  - cfo-casos
   coverage: covered
-  note: Integrada en la misma Propuesta de Modelo de datos, como anticipaste.
+  note: Reglas en orden y los tres grupos de D-002. Cierra con los casos del CFO, usando las cifras del enunciado
+    como ejemplo.
   claim_ids:
   - C-020
+  - C-025
 language_profile:
   primary: es
   tone: direct, conversational
@@ -1237,38 +1552,11 @@ language_profile:
   avoid_unnecessary_jargon: true
   structured_language: es
   observed:
-    register: Conversacional y directo; pega el texto literal del caso y piensa en láminas, secciones y bloques
-      de deck.
-    technical_level: 'Negocio y análisis: maneja funnel, SQL, MRR, churn, contracción y expansión sin necesidad
-      de explicación.'
-    formality: Tú, informal; español con términos de negocio en inglés.
+    register: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas
+      en inglés.
+    technical_level: 'Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS.'
+    formality: Tú, informal, sin rodeos.
     preserved_terms:
-    - expansión
-    - Propuesta de Modelo de datos
-    - CEO
-    - Overview
-    - Growth
-    - Revenue
-    - insights
-    - salud
-    - Inversión en Marketing
-    - Generación de Demanda
-    - ToFu
-    - BoFu
-    - Team
-    - Habilitación
-    - Assisted
-    - Self Service
-    - Executive
-    - Canal de adquisición
-    - Digital
-    - KAM
-    - Funnel Propuesto
-    - máquina de leads
-    - capacidad comercial instalada
-    - Técnica
-    - foros
-    - dashboards
     - Análisis Ad hoc
     - Mecanismo Propuesto
     - Implicaciones Multidisciplinarias
@@ -1283,6 +1571,32 @@ language_profile:
     - revenue que dejamos de capturar
     - MRR
     - pricing
+    - MECE
+    - Hybrid
+    - Reactivate
+    - New
+    - Working
+    - Engaged
+    - SQL
+    - Demo
+    - Proposal
+    - Won
+    - SDR
+    - Account Executive
+    - casuística
+    - canales
+    - estancados
+    - bowtie
+    - puertas
+    - nudo
+    - ToFu
+    - BoFu
+    - leads
+    - Self Service
+    - artefactos de medición
+    - causas potenciales
+    - rebotar
+    - Decision Making
     notes:
     - Perfil inicial derivado del brief v0.3 (sección «Lo tuyo») y de las notas del proyecto.
     introduced_terms:
@@ -1314,27 +1628,34 @@ language_profile:
     - term: MRR antes de descuento vs MRR cobrado
       plain: lo que vale la suscripción contratada vs lo que efectivamente se cobra ese mes
       at: '2026-09-29T10:04:07-06:00'
+    - term: ruta
+      plain: 'cómo llegó al nudo según quién lo movió: Self Service (nadie de ventas), Executive (siempre una persona)
+        o Hybrid (a ratos solo, a ratos una persona)'
+      at: '2026-09-29T14:14:10-06:00'
+    - term: tramo
+      plain: 'el paso de una etapa a la siguiente: es «con persona» si lo movió un contacto registrado de SDR/AE,
+        y «sin persona» si el cliente avanzó por su cuenta en el producto'
+      at: '2026-09-29T14:14:10-06:00'
+    - term: MoFu
+      plain: 'la parte del medio del funnel: cómo se trabaja el lead entre que entra (New) y llega a SQL'
+      at: '2026-09-29T14:27:26-06:00'
+    - term: win rate
+      plain: de las propuestas que se hacen, cuántas se ganan
+      at: '2026-09-29T14:27:26-06:00'
 visual_references:
-- 'S1.1 · T-026, T-027, T-001: clientes activos vs MRR pagado observado (índice ene-22 = 100) y monto por cliente
-  activo.'
-- 'S1.1 · T-031, T-041: contribución por cosecha (composición vs dentro); base previa vs cosechas 2023–24.'
-- 'S2.2 · T-016 y T-019: escalón de primeros pagadores por mes vs valor inicial incorporado.'
-- 'S2.2 · T-013: gasto por categoría (ToFu, Team, Habilitación) y primeros pagadores por tramo.'
-- 'S2.4 · T-048: la matriz de burbuja que pidió Hugo (churn persistente × ticket mediano 2024 × clientes activos
-  oct-24).'
-- 'S2.4 · T-038: variación del MRR por cliente activo por industria.'
-- 'S2.3 y S2.7 · R-016 y R-019: bowtie por puertas con nudo común; foros semanal, mensual y trimestral.'
-- 'S2.6 · R-010: árbol de descarte H-001…H-008 (artefactos → causas).'
-- 'S3.1 · T-053: primer vs segundo pago por cohorte.'
-- 'S3.3 · R-011: escalera de valor lista → pactado → descuento → neto → facturado → cobrado.'
-- 'S3.4 · T-003: puente anual del monto observado, con la línea «Descuento» propuesta.'
+- Bowtie por rutas con puerta fija, nudo en el primer pago y loop de Reactivate (R-029)
+- 'Matriz de burbuja por industria: churn persistente × ticket × volumen (tu idea para S2.4)'
+- Árbol de ingreso recurrente con semáforo de medibilidad (R-018)
+- Matriz de causas por etapa con cierta si / se descarta si / dato / palanca (R-025)
+- Tabla foro → pregunta → métrica → decisión → dueño (R-019)
+- 'Escalera de valor con vigencias: lista → pactado → descuento → neto → facturado → cobrado (R-011)'
+- Puente de MRR con líneas propias de Tarifa y Descuento (R-021, R-011)
 validation:
-  ok: false
-  errors:
-  - 'C-007: cifra(s) sin tabla que las respalde: −COP 31,7 mil, −COP 26,6 mil, −COP 5,2 mil.'
+  ok: true
+  errors: []
   warnings:
+  - 'C-024: lenguaje causal («porque») — la evidencia es observacional.'
   - 'Láminas del guion sin evidencia todavía: S2.1 (van a research, no se rellenan).'
-  - 'Láminas del guion con evidencia parcial: S2.7.'
   pending:
   - F-001
   - F-002
@@ -1347,10 +1668,7 @@ validation:
   - F-033
   - F-037
   - F-039
-  - F-041
-  - F-043
   - F-045
-  - F-053
   - F-056
   - F-058
   - F-059
@@ -1367,13 +1685,9 @@ validation:
   - F-074
   - F-075
   - F-076
-  - F-077
-  - F-078
-  - F-079
   - F-081
   - F-082
   - F-083
-  - F-085
   - F-086
   - F-087
   - F-090
@@ -1383,7 +1697,6 @@ validation:
   - F-096
   - F-097
   - F-099
-  - F-100
   - F-101
   - F-102
   - F-103
@@ -1392,7 +1705,6 @@ validation:
   - F-107
   - F-108
   - F-110
-  - F-112
   - F-113
   - F-114
   - F-115
@@ -1419,8 +1731,6 @@ validation:
   - F-139
   - F-140
   - F-141
-  - F-142
-  - F-143
   - F-144
   - F-145
   - F-146
@@ -1432,4 +1742,45 @@ validation:
   - F-152
   - F-153
   - F-154
-  checked_at: '2026-09-29T11:58:19-06:00'
+  - F-155
+  - F-158
+  - F-159
+  - F-160
+  - F-161
+  - F-162
+  - F-163
+  - F-164
+  - F-165
+  - F-166
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-180
+  - F-182
+  - F-183
+  - F-184
+  - F-185
+  - F-186
+  - F-188
+  - F-190
+  - F-191
+  - F-192
+  - F-193
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
+  - F-204
+  - F-205
+  - F-206
+  - F-207
+  - F-208
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  checked_at: '2026-09-29T17:26:04-06:00'

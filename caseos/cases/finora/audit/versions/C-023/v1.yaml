@@ -1,0 +1,96 @@
+id: C-023
+type: claim
+key: hipotesis-matriz
+question: ¿Qué otras causas potenciales hay (por lo menos 3–5 más) y qué datos tendrían que ser ciertos para validar
+  o descartar cada una?
+headline: 'Proponemos una matriz de causas: qué la valida, qué la descarta y qué palanca mueve'
+answer: 'Artefacto · no-prospectos en New (clientes actuales por soporte o upgrade, duplicados, spam). Cierta si
+  la brecha se cierra al quitarlos; se descarta si las entradas válidas crecen igual que New. Dato: leads marcados
+  como duplicado, cliente actual o spam (pedir). Palanca: regla de conteo y formularios.
+
+  Artefacto · registro o definición (oportunidades creadas directo en SQL, leads sin estado de salida, estancados
+  que vuelven como New). Cierta si la brecha coincide con un cambio fechado de definición, formulario o reparto.
+  Dato: historial de etapas con autor y bitácora de cambios (pedir). Palanca: higiene del CRM.
+
+  Artefacto · tiempo. Cierta si la brecha desaparece al comparar cohortes a igual edad. Dato: fecha de entrada y
+  de primer pago por cuenta (pedir). Palanca: esperar y volver a medir.
+
+  ToFu · demanda, rebotada: compradores que antes compraban solos ahora entran por ventas. Cierta si crece la puerta
+  CRM y baja la de producto con el mismo perfil. Dato: puerta y canal por cuenta (pedir). Palanca: reparto entre
+  funnels.
+
+  ToFu · calidad o mezcla. Cierta si empeora la mezcla de ajuste congelada al entrar y las tasas por banda se sostienen;
+  se descarta si la caída ocurre dentro de cada banda. Dato: banda al entrar (pedir). Palanca: targeting y criterio
+  de calificación.
+
+  MoFu · velocidad de atención y capacidad. Cierta si sube la carga por SDR/AE, cae la cobertura de primer contacto
+  y la caída se concentra en entradas lentas. Dato: roster con ramp y tiempos de contacto (pedir). Palanca: capacidad,
+  SLA y reparto.
+
+  MoFu · sin seguimiento a quien no compra en el momento. Cierta si crecen los estancados en Working o Engaged y
+  cae su recuperación. Dato: fechas de etapa y estado de salida (pedir). Palanca: cadencias y Reactivate.
+
+  MoFu · meta del SDR en SQL o reuniones. Cierta si SQL→Won cae después de un cambio de meta. Dato: historia de
+  metas y SQL→Won por origen (pedir). Palanca: regla de calificación y metas.
+
+  BoFu · post-SQL, rebotada: eligen otra opción por precio o plan, competidor o funcionalidad. Cierta si, con avance
+  previo comparable, cae Demo→Won o Proposal→Won. Dato: historial de etapas, motivos de pérdida estructurados y
+  bitácora de precio y plan (pedir). Palanca: oferta, precio o plan de entrada.
+
+  Después del cierre · Won que no llega a pagar o se cae al arrancar. Cierta si sube el % de Won sin pago en la
+  ventana. Dato: Won fechado y enlazado al cobro (pedir); en los pagos, casi nadie deja de pagar el mes siguiente
+  al alta. Palanca: cobro y onboarding.
+
+  Hoy ninguna se valida ni se descarta con los datos del caso.'
+role_in_story: recommendation
+evidence_ids:
+- F-205
+- F-206
+- F-208
+- F-127
+- F-128
+- F-129
+- F-122
+- F-212
+table_ids: []
+research_ids:
+- R-025
+- R-010
+- R-014
+- R-029
+framework_ids: []
+confidence: low
+limitations:
+- 'Pendiente de tu aceptación: F-205, F-206, F-208, F-127, F-128, F-129, F-122 y F-212 están propuestos.'
+- 'Mapa de IDs: no-prospectos H-052; registro o definición H-051, H-027 y H-069; tiempo H-003 y H-004; demanda rebotada
+  H-053 (con H-001); calidad o mezcla H-005 y H-002; velocidad y capacidad H-006 y H-028; sin seguimiento H-055;
+  meta del SDR H-054; post-SQL H-007, rebotada por H-056 (con H-008); después del cierre H-057. H-050 no es causa:
+  es la trampa de leer la conversión de Hybrid como efecto.'
+- Cambios en metas, comisiones, precio o competencia son candidatos sin evidencia en el caso.
+- 'La caída post-SQL puede nacer antes del traspaso (SQL inflados) o en la oferta: no se atribuye al AE.'
+visual_intent: 'Matriz etapa × causa con columnas: cierta si / se descarta si / dato mínimo / hoy o pedir / palanca
+  del CRO.'
+hugo_wording: generar más causas potenciales, por lo menos 3-5 más y definir que datos tendrian que ser ciertos
+  para validar o descartar cada una
+links:
+- F-205
+- F-206
+- F-208
+- F-127
+- F-128
+- F-129
+- F-122
+- F-212
+- R-025
+- R-010
+- R-014
+- R-029
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 1

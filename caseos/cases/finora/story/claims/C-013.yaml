@@ -1,38 +1,49 @@
 id: C-013
 type: claim
 key: operar-fuentes
-question: ¿Qué hace falta en la capa técnica para que el CRO opere el funnel de forma recurrente?
+question: ¿Qué base técnica necesita el CRO para operar el funnel y qué puede operar desde el primer mes?
 headline: Proponemos primero definiciones y fuentes comunes, unidas por un ID de cuenta
-answer: 'La capa técnica: CRM con motion e historial de etapas; analítica digital que registre el Canal de adquisición
-  desde la primera visita; y facturación con MRR contratado y estado de suscripción. Todo se une por un ID de cuenta
-  en el modelo analítico que ya existe. La facturación va primero: el lado Revenue ya se puede operar mes a mes,
-  pero con pagos observados el CRO confundiría el momento del cobro con churn y expansión. El lado Growth no está
-  en los datos del caso: sin motion, canal ni fechas de hitos no hay conversión ni CAC por motion, y hoy solo se
-  ve la mezcla de gasto.'
+answer: 'Capa de datos: un CRM con puerta, canal e historial de etapas fechado (quién movió cada tramo); analítica
+  digital que registre el canal desde la primera visita; facturación con suscripción, tarifa, descuento y periodo
+  de servicio; y un ID de cuenta que cruce CRM, producto y cobro. Desde el primer mes, con los pagos, se opera el
+  nudo y el lado derecho: primeros pagos, ticket estabilizado, puente del MRR pagado observado, churn observado
+  junto al persistente y la vuelta de pagadores. Hay que saber que hoy el cobro se confunde con churn y con expansión.
+  Todo el lado izquierdo espera al CRM: entradas por puerta, conversión por cohorte, estancamientos, carga y tiempos.
+  La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores observados.'
 role_in_story: recommendation
 evidence_ids:
 - F-145
 - F-146
 - F-144
+- F-191
+- F-213
+- F-136
 table_ids: []
 research_ids:
 - R-019
-- R-016
+- R-023
+- R-018
 framework_ids: []
 confidence: medium
 limitations:
-- Propuesta de especialista (R-019), pendiente de tu aceptación. F-146 viene de fuente sin verificar.
-- 'Que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre: antes de «pulir CRM»
-  hay que saber qué existe.'
-- 'D-007 (activa) dejó la solución fuera de etapa: hay que confirmar si sigue aplicando.'
-visual_intent: 'Convergencia: CRM, analítica digital y facturación se unen por un ID de cuenta en un modelo común.'
-hugo_wording: 'Técnica: pulir CRM, analítica digital.'
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- D-007 deja fuera el modelo de datos y los dashboards; D-018 (propuesta, la decides tú) lo lee como «no construir
+  en esta etapa». Esto es diseño propuesto, no construido.
+- Que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre.
+- Para el lado Revenue, la primera pieza técnica es la facturación (F-145).
+visual_intent: 'Capas: fuentes abajo unidas por un ID de cuenta y métricas gobernadas encima; lo que se enciende
+  primero frente a lo que espera al CRM.'
+hugo_wording: 'técnica: pulir CRM, analítica digital'
 links:
 - F-145
 - F-146
 - F-144
+- F-191
+- F-213
+- F-136
 - R-019
-- R-016
+- R-023
+- R-018
 phase: story
 review:
   state: proposed
@@ -40,8 +51,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T11:54:07-06:00'
-version: 2
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
 status: pending
 strength:
   level: pending
@@ -49,17 +60,29 @@ strength:
   - F-145
   - F-146
   - F-144
+  - F-191
+  - F-213
+  - F-136
   - F-145
   - F-146
   - F-144
+  - F-191
+  - F-213
+  - F-136
   accepted: []
   pending:
   - F-145
   - F-146
   - F-144
+  - F-191
+  - F-213
+  - F-136
   - F-145
   - F-146
   - F-144
+  - F-191
+  - F-213
+  - F-136
   tables: []
   unsupported_numbers: []
   stale: []

@@ -1,0 +1,119 @@
+id: R-029
+type: research
+research_question: Con las definiciones textuales de Hugo, ¿cuál es el mix MECE de funnels —Executive (el funnel
+  actual SDR→AE), Self Service con sus canales, Hybrid (casos A y B) y Reactivate (leads estancados que se reactivan
+  y se asignan a un funnel)—, las etapas de cada uno, la regla que pone a cada lead en uno solo y las métricas de
+  cada casuística?
+case_question: Q-063, Q-064, C-005, H-050, H-051
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 3
+    data_engineering: 0
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-063
+    - Q-064
+    - C-005
+    - H-050
+    - H-051
+    suggested:
+    - H-053
+    - H-055
+    - Q-068
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: queued
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-063
+- Q-064
+- C-005
+- H-050
+- H-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:51:13-06:00'
+updated_at: '2026-09-29T16:21:40-06:00'
+version: 6
+job_id: JOB-20260929-162140-fda6
+error: null
+started_at: '2026-09-29T14:51:14-06:00'
+shaping_task: RT-029
+slides:
+- S2.3
+- S2.5
+task_why: 'La revisión de RT-023 (Challenge de Hugo, 13:43) perdió sus palabras textuales por un error de la plataforma,
+  ya corregido: el especialista no las vio y cambió las definiciones de Executive y Reactivate. Se reformula con
+  sus palabras.'
+task:
+  work: propuesta
+  draft_answer: 'Reformula RT-023 (R-023). R-023 asignó Executive a cuentas nombradas o de KAM y leyó Reactivate
+    como cuentas que ya pagaron; Hugo define Executive como el funnel actual SDR→AE y Reactivate como leads estancados
+    que se reactivan y se asignan a un funnel. De arranque: la puerta se fija al entrar y quién mueve cada tramo
+    decide la ruta. Executive = todos los tramos los mueve SDR/AE, incluida la entrada directa a SQL con etapa de
+    entrada SQL. Self Service = ningún tramo con persona, con su canal de entrada. Hybrid = tramos con y sin persona
+    (A: empezó solo y lo intervinieron abajo; B: lo contactaron como New y terminó solo). Reactivate es un loop
+    sobre leads estancados: umbral de días sin actividad por etapa (Q-064), reactivación y reasignación a una de
+    las tres rutas, sin contar como entrada nueva y conservando su fecha. La vuelta de clientes que dejaron de pagar
+    es otro loop, del lado Revenue. De R-023 sirve: la cuenta como unidad, el episodio, la puerta fija al entrar
+    y el primer pago como nudo.'
+  hugo_said:
+  - text: recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie /
+      Proposal Account Executive / Won /// ese es el punto de partida
+    ref: N-033
+  - text: el de ejecutivos ya está bien definido y te lo acabo de pasar
+    ref: N-034
+  - text: Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido
+      por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y
+      el solito lo acabó, hay que bajar bien esa definición)
+    ref: N-037
+  - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
+      y asignarlos a un funnel de acuerdo al caso
+    ref: N-038
+  steps:
+  - kind: proposal
+    what: 'Mix MECE con las definiciones de Hugo: regla de asignación por tramo (quién movió cada paso) y tabla
+      de bordes (entrada directa a SQL, formulario de «hablar con ventas», lead de campaña que nadie contactó y
+      compró solo, prueba montada por un AE).'
+    where: []
+  - kind: proposal
+    what: 'Etapas de cada ruta con criterio de entrada y salida y su dueño: Executive tal cual (New → Working SDR
+      → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won); Self Service y Hybrid por definir; Reactivate como
+      loop de estancados con umbral, reactivación y reasignación.'
+    where: []
+  - kind: proposal
+    what: 'Métricas MECE por ruta, partiendo de R-022 y corregidas a estas definiciones: qué se compara entre rutas
+      y qué solo dentro de cada una, y cómo se reporta Reactivate sin contar dos veces.'
+    where: []
+  - kind: data
+    what: 'Lo único medible hoy con los pagos: el nudo (primer pago) y la vuelta de pagadores como loop aparte (F-189,
+      F-199), para que no se confunda con Reactivate.'
+    where:
+    - mart.new_customers
+    - mart.customer_month
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+failed_at: '2026-09-29T14:58:17-06:00'

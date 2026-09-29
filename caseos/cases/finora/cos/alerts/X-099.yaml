@@ -1,0 +1,43 @@
+id: X-099
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-027
+target: C-009
+title: R-027 requiere más investigación C-009
+finding_text: El puente por capas no es construible; el actual mezcla orígenes distintos
+why: 'Hallazgo: F-175 (R-027) da un churn observado de 2,04% en 2024, y F-079/T-034 (R-012), que citan C-009 y C-007,
+  da 1,9% para el mismo año. En 2022 las dos coinciden (3,52% vs 3,5%). Por qué afecta a C-009: lo más probable
+  es una diferencia de definición (qué meses de 2024 entran, el denominador o el plazo de seguimiento del persistente).
+  Aun así, dos cifras para la misma métrica en láminas distintas no pasan con el CFO.'
+options:
+- key: A
+  label: Conciliar y fijar una tabla canónica
+  consequence: 'Chequeo corto: fijar la definición (denominador, meses de 2024, plazo de seguimiento) y una sola
+    tabla (T-002, T-034 o T-077) para C-007, C-009 y cualquier claim del puente. Queda una cifra por métrica en
+    toda la story.'
+- key: B
+  label: Quedarse con T-034
+  consequence: 'Rápido; F-175 queda fuera. El riesgo: si el persistente de F-175 y el de T-034 no usan la misma
+    definición, la pareja observado/persistente deja de ser comparable entre láminas.'
+- key: C
+  label: Mostrar ambas con su definición
+  consequence: Es transparente, pero mete ruido en una lámina para el CEO y el CFO.
+recommended: A
+recommended_why: Es barato y es la única forma de que churn observado y churn persistente salgan de la misma tabla
+  en toda la story.
+detected_by: cos
+links:
+- R-027
+- C-009
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144406-cos-7321
+created_at: '2026-09-29T14:59:09-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 1

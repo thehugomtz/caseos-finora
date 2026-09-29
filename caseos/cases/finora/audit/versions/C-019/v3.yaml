@@ -1,0 +1,88 @@
+id: C-019
+type: claim
+key: modelo-escalera
+question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado?
+headline: La Propuesta de Modelo de datos separa el valor en una escalera con vigencias
+answer: 'Escalera por suscripción y mes, cada peldaño con su tabla y su vigencia. La lista, en price_book_entry:
+  tarifa por versión de plan, periodo y moneda, con valid_from y valid_to. El precio pactado, en subscription_item_version:
+  plan, cantidad, add-ons y precio unitario, en intervalos sin traslape. El descuento, en discount_grant: tipo,
+  valor, inicio, fin, motivo, aprobador y el change_event que lo originó. Después vienen el MRR neto; lo facturado,
+  en invoice_line (subtotal, descuento, neto y periodo de servicio); y lo cobrado, en payment_allocation (llave
+  pago + factura). Todo cuelga de customer_id y subscription_id. Cada cambio nace de un change_event con fecha efectiva,
+  fecha de registro y evidencia. subscription_month_snapshot es la foto al cierre de mes con lista, bruto, descuento,
+  neto y caja. mrr_movement es la diferencia entre snapshots consecutivos, partida por componente: suscripción,
+  tarifa, descuento, entrada y salida. Facturado y cobrado nunca generan movimientos de MRR, solo «efecto de cobro»,
+  y el panel actual queda como monto pagado observado, conciliado contra lo cobrado. A facturación se le pide primero:
+  tarifas con vigencia, y plan o cantidad por cliente.'
+role_in_story: recommendation
+evidence_ids:
+- F-130
+- F-132
+- F-133
+- F-151
+- F-152
+- F-168
+table_ids: []
+research_ids:
+- R-011
+- R-021
+- R-027
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos. F-130 y F-133 tienen fuente sin verificar.'
+- D-007 deja fuera el modelo de datos; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa».
+  Es diseño propuesto, no construido.
+- Se sabe qué forma tiene la evidencia; no se sabe si Finora la tiene (F-133).
+- El histórico no se puede reconstruir en capas (F-168).
+visual_intent: 'Escalera: lista → pactado → descuento → neto → facturado → cobrado, cada peldaño con su tabla, su
+  llave y su vigencia.'
+hugo_wording: propuesta de modelo de datos (campos, tablas, definiciones)
+links:
+- F-130
+- F-132
+- F-133
+- F-151
+- F-152
+- F-168
+- R-011
+- R-021
+- R-027
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 3
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  accepted: []
+  pending:
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  tables: []
+  unsupported_numbers: []
+  stale: []

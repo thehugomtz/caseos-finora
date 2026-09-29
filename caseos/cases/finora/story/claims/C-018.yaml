@@ -1,15 +1,13 @@
 id: C-018
 type: claim
 key: descuento-capas
-question: ¿Qué implica, más allá del mecanismo, introducir descuentos temporales?
+question: ¿Qué convención de MRR usar y qué vistas se separan cuando hay descuentos?
 headline: El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan
-answer: 'No hay un estándar para tratar los descuentos temporales en el MRR: es una decisión de definición que el
-  CFO toma y declara. Para Finora, lo más útil es mostrar la capa de lista y la de neto. Con descuentos temporales,
-  el MRR neto, el revenue reconocido y la caja pueden separarse, y cuál vista aplica depende de si los contratos
-  son mensuales cancelables o a plazo fijo. Además, cambian las cohortes: la evidencia externa asocia la adquisición
-  con descuento a clientes de menor valor, así que Finora tendría que marcar esas cohortes y medirlas contra un
-  grupo comparable.'
-role_in_story: implication
+answer: No hay un estándar de mercado para tratar descuentos temporales en el MRR, y la convención «solo neto» borra
+  justo lo que pregunta el CFO. Proponemos mostrar las capas de MRR de lista, descuento y MRR neto, más revenue
+  reconocido y caja, y que el CFO declare cuál es la oficial. Qué vista aplica depende de si los contratos de Finora
+  son mensuales cancelables o a plazo fijo, algo que el caso no dice.
+role_in_story: recommendation
 evidence_ids:
 - F-151
 - F-153
@@ -22,13 +20,11 @@ research_ids:
 framework_ids: []
 confidence: medium
 limitations:
-- Propuesta de especialista (R-021, R-011), pendiente de tu aceptación. F-132 viene de fuente sin verificar.
-- La asociación descuento → clientes de menor valor es evidencia externa; el churn al vencer el descuento tiene
-  otras causas posibles (F-154).
-- No sabemos si los contratos de Finora son mensuales cancelables o a plazo fijo (F-153).
-- La convención oficial la decide el CFO; aquí solo se propone mostrar las dos capas.
-visual_intent: 'Divergencia por capas: lista, neto, revenue y caja se separan cuando hay un descuento temporal.'
-hugo_wording: Implicaciones multidisciplinarias; preguntas del CFO contestadas con el modelo propuesto.
+- 'Pendiente de tu aceptación: F-151, F-153, F-154 y F-132 están propuestos.'
+- F-132 tiene confianza baja y fuente sin verificar.
+- H-048 (que el puente por capas separa los casos del CFO) sigue abierta hasta tener datos.
+visual_intent: 'Capas apiladas: lista menos descuento igual a neto; revenue y caja al lado, desfasados.'
+hugo_wording: cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»
 links:
 - F-151
 - F-153
@@ -43,8 +39,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T11:54:07-06:00'
-version: 2
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
 status: pending
 strength:
   level: pending

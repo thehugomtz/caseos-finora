@@ -1,0 +1,64 @@
+id: F-212
+type: finding
+headline: 'Las tasas se comparan entre puertas, que son fijas al entrar, no entre rutas: la ruta se define por lo
+  que pasó, y eso sesga por construcción la conversión de Hybrid (H-050).'
+evidence_text: 'Un Self Service que se atora y recibe una llamada pasa a Hybrid A; el que avanzó bien sigue en Self
+  Service. Comparar sus tasas mezcla a quién se eligió tocar con lo que aportó la persona. La propuesta: la tasa
+  entrada → primer pago se mide por puerta y canal; entre rutas solo se comparan resultados de quienes llegaron
+  al nudo (volumen, tiempo, valor, permanencia); el paso y el tiempo por etapa solo dentro de cada ruta (SRC-01;
+  SRC-03 mide volumen, conversión y tiempo por etapa). Para medir el aporte de la persona hay que registrar qué
+  disparó la intervención (regla fija o criterio del SDR/AE) y, cuando se pueda, usar un holdout aleatorio por cuenta,
+  aplicado en todas las herramientas (SRC-09).'
+confidence: high
+limitations:
+- 'El punto es metodológico: no dice de qué tamaño es el sesgo en Finora ni si un holdout es operable con su volumen.
+  Eso lo define Analytics cuando haya CRM.'
+kind: measurement
+claims:
+- claim: Cada tipo de oportunidad convierte a tasas distintas y pasa tiempos distintos en cada etapa, así que el
+    mix de tipos cambia el desempeño de todo el motor.
+  source_id: SRC-01
+  source_type: industry
+  confidence: medium
+  freshness: publicación 2021; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda medir por ruta o puerta en vez de usar una tasa mezclada. Es contexto, no un dato de Finora.
+- claim: El bowtie mide cada etapa con volumen, conversión y tiempo, desde el primer contacto hasta retención y
+    expansión.
+  source_id: SRC-03
+  source_type: industry
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda separar volumen, tasa y tiempo y tener un nudo común. No trata motions múltiples.
+- claim: Sourced (quién originó) e influenced (quién ayudó a mover) requieren definiciones gobernadas para no contar
+    doble.
+  source_id: SRC-08
+  source_type: marketing
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: En este diseño, la puerta es el origen y los tramos con persona son la influencia; no se suman.
+- claim: La incrementalidad se estima con un holdout aleatorio. En B2B se aleatoriza por cuenta o grupo de compra,
+    y el holdout se hace cumplir en todas las herramientas de orquestación.
+  source_id: SRC-09
+  source_type: expert
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Diseño para probar H-050. No se sabe si es viable con el volumen de Finora.
+unverified: false
+source_ref:
+  research: R-029
+links:
+- R-029
+- H-050
+- H-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T16:38:56-06:00'
+version: 1

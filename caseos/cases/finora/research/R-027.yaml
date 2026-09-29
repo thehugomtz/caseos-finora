@@ -63,8 +63,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T14:38:00-06:00'
-updated_at: '2026-09-29T14:44:05-06:00'
-version: 6
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 7
 job_id: JOB-20260929-143800-d657
 error: null
 started_at: '2026-09-29T14:38:00-06:00'
@@ -372,3 +372,139 @@ skills_loaded:
   why: agente del workspace existente
 validation:
   ok: true
+cos_assessment:
+  summary: 'R-027 no trae la simulación ilustrativa que se le pidió, con las cifras del enunciado del CFO. Lo que
+    hace es confirmar otra vez que el puente por capas no se construye con datos propios, algo que ya sabíamos por
+    R-002, R-011 y R-021. Lo nuevo y útil es la medición de qué mezcla el puente de monto pagado vigente. 29% del
+    MRR de expansión se revierte al mes siguiente. 44% de los churns observados vuelve a pagar al mes siguiente.
+    Y 32% de los retornos liquida exactamente los meses pendientes (F-172, F-174).
+
+
+    Lo que cambia (material):
+
+    1. H-048 se debilita en «sigue cuadrando con el monto pagado». Con el calendario de cobro adentro, no cuadra
+    mes a mes sin una línea de conciliación.
+
+    2. Q-025 queda a medias. Falta el ejemplo trabajado, y ese ejemplo no necesita datos de Finora.
+
+    3. La story tiene regla para el descuento (C-020), pero no para el cobro.
+
+    4. F-178 dice «composición, no beneficio comercial», pero F-177 dice que eso no se puede separar.
+
+    5. El churn observado de 2024 sale 2,04% en F-175 y 1,9% en F-079. La de F-079 es la cifra que citan C-007 y
+    C-009.
+
+
+    Además, R-027 refuerza C-016, C-018, Q-026 y H-016, y en dirección H-031 y H-034. F-173 no debilita H-033 y
+    H-049 no cambia. H-017 queda aún más débil, pero ya tiene cuatro alertas abiertas (X-031, X-040, X-056, X-065);
+    no abro otra. X-077, X-078 y X-079 eran genéricas; esta evaluación les da contenido.
+
+
+    Orden sugerido:
+
+    1. Decidir H-048 y lanzar la simulación sintética de Q-025.
+
+    2. Corregir F-178 y conciliar el churn 2024 antes de revisar los findings de R-027.
+
+    3. Pedirle a Finora la definición del monto registrado.
+
+    4. Esperar R-028 antes de tocar las cifras de T-003.
+
+
+    Sugiero revisar R-027 como medición del puente vigente, no como respuesta a su pregunta.'
+  run_id: RUN-20260929-144406-cos-7321
+  at: '2026-09-29T14:59:09-06:00'
+  impacts:
+  - target: H-048
+    effect: weakens
+    why: 'Hallazgo: el monto pagado trae movimientos que no son cambios de valor de la suscripción. 29% del MRR
+      de expansión se revierte al mes siguiente (F-172). 44% de los churns observados vuelve a pagar al mes siguiente
+      y 32% de los retornos liquida exactamente los meses pendientes (F-174). Por qué afecta a H-048: si el MRR
+      neto se calcula por vigencia, como propone C-019, no registra esos saltos. Entonces no va a cuadrar mes a
+      mes con el monto pagado sin una pieza que conecte los dos: atrasos, pagos que cubren varios meses y créditos.
+      R-021 ya pone el monto pagado al lado de las tres capas (X-071), pero nadie dice cómo se concilian. La otra
+      mitad de H-048, «separa los tres casos», sigue sin probarse porque la simulación no se hizo (ver Q-025).'
+  - target: Q-025
+    effect: requires_research
+    why: 'Hallazgo: R-027 era justo la simulación ilustrativa con las cifras del enunciado y volvió sin ella. Respondió
+      que no se reproduce con cifras propias, algo ya establecido en R-002 y en R-011 (confianza alta), y midió
+      el puente vigente. Por qué afecta a Q-025: para ilustrar no hacen falta datos de Finora, y el framing permite
+      simulaciones siempre que prueben qué se puede distinguir, no qué pasó. Q-025 queda a medias. «El pago observado
+      no alcanza» está respondido (R-002, R-011; F-177 lo confirma para lista vs descuento). «Cómo se leería cada
+      caso con capas» no lo está.'
+  - target: C-020
+    effect: changes_story
+    why: 'Hallazgo: lo que más mezcla hoy el puente no es el descuento, que no se observa, sino el calendario de
+      cobro. Hay subidas de un mes registradas como expansión (F-171, F-172). Además, 44% de los churns observados
+      vuelve a pagar al mes siguiente y 32% de los retornos liquida exactamente lo pendiente (F-174). Por qué afecta
+      a C-020: la story propone la regla del descuento, pero no la del cobro. Un puente con línea «Descuento» y
+      sin regla de cobro seguiría contando esos movimientos como expansión, churn y reactivación. C-009 nombra el
+      problema (F-136) y C-019 lo resuelve de forma implícita con vigencias, pero ningún claim le dice la regla
+      al CFO. El diagnóstico ya está en X-037 (T-003) y X-034 (H-020); lo que falta es el lado de la propuesta.
+      Esta evaluación le da contenido a X-079.'
+  - target: F-178
+    effect: weakens
+    why: 'Hallazgo: F-177, de la misma research, dice que en el monto observado no se puede separar un precio de
+      lista distinto de un descuento aplicado. F-178, en cambio, cierra con «composición, no beneficio comercial».
+      Por qué afecta a F-178: si «beneficio comercial» se lee como descuento o concesión, F-178 afirma una ausencia
+      que F-177 declara no observable (ausencia de evidencia ≠ evidencia de ausencia). Llevada a C-002 o a la respuesta
+      de Q-026, esa frase le diría al CFO que no hubo revenue que dejamos de capturar. El «No afirmar todavía» cuida
+      un solo lado: «que hubo descuentos en el histórico».'
+  - target: C-009
+    effect: requires_research
+    why: 'Hallazgo: F-175 (R-027) da un churn observado de 2,04% en 2024, y F-079/T-034 (R-012), que citan C-009
+      y C-007, da 1,9% para el mismo año. En 2022 las dos coinciden (3,52% vs 3,5%). Por qué afecta a C-009: lo
+      más probable es una diferencia de definición (qué meses de 2024 entran, el denominador o el plazo de seguimiento
+      del persistente). Aun así, dos cifras para la misma métrica en láminas distintas no pasan con el CFO.'
+  - target: C-016
+    effect: supports
+    why: R-027 refuerza C-016. F-177 muestra que una lista mayor con descuento y un precio neto menor dan el mismo
+      monto, que es el ejemplo 100→80 del CFO. F-171 da un caso medido de subida que se revierte y queda registrada
+      como expansión. Si se suman como evidencia, hay dos cuidados. Primero, F-172 repite el 25,3% de F-090/T-058,
+      así que conviene citar una sola tabla. Segundo, el 6,5× de F-170 no prueba la mezcla por sí solo, porque en
+      cualquier negocio con altas y churn el bruto supera al neto; la prueba está en F-172 y F-174. Esta evaluación
+      le da contenido a X-077.
+  - target: C-018
+    effect: supports
+    why: 'Refuerza que MRR neto, revenue y caja se separan, y sugiere que esa separación ya existe hoy, sin descuentos
+      documentados: 32% de los retornos liquida exactamente los meses pendientes (F-174), un patrón compatible con
+      el cobro de atrasos (direccional, no verificado). A la convención del CFO le faltan dos piezas que hoy no
+      nombra. Una es qué representa el monto registrado (F-168: no hay definición documentada). La otra, si un cliente
+      con descuento del 100% cuenta como activo. Esta evaluación le da contenido a X-078.'
+  - target: Q-026
+    effect: supports
+    why: 'R-027 aporta la evidencia directa de lo que ya plantean X-038 y X-072: el revenue que dejamos de capturar
+      por decisiones comerciales no se puede medir en el histórico, porque precio de lista y descuento coinciden
+      en el mismo monto (F-177). Del negocio subyacente solo se ve un sustituto: el monto pagado por cosecha (F-178:
+      −38% por cliente activo, con la base previa en +5%). Eso no es valor antes de descuentos, y hay que nombrarlo
+      así. Ojo con la redacción de F-178 (ver el impacto sobre F-178).'
+  - target: H-049
+    effect: no_material_impact
+    why: 'H-049 mira hacia adelante y R-027 no la prueba ni la debilita. Una precisión para diseñar su prueba: por
+      F-177, las cohortes históricas no sirven como grupo «sin descuento», porque no se puede saber si lo tuvieron.
+      La comparación tiene que armarse con cohortes nuevas y un grupo sin descuento definido desde el diseño.'
+  - target: H-016
+    effect: supports
+    why: 'F-177 es el caso más directo de H-016 en este panel: sin precios ni descuentos registrados, una lista
+      mayor con descuento vigente y un precio neto menor producen el mismo monto observado. Refuerza la evaluación
+      del agente (Soportada) sin cambiarla.'
+  - target: H-031
+    effect: supports
+    why: 'Señal direccional fuerte: 44% de los churns observados vuelve a pagar al mes siguiente y 32% de los retornos
+      liquida exactamente lo pendiente (F-174). En oct-24 la reactivación fue la mayor entrada del puente (F-176),
+      aunque ese es el mes de borde (H-029). Con ventana de gracia y reparto de pagos, una parte de esa reactivación
+      y del churn que la precede debería desaparecer. La magnitud en COP la dará R-028, que está en curso; conviene
+      esperarla antes de tocar las cifras de T-003.'
+  - target: H-034
+    effect: supports
+    why: 'F-174 encuentra la huella que predice H-034: 32% de los retornos después de meses sin pago liquida exactamente
+      los meses pendientes. Es compatible con atrasos, pero no lo prueba. Sin estado de suscripción ni definición
+      del monto (F-168), también cabe, por ejemplo, una política de reactivación que cobra los meses pendientes.
+      El 44% que vuelve al mes siguiente ya estaba en H-039 (DM-4); R-027 solo lo replica.'
+  - target: H-033
+    effect: no_material_impact
+    why: 'F-173 dice que las bajadas «se sostienen» (COP 55,9 millones en 848 eventos). Eso no las convierte en
+      contracción de suscripción: una bajada después de un primer pago alto, o de una reactivación que cubrió varios
+      meses, también se queda en el nivel nuevo. Es compatible con H-033 y con X-037 (57,6% del COP de contracción
+      cae el mes siguiente a un primer pago o a una reactivación). No hay que leer F-173 como «la contracción es
+      real»; la prueba sigue siendo R-028.'

@@ -1,0 +1,56 @@
+id: C-017
+type: claim
+key: descuento-objeto
+question: ¿Cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»?
+headline: Proponemos que el descuento exista como objeto propio, con fecha de fin
+answer: Cada descuento se registra con tipo, monto, inicio, fin, motivo, Canal y aprobador, separado de la cantidad
+  contratada y del precio de lista, y se lee desde la factura. El puente de MRR suma líneas propias de «descuento
+  nuevo/aumentado» y «descuento reducido/terminado». Las herramientas revisadas (ChartMogul, Chargebee, Stripe),
+  según cómo se configuren, lo mezclan con expansión o contracción o lo excluyen. Usadas tal cual, el fin de un
+  descuento aparecería como expansión, y una subida de suscripción compensada por un descuento, como «sin cambio».
+role_in_story: recommendation
+evidence_ids:
+- F-150
+- F-152
+table_ids: []
+research_ids:
+- R-021
+framework_ids: []
+confidence: medium
+limitations:
+- Propuesta de especialista (R-021), pendiente de tu aceptación.
+- La revisión de herramientas es evidencia externa, no de Finora; no sabemos qué facturación usa.
+- Conviene revisar las trampas concretas que lista F-152 antes de mostrarlas.
+visual_intent: 'Separación: el descuento se desprende de la suscripción como objeto con inicio y fin, y el puente
+  gana líneas propias.'
+hugo_wording: 'Cómo debería Finora introducir descuentos temporales: mecanismo propuesto.'
+links:
+- F-150
+- F-152
+- R-021
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T11:54:07-06:00'
+version: 2
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-150
+  - F-152
+  - F-150
+  - F-152
+  accepted: []
+  pending:
+  - F-150
+  - F-152
+  - F-150
+  - F-152
+  tables: []
+  unsupported_numbers: []
+  stale: []

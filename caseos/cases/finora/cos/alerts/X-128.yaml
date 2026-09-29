@@ -1,0 +1,50 @@
+id: X-128
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-029
+target: H-051
+title: R-029 requiere más investigación H-051
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: La regla de R-029 saca la ruta de quién movió cada tramo, y eso es justo lo que H-051 pone en duda del CRM.
+  R-029 deja entre lo que no puede concluir el resultado de las actividades, quién movió cada etapa y el origen
+  de los SQL directos. Si H-051 es cierta, pasan tres cosas. (1) Un SQL directo de una cuenta que ya había avanzado
+  sola se contaría como Executive cuando en realidad es Hybrid A. (2) Un lead sin estado de salida entraría a Reactivate
+  sin haberse estancado de verdad. (3) Si los Self Service solo aparecen en el CRM cuando pagan, esa puerta no tiene
+  denominador en el CRM y F-212 no puede comparar su tasa. R-029 no prueba ni descarta H-051, pero la vuelve condición
+  de su regla.
+options:
+- key: A
+  label: Adoptar la regla con un grupo «sin clasificar» y sumar los campos a Q-065
+  consequence: 'La propuesta entra a la historia con su límite a la vista. Se reportan aparte, con su peso, los
+    casos en que el CRM no deja saber quién movió el tramo (SQL directo sin origen, leads sin estado de salida).
+    H-051 pasa a ser el primer chequeo al abrir el CRM, y Q-065 suma tres campos: el dueño de cada cambio de etapa,
+    el origen de los SQL directos y el estado de salida.'
+- key: B
+  label: Condicionar la regla a una auditoría previa del CRM
+  consequence: Es más seguro, pero la respuesta al CRO se queda sin propuesta de medición mientras no haya acceso
+    al CRM.
+- key: C
+  label: Mantener SQL directo = Executive y dejar H-051 como nota al pie
+  consequence: Es lo más simple, pero si H-051 es cierta Executive queda inflado y Hybrid A subestimado, justo en
+    la mezcla que le importa al CRO.
+recommended: A
+recommended_why: Deja la propuesta en la historia sin fingir que el CRM registra lo que no sabemos si registra.
+  Además, el grupo «sin clasificar» ya existe en el caso (H-065) para el etiquetado hacia atrás.
+detected_by: cos
+links:
+- R-029
+- H-051
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

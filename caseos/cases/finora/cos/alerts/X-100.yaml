@@ -1,0 +1,58 @@
+id: X-100
+type: alert
+kind: research_needed
+status: open
+severity: high
+effect: requires_research
+source: R-028
+target: H-033
+title: R-028 requiere más investigación H-033
+finding_text: La reactivación concentra firmas de momento de cobro; la contracción no
+why: 'R-028 titula que la contracción no es momento de cobro. Pero su prueba solo mira si al mes siguiente el monto
+  vuelve al nivel previo (4,0%) o se queda igual o más abajo (88,9%, F-184). Con eso no se ve el mecanismo central
+  de H-033: si el mes previo fue un primer pago inflado o una reactivación que liquidó el hueco, el cliente baja
+  a su monto usual y ahí se queda, así que cae dentro del 88,9%.
+
+
+  En un puente mes contra mes como T-003, pasa esto: una reactivación que liquida el hueco (42,6% del MRR de reactivación,
+  F-180) y después sigue con su monto usual deja al mes siguiente una contracción que no se revierte.
+
+
+  Por eso R-028 y R-011 chocan en el titular pero miden cosas distintas. R-011 vio que 57,6% del COP de contracción
+  cae el mes siguiente a un primer pago o a una reactivación (X-037). Ninguna de las dos resuelve H-033. Lo único
+  que R-028 debilita es la parte de pagos parciales que se reponen al mes siguiente. Si F-184 se acepta con su redacción
+  actual, choca con lo que asumen X-043 y X-046.'
+options:
+- key: A
+  label: Hacer el corte de contracción antes de aceptar F-184
+  consequence: 'Con los mismos pagos se mide qué parte del COP de contracción ocurre el mes siguiente a una reactivación
+    que liquidó el hueco, o a un primer pago que es múltiplo exacto del siguiente. También se mide si el cliente
+    baja a su monto usual o por debajo. F-184 se reescribe como un hecho acotado: «la contracción casi no se revierte
+    al mes siguiente (4,0% vuelve al nivel previo; 88,9% se queda igual o más abajo)». Resuelve la tensión entre
+    R-011 y R-028; la lámina de contracción del bloque Revenue espera a ese corte.'
+- key: B
+  label: Aceptar F-184 como está y dar H-033 por debilitada
+  consequence: Es más rápido, pero la story le diría al CFO que la contracción es achicamiento cuando puede ser
+    la vuelta al monto usual después de un pago inflado. Además queda abierta la contradicción con R-011, X-043
+    y X-046.
+- key: C
+  label: Dejar H-033 abierta y seguir con un caveat
+  consequence: La story habla de contracción observada sin decir si es achicamiento o momento de cobro (ya lo cubre
+    «Etiquetas contractuales sin vigencia verificada»). No bloquea nada, pero el bloque Revenue se queda sin la
+    cifra de cuánto de la contracción es cobro.
+recommended: A
+recommended_why: Es el corte más chico que decide entre R-011 y R-028, y sale de la data que ya tenemos. B lleva
+  a la story una lectura que la prueba no sostiene. C sirve de respaldo si el corte no llega a tiempo.
+detected_by: cos
+links:
+- R-028
+- H-033
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144540-cos-37bd
+created_at: '2026-09-29T15:08:18-06:00'
+updated_at: '2026-09-29T15:08:18-06:00'
+version: 1

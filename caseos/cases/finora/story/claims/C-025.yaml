@@ -1,0 +1,124 @@
+id: C-025
+type: claim
+key: cfo-casos
+question: 'El CFO pregunta: si un cliente pagaba 100 y ahora paga 80, ¿es contracción o descuento? Si la suscripción
+  pasa de 100 a 130 con un descuento de 30 y sigue pagando 100, ¿qué pasó? ¿Y si desaparece el descuento? ¿Qué pasa
+  con el negocio subyacente y cuánto revenue dejamos de capturar?'
+headline: Con el modelo propuesto, cada caso del CFO se lee en su capa
+answer: 'Con las cifras del enunciado, como ejemplo. Si pagaba 100 y ahora paga 80, se mira la lista: si el bruto
+  bajó a 80, es contracción; si sigue en 100, es un descuento nuevo en su línea. Si la suscripción pasa de 100 a
+  130 con un descuento de 30 y sigue pagando 100, se registran una expansión de +30 en suscripción y un descuento
+  nuevo de −30, y el neto no cambia. Si después desaparece el descuento y paga 130, esos +30 son fin de descuento,
+  no expansión. El negocio subyacente se lee en el MRR de lista, y el revenue que se deja de capturar, en la capa
+  de descuento, vigente y por vencer. Hacia atrás no se puede medir, porque el histórico no trae lista ni descuentos.
+  El costo real de un descuento pide un grupo comparable, y la convención la decide el CFO. Hoy el puente de monto
+  pagado ya confunde cobro con expansión y churn: 29% de la expansión se revierte al mes siguiente y 44% de los
+  churns vuelve a pagar al mes siguiente. Lo que se ve es composición, no beneficio comercial.'
+role_in_story: recommendation
+evidence_ids:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+table_ids:
+- T-074
+- T-076
+- T-080
+research_ids:
+- R-011
+- R-027
+- R-021
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- 'Los casos son ejemplos construidos con las cifras del enunciado: prueban un límite del modelo, no describen lo
+  que pasa en Finora.'
+- 'R-027 no armó la simulación con datos: el panel no trae lista ni descuento (F-168).'
+- 'F-177 y F-178 están en tensión (X-098): «composición» describe quién entra, no prueba que no haya precio o descuento
+  detrás.'
+- No hay cifra histórica de revenue no capturado (X-038). El costo del descuento pide un grupo comparable (H-049).
+visual_intent: 'Libro de cuentas lado a lado: cada caso del CFO en capas lista/descuento/neto, frente a la lectura
+  del panel actual.'
+hugo_wording: preguntas del CFO contestadas con el modelo propuesto
+links:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+- T-074
+- T-076
+- T-080
+- R-011
+- R-027
+- R-021
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 2
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  accepted: []
+  pending:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  tables:
+  - T-074
+  - T-076
+  - T-080
+  - T-074
+  - T-076
+  - T-080
+  unsupported_numbers:
+  - '100'
+  - '80'
+  - '80'
+  - '100'
+  - '100'
+  - '130'
+  - '30'
+  - '100'
+  - '+30'
+  - −30
+  - '130'
+  - '+30'
+  stale: []

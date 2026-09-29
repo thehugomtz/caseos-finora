@@ -260,3 +260,8 @@ def test_the_case_statement_figures_are_an_example_not_unsupported_data(case):
                      answer="De 100 a 80.")
     errors, _ = story.validate_package(case, loose)
     assert any("cifra" in e for e in errors)                            # only figures the statement poses, not any the COS writes
+
+
+def test_a_step_label_is_not_a_figure():
+    assert evidence.numbers_in("El paso 1 ya se hizo con los pagos; en el caso 2 cambia la lista") == []
+    assert [n.value for n in evidence.numbers_in("Pasan 1.476 altas en 2 pasos")] == [1476.0, 2.0]    # counts still count

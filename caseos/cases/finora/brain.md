@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T14:58:17-06:00 · motivo: R-029 falló (limit); la solicitud se conservó
+> Actualizado: 2026-09-29T17:25:22-06:00 · motivo: cambios en lote
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,9 +25,9 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-26 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 95 alertas abiertas.
+27 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 132 alertas abiertas.
 
-COS: R-026 confirma que la caída del ticket de entrada está en el monto que se repite: el 2.º pago pasa de 52,5 a 36,8 mil y luego a 38,9 mil. Es un escalón 2022→2023 dentro de las 6 industrias, no un efecto del primer cobro ni una tendencia, y los promedios del primer pago de 2022 están inflados y no sirven como tamaño de la caída. Queda abierto si la base 2022 incluye clientes previos al panel (H-041) y en qué mes cae el escalón (H-045 frente a H-025); H-032 queda contradicha, y con 0 findings aceptados ninguna claim, incluidas C-003 y C-007, está lista para la story.
+COS: R-029 cierra el diseño del funnel con las definiciones de Hugo: la ruta sale de quién movió cada tramo, la puerta queda fija al entrar y Reactivate es un loop, no otra ruta. Es una propuesta de confianza media sin CRM: hoy solo se miden el nudo (1.476 primeros pagos observados) y la vuelta de pagadores, que es un loop de Revenue y no Reactivate. Con 0 de 213 findings aceptados, ningún claim está listo; lo que más desbloquea es que Hugo decida la taxonomía de C-005 y la regla de nombre Reactivate/reactivación (junto con X-080), y llevar Q-063 y Q-064 a Finora.
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
@@ -44,14 +44,14 @@ v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
 - **Q-003** (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?
 
 ## Current Story
-**Governing thought:** La brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos: proponemos medir por puerta y separar descuento de suscripción.
+**Governing thought:** La brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos: proponemos medir por funnel y separar descuento de suscripción.
 - **C-001** Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8× · pending
 - **C-002** La caída por cliente se asocia a quién entra; la base previa sostiene su monto · pending
-- **C-003** Entran más primeros pagadores, con menor ticket, en las 6 industrias · pending
+- **C-003** Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias · pending
 - **C-004** Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas · pending
-- **C-005** Proponemos un bowtie por puertas: Self Service, Assisted y Executive con nudo común · pending
-- **C-006** Proponemos medir conversión por cohorte de entrada y ventana fija, por puerta y canal · pending
-- **C-007** La pérdida se concentra en cosechas de menor ticket, no en una industria · pending
+- **C-005** Proponemos rutas Executive, Self Service e Hybrid, más un loop de Reactivate · pending
+- **C-006** Proponemos medir por cohorte de entrada con ventana fija y comparar entre puertas, no rutas · pending
+- **C-007** La pérdida está en el monto por cliente de cosechas de menor ticket · pending
 - **C-008** Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar · pending
 - **C-009** Proponemos un árbol de ingreso recurrente con semáforo: qué se mide hoy y qué no · pending
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
@@ -82,7 +82,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 50 más
+- … y 59 más
 
 ## Evidence We Trust
 _Todavía no hay evidencia aceptada._
@@ -111,7 +111,7 @@ _Todavía no hay evidencia aceptada._
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 58 más
+- … y 76 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -138,6 +138,7 @@ _Sin tablas aceptadas._
 ## Contradictions
 - **X-040** R-011 contradice H-017
 - **X-094** R-026 contradice H-032
+- **X-101** R-028 contradice T-034
 
 ## Risks
 - **X-001** R-013 cambia el framing Q-018
@@ -150,7 +151,7 @@ _Sin tablas aceptadas._
 - **X-036** R-011 cambia la historia Q-002
 - **X-037** R-011 cambia la historia T-003
 - **X-038** R-011 cambia el framing Q-026
-- … y 24 más
+- … y 28 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
@@ -173,16 +174,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 14:58 · R-029 falló (limit); la solicitud se conservó
-- 2026-09-29 14:58 · COS evaluó R-026: R-026 confirma que la caída del ticket de entrada no es un efecto del primer pago: también aparece…
-- 2026-09-29 14:58 · COS propone hipótesis: El escalón 2022→2023 del ticket estabilizado se explica porque más primeros pag…
-- 2026-09-29 14:58 · COS: R-026 requiere más investigación H-026
-- 2026-09-29 14:58 · COS: R-026 contradice H-032
-- 2026-09-29 14:58 · COS: R-026 requiere más investigación H-041
-- 2026-09-29 14:56 · COS: R-025 podría afectar C-011
-- 2026-09-29 14:56 · R-025 completada: Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads ni CRM, sol…
-- 2026-09-29 14:56 · R-025: finding propuesto — Para separar las 17 causas: comparar cohortes de entrada a igual edad y partir…
-- 2026-09-29 14:56 · R-025: finding propuesto — El gasto y los primeros pagadores se mueven en sentido contrario en los dos sem…
+- 2026-09-29 17:25 · Story Package v2 (borrador): 25 claims · 1 problema(s) a resolver · 126 evidencia(s) esperan tu aceptación
+- 2026-09-29 17:25 · Claim propuesto: Con el modelo propuesto, cada caso del CFO se lee en su capa
+- 2026-09-29 17:25 · C-020 actualizado en el Story Package
+- 2026-09-29 17:25 · C-019 actualizado en el Story Package
+- 2026-09-29 17:25 · C-018 actualizado en el Story Package
+- 2026-09-29 17:25 · C-017 actualizado en el Story Package
+- 2026-09-29 17:25 · C-016 actualizado en el Story Package
+- 2026-09-29 17:25 · Claim propuesto: Con cliente, mes y monto se ve qué cambió, no por qué
+- 2026-09-29 17:25 · C-015 actualizado en el Story Package
+- 2026-09-29 17:25 · C-014 actualizado en el Story Package
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 26, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

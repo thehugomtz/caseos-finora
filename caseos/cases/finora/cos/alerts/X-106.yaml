@@ -1,0 +1,50 @@
+id: X-106
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-025
+target: Q-001
+title: R-025 cambia el framing Q-001
+finding_text: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las r…'
+why: 'La mitad de Q-001 que se ve en pagos ya no es «no crecen en la misma proporción»: es una caída absoluta de
+  primeros pagadores en jul–oct 2024. Se sostiene en dos lecturas. Contra el año anterior, −19%, y eso controla
+  la estacionalidad. Por mes contra ene–jun-24, −13% (50,8 vs 58,5; cálculo mío), y eso controla el escalón de jun-23.
+  El número frágil es el +29%, porque compara contra ene–jun-23 (45,3 por mes), antes de ese escalón (H-025). Mes
+  a mes no hubo crecimiento dentro de 2024: 63,0 por mes en jul–dic-23 (650 de T-100 menos 272), 58,5 en ene–jun-24
+  y 50,8 en jul–oct-24. La otra mitad, «llega más gente», sigue sin verse (X-049). Esto amplía X-016: ya sabemos
+  qué periodo mirar. Un cuidado: «se concentra en Retail+Producción» (F-206) puede ser solo tamaño. Además, al lado
+  de C-007 («no es una industria») se lee como contradicción, aunque midan cosas distintas.'
+options:
+- key: A
+  label: Mantener la pregunta del CRO y contestarla en dos mitades
+  consequence: '«¿Llega más gente?»: hoy no se ve y depende de Q-065. «¿Qué pasó con los primeros pagadores?»: cerca
+    del nivel de jun-23 hasta jun-24 y −19% en jul–oct-24, sin causa. Separa lo que se ve de lo que no, sin tocar
+    su pregunta.'
+- key: B
+  label: Reformular Q-001 como «¿qué cambió desde jul-24?»
+  consequence: Da foco, pero reemplaza la pregunta del CRO. También fija la búsqueda en jul-24 antes de ver el perfil
+    mes a mes, y el pico de jun-24 (T-016) puede estar moviendo el corte.
+- key: C
+  label: Quedarse con la lectura anual de R-024 (56 vs 54 altas por mes)
+  consequence: El promedio anual esconde el giro. El CRO se queda con «estancamiento» cuando lo que se ve es una
+    caída reciente.
+recommended: A
+recommended_why: 'La pregunta es del CRO, así que no la tocaría. Lo que cambia es la respuesta: el dato más firme
+  del bloque, sin atribuirle causa ni hablar de conversión del funnel, como pide el framing.'
+detected_by: cos
+links:
+- R-025
+- Q-001
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-be42
+created_at: '2026-09-29T16:36:54-06:00'
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 1

@@ -1,0 +1,48 @@
+id: X-096
+type: alert
+kind: weakening
+status: open
+severity: high
+effect: weakens
+source: R-027
+target: H-048
+title: R-027 debilita H-048
+finding_text: El puente por capas no es construible; el actual mezcla orígenes distintos
+why: 'Hallazgo: el monto pagado trae movimientos que no son cambios de valor de la suscripción. 29% del MRR de expansión
+  se revierte al mes siguiente (F-172). 44% de los churns observados vuelve a pagar al mes siguiente y 32% de los
+  retornos liquida exactamente los meses pendientes (F-174). Por qué afecta a H-048: si el MRR neto se calcula por
+  vigencia, como propone C-019, no registra esos saltos. Entonces no va a cuadrar mes a mes con el monto pagado
+  sin una pieza que conecte los dos: atrasos, pagos que cubren varios meses y créditos. R-021 ya pone el monto pagado
+  al lado de las tres capas (X-071), pero nadie dice cómo se concilian. La otra mitad de H-048, «separa los tres
+  casos», sigue sin probarse porque la simulación no se hizo (ver Q-025).'
+options:
+- key: A
+  label: Tres capas + conciliación de cobro
+  consequence: 'H-048 pasa a decir: MRR de lista → descuento → MRR neto, más una línea que lleva del MRR neto al
+    monto pagado (atrasos, pagos que cubren varios meses, créditos). «Cuadra» significa MRR neto + conciliación
+    = monto pagado. Queda coherente con C-018 y C-019, y la simulación de Q-025 lo puede probar. Sigue siendo propuesta
+    de diseño, no construcción (D-007).'
+- key: B
+  label: Cuadrar solo en el acumulado anual
+  consequence: No agrega línea. Pero el «¿por qué cambió el MRR?» mensual del CFO sigue con el ruido de cobro, y
+    los pagos que cruzan el cierre de año tampoco cuadran exacto.
+- key: C
+  label: Quitar la cláusula de cuadre
+  consequence: H-048 queda más limpia y la relación con caja pasa a C-018. Pero la propuesta pierde el vínculo con
+    el único dato que Finora tiene hoy, que es contra el que va a comparar el CFO durante la transición.
+recommended: A
+recommended_why: 'Es el cambio más chico que hace creíble la propuesta ante el CFO: lo primero que va a revisar
+  es si el puente nuevo coincide con lo cobrado. Además alinea H-048 con lo que ya dicen R-021, C-018 y C-019.'
+detected_by: cos
+links:
+- R-027
+- H-048
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144406-cos-7321
+created_at: '2026-09-29T14:59:09-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 1

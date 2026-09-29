@@ -92,6 +92,8 @@ def numbers_in(text: str) -> list[Num]:
     t = re.sub(r"\b\d{4}-\d{2}(?:-\d{2})?\b", " ", t)                           # 2024-08, 2024-08-31 (ISO periods)
     t = re.sub(r"\b[A-Z]{1,4}-\d{2,4}(?:-[A-Z0-9]+)*\b", " ", t)                # C-004, FIN-GROWTH-01, W0
     t = re.sub(r"\b[WSMQHT]\d{1,2}\b", " ", t)                                   # W3, M12, Q2, S2
+    t = re.sub(r"\b(?:paso|fase|etapa|capa|nivel|caso|grupo|opción|opcion|pregunta|lámina|lamina|regla|tramo)s?\s+\d{1,2}\b",
+               " ", t, flags=re.I)                                                 # «el paso 1», «caso 2»: labels, not figures
     out = []
     for m in _NUM.finditer(t):
         raw = m.group(0).strip()

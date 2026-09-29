@@ -64,8 +64,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T14:15:51-06:00'
-updated_at: '2026-09-29T14:45:42-06:00'
-version: 5
+updated_at: '2026-09-29T16:32:58-06:00'
+version: 6
 job_id: JOB-20260929-141552-50fd
 error: null
 started_at: '2026-09-29T14:15:52-06:00'
@@ -1061,3 +1061,175 @@ validation:
   bare_claims: []
   seen_urls: 120
   ok: true
+cos_assessment:
+  summary: 'R-023 está propuesto (F-187 a F-191 sin aceptar). Cierra el diseño del mix de funnels, pero no lo mide.
+    El mix es MECE con cuatro puertas más «sin clasificar» solo si se cumplen tres condiciones: la unidad es la
+    cuenta, la puerta se fija al entrar con información previa al contacto y hay un orden de prioridad. Antes del
+    primer pago no se mide nada.
+
+
+    Lo material:
+
+    - **C-005 queda corto:** tiene tres puertas, dice «Assisted» y no le da lugar a Reactivate. Conviene reescribirlo
+    una sola vez, cuando cierre R-029 con tus definiciones.
+
+    - **H-037 se debilita** como explicación del estancamiento de 2024: ese año el peso de las reactivaciones sube
+    con las dos definiciones.
+
+    - **Q-050 gana argumentos** para usar «primer pago del episodio» como nudo.
+
+    - **Q-046 hay que partirla** en dos: la puerta al entrar y la compra sin intervención humana.
+
+    - **H-036 ya tiene su prueba más corta:** el etiquetado hacia atrás de F-191.
+
+
+    H-006 y H-028 no se mueven.
+
+
+    Dos cuidados:
+
+    - El 30,4% de 2022 parece salir de otra ventana (feb–dic) que el 38% de R-016.
+
+    - Igual que R-019 y R-021, este diseño entra a la story solo si confirmas D-018 frente a D-007.'
+  run_id: RUN-20260929-162146-cos-7294
+  at: '2026-09-29T16:32:58-06:00'
+  impacts:
+  - target: C-005
+    effect: changes_story
+    why: 'C-005 propone tres puertas: Self Service, Assisted y Executive. R-023 dice que el mix MECE son cuatro
+      (Reactivate, Executive, Hybrid y Self Service) más «sin clasificar». Y eso solo se cumple si se fijan tres
+      cosas (F-187, F-188):
+
+      - la unidad: la cuenta;
+
+      - el momento: la puerta se asigna al entrar, con información previa al contacto, y no cambia;
+
+      - un orden de prioridad.
+
+
+      Tal como está, la lámina no tiene dónde poner las reactivaciones. Según cómo se defina Reactivate, son entre
+      7% y 30% de las entradas a pago (F-189). Además dice «Assisted» donde tú dices Hybrid.
+
+
+      Dos cosas frenan reescribirla hoy:
+
+      1. El orden de prioridad tiene confianza media y lo deciden tú y Finora.
+
+      2. R-029 (en curso) corre la misma pregunta con tus definiciones textuales. Ahí Executive es el funnel actual
+      SDR→AE, pero R-022 había puesto la carga por SDR/AE en Hybrid.
+
+
+      Tampoco está lista para la story: ninguna de sus evidencias está aceptada y las cifras de F-189 no tienen
+      una tabla con las dos definiciones.
+
+
+      Esta evaluación le da contenido a X-090, que hoy es genérica. Conviene resolverla junto con X-081.'
+  - target: Q-050
+    effect: supports
+    why: 'Apoya responder Q-050 con el primer pago. R-023 suma dos razones (F-190):
+
+      - Won solo existe en las puertas con vendedor.
+
+      - Pasar a «sigue pagando en M1» cambia poco el conteo.
+
+
+      Suscripción activa hoy no se puede usar: R-023 no sabe si facturación guarda el estado de la suscripción.
+
+
+      Leído con F-188, el nudo es el primer pago del episodio. Para Reactivate es el pago de regreso, y cuándo empieza
+      un episodio nuevo depende de cómo se defina Reactivate (F-189).
+
+
+      Elegir el nudo es una convención de medición. No afirma que la primera aparición sea la adquisición, que sigue
+      en «No afirmar todavía». Cerrar Q-050 también resuelve lo que pide X-052.'
+  - target: H-037
+    effect: weakens
+    why: 'R-023 confirma la premisa: la definición de Reactivate es lo que más mueve las cifras (F-189). Pero debilita
+      a H-037 como explicación del estancamiento de 2024:
+
+      - De 2023 a 2024 el peso de las reactivaciones sube con las dos definiciones: de 17,7% a 22,6% con un mes,
+      y de 8,1% a 8,6% con 2 o más meses. Contarlas como «nuevos» suavizaría el estancamiento de 2024 (R-024), no
+      lo crearía.
+
+      - Con 2 o más meses, el peso casi no se mueve en ningún año.
+
+
+      Solo podría restar crecimiento de 2022 a 2023, y ahí la cifra es frágil:
+
+      - Según H-058, el 30,4% de 2022 incluye feb-22, un mes en que el panel no puede registrar reactivaciones.
+
+      - Con T-097 (mar–dic) sale ~39%, que cuadra con el 38% de R-016.
+
+
+      Queda viva una variante que R-023 no ve: regresos con otro ID contados como altas (H-024, T-100). No se sabe
+      si «Cliente N» es la cuenta.'
+  - target: Q-046
+    effect: changes_framing
+    why: 'R-023 deja Q-046 abierta, pero cambia cómo hay que plantearla:
+
+      - **Choque de definición:** Q-046 define Self Service por el resultado («compra sin intervención humana»).
+      R-023 asigna la puerta al entrar, con información previa al contacto, y registra aparte el contacto humano
+      (F-188). Con esa regla, una cuenta que entra por self-serve y después recibe ayuda sigue en Self Service,
+      con su contacto anotado aparte.
+
+      - **Consecuencia desactualizada:** sin Self Service ya no quedan dos puertas, sino Reactivate, Executive,
+      Hybrid y «sin clasificar».
+
+
+      R-029 (en curso) puede traer tu definición textual de Self Service. Conviene cruzarla con esto.'
+  - target: H-036
+    effect: requires_research
+    why: 'R-023 no mide la puerta (F-191) y deja abierto si existe Self Service (Q-046), así que H-036 sigue sin
+      prueba.
+
+
+      Lo nuevo es que trae su prueba más corta: que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024
+      (F-191). Para que la prueba no sea circular hacen falta dos condiciones:
+
+      - La puerta tiene que salir de información previa al contacto (F-188), no del plan ni del monto que se compró.
+
+      - El valor se compara con el ticket estabilizado (T-062), no con el primer pago.
+
+
+      Reactivate no entra en este puente tal como se mide hoy: altas y reactivaciones se cuentan como flujos separados
+      (T-094, T-095).'
+  - target: H-059
+    effect: supports
+    why: 'R-023 confirma la parte observable de H-059:
+
+      - 70,5% de los regresos llega tras un solo mes en cero.
+
+      - Al menos 30% de esos paga exactamente los meses faltantes más el actual.
+
+
+      Que no pasen por el loop del CRO ni tengan intervención comercial sigue sin dato, porque no hay CRM.
+
+
+      Lo nuevo: esa firma de atraso también aparece en 29% de los regresos tras 2 meses. Exigir 2 o más meses no
+      deja limpio a Reactivate. No duplica X-080.'
+  - target: H-006
+    effect: no_material_impact
+    why: 'R-023 confirma que no se mide ninguna etapa antes del primer pago (F-191). H-006 sigue sin poder probarse
+      ni descartarse, como ya dicen X-011, X-019 y X-085.
+
+
+      Solo suma una condición de diseño: con la puerta fija al entrar y el contacto humano registrado aparte (F-188),
+      las entradas que nadie atendió y compraron solas no se reclasifican como Self Service. Así un problema de
+      capacidad no se confunde con un cambio de mezcla.
+
+
+      En qué puerta vive la prueba (Hybrid según R-022, o Executive si R-029 confirma que es el funnel SDR→AE) lo
+      define R-029.'
+  - target: H-028
+    effect: no_material_impact
+    why: 'No hay evidencia nueva. Sin entradas, banda de ajuste ni registro de contacto, H-028 sigue sin prueba
+      observada, y su palanca pide un experimento (X-084, F-159).
+
+
+      R-023 repite dos condiciones que ya piden X-084 y X-086: banda asignada al entrar con información previa al
+      contacto, y contacto humano registrado aparte (F-188). Deja abierta la que decide si la prueba es posible:
+      qué guarda Finora al entrar (tamaño, intención, ajuste, canal).
+
+
+      Un matiz útil: con la puerta fija, la conversión por puerta no depende de a quién contactan los SDR/AE. La
+      comparación entre contactados y no contactados dentro de la puerta sí depende (H-050).'

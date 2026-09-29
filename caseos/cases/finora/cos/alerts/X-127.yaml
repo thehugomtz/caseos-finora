@@ -1,0 +1,50 @@
+id: X-127
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-029
+target: framing
+title: R-029 cambia el framing
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: 'Según F-213, la vuelta de pagadores que se ve en pagos es un loop de Revenue y no Reactivate: 468 vueltas
+  en 340 clientes, 330 al mes siguiente y 126 que pagan los meses saltados más el actual. Una parte es timing de
+  pago. En la definición de Hugo (N-038), Reactivate es el loop de estancados antes del primer pago. «No afirmar
+  todavía» no cubre esta diferencia, y ya se mezcló en tres lugares. El puente llama «reactivación» a esa línea
+  (T-003, T-081, T-082). R-022 la leyó como «loop de Reactivate» en pagos (X-080, con la cifra de F-157). H-037
+  y H-058 la suman a las entradas a pago junto con las altas. Con la regla de R-029, el nudo cuenta solo primeros
+  pagos y la vuelta va al lado derecho del bowtie. Esto cambia la premisa de X-080, así que conviene resolverlos
+  juntos.'
+options:
+- key: A
+  label: Agregar la regla de nombre a «No afirmar todavía»
+  consequence: 'Texto propuesto: «Que la reactivación observada en pagos sea el loop de Reactivate del CRO: es un
+    loop de Revenue y en parte timing de pago». El puente conserva «reactivación observada» y «Reactivate» queda
+    solo para el loop de estancados del funnel. Es una línea en el framing y no hay que renombrar tablas. H-037
+    y H-058 pasan a leerse como una comparación entre el nudo y el loop de Revenue, no como mezcla de entradas.'
+- key: B
+  label: Renombrar la línea del puente a «vuelta de pagadores»
+  consequence: Se elimina la ambigüedad de raíz, pero hay que tocar T-003, T-078, T-081, T-082, C-009, C-016 y C-020,
+    y se pierde «reactivación», que es vocabulario de Hugo.
+- key: C
+  label: No tocar el framing y aclararlo en un glosario de la historia
+  consequence: Es lo más barato, pero no protege las corridas de research ni de síntesis. Además, el CEO puede leer
+    en Q-003 la reactivación del puente como el Reactivate del CRO.
+recommended: A
+recommended_why: Cierra la confusión con una sola línea y conserva las dos palabras de Hugo, cada una en su lado
+  del bowtie. B cuesta mucho para lo que resuelve.
+detected_by: cos
+links:
+- R-029
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

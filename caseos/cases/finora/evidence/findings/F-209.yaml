@@ -1,0 +1,75 @@
+id: F-209
+type: finding
+headline: 'Regla MECE que respeta las definiciones de Hugo: la ruta sale de quién movió cada tramo, y la puerta
+  de entrada queda aparte, fija al entrar.'
+evidence_text: 'Con N-033 y N-037: Executive = todos los tramos los mueve SDR/AE (incluye entrada directa a SQL);
+  Self Service = ningún tramo con persona; Hybrid A = el primer tramo lo movió el cliente y después intervino una
+  persona; Hybrid B = el primer tramo lo movió una persona y después el cliente siguió solo. Decidir A/B por el
+  primer tramo movido hace que cualquier mezcla (incluido persona → solo → persona) caiga en un solo lugar. Lo que
+  no tiene ningún tramo movido queda como «sin ruta aún». La puerta (producto o CRM/ventas, con etapa de entrada
+  y canal) se fija al entrar, no cambia y es la que sirve para comparar tasas. Forrester documenta que cada tipo
+  de oportunidad convierte y tarda distinto en cada etapa (SRC-01): por eso no conviene mezclar rutas en una sola
+  tasa. Separar motions según si el cliente necesita hablar con alguien antes de comprar también aparece en la práctica
+  (SRC-10, solo snippet). Valida la hipótesis de arranque con un ajuste: puerta y ruta son dos campos distintos,
+  no uno.'
+confidence: medium
+limitations:
+- Es diseño. No hay CRM en el modelo para ver cuántos episodios caen en cada ruta ni si Finora registra quién movió
+  cada etapa. Depende de cómo se cierre Q-063.
+kind: measurement
+claims:
+- claim: El funnel Executive es New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won, y ya está
+    bien definido.
+  source_id: INT-01
+  source_type: internal
+  confidence: high
+  freshness: N-033, N-034
+  supports_or_contests: supports
+  notes: Se toma tal cual. Solo se propone qué evidencia marca cada paso para que sea medible.
+- claim: 'Hybrid mezcla tramos por Self Service con tramos intervenidos por una persona (A: empezó arriba y lo intervinieron
+    abajo; B: lo contactaron como New y lo terminó solo). Reactivate son leads estancados que se reactivan y se
+    asignan a un funnel según el caso.'
+  source_id: INT-01
+  source_type: internal
+  confidence: high
+  freshness: N-037, N-038
+  supports_or_contests: supports
+  notes: Hugo pidió bajar bien la definición de Hybrid.
+- claim: Cada tipo de oportunidad convierte a tasas distintas y pasa tiempos distintos en cada etapa, así que el
+    mix de tipos cambia el desempeño de todo el motor.
+  source_id: SRC-01
+  source_type: industry
+  confidence: medium
+  freshness: publicación 2021; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda medir por ruta o puerta en vez de usar una tasa mezclada. Es contexto, no un dato de Finora.
+- claim: Forrester propone tratar a las personas de un comité de compra como una sola oportunidad.
+  source_id: SRC-01
+  source_type: industry
+  confidence: medium
+  freshness: publicación 2021; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda la cuenta-episodio como unidad, como en R-023.
+- claim: Hay práctica de separar motions según si el cliente necesita hablar con alguien antes de comprar, y de
+    que las métricas reflejen los motions que corren en paralelo.
+  source_id: SRC-10
+  source_type: expert
+  confidence: low
+  freshness: sin fecha visible; solo snippet del buscador, 2026-09-29
+  supports_or_contests: supports
+  notes: La página devolvió 404 al abrirla; es contexto débil.
+unverified: false
+source_ref:
+  research: R-029
+links:
+- R-029
+- H-050
+- H-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T16:38:56-06:00'
+version: 1

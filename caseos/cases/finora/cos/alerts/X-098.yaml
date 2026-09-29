@@ -1,0 +1,45 @@
+id: X-098
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-027
+target: F-178
+title: R-027 debilita F-178
+finding_text: El puente por capas no es construible; el actual mezcla orígenes distintos
+why: 'Hallazgo: F-177, de la misma research, dice que en el monto observado no se puede separar un precio de lista
+  distinto de un descuento aplicado. F-178, en cambio, cierra con «composición, no beneficio comercial». Por qué
+  afecta a F-178: si «beneficio comercial» se lee como descuento o concesión, F-178 afirma una ausencia que F-177
+  declara no observable (ausencia de evidencia ≠ evidencia de ausencia). Llevada a C-002 o a la respuesta de Q-026,
+  esa frase le diría al CFO que no hubo revenue que dejamos de capturar. El «No afirmar todavía» cuida un solo lado:
+  «que hubo descuentos en el histórico».'
+options:
+- key: A
+  label: Reformular F-178 y agregar el espejo al framing
+  consequence: 'F-178 queda así: «Lo que se observa es composición de cosechas; si detrás hay menor precio de lista
+    o beneficios comerciales no se puede separar (F-177)». Y el «No afirmar todavía» suma: «que no hubo descuentos
+    o beneficios comerciales en el histórico». La regla queda simétrica y F-178 puede entrar a C-002 y a Q-026.'
+- key: B
+  label: Reformular solo F-178
+  consequence: Corrige este caso, pero el framing sigue cuidando un solo lado y otro finding puede repetir la frase.
+- key: C
+  label: No usar F-178
+  consequence: C-002 ya sostiene la composición con F-075 y F-076 (T-030, T-031), así que no se pierde ninguna cifra.
+    Sí se pierde la frase que une la composición con la pregunta del CFO.
+recommended: A
+recommended_why: Cuesta una línea y evita que el error reaparezca en otros findings. Además, la frase reformulada
+  es justo la respuesta honesta a Q-026 sobre el histórico.
+detected_by: cos
+links:
+- R-027
+- F-178
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144406-cos-7321
+created_at: '2026-09-29T14:59:09-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 1

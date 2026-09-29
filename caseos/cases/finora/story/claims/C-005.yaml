@@ -1,44 +1,68 @@
 id: C-005
 type: claim
 key: funnel-puertas
-question: ¿Cómo definir y medir el funnel si no todos lo recorren igual?
-headline: 'Proponemos un bowtie por puertas: Self Service, Assisted y Executive con nudo común'
-answer: 'No es un funnel único: cada puerta tiene sus hitos a la izquierda. Self Service: visita por canal → registro
-  → activación → primer pago. Assisted: entrada (pide ayuda, PQL derivado de Self Service u outbound que responde)
-  → SQL → oportunidad → primer pago. Executive: cuenta objetivo → oportunidad directa, sin MQL → sponsor o business
-  case → primer pago. Todas llegan a un nudo común y a un lado derecho común (retención, expansión, NRR), cortadas
-  por Canal de adquisición (p. ej. Digital, WoM, outbound); la reactivación va aparte como otro tipo de entrada
-  y AAARRR sirve como vocabulario común, no como secuencia.'
+question: ¿Cómo definir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL, estancamientos
+  de semanas)?
+headline: Proponemos rutas Executive, Self Service e Hybrid, más un loop de Reactivate
+answer: 'Con tus definiciones. Executive es el funnel actual SDR→AE (New → Working SDR → Engaged SDR → SQL SDR →
+  Demo AE → Proposal AE → Won); la entrada directa a SQL también es Executive, con etapa de entrada SQL. Self Service
+  es el recorrido sin persona, con sus canales. Hybrid mezcla tramos sin persona y con persona: en A empezó solo
+  y después intervino un SDR/AE; en B lo tocó una persona y terminó solo. Reactivate no es otra ruta: es un loop
+  sobre leads estancados que se reactivan y se asignan a un funnel según el caso. Para que el mix sea MECE: la unidad
+  es la cuenta; la puerta (Producto o CRM/Ventas) y el canal se fijan al entrar y no cambian; la ruta sale de quién
+  movió cada tramo. El formulario de «hablar con ventas» es una entrada por la puerta CRM, y un lead que nadie contactó
+  y compró solo es Self Service con bandera. Un episodio reactivado no cuenta como entrada nueva: conserva su fecha
+  y su puerta originales, y su primer pago cuenta una sola vez, con bandera. El nudo común es el primer pago, como
+  recomendación que decides tú. La vuelta de pagadores que se ve en los pagos no es Reactivate: es otro loop, del
+  lado Revenue.'
 role_in_story: recommendation
 evidence_ids:
+- F-209
+- F-210
+- F-211
+- F-212
+- F-213
+- F-188
+- F-190
 - F-140
-- F-147
-- F-142
-- F-143
+- F-155
 table_ids: []
 research_ids:
+- R-029
+- R-023
 - R-016
-- R-019
+- R-022
 framework_ids: []
 confidence: medium
 limitations:
-- Propuesta de especialista (R-016, R-019), pendiente de tu aceptación. F-140 y F-147 son de confianza media.
-- Los datos del caso no traen puerta, canal ni etapas, así que el lado izquierdo no se puede medir hoy (F-142, fuente
-  sin verificar). Eso no prueba que Finora no los registre.
-- El hito del nudo (Won, primer pago o suscripción activa) está por acordar con el CRO.
-- La puerta no se infiere de los pagos y el primer pago no sirve como valor de entrada (F-143).
-visual_intent: 'Convergencia: caminos de entrada distintos, con hitos propios, que se juntan en un nudo y comparten
-  el lado derecho.'
-hugo_wording: 'Cómo definir y medir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL,
-  estancamientos de semanas): Assisted / Self Service / Executive, con canales (incl. digital, WoM, clientes que
-  no requirieron KAM).'
+- 'Pendiente de tu aceptación: F-209 a F-213, F-188, F-190, F-140 y F-155 están propuestos.'
+- 'No hay CRM para probarla: hoy no se mide ninguna etapa antes del primer pago, ni la puerta (F-191).'
+- 'Corrige lecturas previas: R-022 y R-023 leían Executive como cuentas nombradas o de KAM y Reactivate como ex-pagadores
+  (F-187, F-189). Aquí mandan tus definiciones (N-033, N-035, N-037, N-038), y el «Assisted» del guion pasa a Hybrid.'
+- 'Parámetros por decidir: qué cuenta como intervención (Q-063; R-029 propone solo la interacción de ida y vuelta
+  con SDR/AE), el umbral de estancado (Q-064) y el nudo común (X-052).'
+- No sabemos si en Finora existe Self Service como compra sin persona (Q-046). La ruta de un pagador no se infiere
+  del monto.
+visual_intent: 'Split and converge: rutas que entran por puertas distintas y se juntan en el primer pago; Reactivate
+  como flecha de retorno a la izquierda y la vuelta de pagadores aparte, a la derecha.'
+hugo_wording: «el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie / Proposal
+  Account Executive / Won /// ese es el punto de partida»; Self Service «con sus respectivos canales»; Hybrid «en
+  alguna parte del funnel fue por Self Service y en algún otro fue intervenido por una persona»; Reactivate «los
+  que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso».
 links:
+- F-209
+- F-210
+- F-211
+- F-212
+- F-213
+- F-188
+- F-190
 - F-140
-- F-147
-- F-142
-- F-143
+- F-155
+- R-029
+- R-023
 - R-016
-- R-019
+- R-022
 phase: story
 review:
   state: proposed
@@ -46,30 +70,50 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T13:43:28-06:00'
-version: 4
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 6
 status: pending
 strength:
   level: pending
   evidence:
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  - F-188
+  - F-190
   - F-140
-  - F-147
-  - F-142
-  - F-143
+  - F-155
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  - F-188
+  - F-190
   - F-140
-  - F-147
-  - F-142
-  - F-143
+  - F-155
   accepted: []
   pending:
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  - F-188
+  - F-190
   - F-140
-  - F-147
-  - F-142
-  - F-143
+  - F-155
+  - F-209
+  - F-210
+  - F-211
+  - F-212
+  - F-213
+  - F-188
+  - F-190
   - F-140
-  - F-147
-  - F-142
-  - F-143
+  - F-155
   tables: []
   unsupported_numbers: []
   stale: []

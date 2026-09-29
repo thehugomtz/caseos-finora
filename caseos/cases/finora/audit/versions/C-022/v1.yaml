@@ -1,0 +1,63 @@
+id: C-022
+type: claim
+key: metricas-catalogo
+question: ¿Qué métricas mide cada funnel, cuáles se calculan hoy y en qué foro se leen?
+headline: 'Proponemos un catálogo por funnel: definición, si existe hoy, fuente faltante y foro'
+answer: 'Executive: SQL u oportunidades por cohorte, alcance SQL→Won en ventana fija, ciclo de venta con el % aún
+  abierto, estancamientos por etapa y Won→primer pago. Falta el historial de etapas del CRM; se lee en el foro semanal.
+  Self Service: registros por canal, activación (si existe) y registro→primer pago en ventana. Faltan los eventos
+  de producto y el canal de origen; se lee en el foro mensual. Hybrid: tasa de escalamiento (entradas de producto
+  que reciben a una persona antes de pagar), mix de rutas dentro de cada puerta, tiempo a primer contacto y carga
+  por SDR/AE. Faltan las actividades de ida y vuelta y el roster; se lee en los foros semanal y mensual. Reactivate:
+  estancados por etapa, reactivados, asignados y su primer pago con bandera; foro semanal. Desde el nudo, lo único
+  que se calcula hoy con nombre honesto es: primeros pagos, ticket de entrada estabilizado, permanencia temprana,
+  churn observado y persistente, MRR pagado observado y S&M por alta en unidades reportadas. Se lee en los foros
+  mensual y trimestral.'
+role_in_story: recommendation
+evidence_ids:
+- F-155
+- F-158
+- F-159
+- F-213
+- F-135
+- F-139
+- F-148
+table_ids: []
+research_ids:
+- R-022
+- R-029
+- R-018
+- R-019
+- R-023
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- D-007 deja fuera las métricas definitivas; D-018 (propuesta, la decides tú) lo lee como «no construir en esta
+  etapa». Esto es un catálogo propuesto, no construido.
+- Hoy no se calcula ninguna métrica por funnel ni nada antes del pago (F-159).
+- Los nombres siguen a X-032 (MRR pagado observado, S&M por alta, ARPA). Ventanas y umbrales se acuerdan con Finora.
+visual_intent: Matriz funnel × métrica, con marca de «hoy / pedir» y el foro donde se lee.
+hugo_wording: cómo medirlas, robustecerlo y bajar lo que tenga sentido
+links:
+- F-155
+- F-158
+- F-159
+- F-213
+- F-135
+- F-139
+- F-148
+- R-022
+- R-029
+- R-018
+- R-019
+- R-023
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 1

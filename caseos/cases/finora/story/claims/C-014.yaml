@@ -3,34 +3,50 @@ type: claim
 key: operar-foros
 question: ¿Qué decisiones le permite tomar al CRO y en qué foro?
 headline: 'Proponemos un tablero por foro atado a decisiones: semanal, mensual y trimestral'
-answer: 'La base es un bowtie por motion (Self Service, Assisted, Executive con KAM en la post-venta) que mide volumen,
-  alcance y tiempo por hito. Cada foro tiene su decisión: el semanal decide oportunidades, el mensual la mezcla
-  de motion y Canal de adquisición, y el trimestral la inversión y la capacidad. El análisis ad hoc se abre por
-  hipótesis (H-001 a H-008). Los agentes de IA y la atribución van encima, no en la base: solo sobre métricas gobernadas
-  y con un piloto controlado; para decidir presupuesto hacen falta experimentos.'
+answer: 'Semanal · pregunta: ¿qué entradas y oportunidades se están atorando? · métricas: estancamientos por etapa,
+  cobertura de primer contacto y carga por SDR/AE · decisión: reasignar SDR/AE entre funnels, reactivar o descalificar
+  · dueños: el CRO con los líderes de SDR y AE.
+
+  Mensual · pregunta: ¿qué funnel y qué canal traen clientes que se quedan? · métricas: alcance a primer pago por
+  cohorte y puerta, ticket estabilizado y permanencia temprana por canal · decisión: mover inversión entre canales
+  y ajustar la regla de calificación o de reparto · dueños: el CRO con Marketing y Finanzas.
+
+  Trimestral · pregunta: ¿dónde poner capacidad e inversión y qué pasa con el precio de entrada? · métricas: payback
+  por funnel cuando exista CAC en COP, retención por cohorte y mix de rutas · decisión: revisar precio o plan de
+  entrada, y contratar o reasignar capacidad · dueños: CEO, CFO y CRO.
+
+  Los análisis ad hoc se abren por hipótesis de la matriz. Los agentes de IA y la atribución van encima: trabajan
+  solo sobre métricas gobernadas y entran con un piloto controlado, y la atribución reparte crédito, no prueba causa.'
 role_in_story: recommendation
 evidence_ids:
 - F-147
 - F-148
 - F-149
+- F-144
 table_ids: []
 research_ids:
 - R-019
+- R-025
+- R-022
 framework_ids: []
 confidence: medium
 limitations:
-- Propuesta de especialista (R-019), pendiente de tu aceptación (confianza media).
-- 'Las decisiones del CRO por foro todavía no están definidas: la cadencia se ajusta cuando se acuerden.'
-- Depende de la capa técnica (operar-fuentes) y del historial de etapas del CRM.
-- La atribución reparte crédito; no reemplaza a los experimentos.
-visual_intent: 'Cadencia → decisión: cada foro con su pregunta y su métrica; los agentes, como capa superior sobre
-  métricas gobernadas.'
-hugo_wording: 'Decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA.'
+- 'Pendiente de tu aceptación: F-147, F-148, F-149 y F-144 están propuestos.'
+- D-007 deja fuera los dashboards; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa». Es
+  un tablero propuesto, no construido.
+- 'El brief no define las decisiones del CRO: las del tablero son una propuesta para validar con él.'
+- El payback por funnel solo existe cuando haya CAC en COP.
+visual_intent: 'Escalera de cadencia: foro → pregunta → métrica → decisión → dueño, de lo táctico a lo estratégico,
+  con agentes y atribución como capa superior.'
+hugo_wording: 'decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA'
 links:
 - F-147
 - F-148
 - F-149
+- F-144
 - R-019
+- R-025
+- R-022
 phase: story
 review:
   state: proposed
@@ -38,8 +54,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T11:54:07-06:00'
-version: 2
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
 status: pending
 strength:
   level: pending
@@ -47,17 +63,21 @@ strength:
   - F-147
   - F-148
   - F-149
+  - F-144
   - F-147
   - F-148
   - F-149
+  - F-144
   accepted: []
   pending:
   - F-147
   - F-148
   - F-149
+  - F-144
   - F-147
   - F-148
   - F-149
+  - F-144
   tables: []
   unsupported_numbers: []
   stale: []

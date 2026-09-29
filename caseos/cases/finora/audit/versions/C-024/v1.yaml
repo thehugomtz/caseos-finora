@@ -1,0 +1,77 @@
+id: C-024
+type: claim
+key: observable-semaforo
+question: ¿Qué puede y qué no puede responder cliente + mes + monto?
+headline: Con cliente, mes y monto se ve qué cambió, no por qué
+answer: 'Se puede: clientes activos, MRR pagado observado y su puente, primeros pagos, ticket estabilizado, churn
+  observado y persistente, y cohortes. Con cuidado, el puente, porque el cobro se mezcla con el movimiento: 29%
+  del MRR de expansión se revierte al mes siguiente, 44% de los churns observados vuelve a pagar al mes siguiente
+  y 42,6% del MRR de reactivación llega cubriendo los meses del hueco más el corriente. La contracción, en cambio,
+  casi no revierte: 4,0% regresa al nivel previo y 88,9% sigue igual o más abajo. Eso no descarta que parte de la
+  contracción sea cobro. Si llega justo después de un primer pago o de una reactivación que cubría varios meses,
+  la baja es la vuelta al monto usual y se sostiene; separarla pide el periodo de servicio. No se puede: lista,
+  tarifa, plan, descuento, estado de la suscripción ni nada antes del pago. Además, la vuelta de pagadores es un
+  loop de Revenue, no el Reactivate del funnel.'
+role_in_story: diagnosis
+evidence_ids:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-131
+- F-135
+- F-136
+- F-186
+- F-213
+table_ids:
+- T-074
+- T-076
+- T-082
+- T-086
+research_ids:
+- R-028
+- R-027
+- R-011
+- R-018
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- R-011 ubica buena parte de la contracción justo después de un primer pago o una reactivación (X-037), y R-028
+  solo prueba la reversión al mes siguiente (X-100). Se reconcilian así, sin una cifra conjunta.
+- Una parte del MRR de reactivación no encaja en firmas de cobro (T-082). Podrían ser regresos reales (H-064).
+- El puente normalizado exacto no es medible sin periodo de servicio (F-186).
+visual_intent: 'Semáforo de observabilidad: se puede / con cuidado / no se puede, con el puente en amarillo y la
+  contracción separada de la reactivación.'
+hugo_wording: qué data observable podemos sacar
+links:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-131
+- F-135
+- F-136
+- F-186
+- F-213
+- T-074
+- T-076
+- T-082
+- T-086
+- R-028
+- R-027
+- R-011
+- R-018
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 1

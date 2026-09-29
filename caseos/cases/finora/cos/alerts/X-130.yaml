@@ -1,0 +1,48 @@
+id: X-130
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-029
+target: Q-064
+title: R-029 requiere más investigación Q-064
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: 'R-029 deja Q-064 abierta y le suma un segundo parámetro: la caducidad del episodio. En la regla propuesta,
+  el episodio conserva fecha y puerta, y el primer pago cuenta una sola vez, con bandera. Para aplicarla hay que
+  saber cuándo un regreso deja de ser el mismo episodio. Sin caducidad, un lead que vuelve mucho después sigue en
+  su cohorte original y la cohorte nunca cierra. Con una caducidad corta, los regresos entran como New: sube New
+  y baja Reactivate, que es justo el conteo que miran H-001 y H-052. Sigue siendo un parámetro para acordar con
+  Finora, no un estándar de mercado.'
+options:
+- key: A
+  label: Ampliar Q-064 a dos parámetros y acordarlos juntos con Finora
+  consequence: Se acuerdan juntos el umbral de días sin actividad por etapa y la caducidad del episodio. Cuando
+    haya CRM, se calibran con la distribución de días sin actividad por etapa. El loop de Reactivate queda definido
+    de punta a punta y el conteo de New deja de depender de una regla implícita.
+- key: B
+  label: Atar la caducidad a la ventana fija de cohorte (C-006)
+  consequence: Pasado ese plazo, el regreso abre un episodio nuevo con bandera de re-entrada. Hay un parámetro menos
+    que acordar y queda coherente con la medición por cohorte. A cambio, amarra una regla operativa del CRO a una
+    ventana analítica que quizá no calce con cómo reasignan los SDR.
+- key: C
+  label: Dejar la caducidad como detalle de implementación
+  consequence: Es lo más rápido, pero deja abierto el doble conteo entre New y Reactivate, justo donde mira H-001.
+recommended: A
+recommended_why: Los dos parámetros deciden lo mismo, qué es New y qué es Reactivate, así que conviene acordarlos
+  juntos. B puede ser la propuesta de arranque que se lleva a Finora dentro de A.
+detected_by: cos
+links:
+- R-029
+- Q-064
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

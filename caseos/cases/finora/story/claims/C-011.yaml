@@ -1,47 +1,66 @@
 id: C-011
 type: claim
 key: hipotesis-arbol
-question: ¿Qué podría explicar «más leads, pero no más ventas» y qué dato validaría o descartaría cada explicación?
-headline: Proponemos descartar primero artefactos de medición y después contrastar causas ToFu y BoFu
-answer: 'Antes de las causas, la premisa: con pagos, «no más ventas» se sostiene en jul–oct del último año frente
-  al anterior, pero no en mar–oct, así que depende de la ventana. El árbol separa los artefactos —conteo, es decir,
-  si la demanda creció de verdad (H-001); mezcla (H-002); y tiempo de exposición (H-003 y la parte de H-004 en que
-  compran más tarde y terminan igual)— de las explicaciones a contrastar: calidad al entrar (H-005, ToFu), atención
-  y capacidad (H-006), el tramo post-SQL (H-007, BoFu) y la oferta, es decir producto, precio o condiciones (H-008,
-  BoFu). Las entradas únicas con fecha (con canal, motion y segmento) y su vínculo con el pago bastan para distinguir
-  H-001 a H-004. H-005 a H-007 necesitan datos que suelen estar en un CRM, aunque no siempre con su historia, y
-  H-008 pide más que las razones de pérdida.'
+question: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas» y en qué orden se descartan?
+headline: Proponemos descartar primero artefactos de medición y después contrastar causas ToFu, MoFu y BoFu
+answer: '«Llega más gente» es lo que dice el CRO, no un dato del caso: los datos no traen leads. El paso 1 ya se
+  hizo con los pagos. Sin oct-24, las altas por mes de 2024 son 56, frente a 54 en 2023. Altas y reactivaciones
+  van en flujos separados: 1.476 clientes distintos con alta, 0 con pago previo y 468 reactivaciones aparte. El
+  cambio de ID no se puede verificar, aunque en 2023 el emparejamiento por monto e industria con churns recientes
+  (175) no supera al placebo (196). El estancamiento de altas queda como señal para contrastar con causas, no como
+  artefacto. Después, en orden: artefactos del lado de leads (necesitan el CRM) → ToFu → MoFu → BoFu → después del
+  cierre. En cada paso se comparan cohortes de entrada a igual edad y el cambio se parte en volumen, mezcla y tasa
+  por funnel.'
 role_in_story: recommendation
 evidence_ids:
+- F-196
+- F-197
+- F-201
+- F-202
+- F-203
 - F-125
 - F-126
 - F-127
-- F-128
-- F-129
-table_ids: []
+- F-204
+- F-205
+- F-208
+table_ids:
+- T-093
+- T-094
+- T-100
 research_ids:
+- R-024
+- R-025
 - R-010
 framework_ids: []
 confidence: medium
 limitations:
-- Propuesta de especialista (R-010), pendiente de tu aceptación. F-126 viene de fuente sin verificar y F-129 es
-  de confianza baja.
-- 'Con los datos del caso no se valida ni se descarta ninguna de H-001 a H-008: no hay entradas ni vínculo lead→pago.'
-- 'H-004 no es toda artefacto: solo lo es «compran más tarde y terminan igual». «Compran menos aun con seguimiento
-  comparable» es una diferencia real (X-017).'
-- La caída del último tramo puede ser en parte un efecto de borde o de rezago de los pagos (H-029).
-- Calidad, atención, post-SQL y oferta son explicaciones a contrastar, no causas confirmadas (D-003).
-visual_intent: 'Descarte por eliminación: primero se podan los artefactos; lo que queda son causas, cada una con
-  el dato que la decide.'
-hugo_wording: Definir qué hipótesis ToFu y BoFu (demanda, calidad, velocidad de atención, conversión post-SQL) podrían
-  estar afectando su motor y qué datos validarían o descartarían cada una; aquí no hay research en data, es una
-  propuesta.
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- Con los pagos solo se acotan los artefactos del lado de pagadores; los del lado de leads necesitan el CRM.
+- 'La premisa depende de la ventana: con pagos, la caída de primeros pagadores está en jul–oct 2024 (F-125, F-204,
+  X-106). Hay que fijar el periodo con el CRO.'
+- En 2024 el placebo casi no tiene pares (T-100), probablemente porque el panel termina en oct-24. La prueba de
+  IDs solo sirve para 2022–2023.
+visual_intent: 'Escalera de descarte: cada peldaño cierra artefactos antes de pasar a causas.'
+hugo_wording: Definir que hipótesis ToFu y BoFu podrían estar afectando su motor de acuerdo a su problema definido
+  y qué datos validarían o descartarían cada una
 links:
+- F-196
+- F-197
+- F-201
+- F-202
+- F-203
 - F-125
 - F-126
 - F-127
-- F-128
-- F-129
+- F-204
+- F-205
+- F-208
+- T-093
+- T-094
+- T-100
+- R-024
+- R-025
 - R-010
 phase: story
 review:
@@ -50,36 +69,67 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T13:56:53-06:00'
-version: 3
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 5
 status: pending
 strength:
   level: pending
   evidence:
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
   - F-125
   - F-126
   - F-127
-  - F-128
-  - F-129
+  - F-204
+  - F-205
+  - F-208
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
   - F-125
   - F-126
   - F-127
-  - F-128
-  - F-129
+  - F-204
+  - F-205
+  - F-208
   accepted: []
   pending:
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
   - F-125
   - F-126
   - F-127
-  - F-128
-  - F-129
+  - F-204
+  - F-205
+  - F-208
+  - F-196
+  - F-197
+  - F-201
+  - F-202
+  - F-203
   - F-125
   - F-126
   - F-127
-  - F-128
-  - F-129
-  tables: []
-  unsupported_numbers: []
+  - F-204
+  - F-205
+  - F-208
+  tables:
+  - T-093
+  - T-094
+  - T-100
+  - T-093
+  - T-094
+  - T-100
+  unsupported_numbers:
+  - '1'
   stale: []
 challenges:
 - by: hugo

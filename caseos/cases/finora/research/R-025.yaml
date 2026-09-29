@@ -88,8 +88,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T14:38:00-06:00'
-updated_at: '2026-09-29T14:56:18-06:00'
-version: 5
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 6
 job_id: JOB-20260929-143800-bdd6
 error: null
 started_at: '2026-09-29T14:38:00-06:00'
@@ -1189,3 +1189,155 @@ validation:
   bare_claims: []
   seen_urls: 113
   ok: true
+cos_assessment:
+  summary: 'R-025 no puede validar ni descartar ninguna causa del funnel porque no hay leads ni CRM. Lo que sí hace
+    es poner fecha y lugar a la parte que se ve en pagos: los primeros pagadores caen en jul–oct 2024, −19% frente
+    al año anterior y −13% por mes frente a ene–jun-24 (cálculo mío). La caída pesa más en Retail+Producción. Los
+    artefactos de pagos que se pueden probar no alcanzan para explicarla. Lo material: cambian C-011 y Q-001, y
+    se debilitan H-029, H-037, H-024 y H-058. En C-011 y Q-001 hace falta un paso 0 para fijar el periodo. Además,
+    un artefacto de conteo de leads no quita pagadores, así que solo toca el «llega más gente». Ojo con el +29%
+    de ene–jun: compara contra el semestre anterior al escalón de jun-23, así que no lo leería como crecimiento
+    dentro de 2024. Todo depende de que aceptes F-204–F-208, que hoy están propuestos.'
+  run_id: RUN-20260929-162146-cos-be42
+  at: '2026-09-29T16:36:54-06:00'
+  impacts:
+  - target: C-011
+    effect: changes_story
+    why: 'R-025 ordena sus 17 causas igual que C-011, pero el claim quedó atrás en cuatro cosas. (1) Le falta el
+      paso 0, fijar el periodo (F-204). (2) Los tres artefactos de pagos que se pueden probar no alcanzan (F-205).
+      Un artefacto de conteo de leads (H-052, H-051 y la parte de conteo de H-027) infla el «llega más gente», pero
+      no puede quitar pagadores. Del lado de pagos, para la caída de 203 vs 251 solo queda abierto el rezago Won→primer
+      pago (H-029). (3) El claim dice «ToFu y BoFu», y R-025 agrega MoFu y después del cierre. Esto no choca con
+      D-001/D-003: a primera vista las 17 caben en sus ramas, así que cambia la presentación, no la decisión. Eso
+      sí, tal cual no son MECE: H-028 combina H-005 y H-006, y H-054 toca calidad y post-SQL. (4) Las cifras nuevas
+      no están en ninguna tabla del caso (T-093 solo tiene promedios anuales). Y R-025 tiene confianza alta en los
+      hechos, pero media en el marco. Todo esto le da contenido a X-092, que hoy es genérica: mejor resolverla con
+      esto que abrir otra alerta.'
+  - target: Q-001
+    effect: changes_framing
+    why: 'La mitad de Q-001 que se ve en pagos ya no es «no crecen en la misma proporción»: es una caída absoluta
+      de primeros pagadores en jul–oct 2024. Se sostiene en dos lecturas. Contra el año anterior, −19%, y eso controla
+      la estacionalidad. Por mes contra ene–jun-24, −13% (50,8 vs 58,5; cálculo mío), y eso controla el escalón
+      de jun-23. El número frágil es el +29%, porque compara contra ene–jun-23 (45,3 por mes), antes de ese escalón
+      (H-025). Mes a mes no hubo crecimiento dentro de 2024: 63,0 por mes en jul–dic-23 (650 de T-100 menos 272),
+      58,5 en ene–jun-24 y 50,8 en jul–oct-24. La otra mitad, «llega más gente», sigue sin verse (X-049). Esto amplía
+      X-016: ya sabemos qué periodo mirar. Un cuidado: «se concentra en Retail+Producción» (F-206) puede ser solo
+      tamaño. Además, al lado de C-007 («no es una industria») se lee como contradicción, aunque midan cosas distintas.'
+  - target: H-029
+    effect: weakens
+    why: El borde de octubre no explica la caída. Jul–sep da −18% (153 vs 187) contra −19% en jul–oct, y octubre
+      sola cae −22% (50 vs 64, cálculo mío). Queda solo el rezago Won→primer pago, que no se prueba sin fechas de
+      Won (Q-065). La forma de la caída también pesa en contra. Si el rezago se alarga una vez, los pagos se corren
+      y dejan un hueco temporal, no una caída sostenida de cuatro meses. Para eso, el rezago tendría que alargarse
+      mes tras mes.
+  - target: H-037
+    effect: weakens
+    why: Contar o no las reactivaciones cambia el tamaño, pero no el signo. En jul–oct la caída pasa de −19% a −16%
+      (260 vs 311), y el peso de las reactivaciones sube de 19,3% a 21,9%. En ene–jun el crecimiento pasa de +29%
+      a +38%. Como explicación de la caída, H-037 aporta como mucho unos 3 puntos, y en el semestre anterior empuja
+      hacia el otro lado. La pregunta de definición (cómo cuenta el CRO «clientes nuevos») sigue en pie, pero ya
+      no cambia la lectura.
+  - target: H-024
+    effect: weakens
+    why: 'El salto va de 26 a 60 altas entre dic-22 y ene-23 (T-016). Para que viniera de IDs nuevos puestos a pagadores
+      viejos, tendrían que desaparecer unos 34 IDs cerca del cambio. En nov–dic-22 hay solo 7 salidas sin retorno,
+      y como mucho 2 coinciden en industria y monto exacto con altas de ene-23. Esa coincidencia es un test débil:
+      en 2023, 175 de 650 altas coinciden así con algún churn reciente (T-100), así que esas 2 pueden ser azar.
+      Queda un hueco. Si el cambio de sistema de cobro fue en ene-23, las salidas que cuentan son las de quienes
+      pagaron por última vez en dic-22, y hay que confirmar que la ventana de R-025 las incluye. La identidad en
+      sí no se puede verificar (F-202).'
+  - target: Q-065
+    effect: requires_research
+    why: R-025 muestra que Q-065 cubre los campos del CRM por lead, pero le faltan tres cosas que piden varias causas.
+      (a) Una bitácora con fecha de los cambios en definición de lead, formulario, calificación, reparto, cuota
+      del SDR, precios y planes (H-027, H-054, H-056). (b) El número de SDR/AE por mes y la hora del primer contacto
+      humano (H-006, H-028, H-055). (c) Marcas de duplicado, cliente actual, soporte o spam (H-052). Sin (a), aunque
+      llegue el CRM completo, no se puede poner ningún cambio de reglas contra jul-24.
+  - target: H-058
+    effect: weakens
+    why: 'Con las cifras de R-025, H-058 se cumple en un tramo y en el otro no. En jul–oct-24 sí: las reactivaciones
+      casi no cambian (57 vs 60, que sale de 260−203 y 311−251) y el peso sube porque caen las Nuevas. En ene–jun-24
+      no. Si con reactivaciones el crecimiento pasa de +29% a +38%, las reactivaciones tuvieron que crecer más de
+      +38%, así que ahí el peso se mueve por ellas.'
+  - target: Q-016
+    effect: supports
+    why: R-025 es la respuesta más completa a Q-016 hasta ahora. Para cada una de las 17 causas dice qué tendría
+      que ser cierto y qué la descarta, como diseño y no como resultado (en la línea de R-007). Todavía no es «mínima».
+      Sus cuatro huecos, más la unión Won→primer pago de Q-065, se reducen a unos cinco pedidos de datos que cubren
+      las 17. Esa es la versión para la lámina, con las 17 en anexo. F-208 le da el método.
+  - target: H-027
+    effect: requires_research
+    why: 'R-025 no puede fechar cambios de definición, formulario, calificación ni reparto. Un matiz útil: la parte
+      de conteo de H-027 solo infla los leads y no explica menos pagadores. La parte de reparto o calificación sí
+      podría, por un efecto operativo real. La prueba más barata es la bitácora con fecha (nueva pregunta). Un cambio
+      cerca de jul-24 la vuelve candidata; si no hubo cambios en esa ventana, pierde peso. Las opciones van en el
+      impacto sobre Q-065.'
+  - target: H-056
+    effect: requires_research
+    why: Competidor y funcionalidad piden motivos de pérdida (X-026). Para la rama de precio o plan hay un chequeo
+      parcial con pagos. Si el precio subió a mitad de 2024, el ticket estabilizado de las altas de jul–oct-24 tendría
+      que subir frente a ene–jun-24, con la misma mezcla de industria. F-206 solo dice que no baja. Una suba no
+      lo prueba, porque puede ser mezcla, pero un ticket plano le quita peso a esa rama. Queda en new_questions.
+  - target: H-005
+    effect: requires_research
+    why: 'Sigue sin poder probarse ni descartarse (X-010, X-024, X-086). R-025 le agrega condiciones: para explicar
+      lo que se ve en pagos, la baja de calidad tendría que caer sobre entradas que convierten en jul–oct 2024 y
+      pegar más en Retail+Producción. F-206 dice que el ticket no baja y que casi nadie deja de pagar en M1, pero
+      eso no la separa de las otras causas: una peor calidad puede bajar la conversión sin cambiar a quien sí paga.
+      Sin alerta nueva.'
+  - target: H-006
+    effect: requires_research
+    why: 'Igual que antes (X-011, X-019, X-085): sin número de SDR/AE ni tiempos de contacto no se prueba. F-207
+      vuelve a cerrar el atajo de usar el gasto como proxy de capacidad. R-025 le agrega una condición: para explicar
+      la caída, la carga por SDR/AE tendría que haber subido hacia mitad de 2024. El número de SDR/AE por mes entra
+      en la pregunta propuesta para Finora. Sin alerta nueva.'
+  - target: H-052
+    effect: requires_research
+    why: 'R-025 la deja entre lo que no se puede concluir: faltan leads por mes y fuente, y marcas de duplicado,
+      cliente actual, soporte o spam. Lo que cambia es su papel: como mucho explica el lado «llega más gente», no
+      los 203 vs 251 primeros pagadores de jul–oct. Las marcas entran en el pedido a Finora (ver Q-065).'
+  - target: H-053
+    effect: requires_research
+    why: 'Hace falta la motion o el canal por cuenta, que no está en el modelo (X-054). Es de las pocas causas ToFu
+      que sí pueden bajar la cantidad de pagadores: compradores que antes entraban solos por Self Service y ahora
+      pasan por el funnel comercial y se quedan en Working o Engaged. R-025 no le agrega evidencia.'
+  - target: H-054
+    effect: requires_research
+    why: Hace falta la historia de la meta o cuota del SDR y SQL→Won por origen. La bitácora con fecha (nueva pregunta)
+      mostraría si la meta cambió cerca de jul-24. R-025 no le agrega evidencia.
+  - target: H-055
+    effect: requires_research
+    why: 'Hacen falta los leads estancados en Working o Engaged por cohorte, con fechas de etapa (Q-065). R-025
+      no le agrega evidencia. Si fuera cierta, se vería como una bolsa de estancados que crece en las cohortes de
+      mitad de 2024: eso es lo primero que habría que pedir.'
+  - target: H-057
+    effect: requires_research
+    why: 'Según F-206 (propuesto), casi nadie deja de pagar en M1. Eso deja fuera la caída en el arranque después
+      de pagar, que además solo importaría si «clientes nuevos» son los que siguen activos. Queda el Won que nunca
+      llega a pagar: por construcción no aparece en pagos, y verlo pide la fecha de Won unida a facturación (Q-065).
+      Solo explica la brecha si para el CRO «venta» es un cliente pagando.'
+  - target: Q-021
+    effect: requires_research
+    why: 'Mismo resultado que X-013 y X-030: ninguna de las cuatro causas del caso (demanda, calidad, velocidad
+      de atención y post-SQL) se valida ni se descarta. Lo nuevo es que cada una tiene un «rebote» con el mismo
+      síntoma: H-053 para demanda, H-054 para calidad y post-SQL, H-055 para velocidad y H-056 para post-SQL. Eso
+      es lo que el CRO tiene que oír antes de elegir palanca. Sin alerta nueva.'
+  - target: C-004
+    effect: supports
+    why: 'F-207 extiende C-004 a 2024: gasto y primeros pagadores van en sentido contrario en los dos semestres.
+      El límite no cambia. Cruzar fechas no atribuye ventas, el gasto sigue en «u» (X-001) y Payroll es negativo
+      en cinco meses (X-015). Si se suma a C-004, necesita una tabla por semestre de 2024.'
+  - target: C-006
+    effect: supports
+    why: 'F-208 junta el método de C-006 con el de C-012: cohortes de entrada a igual edad, con el cambio partido
+      en volumen, mezcla y tasa por motion. En la story conviene una sola lámina de método, no tres versiones. La
+      palanca de capacidad sigue pidiendo un experimento (X-082).'
+  - target: H-028
+    effect: no_material_impact
+    why: R-025 no le agrega nada. Sigue pidiendo la carga por cohorte y la cobertura por banda de ajuste, y la palanca
+      pide un experimento (X-084). Sin alerta nueva.
+  - target: H-051
+    effect: no_material_impact
+    why: 'Es un artefacto de registro en el CRM que no se ve en pagos, y Q-065 ya pide el origen (incluida la entrada
+      directa a SQL) y los estados de salida. R-025 no le agrega evidencia. El único matiz es para C-011: cómo se
+      registra algo en el CRM no puede quitar pagadores, así que no explica la caída de jul–oct.'

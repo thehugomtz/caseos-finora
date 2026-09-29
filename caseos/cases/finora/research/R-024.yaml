@@ -61,8 +61,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T14:38:00-06:00'
-updated_at: '2026-09-29T14:46:22-06:00'
-version: 6
+updated_at: '2026-09-29T16:45:29-06:00'
+version: 7
 job_id: JOB-20260929-143800-3eaf
 error: null
 started_at: '2026-09-29T14:38:00-06:00'
@@ -525,3 +525,184 @@ skills_loaded:
   why: agente del workspace existente
 validation:
   ok: true
+cos_assessment:
+  summary: 'R-024 corre el Paso 1 de C-011 con los pagos. Lo que deja firme: la meseta de primeros pagadores observados
+    2023→2024 (54 → 55 por mes; 56 sin octubre) no la produce el último mes ni la forma de contar las reactivaciones.
+    Además, desde ene-23 no se distingue una tendencia.
+
+
+    Lo que no cubre:
+
+    1. Los artefactos del lado de la entrada (H-001, H-002, H-003, H-052), porque sin leads no se pueden probar.
+
+    2. La reaparición de un cliente con otro ID, que no se puede verificar (F-202).
+
+    3. El tramo del −19% de jul–oct 2024, porque compara promedios anuales y no los mismos meses. Por eso Q-036
+    queda contestada solo a medias.
+
+
+    Efectos:
+
+    - Debilita H-029 (la parte de «octubre incompleto») y H-037 (en la ventana 2023→2024).
+
+    - Debilita H-024, pero solo como indicio, sin descartarla.
+
+    - Sostiene Q-051 (lectura 2023→2024), H-058 y C-003.
+
+    - Cambia cómo se cuenta C-011. Esto llena X-091, que solo marcaba el vínculo; no abro una alerta nueva.
+
+
+    F-192 a F-203 siguen propuestos: nada de esto entra a la historia hasta que Hugo los revise.
+
+
+    Orden sugerido:
+
+    1. Q-051: Hugo fija el periodo y el hito del CRO (o se los pregunta). Eso decide si H-024 y H-037 pesan.
+
+    2. Q-036: pedir el corte comparando los mismos meses.
+
+    3. H-024: revisar mes a mes el salto de ene-23, solo si el periodo incluye 2022 o si C-003 usa el +104%.'
+  run_id: RUN-20260929-162147-cos-c496
+  at: '2026-09-29T16:45:29-06:00'
+  impacts:
+  - target: C-011
+    effect: changes_story
+    why: 'R-024 es el Paso 1 de C-011 hecho con pagos. Este es el contenido de X-091, que está abierta pero solo
+      marca el vínculo: no abro alerta nueva.
+
+
+      Qué cambia: C-011 deja de ser solo método y trae un resultado. Con pagos, la meseta 2023→2024 no sale del
+      último mes ni de contar dos veces a quien se reactiva (F-196, F-197, F-201). Desde ene-23 la pendiente no
+      se distingue de cero (F-193).
+
+
+      Alcance: cubre solo los artefactos de la serie de primeros pagos. Los de la entrada que nombra R-010 (conteo
+      H-001, mezcla H-002, tiempo H-003/H-004) y H-052 no se prueban sin leads. R-025 (X-092) deja el Paso 2 igual
+      de bloqueado.
+
+
+      Límites que hay que escribir: la reaparición con otro ID no se puede verificar (F-202); la prueba de coincidencias
+      solo da una dirección (F-203); el churn observado incluye pausas y atrasos.
+
+
+      En la lámina, «altas» quiere decir primeros pagadores observados. El framing no deja usar la etiqueta contractual
+      sin vigencia verificada.
+
+
+      Ninguno de F-192 a F-203 está aceptado.'
+  - target: H-029
+    effect: weakens
+    why: 'La parte de «octubre-24 incompleto» pierde apoyo. Frente a sep-24, en oct-24 suben los clientes activos
+      (1.678 contra 1.645, F-194) y el MRR pagado (COP 97,0 contra 92,7 millones, F-195). Si faltaran pagos se vería
+      lo contrario: activos y MRR abajo y un pico de salidas.
+
+
+      Cuenta directa mía, no medida en R-024: las 33 salidas de oct-24 (F-198) son ≈2,0% de los activos de sep-24,
+      en línea con el churn observado de 2024 (F-175; ver X-101).
+
+
+      Ojo con F-195: las 1.961 filas no prueban que el mes esté completo, porque el panel tiene esas filas en todos
+      los meses (X-031).
+
+
+      Lo que no cubre:
+
+      - R-024 compara promedios anuales (2024 sin octubre, 56, contra 2023 completo, 54; F-196), no el tramo del
+      −19% de jul–oct 2024 (R-025).
+
+      - La otra explicación, más tiempo entre Won y primer pago, no se puede evaluar: no hay fechas de Won (F-202).'
+  - target: Q-036
+    effect: requires_research
+    why: 'R-024 contesta la primera mitad, de forma indirecta: octubre-24 no se ve incompleto, porque activos y
+      MRR suben frente a sep-24 (F-194, F-195).
+
+
+      La segunda mitad queda sin responder. R-024 compara 2024 ene–sep (56) contra 2023 completo (54), no jul–sep
+      2024 contra jul–sep 2023, que es justo donde R-025 pone el −19%.
+
+
+      Además, diez meses contra doce no son los mismos meses, y 2023 tuvo un ene–may bajo y un jun–dic alto (T-013).'
+  - target: H-024
+    effect: weakens
+    why: 'Con pagos no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202).
+
+
+      La única prueba disponible no encuentra más coincidencias que las esperables por azar en 2023. De 650 altas,
+      175 coinciden en monto exacto e industria con el último pago de un churn reciente. La comparación de control
+      da 196: cruza con churns posteriores, así que mide lo que coincide por azar. En 2022 hay un exceso chico:
+      76 contra 68 (F-203).
+
+
+      Pesa poco por tres razones:
+
+      - Solo da una dirección y es sensible a montos extremos.
+
+      - Es anual, y H-024 habla de un solo mes, ene-23.
+
+      - La vía «cambio de sistema de cobro» puede no dejar un churn previo en el panel.
+
+
+      Ojo: «0 altas con un pago anterior» (F-197) solo comprueba la clasificación bajo el mismo ID; no dice nada
+      de H-024.
+
+
+      Contexto: ene-23 (60, T-016) queda por encima del promedio de ene–may-23, que lo incluye (45,2, T-013). Entonces
+      feb–may-23 promedian menos: ≈41,5, cuenta directa mía. Parece un pico de un mes. Eso es lo que dejaría un
+      evento de registro, pero también una campaña o un efecto de enero.'
+  - target: H-037
+    effect: weakens
+    why: 'En 2023→2024, contar o no las reactivaciones no cambia la lectura: son 12 y 16 por mes frente a 54 y 55
+      altas, y ambos periodos quedan en el mismo orden (F-201). Tampoco hay doble conteo: ningún mes-cliente es
+      alta y reactivación a la vez (F-197).
+
+
+      El peso de las reactivaciones sí se movió (F-200: 17, 12 y 16 frente a 27, 54 y 55 altas), pero en esa ventana
+      no produce el «no crecen».
+
+
+      Donde sigue viva es en 2022→2024, porque cambia la magnitud. Con reactivaciones, las entradas a pago van de
+      ≈44 a ≈71 por mes. Es una cuenta directa de F-200 que no está en ninguna tabla: cerca de +60%, contra +104%
+      sin ellas (T-019).
+
+
+      Eso solo importa si el CRO habla de 2022→2024 (Q-051) y cuenta como nuevo a quien vuelve. Si H-059 se sostiene,
+      la mayoría de esas vueltas ni siquiera pasa por el CRM.'
+  - target: Q-051
+    effect: supports
+    why: 'R-024 sostiene la lectura «2023→2024 + primer pago»: la meseta (54 → 55 por mes; 56 sin octubre) se mantiene
+      aunque se saque el último mes o se cambie la forma de contar reactivaciones (F-196, F-201).
+
+
+      Matiz para la lámina: «plano» sale de los promedios (F-192). La pendiente (F-193) solo dice que no se distingue
+      dirección, y su rango también admite crecimiento. Va mejor «sin tendencia distinguible».
+
+
+      La lectura 2022→2024 sigue siendo un escalón (27 → 55, F-192), con F-202 como límite.
+
+
+      R-024 no contesta qué periodo ni qué hito usa el CRO. Además, la cifra 2024 contra 2023 cambia según los meses
+      que se comparen (X-016 trae otra). La lámina necesita una sola, con los mismos meses.'
+  - target: C-003
+    effect: supports
+    why: 'R-024 confirma la parte de volumen de C-003: escalón 2022→2023 y meseta después (F-192, F-193), sin que
+      el último mes jale la cifra (F-196).
+
+
+      Si la lámina dice «entran más», tiene que decir contra qué periodo: contra 2022 sí (+104%, T-019); contra
+      2023, no.
+
+
+      El límite de F-202 (no se puede verificar que el salto sea entrada nueva) ya lo cubre el framing al hablar
+      de «primera aparición observada». Aun así, conviene citarlo junto al +104%.'
+  - target: H-058
+    effect: supports
+    why: 'Las reactivaciones por mes se quedan entre 12 y 17 mientras las altas se duplican (F-200). El peso cambia
+      por el lado de las altas, como dice H-058, en línea con T-035/F-080.
+
+
+      Al citar el peso de 2022 hay que fijar el periodo: H-058 usa feb–dic (30,4%). Con los promedios de mar–dic
+      de F-200 sale cerca de 38% (cuenta directa), que es el techo de R-016.'
+  - target: H-039
+    effect: no_material_impact
+    why: F-199 repite el 44% como «vuelve a pagar al mes siguiente bajo el mismo ID», sin decir con qué monto. Es
+      el mismo hueco que X-102 ya señaló para F-182. No agrega evidencia sobre un desfase del cobro.
