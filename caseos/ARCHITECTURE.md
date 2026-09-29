@@ -6,8 +6,8 @@ El estado del caso son **archivos** legibles y versionados; no hay base de datos
 
 ```
                 ┌──────────────────────────── navegador (web/, ES modules) ────────────────────────────┐
-                │ Home · Briefing · Framing · Research · Chief of Staff · Story · Slides · Agents ·     │
-                │ Artifacts · ⌘K · Under the hood · Demo              ▲ SSE (/events)                   │
+                │ Home · Briefing · Framing & Shaping · Research · Chief of Staff · Story · Slides ·    │
+                │ Agents · Artifacts · ⌘K · Under the hood · Demo     ▲ SSE (/events)                   │
                 └───────────────┬──────────────────────────────────────┼──────────────────────────────┘
                                 │ REST /api                            │
 ┌───────────────────────────────▼──────────────────────────────────────┴──────────────────────────────┐
@@ -44,7 +44,8 @@ El estado del caso son **archivos** legibles y versionados; no hay base de datos
 | `agents/briefer.py` | turno del Briefer: propuestas con base, enunciado literal copiado por código |
 | `datamodels.py` | modelos de datos del caso: raw → staging → mart en DuckDB en memoria (warehouse adjunto READ_ONLY, acceso a archivos bloqueado), catálogo, consultas SELECT guardadas, 7 checks de reconciliación, verificación de EvidenceTables |
 | `slidestyle.py` | guía de formato de slides → tema del renderer (tokens, contraste WCAG, Google Fonts OFL descargadas al deck) |
-| `framing_doc.py` | framing vivo (`framing/current.yaml` → `current.md`) |
+| `framing_doc.py` | framing vivo (`framing/current.yaml`) y su render: `current.md` **es** el documento de Shaping |
+| `shaping.py` | documento de Shaping: problema, guion (secciones → láminas), plan de investigación tipado por agente; propuestas → aprobar / editar / descartar (solo Hugo); ids que nunca se reutilizan; `send_task` lanza una tarea aprobada a Research con su ruta; `migrate` convierte una estructura metida en Entregables en propuestas |
 | `agents/` | `base.py` (contratos desde `agents/*.md`, kernel del sistema), `framer.py` |
 | `research.py` | Router, especialistas, L3 (profundidad + amplitud + contraargumento + peer review), aceptar/cuestionar |
 | `analytics.py` | puente con el workspace: corridas, promover claims a findings, **EvidenceTable** con linaje |
@@ -91,11 +92,23 @@ Los endpoints síncronos corren en hilos: `jobs._spawn` agenda en el loop del se
 
 | De → a | Contrato | Validación en código |
 |---|---|---|
-| Framer → caso | `FramerTurn` (items epistémicos + patch del framing + perfil de lenguaje) | `framer.guard`, `language.assess` |
+| Framer → caso | `FramerTurn` (items epistémicos + patch del framing: `problem`, `storyline_guide`, `research_plan`… + perfil de lenguaje) | `framer.guard`, `language.assess`; lo de Shaping entra como propuesta (`shaping.propose`), nunca aprobado |
+| Shaping → Research | tarea aprobada del plan (`RT-###`: pregunta, tipo → especialista, intensidad, H/Q y láminas a las que sirve) | `shaping.send_task`: solo tareas aprobadas; ruta fijada por Hugo; propósito de caso por construcción |
 | Research → COS | resultado `case-research-synthesis` (§40) + fuentes | `research.verify_citations` (URLs recuperadas) |
 | Analytics → COS | **EvidenceTable** (§62: table_id, columnas, filas, unidades, definiciones, fuente, query, filtros, periodo, grano, limitaciones, visual preferido) | `evidence.validate_table` |
-| COS → Story | Story Package (§61) | `story.validate_package`: evidencia aceptada, cifras en tablas, dependencias needs_review, lenguaje causal |
-| Story → Storyteller | carpeta del deck: `storyline.md`, `data/*.yaml`, `caseos-handoff.yaml` | Story Ready + paquete válido; `storyteller._guard` limita escrituras al deck |
+| COS → Story | Story Package (§61) siguiendo el Guion aprobado; `guion_map` = por lámina, claims y cobertura (covered · partial · missing) | `story.validate_package`: evidencia aceptada, cifras en tablas, dependencias needs_review, lenguaje causal, avisos por lámina sin evidencia o parcial |
+| Story → Storyteller | carpeta del deck: `storyline.md` (con la tabla del Guion), `data/*.yaml`, `caseos-handoff.yaml` (`guion` + `guion_map`) | Story Ready + paquete válido; `storyteller._guard` limita escrituras al deck |
+
+## Framing & Shaping
+
+`framing/current.yaml` guarda lo aprobado (`problem`, `storyline_guide`, `research_plan`, más la pregunta ejecutiva y los
+límites) y, aparte, `pending` (propuestas por clave: `problem`, `guion:S#`, `plan:RT-###`) y `shaping_state` (quién aprobó
+qué y en qué versión). El Framer solo propone; Hugo aprueba, edita (queda aprobado como suyo) o descarta. Una propuesta
+sobre algo aprobado es una **revisión**: lo aprobado no se toca hasta que Hugo la acepta. Una tarea aprobada aparece en
+Research lista para lanzar; al lanzarla, la investigación lleva `shaping_task` y las láminas a las que sirve, y la tarea
+queda `sent` con su `R-###` (ya no se puede quitar: se rechaza en Research). El COS lee el Guion (`shaping.guide_text`)
+para armar el Story Package; el Storyteller lo recibe en el handoff. `framing/current.md` es el documento completo:
+1 Problema · 2 Pregunta ejecutiva · 3 Guion · 4 Hipótesis · 5 Plan de investigación · 6–8 límites · anexo con lo capturado.
 
 ## Modelo de datos
 

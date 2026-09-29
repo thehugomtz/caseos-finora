@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 
-from . import cases, cos, jobs, phases, skills
+from . import cases, cos, jobs, phases, shaping, skills
 from .agents import base
 from .evidence import numbers_in, unsupported_numbers, validate_table, verbal_ratio_issues
 from .llm import RunSpec, get_llm
@@ -44,6 +44,8 @@ SCHEMA = _obj({
                                                          "claim_keys": _SA})},
     "appendix_candidates": {"type": "array", "items": _obj({"title": _S, "why": _S, "ids": _SA})},
     "unresolved_questions": _SA, "visual_references": _SA,
+    "guion_map": {"type": "array", "items": _obj({"slide_id": _S, "claim_keys": _SA,
+                                                  "coverage": {"type": "string", "enum": ["covered", "partial", "missing"]}, "note": _S})},
 })
 
 
@@ -98,6 +100,13 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
         errors.append(f"Governing thought con cifras sin tabla: {', '.join(gt_unsup)}.")
     if len(gt.split()) > 30:
         warnings.append(f"Governing thought de {len(gt.split())} palabras (objetivo ≤ 25).")
+    gm = pkg.get("guion_map") or []
+    missing = [g["slide_id"] for g in gm if g.get("coverage") == "missing"]
+    if missing:
+        warnings.append(f"Láminas del guion sin evidencia todavía: {', '.join(missing)} (van a research, no se rellenan).")
+    partial = [g["slide_id"] for g in gm if g.get("coverage") == "partial"]
+    if partial:
+        warnings.append(f"Láminas del guion con evidencia parcial: {', '.join(partial)}.")
     if not pkg.get("language_profile"):
         warnings.append("El paquete no incluye el perfil de lenguaje.")
     return errors, warnings
@@ -138,12 +147,18 @@ async def _job(job, params):
     fr = store.read_data("framing/current.yaml", {}) or {}
     prompt = (f"Instrucciones de Hugo: {params.get('instructions') or '—'}\n\n"
               f"Pregunta ejecutiva: {fr.get('executive_question')}\nNo afirmar todavía: {'; '.join(fr.get('should_not_claim') or [])}\n\n"
+              + (("## Guion de la historia de Hugo (aprobado en Shaping; síguelo)\n" + shaping.guide_text(store) + "\n\n")
+                 if fr.get("storyline_guide") else "")
               + _evidence_block(store) + "\n\n" + cos.digest(store) +
               ("\n\n## Paquete anterior (mejóralo, conserva las keys de los claims que sigan vigentes)\n" + yaml_dump(prev)[:12000] if prev else "") +
               "\n\nReglas: cada claim de evidencia cita findings ACEPTADOS (evidence_ids) y las tablas (table_ids) donde está cada cifra "
               "que escribas; si una cifra no está en una tabla, no la escribas. Nada de cantidades con letras («a la mitad», «el doble», "
               "«por cuatro») salvo que coincidan con las cifras de la tabla: prefiere la cifra. Lenguaje asociativo, no causal. Recomendaciones condicionales. "
-              "keys de claims estables y cortas (p. ej. 'arpa-mix'). Máximo 8 claims.")
+              "keys de claims estables y cortas (p. ej. 'arpa-mix'). "
+              + ("Sigue el guion de Hugo: sus secciones son las secciones del paquete, en su orden; cada lámina con evidencia aceptada "
+                 "se cubre con 1–2 claims; en guion_map di por lámina (slide_id S#.#) qué claims la cubren y si queda covered, partial "
+                 "o missing. Una lámina sin evidencia aceptada NO se rellena: coverage missing y su pregunta va a unresolved_questions."
+                 if fr.get("storyline_guide") else "Máximo 8 claims; guion_map vacío."))
     spec = RunSpec(agent="cos", role="story", system=system, prompt=prompt, schema=SCHEMA, max_turns=4,
                    skills=skills.record(selected), purpose="Story Package", case_id=store.id, case_root=store.root)
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
@@ -195,6 +210,8 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
                "claims": [], "recommendations": [{**r, "claim_ids": [key_to_id[k] for k in r.get("claim_keys") or [] if k in key_to_id]}
                                                  for r in out.get("recommendations") or []],
                "appendix_candidates": out.get("appendix_candidates") or [], "unresolved_questions": out.get("unresolved_questions") or [],
+               "guion_map": [{**g, "claim_ids": [key_to_id[k] for k in g.get("claim_keys") or [] if k in key_to_id]}
+                             for g in out.get("guion_map") or []],
                "language_profile": meta.get("language") or {}, "visual_references": out.get("visual_references") or []}
         ents = store.all()
         for cid in claim_ids:

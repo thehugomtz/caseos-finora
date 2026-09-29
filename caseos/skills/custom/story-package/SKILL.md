@@ -15,7 +15,10 @@ should believe it; the Visual Storyteller decides how it looks.
    implies action, survives "so what?". It must be supported by accepted evidence or labelled as a proposal.
 3. **Executive questions** — the questions the audience brings, in the order the story answers them.
 4. **Story arc** — the archetype (SCR, answer-first + pillars, diagnosis → root cause → prescription, options →
-   criteria → recommendation) and the sections.
+   criteria → recommendation) and the sections. **When Hugo approved a storyline guide in Framing & Shaping, it is the
+   arc:** keep his sections and their order, and build the claims slide by slide. Map every slide in `guion_map`
+   (`covered` when accepted evidence answers its question, `partial` when only part of it, `missing` when nothing does).
+   A `missing` slide is never filled in: its question goes to `unresolved_questions` so it can be researched.
 5. **Claims** — one claim per idea. Each claim: `question` (the audience's), `headline` (a conclusion with a verb,
    ≤15 words), `answer` (2–3 sentences), `role_in_story` (context, evidence, diagnosis, implication, recommendation,
    limitation), `evidence_ids` (accepted findings F-…), `table_ids` (T-… for every number), `research_ids`,
@@ -30,4 +33,5 @@ should believe it; the Visual Storyteller decides how it looks.
 - Every material number in a headline or answer appears in one of the claim's tables.
 - Causal language only where causality was shown; otherwise associative ("coincide con", "se asocia a").
 - Nothing marked needs_review goes in without Hugo re-reviewing it.
+- Hugo's storyline guide is followed, not rewritten; slides without evidence are flagged, not invented.
 - Keep Hugo's vocabulary; the executive version may raise clarity, not replace his thinking.

@@ -1,55 +1,24 @@
-# CURRENT FRAMING
-> Versión 3 · actualizado 2026-09-29T00:26
+# FRAMING & SHAPING
+> Versión 3 · actualizado 2026-09-29T00:26 · 8 propuesta(s) esperando a Hugo
 
-## Executive Question
+## 1. Problema
+_Sin aprobar todavía._
+
+## 2. Pregunta ejecutiva
 ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué sigue siendo solo una posibilidad y qué información permitiría elegir entre ellas?
 
-## Hugo's Current Thinking
-- “Lámina 1: las relaciones que te comenté” (Q-024)
-- “¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? / Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el descuento, eso cuenta como expansión?” (Q-025)
-- “Inversión en Generación de Demanda para ToFu (Paid Media y Publicidad no web) / Team + Payroll Expenses + Travel / Habilitación ¿producto tal vez? (Software Tools + Freelance)” (N-023)
-- “Entradas y Actividad económica de los clientes y de diferentes segmentos” (N-022)
-- “No es posible determinar las métricas actuales, pero típicamente pensaría en abordar estos frameworks de Growth (MRR, ARR, ARPU, CAC, LTV, Churn, UCM)” (N-025)
-- “¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones agregarías? → Propuesta de Modelo de datos / ¿Cómo clasificarías el inicio y el fin de un descuento…? También entra dentro de Propuesta de Modelo de datos” (N-029)
-- “Revisar Data observable de pricing y comportamiento actual, observaciones generales // Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo? Mecanismo Propuesto / Implicaciones Multidisciplinarias” (N-028)
-- “Assisted / Self Service / Executive” (N-024)
-- “Decision Making” (N-027)
-- “Por lo que se puede observar tienen un problema” (N-026)
-- “el storytelling lo visualizo más o menos así: Sección 1 Overview… Sección 2 Growth… Revenue…” (N-021)
-- “Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil.” (N-020)
+## 3. Guion de la historia
+_Sin guion aprobado todavía._
 
-## Structured Interpretation
-- **Q-024** ¿Qué relaciones van en la Lámina 1 de Growth? No están registradas en el caso y el brief también las marca «por precisar».
-- **Q-025** Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (100→130 con −30, y sigue pagando 100), contracción vs descuento (100→80) y fin de descuento vs expansión.
-- **N-023** Agrupar el gasto de Marketing en tres bloques: generación de demanda ToFu (Paid Media + Publicidad no web), equipo (Payroll Expenses + Travel) y habilitación (Software Tools + Freelance). Queda abierta la duda de si habilitación es en realidad gasto de producto.
-- **N-022** Lámina 2 de Growth: describir los primeros pagadores observados y su actividad económica (monto pagado) por segmento. Con los datos disponibles, el único segmento es industria.
-- **N-025** Como no se conocen las métricas actuales de Finora, proponer métricas que hoy no existen partiendo de MRR, ARR, ARPU, CAC, LTV, Churn y UCM.
-- **N-029** Una propuesta de modelo de datos que resuelva dos cosas: separar el valor de la suscripción del precio efectivamente pagado (campos, tablas, definiciones) y clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión reales.
-- **N-028** Sección Revenue: primero, lo observable de pricing y comportamiento actual en los pagos; después, cómo introducir descuentos temporales (mecanismo propuesto) y sus implicaciones multidisciplinarias.
-- **N-024** La Lámina 3 supone que Finora tiene tres motions distinguibles y que cada lead o cliente se puede asignar a una. El caso respalda self-service y proceso comercial asistido; «Executive» no aparece como ruta propia.
-- **N-027** No sabemos qué decisiones quiere tomar el CRO con el funnel. La columna «Decision Making» de la solución está vacía.
-- **N-026** Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analítica).
-- **N-021** Material de soporte en tres secciones: Overview (salud general que introduce lo demás) → Growth (L1 relaciones; L2 entradas, actividad económica y gasto; L3 funnel por motion; L4 concentración, hipótesis y solución analítica) → Revenue (pricing observable, mecanismo de descuentos, preguntas del CFO, modelo de datos).
-- **N-020** Entre dos periodos aún sin fijar, los clientes activos observados crecen 4,5× y el monto pagado 2,8×. El monto pagado por cliente activo baja ~38% (≈COP 92,8 mil → 57,8 mil). Las tres cifras son una sola observación: el −38% sale de 2,8/4,5 ≈ 0,62.
+Storyline provisional anterior:
+- Situación (Overview): Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente activo, periodo por fijar). Esa brecha abre Growth y Revenue.
+- Growth, lo que sí vemos: los primeros pagadores observados y su actividad económica por industria, y el gasto de Marketing por categoría en el tiempo, descritos sin atribuir ventas al gasto.
+- Growth, lo que no vemos: no todos recorren el funnel igual (propuesta: Assisted, Self Service, Executive). Demanda, calidad, capacidad/atención y post-SQL quedan como explicaciones a contrastar, cada una con el dato que permitiría elegir.
+- Growth, cómo operarlo: primero definiciones y fuentes comunes; después, seguimiento recurrente por foros (dashboards, análisis ad hoc, agentes), atado a decisiones del CRO que aún no están definidas.
+- Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento). Proponemos cómo introducir descuentos temporales y un modelo de datos que separe el valor de la suscripción del precio pagado.
+- Qué tan seguros estamos y qué cambiaría: la separación de preguntas es defendible bajo las definiciones que explicamos. Para elegir causas faltan eventos de entradas y compras, y datos separados de suscripción, tarifa y descuento.
 
-## Facts
-_—_
-
-## Observations
-- **N-004** U05 · Primera aparición como cliente nuevo _(propuesto)_
-- **N-005** U08 · Self-serve, SQL directo y semanas estancado _(propuesto)_
-- **N-011** U15 · Tu Parte 3 _(propuesto)_
-- **N-020** Entre dos periodos aún sin fijar, los clientes activos observados crecen 4,5× y el monto pagado 2,8×. El monto pagado por cliente activo baja ~38% (≈COP 92,8 mil → 57,8 mil). Las tres cifras son una sola observación: el −38% sale de 2,8/4,5 ≈ 0,62. _(propuesto)_
-
-## Hugo's Intuitions
-- **N-001** U01 · Dos problemas conectados _(propuesto)_
-- **N-003** U04 · Entraron muchos leads no calificados _(propuesto)_
-- **N-026** Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analítica). _(propuesto)_
-
-## Assumptions
-- **N-024** La Lámina 3 supone que Finora tiene tres motions distinguibles y que cada lead o cliente se puede asignar a una. El caso respalda self-service y proceso comercial asistido; «Executive» no aparece como ruta propia. _(propuesto)_
-
-## Hypotheses
+## 4. Hipótesis
 - **H-001** New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía. _(propuesto)_
   - _Se debilita si:_ Si el total crece menos, corregimos la magnitud de la premisa. Si crece como esperaba el CRO, dejamos de usar falta de demanda total como explicación de la menor proporción que compra.
 - **H-002** Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo. _(propuesto)_
@@ -95,7 +64,74 @@ _—_
 - **H-022** Gasto agregado y resultados pagados evolucionan de forma diferente. _(propuesto)_
   - _Se debilita si:_ Si no añade una conclusión que cambie la historia, dejarlo fuera. Si divergen, sólo describirlo, sin atribuir el resultado al gasto.
 
-## Open Questions
+## 5. Plan de investigación
+_Sin tareas aprobadas todavía._
+
+## 6. Lo que no afirmamos todavía
+- Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.
+- Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.
+- Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.
+- Que hubo descuentos en el histórico: el caso habla de introducirlos.
+- Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.
+- Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.
+- Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).
+- Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
+- Descuentos a partir del tamaño de un salto del monto.
+- Una lectura del puente si las contribuciones no concilian con el total.
+- Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto de canal o ruta.
+- Un segmento fabricado por clustering cuando no hay concentración clara.
+- La calidad de los leads a partir de lo que pasa después del pago.
+- Retención contractual a partir de la continuidad de pago.
+- Que Finora «tiene un problema» de CRM o analítica digital: que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre.
+- Valores de LTV o UCM (no hay margen ni costo por cliente) ni de CAC por canal (no hay canal). Un CAC combinado depende de documentar la unidad del gasto y de acordar qué es adquirir un cliente.
+- Que una categoría de gasto (ToFu, Team, Habilitación) generó ventas porque las dos series se mueven en las mismas fechas.
+- Que el ~−38% por cliente activo sea deterioro de la salud del negocio: todavía no separamos la mezcla de quienes entran, el precio y las salidas.
+
+## 7. Decisiones necesarias
+- Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente).
+- Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa.
+- Qué es «Executive» en la Lámina 3: la ruta de entrada directa a SQL o un segmento de cuentas con KAM. Define si las columnas separan cómo compra el cliente o quién es.
+- Qué decisiones del CRO asumimos explícitamente para la columna «Decision Making», dado que el caso no las define.
+
+## 8. Riesgos
+- El esqueleto (Overview + 4 láminas de Growth + Revenue) es material de soporte; si se usa como la presentación de ≤5 min, no cabe.
+- La Lámina 4 carga tres preguntas del brief (concentración + métricas, hipótesis + datos, solución analítica) y puede quedar como una lista de frameworks sin respuesta.
+- El agente propio dentro de «Seguimiento» puede leerse como demo de herramienta si no se ata a una decisión concreta del CRO.
+
+---
+## Anexo · lo capturado en la conversación
+### Lo que Hugo piensa
+- “Lámina 1: las relaciones que te comenté” (Q-024)
+- “¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? / Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el descuento, eso cuenta como expansión?” (Q-025)
+- “Inversión en Generación de Demanda para ToFu (Paid Media y Publicidad no web) / Team + Payroll Expenses + Travel / Habilitación ¿producto tal vez? (Software Tools + Freelance)” (N-023)
+- “Entradas y Actividad económica de los clientes y de diferentes segmentos” (N-022)
+- “No es posible determinar las métricas actuales, pero típicamente pensaría en abordar estos frameworks de Growth (MRR, ARR, ARPU, CAC, LTV, Churn, UCM)” (N-025)
+- “¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones agregarías? → Propuesta de Modelo de datos / ¿Cómo clasificarías el inicio y el fin de un descuento…? También entra dentro de Propuesta de Modelo de datos” (N-029)
+- “Revisar Data observable de pricing y comportamiento actual, observaciones generales // Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo? Mecanismo Propuesto / Implicaciones Multidisciplinarias” (N-028)
+- “Assisted / Self Service / Executive” (N-024)
+- “Decision Making” (N-027)
+- “Por lo que se puede observar tienen un problema” (N-026)
+- “el storytelling lo visualizo más o menos así: Sección 1 Overview… Sección 2 Growth… Revenue…” (N-021)
+- “Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil.” (N-020)
+
+### Hechos
+_—_
+
+### Observaciones
+- **N-004** U05 · Primera aparición como cliente nuevo _(propuesto)_
+- **N-005** U08 · Self-serve, SQL directo y semanas estancado _(propuesto)_
+- **N-011** U15 · Tu Parte 3 _(propuesto)_
+- **N-020** Entre dos periodos aún sin fijar, los clientes activos observados crecen 4,5× y el monto pagado 2,8×. El monto pagado por cliente activo baja ~38% (≈COP 92,8 mil → 57,8 mil). Las tres cifras son una sola observación: el −38% sale de 2,8/4,5 ≈ 0,62. _(propuesto)_
+
+### Intuiciones de Hugo
+- **N-001** U01 · Dos problemas conectados _(propuesto)_
+- **N-003** U04 · Entraron muchos leads no calificados _(propuesto)_
+- **N-026** Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analítica). _(propuesto)_
+
+### Supuestos
+- **N-024** La Lámina 3 supone que Finora tiene tres motions distinguibles y que cada lead o cliente se puede asignar a una. El caso respalda self-service y proceso comercial asistido; «Executive» no aparece como ruta propia. _(propuesto)_
+
+### Preguntas abiertas
 - **Q-001** ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción? _(propuesto)_
 - **Q-002** ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos? _(propuesto)_
 - **Q-003** ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente? _(propuesto)_
@@ -122,7 +158,7 @@ _—_
 - **Q-024** ¿Qué relaciones van en la Lámina 1 de Growth? No están registradas en el caso y el brief también las marca «por precisar». _(propuesto)_
 - **Q-025** Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (100→130 con −30, y sigue pagando 100), contracción vs descuento (100→80) y fin de descuento vs expansión. _(propuesto)_
 
-## Unknowns
+### Desconocidos
 - **N-013** Qué contamos como una persona o cuenta que entra. Un contacto, usuario, oportunidad y cliente no son necesariamente la misma unidad. _(propuesto)_
 - **N-014** Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa. _(propuesto)_
 - **N-015** Si primera transacción realmente significa cliente nuevo y si la historia y los IDs lo permiten. _(propuesto)_
@@ -132,7 +168,7 @@ _—_
 - **N-019** Si un resultado neto estable esconde aumentos y caídas que se compensan. _(propuesto)_
 - **N-027** No sabemos qué decisiones quiere tomar el CRO con el funnel. La columna «Decision Making» de la solución está vacía. _(propuesto)_
 
-## Proposals
+### Propuestas
 - **N-002** U03 · Separar lo comercial del revenue _(propuesto)_
 - **N-006** U09 · Primero ordenar canales, después medir _(propuesto)_
 - **N-007** U10 · Agrupar clientes por pagos, churn y gasto _(propuesto)_
@@ -147,58 +183,13 @@ _—_
 - **N-028** Sección Revenue: primero, lo observable de pricing y comportamiento actual en los pagos; después, cómo introducir descuentos temporales (mecanismo propuesto) y sus implicaciones multidisciplinarias. _(propuesto)_
 - **N-029** Una propuesta de modelo de datos que resuelva dos cosas: separar el valor de la suscripción del precio efectivamente pagado (campos, tablas, definiciones) y clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión reales. _(propuesto)_
 
-## Candidate Frames
+### Frames candidatos
 - **CRO por cuánto entra, quién entra y cómo compra con el tiempo** ✓ elegido — Incluye rutas distintas sin asumir que sabemos quién comprará en el futuro. C1, C2 y C3.
-  - _Cuándo gana:_ Es el corte elegido.
 - **CFO por clientes que entran / salen / permanecen** ✓ elegido — Evita contar la misma cuenta en dos grupos entre las mismas fechas; dentro de cada grupo distinguimos suscripción y descuento.
-  - _Cuándo gana:_ Es el corte elegido.
 - **CRO por etapas comerciales** — Dónde se detiene el avance cuando sí hay historial de etapas.
-  - _Cuándo gana:_ No sirve igual para self-serve ni entradas directas; las etapas quedan como lugar donde investigar dentro de C3.
 - **CFO por comportamiento / precio / descuentos** — Se parece a la pregunta del ejecutivo.
-  - _Cuándo gana:_ No separa causas limpiamente: un precio o descuento puede cambiar el comportamiento. Se investigan dentro de los grupos.
 
-## Initial Storyline
-- Situación (Overview): Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente activo, periodo por fijar). Esa brecha abre Growth y Revenue.
-- Growth, lo que sí vemos: los primeros pagadores observados y su actividad económica por industria, y el gasto de Marketing por categoría en el tiempo, descritos sin atribuir ventas al gasto.
-- Growth, lo que no vemos: no todos recorren el funnel igual (propuesta: Assisted, Self Service, Executive). Demanda, calidad, capacidad/atención y post-SQL quedan como explicaciones a contrastar, cada una con el dato que permitiría elegir.
-- Growth, cómo operarlo: primero definiciones y fuentes comunes; después, seguimiento recurrente por foros (dashboards, análisis ad hoc, agentes), atado a decisiones del CRO que aún no están definidas.
-- Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento). Proponemos cómo introducir descuentos temporales y un modelo de datos que separe el valor de la suscripción del precio pagado.
-- Qué tan seguros estamos y qué cambiaría: la separación de preguntas es defendible bajo las definiciones que explicamos. Para elegir causas faltan eventos de entradas y compras, y datos separados de suscripción, tarifa y descuento.
-
-## Research Needed
-- {'id': 'RN-W6', 'question': '¿Qué información mínima falta para contestar al CRO (entradas únicas con fecha, señales iniciales, recorrido, atención, vínculo con pago)?', 'why': 'HC1–HC3 tienen capacidad 0 con los datos actuales: sin esto la respuesta al CRO queda como propuesta.', 'links': ['Q-016', 'H-001', 'H-002', 'H-003'], 'status': 'pending', 'proposed_by': 'import (brief v0.3 W6)'}
-- {'id': 'RN-W7', 'question': '¿Qué evidencia confirmaría vigencia, características contratadas, tarifa y descuento aplicado?', 'why': 'HF1–HF3 tienen capacidad 0: sin componentes explícitos no se separa suscripción, tarifa y descuento.', 'links': ['Q-017', 'H-009', 'H-010', 'H-011'], 'status': 'pending', 'proposed_by': 'import (brief v0.3 W7)'}
-- {'id': 'RN-5eff9f', 'question': '¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del Overview?', 'why': 'Es el titular que abre toda la historia: si cambian el periodo o la definición, cambia la magnitud y quizá el mensaje.', 'links': ['H-017', 'H-018', 'N-016', 'N-017'], 'status': 'pending', 'proposed_by': 'framer', 'at': '2026-09-29T00:26:18-06:00'}
-- {'id': 'RN-66535e', 'question': '¿Qué documenta el archivo de gasto de Marketing (unidad, moneda y periodo por categoría)? ¿Software Tools + Freelance es gasto de Marketing o de producto?', 'why': 'Decide si la Lámina 2 puede agrupar el gasto en los tres bloques de Hugo y cruzarlo por fechas con los nuevos pagadores, o si solo describe tendencias por separado.', 'links': ['H-022', 'Q-018'], 'status': 'pending', 'proposed_by': 'framer', 'at': '2026-09-29T00:26:18-06:00'}
-- {'id': 'RN-86a650', 'question': '¿Qué dato mínimo separaría una capacidad comercial insuficiente de una caída de calidad: la carga por SDR/AE y el tiempo a primer contacto por cohorte de entrada, frente a las señales de ajuste al entrar?', 'why': 'Son las dos hipótesis de la Lámina 4 y llevan a acciones distintas: sumar o reasignar capacidad, o cambiar cómo se generan los leads.', 'links': ['H-005', 'H-006', 'Q-016', 'Q-021'], 'status': 'pending', 'proposed_by': 'framer', 'at': '2026-09-29T00:26:18-06:00'}
-
-## Decisions Needed
-- Qué unidad cuenta como entrada (contacto, usuario, oportunidad o cliente).
-- Qué significa adquirir un cliente para el CRO: cerrar una venta, primer pago o suscripción activa.
-- Qué es «Executive» en la Lámina 3: la ruta de entrada directa a SQL o un segmento de cuentas con KAM. Define si las columnas separan cómo compra el cliente o quién es.
-- Qué decisiones del CRO asumimos explícitamente para la columna «Decision Making», dado que el caso no las define.
-
-## Things We Should Not Claim Yet
-- Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.
-- Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.
-- Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.
-- Que hubo descuentos en el histórico: el caso habla de introducirlos.
-- Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.
-- Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.
-- Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).
-- Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.
-- Descuentos a partir del tamaño de un salto del monto.
-- Una lectura del puente si las contribuciones no concilian con el total.
-- Una causa industrial, un canal o una fase del recorrido: la industria es una segmentación disponible, no un sustituto de canal o ruta.
-- Un segmento fabricado por clustering cuando no hay concentración clara.
-- La calidad de los leads a partir de lo que pasa después del pago.
-- Retención contractual a partir de la continuidad de pago.
-- Que Finora «tiene un problema» de CRM o analítica digital: que los datos del caso no traigan canal ni etapas no prueba que Finora no los registre.
-- Valores de LTV o UCM (no hay margen ni costo por cliente) ni de CAC por canal (no hay canal). Un CAC combinado depende de documentar la unidad del gasto y de acordar qué es adquirir un cliente.
-- Que una categoría de gasto (ToFu, Team, Habilitación) generó ventas porque las dos series se mueven en las mismas fechas.
-- Que el ~−38% por cliente activo sea deterioro de la salud del negocio: todavía no separamos la mezcla de quienes entran, el precio y las salidas.
-
-## Language Notes
+### Notas de lenguaje
 - Hugo usa «monto observado» y «primer pagador observado» en lugar de MRR y cliente nuevo mientras la semántica no esté confirmada.
 - Términos en inglés que Hugo usa tal cual: leads, funnel, churn, self-serve, SQL, MRR.
 - Overview: «MRR pagado por cliente activo» (o «monto pagado por cliente activo») en lugar de «MRR» a secas; es el ARPU observado de Hugo.

@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T00:26:18-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-29T09:21:46-06:00 · motivo: Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -151,6 +151,8 @@ language:
 Registro observado: Conversacional y directo, informal («jaja»); piensa en láminas, columnas y bloques de deck; español con términos de negocio en inglés. · nivel técnico: Analítico / de negocio: maneja frameworks de Growth (AAARRR, CAC, LTV, UCM), ToFu/BoFu y roles comerciales (SDR, AE, KAM). · vocabulario de Hugo: entrada directa a SQL, Paid Media, Métricas Clave, low tickets, CRM, Analítica Digital, Decision Making, Análisis Adhoc, pricing introductorio, descuentos temporales, contracción, expansión, Propuesta de Modelo de datos, CEO
 
 ## Recent Material Changes
+- 2026-09-29 09:21 · Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
+- 2026-09-29 09:21 · Migración pedida por Hugo: 3 sección(es) del guion y 5 tarea(s) de investigación propuestas · Entregables limpios propuestos en el brief
 - 2026-09-29 00:26 · Framing actualizado (storyline inicial, decisions_needed, should_not_claim, language_notes, risks, research necesario)
 - 2026-09-29 00:26 · Framer capturó propuesta: Una propuesta de modelo de datos que resuelva dos cosas: separar el valor de la suscripci…
 - 2026-09-29 00:26 · Framer capturó pregunta: Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (10…
@@ -159,8 +161,6 @@ Registro observado: Conversacional y directo, informal («jaja»); piensa en lá
 - 2026-09-29 00:26 · Framer refinó N-009: Seguimiento recurrente: dashboards automatizados con métricas según los foros, análisis a…
 - 2026-09-29 00:26 · Framer refinó N-010: Base técnica de la solución para el CRO: pulir el CRM e implementar analítica digital.
 - 2026-09-29 00:26 · Framer capturó intuición de hugo: Hugo lee que Finora tiene un problema de instrumentación comercial y digital (CRM y analí…
-- 2026-09-29 00:26 · Framer refinó H-005: Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad…
-- 2026-09-29 00:26 · Framer refinó H-006: El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención s…
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 13, Observación 4, Desconocido 8, Supuesto 1 -->

@@ -1,5 +1,6 @@
-// Research Hub — request with live routing preview (intensity · specialist · minimum skills · purpose check),
-// the queue, and the result page (§41): question, short answer, findings, evidence, sources, alternatives,
+// Research Hub — the research plan approved in Framing & Shaping (tasks ready to launch, each with its agent), a free
+// request with live routing preview (intensity · specialist · minimum skills · purpose check), the queue, and the
+// result page (§41): question, short answer, findings, evidence, sources, alternatives,
 // unknowns, case implication, story impact — with Accept / Challenge / Research deeper / Follow-up / Send to COS / Reject.
 import { h, mount as put, debounce, autosize } from "../core/dom.js";
 import { api } from "../core/api.js";
@@ -61,7 +62,42 @@ async function hub(root) {
       app.go("#/research/" + out.research.id);
     } catch (e) { toast(e.message, "err"); }
   };
+  const planBox = h("div");
+  const paintPlan = async () => {
+    const sh = await api.cget("/shaping");
+    const approved = sh.plan.filter(e => e.approved);
+    const proposed = sh.progress.tasks_proposed;
+    if (!approved.length && !proposed) { put(planBox); return; }
+    const ready = approved.filter(e => e.approved.status === "approved"), sent = approved.filter(e => e.approved.status === "sent");
+    const launch1 = async id => {
+      try { const out = await api.cpost(`/shaping/tasks/${encodeURIComponent(id)}/send`); toast(`${id} → ${out.research_id} ${out.launched ? "en cola" : "creada"}`, "agent"); await app.refresh(); await paint(); }
+      catch (e) { toast(e.message, "err", 7000); }
+    };
+    const launchAll = async () => {
+      try { const out = await api.cpost("/shaping/tasks/send-all"); toast(`${out.sent.length} tarea(s) lanzadas`, "agent"); await app.refresh(); await paint(); }
+      catch (e) { toast(e.message, "err", 7000); }
+    };
+    const kindChip = t => h("span.chip.kind-" + t.kind, icon(SPEC_ICON[t.agent] || "globe"), `${(sh.kinds[t.kind] || {}).label || t.kind} · ${SPEC[t.agent] || t.agent}`);
+    put(planBox, h("div.panel.pad.plan",
+      h("div.row.between.wrap",
+        h("div", h("div.eyebrow.accent", "Plan de investigación · aprobado en Framing & Shaping"),
+          h("div.small.muted", { style: { marginTop: "4px" } }, [`${ready.length} por lanzar`, `${sent.length} ya en Research`,
+            proposed ? `${proposed} propuesta(s) esperan tu aprobación en el documento` : null].filter(Boolean).join(" · "))),
+        h("div.row", { style: { gap: "6px" } },
+          btn("Ver en el documento", { sm: true, variant: "ghost", icon: "compass", onClick: () => app.go("#/framing") }),
+          ready.length > 1 ? btn(`Lanzar las ${ready.length}`, { sm: true, variant: "primary", icon: "send", onClick: launchAll }) : null)),
+      ready.length ? h("div.list", { style: { marginTop: "8px" } }, ready.map(e => { const t = e.approved;
+        return h("div.item", { style: { gridTemplateColumns: "64px 1fr auto" } },
+          h("span.sid", { style: { justifySelf: "start" } }, t.id),
+          h("div.body", h("div.t", t.question), h("div.m", kindChip(t), t.intensity && t.intensity !== "analytics" ? h("span.chip.accent", t.intensity) : null,
+            (t.links || []).map(i => idTag(i)), (t.slides || []).map(x => h("span.chip.ghost", x))), t.why ? h("div.small.muted", { style: { marginTop: "4px" } }, t.why) : null),
+          h("div.side", btn("Lanzar", { sm: true, variant: "primary", icon: "send", onClick: () => launch1(t.id) }))); })) : null,
+      sent.length ? h("div.row.wrap", { style: { gap: "6px", marginTop: "10px" } }, h("span.small.faint", "Ya en Research:"),
+        sent.map(e => h("button.chip", { type: "button", style: { cursor: "pointer" }, on: { click: () => app.go("#/research/" + e.approved.research_id) } },
+          `${e.approved.id} → ${e.approved.research_id}`))) : null));
+  };
   const paint = async () => {
+    paintPlan().catch(() => put(planBox));
     const room = await api.cget("/cos/room");
     const all = room.research_queue;
     const groups = {
@@ -79,17 +115,17 @@ async function hub(root) {
         h("div.row", { style: { paddingTop: "2px" } }, idTag(r.id, { alias: r.alias })),
         h("div.body", h("div.t", r.question), r.short_answer ? h("div.small.muted.clamp2", { style: { marginTop: "4px" } }, r.short_answer) : null,
           h("div.m", h("span.chip", icon(SPEC_ICON[r.specialty] || "globe"), SPEC[r.specialty] || r.specialty), r.intensity && r.intensity !== "analytics" ? h("span.chip.accent", r.intensity) : null,
-            !r.purpose_ok ? h("span.chip.warn", "sin propósito") : null)),
+            r.shaping_task ? h("span.chip.ghost", "plan " + r.shaping_task) : null, !r.purpose_ok ? h("span.chip.warn", "sin propósito") : null)),
         h("div.side", r.status === "running" || r.status === "queued" ? h("span.row", thinking(), statusChip(r.status)) : statusChip(r.status === "completed" ? (r.review === "proposed" ? "review" : r.review === "accepted" ? "completed" : "rejected") : r.status),
-          review(r.review, r.stale))))) : empty("Nada aquí", "Lanza una investigación arriba o envía el research necesario del framing."));
+          review(r.review, r.stale))))) : empty("Nada aquí", "Lanza una tarea del plan de investigación o escribe una pregunta arriba."));
     put(headBox, h("div.head", h("div", h("div.eyebrow", "03 · Research Hub · Router → especialistas → síntesis para el caso"), h("h1.title", "Research"),
       h("p.lede", "No se investigan temas: se investigan incertidumbres que importan al caso. Cada solicitud se mapea a una pregunta, hipótesis, decisión o claim.")),
       h("div.actions", statusChip(ph.status), btn("Analytics workspace", { icon: "chart", onClick: () => app.go("#/analytics") }),
         btn(ph.status === "ready" ? "Research aprobado" : "Mark Research Ready", { variant: "human", human: true, disabled: ph.status === "ready", onClick: () => app.markReady("research") }))));
   };
   const headBox = h("div");
-  put(root, headBox,
-    h("div.panel.pad.glow", h("div.eyebrow.accent", "Nueva investigación"), h("div.qbox", { style: { marginTop: "10px" } }, ta), preview),
+  put(root, headBox, planBox,
+    h("div.panel.pad.glow", { style: { marginTop: "16px" } }, h("div.eyebrow.accent", "Nueva investigación"), h("div.qbox", { style: { marginTop: "10px" } }, ta), preview),
     h("div.mt2", list));
   await paint();
   if (q0) runPreview();
@@ -116,7 +152,9 @@ async function detail(root, rid) {
         h("h1.title", { style: { fontFamily: "var(--serif)", fontWeight: 450, fontSize: "30px" } }, r.research_question),
         (() => { const w = r.worked_question || (r.route || {}).reformulated_question;
           return w && w !== r.research_question ? h("div.small.muted", { style: { marginTop: "-4px", maxWidth: "820px" } }, h("span.faint", "Cómo la trabajó el agente: "), w) : null; })(),
-        h("div.row.wrap", h("span.small.muted", "Sirve a:"), ids((r.links || []).filter(i => /^[QHDC]-/.test(i)), 8), !r.purpose_ok ? h("span.chip.warn", "RESEARCH WITHOUT CASE PURPOSE") : null)),
+        h("div.row.wrap", h("span.small.muted", "Sirve a:"), ids((r.links || []).filter(i => /^[QHDC]-/.test(i)), 8),
+          r.shaping_task ? h("button.chip.ghost", { type: "button", style: { cursor: "pointer" }, on: { click: () => app.go("#/framing") } }, `tarea ${r.shaping_task} del plan`) : null,
+          (r.slides || []).map(x => h("span.chip.ghost", "lámina " + x)), !r.purpose_ok ? h("span.chip.warn", "RESEARCH WITHOUT CASE PURPOSE") : null)),
         h("div.actions", btn("Volver", { icon: "back", variant: "ghost", onClick: () => app.go("#/research") }))),
       running ? h("div.panel.pad.agentwork", h("div.row", thinking(), h("span", { style: { fontWeight: 560 } }, r.status === "queued" ? "En cola" : "Investigando…"), h("span.small.muted", SPEC[r.specialty])),
         h("div.progress.mt", ((job || {}).progress || []).slice(-24).map(p => h("div", h("span.t", hhmm(p.t)), h("span", p.summary || p.kind + (p.phase ? " · " + p.phase : "") + (p.role ? " · " + p.role : "")))))) : null,

@@ -16,7 +16,7 @@ export const STATUS_LABEL = { open: "abierta", supported: "soportada", weakened:
   answered: "respondida", parked: "aparcada", valid: "válida", invalid: "inválida", weak: "débil", unsupported: "sin soporte", passed: "pasó QA",
   rendered: "renderizada", escalated: "escalada", not_started: "sin iniciar", in_progress: "en curso", review: "por revisar", ready: "Ready",
   reopened: "reabierta", needs_review: "needs_review" };
-export const PHASE_LABEL = { briefing: "Briefing", framing: "Framing", research: "Research", synthesis: "Chief of Staff", story: "Story", slides: "Slides" };
+export const PHASE_LABEL = { briefing: "Briefing", framing: "Framing & Shaping", research: "Research", synthesis: "Chief of Staff", story: "Story", slides: "Slides" };
 
 export function idTag(id, opts = {}) {
   const t = typeOf(id);

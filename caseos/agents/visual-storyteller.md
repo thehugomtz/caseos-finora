@@ -21,7 +21,7 @@ CaseOS no reescribe este agente. Lo invoca con sus propias skills (`executive-vi
 `~/.claude/skills`, y le entrega una carpeta de deck ya preparada según su contrato (`deck-folder-contract.md`):
 `storyline.md` pre-llenado desde el Story Package (audiencia, governing thought, pirámide, secuencia, un brief por
 claim con soporte FACT/INFERENCE/PROPOSAL e IDs de evidencia), `data/*.yaml` con las tablas canónicas (contrato de
-datos de slides) y `caseos-handoff.yaml`. La instrucción de la corrida fija la dirección visual elegida por Hugo (o
+datos de slides) y `caseos-handoff.yaml` (incluye el Guion aprobado por Hugo y su cobertura por lámina). La instrucción de la corrida fija la dirección visual elegida por Hugo (o
 "elige tú"), pide respetar las cifras de las tablas y mantener el `claim_id` de cada slide para el linaje.
 
 ## Inputs

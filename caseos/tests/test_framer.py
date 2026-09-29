@@ -42,8 +42,10 @@ def _turn(existing_note: str) -> dict:
             _item(kind="ASSUMPTION", structured="Los montos están en la misma moneda.", links=["H-999"], updates="N-999"),
         ],
         "framing_patch": {"executive_question": "¿Por qué cae el ingreso por cliente?", "candidate_frames": [],
-                          "initial_storyline": [],
-                          "research_needed": [{"question": "¿El monto de entrada bajó?", "links": [], "why": "premisa"}],
+                          "problem": {"statement": "", "situation": "", "why_it_matters": "", "in_scope": [], "out_of_scope": []},
+                          "storyline_guide": [],
+                          "research_plan": [{"id": "", "question": "¿El monto de entrada bajó?", "kind": "data", "intensity": "auto",
+                                             "why": "premisa", "links": [], "slides": []}],
                           "decisions_needed": ["Qué es adquirir un cliente"],
                           "should_not_claim": ["Que hubo descuentos en el histórico"], "language_notes": [], "risks": []},
         "advisors": [{"lens": l, "why": "", "contribution": ""} for l in ("cfo", "cro", "ceo")],
@@ -101,7 +103,8 @@ def test_messy_text_is_classified_guarded_and_keeps_hugo_words(case):
 
     fr = case.read_data("framing/current.yaml")
     assert fr["executive_question"] == "¿Por qué cae el ingreso por cliente?"
-    assert any(r["question"] == "¿El monto de entrada bajó?" for r in fr["research_needed"])
+    task = fr["pending"]["plan:RT-001"]["value"]
+    assert task["question"] == "¿El monto de entrada bajó?" and task["kind"] == "data" and task["agent"] == "analytics"
     assert "Que hubo descuentos en el histórico" in fr["should_not_claim"]
     assert "MRR" in case.meta()["language"]["observed"]["preserved_terms"]
     assert "¿Por qué cae el ingreso por cliente?" in case.read_text("framing/current.md")

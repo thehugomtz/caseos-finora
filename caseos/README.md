@@ -1,10 +1,10 @@
 # CaseOS
 
 **Un case room con agentes para resolver casos de negocio de punta a punta.**
-Brief → Framing → Research → Chief of Staff → Story Package → Executive Visual Storyteller → deck HTML.
+Brief → Framing & Shaping → Research → Chief of Staff → Story Package → Executive Visual Storyteller → deck HTML.
 
 > Los agentes hacen el trabajo. **Hugo es dueño del juicio.**
-> Ninguna fase avanza sola: solo Hugo aprueba el framing, acepta evidencia, decide entre alternativas, aprueba la
+> Ninguna fase avanza sola: solo Hugo aprueba el documento de Shaping, acepta evidencia, decide entre alternativas, aprueba la
 > story y marca cada fase como Ready. Cada cambio queda con ID, linaje, versión y traza.
 
 Finora es el primer caso (importado desde el brief v0.3 y el Business Exploration Workspace, no escrito a mano).
@@ -45,13 +45,25 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
    propone el brief por secciones; tú apruebas, editas o descartas cada una. Nada aprobado se sobrescribe: un cambio
    llega como revisión. Aquí también eliges el **modelo de datos** del caso. *Mark Ready* pide objetivo, audiencia y
    entregables aprobados.
-3. **Framing** — escribe como piensas («creo que están metiendo más leads pero no convierten…»). El Framer separa
-   hechos, intuiciones, supuestos, hipótesis (con falsificador) y preguntas; conserva **tus palabras junto a la versión
-   estructurada**. Modos: *Organize* (ordena), *Advise* (2–3 alternativas), *Challenge* (intenta romperlo). Aprueba el
-   framing con *Approve Framing · Mark Ready*.
-4. **Research** — pide una investigación; el Router elige especialista (Business Research, Measurement, Data
-   Engineering, Analytics) e intensidad (L1 lookup · L2 · L3 deep research con peer review). Las citas solo cuentan si la
-   URL se recuperó en la corrida. Aceptas, rechazas, cuestionas o profundizas cada resultado.
+3. **Framing & Shaping** — escribe como piensas («creo que están metiendo más leads pero no convierten…»). El Framer
+   separa hechos, intuiciones, supuestos, hipótesis (con falsificador) y preguntas; conserva **tus palabras junto a la
+   versión estructurada**. Modos: *Organize* (ordena), *Advise* (2–3 alternativas), *Challenge* (intenta romperlo).
+   Lo que sale de aquí es el **documento de Shaping** (`framing/current.md`), que se arma pieza por pieza y tú apruebas,
+   editas o descartas cada una:
+   1. **Problema** — planteamiento, situación, por qué importa, dentro y fuera del alcance (no-gos).
+   2. **Pregunta ejecutiva**.
+   3. **Guion de la historia** — secciones → láminas; cada lámina dice qué pregunta responde y qué debe mostrar.
+   4. **Hipótesis** con falsificador.
+   5. **Plan de investigación** — una tarea por incertidumbre, tipada por agente: *Datos* (Analytics sobre el modelo del
+      caso), *Research* (Business Research, L1–L3), *Medición* (Measurement) o *Modelo de datos* (Data Engineering).
+   6–8. Lo que no afirmamos todavía, decisiones necesarias y riesgos.
+
+   *Mark Ready* pide el problema aprobado. Si tu estructura vivía en Entregables del brief, **Traer como propuestas** la
+   convierte en Guion (y el research necesario en tareas tipadas) sin aprobar nada por ti.
+4. **Research** — arriba, las tareas aprobadas del plan de investigación, cada una con su agente y un botón **Lanzar**
+   (lanzarlas es tu clic). Abajo puedes pedir cualquier otra investigación; el Router elige especialista (Business
+   Research, Measurement, Data Engineering, Analytics) e intensidad (L1 lookup · L2 · L3 deep research con peer review).
+   Las citas solo cuentan si la URL se recuperó en la corrida. Aceptas, rechazas, cuestionas o profundizas cada resultado.
 5. **Datos** — el modelo de datos del caso en tres capas reales: **raw** (los CSV tal cual), **staging** (tipado con las
    reglas de la Fase 1) y **mart** (lo que consulta Analytics). Columnas, muestra real, consola SQL de solo lectura y 7
    checks de reconciliación que prueban que las capas cuadran al centavo. Cualquier tabla de evidencia se puede
@@ -60,8 +72,10 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
    promueve a finding y viaja al COS como **EvidenceTable** con linaje completo.
 7. **Chief of Staff** — sala de control: alertas de impacto (apoya / debilita / contradice…) con opciones A/B/C, decision
    log, claims más débiles, siguientes mejores acciones. Pregúntale lo que sea del caso.
-8. **Story** — el COS arma el **Story Package**; el código valida que cada claim tenga evidencia aceptada y que cada cifra
-   exista en una tabla. Lo apruebas tú.
+8. **Story** — el COS arma el **Story Package** siguiendo tu Guion; el código valida que cada claim tenga evidencia
+   aceptada y que cada cifra exista en una tabla. La pestaña **Guion** muestra lámina por lámina qué claims la cubren y
+   si la evidencia está (con evidencia · parcial · sin evidencia). Una lámina sin evidencia no se rellena: queda marcada
+   y su pregunta pasa a research. Lo apruebas tú.
 9. **Slides** — el paquete aprobado pasa al **Executive Visual Storyteller existente** (no se reconstruyó: se enlaza) y
    regresa un deck HTML. Puedes darle una **guía de formato** en palabras simples: tipografía de títulos y de texto
    (cualquier Google Font), colores y notas; se aplica como tema del renderer con el contraste revisado.

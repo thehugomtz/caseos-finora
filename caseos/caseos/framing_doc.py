@@ -1,9 +1,8 @@
 """The current framing: structured state (framing/current.yaml + entities) and its document (framing/current.md).
 
-The UI never shows this markdown raw; it is the portable artifact that gets approved, snapshotted and read by
-other agents. The structure follows CaseOS §21: executive question, Hugo's thinking next to its structured
-interpretation, the epistemic ledger, candidate frames, initial storyline, research and decisions needed, what we
-should not claim yet and language notes.
+The document is the Shaping document (caseos/shaping.py): the portable artifact that gets approved, snapshotted and
+read by other agents — problem, executive question, storyline guide, hypotheses, research plan and limits — with the
+epistemic ledger (facts, intuitions, assumptions, questions…) as an appendix.
 """
 from __future__ import annotations
 
@@ -58,7 +57,12 @@ def save(store: CaseStore, fr: dict, *, actor: str, summary: str, material: bool
 
 
 def render_md(store: CaseStore) -> str:
+    """framing/current.md is the Shaping document: the structured output of Framing that Hugo approves and every later
+    agent reads — problem, executive question, storyline guide, hypotheses, research plan, limits — with the full
+    epistemic ledger as an appendix."""
     s = state(store)
+    fr = store.read_data("framing/current.yaml", {}) or {}
+    from .shaping import KINDS
 
     def items(rows, empty="—"):
         if not rows:
@@ -76,26 +80,65 @@ def render_md(store: CaseStore) -> str:
     def plain(xs, empty="—"):
         if not xs:
             return f"_{empty}_\n"
-        return "\n".join(f"- {x if isinstance(x, str) else (x.get('text') or x.get('name') or x)}" for x in xs) + "\n"
+        return "\n".join(f"- {x if isinstance(x, str) else (x.get('text') or x.get('name') or x.get('question') or x)}" for x in xs) + "\n"
 
-    led = s.get("ledger", {})
-    md = ["# CURRENT FRAMING", f"> Versión {s.get('version', 1)} · actualizado {str(s.get('updated_at', ''))[:16]}", "",
-          "## Executive Question", s.get("executive_question") or "_Sin definir todavía._", "",
-          "## Hugo's Current Thinking"]
+    pr = fr.get("problem") or {}
+    md = ["# FRAMING & SHAPING", f"> Versión {s.get('version', 1)} · actualizado {str(s.get('updated_at', ''))[:16]}"
+          + (f" · {len(fr.get('pending') or {})} propuesta(s) esperando a Hugo" if fr.get("pending") else ""), "",
+          "## 1. Problema"]
+    if pr:
+        md += [pr.get("statement") or "_Sin enunciado._", ""]
+        if pr.get("situation"):
+            md += [f"**Situación.** {pr['situation']}", ""]
+        if pr.get("why_it_matters"):
+            md += [f"**Por qué importa.** {pr['why_it_matters']}", ""]
+        md += ["**Dentro del alcance**", plain(pr.get("in_scope")), "**Fuera del alcance (no-gos, rabbit holes)**", plain(pr.get("out_of_scope"))]
+    else:
+        md += ["_Sin aprobar todavía._", ""]
+    md += ["## 2. Pregunta ejecutiva", s.get("executive_question") or "_Sin definir todavía._", "", "## 3. Guion de la historia"]
+    guide = fr.get("storyline_guide") or []
+    if guide:
+        for sec in guide:
+            md.append(f"### {sec['id']} · {sec.get('title') or '—'}")
+            if sec.get("purpose"):
+                md += [f"_{ln.strip()}_" for ln in sec["purpose"].splitlines() if ln.strip()] + [""]
+            for sl in sec.get("slides") or []:
+                md.append(f"- **{sl['id']} {sl.get('title') or ''}**" + (f" — {sl['question']}" if sl.get("question") else ""))
+                if sl.get("intent"):
+                    md.append(f"  - Debe mostrar: {sl['intent']}")
+                if sl.get("notes"):
+                    md.append(f"  - Notas de Hugo: {sl['notes']}")
+                if sl.get("links"):
+                    md.append(f"  - Enlaza: {', '.join(sl['links'])}")
+            md.append("")
+    else:
+        md += ["_Sin guion aprobado todavía._", ""]
+        if s.get("initial_storyline"):
+            md += ["Storyline provisional anterior:", plain(s.get("initial_storyline"))]
+    md += ["## 4. Hipótesis", items(s["hypotheses"]), "## 5. Plan de investigación"]
+    plan = fr.get("research_plan") or []
+    if plan:
+        md += [f"- **{t['id']}** [{KINDS.get(t['kind'], {}).get('label', t['kind'])} · {KINDS.get(t['kind'], {}).get('agent', '')}"
+               f"{' · ' + t['intensity'] if t.get('intensity') and t['intensity'] != 'analytics' else ''}] {t['question']}"
+               + (f" → **{t['research_id']}**" if t.get("research_id") else "")
+               + (f"\n  - Por qué: {t['why']}" if t.get("why") else "")
+               + (f"\n  - Sirve a: {', '.join(t.get('links', []) + t.get('slides', []))}" if t.get("links") or t.get("slides") else "")
+               for t in plan]
+        md.append("")
+    else:
+        md += ["_Sin tareas aprobadas todavía._", ""]
+    md += ["## 6. Lo que no afirmamos todavía", plain(s.get("should_not_claim")), "## 7. Decisiones necesarias",
+           plain(s.get("decisions_needed")), "## 8. Riesgos", plain(s.get("risks")), "---", "## Anexo · lo capturado en la conversación",
+           "### Lo que Hugo piensa"]
     md += [f"- “{d['hugo_wording']}” ({d['id']}){'' if d.get('verbatim', True) else ' _(paráfrasis)_'}" for d in s["dual"][:12]] or ["_—_"]
-    md += ["", "## Structured Interpretation"]
-    md += [f"- **{d['id']}** {d['structured']}" for d in s["dual"][:12]] or ["_—_"]
-    md += ["", "## Facts", items(led.get("FACT", [])), "## Observations", items(led.get("OBSERVATION", [])),
-           "## Hugo's Intuitions", items(led.get("USER_INTUITION", [])),
-           "## Assumptions", items(led.get("ASSUMPTION", [])), "## Hypotheses", items(s["hypotheses"]),
-           "## Open Questions", items(s["open_questions"]), "## Unknowns", items(led.get("UNKNOWN", [])),
-           "## Proposals", items(led.get("PROPOSAL", [])), "## Candidate Frames"]
+    led = s.get("ledger", {})
+    md += ["", "### Hechos", items(led.get("FACT", [])), "### Observaciones", items(led.get("OBSERVATION", [])),
+           "### Intuiciones de Hugo", items(led.get("USER_INTUITION", [])), "### Supuestos", items(led.get("ASSUMPTION", [])),
+           "### Preguntas abiertas", items(s["open_questions"]), "### Desconocidos", items(led.get("UNKNOWN", [])),
+           "### Propuestas", items(led.get("PROPOSAL", [])), "### Frames candidatos"]
     frames = s.get("candidate_frames") or []
-    md += [(f"- **{f.get('name')}**{' ✓ elegido' if f.get('chosen') else ''} — {f.get('description', '')}"
-            + (f"\n  - _Cuándo gana:_ {f['when_it_wins']}" if f.get("when_it_wins") else "")) for f in frames] or ["_—_"]
-    md += ["", "## Initial Storyline", plain(s.get("initial_storyline")), "## Research Needed", plain(s.get("research_needed")),
-           "## Decisions Needed", plain(s.get("decisions_needed")), "## Things We Should Not Claim Yet",
-           plain(s.get("should_not_claim")), "## Language Notes", plain(s.get("language_notes"))]
+    md += [(f"- **{f.get('name')}**{' ✓ elegido' if f.get('chosen') else ''} — {f.get('description', '')}") for f in frames] or ["_—_"]
+    md += ["", "### Notas de lenguaje", plain(s.get("language_notes"))]
     text = "\n".join(md)
     store.write_text("framing/current.md", text)
     return text

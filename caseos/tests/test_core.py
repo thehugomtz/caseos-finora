@@ -8,6 +8,8 @@ from caseos.store import CaseStore
 def _framing_ready(case):
     fr = case.read_data("framing/current.yaml")
     fr["executive_question"] = "¿Por qué cae el ingreso por cliente activo?"
+    fr["problem"] = {"statement": "Entender si la caída del ingreso por cliente es mezcla o precio.", "situation": "",
+                     "why_it_matters": "", "in_scope": [], "out_of_scope": []}
     case.write_data("framing/current.yaml", fr)
     q = case.create("question", {"text": "¿Qué cambió en los clientes nuevos?", "status": "open"}, actor="framer")
     h = case.create("hypothesis", {"statement": "La caída es de mezcla, no de precio", "falsifier": "El efecto precio domina",

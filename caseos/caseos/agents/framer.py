@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import uuid
 
-from .. import cases, decisions, framing_doc, jobs, language, phases, skills
+from .. import cases, datamodels, decisions, framing_doc, jobs, language, phases, shaping, skills
 from ..llm import AgentError, RunSpec, get_llm
 from ..model import EPISTEMIC_KINDS, KIND_LABELS, title_of, type_of
 from ..store import CaseStore
@@ -39,12 +39,17 @@ ITEM = _obj({"kind": {"type": "string", "enum": EPISTEMIC_KINDS}, "structured": 
              "confidence": {"type": "string", "enum": ["high", "medium", "low", "n/a"]}, "falsifier": _S,
              "links": _SA, "updates": _S})
 FRAME = _obj({"name": _S, "description": _S, "when_it_wins": _S, "cost": _S})
-RESEARCH_NEEDED = _obj({"question": _S, "links": _SA, "why": _S})
+PROBLEM = _obj({"statement": _S, "situation": _S, "why_it_matters": _S, "in_scope": _SA, "out_of_scope": _SA})
+SLIDE = _obj({"title": _S, "question": _S, "intent": _S, "notes": _S, "links": _SA})
+SECTION = _obj({"id": _S, "title": _S, "purpose": _S, "slides": {"type": "array", "items": SLIDE}, "why": _S})
+TASK = _obj({"id": _S, "question": _S, "kind": {"type": "string", "enum": list(shaping.KINDS)},
+             "intensity": {"type": "string", "enum": ["L1", "L2", "L3", "auto"]}, "why": _S, "links": _SA, "slides": _SA})
 SCHEMA = _obj({
     "reply": _S,
     "items": {"type": "array", "items": ITEM},
     "framing_patch": _obj({"executive_question": _S, "candidate_frames": {"type": "array", "items": FRAME},
-                           "initial_storyline": _SA, "research_needed": {"type": "array", "items": RESEARCH_NEEDED},
+                           "problem": PROBLEM, "storyline_guide": {"type": "array", "items": SECTION},
+                           "research_plan": {"type": "array", "items": TASK},
                            "decisions_needed": _SA, "should_not_claim": _SA, "language_notes": _SA, "risks": _SA}),
     "advisors": {"type": "array", "items": _obj({"lens": {"type": "string", "enum": ["ceo", "cro", "cfo", "cpo", "cdo"]},
                                                  "why": _S, "contribution": _S})},
@@ -86,6 +91,38 @@ def ledger_lines(store: CaseStore, limit: int = 140) -> list[str]:
     return out[-limit:]
 
 
+def shaping_lines(store: CaseStore, fr: dict) -> list[str]:
+    """The Shaping document as the Framer sees it: what is approved (with ids to revise) and what waits for Hugo."""
+    pend = fr.get("pending") or {}
+    pr = fr.get("problem") or {}
+    out = ["## Shaping (el documento que sale de Framing; tú propones, Hugo aprueba)",
+           "Problema aprobado: " + (clip(pr.get("statement", ""), 400) or "—")
+           + (f" · situación: {clip(pr['situation'], 300)}" if pr.get("situation") else "")
+           + (f" · fuera de alcance: {'; '.join(pr.get('out_of_scope') or [])}" if pr.get("out_of_scope") else ""),
+           "Guion aprobado:"]
+    for sec in fr.get("storyline_guide") or []:
+        out.append(f"- {sec['id']} {sec.get('title')}: " + "; ".join(f"{sl['id']} {clip(sl.get('title', ''), 80)}" for sl in sec.get("slides") or []))
+    if not fr.get("storyline_guide"):
+        out.append("- (vacío)")
+    out.append("Plan de investigación aprobado:")
+    for t in fr.get("research_plan") or []:
+        out.append(f"- {t['id']} [{t['kind']} · {t.get('status')}] {clip(t['question'], 160)}")
+    if not fr.get("research_plan"):
+        out.append("- (vacío)")
+    if pend:
+        out.append("Esperando aprobación de Hugo (no las repitas salvo para revisarlas): "
+                   + ", ".join(shaping.label(k, fr) for k in pend))
+    m = datamodels.for_case(store) if (store.meta().get("data_model") or {}).get("id") else None
+    if m is None and (store.meta().get("workspace") or {}).get("type") == "finora-eda":
+        try:
+            m = datamodels.get("finora")
+        except ValueError:
+            m = None
+    out.append("Datos del caso para tareas de tipo data (Analytics): "
+               + (" | ".join(clip(x, 160) for x in m.brief_lines()[:6]) if m else "sin modelo de datos: no propongas tareas de tipo data."))
+    return out
+
+
 def build_prompt(store: CaseStore, message: str, mode: str, lenses: list[dict]) -> str:
     meta = store.meta()
     brief = store.read_data("brief/brief.yaml", {}) or {}
@@ -103,10 +140,9 @@ def build_prompt(store: CaseStore, message: str, mode: str, lenses: list[dict]) 
              "", "## Framing vivo",
              f"Pregunta ejecutiva: {fr.get('executive_question') or '(sin definir)'}",
              "Frames candidatos: " + ("; ".join(f"{f.get('name')}{' (elegido)' if f.get('chosen') else ''}" for f in fr.get("candidate_frames") or []) or "—"),
-             "Storyline inicial: " + (" / ".join(fr.get("initial_storyline") or []) or "—"),
-             "Research necesario: " + ("; ".join(clip(r.get("question", ""), 140) for r in fr.get("research_needed") or []) or "—"),
              "Decisiones necesarias: " + ("; ".join(fr.get("decisions_needed") or []) or "—"),
              "No afirmar todavía: " + ("; ".join(fr.get("should_not_claim") or []) or "—"),
+             "", *shaping_lines(store, fr),
              "", "## Ledger del caso (usa estos IDs; no dupliques)", *(ledger_lines(store) or ["(vacío)"]),
              "", "## Evidencia aceptada (hechos con base evidence:<ID>)",
              *([f"- {f['id']} {clip(title_of(f), 200)}" for f in ev] or ["(ninguna todavía)"]),
@@ -124,9 +160,12 @@ def build_prompt(store: CaseStore, message: str, mode: str, lenses: list[dict]) 
     else:
         lines.append("Sin lentes de advisor en este turno.")
     lines += ["", "## Mensaje de Hugo", message.strip(),
-              "", "Devuelve el FramerTurn. Reglas del patch: executive_question vacío = sin cambio; candidate_frames e "
-                  "initial_storyline vacíos = sin cambio (si los envías, envía la lista completa, máx. 3 frames); "
-                  "research_needed, decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo de este turno."]
+              "", "Devuelve el FramerTurn. Reglas del patch: executive_question vacío = sin cambio; candidate_frames vacío = sin "
+                  "cambio (si lo envías, la lista completa, máx. 3); problem con campos vacíos = sin cambio en esos campos; "
+                  "storyline_guide = SOLO las secciones que cambian, completas con sus láminas (usa el id S# existente para revisar "
+                  "una; id vacío = sección nueva); research_plan = SOLO tareas nuevas o revisadas (id RT-### para revisar; vacío = "
+                  "nueva); decisions_needed, should_not_claim, language_notes y risks = SOLO lo nuevo. Todo lo de shaping queda "
+                  "como propuesta hasta que Hugo lo apruebe."]
     return "\n".join(lines)
 
 
@@ -242,9 +281,26 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
             chosen = {norm(f.get("name", "")) for f in fr.get("candidate_frames") or [] if f.get("chosen")}
             fr["candidate_frames"] = [{**f, "chosen": norm(f.get("name", "")) in chosen} for f in p["candidate_frames"]]
             changed.append("frames candidatos")
-        if p.get("initial_storyline"):
-            fr["initial_storyline"] = p["initial_storyline"][:7]
-            changed.append("storyline inicial")
+        proposed = []
+        pr = p.get("problem") or {}
+        if any((pr.get(k) if isinstance(pr.get(k), str) else pr.get(k)) for k in shaping.PROBLEM_FIELDS):
+            if shaping.propose(store, "problem", pr, basis="framer", turn_id=run_id, fr=fr, save=False):
+                proposed.append("problem")
+        known_secs = {x["id"] for x in fr.get("storyline_guide") or []} | {k.split(":", 1)[1] for k in (fr.get("pending") or {}) if k.startswith("guion:")}
+        for sec in p.get("storyline_guide") or []:
+            sid = sec.get("id") if sec.get("id") in known_secs else shaping.next_section_id(fr)
+            if shaping.propose(store, f"guion:{sid}", sec, basis="framer", why=sec.get("why", ""), turn_id=run_id, fr=fr, save=False):
+                proposed.append(f"guion:{sid}")
+                known_secs.add(sid)
+        known_tasks = {x["id"] for x in fr.get("research_plan") or []} | {k.split(":", 1)[1] for k in (fr.get("pending") or {}) if k.startswith("plan:")}
+        for t in p.get("research_plan") or []:
+            t = {**t, "links": [l for l in t.get("links") or [] if l in existing or l in created]}
+            tid = t.get("id") if t.get("id") in known_tasks else shaping.next_task_id(fr)
+            if shaping.propose(store, f"plan:{tid}", t, basis="framer", why=t.get("why", ""), turn_id=run_id, fr=fr, save=False):
+                proposed.append(f"plan:{tid}")
+                known_tasks.add(tid)
+        if proposed:
+            changed.append("propuestas de shaping")
         for key in ("decisions_needed", "should_not_claim", "language_notes", "risks"):
             cur = fr.get(key) or []
             seen = {norm(x) for x in cur}
@@ -252,15 +308,6 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
             if add:
                 fr[key] = cur + add
                 changed.append(key)
-        rn = fr.get("research_needed") or []
-        seen = {norm(r.get("question", "")) for r in rn}
-        for r in p.get("research_needed") or []:
-            if r.get("question") and norm(r["question"]) not in seen:
-                rn.append({"id": f"RN-{uuid.uuid4().hex[:6]}", "question": r["question"], "why": r.get("why", ""),
-                           "links": [l for l in r.get("links") or [] if l in existing or l in created], "status": "pending",
-                           "proposed_by": "framer", "at": now_iso()})
-                changed.append("research necesario")
-        fr["research_needed"] = rn
         fr["mode"] = mode
         framing_doc.save(store, fr, actor=actor, summary=f"Framing actualizado ({', '.join(dict.fromkeys(changed)) or 'ideas capturadas'})",
                          material=bool(created or updated or changed))
@@ -268,7 +315,7 @@ def apply_turn(store: CaseStore, out: dict, *, message: str, mode: str, run_id: 
         phases.touch(store, "framing", actor=actor)
         if store.meta()["phases"]["framing"].get("status") == "ready" and (created or changed):
             phases.set_status(store, "framing", "needs_review", actor=actor, note="el framing cambió después de aprobarse")
-    return {"created": created, "updated": updated, "framing_changed": list(dict.fromkeys(changed))}
+    return {"created": created, "updated": updated, "framing_changed": list(dict.fromkeys(changed)), "shaping_proposed": proposed}
 
 
 def _update_language(store: CaseStore, lang_out: dict) -> None:
@@ -378,6 +425,7 @@ async def _job(job, params):
     if not lang_check["ok"]:
         corrections = corrections + [f"Disciplina de lenguaje: {i}" for i in lang_check["issues"]]
     rec = {"status": "done", "error": None, "error_kind": None, "language_check": lang_check,
+           "shaping_proposed": applied.get("shaping_proposed") or [],
            "reply": out.get("reply", ""), "created": applied["created"], "updated": applied["updated"],
            "framing_changed": applied["framing_changed"], "advisors": out.get("advisors") or [],
            "alternatives": out.get("alternatives") or [], "challenge": out.get("challenge") if mode == "challenge" else None,

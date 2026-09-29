@@ -117,3 +117,28 @@ por ID y texto; el detalle de research muestra respuesta, findings con evidencia
 - **Encontrado y corregido:** meses ISO (`2024-08`) se leían como el número 8 en la disciplina de cifras; `data_model`
   no viajaba en el resumen del caso; la guía de colores se encimaba en paneles angostos; Python sin certificados para
   bajar Google Fonts (se usa certifi).
+
+## 8. Tercera ronda (29-sep-2026): Framing & Shaping
+
+Pedido de Hugo: que Framing sea también *shaping* y que su salida sea un documento estructurado —problema, storytelling,
+hipótesis y tareas de investigación tipadas (datos, research u otro agente)— que aterrice en Research.
+
+- **Pruebas:** `pytest` → 53 pasan, 1 omitida (en vivo, opt-in). Nuevas: `test_shaping.py` (propuestas que esperan a
+  Hugo, revisiones que no sobrescriben, tarea aprobada que se lanza con su agente, migración desde Entregables, el Guion
+  llega al Story Package y al Storyteller, ids que no se reutilizan) y `test_shaping_endpoints`.
+- **Migración en el caso real** (pedida por Hugo; corrida como `caseos`, todo como propuesta): 3 secciones del Guion
+  (Overview 1 lámina, Growth 7, Revenue 4) desde los Entregables aprobados, 5 tareas desde el research necesario del
+  Framer (tipo sugerido por el Router) y una versión limpia de Entregables propuesta en el brief. Nada aprobado cambió.
+  La bitácora la registra dos veces: la primera corrida le ponía a las tres secciones el mismo «para qué» (la línea de
+  Overview menciona Growth y Revenue); se restauró el respaldo, se corrigió y se volvió a correr.
+- **UI (sandbox `finora-shaping`, 8781, a 1512×945, claro y oscuro):** escribir y aprobar el problema; aprobar una
+  sección; editar Growth (reordenar, añadir y quitar láminas; ids renumerados); cambiar el tipo de una tarea a Datos;
+  aprobar todo; añadir y quitar una tarea (con confirmación); «Ver documento»; el plan en Research con *Lanzar*; la
+  cobertura del Guion en Story (con evidencia · parcial · sin evidencia); la propuesta de Entregables en Briefing. El
+  borrador y el cursor sobreviven a un repintado en vivo. No se lanzó ninguna tarea real (cuota); la ruta de lanzamiento
+  está cubierta por pruebas con el lanzador sustituido.
+- **Encontrado y corregido:** al añadir una lámina el cursor regresaba al título de la sección (Safari no enfoca
+  botones); una tarea nueva reutilizaba el id de una propuesta descartada; el orden del Guion dependía de qué se aprobaba
+  primero; la etiqueta «El Briefer propone» aparecía en propuestas que no eran del Briefer.
+- **Límite de la herramienta, no de la app:** la tecla Enter del navegador automatizado no inserta salto de línea en un
+  textarea; con un teclado real sí.

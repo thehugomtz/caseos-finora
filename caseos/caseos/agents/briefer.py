@@ -6,6 +6,7 @@ statement or reframes) → structured BrieferTurn → code guards → proposals 
 """
 from __future__ import annotations
 
+import re
 import uuid
 
 from .. import briefing, cases, datamodels, jobs, language, skills
@@ -82,6 +83,12 @@ def guard(out: dict, message: str) -> tuple[list[dict], list[str]]:
         if key == "brief_text":
             continue                                   # the verbatim statement is Hugo's message itself, below
         val = [str(x).strip() for x in p.get("value") or [] if str(x).strip()]
+        if key == "deliverables":
+            story = [x for x in val if len(x) > 220 and re.search(r"\bL\d+\s*:|l[aá]mina|\bsecci[oó]n\b", x, re.I)]
+            if story:
+                notes.append("Eso parece la estructura de la historia (secciones y láminas): no va en Entregables sino en "
+                             "Framing & Shaping › Guion de la historia. Cuéntaselo al Framer.")
+                val = [x for x in val if x not in story]
         if not val:
             continue
         seen.add(key)

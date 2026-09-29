@@ -18,7 +18,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Streamin
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, framing_doc, jobs, slidestyle,
+from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, framing_doc, jobs, shaping, slidestyle,
                lineage, phases, research, search, skills, story, storyteller)
 from .agents import base as agents_base
 from .agents import briefer, framer
@@ -367,9 +367,10 @@ def entity_verify(cid: str, eid: str):
 @app.get("/api/cases/{cid}/framing")
 def framing_get(cid: str):
     s = S(cid)
-    return {"framing": framing_doc.state(s), "conversation": framer.conversation(s), "counts": framing_doc.ledger_counts(s),
+    return {"framing": framing_doc.state(s), "shaping": shaping.state(s), "conversation": framer.conversation(s),
+            "counts": framing_doc.ledger_counts(s), "document": s.read_text("framing/current.md"),
             "phase": next(p for p in phases.phases_view(s) if p["id"] == "framing"), "readiness": phases.readiness(s, "framing"),
-            "language": s.meta().get("language") or {}, "modes": framer.MODES}
+            "language": s.meta().get("language") or {}, "modes": framer.MODES, "data_model": s.meta().get("data_model")}
 
 
 class FramingPatch(BaseModel):
@@ -412,6 +413,51 @@ def framing_patch(cid: str, body: FramingPatch):
 class FramerTurn(BaseModel):
     message: str
     mode: str = "organize"
+
+
+@app.get("/api/cases/{cid}/shaping")
+def shaping_get(cid: str):
+    return shaping.state(S(cid))
+
+
+@app.post("/api/cases/{cid}/shaping/{key}/approve")
+def shaping_approve(cid: str, key: str):
+    return shaping.approve(S(cid), key, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/shaping/{key}/discard")
+def shaping_discard(cid: str, key: str):
+    return shaping.discard(S(cid), key, actor="hugo")
+
+
+@app.put("/api/cases/{cid}/shaping/{key}")
+def shaping_set(cid: str, key: str, body: dict):
+    return shaping.set_section(S(cid), key, body, actor="hugo")
+
+
+@app.delete("/api/cases/{cid}/shaping/{key}")
+def shaping_remove(cid: str, key: str):
+    return shaping.remove(S(cid), key, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/shaping/approve-all")
+def shaping_approve_all(cid: str):
+    return shaping.approve_all(S(cid), actor="hugo")
+
+
+@app.post("/api/cases/{cid}/shaping/migrate")
+def shaping_migrate(cid: str):
+    return shaping.migrate(S(cid), actor="hugo")
+
+
+@app.post("/api/cases/{cid}/shaping/tasks/{task_id}/send")
+def shaping_send(cid: str, task_id: str):
+    return shaping.send_task(S(cid), task_id, actor="hugo")
+
+
+@app.post("/api/cases/{cid}/shaping/tasks/send-all")
+def shaping_send_all(cid: str):
+    return {"sent": shaping.send_all(S(cid), actor="hugo")}
 
 
 @app.post("/api/cases/{cid}/framer")

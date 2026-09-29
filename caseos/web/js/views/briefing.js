@@ -7,7 +7,8 @@ import { app } from "../app.js";
 import { btn, empty, statusChip, toast, thinking, hhmm } from "../ui/components.js";
 
 const BASIS = { hugo: ["dicho por ti", "human"], enunciado: ["del enunciado", "accent"], inferido: ["inferido por el agente", "warn"],
-  "alta del caso": ["al crear el caso", "ghost"], "modelo de datos elegido por Hugo": ["del modelo de datos", "accent"] };
+  "alta del caso": ["al crear el caso", "ghost"], "modelo de datos elegido por Hugo": ["del modelo de datos", "accent"],
+  reorganizado: ["tu texto, reorganizado", "accent"] };
 
 export async function mount(root) {
   let data = null;
@@ -114,7 +115,8 @@ export async function mount(root) {
   const proposalView = s => {
     const p = s.pending, b = BASIS[p.basis] || [p.basis, "ghost"];
     return h("div.proposal",
-      h("div.row.wrap", h("span.eyebrow.agent", p.revises ? "El Briefer propone cambiarlo" : "Propuesta del Briefer"), h(`span.chip.${b[1]}`, b[0])),
+      h("div.row.wrap", h("span.eyebrow.agent", p.by && p.by !== "briefer" ? (p.revises ? "Cambio propuesto" : "Propuesta")
+        : p.revises ? "El Briefer propone cambiarlo" : "Propuesta del Briefer"), h(`span.chip.${b[1]}`, b[0])),
       valueView(s, p.value),
       p.hugo_wording ? h("div.small", h("span.muted", "Tus palabras: "), h("span.voice", { style: { fontSize: "14.5px" } }, p.hugo_wording)) : null,
       p.why ? h("div.small.muted", p.why) : null,

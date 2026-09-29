@@ -121,6 +121,8 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
                "research": sorted({r for c in pkg.get("claims") or [] for r in c.get("research_ids") or []}),
                "limitations": sorted({l for c in pkg.get("claims") or [] for l in c.get("limitations") or []}),
                "appendix_candidates": pkg.get("appendix_candidates"), "visual_references": pkg.get("visual_references"),
+               "guion": (store.read_data("framing/current.yaml", {}) or {}).get("storyline_guide") or [],
+               "guion_map": pkg.get("guion_map") or [],
                "brand_system": ({"note": "Guía de formato de Hugo aplicada como tokens del tema (assets/theme.css).", **applied}
                                 if applied else {"note": "Sin marca impuesta: tokens del tema elegido."}),
                "rules": ["No cambies el argumento ni las cifras del Story Package; si algo no se sostiene, anótalo en storyline.md §7.",
@@ -146,6 +148,27 @@ def slide_table(t: dict) -> dict:
             "analysis_reference": t.get("analysis_id"), "period": t.get("period"), "grain": t.get("grain")}
 
 
+def guion_block(store: CaseStore, pkg: dict) -> list[str]:
+    """Hugo's approved storyline guide (Shaping) with the COS's coverage per slide: the order and the question of each
+    slide come from Hugo; the claims and figures come from the Story Package."""
+    fr = store.read_data("framing/current.yaml", {}) or {}
+    guide = fr.get("storyline_guide") or []
+    if not guide:
+        return []
+    cov = {g.get("slide_id"): g for g in pkg.get("guion_map") or []}
+    L = ["## 1b. Guion de Hugo (orden de secciones y láminas: respétalo)", "",
+         "| Lámina | Pregunta que responde | Qué debe mostrar | Claims | Cobertura |", "|---|---|---|---|---|"]
+    for sec in guide:
+        L.append(f"| **{sec['id']} · {sec.get('title')}** | {sec.get('purpose', '')} | | | |")
+        for sl in sec.get("slides") or []:
+            g = cov.get(sl["id"], {})
+            L.append(f"| {sl['id']} {sl.get('title', '')} | {sl.get('question', '')} | {clip(sl.get('intent', ''), 220)} | "
+                     f"{', '.join(g.get('claim_ids') or []) or '—'} | {g.get('coverage', 'sin mapear')} |")
+    L += ["", "Las láminas `missing` no se diseñan con cifras: si Hugo las quiere en el deck, van como pregunta abierta o se "
+              "quedan fuera; anótalo en §7.", ""]
+    return L
+
+
 def storyline_md(store: CaseStore, pkg: dict, tables: dict, title: str, brief: dict) -> str:
     ents = store.all()
     claims = pkg.get("claims") or []
@@ -163,6 +186,7 @@ def storyline_md(store: CaseStore, pkg: dict, tables: dict, title: str, brief: d
          f"| **Qué deben creer al salir (To)** | {ft.get('to', '—')} |",
          f"| **Formato** | {fmt or 'presentado + pre-lectura'} |",
          f"| **Idioma** | {(pkg.get('language_profile') or {}).get('primary', 'es')} — tono directo y conversacional; conservar términos de Hugo |", "",
+         *guion_block(store, pkg),
          "## 2. Governing thought", "", f"> **{pkg.get('governing_thought', '')}**", "",
          "## 3. Pirámide", "", f"Lógica: {(pkg.get('story_arc') or {}).get('archetype', '')} — {(pkg.get('story_arc') or {}).get('logic', '')}", "",
          "```", f"Governing thought: {pkg.get('governing_thought', '')}"]

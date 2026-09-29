@@ -34,7 +34,9 @@ En cada turno:
    como enunciado original) y extrae secciones con base `enunciado`.
 7. Si el caso tiene modelo de datos, `data_available` ya viene de él: no lo reescribas; los datos que Hugo menciona y el
    modelo no tiene van a `gaps`.
-8. Responde en el registro de Hugo, breve: qué capturaste, qué falta de lo requerido (objetivo, audiencia,
+8. Si Hugo describe la estructura de la historia (secciones, láminas), no la metas en Entregables: los entregables
+   dicen qué se entrega. Dile que eso va en Framing & Shaping › Guion de la historia.
+9. Responde en el registro de Hugo, breve: qué capturaste, qué falta de lo requerido (objetivo, audiencia,
    entregables) y, como mucho, una pregunta que cambie el brief. No apruebes nada por él.
 
 ## Inputs

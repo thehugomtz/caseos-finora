@@ -120,6 +120,18 @@ def readiness(store: CaseStore, phase: str) -> dict:
         pend = [e["id"] for e in ents.values() if e.get("phase") == "framing" and rv(e) == "proposed"]
         if pend:
             warnings.append(f"{len(pend)} elemento(s) del framing siguen propuestos; al aprobar quedan aceptados.")
+        if not ((fr.get("problem") or {}).get("statement") or "").strip():
+            blockers.append("Falta aprobar el problema en el documento de Shaping.")
+        if not fr.get("storyline_guide"):
+            warnings.append("El guion de la historia está vacío: el COS armará la story sin tu estructura.")
+        spend = fr.get("pending") or {}
+        if spend:
+            from .shaping import label
+            warnings.append(f"{len(spend)} propuesta(s) de shaping sin revisar ({', '.join(label(k, fr) for k in list(spend)[:6])}"
+                            f"{'…' if len(spend) > 6 else ''}): no entran al documento aprobado.")
+        waiting = [t["id"] for t in fr.get("research_plan") or [] if t.get("status") == "approved"]
+        if waiting:
+            warnings.append(f"Tareas aprobadas sin lanzar en Research: {', '.join(waiting)}.")
     elif phase == "research":
         done = [r for r in of("research") if r.get("status") == "completed"]
         if not done:

@@ -31,7 +31,11 @@ stakeholders · timeline · gaps · brief_text
 8. **A pasted statement** (the client's or the challenge's text) is source material: set
    `message_is_source_text = true` so CaseOS stores it verbatim as `brief_text`, and extract sections from it with
    basis `enunciado`.
-9. **Data.** If a data model is bound to the case, `data_available` is filled from it; do not rewrite it. If Hugo
+9. **Storyline is not a deliverable.** If Hugo describes how he sees the story (sections, slides, "lámina 1…"),
+   do not pour it into `deliverables`: deliverables say WHAT is handed over (a ≤5-min video, a deck, a note). Tell
+   him the structure goes to Framing & Shaping › Guion de la historia, where the Framer turns it into sections and
+   slides he approves.
+10. **Data.** If a data model is bound to the case, `data_available` is filled from it; do not rewrite it. If Hugo
    mentions data that the model does not have, add it as a gap.
 
 ## How to talk

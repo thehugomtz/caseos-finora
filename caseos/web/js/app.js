@@ -26,7 +26,7 @@ const NAV = [
   { grp: null, items: [{ id: "home", label: "Home", icon: "home" }] },
   { grp: "Case", items: [
     { id: "briefing", label: "Briefing", icon: "brief", phase: "briefing", n: "01" },
-    { id: "framing", label: "Framing", icon: "compass", phase: "framing", n: "02" },
+    { id: "framing", label: "Framing & Shaping", icon: "compass", phase: "framing", n: "02" },
     { id: "research", label: "Research", icon: "search", phase: "research", n: "03" },
     { id: "cos", label: "Chief of Staff", icon: "orbit", phase: "synthesis", n: "04" },
     { id: "story", label: "Story", icon: "story", phase: "story", n: "05" },
@@ -409,7 +409,7 @@ function openPalette() {
   const input = h("input", { placeholder: "Busca findings, preguntas, decisiones, research, tablas… o escribe un comando" });
   const res = h("div.res");
   let items = [], sel = 0;
-  const views = [["Home", "#/home"], ["Briefing", "#/briefing"], ["Framing", "#/framing"], ["Research", "#/research"], ["Analytics", "#/analytics"],
+  const views = [["Home", "#/home"], ["Briefing", "#/briefing"], ["Framing & Shaping", "#/framing"], ["Research", "#/research"], ["Analytics", "#/analytics"],
     ["Chief of Staff", "#/cos"], ["Story", "#/story"], ["Slides", "#/slides"], ["Agents", "#/agents"], ["Artifacts", "#/artifacts"], ["brain.md", "#/artifacts/brain.md"]];
   const paint = () => {
     mount(res, items.length ? null : h("div.g", "Sin resultados"), groupBy(items).map(([g, list]) => [h("div.g", g), list.map(it => {
@@ -514,7 +514,7 @@ const DEMO = [
   { r: "#/agents", t: "Agent topology", c: "No es un chatbot con prompts distintos: Framer, COS, Research Router y especialistas sobre el mismo caso. Los rombos dorados son mis gates.", s: ".topo" },
   { r: "#/framing", t: "Framing conversation", c: "Le hablo como hablo. El Framer separa hechos, intuiciones, hipótesis y preguntas, y conserva mis palabras junto a la versión estructurada.", s: ".convo" },
   { r: "#/agents/framer", t: "Framer skills", c: "Core + dinámicas + challenge-only. Los advisors C-level son lentes que el Framer consulta; él conserva la síntesis.", s: ".agentcard" },
-  { r: "#/framing", t: "Approved framing artifact", c: "El framing vivo es un artefacto: se aprueba con Mark Ready, se versiona y se congela en un snapshot.", s: ".board" },
+  { r: "#/framing", t: "Shaping document", c: "Lo que sale de Framing es un documento: problema, mi guion de la historia, hipótesis y un plan de investigación por agente. Cada pieza la apruebo yo; se versiona y se congela en un snapshot.", s: ".board" },
   { r: "#/research", t: "Research queue", c: "Nada se investiga sin propósito de caso. Cada pregunta se rutea por intensidad (L1/L2/L3) y especialista.", s: ".rq" },
   { r: "#/research", t: "Specialist research", c: "Cada resultado termina en una síntesis para ESTE caso: respuesta corta, evidencia, fuentes calificadas, qué no sabemos y qué cambia en la historia.", s: ".rq" },
   { r: "#/analytics", t: "Analytics Workspace", c: "El workspace de exploración existente, reutilizado: investigaciones con gráficas para mí y tablas canónicas con linaje para el COS.", s: ".runs" },

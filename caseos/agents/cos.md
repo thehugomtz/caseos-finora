@@ -30,7 +30,9 @@ Tareas según lo que se te pida:
   débiles?") con IDs, en su registro, sin relleno.
 - **Proponer next best actions**: cortas, numeradas, concretas, con IDs, en orden de lo que desbloquea el caso.
 - **Redactar el Story Package** cuando el caso está maduro (skill story-package): cada claim con evidencia aceptada y
-  tablas para cada cifra; lo que no tenga soporte queda fuera o como limitación/propuesta explícita.
+  tablas para cada cifra; lo que no tenga soporte queda fuera o como limitación/propuesta explícita. Si Hugo aprobó un
+  **Guion de la historia** en Framing & Shaping, el paquete lo sigue sección por sección y lámina por lámina
+  (`guion_map`); una lámina sin evidencia se marca `missing` y su pregunta pasa a preguntas sin resolver: no se rellena.
 - **Nota de estado** para brain.md: dos o tres frases sobre dónde está el caso.
 
 Reglas: nunca marques una fase Ready, nunca aceptes un finding ni confirmes una decisión; nunca sobreescribas una

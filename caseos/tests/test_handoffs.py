@@ -174,6 +174,7 @@ def test_alert_on_the_framing_itself_resolves_cleanly(case):
                 actor="framer")
     fr = case.read_data("framing/current.yaml")
     fr["executive_question"] = "¿Por qué cae el ingreso por cliente?"
+    fr["problem"] = {"statement": "Separar mezcla de precio.", "situation": "", "why_it_matters": "", "in_scope": [], "out_of_scope": []}
     case.write_data("framing/current.yaml", fr)
     phases.mark_ready(case, "briefing", actor="hugo")
     phases.mark_ready(case, "framing", actor="hugo")
