@@ -5,7 +5,10 @@ con suscripción no se factura por corrida.
 
 ## 1. Pruebas automáticas
 
-`.venv/bin/python -m pytest -q tests` → **29 pasan**, 1 omitida (la eval en vivo, opcional con `CASEOS_LIVE=1`).
+`.venv/bin/python -m pytest -q tests` → **32 pasan**, 1 omitida (la eval en vivo, opcional).
+`CASEOS_LIVE=1 .venv/bin/python -m pytest -q tests/test_live.py` → **pasa** con el modelo real (119 s): respuesta en el
+registro de Hugo, sin jerga performativa ni inglés, su intuición como USER_INTUITION (no FACT), hipótesis con
+falsificador, sus palabras junto a la estructura y su vocabulario preservado.
 
 | Área (§89) | Pruebas |
 |---|---|
@@ -17,8 +20,8 @@ con suscripción no se factura por corrida.
 | Disciplina de citas | `test_citations_must_come_from_retrieved_urls`, `test_specialist_run_persists_proposed_findings_with_lineage` |
 | Handoff Analytics → EvidenceTable | `test_analytics_finding_becomes_a_canonical_evidence_table` (contra el workspace real), `test_table_contract_and_unsupported_numbers`, `test_numbers_in_spanish_formats` |
 | COS marca claims afectados | `test_cos_flags_claims_on_the_same_lineage`, `test_cos_contradiction_flags_claim_and_waits_for_hugo`, `test_alert_on_the_framing_itself_resolves_cleanly` |
-| Story Package | `test_story_package_validation`, `test_story_package_is_versioned_and_proposed_for_review` |
-| Visual Storyteller acepta el paquete | `test_visual_storyteller_accepts_the_story_package` (usa el `new-deck.mjs` real) |
+| Story Package | `test_story_package_validation`, `test_story_package_is_versioned_and_proposed_for_review`, `test_quantities_in_words_must_match_the_data`, `test_story_package_rejects_a_headline_the_data_does_not_support` |
+| Visual Storyteller acepta el paquete | `test_visual_storyteller_accepts_the_story_package` (usa el `new-deck.mjs` real), `test_storyteller_run_is_confined_to_its_deck` |
 | API | `test_api_flow` (crear caso, compuertas, turno del Framer como job lanzado desde un hilo, comandos, búsqueda) |
 
 ## 2. No se rompió lo existente
@@ -45,7 +48,7 @@ de Hugo.
 | Compuertas | Briefing → Framing (v1, v2) → Research → Synthesis → Story Ready, cada una con snapshot, decisión y artefacto aprobado. | — |
 | Story Package | 4 claims (contexto · diagnóstico · descarte · limitación), recomendaciones condicionales («no decidir precio con este paquete»); **validación OK sin errores ni avisos** al primer intento. | US$0.42 · 108 s |
 | COS · pregunta libre («qué falta para cerrar la historia para el CFO?», vía command layer) | Detecta que el paquete responde la composición pero no la pregunta literal del CFO (contrato vs tarifa vs descuento); propone opciones A/B/C con recomendación y «tú decides»; señala que el puente (T-003) no está en la historia y que el caveat clave descansa en research sin revisar. | US$0.38 · 99 s |
-| Visual Storyteller | Ver sección 5. | |
+| Visual Storyteller | 4 slides, 4/4 PASS, linaje slide → claim → tabla cerrado (sección 5). | US$8.87 · 27 min |
 
 ## 4. Errores encontrados y corregidos durante la validación
 
@@ -65,10 +68,32 @@ de Hugo.
 14. Se podía lanzar un segundo Storyteller mientras corría otro, y un deck quedaba «en curso» para siempre tras un reinicio → bloqueo en servidor y UI; `recover_decks` al arrancar marca interrumpido.
 15. Caracteres de ancho cero al inicio de respuestas rompían los títulos Markdown → se limpian al renderizar.
 16. Demo mode: tres pasos no encontraban qué resaltar en un caso nuevo → selector del decision log y respaldo al estado vacío de la vista.
+17. Cantidades con letras que contradicen los datos pasaban la validación del Story Package (ver sección 5) → `evidence.verbal_ratio_issues`.
 
 ## 5. Visual Storyteller en vivo
 
-Pendiente de completar al terminar la corrida (ver el reporte final de la sesión).
+Story Ready (D-029) → `prepare` (con el `new-deck.mjs` del renderer: storyline pre-llenado, 3 tablas en `data/*.yaml`,
+`caseos-handoff.yaml`) → corrida con las skills **enlazadas** (la sesión las descubre: `executive-visual-storyteller`,
+`executive-storyline`, `consulting-visual-director`, `html-slide-renderer`, `slide-critic`), dirección *editorial*, sin
+crítico independiente (para una sola pasada; se declara en su reporte de QA).
+
+- **Resultado:** 4 slides (una por claim), 4 composiciones distintas (`divergence_panels`, `step_down_with_volume`,
+  `hypothesis_knockout`, `denominator_conflation`), 3 rondas de QA con renders por ronda, **4/4 PASS**, 0 errores y 0
+  avisos automáticos, fidelidad 0% de píxeles distintos, `presentation.html` + PDF. 27 min · 99 turnos · US$8.87.
+- **Linaje cerrado:** cada slide se importó como S-001…S-004 con su `claim_id` (C-001…C-004); cada pie de slide cita la
+  tabla y el claim (p. ej. «Fuente: T-001 · FIN-GROWTH-01 … · CaseOS C-001»). Slides quedó *por revisar* (gate de Hugo).
+- **Guardas:** todas las escrituras de la corrida quedaron dentro de la carpeta del deck. La guarda (probada en
+  `test_storyteller_run_is_confined_to_its_deck`) permite los scripts del renderer y copias dentro del deck, y niega
+  escrituras fuera, `rm`, `node -e` en línea y herramientas no habilitadas. Desde esta validación cada negación queda en
+  la traza (`caseos-run.json › denials` y un evento en vivo); en esta corrida todavía no se registraban.
+- **Lo que atrapó el Storyteller:** el titular aprobado de C-001 decía que el monto «cayó a la mitad»; la tabla dice
+  COP 92,8 → 57,8 mil (×0.62). No lo dibujó: usó la redacción literal del finding («más de 30%»), lo documentó en
+  `storyline.md §7` y dejó la reversión a una línea. La validación de CaseOS solo revisaba cifras escritas con dígitos;
+  **ahora también revisa cantidades con letras** («a la mitad», «el doble», «por cuatro»…) contra las cifras del claim y
+  sus tablas (error si las contradicen; aviso si no hay contra qué comprobar). Re-validado el paquete del sandbox, marca
+  exactamente C-001 y nada más.
+
+Deck: `.runtime/e2e/cases/finora/slides/decks/finora-sandbox-d-v1-20260928-222214/presentation.html`.
 
 ## 6. UI
 

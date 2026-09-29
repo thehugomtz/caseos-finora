@@ -23,9 +23,10 @@ Dos clases de reglas, y conviene no confundirlas:
 | Research sin propósito de caso no se lanza sin decisión de Hugo | `research.map_purpose`, `create_request` | `test_research_without_case_purpose_waits_for_hugo` |
 | Una cita solo cuenta si su URL se recuperó en esa corrida; si no, el claim baja a confianza baja y se marca | `research.verify_citations` | `test_citations_must_come_from_retrieved_urls`, `test_specialist_run_…` |
 | Las cifras viajan en tablas: una cifra de un claim que no está en sus tablas invalida el Story Package | `evidence.unsupported_numbers`, `story.validate_package` | `test_story_package_validation` |
+| Las cantidades con letras («a la mitad», «el doble», «por cuatro») deben coincidir con las cifras del claim o sus tablas | `evidence.verbal_ratio_issues`, `story.validate_package` | `test_quantities_in_words_must_match_the_data`, `test_story_package_rejects_a_headline_the_data_does_not_support` |
 | Claims sin evidencia aceptada, o que dependen de algo needs_review, invalidan el paquete | `story.validate_package` | idem |
 | Evidencia que contradice o debilita un claim/hipótesis lo marca needs_review (sin reescribirlo) y abre una alerta con opciones | `cos._impact_job` | `test_cos_contradiction_…` |
-| El Storyteller solo recibe un Story Package aprobado y válido; escribe solo en su carpeta; Bash solo scripts del renderer | `storyteller.prepare`, `storyteller._guard` | `test_visual_storyteller_accepts_the_story_package` |
+| El Storyteller solo recibe un Story Package aprobado y válido; escribe solo en su carpeta; Bash solo scripts del renderer | `storyteller.prepare`, `storyteller._guard` | `test_visual_storyteller_accepts_the_story_package`, `test_storyteller_run_is_confined_to_its_deck` |
 | Salidas de agentes validadas contra JSON Schema antes de tocar el estado | `llm.AgentSDKLLM.run` (`output_format`) | — |
 | Ninguna solicitud se pierde: se guarda antes de correr, se reintenta, se recupera al reiniciar | `jobs.py`, `framer.recover_turns` | `test_api_flow` |
 

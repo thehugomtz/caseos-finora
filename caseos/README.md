@@ -69,7 +69,7 @@ pasos.
 | `agents/*.md` | contrato de cada agente (rol, comportamiento, inputs/outputs, guardrails, handoff, fallas) |
 | `skills/` | `manifest.yaml` (fuente de verdad del loader), skills propias y de terceros con licencia y procedencia |
 | `cases/<id>/` | un caso = carpetas de archivos legibles (YAML/Markdown): ver `cases/README.md` |
-| `tests/` | 29 pruebas (núcleo, framer, research, handoffs, API) + 1 eval en vivo opcional |
+| `tests/` | 32 pruebas (núcleo, framer, research, handoffs, API) + 1 eval en vivo opcional |
 
 Documentos: [ARCHITECTURE](ARCHITECTURE.md) · [AGENTS](AGENTS.md) · [SKILLS](SKILLS.md) · [GUARDRAILS](GUARDRAILS.md) ·
 [REUSE](REUSE.md) (qué se reutilizó, refactorizó, creó o dejó de usarse) · [VALIDATION](docs/VALIDATION.md).

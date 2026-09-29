@@ -222,9 +222,15 @@ def recover_decks(store: CaseStore) -> int:
     return n
 
 
-def _guard(deck: Path):
-    from claude_agent_sdk import PermissionResultAllow, PermissionResultDeny
+def _guard(deck: Path, on_deny=None):
+    """Permission callback for the Storyteller run. Every denial is reported through `on_deny` (trace + UI)."""
+    from claude_agent_sdk import PermissionResultAllow, PermissionResultDeny as _Deny
     deck = deck.resolve()
+
+    async def PermissionResultDeny(message: str):  # noqa: N802 - keeps the call sites below readable
+        if on_deny:
+            await on_deny(message)
+        return _Deny(message=message)
     rend = renderer_dir().resolve()
     allowed_roots = [deck, (config.USER_SKILLS_DIR).resolve(), (config.ROOT / ".claude").resolve()]
     ok_cmds = {"ls", "cat", "head", "tail", "wc", "grep", "find", "mkdir", "cp", "mv", "echo", "pwd", "node", "sed", "diff", "stat", "file"}
@@ -241,29 +247,29 @@ def _guard(deck: Path):
             fp = inp.get("file_path") or inp.get("notebook_path") or ""
             if inside(fp, [deck]):
                 return PermissionResultAllow()
-            return PermissionResultDeny(message=f"CaseOS: solo puedes escribir dentro de {deck}")
+            return await PermissionResultDeny(f"CaseOS: solo puedes escribir dentro de {deck}")
         if tool == "Bash":
             cmd = inp.get("command", "")
             if re.search(r"\brm\b|\bsudo\b|curl |wget |\bgit\b|>\s*/(?!dev/null)|\bchmod\b|\bkill\b", cmd):
-                return PermissionResultDeny(message="CaseOS: comando no permitido en la corrida del Storyteller.")
+                return await PermissionResultDeny("CaseOS: comando no permitido en la corrida del Storyteller.")
             try:
                 parts = shlex.split(cmd)
             except ValueError:
-                return PermissionResultDeny(message="CaseOS: comando no interpretable.")
+                return await PermissionResultDeny("CaseOS: comando no interpretable.")
             first = [p for p in parts if not re.match(r"^[A-Z_]+=", p)][:1]
             if not first or os.path.basename(first[0]) not in ok_cmds:
-                return PermissionResultDeny(message=f"CaseOS: solo node (scripts del renderer) y comandos de lectura. Recibí: {cmd[:80]}")
+                return await PermissionResultDeny(f"CaseOS: solo node (scripts del renderer) y comandos de lectura. Recibí: {cmd[:80]}")
             if os.path.basename(first[0]) == "node":
                 scripts = [p for p in parts if p.endswith(".mjs") or p.endswith(".js")]
                 if not scripts or not all(inside(s, [rend, deck]) for s in scripts):
-                    return PermissionResultDeny(message="CaseOS: node solo puede correr scripts de html-slide-renderer.")
+                    return await PermissionResultDeny("CaseOS: node solo puede correr scripts de html-slide-renderer.")
             for p in parts:
                 if p.startswith("/") and not inside(p, allowed_roots + [Path("/dev/null")]):
-                    return PermissionResultDeny(message=f"CaseOS: ruta fuera del deck: {p}")
+                    return await PermissionResultDeny(f"CaseOS: ruta fuera del deck: {p}")
             return PermissionResultAllow()
         if tool in ("Agent", "Task"):
             return PermissionResultAllow()
-        return PermissionResultDeny(message=f"CaseOS: herramienta {tool} no habilitada para el Storyteller.")
+        return await PermissionResultDeny(f"CaseOS: herramienta {tool} no habilitada para el Storyteller.")
     return can_use
 
 
@@ -306,6 +312,12 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
             agents = {"independent-slide-critic": AgentDefinition(
                 description="Fresh-eyes visual critic for executive HTML decks; never edits files.",
                 prompt=body.strip(), tools=["Read", "Bash", "Glob", "Grep", "Skill"], skills=["slide-critic"])}
+    denials: list[dict] = []
+
+    async def on_deny(message: str):
+        denials.append({"t": now_iso(), "message": message})
+        await job.event("denied", {"summary": message})
+
     tools = ["Skill", "Read", "Write", "Edit", "Bash", "Glob", "Grep"] + (["Agent"] if agents else [])
     opts = ClaudeAgentOptions(
         tools=tools, allowed_tools=["Read", "Glob", "Grep"], skills=list(config.STORYTELLER_SKILLS),
@@ -313,7 +325,7 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
         system_prompt={"type": "preset", "preset": "claude_code", "append": append},
         model=config.model_for("storyteller"), effort=config.EFFORT.get("storyteller", "high"),
         max_turns=300, max_budget_usd=config.BUDGET_USD.get("storyteller"), cwd=str(config.ROOT),
-        add_dirs=[str(deck)], can_use_tool=_guard(deck), agents=agents)
+        add_dirs=[str(deck)], can_use_tool=_guard(deck, on_deny), agents=agents)
     started = now_ms()
     trace, final, usage, cost = [], "", {}, None
 
@@ -339,9 +351,9 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
     except Exception as e:
         d.update({"status": "failed", "error": str(e)[:600], "finished_at": now_iso()})
         _upsert_deck(store, d)
-        write_json(deck / "caseos-run.json", {"trace": trace, "usage": usage, "cost_usd": cost, "error": str(e)})
+        write_json(deck / "caseos-run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost, "error": str(e)})
         raise
-    write_json(deck / "caseos-run.json", {"trace": trace, "usage": usage, "cost_usd": cost, "final": final})
+    write_json(deck / "caseos-run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost, "final": final})
     result = import_deck(store, d["id"], final=final, usage=usage, cost=cost)
     return result
 

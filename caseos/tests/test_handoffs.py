@@ -186,3 +186,45 @@ def test_alert_on_the_framing_itself_resolves_cleanly(case):
     assert case.get(x["id"])["status"] == "resolved"
     with pytest.raises(ValueError):
         cos.resolve_alert(case, x["id"], choice="A")                                           # no double resolution
+
+
+def test_quantities_in_words_must_match_the_data():
+    t = evidence.make_table(table_key="G", title="g", question="q", columns=["mes", "clientes", "monto"],
+                            rows=[["ene-22", 377, 92839.0], ["oct-24", 1678, 57811.0]], message="m",
+                            source={"dataset": "d"}, limitations=["l"])
+    # the case the Visual Storyteller caught live: 92,8 → 57,8 mil is ×0.62, not "a la mitad"
+    errs, _ = evidence.verbal_ratio_issues("El monto cayó a la mitad: de COP 92,8 mil a COP 57,8 mil", [t])
+    assert errs and "a la mitad" in errs[0]
+    errs, _ = evidence.verbal_ratio_issues("Los clientes se multiplicaron por cuatro: de 377 a 1.678", [t])
+    assert errs == []                                                                       # ×4.45 is "por cuatro"
+    errs, warns = evidence.verbal_ratio_issues("Las altas se duplicaron", [])
+    assert errs == [] and warns                                                             # nothing to check it against
+
+
+def test_story_package_rejects_a_headline_the_data_does_not_support(case):
+    f, t = _accepted_evidence(case)
+    errors, _ = story.validate_package(case, _package(f, t, headline="El monto de entrada cayó a la mitad"))
+    assert any("a la mitad" in e for e in errors)                                          # 120,5 → 74,7 is ×0.62
+
+
+def test_storyteller_run_is_confined_to_its_deck(tmp_path):
+    deck = tmp_path / "deck"
+    deck.mkdir()
+    denied = []
+
+    async def on_deny(msg):
+        denied.append(msg)
+    guard = storyteller._guard(deck, on_deny)
+    renderer = storyteller.renderer_dir() / "scripts" / "render.mjs"
+
+    async def check():
+        return [type(await guard(tool, inp, None)).__name__ for tool, inp in [
+            ("Write", {"file_path": str(deck / "slides" / "01.html")}),
+            ("Write", {"file_path": str(tmp_path / "fuera.txt")}),
+            ("Bash", {"command": f'node "{renderer}" "{deck}"'}),
+            ("Bash", {"command": "node -e \"require('fs').writeFileSync('/tmp/x', '')\""}),
+            ("Bash", {"command": f'rm -rf "{deck}"'}),
+            ("WebFetch", {"url": "https://example.com"})]]
+    assert asyncio.run(check()) == ["PermissionResultAllow", "PermissionResultDeny", "PermissionResultAllow",
+                                    "PermissionResultDeny", "PermissionResultDeny", "PermissionResultDeny"]
+    assert len(denied) == 4                                                                 # every denial is reported

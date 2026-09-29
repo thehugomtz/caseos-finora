@@ -11,7 +11,7 @@ import re
 
 from . import cases, cos, jobs, phases, skills
 from .agents import base
-from .evidence import numbers_in, unsupported_numbers, validate_table
+from .evidence import numbers_in, unsupported_numbers, validate_table, verbal_ratio_issues
 from .llm import RunSpec, get_llm
 from .model import title_of, type_of
 from .store import CaseStore
@@ -80,6 +80,9 @@ def validate_package(store: CaseStore, pkg: dict) -> tuple[list[str], list[str]]
         unsup = unsupported_numbers(text, tables)
         if unsup:
             errors.append(f"{cid}: cifra(s) sin tabla que las respalde: {', '.join(unsup[:5])}.")
+        verr, vwarn = verbal_ratio_issues(text, tables)
+        errors += [f"{cid}: cantidad con letras {e}." for e in verr]
+        warnings += [f"{cid}: cantidad con letras {w}." for w in vwarn]
         stale = [i for i in ev + tb if i in ents and ents[i].get("stale")]
         if stale:
             errors.append(f"{cid}: depende de elementos marcados needs_review ({', '.join(stale)}).")
@@ -138,7 +141,8 @@ async def _job(job, params):
               + _evidence_block(store) + "\n\n" + cos.digest(store) +
               ("\n\n## Paquete anterior (mejóralo, conserva las keys de los claims que sigan vigentes)\n" + yaml_dump(prev)[:12000] if prev else "") +
               "\n\nReglas: cada claim de evidencia cita findings ACEPTADOS (evidence_ids) y las tablas (table_ids) donde está cada cifra "
-              "que escribas; si una cifra no está en una tabla, no la escribas. Lenguaje asociativo, no causal. Recomendaciones condicionales. "
+              "que escribas; si una cifra no está en una tabla, no la escribas. Nada de cantidades con letras («a la mitad», «el doble», "
+              "«por cuatro») salvo que coincidan con las cifras de la tabla: prefiere la cifra. Lenguaje asociativo, no causal. Recomendaciones condicionales. "
               "keys de claims estables y cortas (p. ej. 'arpa-mix'). Máximo 8 claims.")
     spec = RunSpec(agent="cos", role="story", system=system, prompt=prompt, schema=SCHEMA, max_turns=4,
                    skills=skills.record(selected), purpose="Story Package", case_id=store.id, case_root=store.root)

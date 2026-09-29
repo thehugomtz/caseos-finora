@@ -151,6 +151,63 @@ def unsupported_numbers(text: str, tables: list[dict]) -> list[str]:
     return [n.raw for n in numbers_in(text) if not supported(n, pool)]
 
 
+# ------------------------------------------------------------------------------------------ quantities in words
+# "cayó a la mitad", "se multiplicaron por cuatro", "el doble": a ratio written in words is still a number. It has to
+# agree with the claim's own from → to figures (or its tables), or the headline says something the data does not.
+_RATIO_WORDS = [
+    (r"a la mitad|la mitad|se redujo a la mitad|se redujeron a la mitad", 0.5),
+    (r"a un tercio|un tercio", 1 / 3), (r"dos tercios", 2 / 3), (r"a una cuarta parte|un cuarto", 0.25),
+    (r"el doble|se duplic[oó]|se duplicaron|duplic[oó]|duplicaron|por dos", 2.0),
+    (r"el triple|se triplic[oó]|se triplicaron|triplic[oó]|triplicaron|por tres", 3.0),
+    (r"el cu[aá]druple|se cuadruplic[oó]|se cuadruplicaron|cuadruplic[oó]|cuadruplicaron|por cuatro", 4.0),
+    (r"se quintuplic[oó]|se quintuplicaron|por cinco", 5.0),
+]
+_RATIO_RE = [(re.compile(rf"\b(?:{pat})\b", re.I), r) for pat, r in _RATIO_WORDS]
+RATIO_TOLERANCE = 0.12        # relative: "por cuatro" accepts ×3.5–×4.5; "a la mitad" accepts ×0.44–×0.56
+
+
+def ratio_phrases(text: str) -> list[tuple[str, float]]:
+    out, taken = [], []
+    for rx, r in _RATIO_RE:
+        for m in rx.finditer(text or ""):
+            if any(a <= m.start() < b for a, b in taken):
+                continue
+            taken.append((m.start(), m.end()))
+            out.append((m.group(0), r))
+    return out
+
+
+def _ratios_available(text: str, tables: list[dict]) -> list[float]:
+    """Ratios the claim can stand on: consecutive figures written in the claim (de X a Y) and first → last of each
+    numeric column of its tables."""
+    pool = [v for t in tables for v in table_numbers(t)]
+    nums = [n for n in numbers_in(text) if not n.pct and not n.times and n.value and supported(n, pool)]
+    out = [b.value / a.value for a, b in zip(nums, nums[1:]) if a.value and (a.value > 0) == (b.value > 0)]
+    for t in tables:
+        rows = [r for r in t.get("rows") or [] if isinstance(r, list)]
+        for j in range(len(t.get("columns") or [])):
+            col = [r[j] for r in rows if j < len(r) and isinstance(r[j], (int, float)) and not isinstance(r[j], bool)]
+            if len(col) >= 2 and col[0]:
+                out.append(col[-1] / col[0])
+    return out
+
+
+def verbal_ratio_issues(text: str, tables: list[dict]) -> tuple[list[str], list[str]]:
+    """(errors, warnings) for quantities written in words."""
+    errors, warnings = [], []
+    phrases = ratio_phrases(text)
+    if not phrases:
+        return errors, warnings
+    avail = _ratios_available(text, tables)
+    for raw, r in phrases:
+        if not avail:
+            warnings.append(f"«{raw}» (≈×{r:g}) sin cifras que permitan comprobarlo")
+        elif not any(abs(x - r) <= RATIO_TOLERANCE * r for x in avail):
+            closest = min(avail, key=lambda x: abs(x - r))
+            errors.append(f"«{raw}» (≈×{r:g}) no coincide con los datos del claim (lo más cercano: ×{closest:.2f})")
+    return errors, warnings
+
+
 def is_material_numeric(text: str) -> bool:
     return bool(numbers_in(text))
 
