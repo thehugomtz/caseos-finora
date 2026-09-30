@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T18:03:21-06:00 · motivo: Hugo pidió research (analytics · Analytics): Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos… · v…
+> Actualizado: 2026-09-29T18:11:27-06:00 · motivo: Hugo pidió cambiar C-004 en la story · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,7 +25,7 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-27 investigaciones completadas (0 aceptadas), 1 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 132 alertas abiertas.
+28 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 133 alertas abiertas.
 
 COS: R-029 cierra el diseño del funnel con las definiciones de Hugo: la ruta sale de quién movió cada tramo, la puerta queda fija al entrar y Reactivate es un loop, no otra ruta. Es una propuesta de confianza media sin CRM: hoy solo se miden el nudo (1.476 primeros pagos observados) y la vuelta de pagadores, que es un loop de Revenue y no Reactivate. Con 0 de 213 findings aceptados, ningún claim está listo; lo que más desbloquea es que Hugo decida la taxonomía de C-005 y la regla de nombre Reactivate/reactivación (junto con X-080), y llevar Q-063 y Q-064 a Finora.
 
@@ -174,16 +174,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 18:03 · Hugo pidió research (analytics · Analytics): Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos… · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
-- 2026-09-29 18:01 · Hugo pidió cambiar C-001 en la story · vía Claude (Hugo lo pidió en el chat, 29-sep)
-- 2026-09-29 17:25 · Story Package v2 (borrador): 25 claims · 1 problema(s) a resolver · 126 evidencia(s) esperan tu aceptación
-- 2026-09-29 17:25 · Claim propuesto: Con el modelo propuesto, cada caso del CFO se lee en su capa
-- 2026-09-29 17:25 · C-020 actualizado en el Story Package
-- 2026-09-29 17:25 · C-019 actualizado en el Story Package
-- 2026-09-29 17:25 · C-018 actualizado en el Story Package
-- 2026-09-29 17:25 · C-017 actualizado en el Story Package
-- 2026-09-29 17:25 · C-016 actualizado en el Story Package
-- 2026-09-29 17:25 · Claim propuesto: Con cliente, mes y monto se ve qué cambió, no por qué
+- 2026-09-29 18:11 · Hugo pidió cambiar C-004 en la story · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
+- 2026-09-29 18:09 · COS: R-030 podría afectar C-004
+- 2026-09-29 18:09 · R-030 completada: Gasto de S&M y altas se mueven en direcciones opuestas. Entre 2023 ene-may y 2023 jun-dic el S&M por mes pasó…
+- 2026-09-29 18:09 · F-222 → tabla canónica FIN-F-222 (0 filas)
+- 2026-09-29 18:09 · F-221 → tabla canónica FIN-F-221 (4 filas)
+- 2026-09-29 18:09 · F-220 → tabla canónica FIN-F-220 (32 filas)
+- 2026-09-29 18:09 · F-219 → tabla canónica FIN-F-219 (2 filas)
+- 2026-09-29 18:09 · F-218 → tabla canónica FIN-F-218 (2 filas)
+- 2026-09-29 18:09 · F-217 → tabla canónica FIN-F-217 (6 filas)
+- 2026-09-29 18:09 · F-216 → tabla canónica FIN-F-216 (34 filas)
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 26, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

@@ -218,3 +218,9 @@ Package. Encontrado y corregido:
   apaga cuando termina el turno de Claude: mientras haya trabajos, el turno sigue abierto.
 - **Tope de presupuesto del Story Package:** con el diseño completo de los especialistas en el prompt, el borrador 2
   topó los US$6 equivalentes a los 32 min (sin resultado). Story: US$15 y 60 min.
+- **Gráficas de la evidencia (29-sep, tarde, pedido de Hugo):** C-001 mostraba un índice de una sola serie (F-071) y
+  C-004 no tenía ninguna gráfica (tablas, tarjetas que solo apuntan al workspace, listas de datos faltantes). Ahora un
+  claim puede nombrar la gráfica de un finding (`visual_finding`); C-001 → MRR por cliente activo en COP (F-072) y C-004
+  → la serie mensual de R-030 (pedida a Analytics). El kit parte en paneles con los mismos meses las series cuyas
+  escalas difieren más de 5× (nunca un eje con escalas mezcladas), y una «tarjeta» del workspace muestra la tabla del
+  finding en lugar de «no disponible». Los cambios que Hugo pide en el chat y hace Claude no aceptan el claim por él.

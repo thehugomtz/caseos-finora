@@ -81,8 +81,8 @@ En 2023 jun–dic hay 60,6 primeros pagadores por mes, frente a 45,2 en ene–ma
 
 - Pregunta: ¿Hasta dónde se puede relacionar la Inversión en Marketing por categoría con las ventas cruzando fechas?
 - Rol: evidence · confianza medium · fuerza pending
-- Evidencia: F-107, F-118, F-023, F-024, F-063, F-066, F-115, F-065, F-068, F-119, F-207 · Tablas: T-013, T-024, T-008, T-005, T-009
-- Intención visual: Diverge: en 2023 el gasto baja mientras los primeros pagadores suben; no hay co-movimiento que atribuir.
+- Evidencia: F-214, F-220, F-219, F-221, F-217, F-107, F-118, F-023, F-024, F-063, F-066, F-115, F-065, F-068, F-119, F-207 · Tablas: T-101, T-107, T-106, T-108, T-104, T-013, T-024, T-008, T-005, T-009
+- Intención visual: Dos paneles con los mismos meses (ene-22 a oct-24): arriba el S&M total por mes (unidad reportada), abajo las altas por mes; en 2023 jun-dic el gasto baja mientras las altas suben (T-101). Apoyo: dispersión de S&M contra altas con un mes de rezago (F-220, T-107) y barras por ventana de altas por mes y S&M por alta (T-108). Sin atribuir ventas al gasto.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
 - Limitación: Asociación no es efecto: no hay etapas con fecha ni fuente del lead que liguen gasto y clientes (F-119).
 - Limitación: No se puede decidir si SoftwareTools y Freelance son habilitación comercial o producto (F-068).

@@ -1,0 +1,201 @@
+id: T-104
+type: table
+table_key: FIN-F-217
+title: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad…
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- periodo
+- demanda_u
+- capacidad_u
+- habilitacion_u
+- part_demanda
+- part_capacidad
+- part_habilitacion
+- part_team
+rows:
+- - 2022 S1
+  - 8.94
+  - 3.61
+  - 1.45
+  - 0.6384
+  - 0.258
+  - 0.1036
+  - 0.12
+- - 2022 S2
+  - 10.83
+  - 5.84
+  - 2.29
+  - 0.5713
+  - 0.308
+  - 0.1207
+  - 0.12
+- - 2023 ene-may
+  - 8.64
+  - 5.09
+  - 1.32
+  - 0.5741
+  - 0.3379
+  - 0.088
+  - 0.12
+- - 2023 jun-dic
+  - 5.75
+  - 3.82
+  - 0.48
+  - 0.5718
+  - 0.3803
+  - 0.0478
+  - 0.2944
+- - 2024 S1
+  - 7.66
+  - 4.0
+  - 0.55
+  - 0.6273
+  - 0.3276
+  - 0.0451
+  - 0.2172
+- - 2024 jul-oct
+  - 4.37
+  - 2.88
+  - 0.3
+  - 0.5783
+  - 0.3817
+  - 0.04
+  - 0.2382
+units:
+  periodo: texto
+  demanda_u: num2
+  capacidad_u: num2
+  habilitacion_u: num2
+  part_demanda: num2
+  part_capacidad: num2
+  part_habilitacion: num2
+  part_team: num2
+definitions: {}
+message: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad
+  comercial de 26% a 38% y la habilitación de 10% a 4%.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  - E-002
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-006\nWITH s AS (SELECT month,\n       CASE WHEN month <= '2022-06' THEN '2022 S1'\n            WHEN
+  month <= '2022-12' THEN '2022 S2'\n            WHEN month <= '2023-05' THEN '2023 ene-may'\n            WHEN month
+  <= '2023-12' THEN '2023 jun-dic'\n            WHEN month <= '2024-06' THEN '2024 S1'\n            ELSE '2024 jul-oct'
+  END AS periodo,\n       demand_gen_spend, sales_capacity_spend, enablement_spend, team, total_sm_spend\nFROM mart.sm_monthly)\nSELECT
+  periodo,\n       ROUND(SUM(demand_gen_spend),2) AS demanda_u,\n       ROUND(SUM(sales_capacity_spend),2) AS capacidad_u,\n
+  \      ROUND(SUM(enablement_spend),2) AS habilitacion_u,\n       ROUND(SUM(demand_gen_spend)/SUM(total_sm_spend),4)
+  AS part_demanda,\n       ROUND(SUM(sales_capacity_spend)/SUM(total_sm_spend),4) AS part_capacidad,\n       ROUND(SUM(enablement_spend)/SUM(total_sm_spend),4)
+  AS part_habilitacion,\n       ROUND(SUM(team)/SUM(total_sm_spend),4) AS part_team\nFROM s GROUP BY periodo ORDER
+  BY periodo\n\n-- E-002\nSELECT * FROM mart.sm_monthly ORDER BY 1"
+transformation: E-006 · run_sql · SQL ad hoc de solo lectura; E-002 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-004
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-PAYROLL-NEG: PayrollExpenses es negativo en algunos meses'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: periodo
+    nombre: periodo
+    formato: texto
+  - id: demanda_u
+    nombre: demanda_u
+    formato: num2
+  - id: capacidad_u
+    nombre: capacidad_u
+    formato: num2
+  - id: habilitacion_u
+    nombre: habilitacion_u
+    formato: num2
+  - id: part_demanda
+    nombre: part_demanda
+    formato: num2
+  - id: part_capacidad
+    nombre: part_capacidad
+    formato: num2
+  - id: part_habilitacion
+    nombre: part_habilitacion
+    formato: num2
+  - id: part_team
+    nombre: part_team
+    formato: num2
+  filas:
+  - periodo: 2022 S1
+    demanda_u: 8.94
+    capacidad_u: 3.61
+    habilitacion_u: 1.45
+    part_demanda: 0.6384
+    part_capacidad: 0.258
+    part_habilitacion: 0.1036
+    part_team: 0.12
+  - periodo: 2022 S2
+    demanda_u: 10.83
+    capacidad_u: 5.84
+    habilitacion_u: 2.29
+    part_demanda: 0.5713
+    part_capacidad: 0.308
+    part_habilitacion: 0.1207
+    part_team: 0.12
+  - periodo: 2023 ene-may
+    demanda_u: 8.64
+    capacidad_u: 5.09
+    habilitacion_u: 1.32
+    part_demanda: 0.5741
+    part_capacidad: 0.3379
+    part_habilitacion: 0.088
+    part_team: 0.12
+  - periodo: 2023 jun-dic
+    demanda_u: 5.75
+    capacidad_u: 3.82
+    habilitacion_u: 0.48
+    part_demanda: 0.5718
+    part_capacidad: 0.3803
+    part_habilitacion: 0.0478
+    part_team: 0.2944
+  - periodo: 2024 S1
+    demanda_u: 7.66
+    capacidad_u: 4.0
+    habilitacion_u: 0.55
+    part_demanda: 0.6273
+    part_capacidad: 0.3276
+    part_habilitacion: 0.0451
+    part_team: 0.2172
+  - periodo: 2024 jul-oct
+    demanda_u: 4.37
+    capacidad_u: 2.88
+    habilitacion_u: 0.3
+    part_demanda: 0.5783
+    part_capacidad: 0.3817
+    part_habilitacion: 0.04
+    part_team: 0.2382
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-217
+links:
+- F-217
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1

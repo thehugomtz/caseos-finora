@@ -510,11 +510,38 @@ const VFMT = { int: f.int, cop: f.cop, cop2: f.cop2, pct: v => f.pct(v), pct0: v
 export const vfmt = (v, k) => (v === null || v === undefined ? "–" : typeof v === "string" ? v : (VFMT[k] || (x => f.num(x, 2)))(v));
 const VKIND = { cop: "cop", cop2: "cop", pct: "pct", pct0: "pct", pct2: "pct", pct_signed: "pct", int: "int", idx: "idx", num1: "num", num2: "num" };
 
+// raw column ids from the workspace («sm_total_u») read as words («S&M total (u)»)
+const seriesName = n => !String(n || "").includes("_") ? n : String(n).replace(/_u$/, " (u)").replace(/_/g, " ").replace(/\bsm\b/i, "S&M")
+  .replace(/^./, c => c.toUpperCase());
+
+// series whose sizes differ by more than 5× cannot share one axis: each group gets its own panel (small multiples)
+function scaleGroups(series) {
+  const top = s => Math.max(0, ...s.values.filter(ok).map(Math.abs));
+  const sorted = [...series].sort((a, b) => top(a) - top(b)), groups = [];
+  sorted.forEach(s => { const g = groups[groups.length - 1]; if (g && top(s) <= 5 * Math.max(top(g[0]), 1e-9)) g.push(s); else groups.push([s]); });
+  const at = s => series.indexOf(s);                       // panels keep the order the series came in
+  return groups.map(g => g.sort((a, b) => at(a) - at(b))).sort((a, b) => at(a[0]) - at(b[0]));
+}
+
+function panels(el, spec, groups) {
+  el.replaceChildren();
+  groups.forEach(g => {
+    const share = g.every(s => s.values.filter(ok).every(v => v >= 0 && v <= 1)) && g.some(s => /particip|share|pct|%/i.test(s.name));
+    const box = H("div", "vpanel", el);
+    H("div", "vt", box, g.map(s => s.name).join(" · "));
+    const c = H("div", null, box);
+    lineChart(c, { labels: spec.x, series: g, fmt: share ? (v => f.pct(v, 0)) : (v => vfmt(v, spec.formato)), tickKind: share ? "pct" : (VKIND[spec.formato] || "num"),
+                   height: 150, includeZero: true });
+  });
+  return {};
+}
+
 export function renderVisual(el, spec, legendEl) {
   const fmt = v => vfmt(v, spec.formato), kind = VKIND[spec.formato] || "num";
   const P = PAL();
-  const series = (spec.series || []).map((s, i) => ({ name: s.nombre, values: s.valores, color: P[i % P.length] }));
+  const series = (spec.series || []).map((s, i) => ({ name: seriesName(s.nombre), values: s.valores, color: P[i % P.length] }));
   if (legendEl) legend(legendEl, series.map(s => ({ name: s.name, color: s.color, kind: spec.tipo === "linea" ? "line" : spec.tipo === "puntos" ? "dot" : "rect" })));
+  if (spec.tipo === "linea" && spec.formato !== "idx" && scaleGroups(series).length > 1) return panels(el, spec, scaleGroups(series));
   if (spec.tipo === "linea") return lineChart(el, { labels: spec.x, series, fmt, tickKind: kind, height: 260, includeZero: spec.formato !== "idx" });
   if (spec.tipo === "barras") return barChart(el, { labels: spec.x, series, stacked: !!spec.apiladas, fmt, tickKind: kind, height: 260, maxBar: 34, yMax: spec.apiladas && spec.formato === "pct" ? 1 : undefined });
   if (spec.tipo === "cascada") { let k = 0; return waterfall(el, { height: 280, title: "Descomposición", steps: spec.pasos.map(p => ({ label: p.etiqueta, short: p.corta, value: p.valor, kind: p.tipo === "total" ? "total" : "delta", color: p.tipo === "total" ? C.de : [C.s2, C.s1, C.s3][k++ % 3] })) }); }

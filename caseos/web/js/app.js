@@ -306,7 +306,8 @@ function drawerBody(e, data) {
   if (t === "research") out.push(dsec("Respuesta corta", h("p.prose", { style: { fontSize: "14.5px", color: "var(--ink)" } }, e.short_answer || "—"),
     btn("Abrir investigación completa", { icon: "arrow", sm: true, onClick: () => { closeOverlays(); app.go("#/research/" + e.id); } })));
   if (t === "finding") {
-    if (e.visual) { const wrap = h("div.viz", e.visual_title ? h("div.vt", e.visual_title) : null, h("div.legend"), h("div.chart")); out.push(dsec("Visual", wrap)); requestAnimationFrame(() => renderVisual(wrap.querySelector(".chart"), e.visual, wrap.querySelector(".legend"))); }
+    // a «tarjeta» is only a pointer to a card of the analytics workspace: its data is the finding's table, drawn below
+    if (e.visual && e.visual.tipo !== "tarjeta") { const wrap = h("div.viz", e.visual_title ? h("div.vt", e.visual_title) : null, h("div.legend"), h("div.chart")); out.push(dsec("Visual", wrap)); requestAnimationFrame(() => renderVisual(wrap.querySelector(".chart"), e.visual, wrap.querySelector(".legend"))); }
     if (e.evidence_values && Object.keys(e.evidence_values).length) out.push(dsec("Evidencia", h("table.spec-table", h("tbody", Object.entries(e.evidence_values).map(([k, v]) => h("tr", h("td", (e.evidence_labels || {})[k] || k), h("td.n", String(v))))))));
     if (e.evidence_text) out.push(dsec("Evidencia", h("p.prose", e.evidence_text)));
     if (e.claims && e.claims.length) out.push(dsec("Claims y fuentes", e.claims.map(c => h("div.small", { style: { padding: "4px 0" } }, (c.unverified ? "⚠ " : "") + c.claim, h("span.faint", ` · ${c.source_id} · ${c.confidence}`)))));

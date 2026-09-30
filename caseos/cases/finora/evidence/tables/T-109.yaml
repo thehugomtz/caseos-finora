@@ -1,0 +1,72 @@
+id: T-109
+type: table
+table_key: FIN-F-222
+title: No es posible atribuir las altas de primeros pagadores al gasto de S&M
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- Dato
+- Valor
+rows: []
+units: {}
+definitions: {}
+message: 'No es posible atribuir las altas de primeros pagadores al gasto de S&M: faltan las etapas del funnel con
+  sus fechas, la fuente del lead y la unidad documentada del gasto, de modo que la relación solo puede describirse
+  como coincidencia temporal entre series.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids: []
+  tools: []
+  data_version: null
+  brain_version: null
+query: ''
+transformation: ''
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-009
+limitations:
+- 'CV-SIN-FUNNEL: No hay funnel, atribución, precios ni descuentos'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+preferred_visual: table
+visual_artifact:
+  tipo: datos
+  filas:
+  - dato: Monto pagado por cliente y mes (amount)
+    estado: Disponible
+    campos: ''
+  - dato: Industria del cliente
+    estado: Disponible
+    campos: ''
+  - dato: Gasto de S&M por mes y rubro
+    estado: Disponible, sin unidad documentada
+    campos: ''
+  - dato: Etapas del funnel con fechas de entrada y salida
+    estado: No existe
+    campos: stage, stage_entered_at, stage_exited_at
+  - dato: Fuente del lead y atribución por canal
+    estado: No existe
+    campos: lead_source, channel
+created_at: '2026-09-29T18:09:10-06:00'
+status: invalid
+validation_errors:
+- falta 'rows'
+finding: F-222
+links:
+- F-222
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1
