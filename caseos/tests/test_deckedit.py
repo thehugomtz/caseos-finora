@@ -105,3 +105,25 @@ def test_a_divider_goes_where_hugo_says_and_the_rest_moves_down(case, deck):
     assert "color: 'bg'" in (deck / "slides" / f"{deckedit.add_divider(case, 'DECK-1', 'Anexos', '#101010')['position']:02d}.html").read_text(encoding="utf-8")
     with pytest.raises(StoreError):
         deckedit.add_divider(case, "DECK-1", "", "#FF6364")
+
+
+def test_a_slide_from_an_earlier_deck_comes_back_where_hugo_says(case, deck):
+    old = case.root / "slides" / "decks" / "old"
+    (old / "slides").mkdir(parents=True)
+    (old / "renders").mkdir(parents=True)
+    (old / "slides" / "00.html").write_text(SLIDE.format(n=2).replace("Los clientes crecen", "La brecha se asocia a quién entra; crecen"),
+                                            encoding="utf-8")
+    (old / "renders" / "00.png").write_bytes(b"old0")
+    storyteller._upsert_deck(case, {"id": "DECK-0", "slug": "old", "path": "slides/decks/old", "status": "completed",
+                                    "created_at": "2026-09-29T21:00:00"})
+    out = deckedit.copy_slide(case, "DECK-1", "DECK-0", "00.html", after="01.html", via="vía Claude (pedido de Hugo)")
+    assert out == {"file": "02.html", "position": 2, "slide_id": "S2V2", "moved": 2}          # S2 was taken: new id
+    new = (deck / "slides" / "02.html").read_text(encoding="utf-8")
+    assert 'data-slide="S2V2"' in new and "P.draw('S2V2'" in new and "quién entra" in new
+    assert '<main class="slide" data-slide="S2">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
+    assert (deck / "renders" / "02.png").read_bytes() == b"old0" and (deck / "renders" / "04.png").read_bytes() == b"png3"
+    log = read_jsonl(case.root / "audit/activity.jsonl")
+    assert any("Hugo trajo «La brecha se asocia a quién entra" in (e.get("summary") or "") and "lámina 1 de old" in e["summary"]
+               and "vía Claude" in e["summary"] for e in log)
+    with pytest.raises(StoreError):
+        deckedit.copy_slide(case, "DECK-1", "DECK-9", "00.html")

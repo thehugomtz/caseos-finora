@@ -3,115 +3,84 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S04 · Finora</title>
+<title>S03 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S04"] {
+[data-slide="S03"] {
+  .mult { font-family: var(--font-display); font-size: 56px; line-height: 1; color: var(--ink); display: block; margin-bottom: 6px; }
+  .end-sub { font-size: 20px; color: var(--ink-3); font-weight: 400; display: block; margin-top: 2px; }
+  .caps { color: var(--ink-3); }
   .num { font-variant-numeric: tabular-nums; }
-  .fd { font-size: 26px; font-weight: 600; line-height: 1.2; color: var(--ink); }
-  .v { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .v.hot { color: var(--accent-text); }
-  .v span { font-weight: 400; color: var(--ink-2); font-size: 20px; }
-  .v.hot span { color: var(--accent-text); }
-  .q { font-family: var(--font-display); font-size: 40px; line-height: 1.15; color: var(--ink); letter-spacing: -0.01em; }
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .go { font-size: 22px; font-weight: 600; color: var(--ink-3); }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S04" data-composition="converging_evidence (tres mini-exhibits → pregunta abierta)" data-family="process" data-word-budget="120" data-page="4">
+<main class="slide" data-slide="S03" data-composition="annotated_chart (divergence) + per_client_strip" data-family="evidence" data-word-budget="75" data-page="3">
   <header class="header">
-    <div class="kicker">Overview · observaciones</div>
-    <h1 class="headline">La caída por cliente coincide con quién entra, y el gasto no acompaña las altas</h1>
+    <div class="kicker">Overview · salud del modelo</div>
+    <h1 class="headline">Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8×</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: pagos cliente × mes y S&amp;M_spend de Finora; S&amp;M en unidad reportada (u) · F-075, F-076, F-097, F-110, F-160, F-164, F-214</span><span class="page"></span></footer>
-  <aside class="notes">Tres observaciones que rescatan lo mejor de C-002, C-003 y C-004 (el detalle está en el anexo). Mezcla: la base previa sostiene su monto (+5% por cliente entre ene-22 y oct-24, a COP 97,4 mil), mientras las cosechas 2023 y 2024 ya son 65% de los activos, con COP 46,3 mil y COP 43,0 mil por cliente. Entradas: los primeros pagadores observados pasan de 27,2 a 54,7 por mes en un escalón a inicios de 2023, y el ticket de entrada estabilizado baja (la mediana del segundo pago pasa de COP 52,5 mil en 2022 a COP 36,8 mil en 2023); según el monto usual temprano, 91% de ese cambio ocurre dentro de cada industria. Gasto: entre ene–may y jun–dic de 2023 el S&amp;M por mes baja de 3,01 u a 1,44 u, mientras las altas suben de 45,2 a 60,6 por mes; además, la capacidad comercial pasa de 26% a 38% del S&amp;M entre 2022 S1 y 2024 jul–oct, así que cruzar fechas no atribuye ventas. Lo que los pagos no dicen es por qué ruta, canal y etapa entra cada cliente, y esa pregunta abre Growth. Cuidado: composición no es causa (F-093); el peso de la composición depende de la base, 84% con dic-22 y 108% con ene-22, y la base la decides tú (X-060); primer pago observado no es adquisición (X-052); el escalón de 2023 puede ser registro (H-024) u operación (H-025, H-068); el ticket estabilizado sigue siendo monto pagado y no sigue bajando en 2024 (F-161); el gasto está en unidad reportada y Team queda fijo en 12% hasta may-23 (F-063, F-066); la asociación negativa en niveles (−0,57) no es efecto (F-119, F-219); la industria es la única segmentación disponible. Las tijeras parten del mismo punto y muestran el cambio relativo de cada serie con la misma escala; las cifras rotuladas son las de los datos.</aside>
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, ene-22–oct-24; monto pagado observado (campo amount con escala fija), no MRR contratado; cliente activo = pago &gt; 0 en el mes · F-071, F-072, T-001</span><span class="page"></span></footer>
+  <aside class="notes">Entre ene-22 y oct-24 (ventana completa) los clientes con pago en el mes pasan de 377 a 1.678 (4,5×) y el MRR pagado observado de COP 35,0 millones a COP 97,0 millones (2,8×). El MRR pagado por cliente activo baja de COP 92,8 mil a COP 57,8 mil (−38%). Esa brecha abre Growth (quién entra) y Revenue (qué se paga y por qué cambia). Cuidado: es monto pagado observado, no MRR contratado (F-082); un cliente sin pago puede estar cancelado, en pausa o atrasado. Es stock con ventana completa desde ene-22; los flujos arrancan en mar-22 (F-074). El −38% no se presenta como deterioro: todavía no separa mezcla de entrada, precio y salidas. Pendiente de tu aceptación: F-071, F-072, F-001, F-002 y F-074 están propuestos.</aside>
 </main>
 <script>
-P.draw('S04', (s, P) => {
-  // Plan: findings cols 1–4 (x 112–600) · mini-exhibits cols 5–8 (x 688–1232) · connectors col 9 ·
-  // open question cols 10–12 (x 1440–1808). Rows centred at 395 / 610 / 820, hairlines between.
-  const ROWS = [395, 610, 820];
-  [505, 715].forEach((y) => s.line(112, y, 1232, y, { stroke: 'rule', w: 1.5 }));
+P.draw('S03', (s, P) => {
+  // T-001 (FIN-GROWTH-01) + F-071: 34 meses ene-22 → oct-24
+  const cl = [377,457,467,499,532,520,586,609,629,654,669,697,733,763,792,822,861,899,959,1021,1078,1133,1203,1241,1283,1292,1320,1397,1457,1530,1566,1602,1645,1678];
+  const paid = [35000308.35,43818509.91,39545237.97,48794921.91,49299193.86,39545196.6,49378369.95,55090995.54,50463767.76,49268442.09,50274228.9,62411971.65,56363068.02,55518865.5,56690874.03,60082807.05,62022100.56,62013615.93,64476189.96,68120097.99,69249404.07,71855032.83,76874755.02,77918005.2,76506001.95,75633087.18,78038810.01,84120683.85,85651681.29,90094989.39,89433913.8,91188777.33,92663692.8,97007446.83];
+  const per = [92839.01,95882.95,84679.31,97785.41,92667.66,76048.46,84263.43,90461.4,80228.57,75334.01,75148.32,89543.72,76893.68,72763.91,71579.39,73093.44,72034.96,68980.66,67232.73,66719.0,64238.78,63420.15,63902.54,62786.47,59630.55,58539.54,59120.31,60215.24,58786.33,58885.61,57109.78,56921.83,56330.51,57811.35];
+  const ci = cl.map((v) => v / cl[0] * 100), mi = paid.map((v) => v / paid[0] * 100);
 
-  // Findings (bold line + one supporting line).
-  const F = [
-    ['La base previa sostiene su monto', 'Base previa: <b>+5%</b> por cliente; cosechas 2023–24: <b>65%</b> de los activos'],
-    ['Entran más, con menor ticket', '<b>91%</b> del cambio del ticket 2022→2023 ocurre dentro de cada industria'],
-    ['El gasto no acompaña las altas', 'Cruzar fechas no atribuye ventas'],
-  ];
-  F.forEach(([h, t], i) => {
-    s.label(112, ROWS[i] - 58, h, { cls: 'fd', w: 500, id: `s04-f${i}` });
-    s.label(112, ROWS[i] - 18, t, { cls: 'annotation', w: 500 });
+  // Main chart: cols 1–7 (x 200 → 1040). Right strip: cols 10–12.
+  const c = s.chart({ x: 200, y: 330, w: 840, h: 540 });
+  const x = c.linear([0, 33], { axis: 'x' }), y = c.linear([50, 470]);
+  c.gridY(y, [100, 200, 300, 400]);
+  c.axisY(y, [100, 200, 300, 400]);
+  s.label(200, 322, 'Índice, ene-22 = 100', { anchor: 'bl', cls: 'label-sm' });
+  s.line(200, c.b, c.r, c.b, { stroke: 'ink-4', w: 1.5, role: 'axis' });
+  [[0, 'ene-22'], [12, 'ene-23'], [24, 'ene-24'], [33, 'oct-24']].forEach(([i, t]) => s.label(x(i), c.b + 14, t, { anchor: 'tc', cls: 'label-sm' }));
+
+  // The gap (la brecha): area where clients outgrow paid MRR, cut exactly where the two lines cross.
+  const top = [], bot = [];
+  ci.forEach((v, i) => {
+    top.push([x(i), y(Math.max(v, mi[i]))]);
+    bot.push([x(i), y(mi[i])]);
+    const d = v - mi[i], d2 = i < 33 ? ci[i + 1] - mi[i + 1] : 0;
+    if (d * d2 < 0) {
+      const t = d / (d - d2), yc = mi[i] + (mi[i + 1] - mi[i]) * t;
+      top.push([x(i + t), y(yc)]);
+      bot.push([x(i + t), y(yc)]);
+    }
   });
+  s.poly([...top, ...bot.reverse()], { fill: 'accent', stroke: null, id: 's03-gap', focal: true, opacity: 0.9 });
+  c.line(ci.map((v, i) => ({ i, v })), { x: (d) => x(d.i), y: (d) => y(d.v), tone: 'ink', w: 3 });
+  c.line(mi.map((v, i) => ({ i, v })), { x: (d) => x(d.i), y: (d) => y(d.v), tone: 'ink-3', w: 3 });
+  s.dot(x(33), y(ci[33]), { r: 7, fill: 'ink' });
+  s.dot(x(33), y(mi[33]), { r: 7, fill: 'ink-3' });
+  s.label(x(25), y((ci[25] + mi[25]) / 2) + 8, 'la brecha', { anchor: 'mc', cls: 'label' });
 
-  // Row 1 · mix (F-076, oct-24): width = % of active clients, height = MRR per client (COP mil).
-  const mix = [
-    { k: 'base', share: 0.17759237187127533, v: 97.39, tone: 'ink', lab: '97,4', name: 'base previa' },
-    { k: 'feb', share: 0.048271752085816445, v: 69.86, tone: 'ink-4' },
-    { k: 'c22', share: 0.12216924910607867, v: 65.44, tone: 'ink-4' },
-    { k: 'c23', share: 0.3396901072705602, v: 46.30, tone: 'accent', lab: '46,3', name: '2023', hot: true },
-    { k: 'c24', share: 0.31227651966626935, v: 42.98, tone: 'accent', lab: '43,0', name: '2024', hot: true },
-  ];
-  const MX = 688, MW = 544, BASE = 455, hk = 130 / 97.39;
-  let cx = MX;
-  const span = {};
-  mix.forEach((o) => {
-    const w = o.share * MW, h = o.v * hk;
-    s.rect(cx + 1.5, BASE - h, w - 3, h, { fill: o.tone, role: 'bar', id: `s04-${o.k}` });
-    if (o.lab) s.label(cx + w / 2, BASE - h - 6, o.lab, { anchor: 'bc', cls: `v num${o.hot ? ' hot' : ''}` });
-    if (o.name) s.label(cx + w / 2, BASE + 8, o.name, { anchor: 'tc', cls: 'label-sm' });
-    span[o.k] = [cx, cx + w];
-    cx += w;
-  });
-  // Altas de feb-22 (marcadas) and cosecha mar–dic 2022 are both 2022 entries: one label under the pair.
-  s.label((span.feb[0] + span.c22[1]) / 2, BASE + 8, '2022', { anchor: 'tc', cls: 'label-sm' });
-  s.line(MX, BASE, MX + MW, BASE, { stroke: 'ink-4', w: 1.5, role: 'axis' });
-  s.label(MX + MW, 306, 'MRR por cliente, oct-24 (COP mil)<br>ancho = % de activos', { anchor: 'tr', cls: 'label-sm', align: 'right', w: 330 });
+  // Direct end labels (445 / 277 from F-071).
+  s.label(1066, y(445), '<span class="mult">4,5×</span>Clientes activos<span class="end-sub num">377 → 1.678</span>', { anchor: 'ml', cls: 'label', w: 300 });
+  s.label(1066, y(277), '<span class="mult">2,8×</span>MRR pagado observado<span class="end-sub num">COP 35,0 → 97,0 millones</span>', { anchor: 'ml', cls: 'label', w: 300 });
 
-  // Rows 2–3 · scissors: both series start at the same point; same relative scale in both rows.
-  const K = 90;                           // px per +100% change
-  const scissors = (y0, x0, x1, up, down, t0, t1) => {
-    const yu = y0 - K * (up.b / up.a - 1), yd = y0 - K * (down.b / down.a - 1);
-    s.line(x0, y0, x1, yd, { stroke: 'ink-3', w: 3 });
-    s.line(x0, y0, x1, yu, { stroke: 'accent', w: 5, id: up.id });
-    s.dot(x0, y0, { r: 6, fill: 'ink' });
-    s.dot(x1, yu, { r: 6, fill: 'accent' });
-    s.dot(x1, yd, { r: 6, fill: 'ink-3' });
-    s.label(x0 - 14, y0 - 4, up.la, { anchor: 'br', cls: 'v hot num' });
-    s.label(x0 - 14, y0 + 4, down.la, { anchor: 'tr', cls: 'v num' });
-    s.label(x1 + 14, yu, `${up.lb} <span>${up.n}</span>`, { anchor: 'ml', cls: 'v hot num' });
-    s.label(x1 + 14, yd, `${down.lb} <span>${down.n}</span>`, { anchor: 'ml', cls: 'v num' });
-    const ty = Math.max(yd, y0) + 20;     // one baseline for both period labels, under the lowest point
-    s.label(x0, ty, t0, { anchor: 'tc', cls: 'label-sm' });
-    s.label(x1, ty, t1, { anchor: 'tc', cls: 'label-sm' });
-  };
-  // F-110 (altas/mes 27,2 → 54,7) · F-160 (mediana del segundo pago, COP mil 52,5 → 36,8).
-  scissors(636, 820, 1000, { a: 27.2, b: 54.7, la: '27,2', lb: '54,7', n: 'altas/mes', id: 's04-up1' },
-    { a: 52.5, b: 36.75, la: '52,5', lb: '36,8', n: 'ticket 2023, COP mil' }, '2022', 'desde 2023');
-  // F-214 (2023 ene–may → jun–dic): altas/mes 45,2 → 60,6 · S&M/mes 3,01 u → 1,44 u.
-  scissors(838, 820, 1000, { a: 45.2, b: 60.6, la: '45,2', lb: '60,6', n: 'altas/mes', id: 's04-up2' },
-    { a: 3.011, b: 1.436, la: '3,01 u', lb: '1,44 u', n: 'S&amp;M/mes' }, 'ene–may 23', 'jun–dic 23');
-
-  // Open question (focal): where the three observations converge.
-  const QX = 1440;
-  s.label(QX, 506, 'Lo que los pagos no dicen', { anchor: 'bl', cls: 'cap' });
-  s.label(QX, 520, '¿Por qué ruta, canal y etapa entra cada cliente?', { cls: 'q', w: 368, id: 's04-q', focal: true });
-  const qb = s.box('#s04-q');
-  s.line(QX - 20, 482, QX - 20, qb.b + 4, { stroke: 'ink', w: 4 });
-  s.label(QX, qb.b + 24, 'Abre Growth →', { cls: 'go' });
-
-  // Connectors: each row converges on the question.
-  const ends = [[1290, ROWS[0] + 10], [1290, 610], [1290, 838]];
-  ends.forEach(([x, y], i) => {
-    s.dot(x, y, { r: 5, fill: 'ink-3' });
-    s.connect([x, y], [QX - 28, qb.t + qb.h * (0.3 + 0.2 * i)], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 4 });
-  });
+  // Consequence strip: MRR pagado por cliente activo (T-027).
+  const X = P.grid.col(10);
+  s.label(X, 330, 'MRR pagado por cliente activo', { cls: 'caps', w: 400 });
+  s.label(X, 372, '−38%', { cls: 'metric', size: 120, id: 's03-m' });
+  s.label(X, 500, 'COP 92,8 mil → 57,8 mil', { cls: 'label num' });
+  const k = s.chart({ x: X, y: 556, w: 400, h: 150 });
+  const kx = k.linear([0, 33], { axis: 'x' }), ky = k.linear([50000, 100000]);
+  k.line(per.map((v, i) => ({ i, v })), { x: (d) => kx(d.i), y: (d) => ky(d.v), tone: 'ink-2', w: 2.5 });
+  s.dot(kx(0), ky(per[0]), { r: 6, fill: 'ink-2' });
+  s.dot(kx(33), ky(per[33]), { r: 6, fill: 'ink' });
+  s.line(X, k.b + 8, X + 400, k.b + 8, { stroke: 'rule', w: 1.5 });
+  s.label(X, k.b + 18, 'ene-22', { cls: 'label-sm' });
+  s.label(X + 400, k.b + 18, 'oct-24', { anchor: 'tr', cls: 'label-sm' });
+  s.label(X, 790, 'Todavía no separa mezcla de entrada, precio y salidas: no se lee como deterioro.', { cls: 'annotation', w: 400 });
 });
 </script>
 </body>

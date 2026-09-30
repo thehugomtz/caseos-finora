@@ -255,3 +255,9 @@ Package. Encontrado y corregido:
 - **Separadores desde el editor (30-sep):** «Agregar separador» crea una lámina de color sólido con solo el nombre, como
   las del Storyteller, en la posición que Hugo elija (las siguientes se recorren) y con el texto oscuro o claro según el
   contraste. Primer uso, a pedido de Hugo: «Data» en coral `#FF6364` (el color de su paleta que faltaba) como lámina 19.
+- **Traer una lámina de un deck anterior (30-sep):** `copy_slide` (POST `…/slides/{deck}/copy`) copia una lámina de otro
+  deck del caso a la posición que Hugo diga (las siguientes se recorren, igual que un separador); toma el tema del deck
+  al que llega y, si su id ya existe ahí, recibe uno nuevo. Primer uso, a pedido de Hugo («la lámina inicial… que
+  describía el problema inicial»): la apertura del v3 («La brecha clientes–monto se asocia a quién entra» + Overview ·
+  Growth · Revenue) como lámina 2 del v5, detrás de la portada; miniatura re-renderizada con la paleta nueva y PDF de 36
+  páginas. Su kicker y su pie aún dicen «borrador 3… pendiente de aceptación»: se editan desde el editor.

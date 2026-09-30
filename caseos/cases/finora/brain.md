@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-30T14:39:07-06:00 · motivo: Hugo agregó el separador «Data» (#ff6364) como lámina 19 del deck finora-v5-20260930-112103 · vía Claude: Hugo lo pidió en el chat (coral,…
+> Actualizado: 2026-09-30T14:54:17-06:00 · motivo: Hugo trajo «La brecha clientes–monto se asocia a quién entra» (lámina 1 de finora-v3-20260929-212258) como lámina 2 del deck finora-v5-2026…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -197,6 +197,9 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-30 14:54 · Hugo trajo «La brecha clientes–monto se asocia a quién entra» (lámina 1 de finora-v3-20260929-212258) como lámina 2 del deck finora-v5-20260930-112103 · vía Claude: Hugo pidió recuperar la lámina inicial del deck v3 («la lámina inicial… que describía el problema inicial»)
+- 2026-09-30 14:45 · Hugo reordenó el deck finora-v5-20260930-112103: 19→18, 20→19, 21→20, 22→21, 23→22, 24→23, 25→24, 26→25, 27→26, 28→27, 29→28, 18→29
+- 2026-09-30 14:45 · Hugo reordenó el deck finora-v5-20260930-112103: 8→5, 15→6, 5→7, 6→8, 7→9, 9→10, 10→11, 11→12, 17→15, 18→16, 19→17, 32→18, 16→19, 12→20, 20→21, 21→22, 22→23, 23→24, 24→25, 25→26, 26→27, 27→28, 28→29, 29→30, 30→31, 31→32
 - 2026-09-30 14:39 · Hugo agregó el separador «Data» (#ff6364) como lámina 19 del deck finora-v5-20260930-112103 · vía Claude: Hugo lo pidió en el chat (coral, el color de su paleta que faltaba)
 - 2026-09-30 13:49 · Deck finora-v5-20260930-112103: 34 slides · completed
 - 2026-09-30 13:00 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): retoma el deck v5 congelado a las 12:28 (34 láminas hechas)
@@ -204,9 +207,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): deck con su selección para 5 min, su paleta, portadas, separadores y anexos (D-026)
 - 2026-09-30 11:21 · Story Package v5 preparado para el Visual Storyteller (finora-v5-20260930-112103)
 - 2026-09-30 11:20 · Story marcada Ready (v2)
-- 2026-09-30 11:20 · Hugo decidió: Story marcada Ready (v2)
-- 2026-09-30 11:20 · Hugo aceptó C-025 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
-- 2026-09-30 11:20 · Hugo aceptó C-019 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

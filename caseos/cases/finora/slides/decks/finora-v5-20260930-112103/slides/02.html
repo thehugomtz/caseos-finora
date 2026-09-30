@@ -3,25 +3,47 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S02 · Overview</title>
+<title>S00 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S02"] {
-  background: var(--accent);
+[data-slide="S00"] {
+  #s00-st { position: absolute; left: 112px; top: 262px; width: 1420px; z-index: 2; }
+  #s00-st .hl { background: linear-gradient(transparent 64%, var(--accent) 64%, var(--accent) 94%, transparent 94%); }
+  #s00-lead { position: absolute; left: 112px; top: 500px; width: 1240px; font-size: 40px; line-height: 1.25; color: var(--ink-2); z-index: 2; }
+  .sec { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .sec i { font-style: normal; color: var(--ink-3); margin-right: 10px; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S02" data-composition="section_divider" data-family="editorial" data-word-budget="3" data-page="2">
-  <aside class="notes">Overview: la salud general del modelo antes de Growth y Revenue. Dos láminas: la brecha entre clientes y monto pagado, y las observaciones que la sostienen hasta dejar la pregunta que abre Growth.</aside>
+<main class="slide" data-slide="S00" data-composition="single_big_statement + section_tracker" data-family="editorial" data-word-budget="90" data-page="1">
+  <header class="header">
+    <div class="kicker">Finora · crecimiento y revenue · borrador para CEO, CRO y CFO</div>
+  </header>
+  <h1 class="statement" id="s00-st" data-focal>La brecha clientes–monto se asocia a <span class="hl">quién entra</span></h1>
+  <p class="lead" id="s00-lead">El porqué no está en los pagos: proponemos medir por funnel y separar descuento de suscripción.</p>
+
+  <footer class="footer"><span class="source">Borrador 3 · material de soporte propuesto, pendiente de aceptación · cifras: pagos cliente × mes de Finora, ene-22–oct-24, monto pagado observado</span><span class="page"></span></footer>
+  <aside class="notes">Abrimos con la respuesta. La brecha entre clientes y monto pagado coincide con quién entra (más primeros pagadores, con menor ticket), no con la base previa ni con salidas persistentes. El porqué del CRO (más leads sin más ventas) y del CFO (qué cambió en el MRR) no está en los datos de pagos: por eso la propuesta es de medición y de modelo de datos. El deck sigue tu guion: Overview → Growth → Revenue.</aside>
 </main>
 <script>
-P.draw('S02', (s, P) => {
-  // Separador de sección (guía de Hugo): color sólido, solo el nombre. Overview = turquesa.
-  s.label(112, 900, 'Overview', { cls: 'statement', size: 144, anchor: 'bl', color: 'ink', id: 's02-name', focal: true });
+P.draw('S00', (s, P) => {
+  // Tracker: one hairline with three stops (cols 1, 5, 9), read left → right.
+  const Y = 752, xs = [P.grid.col(1), P.grid.col(5), P.grid.col(9)];
+  s.line(P.grid.col(1), Y, P.grid.colEnd(12), Y, { stroke: 'rule', w: 1.5, arrow: 'end', headSize: 12 });
+  const items = [
+    ['1', 'Overview', 'Clientes 4,5× contra MRR pagado 2,8×; la base previa sostiene su monto.'],
+    ['2', 'Growth', 'Más primeros pagadores con menor ticket; proponemos rutas, métricas por funnel y un árbol MECE para hallar el porqué.'],
+    ['3', 'Revenue', 'El monto pagado no separa suscripción, descuento y cobro; proponemos un modelo que los registra aparte.'],
+  ];
+  items.forEach(([n, name, txt], i) => {
+    s.dot(xs[i], Y, { r: 7, fill: 'ink' });
+    s.label(xs[i], Y - 22, `<i>${n}</i>${name}`, { anchor: 'bl', cls: 'sec' });
+    s.label(xs[i], Y + 26, txt, { w: 470, cls: 'annotation' });
+  });
 });
 </script>
 </body>

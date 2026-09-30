@@ -3,65 +3,83 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S09 · Finora</title>
+<title>S06 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S09"] {
-  .num { font-variant-numeric: tabular-nums; }
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .mt { font-size: 24px; line-height: 1.25; color: var(--ink-2); }
-  .mt b { color: var(--ink); font-weight: 600; }
-  .mt .chip { background: var(--accent); color: var(--ink); font-weight: 600; padding: 2px 10px; margin-left: -10px; }
-  .dc { font-size: 26px; line-height: 1.25; color: var(--ink); font-weight: 600; }
-  .none { font-size: 22px; line-height: 1.3; color: var(--coral-text); }
-  .none b { font-weight: 600; }
-  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+[data-slide="S06"] {
+  .st { font-size: 20px; line-height: 1.15; color: var(--ink-3); }
+  .st b { color: var(--ink); font-weight: 600; }
+  .grp { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cn { font-size: 20px; color: var(--ink-2); }
+  .acc { color: var(--accent-text); font-weight: 600; }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
   .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="125" data-page="9">
+<main class="slide" data-slide="S06" data-composition="stage_matrix (metro map) + reactivate_loop" data-family="comparison" data-word-budget="120" data-page="6">
   <header class="header">
-    <div class="kicker">Growth · métricas nuevas · propuesta</div>
-    <h1 class="headline">Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO</h1>
+    <div class="kicker">Growth · cómo definir el funnel · propuesta</div>
+    <h1 class="headline">Cada ruta usa las etapas del Executive que le aplican, por canal y con dueño</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (R-036); decisiones del CRO por definir con Finora · S&amp;M por alta en unidad reportada (u), sin escala a COP: T-036 · F-135–F-139, F-141, F-146, F-246, F-247, F-249, F-252</span><span class="page"></span></footer>
-  <aside class="notes">Proponemos medir por ruta lo que hoy no existe y atar cada métrica a una decisión del CRO: entradas, alcance por etapa en cohorte y tiempo por tramo, para saber si falta volumen o tasa antes de pedir más SDR/AE o más gasto; tiempo a primer toque y carga por SDR/AE, para separar capacidad de calidad; estancamiento por etapa, para decidir qué tramo y qué dueño arreglar primero; valor y calidad por ruta (MRR inicial con run-rate y guardarraíles, no con el primer pago, y retención temprana), para decidir a qué puerta ponerle persona; y eficiencia (CAC y payback por ruta), para repartir el S&amp;M entre rutas y canales. Hoy se calcula, con nombre honesto y solo en total, el MRR pagado observado y su puente, los clientes activos, el ARPA por cliente (lo que se pide como ARPU), el churn observado y las métricas de cohorte. La eficiencia hoy solo existe como S&amp;M por alta en unidad reportada, 0,105 u en 2022 y 0,036 u en 2024 (−66%), y eso no es CAC: sin la unidad del gasto no hay CAC en COP ni payback, sin ruta ni canal no hay CAC por ruta, y el LTV con margen y el UCM necesitan margen bruto o costo de servir. Límites: F-246, F-247, F-249 y F-252 están propuestos (R-035, R-036), pendientes de aceptación; ninguna métrica propia de ruta se calcula hoy y ninguna métrica común se puede cortar por ruta (F-146); churn y MRR observados necesitan regla de normalización y ventana de gracia (F-136); las decisiones del CRO son propuesta: Finora aún no las define; la «reactivación» del modelo actual es retorno de pago de clientes, no el Reactivate de leads (F-252). El detalle del semáforo y del catálogo está en el anexo (C-009, C-010, C-022).</aside>
+  <footer class="footer"><span class="source">Propuesta de diseño (R-031, R-036); hoy no se mide ninguna etapa antes del primer pago · F-209, F-210, F-211, F-212, F-188, F-223, F-224, F-225, F-191</span><span class="page"></span></footer>
+  <aside class="notes">Proponemos una lista maestra, la del Executive (New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won), y que cada ruta use solo las etapas que le aplican, con saltos permitidos y el canal como atributo de la entrada. El outbound del SDR recorre la lista completa; el inbound de «hablar con ventas» salta Working SDR; la entrada directa a SQL arranca en SQL. Self Service va New → Signup Self → Activated Self → Checkout Self → Won. Hybrid A arranca en producto y después suma etapas de SDR/AE; Hybrid B arranca con SDR/AE y cierra por Checkout Self. Dueños propuestos: SDR hasta SQL, AE desde Demo, y Growth o Producto en los tramos sin persona. La ruta se clasifica al cierre según quién movió cada tramo: solo cuenta como intervención la interacción de ida y vuelta con SDR/AE, y el formulario de «hablar con ventas» es la entrada, no un tramo. Reactivate es un loop sobre estancados que conserva fecha y puerta, no una ruta más. Nota rescatada de la lámina de rutas (C-005): la puerta queda fija al entrar y es la única base para comparar tasas, porque la ruta se define por lo que pasó y eso sesga, por construcción, la conversión de Hybrid (H-050). Límites: es propuesta, el caso no trae CRM ni etapas (F-223, F-191); Demo, Proposal y la entrada por referido o partner están por confirmar contra el CRM de Finora; no sabemos si Self Service existe como compra sin humano (Q-046); qué cuenta como intervención (Q-063) y el umbral de estancamiento (Q-064) se acuerdan con Finora; usa las definiciones de Hugo de Hybrid B y Reactivate (no las de R-035); una entrada que pide persona y nadie atiende termina como Self Service con bandera (H-072); la vuelta de pagadores que se ve en pagos es un loop de Revenue, no Reactivate (F-213).</aside>
 </main>
 <script>
-P.draw('S09', (s, P) => {
-  // Plan: metric families cols 1–5 → link arrows cols 6–7 → the CRO decision each one enables cols 8–12.
-  // Efficiency (asked for explicitly) carries the accent and today's proxy in coral (what does not exist: CAC).
-  const MX = 112, MW = 620, AX0 = 760, AX1 = 1000, DX = 1032, DW = 776;
-  s.label(MX, 318, 'Métrica nueva · ninguna existe hoy', { anchor: 'bl', cls: 'cap' });
-  s.label(DX, 318, 'Decisión del CRO', { anchor: 'bl', cls: 'cap' });
-
-  const rows = [
-    ['<b>Volumen y tasa</b>: entradas, alcance y tiempo por etapa', '¿Volumen o tasa? Antes de pedir SDR/AE o gasto'],
-    ['<b>Capacidad</b>: tiempo a primer toque y carga por SDR/AE', 'Separar capacidad de calidad'],
-    ['<b>Estancamiento</b> por etapa', 'Qué tramo y qué dueño arreglar primero'],
-    ['<b>Valor y calidad</b>: MRR inicial con run-rate y retención temprana', 'A qué puerta ponerle persona'],
-    ['<span class="chip">Eficiencia</span> <b>CAC y payback por ruta</b>', 'Repartir el S&amp;M entre rutas y canales'],
-  ];
-  const Y = [392, 482, 572, 662, 764];
-  rows.forEach(([m, d], i) => {
-    const hot = i === 4;
-    if (i) s.line(MX, Y[i] - 46, 1808, Y[i] - 46, { stroke: 'rule', w: 1 });
-    s.label(MX, Y[i], m, { anchor: 'ml', cls: 'mt', w: MW, id: `s09-m${i}` });
-    s.line(AX0, Y[i], AX1, Y[i], { stroke: hot ? 'accent' : 'ink-3', w: hot ? 5 : 2, arrow: 'end', headSize: hot ? 16 : 11, id: hot ? 's09-link' : null, focal: hot });
-    s.label(DX, Y[i], d, { anchor: 'ml', cls: 'dc', w: DW, id: `s09-d${i}` });
+P.draw('S06', (s, P) => {
+  // Plan: key + route/channel labels cols 1–4 · stage columns (x 648 → 1755, the Executive master list plus the
+  // Self stages) · owner brackets above · Reactivate loop under the grid · the door note (C-005) bottom-left.
+  const cols = [['New', ''], ['Signup', 'Self'], ['Activated', 'Self'], ['Working', 'SDR'], ['Engaged', 'SDR'], ['SQL', 'SDR'], ['Demo', 'AE'], ['Proposal', 'AE'], ['Checkout', 'Self'], ['Won', '']];
+  const X = cols.map((_, i) => 648 + i * 123);
+  cols.forEach(([a, b], i) => s.label(X[i], 372, `<b>${a}</b>${b ? '<br>' + b : ''}`, { anchor: 'tc', cls: 'st', w: 120, align: 'center' }));
+  // Owner of each stretch: SDR up to SQL, AE from Demo, Growth/Producto where no person moves it.
+  [['Growth/Producto', 1, 2], ['SDR', 3, 5], ['AE', 6, 7], ['Producto', 8, 8]].forEach(([g, a, b]) => {
+    const l = X[a] - 54, r = X[b] + 54;
+    s.path(`M${l},${344} v8 H${r} v-8`, { stroke: 'ink-4', w: 1.5 });
+    s.label((l + r) / 2, 336, g, { anchor: 'bc', cls: 'grp' });
   });
-  // Efficiency today: the only proxy, and why it is not a CAC (T-036).
-  s.label(MX, Y[4] + 34, '<b>Hoy</b>: S&amp;M por alta 0,105 u → 0,036 u (−66%, 2022–2024); <b>no es CAC</b>', { cls: 'none num', w: 960 });
+  X.forEach((xx) => s.line(xx, 440, xx, 866, { stroke: 'ink-5', w: 1.5 }));
 
-  // What exists today: only totals, with honest names.
-  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
-  s.label(112, 904, '<b>Hoy existen solo en total</b>: MRR pagado y su puente, activos, ARPA, churn observado y cohortes', { cls: 'nt', w: 1696 });
+  // 1 = uses the stage · 2 = can be skipped · 0 = does not apply. The channel is an attribute of the entry.
+  const rows = [
+    ['Executive', 'outbound SDR', 470, [1, 0, 0, 1, 1, 1, 1, 1, 0, 1], true],
+    ['', 'inbound «hablar con ventas»', 524, [1, 0, 0, 0, 1, 1, 1, 1, 0, 1]],
+    ['', 'entrada directa a SQL', 578, [0, 0, 0, 0, 0, 1, 1, 1, 0, 1]],
+    ['Hybrid B', 'outbound SDR', 652, [1, 0, 0, 1, 1, 1, 2, 0, 1, 1]],
+    ['', 'inbound «hablar con ventas»', 706, [1, 0, 0, 0, 1, 1, 2, 0, 1, 1]],
+    ['Hybrid A', 'signup en producto', 778, [1, 1, 1, 0, 2, 2, 1, 1, 0, 1]],
+    ['Self Service', 'signup en producto', 846, [1, 1, 1, 0, 0, 0, 0, 0, 1, 1]],
+  ];
+  [614, 742, 812].forEach((yy) => s.line(112, yy, 1808, yy, { stroke: 'rule', w: 1 }));
+  rows.forEach(([route, canal, y, st, hot]) => {
+    const pts = st.map((v, i) => (v ? [X[i], y] : null)).filter(Boolean);
+    if (hot) s.polyline(pts, { stroke: 'accent', w: 20, id: 's06-hot', focal: true });
+    s.polyline(pts, { stroke: 'ink-3', w: 3 });
+    st.forEach((v, i) => {
+      if (v === 1) s.dot(X[i], y, { r: 9, fill: 'ink' });
+      if (v === 2) s.circle(X[i], y, 8, { fill: 'bg', stroke: 'ink-3', w: 2.5 });
+    });
+    if (route) s.label(112, y, route, { anchor: 'ml', cls: 'rn' });
+    s.label(290, y, canal + (hot ? '<br><span class="acc">lista maestra</span>' : ''), { anchor: 'ml', cls: 'cn', style: { lineHeight: '1.2' } });
+  });
+
+  // Key (top-left, above the route labels).
+  s.dot(120, 368, { r: 8, fill: 'ink' }); s.label(136, 368, 'usa la etapa', { anchor: 'ml', cls: 'key' });
+  s.circle(120, 402, 7, { fill: 'bg', stroke: 'ink-3', w: 2.5 }); s.label(136, 402, 'se puede saltar', { anchor: 'ml', cls: 'key' });
+
+  // Reactivate: a loop over stalled journeys that returns them to their stage (keeps date and door).
+  s.path(`M${X[7]},${876} C${X[7]},${936} ${X[4]},${936} ${X[4]},${882}`, { stroke: 'ink-2', w: 2.5, arrow: 'end', headSize: 12, id: 's06-loop' });
+  s.label((X[4] + X[7]) / 2, 946, '<b>Reactivate</b>: loop de estancados; vuelve a su etapa con fecha y puerta; no es otra ruta', { anchor: 'tc', cls: 'nt', w: 620, align: 'center' });
+
+  // Key note rescued from the routes slide (C-005).
+  s.label(112, 890, '<b>Las tasas se comparan por puerta, fija al entrar</b>: la ruta se define por lo que pasó y eso sesga la conversión de Hybrid.', { cls: 'nt', w: 440 });
 });
 </script>
 </body>

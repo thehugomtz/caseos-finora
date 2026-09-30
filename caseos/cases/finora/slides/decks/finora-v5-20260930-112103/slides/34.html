@@ -3,92 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S33 · Finora</title>
+<title>S32 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S33"] {
+[data-slide="S32"] {
   .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .ln { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .ln.lt { color: var(--ink-2); font-weight: 400; }
-  .ax { font-size: 20px; color: var(--ink-3); }
-  .gp { font-size: 22px; line-height: 1.3; color: var(--ink); }
-  .gp b { font-weight: 600; }
+  .src { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .src span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
+  .ly { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .hb { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .tb { font-family: var(--font-mono); font-size: 20px; line-height: 1.35; color: var(--ink); }
+  .sp { font-size: 22px; color: var(--ink); }
+  .sp code { font-family: var(--font-mono); font-size: 22px; font-weight: 600; }
+  .mt { font-size: 22px; color: var(--ink-2); }
+  .mt code { font-family: var(--font-mono); font-size: 20px; color: var(--ink); }
   .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .n { font-family: var(--font-display); font-size: 40px; color: var(--ink); line-height: 1; }
-  .st { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .st b { color: var(--ink); font-weight: 600; }
-  .im { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
-  .im b { display: block; color: var(--ink); font-weight: 600; font-size: 22px; margin-bottom: 4px; }
+  .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S33" data-composition="layered_divergence + mechanism_sequence + implications_strip" data-family="evidence" data-word-budget="120" data-page="33">
+<main class="slide" data-slide="S32" data-composition="from_to_architecture" data-family="operating_model" data-word-budget="120" data-page="32">
   <header class="header">
-    <div class="kicker">Anexo · convención y regla del descuento</div>
-    <h1 class="headline">El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan</h1>
+    <div class="kicker">Anexo · modelo del funnel</div>
+    <h1 class="headline">Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta; esquema ilustrativo, sin cifras de Finora; no hay estándar de mercado para el descuento en el MRR (F-151, F-132, F-236) · F-153, F-154</span><span class="page"></span></footer>
-  <aside class="notes">Mecanismo propuesto: (1) el CFO declara la convención, porque no hay un estándar de mercado y la de «Descuento» se aparta del default de herramientas como ChartMogul (F-236); (2) el MRR se reporta en dos capas, lista y neto, y el descuento es la diferencia: el revenue que dejamos de capturar, abierto por origen; (3) las cohortes que entren con descuento se marcan y se comparan con cohortes sin descuento (necesita un grupo comparable; con datos observados es asociación, H-049). Con descuentos, el MRR neto, el revenue reconocido y la caja se separan; cuál vista manda depende de si los contratos son mensuales cancelables o a plazo fijo, algo que hoy no sabemos. Implicaciones multidisciplinarias: Finanzas fija la convención y el reconocimiento; Marketing y Ventas crean promociones, códigos y aprobaciones; Producto y Billing registran el descuento con su vigencia; Data arma la foto de cierre y el puente. La evidencia externa asocia la adquisición con descuento a clientes de menor valor, y el churn al vencer el descuento tiene otras causas posibles (F-154): es evidencia externa, no de Finora.</aside>
+  <footer class="footer"><span class="source">Propuesta (R-033, C-013): diseño, no algo construido; mide hacia adelante (F-242) · 44%: T-096, 751 churns observados, mar-22–oct-24 · F-136, F-144, F-145, F-146, F-191, F-238–F-241</span><span class="page"></span></footer>
+  <aside class="notes">As-is: tres fuentes, todas de después del pago. Pagos (cliente × mes: customer_id, month, amount_cop) responde cuánto pagó cada cliente cada mes, el puente de monto pagado y las cohortes por primer pago; no responde nada de quien no pagó, ni plan, precio o descuento, ni si un cero es cancelación, mora o desfase (44% de los 751 churns observados vuelve a pagar al mes siguiente), ni si un pico es prepago o expansión. Industria (cliente, ID en otro formato) responde el corte por industria. Gasto S&amp;M (mes × rubro, sin unidad) responde el gasto por rubro; no canal ni campaña. Ninguna responde canal, puerta, etapa, intervención, tiempo de cierre ni estancamiento. To-be: una espina y tres capas. Espina: account (una fila por cuenta) y account_xref (sistema + ID de origen + inicio de vigencia), que une CRM, producto, facturación y los IDs de hoy. Demanda: channel, campaign, touch (con UTMs), campaign_member y campaign_spend (con moneda). Comercial: person, lead, opportunity, stage_history (de, a, cuándo y quién), activity y assignment. Producto y facturación: product_event, subscription, subscription_item_version (contratado), discount (descontado), invoice (facturado) y payment (cobrado). Marts: funnel_entry (una fila por entrada con puerta, ruta y fecha de cada hito) alimenta las métricas del funnel; account_month (cuenta × mes con MRR de lista y neto y estado de suscripción) alimenta las comunes y se concilia cada mes con el monto pagado de hoy. Seis reglas son decisiones de negocio por escribir antes de construir (F-241): orden de puerta, cuándo una entrada es nueva, estados New/Working/Engaged, ventana W, umbral de estancamiento y base del puente. R-033 trata Reactivate como puerta y C-005 como loop: alinear antes de construir. La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024 (F-191).</aside>
 </main>
 <script>
-P.draw('S33', (s, P) => {
-  // Plan: schematic (no data) cols 1–7: list vs net MRR diverge by the discount (accent), cash (dashed) moves with billing ·
-  // mechanism cols 9–12 · implications strip cols 1–12.
-  const XA = 150, XB = 1020, YL = 432, YN = 540, D0 = 360, D1 = 780, CB = 700;
-  s.line(XA, CB, XB + 20, CB, { stroke: 'rule', w: 1.5, arrow: 'end', headSize: 10 });
-  s.label(XB + 20, CB + 12, 'meses', { anchor: 'tr', cls: 'ax' });
+P.draw('S32', (s, P) => {
+  // Plan: as-is cols 1–3 (solid = exists) → arrow col 4 → to-be cols 5–12: three dashed layers hang from
+  // the accent account spine; two marts below feed the metrics.
+  s.label(112, 344, 'Hoy · as-is', { anchor: 'bl', cls: 'cap' });
+  const srcs = [['Pagos', 'cliente × mes'], ['Industria', 'cliente'], ['Gasto S&amp;M', 'mes × rubro, sin unidad']];
+  srcs.forEach(([n, g], i) => {
+    const y = 364 + i * 104;
+    s.rect(112, y, 360, 84, { fill: 'none', stroke: 'ink-3', w: 1.5 });
+    s.label(132, y + 42, `${n}<span>${g}</span>`, { anchor: 'ml', cls: 'src' });
+  });
+  s.label(112, 720, '<b>Todo es de después del pago</b>: no dice si un cero es cancelación, mora o desfase; 44% de los churns vuelve a pagar al mes siguiente', { cls: 'nt', w: 380 });
 
-  // Discount window.
-  [D0, D1].forEach((x) => s.line(x, 372, x, CB, { stroke: 'ink-4', w: 1.5 }));
-  s.label(D0, 364, 'inicio del descuento', { anchor: 'bc', cls: 'ax' });
-  s.label(D1, 364, 'fin', { anchor: 'bc', cls: 'ax' });
+  const W = 352, SPY = 660, SPH = 48;
+  // from → to
+  s.line(500, SPY + SPH / 2, 640, SPY + SPH / 2, { stroke: 'ink-3', w: 3, arrow: 'end', headSize: 16 });
 
-  // The gap = discount = revenue we stop capturing.
-  s.rect(D0, YL, D1 - D0, YN - YL, { fill: 'accent', id: 's33-gap', focal: true });
-  s.label(D0 + 20, (YL + YN) / 2, '<b>Descuento</b>: revenue que dejamos de capturar, abierto por origen', { anchor: 'ml', cls: 'gp', w: D1 - D0 - 40 });
-
-  // List MRR (flat) and net MRR (dips during the discount).
-  s.line(XA, YL, XB, YL, { stroke: 'ink', w: 4 });
-  s.polyline([[XA, YL + 10], [D0, YL + 10], [D0, YN], [D1, YN], [D1, YL + 10], [XB, YL + 10]], { stroke: 'ink-2', w: 2.5 });
-  s.label(XB + 14, YL - 6, 'MRR de lista', { anchor: 'ml', cls: 'ln' });
-  s.label(D0 + 20, YN + 14, 'MRR neto', { cls: 'ln lt' });
-
-  // Cash lane: moves with billing, not with the contract (illustrative monthly bars, no data).
-  const cash = [1, 1, 0, 2.2, 0, 0, 1.6, 0.4, 0.8, 0, 1.9, 1, 1];
-  const bwid = (XB - XA) / cash.length;
-  cash.forEach((v, i) => { if (v) s.rect(XA + i * bwid + 8, CB - v * 40, bwid - 16, v * 40, { fill: 'ink-4' }); });
-  s.label(XB + 14, CB - 40, 'caja', { anchor: 'ml', cls: 'ln lt' });
-
-  s.label(112, 736, 'Qué vista manda (MRR neto, revenue reconocido o caja) depende de si los contratos son mensuales cancelables o a plazo fijo.', { cls: 'nt', w: 1000 });
-
-  // Proposed mechanism.
-  const MX = 1264;
-  s.label(MX, 344, 'Mecanismo propuesto', { anchor: 'bl', cls: 'cap' });
-  const steps = [
-    '<b>El CFO declara la convención</b>: no hay estándar de mercado',
-    '<b>MRR en dos capas</b>: lista y neto; el descuento es la diferencia',
-    '<b>Cohortes con descuento marcadas</b> y comparadas',
+  // To-be.
+  s.label(688, 344, 'Propuesta · to-be', { anchor: 'bl', cls: 'cap' });
+  const L = [
+    { x: 688, n: 'Demanda', hb: '→ entradas, win rate y costo por Won por canal', tb: ['touch', 'channel', 'campaign', 'campaign_spend'] },
+    { x: 1072, n: 'Funnel comercial', hb: '→ conversión, tiempos, carga y handoff por etapa', tb: ['lead', 'opportunity', 'stage_history', 'activity', 'assignment'] },
+    { x: 1456, n: 'Suscripción y facturación', hb: '→ churn por cancelación vs mora; MRR de lista y neto', tb: ['subscription', 'subscription_item_version', 'discount_grant', 'invoice', 'payment'] },
   ];
-  steps.forEach((t, i) => {
-    const y = 380 + i * 128;
-    s.label(MX, y, String(i + 1), { cls: 'n' });
-    s.label(MX + 52, y + 2, t, { cls: 'st', w: 490 });
-    if (i < 2) s.line(MX, y + 112, 1808, y + 112, { stroke: 'rule', w: 1 });
+  L.forEach(({ x, n, hb, tb }) => {
+    s.label(x, 364, n, { cls: 'ly' });
+    s.label(x, 400, hb, { cls: 'hb', w: W });
+    s.rect(x, 476, W, 164, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
+    s.label(x + 20, 492, tb.join('<br>'), { cls: 'tb', w: W - 40 });
+    s.line(x + W / 2, 640, x + W / 2, SPY, { stroke: 'ink-3', w: 2 });
   });
 
-  // Multidisciplinary implications.
-  s.line(112, 856, 1808, 856, { stroke: 'rule', w: 1.5 });
-  s.label(112, 872, 'Implicaciones multidisciplinarias', { cls: 'cap' });
-  const im = [['Finanzas', 'convención y reconocimiento'], ['Marketing y Ventas', 'promociones, códigos y aprobaciones'], ['Producto y Billing', 'descuento con su vigencia'], ['Data', 'foto de cierre y puente']];
-  im.forEach(([a, b], i) => {
-    const x = 112 + i * 432;
-    if (i) s.line(x - 20, 914, x - 20, 978, { stroke: 'rule', w: 1.5 });
-    s.label(x, 912, `<b>${a}</b>${b}`, { cls: 'im', w: 400 });
+  // The spine: one account key that joins CRM, product, billing and today's IDs.
+  s.rect(688, SPY, 1120, SPH, { fill: 'accent', id: 's32-spine', focal: true });
+  s.label(708, SPY + SPH / 2, '<code>account · account_xref</code>  —  llave común de cuenta', { anchor: 'ml', cls: 'sp' });
+
+  // Marts.
+  const M = [{ x: 688, t: '<code>funnel_entry</code> → métricas del funnel' }, { x: 1256, t: '<code>account_month</code> → métricas comunes' }];
+  M.forEach(({ x, t }) => {
+    s.line(x + 60, SPY + SPH, x + 60, 766, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 11 });
+    s.rect(x, 770, 552, 64, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
+    s.label(x + 20, 802, t, { anchor: 'ml', cls: 'mt' });
   });
 });
 </script>

@@ -3,70 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S28 · Finora</title>
+<title>S27 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S28"] {
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .tm { font-size: 36px; font-weight: 600; color: var(--ink); line-height: 1.1; }
-  .tm.to { color: var(--ink-2); font-weight: 400; }
-  .op { font-size: 36px; color: var(--ink-3); line-height: 1; }
-  .gp { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .val { font-size: 24px; line-height: 1.35; color: var(--ink-2); }
-  .val b { color: var(--ink); font-weight: 600; }
-  .chip { background: var(--accent); color: var(--ink); padding: 8px 18px; font-size: 36px; font-weight: 600; }
+[data-slide="S27"] {
+  .root { font-size: 30px; font-weight: 600; color: var(--ink); }
+  .br { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .chip { background: var(--accent); color: var(--ink); padding: 2px 12px; margin-left: -12px; font-size: 24px; font-weight: 600; }
+  .lf { font-size: 22px; line-height: 1.2; color: var(--ink-2); }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S28" data-composition="formula_anatomy (término contra término)" data-family="economics" data-word-budget="85" data-page="28">
+<main class="slide" data-slide="S27" data-composition="driver_tree + status_markers" data-family="logic" data-word-budget="125" data-page="27">
   <header class="header">
     <div class="kicker">Anexo · métricas comunes y catálogo</div>
-    <h1 class="headline">Hoy solo existe S&amp;M por primer pagador en unidades reportadas: no es CAC</h1>
+    <h1 class="headline">Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: archivo S&amp;M_spend y pagos cliente × mes de Finora; unidad del gasto sin documentar (u), sin canal ni ruta · T-036, T-011, T-012 · F-081, F-108, F-022, F-137</span><span class="page"></span></footer>
-  <aside class="notes">Lo único que se puede calcular es el S&amp;M total por primer pagador observado, en la unidad del archivo: 0,105 u en 2022 y 0,036 u en 2024 (−66%). No es CAC, término a término: la unidad del gasto no está documentada (u, no COP); el denominador es el primer pago observado, no el Won (el hito de adquisición lo acuerda el CRO); y no hay canal ni ruta. Además depende de qué rubros se cuenten: Habilitación pesa 12% del S&amp;M en 2022, 7% en 2023 y 4% en 2024; el gasto por alta baja de 0,11 a 0,04 si se incluye y de 0,09 a 0,03 si se excluye. El −66% puede venir de cómo se arma el archivo (X-005, H-070): no se lee como más eficiencia comercial. En las métricas comunes queda como proxy del CAC, en rojo, hasta tener la unidad y el canal. No se da ningún valor de CAC en COP.</aside>
+  <footer class="footer"><span class="source">Propuesta (C-009) sobre pagos cliente × mes de Finora · F-135, F-136, F-137, F-138, F-139, F-183, F-239, F-240</span><span class="page"></span></footer>
+  <aside class="notes">A la lista (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) se suman churn persistente, las capas de lista, descuento y neto, quick ratio, NRR/GRR, payback y LTV:CAC. Cómo se mide cada una. Resultado: MRR pagado observado = suma de lo pagado en el mes (verde); MRR normalizado = cada pago repartido entre los meses que cubre (amarillo); ARR run-rate = MRR normalizado × 12 (amarillo); MRR de lista, descuento recurrente y MRR neto = lista − descuento (rojo, se detalla en Revenue). Movimiento: puente = nuevo + expansión + reactivación − contracción − churn (verde sobre monto pagado; se lee con cuidado); en el to-be suma la línea Descuento y deja el efecto de cobro fuera del MRR; quick ratio = entradas ÷ salidas del puente, trimestral (verde). Clientes: activos = con pago en el mes; churn de logos observado = dejan de pagar ÷ activos del mes previo; churn persistente = no vuelven a pagar en un trimestre ÷ activos del mes previo (amarillo); reactivaciones como loop de Revenue; ARPA = MRR ÷ clientes activos, por cohorte (es lo que se pide como ARPU; por usuario, rojo). Retención por cohorte de primer pago: logos en M3, M6 y M12; NRR = MRR actual de la cohorte ÷ su MRR inicial; GRR = lo mismo sin expansión (verdes sobre monto pagado, no contractuales). Eficiencia: CAC = gasto de S&amp;M ÷ nuevas cuentas, por canal y ruta (hoy solo el proxy de la lámina siguiente); payback = CAC ÷ (valor de entrada × margen bruto); LTV empírico de ingreso = ingreso acumulado por alta a horizonte fijo (verde); LTV con margen y LTV:CAC (rojos); UCM = ARPA − costo variable de servir (rojo). El monto pagado mezcla fecha de cobro y mes de servicio: churn, reactivación y expansión observados salen inflados (F-136). Por eso el churn persistente va en amarillo: 2022 → 2024, el observado baja de 3,52% a 2,04% y el persistente pasa de 0,98% a 0,96% (CFO-03). Puerta, ruta, canal, industria y cohorte son cortes, no métricas nuevas.</aside>
 </main>
 <script>
-P.draw('S28', (s, P) => {
-  // Plan: today's ratio (solid) on top and the CAC (dashed, does not exist) below, term against term across the
-  // full width; each column's gap is named on a dashed connector; «no es CAC» (accent) closes the middle band.
-  const C = [{ x: 112, w: 520 }, { x: 760, w: 470 }, { x: 1360, w: 448 }];
-  const TOP = 380, BOT = 716;
-  const row = (y, terms, to) => terms.forEach((t, i) => {
-    const el = s.label(C[i].x, y, t, { cls: 'tm' + (to ? ' to' : ''), id: `s28-${to ? 'c' : 'h'}${i}` });
-    const b = s.box(el);
-    s.line(b.l, b.b + 10, b.r, b.b + 10, { stroke: to ? 'ink-3' : 'ink', w: 2.5, dash: to ? 'dash' : null });
+P.draw('S27', (s, P) => {
+  // Plan: root centred (cols 5–8) → spine → five branch columns (module 339 px) → leaves on a stem
+  // with status markers; Eficiencia (the red branch) last on the right, in the accent. Key bottom-right; MECE rule at the bottom.
+  const X = [112, 451, 790, 1129, 1468], SPINE = 382, BY = 404, L0 = 486, DL = 46;
+  const R = 8;
+  const green = (x, y) => s.dot(x, y, { r: R + 1, fill: 'ink' });
+  const amber = (x, y) => { s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M${x},${y - R} A${R},${R} 0 0 0 ${x},${y + R} Z`, { fill: 'ink', stroke: null }); };
+  const red = (x, y) => s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
+  const mark = { g: green, a: amber, r: red };
+
+  // Root and spine.
+  s.label(960, 300, 'Ingreso recurrente', { anchor: 'tc', cls: 'root', id: 's27-root' });
+  s.line(960, 346, 960, SPINE, { stroke: 'ink-3', w: 2 });
+  s.line(X[0] + 10, SPINE, X[4] + 10, SPINE, { stroke: 'ink-3', w: 2 });
+
+  const branches = [
+    ['Resultado', [['g', 'MRR pagado observado'], ['a', 'MRR normalizado'], ['a', 'ARR run-rate'], ['r', 'Lista, descuento y neto']]],
+    ['Movimiento', [['g', 'Puente del MRR'], ['g', 'Quick ratio']]],
+    ['Clientes', [['g', 'Clientes activos'], ['g', 'ARPA por cohorte'], ['g', 'Reactivaciones'], ['g', 'Churn observado'], ['a', 'Churn persistente']]],
+    ['Retención por cohorte', [['g', 'Logos M3, M6, M12'], ['g', 'NRR'], ['g', 'GRR']]],
+    ['Eficiencia', [['r', 'CAC por canal y ruta'], ['r', 'Payback'], ['g', 'LTV empírico de ingreso'], ['r', 'LTV con margen, LTV:CAC'], ['r', 'UCM']]],
+  ];
+  branches.forEach(([name, leaves], i) => {
+    const x = X[i], hot = i === 4, last = L0 + (leaves.length - 1) * DL;
+    s.line(x + 10, SPINE, x + 10, BY - 4, { stroke: hot ? 'accent' : 'ink-3', w: hot ? 5 : 2 });
+    s.label(x, BY, name, { cls: hot ? 'chip' : 'br', id: `s27-b${i}`, focal: hot });
+    s.line(x + 10, BY + 44, x + 10, last, { stroke: hot ? 'accent' : 'ink-4', w: hot ? 5 : 2 });
+    leaves.forEach(([st, t], j) => {
+      const y = L0 + j * DL;
+      mark[st](x + 10, y);
+      s.label(x + 32, y, t, { anchor: 'ml', cls: 'lf' });
+    });
   });
-  const ops = (y) => { s.label(C[1].x - 64, y + 20, '÷', { anchor: 'ml', cls: 'op' }); s.label(C[2].x - 64, y + 20, '·', { anchor: 'ml', cls: 'op' }); };
 
-  // Today (exists).
-  s.label(112, TOP - 16, 'Hoy', { anchor: 'bl', cls: 'cap' });
-  row(TOP, ['S&amp;M total (u)', 'primeros pagadores', 'sin canal ni ruta']);
-  ops(TOP);
-  s.label(112, TOP + 76, '<b>0,105 u</b> (2022) → <b>0,036 u</b> (2024), −66%: no se lee como eficiencia comercial', { cls: 'val', w: 1300 });
+  // What is missing (under Eficiencia).
+  const cy = L0 + 4 * DL + 44;
+  s.label(X[4], cy, '<b>Faltan unidad del gasto, canal, margen y costo de servir</b>', { cls: 'nt', w: 330 });
 
-  // The three gaps, term against term.
-  const G0 = TOP + 130, G1 = BOT - 44;
-  [['u → COP', 0], ['primer pago → Won', 1], ['sin canal → por canal', 2]].forEach(([t, i]) => {
-    const x = C[i].x + 24;
-    s.line(x, G0, x, G1, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end', headSize: 11 });
-    s.label(x + 20, (G0 + G1) / 2, t, { anchor: 'ml', cls: 'gp' });
-  });
-  s.label(510, (G0 + G1) / 2, 'no es CAC', { anchor: 'mc', cls: 'chip', id: 's28-chip', focal: true });
-
-  // CAC (does not exist).
-  s.label(112, BOT - 16, 'CAC · no existe hoy', { anchor: 'bl', cls: 'cap' });
-  row(BOT, ['S&amp;M en COP', 'Won', 'por canal'], true);
-  ops(BOT);
-
-  // Sensitivity in one line.
-  s.line(112, 846, 1808, 846, { stroke: 'rule', w: 1.5 });
-  s.label(112, 868, 'Con Habilitación, <b>0,105 u</b>; sin ella, <b>0,093 u</b> (2022): el nivel depende de si es comercial; pesa 12%, 7% y 4% (2022–2024).', { cls: 'val', w: 1696 });
+  // Reading rules: MECE rule (cols 1–8) and the traffic-light key (cols 9–12).
+  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
+  s.label(112, 908, '<b>Regla MECE</b>: hasta el primer pago, cada métrica vive en el funnel; después, aquí.', { cls: 'nt', w: 960 });
+  const ky = 924;
+  s.label(1129, ky, 'Semáforo', { anchor: 'ml', cls: 'key', weight: 600 });
+  green(1244, ky); s.label(1260, ky, 'se calcula hoy', { anchor: 'ml', cls: 'key' });
+  amber(1422, ky); s.label(1438, ky, 'proxy por aprobar', { anchor: 'ml', cls: 'key' });
+  red(1628, ky); s.label(1644, ky, 'falta el dato', { anchor: 'ml', cls: 'key' });
 });
 </script>
 </body>

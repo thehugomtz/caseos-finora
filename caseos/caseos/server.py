@@ -771,6 +771,18 @@ def deck_divider(cid: str, deck_id: str, body: DividerBody):
     return deckedit.add_divider(S(cid), deck_id, body.title, body.color, after=body.after, via=body.via)
 
 
+class CopySlideBody(BaseModel):
+    from_deck: str                     # another deck of the case
+    file: str                          # its slide file
+    after: str = ""                    # the slide file it goes after in this deck; empty = at the end
+    via: str = ""
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/copy")
+def deck_copy(cid: str, deck_id: str, body: CopySlideBody):
+    return deckedit.copy_slide(S(cid), deck_id, body.from_deck, body.file, after=body.after, via=body.via)
+
+
 @app.post("/api/cases/{cid}/slides/{deck_id}/pdf")
 def deck_pdf(cid: str, deck_id: str):
     return deckedit.rebuild_pdf(S(cid), deck_id)

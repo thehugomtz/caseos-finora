@@ -3,81 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S32 · Finora</title>
+<title>S30 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S32"] {
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .src { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .src span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
-  .ly { font-size: 24px; font-weight: 600; color: var(--ink); }
-  .hb { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
-  .tb { font-family: var(--font-mono); font-size: 20px; line-height: 1.35; color: var(--ink); }
-  .sp { font-size: 22px; color: var(--ink); }
-  .sp code { font-family: var(--font-mono); font-size: 22px; font-weight: 600; }
-  .mt { font-size: 22px; color: var(--ink-2); }
-  .mt code { font-family: var(--font-mono); font-size: 20px; color: var(--ink); }
-  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .nt b { color: var(--ink); font-weight: 600; }
+[data-slide="S30"] {
+  .chip { background: var(--accent); color: var(--ink); padding: 6px 16px; font-size: 26px; font-weight: 600; }
+  .p0 { font-size: 26px; line-height: 1.3; color: var(--ink-2); }
+  .p0 b { color: var(--ink); font-weight: 600; }
+  .p0s { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .gt { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .gr { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .gr b { color: var(--ink); font-weight: 600; }
+  .pm { font-size: 22px; color: var(--ink-2); }
+  .res { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .ld { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .ld b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S32" data-composition="from_to_architecture" data-family="operating_model" data-word-budget="120" data-page="32">
+<main class="slide" data-slide="S30" data-composition="filter_pipeline" data-family="process" data-word-budget="110" data-page="30">
   <header class="header">
-    <div class="kicker">Anexo · modelo del funnel</div>
-    <h1 class="headline">Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción</h1>
+    <div class="kicker">Anexo · premisa y capacidad</div>
+    <h1 class="headline">Primero se fija qué es venta; revisar la medición en pagos no cierra la brecha</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (R-033, C-013): diseño, no algo construido; mide hacia adelante (F-242) · 44%: T-096, 751 churns observados, mar-22–oct-24 · F-136, F-144, F-145, F-146, F-191, F-238–F-241</span><span class="page"></span></footer>
-  <aside class="notes">As-is: tres fuentes, todas de después del pago. Pagos (cliente × mes: customer_id, month, amount_cop) responde cuánto pagó cada cliente cada mes, el puente de monto pagado y las cohortes por primer pago; no responde nada de quien no pagó, ni plan, precio o descuento, ni si un cero es cancelación, mora o desfase (44% de los 751 churns observados vuelve a pagar al mes siguiente), ni si un pico es prepago o expansión. Industria (cliente, ID en otro formato) responde el corte por industria. Gasto S&amp;M (mes × rubro, sin unidad) responde el gasto por rubro; no canal ni campaña. Ninguna responde canal, puerta, etapa, intervención, tiempo de cierre ni estancamiento. To-be: una espina y tres capas. Espina: account (una fila por cuenta) y account_xref (sistema + ID de origen + inicio de vigencia), que une CRM, producto, facturación y los IDs de hoy. Demanda: channel, campaign, touch (con UTMs), campaign_member y campaign_spend (con moneda). Comercial: person, lead, opportunity, stage_history (de, a, cuándo y quién), activity y assignment. Producto y facturación: product_event, subscription, subscription_item_version (contratado), discount (descontado), invoice (facturado) y payment (cobrado). Marts: funnel_entry (una fila por entrada con puerta, ruta y fecha de cada hito) alimenta las métricas del funnel; account_month (cuenta × mes con MRR de lista y neto y estado de suscripción) alimenta las comunes y se concilia cada mes con el monto pagado de hoy. Seis reglas son decisiones de negocio por escribir antes de construir (F-241): orden de puerta, cuándo una entrada es nueva, estados New/Working/Engaged, ventana W, umbral de estancamiento y base del puente. R-033 trata Reactivate como puerta y C-005 como loop: alinear antes de construir. La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024 (F-191).</aside>
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; altas = primer pago observado, no Won · T-093, T-094, T-100, T-089 · F-125, F-126, F-201, F-202, F-204, F-205, F-229, F-230</span><span class="page"></span></footer>
+  <aside class="notes">Paso 0 del árbol (C-023): fijar qué es «venta» (Won o primer pago) y qué ventana se compara, porque en los pagos la respuesta cambia: la premisa «no más ventas» se sostiene en jul–oct 2024 y no en mar–oct. Del lado de los pagadores, tres revisiones de medición no cambian la lectura. Sin oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023 (55 con octubre). Altas y reactivaciones son flujos separados: 1.476 clientes con alta, 468 reactivaciones y 0 meses marcados como ambos; las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas, así que sumarlas o separarlas deja el mismo orden. Las altas que coinciden en monto e industria con un churn reciente no superan al emparejamiento placebo (175 de 650 frente a 196 en 2023; 76 de 272 contra 68 en 2022). En 2024 el placebo no sirve porque hay pocos churns posteriores. No se afirma que la medición quedó descartada: con los pagos solo se acotan las revisiones del lado de pagadores; no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202). Primer pago no es Won. La ventana jul–oct 2024 es corta y puede incluir compra adelantada (H-066, H-075). Lo del lado de los leads necesita el CRM.</aside>
 </main>
 <script>
-P.draw('S32', (s, P) => {
-  // Plan: as-is cols 1–3 (solid = exists) → arrow col 4 → to-be cols 5–12: three dashed layers hang from
-  // the accent account spine; two marts below feed the metrics.
-  s.label(112, 344, 'Hoy · as-is', { anchor: 'bl', cls: 'cap' });
-  const srcs = [['Pagos', 'cliente × mes'], ['Industria', 'cliente'], ['Gasto S&amp;M', 'mes × rubro, sin unidad']];
-  srcs.forEach(([n, g], i) => {
-    const y = 364 + i * 104;
-    s.rect(112, y, 360, 84, { fill: 'none', stroke: 'ink-3', w: 1.5 });
-    s.label(132, y + 42, `${n}<span>${g}</span>`, { anchor: 'ml', cls: 'src' });
-  });
-  s.label(112, 720, '<b>Todo es de después del pago</b>: no dice si un cero es cancelación, mora o desfase; 44% de los churns vuelve a pagar al mes siguiente', { cls: 'nt', w: 380 });
+P.draw('S30', (s, P) => {
+  // Plan: Paso 0 cols 1–3 (accent) → premise line y=600 through three gates (cols 5, 7, 9–10) → result cols 11–12;
+  // leads-side branch dashed underneath (needs data that does not exist today).
+  const Y = 572, G = [812, 1092, 1372], X0 = 508, X1 = 1616;
 
-  const W = 352, SPY = 660, SPH = 48;
-  // from → to
-  s.line(500, SPY + SPH / 2, 640, SPY + SPH / 2, { stroke: 'ink-3', w: 3, arrow: 'end', headSize: 16 });
+  // Paso 0 comes first: the premise leaves from it.
+  s.label(112, Y - 128, 'Paso 0', { anchor: 'bl', cls: 'chip', id: 's30-p0', focal: true });
+  s.label(112, Y - 106, '<b>Fijar qué es venta</b> (Won o primer pago) <b>y qué ventana</b>', { cls: 'p0', w: 350 });
+  s.label(112, Y + 40, 'En pagos, se sostiene en <span style="white-space:nowrap">jul–oct 2024</span>, no en <span style="white-space:nowrap">mar–oct</span>', { cls: 'p0s', w: 340 });
+  s.line(112, Y, X0, Y, { stroke: 'accent', w: 8, cap: 'butt' });
 
-  // To-be.
-  s.label(688, 344, 'Propuesta · to-be', { anchor: 'bl', cls: 'cap' });
-  const L = [
-    { x: 688, n: 'Demanda', hb: '→ entradas, win rate y costo por Won por canal', tb: ['touch', 'channel', 'campaign', 'campaign_spend'] },
-    { x: 1072, n: 'Funnel comercial', hb: '→ conversión, tiempos, carga y handoff por etapa', tb: ['lead', 'opportunity', 'stage_history', 'activity', 'assignment'] },
-    { x: 1456, n: 'Suscripción y facturación', hb: '→ churn por cancelación vs mora; MRR de lista y neto', tb: ['subscription', 'subscription_item_version', 'discount_grant', 'invoice', 'payment'] },
+  // The premise travels left → right and survives every payment-side check.
+  s.line(X0, Y, X1 - 16, Y, { stroke: 'ink', w: 4, arrow: 'end', headSize: 16 });
+  s.dot(X0, Y, { r: 8, fill: 'ink' });
+  s.label(X0 + 16, Y - 18, 'Premisa «no más ventas»', { anchor: 'bl', cls: 'pm' });
+
+  const gates = [
+    ['¿Octubre incompleto?', 'Sin oct-24: <b>56</b> por mes en 2024 vs <b>54</b> en 2023 (55 con octubre)'],
+    ['¿Altas o reactivaciones?', '<b>1.476</b> altas, <b>468</b> reactivaciones, <b>0</b> meses marcados como ambas'],
+    ['¿Recompras con otro ID?', '<b>175</b> de 650 altas de 2023 coinciden con un churn reciente; placebo: <b>196</b>'],
   ];
-  L.forEach(({ x, n, hb, tb }) => {
-    s.label(x, 364, n, { cls: 'ly' });
-    s.label(x, 400, hb, { cls: 'hb', w: W });
-    s.rect(x, 476, W, 164, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
-    s.label(x + 20, 492, tb.join('<br>'), { cls: 'tb', w: W - 40 });
-    s.line(x + W / 2, 640, x + W / 2, SPY, { stroke: 'ink-3', w: 2 });
+  gates.forEach(([t, r], i) => {
+    const x = G[i];
+    s.line(x, Y - 64, x, Y - 14, { stroke: 'ink-3', w: 3, cap: 'butt' });
+    s.line(x, Y + 14, x, Y + 64, { stroke: 'ink-3', w: 3, cap: 'butt' });
+    s.label(x - 2, Y - 80, t, { anchor: 'bl', cls: 'gt', w: 280 });
+    s.label(x - 2, Y + 84, r, { cls: 'gr', w: 250 });
   });
+  s.label(X1 + 10, Y, 'La brecha sigue en pie', { anchor: 'ml', cls: 'res', w: 176, id: 's30-res' });
 
-  // The spine: one account key that joins CRM, product, billing and today's IDs.
-  s.rect(688, SPY, 1120, SPH, { fill: 'accent', id: 's32-spine', focal: true });
-  s.label(708, SPY + SPH / 2, '<code>account · account_xref</code>  —  llave común de cuenta', { anchor: 'ml', cls: 'sp' });
-
-  // Marts.
-  const M = [{ x: 688, t: '<code>funnel_entry</code> → métricas del funnel' }, { x: 1256, t: '<code>account_month</code> → métricas comunes' }];
-  M.forEach(({ x, t }) => {
-    s.line(x + 60, SPY + SPH, x + 60, 766, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 11 });
-    s.rect(x, 770, 552, 64, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
-    s.label(x + 20, 802, t, { anchor: 'ml', cls: 'mt' });
-  });
+  // Leads side: waits for the CRM (dashed = data that does not exist today).
+  const BY = 872;
+  s.path(`M${X0 + 150},${Y + 8} V${BY} H${X0 + 250}`, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end' });
+  s.label(X0 + 266, BY, '<b>Lado de leads</b>: no-prospectos, duplicados y cambios de definición esperan al CRM', { anchor: 'ml', cls: 'ld', w: 1000 });
 });
 </script>
 </body>

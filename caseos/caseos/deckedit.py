@@ -381,6 +381,66 @@ def _shift(deck: Path, frm: int, by: int = 1) -> dict:
     return moved
 
 
+def _insert(store: CaseStore, deck_id: str, deck: Path, pos: int, html: str) -> tuple[str, dict]:
+    """Put a slide at position `pos`: the ones from there on move down one place (their case slides follow)."""
+    moved = _shift(deck, pos)
+    rel = lambda n, sub, ext: str((deck / sub / f"{n}{ext}").relative_to(store.root))
+    for e in store.list("slide"):
+        if e.get("deck") == deck_id and e.get("html") and Path(e["html"]).name in moved:
+            n = moved[Path(e["html"]).name][:2]
+            store.update(e["id"], {"html": rel(n, "slides", ".html"), "render": rel(n, "renders", ".png")}, actor="hugo",
+                         material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
+    file = f"{pos:02d}.html"
+    (deck / "slides" / file).write_text(html, encoding="utf-8")
+    return file, moved
+
+
+def _ids(deck: Path) -> set[str]:
+    return {m for f in slide_files(deck) for m in re.findall(r'data-slide="([^"]+)"', (deck / "slides" / f).read_text(encoding="utf-8"))}
+
+
+def copy_slide(store: CaseStore, deck_id: str, from_deck: str, from_file: str, *, after: str = "", via: str = "",
+               actor: str = "hugo") -> dict:
+    """Bring a slide from another deck of the case (e.g. one a newer run left out), placed after `after`. It takes the
+    theme of the deck it lands in; if its id is already used there, it gets a new one."""
+    if actor != "hugo":
+        raise StoreError("Solo Hugo agrega láminas al deck.")
+    if not SLIDE_FILE.match(from_file):
+        raise StoreError("Lámina inválida.")
+    d, deck = _deck(store, deck_id)
+    src_d = next((x for x in storyteller.decks(store) if x["id"] == from_deck), None)
+    if not src_d:
+        raise StoreError("No encuentro el deck de origen.")
+    src = store.root / src_d["path"] / "slides" / from_file
+    if not src.exists():
+        raise StoreError("No encuentro esa lámina en el deck de origen.")
+    html = src.read_text(encoding="utf-8")
+    files_ = slide_files(deck)
+    if after and after not in files_:
+        raise StoreError("No encuentro la lámina después de la cual va.")
+    old = (re.search(r'data-slide="([^"]+)"', html) or [None, ""])[1]
+    used, new = _ids(deck), old
+    k = 2
+    while new in used:
+        new, k = f"{old}V{k}", k + 1
+    if new != old:
+        html = (html.replace(f'data-slide="{old}"', f'data-slide="{new}"').replace(f"P.draw('{old}'", f"P.draw('{new}'")
+                .replace(f'P.draw("{old}"', f'P.draw("{new}"'))
+    pos = (int(after[:2]) + 1) if after else len(files_) + 1
+    file, moved = _insert(store, deck_id, deck, pos, html)
+    png = store.root / src_d["path"] / "renders" / f"{from_file[:2]}.png"
+    if png.exists():                                         # a thumbnail right away; the re-themed one follows
+        shutil.copy2(png, deck / "renders" / f"{file[:2]}.png")
+    title = re.search(r"<h1\b[^>]*>([\s\S]*?)</h1>", html)
+    name = _plain(title.group(1)) if title else from_file
+    _record(store, d, deck, {"kind": "copy", "file": file, "from": {"deck": src_d["slug"], "file": from_file}, "moved": moved},
+            f"Hugo trajo «{name[:70]}» (lámina {int(from_file[:2]) + 1} de {src_d['slug']}) como lámina {pos} del deck {d['slug']}"
+            + (f" · {via}" if via else ""))
+    rebuild(deck)
+    threading.Thread(target=render_one, args=(deck, file[:2]), daemon=True).start()
+    return {"file": file, "position": pos, "slide_id": new, "moved": len(moved)}
+
+
 def add_divider(store: CaseStore, deck_id: str, title: str, color: str, *, after: str = "", via: str = "",
                 actor: str = "hugo") -> dict:
     """A solid-color section divider with only its name, like the ones the Storyteller drew, placed after `after`
@@ -397,24 +457,15 @@ def add_divider(store: CaseStore, deck_id: str, title: str, color: str, *, after
     if after and after not in files_:
         raise StoreError("No encuentro la lámina después de la cual va el separador.")
     pos = (int(after[:2]) + 1) if after else len(files_) + 1
-    used = {m for f in files_ for m in re.findall(r'data-slide="([^"]+)"', (deck / "slides" / f).read_text(encoding="utf-8"))}
+    used = _ids(deck)
     base_id = "S" + (re.sub(r"[^A-Za-z0-9]", "", title).upper()[:12] or "SEC")
     sid, k = base_id, 2
     while sid in used:
         sid, k = f"{base_id}{k}", k + 1
-    moved = _shift(deck, pos)
-    rel = lambda n, sub, ext: str((deck / sub / f"{n}{ext}").relative_to(store.root))
-    for e in store.list("slide"):
-        if e.get("deck") == deck_id and e.get("html") and Path(e["html"]).name in moved:
-            n = moved[Path(e["html"]).name][:2]
-            store.update(e["id"], {"html": rel(n, "slides", ".html"), "render": rel(n, "renders", ".png")}, actor=actor,
-                         material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
     esc = html_lib.escape(title)
     js = title.replace("\\", "\\\\").replace("'", "\\'").replace("<", "&lt;")
-    file = f"{pos:02d}.html"
-    (deck / "slides" / file).write_text(DIVIDER.format(sid=sid, title_html=esc, title_js=js, color=color.lower(),
-                                                       ink="bg" if _luminance(color) < 0.18 else "ink", lid=f"{sid.lower()}-name"),
-                                        encoding="utf-8")
+    file, moved = _insert(store, deck_id, deck, pos, DIVIDER.format(sid=sid, title_html=esc, title_js=js, color=color.lower(),
+                                                                    ink="bg" if _luminance(color) < 0.18 else "ink", lid=f"{sid.lower()}-name"))
     _record(store, d, deck, {"kind": "divider", "file": file, "title": title, "color": color.lower(), "moved": moved},
             f"Hugo agregó el separador «{title}» ({color.lower()}) como lámina {pos} del deck {d['slug']}" + (f" · {via}" if via else ""))
     rebuild(deck)
