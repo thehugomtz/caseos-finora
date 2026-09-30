@@ -1,0 +1,77 @@
+id: F-137
+type: finding
+headline: 'El CAC solo existe como «S&M por alta en unidades reportadas»: sin la unidad del gasto no hay CAC en
+  COP, ni payback, ni LTV:CAC, y sin motion o canal no hay CAC por Self Service/Assisted/Executive ni por Digital/KAM.'
+evidence_text: El S&M llega como texto con «$» y tres decimales, sin unidad ni moneda. Entre mar-22 y oct-24 suma
+  73,518 unidades para 1.476 altas limpias, es decir, 0,0498 unidades por alta, y ese número no se puede comparar
+  con un ARPA en COP. Team + PayrollExpenses son el 26% del S&M, y no sabemos si incluyen KAM o retención. El modelo
+  no tiene motion ni canal. a16z advierte que el CAC blended no dice si la adquisición pagada es rentable.
+confidence: low
+limitations:
+- 'Aunque tuviéramos la unidad, el denominador es la primera aparición, no la adquisición: puede incluir clientes
+  anteriores a 2022 que regresan. Además, el gasto no tiene rezago ni asignación entre adquisición y KAM.'
+kind: measurement
+claims:
+- claim: El modelo no tiene usuarios o licencias, plan, intervalo de facturación, periodo de servicio, motion, canal,
+    margen ni costo de servir, y la unidad del S&M no está documentada.
+  source_id: DM-00
+  source_type: data_model
+  confidence: low
+  freshness: Catálogo consultado 2026-09-29
+  supports_or_contests: context
+  notes: Por esto CAC en COP, payback, LTV con margen, LTV:CAC, UCM y ARPU por usuario quedan en rojo. · fuente
+    no recuperada en la corrida (CaseOS)
+  unverified: false
+- claim: El gasto S&M llega como texto con «$» y tres decimales (por ejemplo, «$1.040» en Paid Media de ene-22),
+    sin unidad ni moneda.
+  source_id: DM-18
+  source_type: data_model
+  confidence: high
+  freshness: Archivo crudo; consulta 2026-09-29
+  supports_or_contests: context
+  notes: El catálogo lo marca como unidad no documentada y no lo convierte a COP.
+- claim: 'Entre mar-22 y oct-24 el S&M suma 73,518 unidades para 1.476 altas limpias: 0,0498 unidades por alta.'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos mar-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Es una razón en unidades del archivo: no es un CAC en COP y no se puede comparar con el ARPA.'
+- claim: En los 34 meses, Team + PayrollExpenses son el 26% del S&M y Paid Media el 44%. Generación de Demanda suma
+    46,181 unidades, la capacidad comercial 25,24 y Habilitación 6,397.
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: No sabemos si Team incluye KAM o retención; eso cambia qué entra en el CAC.
+- claim: El CAC debe ser el costo completo de adquisición. El CAC blended no dice si la adquisición pagada es rentable;
+    por eso importa el paid CAC.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Para el paid CAC hace falta el canal por cliente.
+- claim: Conviene examinar qué segmentos recuperan antes el CAC o tienen mayor LTV:CAC, y medir cohortes por clientes
+    y por revenue. Como referencia, Skok menciona payback de 5–7 meses y LTV:CAC mayor que 3 en los mejores SaaS.
+  source_id: EXT-09
+  source_type: expert
+  confidence: medium
+  freshness: Consultado 2026-09-29; fecha no verificada
+  supports_or_contests: context
+  notes: Son benchmarks de contexto, no metas para Finora.
+unverified: false
+source_ref:
+  research: R-018
+links:
+- R-018
+- H-017
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:01:40-06:00'
+updated_at: '2026-09-29T11:57:06-06:00'
+version: 2

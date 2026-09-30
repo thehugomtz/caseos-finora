@@ -1,0 +1,129 @@
+id: F-213
+type: finding
+headline: Con los datos de hoy solo se miden el nudo y la vuelta de pagadores. Esa vuelta es un loop de Revenue,
+  en parte es timing de pago, y no debe llamarse Reactivate.
+evidence_text: 'El modelo no tiene tablas de leads, etapas ni dueños (DM-01), y los 1.961 clientes tienen al menos
+  un pago (DM-04): no hay denominador para ningún funnel. El nudo: 1.476 primeros pagos observados limpios entre
+  mar-22 y oct-24, más 377 clientes que ya pagaban en ene-22 y 108 marcados en feb-22 (DM-02, DM-03). La vuelta
+  de pagadores: 751 churn observados en 549 clientes y 468 vueltas en 340 clientes (DM-05). De los 751 churn, 330
+  vuelven en t+1 y 283 no vuelven antes de oct-24 (DM-06). De las 330 vueltas en t+1, solo 87 pagan el mismo monto
+  de antes (DM-07). 145 vueltas traen firma de pago multi-mes (DM-08), y 126 pagan exactamente los meses saltados
+  más el actual (DM-09). 85 clientes vuelven dos o más veces (DM-10). El monto del mes de vuelta (≈86,5 M COP) es
+  del mismo orden que el del primer mes de los clientes nuevos (≈94,3 M COP) en la misma ventana (DM-11), y ≈31%
+  de ese monto de vuelta trae firma multi-mes (DM-09). La línea «reactivación» del puente de MRR describe esto,
+  no a leads estancados.'
+confidence: high
+limitations:
+- Los conteos son de confianza alta. Leer las vueltas que pagan los meses saltados como atraso de cobro, y no como
+  recompra, es inferencia (confianza media). «No vuelve antes de oct-24» está censurado para los churn recientes.
+  Primer pago observado ≠ adquisición.
+kind: measurement
+claims:
+- claim: El modelo solo tiene pagos (cliente × mes), industria y gasto S&M; no hay tablas de leads, etapas, dueños
+    ni actividades comerciales.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Nada del mix de rutas ni de Reactivate se puede medir hoy.
+- claim: Los 1.961 clientes del modelo tienen al menos un pago; ninguno aparece sin pago, así que no existe denominador
+    para conversión de funnel.
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29 · datos ene-22–oct-24
+  supports_or_contests: context
+  notes: 'Coincide con la restricción del caso: los pagos no incluyen a quien no compró.'
+- claim: Hay 1.476 primeros pagos observados limpios entre mar-22 y oct-24, más 108 marcados en feb-22.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29 · datos ene-22–oct-24
+  supports_or_contests: context
+  notes: 'Por cosecha: 272 (mar–dic 22), 650 (2023) y 554 (ene–oct 24). Las coberturas son distintas: no se comparan
+    como años. Primer pago observado ≠ adquisición.'
+- claim: 377 clientes ya pagaban en ene-22 (censura a la izquierda), 108 tienen su primer pago en feb-22 (posible
+    arrastre) y 1.476 son cohortes limpias.
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Cuando exista CRM, el nudo por ruta solo debe unirse a cohortes limpias.
+- claim: Se observan 751 eventos de churn en 549 clientes y 468 vueltas a pagar en 340 clientes.
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Es churn observado (pago que pasa a cero), no cancelación confirmada.
+- claim: De los 751 churn observados, 330 vuelven a pagar en t+1, 86 en 2–3 meses, 32 en 4–6, 20 en 7 o más y 283
+    no vuelven antes de oct-24.
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: '«No vuelve» está censurado para los churn recientes. En el SQL, el alias vuelven_t1_mismo_monto quedó
+    mal puesto: suma returned_next_month (vuelve en t+1 con cualquier monto). El mismo monto está en DM-07.'
+- claim: De las 330 vueltas en t+1, solo 87 pagan el mismo monto que antes del mes en cero.
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: La mayoría vuelve con otro monto; ver DM-09 para los pagos de meses saltados.
+- claim: 145 de las 468 vueltas (31%) traen firma de pago multi-mes (monto = k × monto usual).
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: 160 vuelven exactamente con su monto usual.
+- claim: 126 vueltas (100 en t+1 y 26 en t+2 o más) pagan exactamente los meses saltados más el actual. Las vueltas
+    con firma multi-mes suman ≈26,9 M COP de los ≈86,5 M COP del monto del mes de vuelta.
+  source_id: DM-09
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Los conteos son firmes. Leerlos como atraso de cobro y no como recompra es inferencia (confianza media).
+- claim: '85 de los 340 clientes que vuelven lo hacen dos o más veces: 60 dos, 14 tres, 7 cuatro y 4 cinco o más.'
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: El patrón repetido es compatible con pagos intermitentes.
+- claim: Entre mar-22 y oct-24, el monto pagado en el mes de vuelta suma ≈86,5 M COP y el del primer mes de los
+    clientes nuevos ≈94,3 M COP.
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Misma ventana y misma fuente. Es monto pagado observado, no MRR contratado. Muestra por qué confundir este
+    loop con Reactivate distorsionaría la historia.
+- claim: 117 de los 1.584 primeros pagos traen firma de pago multi-mes.
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: El M0 bruto sobreestima el arranque de esos clientes; para valor, usar monto usual o run-rate temprano.
+unverified: false
+source_ref:
+  research: R-029
+links:
+- R-029
+- H-050
+- H-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T16:38:56-06:00'
+version: 1

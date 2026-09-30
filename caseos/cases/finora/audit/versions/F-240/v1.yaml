@@ -1,0 +1,117 @@
+id: F-240
+type: finding
+headline: 'El to-be de la hipótesis de trabajo se sostiene con patrones estándar, con tres ajustes: espina de identidad,
+  puerta separada de ruta, y suscripción dividida en contratado, descontado, facturado y cobrado.'
+evidence_text: 'Referencias que lo respaldan: el Lead con fuente, estado, dueño y conversión a cuenta y oportunidad;
+  CampaignMember; OpportunityHistory con etapa, monto, fecha y autor; Task con quién, sobre qué y dueño; UTM source/medium/campaign
+  (+utm_id); la spec B2B con groupId como ID de cuenta. Para las entradas, el accumulating snapshot (una fila por
+  ítem, una fecha por hito, lags entre hitos). Para cuenta × mes, el periodic snapshot denso. SCD2 para asignación,
+  plan y descuentos, y el historial diario que generan los paquetes de CRM. HubSpot muestra el enfoque alternativo:
+  fechas de entrada y salida por etapa guardadas como propiedades.'
+confidence: medium
+limitations:
+- 'Son patrones de industria, no evidencia sobre Finora: su stack y sus definiciones no están en el caso. Los esquemas
+  de Salesforce vienen de documentación de terceros (la página oficial devolvió 403).'
+kind: data_engineering
+claims:
+- claim: 'Kimball define el accumulating snapshot para procesos con inicio, pasos intermedios y fin: una fila por
+    ítem, una fecha por cada hito, que se actualiza a medida que avanza e incluye los lags entre hitos.'
+  source_id: W-01
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el grano natural de funnel_entry para cohortes con ventana fija (C-006).
+- claim: Kimball define el periodic snapshot con grano = periodo y filas densas aunque no haya actividad (ceros).
+  source_id: W-03
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el patrón de mart.customer_month hoy y de account_month en el to-be.
+- claim: 'Kimball: un cambio tipo 2 agrega una fila nueva con fecha de inicio, fecha de expiración e indicador de
+    fila vigente.'
+  source_id: W-02
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para asignación, industria, plan/precio, descuentos y mapeo de canal.
+- claim: Google exige utm_source, utm_medium y utm_campaign, recomienda utm_id y utm_source_platform, y advierte
+    que si faltan, los reportes muestran «(not set)».
+  source_id: W-04
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Define los campos mínimos de touch, channel y campaign.
+- claim: 'La spec B2B SaaS de Segment usa context.groupId como ID de la cuenta en eventos como Account Created,
+    Signed Up (type: invited u organic) y Trial Started/Ended.'
+  source_id: W-05
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda que product_event lleve account_id obligatorio y que se distinga el registro orgánico del invitado.
+- claim: En Salesforce, OpportunityHistory guarda en cada cambio la etapa, el monto, la fecha de cierre esperada,
+    la probabilidad, el autor (CreatedById) y la fecha del cambio (CreatedDate).
+  source_id: W-09
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Documentación de terceros (CData) del esquema de Salesforce; la página oficial devolvió 403.
+- claim: El Lead de Salesforce trae LeadSource, Status, OwnerId, CreatedDate e IsConverted/ConvertedDate, con los
+    IDs de la cuenta, el contacto y la oportunidad que se crean al convertir.
+  source_id: W-10
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el enlace lead → cuenta → oportunidad que hoy falta.
+- claim: CampaignMember enlaza leads y contactos con campañas, con estado, HasResponded y FirstRespondedDate.
+  source_id: W-11
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para campaign_member (grano persona/lead × campaña).
+- claim: 'Task registra cada actividad con quién (WhoId: lead o contacto), sobre qué (WhatId: oportunidad o cuenta),
+    dueño, fechas, estado, tipo de llamada y duración.'
+  source_id: W-12
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para activity (toques de SDR/AE).
+- claim: HubSpot guarda por etapa de lifecycle «Date entered», «Date exited» y el tiempo último y acumulado en la
+    etapa; muestra la fuente de cada cambio en el historial y, por defecto, las actualizaciones automáticas solo
+    mueven la etapa hacia adelante.
+  source_id: W-13
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Enfoque alternativo (fechas como propiedades). Los retrocesos y las re-entradas requieren manejo explícito.
+- claim: El paquete dbt de Fivetran para Salesforce genera modelos de historial diario por cuenta, contacto, oportunidad
+    y campaña, además de desempeño de campañas y actividad diaria.
+  source_id: W-14
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Práctica común: reconstruir estados diarios desde el historial del CRM. Solo funciona si ese historial
+    existe.'
+unverified: false
+source_ref:
+  research: R-033
+links:
+- R-033
+phase: research
+review:
+  state: proposed
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:19:55-06:00'
+updated_at: '2026-09-29T19:19:55-06:00'
+version: 1

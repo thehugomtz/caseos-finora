@@ -1,0 +1,92 @@
+id: T-106
+type: table
+table_key: FIN-F-219
+title: En niveles mensuales, el S&M total se asocia negativamente con las altas
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- especificacion
+- n_meses
+- r_pearson
+rows:
+- - rezago_0
+  - 32
+  - -0.568
+- - rezago_1
+  - 31
+  - -0.549
+units:
+  especificacion: texto
+  n_meses: int
+  r_pearson: num2
+definitions: {}
+message: 'En niveles mensuales, el S&M total se asocia negativamente con las altas: −0,57 en el mismo mes sobre
+  32 meses y −0,55 con un mes de rezago sobre 31 meses.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-004
+  - EC-INV-03
+  - EC-INV-04
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-004\nWITH s AS (SELECT month, total_sm_spend FROM mart.sm_monthly WHERE month >= '2022-03'),\nn AS
+  (SELECT month, new_customers FROM mart.monthly_metrics WHERE month >= '2022-03'),\nj AS (SELECT s.month, s.total_sm_spend
+  AS sm, n.new_customers AS altas,\n             LEAD(n.new_customers) OVER (ORDER BY s.month) AS altas_lag1\n      FROM
+  s JOIN n ON n.month = s.month)\nSELECT 'rezago_0' AS especificacion, COUNT(*) AS n_meses, ROUND(CORR(sm, altas),3)
+  AS r_pearson\nFROM j WHERE altas IS NOT NULL\nUNION ALL\nSELECT 'rezago_1', COUNT(*), ROUND(CORR(sm, altas_lag1),3)
+  FROM j WHERE altas_lag1 IS NOT NULL"
+transformation: E-004 · run_sql · SQL ad hoc de solo lectura; EC-INV-03 · search_evidence · Afirmación canónica
+  verificada en código (Fase 1); EC-INV-04 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-005
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SIN-FUNNEL: No hay funnel, atribución, precios ni descuentos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: especificacion
+    nombre: especificacion
+    formato: texto
+  - id: n_meses
+    nombre: n_meses
+    formato: int
+  - id: r_pearson
+    nombre: r_pearson
+    formato: num2
+  filas:
+  - especificacion: rezago_0
+    n_meses: 32
+    r_pearson: -0.568
+  - especificacion: rezago_1
+    n_meses: 31
+    r_pearson: -0.549
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-219
+links:
+- F-219
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1

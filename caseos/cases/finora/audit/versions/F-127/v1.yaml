@@ -1,0 +1,75 @@
+id: F-127
+type: finding
+headline: 'Dos tipos de dato bastan para distinguir 4 de las 8 hipótesis (H-001, H-002, H-003, H-004): las entradas
+  únicas con fecha (con canal, motion y segmento) y el vínculo con pago. Son justamente las que convertirían «más
+  leads» en un artefacto.'
+evidence_text: El método ya está establecido. Se agrupa por periodo de entrada con una ventana de conversión fija
+  (EXT-03). Las entradas que aún no compran se tratan como censuradas, con curvas Kaplan-Meier (EXT-05). La mezcla
+  se separa del desempeño manteniendo fijos los pesos de los grupos (EXT-04). Deduplicar y separar a los clientes
+  existentes evita inflar la entrada (EXT-10). Un experimento aleatorizado externo muestra que la conversión inmediata
+  y la diferida pueden ir en direcciones distintas (EXT-08), por eso conviene medir ambas.
+confidence: medium
+limitations:
+- Depende de que Finora tenga la fecha de entrada y un ID que se pueda unir con los pagos. Con unas 50 altas al
+  mes, las celdas quedan chicas y obligan a trabajar por trimestre.
+kind: measurement
+claims:
+- claim: Para ver la tendencia de conversión hay que agrupar por el periodo en que se entra al funnel («group users
+    based on the period in which they enter the funnel») y usar una ventana de conversión fija. Sin esa ventana,
+    las cohortes viejas parecen mejores solo porque tuvieron más tiempo.
+  source_id: EXT-03
+  source_type: expert
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda el método para H-003/H-004 y descarta usar «altas del mes ÷ leads del mes».
+- claim: 'Censura a la derecha: «we don''t know when the event happened, but only that it happened after the end
+    of the study». Calcular medianas sin tomar en cuenta la censura «is not a good idea»; Kaplan-Meier sí la incorpora.'
+  source_id: EXT-05
+  source_type: academic
+  confidence: high
+  freshness: Libro online; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda tratar como censuradas, y no como perdidas, a las entradas recientes que aún no compran (H-003).
+- claim: 'Mecanismo de Simpson: «The relative sizes of the groups changed between periods, and the groups have very
+    different baseline conversion rates». La práctica recomendada es mantener constantes los pesos de los subgrupos
+    («hold the subgroup weights constant»).'
+  source_id: EXT-04
+  source_type: expert
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda el ajuste por mezcla para H-002.
+- claim: Experimento aleatorizado con 680.588 usuarios en 190 países (prueba gratuita de 3 vs 7 días). No hubo efecto
+    significativo en la conversión inmediata, pero la conversión diferida subió 42,36% y la suscripción total 20,92%.
+  source_id: EXT-08
+  source_type: academic
+  confidence: high
+  freshness: Datos 2022–2024; fecha de publicación no verificada
+  supports_or_contests: context
+  notes: Es un contexto B2C freemium, no Finora. Muestra que la conversión inmediata y la diferida pueden ir en
+    direcciones distintas (H-004) y que un experimento puede separarlas (Q-023).
+- claim: Los duplicados y un mal matching lead→cuenta hacen que «Pipeline reports double-count the opportunity»
+    y que «Wrong rep gets the lead».
+  source_id: EXT-10
+  source_type: industry
+  confidence: low
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Respalda contar entradas únicas y separar a los clientes existentes (H-001), y cuidar el routing (H-006).
+unverified: false
+source_ref:
+  research: R-010
+links:
+- R-010
+- H-001
+- H-002
+- H-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:47:15-06:00'
+updated_at: '2026-09-29T10:47:15-06:00'
+version: 1

@@ -1,0 +1,141 @@
+id: F-065
+type: finding
+headline: Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes,
+  pero Freelance queda en cero en 17 de esos meses y PayrollExpenses toma valor negativo en 5.
+epistemic_state: Direccional
+confidence: medium
+kind: analytics
+visual:
+  tipo: tabla
+  columnas:
+  - id: rubro
+    nombre: rubro
+    formato: texto
+  - id: meses_en_archivo
+    nombre: meses_en_archivo
+    formato: int
+  - id: meses_nulos
+    nombre: meses_nulos
+    formato: num2
+  - id: meses_positivos
+    nombre: meses_positivos
+    formato: num2
+  - id: meses_en_cero
+    nombre: meses_en_cero
+    formato: num2
+  - id: meses_negativos
+    nombre: meses_negativos
+    formato: num2
+  - id: primer_mes
+    nombre: primer_mes
+    formato: texto
+  - id: ultimo_mes
+    nombre: ultimo_mes
+    formato: texto
+  - id: ultimo_mes_no_cero
+    nombre: ultimo_mes_no_cero
+    formato: texto
+  - id: minimo
+    nombre: minimo
+    formato: num2
+  - id: maximo
+    nombre: maximo
+    formato: num2
+  filas:
+  - rubro: freelance
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 17.0
+    meses_en_cero: 17.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2023-06
+    minimo: 0.0
+    maximo: 0.338
+  - rubro: paid_media
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 34.0
+    meses_en_cero: 0.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: 0.4
+    maximo: 1.505
+  - rubro: payroll_expenses
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 29.0
+    meses_en_cero: 0.0
+    meses_negativos: 5.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: -0.053
+    maximo: 0.863
+  - rubro: publicidad_no_web
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 34.0
+    meses_en_cero: 0.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: 0.156
+    maximo: 0.63
+  - rubro: software_tools
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 34.0
+    meses_en_cero: 0.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: 0.033
+    maximo: 0.195
+  - rubro: team
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 34.0
+    meses_en_cero: 0.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: 0.24
+    maximo: 0.453
+  - rubro: travel
+    meses_en_archivo: 34
+    meses_nulos: 0.0
+    meses_positivos: 34.0
+    meses_en_cero: 0.0
+    meses_negativos: 0.0
+    primer_mes: 2022-01
+    ultimo_mes: 2024-10
+    ultimo_mes_no_cero: 2024-10
+    minimo: 0.066
+    maximo: 0.263
+visual_title: Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes,
+  pero Freelance queda en cero en 17 de esos meses y PayrollExpenses toma valor negativo en 5.
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103202-c958
+  claim: C-004
+  evidence:
+  - E-002
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-007
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:36:18-06:00'
+updated_at: '2026-09-29T10:37:12-06:00'
+version: 2

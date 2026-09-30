@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T20:35:56-06:00 · motivo: Hugo resolvió X-003: Sin impacto material
+> Actualizado: 2026-09-29T20:45:02-06:00 · motivo: cambios en lote
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,7 +25,7 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 11 findings aceptados · 15 decisiones activas · 158 alertas abiertas.
+32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 16 decisiones activas · 158 alertas abiertas.
 
 COS: R-033 cierra, junto con R-034, el diseño as-is/to-be del modelo de datos. El as-is del caso es solo de después del pago (confianza alta) y el to-be sale de patrones de afuera (confianza media); falta saber qué sistemas tiene Finora y qué es un «Cliente N». La research está prácticamente cerrada (R-007 y R-008 siguen bloqueadas por falta de data) y el cuello de botella ahora es la revisión: hay 0 findings aceptados de 242 propuestos, así que ningún claim está listo para el story, y sigue pendiente D-018, que decide si las propuestas de modelo y tablero entran a la historia.
 
@@ -57,6 +57,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-023** Delegación a Claude (3): aceptar la historia con su evidencia · 2026-09-29 → «Pero tu dale accept a todo lo de la story»
 - **D-022** R-013 requiere más investigación H-022: Sin impacto material · 2026-09-29 → Sin impacto material
 - **D-021** R-013 cambia el framing Q-018: Sin impacto material · 2026-09-29 → Sin impacto material
 - **D-020** Research marcada Ready (v1) · 2026-09-29 → Ready
@@ -66,8 +67,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-013** Briefing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-001** CRO pasa de cuatro a tres ramas · 2026-09-28 → Cantidad, mezcla y compra según tiempo. Se deja de tratar c…
-- **D-002** CFO conserva tres grupos · 2026-09-28 → Entrantes, salientes y continuos, con suscripción y descuen…
-- … y 5 más
+- … y 6 más
 
 _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
@@ -91,11 +91,11 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **F-020** (C-MON-05) El MRR por cliente activo bajó en las seis industrias entre dic-22 y oct-24. · high
 - **F-022** (C-INV-02) El S&M total por cliente nuevo es más de 50% menor en 2024 que en 2022. · high
 - **F-023** (C-INV-03) Las correlaciones en niveles entre gasto y altas (rezagos 0–1) son todas negativas, y ninguna correlación de cambios mes a mes alcanza |r| ≥ 0,3 ni p < 0,05. · medium
+- **F-024** (C-INV-04) Toda correlación con p < 0,05 es una correlación negativa en niveles con las altas. · medium
 - **F-030** (C-ADQ-07) El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana de 2022; por encima de esa mediana, las altas por mes no aumentaron. · high
 - **F-033** (C-RET-03) El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos. · high
 - **F-037** (C-ADQ-08) El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones probadas, y entre 2023 y 2024 cambió menos de 10% en todas. · high
-- **F-039** (C-ADQ-09) Las altas por mes se duplicaron con un escalón a inicios de 2023 y desde ene-23 no muestran una tendencia distinguible de cero. · medium
-- … y 1 más
+- … y 137 más
 
 ## Things We Cannot Claim
 - Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.
@@ -143,7 +143,17 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - CFO por clientes que entran / salen / permanecen: Evita contar la misma cuenta en dos grupos entre las mismas fechas; dentro de cada grupo distinguim…
 
 ## Key Tables
-_Sin tablas aceptadas._
+- **T-001** `FIN-GROWTH-01` Clientes activos y monto observado por cliente activo
+- **T-002** `CFO-03` Churn observado vs churn persistente
+- **T-005** `FIN-F-063` El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala
+- **T-008** `FIN-F-066` El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo
+- **T-009** `FIN-F-067` La serie de Habilitación cambia de composición dentro del panel
+- **T-011** `FIN-F-069` El peso de Habilitación en el S&M total no es estable
+- **T-012** `FIN-F-070` Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…
+- **T-013** `FIN-F-107` En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación de…
+- **T-016** `FIN-F-110` Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…
+- **T-019** `FIN-F-113` Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% me…
+- … y 37 más
 
 ## Contradictions
 - **X-040** R-011 contradice H-017
@@ -185,16 +195,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 20:35 · Hugo resolvió X-003: Sin impacto material
-- 2026-09-29 20:35 · Hugo decidió: R-013 requiere más investigación H-022: Sin impacto material
-- 2026-09-29 20:35 · Hugo resolvió X-001: Sin impacto material
-- 2026-09-29 20:35 · Hugo decidió: R-013 cambia el framing Q-018: Sin impacto material
-- 2026-09-29 20:34 · Hugo aceptó C-024
-- 2026-09-29 20:34 · Hugo aceptó C-025
-- 2026-09-29 20:33 · Research marcada Ready (v1)
-- 2026-09-29 20:33 · Hugo decidió: Research marcada Ready (v1)
-- 2026-09-29 20:32 · Framing marcada Ready (v2)
-- 2026-09-29 20:32 · Hugo decidió: Framing marcada Ready (v2)
+- 2026-09-29 20:45 · Hugo aceptó T-080 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-178 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-177 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó C-020 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó C-019 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-168 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-133 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-130 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó C-018 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+- 2026-09-29 20:45 · Hugo aceptó F-132 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

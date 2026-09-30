@@ -1,0 +1,68 @@
+id: F-211
+type: finding
+headline: 'Reactivate funciona como loop sobre episodios estancados, no como cuarta ruta: conserva fecha y puerta,
+  y el primer pago cuenta una sola vez en su ruta, con bandera.'
+evidence_text: 'Forrester trata como «desvío» lo que se sale del camino (estancada, cerrada-perdida, rechazada,
+  descalificada), le asigna un código de motivo y lo reasigna al punto del waterfall más adecuado para su estado
+  (SRC-02). Es exactamente lo que describe N-038. Las prácticas de reciclaje usan disparadores por tiempo, actividad
+  y etapa con umbrales de ejemplo, y separan motivos reciclables de no reciclables (SRC-04). Son ejemplos, no un
+  estándar: confirma que el umbral de Q-064 es un parámetro de Finora. Reciclado es distinto de rechazado y de expirado,
+  y los resultados mutuamente excluyentes suman 100% (SRC-05). Si Reactivate fuera una línea más del mix, cada reactivado
+  estaría en dos funnels a la vez; como bandera transversal, el mix sigue siendo MECE. Tras reactivar, la ruta se
+  recalcula según quién mueve los tramos siguientes: un Self Service reactivado por un SDR pasa a Hybrid A.'
+confidence: medium
+limitations:
+- Ninguna fuente dice qué pasa con la fecha original al reciclar (SRC-04 no lo trata). La regla «conserva fecha,
+  sin entrada nueva, con caducidad que abre un episodio nuevo enlazado» es propuesta propia. Umbral y caducidad
+  los acuerda Finora.
+kind: measurement
+claims:
+- claim: 'Hybrid mezcla tramos por Self Service con tramos intervenidos por una persona (A: empezó arriba y lo intervinieron
+    abajo; B: lo contactaron como New y lo terminó solo). Reactivate son leads estancados que se reactivan y se
+    asignan a un funnel según el caso.'
+  source_id: INT-01
+  source_type: internal
+  confidence: high
+  freshness: N-037, N-038
+  supports_or_contests: supports
+  notes: Hugo pidió bajar bien la definición de Hybrid.
+- claim: Las oportunidades que se desvían se clasifican como estancadas, cerradas-perdidas, rechazadas o descalificadas,
+    y se reasignan según su código de motivo al punto del waterfall más adecuado para su estado.
+  source_id: SRC-02
+  source_type: industry
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el patrón de N-038. La fuente no dice cómo contarlas.
+- claim: Las prácticas de reciclaje usan disparadores por tiempo, actividad y etapa con umbrales de ejemplo (90
+    días tras «Not Now», 8 toques en 30 días, más de 90 días sin actividad en discovery) y separan motivos reciclables
+    de no reciclables.
+  source_id: SRC-04
+  source_type: marketing
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Son ejemplos, no un estándar: confirma que el umbral de Q-064 es un parámetro que decide Finora.'
+- claim: Reciclado se distingue de rechazado y de expirado; aceptado, rechazado, reciclado y expirado son resultados
+    mutuamente excluyentes que suman 100%.
+  source_id: SRC-05
+  source_type: industry
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Base para contar Reactivate sin doble conteo.
+unverified: false
+source_ref:
+  research: R-029
+links:
+- R-029
+- H-050
+- H-051
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T16:38:56-06:00'
+version: 1
