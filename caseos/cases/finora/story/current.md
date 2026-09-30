@@ -34,7 +34,7 @@ Entre ene-22 y oct-24 (ventana completa), los clientes con pago en el mes pasan 
 - Pregunta: ¿Qué tan sano está el modelo si suma clientes mucho más rápido que monto pagado?
 - Rol: context · confianza high · fuerza pending
 - Evidencia: F-071, F-072, F-001, F-002, F-074 · Tablas: T-026, T-027, T-001
-- Intención visual: Diverge: clientes activos y MRR pagado observado parten de la misma base y se separan; el monto por cliente cae en espejo.
+- Intención visual: Una línea: MRR pagado por cliente activo, en COP, de ene-22 a oct-24 (T-027): de COP 92,8 mil a 57,8 mil (−38%). Si hace falta la comparación, en apoyo: clientes activos y MRR pagado en la misma gráfica, cada uno con ene-22 = 100 (T-001), las dos líneas juntas.
 - Limitación: Pendiente de tu aceptación: F-071, F-072, F-001, F-002 y F-074 están propuestos.
 - Limitación: Es monto pagado observado (campo amount con escala fija), no MRR contratado (F-082).
 - Limitación: Cliente activo = pago mayor que cero en el mes. Un cliente sin pago puede estar cancelado, en pausa o atrasado (F-082).

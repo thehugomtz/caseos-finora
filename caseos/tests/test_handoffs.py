@@ -265,3 +265,19 @@ def test_the_case_statement_figures_are_an_example_not_unsupported_data(case):
 def test_a_step_label_is_not_a_figure():
     assert evidence.numbers_in("El paso 1 ya se hizo con los pagos; en el caso 2 cambia la lista") == []
     assert [n.value for n in evidence.numbers_in("Pasan 1.476 altas en 2 pasos")] == [1476.0, 2.0]    # counts still count
+
+
+def test_a_claim_edit_hugo_asked_for_in_the_chat_does_not_accept_it_for_him(case):
+    from caseos import actions
+    f, t = _accepted_evidence(case)
+    story.apply_package(case, _package(f, t, key="entry"), actor="cos")
+    cid = case.read_data("story/package.yaml")["claims"][0]["claim_id"]
+    chart = case.create("finding", {"headline": "MRR por cliente activo", "visual": {"tipo": "linea", "x": ["ene-22"], "series": []},
+                                    "links": [t["id"]]}, actor="analytics")
+    out = actions.run(case, cid, "update_story", {"visual_finding": chart["id"], "visual_intent": "Línea en COP",
+                                                   "via": "vía Claude (Hugo lo pidió en el chat)"})
+    c = case.get(cid)
+    assert c["visual_finding"] == chart["id"] and (c.get("review") or {}).get("state") != "accepted"   # still his to accept
+    assert case.read_data("story/package.yaml")["claims"][0]["visual_finding"] == chart["id"] and out["validation"]
+    with pytest.raises(StoreError):
+        actions.run(case, cid, "update_story", {"visual_finding": f["id"], "via": "vía Claude"})         # no chart, no swap

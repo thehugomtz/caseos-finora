@@ -6,6 +6,7 @@ import { api } from "../core/api.js";
 import { app } from "../app.js";
 import { idTag, statusChip, btn, empty, toast, thinking, ids, dataView, confirmDialog, tabs } from "../ui/components.js";
 import { markdown } from "../ui/markdown.js";
+import { renderVisual } from "../charts/kit.js";
 
 export async function mount(root) {
   let tab = "spine";
@@ -87,10 +88,23 @@ function claimCard(c, ent, i) {
       c.hugo_wording ? h("div.voice", { style: { fontSize: "14.5px" } }, c.hugo_wording) : null,
       h("div.row.wrap", h("span.small.muted", "Evidencia"), ids(c.evidence_ids, 6), h("span.small.muted", "· Tablas"), (c.table_ids || []).length ? ids(c.table_ids, 4) : h("span.chip.warn", "sin tabla")),
       s.unsupported_numbers && s.unsupported_numbers.length ? h("div.corr", "Cifras sin tabla: " + s.unsupported_numbers.join(", ")) : null,
+      c.visual_finding ? claimChart(c.visual_finding) : null,
       c.visual_intent ? h("div.small.muted", "Intención visual: " + c.visual_intent) : null,
       (c.limitations || []).length ? h("div.small.faint", "Límites: " + c.limitations.join(" · ")) : null,
       h("div.row", btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => app.openEntity(c.claim_id, false, { paths: true }) }),
         btn("Editar claim", { sm: true, variant: "ghost", onClick: () => editClaim(c) }), btn("Detalle", { sm: true, variant: "ghost", onClick: () => app.openEntity(c.claim_id) }))));
+}
+
+// the chart of the finding the claim names (the deck draws its own from the tables and the visual intent)
+function claimChart(fid) {
+  const wrap = h("div.viz", h("div.legend"), h("div.chart"));
+  api.cget(`/entities/${fid}`).then((d) => {
+    const f = d.entity || d;
+    if (!f.visual) { wrap.remove(); return; }
+    wrap.prepend(h("div.vt", `${fid} · ${f.visual_title || ""}`));
+    requestAnimationFrame(() => renderVisual(wrap.querySelector(".chart"), f.visual, wrap.querySelector(".legend")));
+  }).catch(() => wrap.remove());
+  return wrap;
 }
 
 async function editClaim(c) {

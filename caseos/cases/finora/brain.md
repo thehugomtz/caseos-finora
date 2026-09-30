@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T17:25:22-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-29T18:03:21-06:00 · motivo: Hugo pidió research (analytics · Analytics): Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos… · v…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,7 +25,7 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-27 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 132 alertas abiertas.
+27 investigaciones completadas (0 aceptadas), 1 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 132 alertas abiertas.
 
 COS: R-029 cierra el diseño del funnel con las definiciones de Hugo: la ruta sale de quién movió cada tramo, la puerta queda fija al entrar y Reactivate es un loop, no otra ruta. Es una propuesta de confianza media sin CRM: hoy solo se miden el nudo (1.476 primeros pagos observados) y la vuelta de pagadores, que es un loop de Revenue y no Reactivate. Con 0 de 213 findings aceptados, ningún claim está listo; lo que más desbloquea es que Hugo decida la taxonomía de C-005 y la regla de nombre Reactivate/reactivación (junto con X-080), y llevar Q-063 y Q-064 a Finora.
 
@@ -124,7 +124,7 @@ _Todavía no hay evidencia aceptada._
 - **R-008** (W7) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-009** (Q2) La caída se concentra en quién entra, no en la base previa · completed · por revisar
 - **R-010** Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (… · completed · por revisar
-- … y 19 más
+- … y 20 más
 
 ## Accepted Frameworks
 - **D-001** CRO pasa de cuatro a tres ramas
@@ -174,6 +174,8 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-29 18:03 · Hugo pidió research (analytics · Analytics): Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos… · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
+- 2026-09-29 18:01 · Hugo pidió cambiar C-001 en la story · vía Claude (Hugo lo pidió en el chat, 29-sep)
 - 2026-09-29 17:25 · Story Package v2 (borrador): 25 claims · 1 problema(s) a resolver · 126 evidencia(s) esperan tu aceptación
 - 2026-09-29 17:25 · Claim propuesto: Con el modelo propuesto, cada caso del CFO se lee en su capa
 - 2026-09-29 17:25 · C-020 actualizado en el Story Package
@@ -182,8 +184,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-29 17:25 · C-017 actualizado en el Story Package
 - 2026-09-29 17:25 · C-016 actualizado en el Story Package
 - 2026-09-29 17:25 · Claim propuesto: Con cliente, mes y monto se ve qué cambió, no por qué
-- 2026-09-29 17:25 · C-015 actualizado en el Story Package
-- 2026-09-29 17:25 · C-014 actualizado en el Story Package
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 26, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

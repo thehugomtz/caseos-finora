@@ -589,11 +589,16 @@ class ResearchBody(BaseModel):
     links: list[str] = []
     route: dict | None = None
     force: bool = False
+    via: str = ""                     # launched for Hugo by someone he asked (the log says so)
 
 
 @app.post("/api/cases/{cid}/research")
 def research_create(cid: str, body: ResearchBody):
-    return research.create_request(S(cid), body.question, links=body.links, route=body.route, actor="hugo", force_purpose=body.force)
+    out = research.create_request(S(cid), body.question, links=body.links, route=body.route, actor="hugo", force_purpose=body.force,
+                                  via=body.via)
+    if body.via:
+        S(cid).update(out["research"]["id"], {"requested_via": body.via}, actor="system", material=False)
+    return out
 
 
 # ------------------------------------------------------------------------------------------ analytics

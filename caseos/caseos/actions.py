@@ -111,14 +111,22 @@ def run(store: CaseStore, eid: str, action: str, payload: dict | None = None) ->
                          actor=HUGO, summary=f"Hugo creó una pregunta desde {eid}")
         return {"entity": q}
     if action == "update_story":
-        patch = {k: v for k, v in p.items() if k in ("headline", "answer", "limitations", "visual_intent", "confidence",
+        patch = {k: v for k, v in p.items() if k in ("headline", "answer", "limitations", "visual_intent", "visual_finding", "confidence",
                                                       "evidence_ids", "table_ids") and v is not None}
         if not patch:
             raise StoreError("Nada que actualizar.")
+        vf = patch.get("visual_finding")
+        if vf and not ((store.get(vf) or {}).get("type") == "finding" and (store.get(vf) or {}).get("visual")):
+            raise StoreError(f"{vf} no es un finding con gráfica.")
         if "evidence_ids" in patch or "table_ids" in patch:
             patch["links"] = list(dict.fromkeys((patch.get("evidence_ids") or e.get("evidence_ids") or []) + (patch.get("table_ids") or e.get("table_ids") or [])))
-        out = store.update(eid, {**patch, "review": {"state": "accepted", "by": HUGO, "at": now_iso(), "note": "editado por Hugo"}},
-                           actor=HUGO, summary=f"Hugo actualizó {eid} en la story", verb="edited")
+        via = (p.get("via") or "").strip()
+        if via:
+            # Hugo asked for the change; someone else made it: the claim keeps waiting for his review
+            out = store.update(eid, patch, actor=HUGO, summary=f"Hugo pidió cambiar {eid} en la story · {via}", verb="edited")
+        else:
+            out = store.update(eid, {**patch, "review": {"state": "accepted", "by": HUGO, "at": now_iso(), "note": "editado por Hugo"}},
+                               actor=HUGO, summary=f"Hugo actualizó {eid} en la story", verb="edited")
         return {"entity": out, "validation": story.revalidate(store)}
     if action == "confirm":
         return {"entity": decisions.confirm(store, eid, choice=p.get("choice") or e.get("title", ""), rationale=note)}

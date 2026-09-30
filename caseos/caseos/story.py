@@ -300,8 +300,8 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
                                   "evidence_ids": c.get("evidence_ids") or [], "table_ids": c.get("table_ids") or [],
                                   "research_ids": c.get("research_ids") or [], "framework_ids": c.get("framework_ids") or [],
                                   "confidence": c.get("confidence"), "limitations": c.get("limitations") or [],
-                                  "visual_intent": c.get("visual_intent"), "hugo_wording": c.get("hugo_wording") or "",
-                                  "strength": (c.get("strength") or {}).get("level")})
+                                  "visual_intent": c.get("visual_intent"), "visual_finding": c.get("visual_finding") or "",
+                                  "hugo_wording": c.get("hugo_wording") or "", "strength": (c.get("strength") or {}).get("level")})
         errors, warnings = validate_package(store, pkg)
         pend = pending_acceptance(store, pkg)
         pkg["validation"] = {"ok": not errors, "errors": errors, "warnings": warnings, "pending": pend, "checked_at": now_iso()}
@@ -327,7 +327,7 @@ def revalidate(store: CaseStore) -> dict:
     for c in pkg.get("claims") or []:
         e = ents.get(c.get("claim_id"))
         if e:
-            for k in ("headline", "answer", "evidence_ids", "table_ids", "limitations", "confidence", "visual_intent"):
+            for k in ("headline", "answer", "evidence_ids", "table_ids", "limitations", "confidence", "visual_intent", "visual_finding"):
                 c[k] = e.get(k, c.get(k))
             c["strength"] = cos.claim_strength(store, e, ents)["level"]
     errors, warnings = validate_package(store, pkg)
