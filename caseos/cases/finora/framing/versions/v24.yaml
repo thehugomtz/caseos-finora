@@ -1,4 +1,4 @@
-version: 25
+version: 24
 executive_question: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos
   en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
 executive_question_history:
@@ -246,7 +246,7 @@ risks:
 - Cualquier comparación entre leads trabajados y no trabajados mezcla a quién eligió el SDR con lo que aporta el
   contacto (H-028, H-050).
 mode: challenge
-updated_at: '2026-09-30T10:15:29-06:00'
+updated_at: '2026-09-30T09:57:16-06:00'
 executive_question_note: Formulada como pregunta desde brief v0.3 §01 · Qué estamos tratando de conseguir.
 stress_test:
 - n: 1
@@ -328,7 +328,83 @@ parked:
   modelar quién comprará «algún día»; adivinar descuentos históricos; diseñar o mostrar funciones de la herramienta.
   (brief v0.3 §08 · Lo que dejamos fuera por ahora)
 source: brief v0.3 (importado)
-pending: {}
+pending:
+  plan:RT-035:
+    value:
+      id: RT-035
+      question: Con las definiciones textuales de Hugo, ¿qué métricas específicas se miden por tipo de funnel en
+        cada familia (volumen, conversión, velocidad, valor, calidad, estancamiento y eficiencia), con fórmula,
+        por qué se propone cada una y si existe hoy? Executive = el funnel SDR→AE, incluida la entrada directa a
+        SQL; Self Service = sin persona; Hybrid A = empezó solo y lo intervino una persona; Hybrid B = lo contactó
+        una persona como New y terminó solo; Reactivate = leads estancados que se reactivan y se asignan a un funnel.
+      kind: measurement
+      agent: measurement
+      intensity: L2
+      work: propuesta
+      draft_answer: 'Reformula RT-034 (R-035). R-035 tomó Hybrid B como «SQL directo» y Reactivate como clientes
+        que dejaron de pagar y vuelven; con las definiciones de Hugo (C-021, R-029): la entrada directa a SQL es
+        Executive con etapa de entrada SQL; Hybrid B es New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Checkout
+        Self → Won; Reactivate es un loop de leads estancados (estancado → reactivado → reasignado a una ruta, sin
+        contar como entrada nueva); la vuelta de pagadores es un loop de Revenue aparte. Se reutiliza de R-035 lo
+        que no depende de esas definiciones: la capa común (valor, calidad, eficiencia con CAC y payback por ruta)
+        y el porqué, dueño y foro de cada métrica.'
+      hugo_said:
+      - text: recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie
+          / Proposal Account Executive / Won /// ese es el punto de partida
+        ref: N-033
+      - text: Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido
+          por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new
+          y el solito lo acabó, hay que bajar bien esa definición)
+        ref: N-037
+      - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
+          y asignarlos a un funnel de acuerdo al caso
+        ref: N-038
+      - text: me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
+          mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi
+        ref: N-058
+      steps:
+      - kind: proposal
+        what: Matriz funnel × familia con métricas específicas por etapa (nombre, fórmula, grano), sobre el stage_map
+          de R-031, con la eficiencia en cada funnel (costo por etapa o por Won, productividad por SDR/AE, CAC y
+          payback por ruta).
+        where: []
+      - kind: proposal
+        what: 'Por cada métrica: por qué se propone (qué decisión del CRO o qué hoja del árbol de C-023 sirve),
+          dueño, foro y si existe hoy.'
+        where: []
+      - kind: proposal
+        what: 'Prueba de MECE y de fidelidad: cada funnel con las definiciones de Hugo; nada de la vuelta de pagadores
+          dentro de Reactivate (va aparte, del lado Revenue).'
+        where: []
+      why: R-035 cambió las definiciones de Hybrid B y de Reactivate; se reformula con las palabras textuales de
+        Hugo (D-026, coordinación de Claude).
+      links:
+      - R-035
+      - C-006
+      - C-009
+      - C-021
+      - C-023
+      - R-031
+      - R-029
+      - R-018
+      - R-032
+      - N-033
+      - N-037
+      - N-038
+      - N-058
+      - N-059
+      slides:
+      - S2.3
+      - S2.5
+      flags: []
+    basis: hugo
+    why: R-035 cambió las definiciones de Hybrid B y de Reactivate; se reformula con las palabras textuales de Hugo
+      (D-026, coordinación de Claude).
+    hugo_wording: ''
+    turn_id: ''
+    by: claude
+    at: '2026-09-30T10:15:29-06:00'
+    revises: false
 shaping_state:
   guion:S2:
     state: approved
@@ -500,12 +576,6 @@ shaping_state:
     at: '2026-09-30T09:57:16-06:00'
     version: 1
     via: Hugo lo pidió en el chat (30-sep, revisión del deck v3, D-026); lo armó Claude
-  plan:RT-035:
-    state: approved
-    by: hugo
-    at: '2026-09-30T10:15:29-06:00'
-    version: 1
-    via: Hugo lo pidió en el chat (30-sep, D-026); reformula RT-034 por definiciones; lo armó Claude
 storyline_guide:
 - id: S1
   title: Overview
@@ -2115,76 +2185,6 @@ research_plan:
   research_id: R-035
   approved_at: '2026-09-30T09:57:16-06:00'
   sent_at: '2026-09-30T09:57:30-06:00'
-- id: RT-035
-  question: Con las definiciones textuales de Hugo, ¿qué métricas específicas se miden por tipo de funnel en cada
-    familia (volumen, conversión, velocidad, valor, calidad, estancamiento y eficiencia), con fórmula, por qué se
-    propone cada una y si existe hoy? Executive = el funnel SDR→AE, incluida la entrada directa a SQL; Self Service
-    = sin persona; Hybrid A = empezó solo y lo intervino una persona; Hybrid B = lo contactó una persona como New
-    y terminó solo; Reactivate = leads estancados que se reactivan y se asignan a un funnel.
-  kind: measurement
-  agent: measurement
-  intensity: L2
-  work: propuesta
-  draft_answer: 'Reformula RT-034 (R-035). R-035 tomó Hybrid B como «SQL directo» y Reactivate como clientes que
-    dejaron de pagar y vuelven; con las definiciones de Hugo (C-021, R-029): la entrada directa a SQL es Executive
-    con etapa de entrada SQL; Hybrid B es New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Checkout Self →
-    Won; Reactivate es un loop de leads estancados (estancado → reactivado → reasignado a una ruta, sin contar como
-    entrada nueva); la vuelta de pagadores es un loop de Revenue aparte. Se reutiliza de R-035 lo que no depende
-    de esas definiciones: la capa común (valor, calidad, eficiencia con CAC y payback por ruta) y el porqué, dueño
-    y foro de cada métrica.'
-  hugo_said:
-  - text: recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie /
-      Proposal Account Executive / Won /// ese es el punto de partida
-    ref: N-033
-  - text: Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido
-      por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y
-      el solito lo acabó, hay que bajar bien esa definición)
-    ref: N-037
-  - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
-      y asignarlos a un funnel de acuerdo al caso
-    ref: N-038
-  - text: me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
-      mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi
-    ref: N-058
-  steps:
-  - kind: proposal
-    what: Matriz funnel × familia con métricas específicas por etapa (nombre, fórmula, grano), sobre el stage_map
-      de R-031, con la eficiencia en cada funnel (costo por etapa o por Won, productividad por SDR/AE, CAC y payback
-      por ruta).
-    where: []
-  - kind: proposal
-    what: 'Por cada métrica: por qué se propone (qué decisión del CRO o qué hoja del árbol de C-023 sirve), dueño,
-      foro y si existe hoy.'
-    where: []
-  - kind: proposal
-    what: 'Prueba de MECE y de fidelidad: cada funnel con las definiciones de Hugo; nada de la vuelta de pagadores
-      dentro de Reactivate (va aparte, del lado Revenue).'
-    where: []
-  why: R-035 cambió las definiciones de Hybrid B y de Reactivate; se reformula con las palabras textuales de Hugo
-    (D-026, coordinación de Claude).
-  links:
-  - R-035
-  - C-006
-  - C-009
-  - C-021
-  - C-023
-  - R-031
-  - R-029
-  - R-018
-  - R-032
-  - N-033
-  - N-037
-  - N-038
-  - N-058
-  - N-059
-  slides:
-  - S2.3
-  - S2.5
-  flags: []
-  status: sent
-  research_id: R-036
-  approved_at: '2026-09-30T10:15:29-06:00'
-  sent_at: '2026-09-30T10:15:30-06:00'
 problem:
   statement: Hay que definir nosotros diferentes propuestas de acuerdo a lo que se requiere, propuestas de medición,
     frameworks, etc.

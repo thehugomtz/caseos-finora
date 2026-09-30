@@ -1,0 +1,1225 @@
+id: R-036
+type: research
+research_question: Con las definiciones textuales de Hugo, ¿qué métricas específicas se miden por tipo de funnel
+  en cada familia (volumen, conversión, velocidad, valor, calidad, estancamiento y eficiencia), con fórmula, por
+  qué se propone cada una y si existe hoy? Executive = el funnel SDR→AE, incluida la entrada directa a SQL; Self
+  Service = sin persona; Hybrid A = empezó solo y lo intervino una persona; Hybrid B = lo contactó una persona como
+  New y terminó solo; Reactivate = leads estancados que se reactivan y se asignan a un funnel.
+case_question: 'Growth / CRO: ¿cómo definir y medir el funnel si no todos los clientes lo recorren igual? Sirve
+  a C-006, C-009, C-021 y C-023.'
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 0
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - C-006
+    - C-009
+    - C-021
+    - C-023
+    suggested:
+    - H-072
+    - H-055
+    - H-053
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-006
+- C-009
+- C-021
+- C-023
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-30T10:15:29-06:00'
+updated_at: '2026-09-30T10:33:27-06:00'
+version: 5
+job_id: JOB-20260930-101530-d92d
+error: null
+started_at: '2026-09-30T10:15:30-06:00'
+shaping_task: RT-035
+slides:
+- S2.3
+- S2.5
+task_why: R-035 cambió las definiciones de Hybrid B y de Reactivate; se reformula con las palabras textuales de
+  Hugo (D-026, coordinación de Claude).
+task:
+  work: propuesta
+  draft_answer: 'Reformula RT-034 (R-035). R-035 tomó Hybrid B como «SQL directo» y Reactivate como clientes que
+    dejaron de pagar y vuelven; con las definiciones de Hugo (C-021, R-029): la entrada directa a SQL es Executive
+    con etapa de entrada SQL; Hybrid B es New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Checkout Self →
+    Won; Reactivate es un loop de leads estancados (estancado → reactivado → reasignado a una ruta, sin contar como
+    entrada nueva); la vuelta de pagadores es un loop de Revenue aparte. Se reutiliza de R-035 lo que no depende
+    de esas definiciones: la capa común (valor, calidad, eficiencia con CAC y payback por ruta) y el porqué, dueño
+    y foro de cada métrica.'
+  hugo_said:
+  - text: recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie /
+      Proposal Account Executive / Won /// ese es el punto de partida
+    ref: N-033
+  - text: Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido
+      por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y
+      el solito lo acabó, hay que bajar bien esa definición)
+    ref: N-037
+  - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
+      y asignarlos a un funnel de acuerdo al caso
+    ref: N-038
+  - text: me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
+      mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi
+    ref: N-058
+  steps:
+  - kind: proposal
+    what: Matriz funnel × familia con métricas específicas por etapa (nombre, fórmula, grano), sobre el stage_map
+      de R-031, con la eficiencia en cada funnel (costo por etapa o por Won, productividad por SDR/AE, CAC y payback
+      por ruta).
+    where: []
+  - kind: proposal
+    what: 'Por cada métrica: por qué se propone (qué decisión del CRO o qué hoja del árbol de C-023 sirve), dueño,
+      foro y si existe hoy.'
+    where: []
+  - kind: proposal
+    what: 'Prueba de MECE y de fidelidad: cada funnel con las definiciones de Hugo; nada de la vuelta de pagadores
+      dentro de Reactivate (va aparte, del lado Revenue).'
+    where: []
+requested_via: 'vía Claude (D-026): reformula RT-034 con las definiciones de Hugo'
+why_it_matters: Define qué se le puede mostrar al CRO y al CFO sobre cada ruta y qué hay que instrumentar. Sin reglas
+  MECE, los híbridos y los reactivados se cuentan dos veces, y una conversión mezclada no describe a ningún funnel.
+short_answer: 'Propongo 35 métricas sin solapes (MECE): 30 son propias de cada funnel (entradas, alcance por etapa
+  en cohorte, tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta: speed to lead, aceptación
+  de SQL y productividad en Executive; tasa y uplift de intervención en Hybrid A; salida a self-serve, brecha de
+  MRR e incrementalidad del contacto en Hybrid B; tasa de reactivación, re-estancamiento y envejecimiento del pool
+  en Reactivate). Las otras 5 son comunes (Won, MRR inicial, retención M3, CAC y payback) y siempre se reportan
+  cortadas por funnel, nunca mezcladas. Hoy el semáforo queda en 0 verde, 4 amarillo (solo en total y con cuidado)
+  y 31 rojo: el modelo no tiene leads, etapas, toques ni dueño, y su «reactivación» es de clientes que vuelven a
+  pagar, no el Reactivate de leads. Confianza alta en qué existe hoy; media en el diseño, que depende de dos definiciones
+  que cierra Hugo.'
+claims:
+- claim: El modelo del caso no tiene tablas ni columnas de leads, etapas, toques humanos, dueño, canal de entrada
+    ni motion. Solo tiene pagos cliente×mes, industria, gasto S&M por rubro y sus derivados.
+  source_id: mod1
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: supports
+  notes: Sostiene el semáforo rojo de C-009 para todo lo previo al pago. Que no esté en el modelo no prueba que
+    Finora no lo tenga (puede haber un CRM no entregado).
+- claim: El panel cubre 34 meses (2022-01 a 2024-10), con 1.584 altas observadas, 751 churn observados y 468 reactivaciones
+    de pago.
+  source_id: mod2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: Alta = primer pago observado (primera aparición), no adquisición confirmada.
+- claim: Los movimientos del panel (new, expansion, contraction, flat, churn, reactivation, etc.) son movimientos
+    de pago por cliente-mes, no etapas de funnel. «reactivation» tiene 468 filas.
+  source_id: mod3
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: Sirven para el MRR bridge (bloque Revenue), no para medir funnels.
+- claim: El gasto S&M llega en 7 rubros (PaidMedia, Team, PublicidadNoWeb, PayrollExpenses, Travel, SoftwareTools,
+    Freelance), con 34 meses cada uno y sin corte por funnel ni motion.
+  source_id: mod4
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: supports
+  notes: La unidad del gasto no está documentada. Con esto no se puede calcular CAC por funnel ni productividad
+    por rol.
+- claim: 'De las 1.584 altas, 108 (feb-22) están marcadas como posible arrastre y 1.476 son cosechas limpias: 272
+    (2022 mar–dic), 650 (2023) y 554 (2024 ene–oct).'
+  source_id: mod5
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: Es la base del control Σ Won por funnel = altas.
+- claim: De 751 churn observados, 468 vuelven a pagar antes de oct-24 y 330 al mes siguiente (mediana de 1 mes entre
+    los que vuelven). La «reactivación» del modelo es de clientes que vuelven a pagar, no de leads estancados.
+  source_id: mod6
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: contests
+  notes: Descarta usar la reactivación del modelo como proxy de Reactivate. Además, avisa que los huecos de pago
+    de un mes inflan el churn en la retención M3.
+- claim: La métrica S&M por alta existe en el mart con estado ok en 32 meses (mar-22 a oct-24). Ene-22 no se puede
+    calcular y feb-22 se excluye.
+  source_id: mod7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: 'Existe solo en total y con unidad no documentada: amarillo.'
+- claim: La mediana del M0 pagado por alta es 63.000 COP en la cosecha 2022 limpia, 36.750 en 2023 y 42.000 en 2024.
+  source_id: mod8
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: 'Proxy de valor en total: es monto pagado observado, no MRR contratado, y no tiene corte por funnel.'
+- claim: El Bowtie Standard de Winning by Design conecta métricas de volumen, conversión y velocidad en cada etapa
+    del recorrido del cliente, desde Awareness hasta Expansion.
+  source_id: web1
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-01-22
+  supports_or_contests: supports
+  notes: Solo se leyó la página de resumen, no el PDF. Respalda la estructura de C-006.
+- claim: En el Bowtie, la conversión entre etapas se calcula como CR = VM2 ÷ VM1, y la velocidad como el tiempo
+    que tarda el volumen en pasar de una etapa a la siguiente.
+  source_id: web2
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2025-08-08
+  supports_or_contests: supports
+  notes: Blog de un proveedor. Base de la fórmula de alcance por etapa.
+- claim: Pipeline velocity = (oportunidades × ticket promedio × win rate) ÷ ciclo. Incluir oportunidades estancadas
+    infla el conteo; se sugiere limpiar las que no avanzan en 2–3× el ciclo promedio.
+  source_id: web3
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha
+  supports_or_contests: context
+  notes: 'Es una métrica compuesta que mezcla cuatro familias: se deriva del catálogo y no se agrega aparte. El
+    umbral es un benchmark, no una recomendación para Finora.'
+- claim: En product-led sales se propone comparar la conversión de PQL tocados por ventas con la tasa self-serve
+    y el ACV de ambos caminos, y medir el tiempo a convertir como mediana desde el registro o el PQL hasta el primer
+    pago.
+  source_id: web4
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-07-19
+  supports_or_contests: supports
+  notes: Blog de un proveedor. Respalda el uplift de Hybrid A y la velocidad de Self Service.
+- claim: El envejecimiento del pipeline se lee mejor por edad en etapa que por edad total. Se usan umbrales de 1,5–2×
+    la mediana de días en etapa para cada combinación etapa-segmento, y se revisa tras 14 días sin actividad en
+    etapas medias o tardías.
+  source_id: web5
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-05-05; modificado 2026-08-25
+  supports_or_contests: context
+  notes: 'Benchmark de un proveedor: sirve de contexto para calibrar k y N, no es una recomendación.'
+- claim: CAC payback (meses) = gasto S&M del periodo ÷ (MRR nuevo de clientes nuevos × margen bruto). No hay que
+    usar net new MRR, y el gasto se desfasa según el ciclo de venta.
+  source_id: web6
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha
+  supports_or_contests: context
+  notes: Fórmula estándar. En Finora falta el margen bruto y la unidad del gasto.
+- claim: El estudio publicado en HBR por Oldroyd, McElheran y Elkington (2011) documentó que la mayoría de empresas
+    no responde lo bastante rápido a leads online.
+  source_id: web7
+  source_type: academic
+  confidence: medium
+  freshness: '2011'
+  supports_or_contests: supports
+  notes: Solo se recuperó el abstract; las cifras del estudio no se verificaron en esta corrida. Respalda proponer
+    speed to lead.
+- claim: La atribución dice con qué puntos de contacto interactuó el cliente; la incrementalidad, con grupos de
+    control (holdout), dice si ese punto causó la conversión.
+  source_id: web8
+  source_type: marketing
+  confidence: medium
+  freshness: Publicado 2026-02-19
+  supports_or_contests: supports
+  notes: Contenido de un proveedor. El principio es estándar y respalda los holdouts de Hybrid A y B.
+- claim: Recycled Lead Rate = MQL marcados como Recycle ÷ MQL entregados. Viene con métricas de reactivación (Recycle
+    → re-MQL, → SAL/SQL, pipeline por lead reciclado) cortadas por motivo y por tiempo en recycle.
+  source_id: web9
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha
+  supports_or_contests: supports
+  notes: Referencia para las métricas de Reactivate. Las ventanas que cita son contexto.
+sources:
+- id: mod1
+  title: Qué tablas y columnas existen en el modelo (no hay leads, etapas, toques, dueño ni canal)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: catalogo_modelo()
+  verified: true
+- id: mod2
+  title: Cobertura del panel y totales de altas, churn y reactivaciones de pago
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS new_customers_total,
+    SUM(reactivated_customers) AS reactivated_total, SUM(churned_customers) AS churned_total FROM mart.monthly_metrics
+  verified: true
+- id: mod3
+  title: Tipos de movimiento de pago por cliente-mes
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS rows_n FROM mart.customer_month GROUP BY movement_type ORDER BY rows_n
+    DESC
+  verified: true
+- id: mod4
+  title: Rubros de gasto S&M y meses con dato (sin corte por motion)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT rubro, COUNT(*) AS months, SUM(amount) AS total_amount FROM staging.stg_sm_spend GROUP BY rubro ORDER
+    BY total_amount DESC
+  verified: true
+- id: mod5
+  title: Altas por cosecha y bandera clean
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT vintage, clean, COUNT(*) AS altas, MIN(cohort_month) AS first_cohort, MAX(cohort_month) AS last_cohort
+    FROM mart.new_customers GROUP BY vintage, clean ORDER BY first_cohort
+  verified: true
+- id: mod6
+  title: Churn observado y retorno a pago (qué es la «reactivación» del modelo)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS churn_events, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_before_oct24,
+    SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS returned_next_month, MEDIAN(months_to_return) AS
+    median_months_to_return FROM mart.churn_events
+  verified: true
+- id: mod7
+  title: Estado de la eficiencia S&M por alta en el mart
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT efficiency_status, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM mart.monthly_metrics_phase1
+    GROUP BY efficiency_status ORDER BY first_month
+  verified: true
+- id: mod8
+  title: Mediana del M0 y run-rate temprano por cosecha (proxy de valor en total)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora
+  date: '2026-09-30'
+  source_type: data_model
+  quality: A
+  note: SELECT vintage, COUNT(*) AS altas, MEDIAN(m0_cop) AS median_m0_cop, MEDIAN(early_run_rate_cop) AS median_early_run_rate_cop,
+    AVG(early_months_observed) AS avg_early_months_observed FROM mart.new_customers GROUP BY vintage ORDER BY vintage
+  verified: true
+- id: web1
+  title: The Bowtie Standard
+  url: https://winningbydesign.com/resources/research/bowtie-standard/
+  publisher: Winning by Design (Jacco van der Kooij)
+  date: '2026-01-22'
+  source_type: industry
+  quality: B
+  note: Solo se leyó la página de resumen; el PDF de 46 páginas no se leyó. Volumen, conversión y velocidad en cada
+    etapa; etapas de Awareness a Expansion.
+  verified: true
+- id: web2
+  title: Essential SaaS bowtie funnel metrics
+  url: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics
+  publisher: Drivetrain (Vanika Achreja)
+  date: '2025-08-08'
+  source_type: industry
+  quality: C
+  note: Define volumen (VM), CR = VM2 ÷ VM1 y tiempo entre etapas. Blog de un proveedor.
+  verified: true
+- id: web3
+  title: 'Pipeline Velocity: definition, formula & components'
+  url: https://count.co/metric/pipeline-velocity
+  publisher: Count
+  date: sin fecha
+  source_type: industry
+  quality: C
+  note: Fórmula de pipeline velocity. Advierte que las oportunidades estancadas inflan el conteo (limpiar a 2–3×
+    el ciclo).
+  verified: true
+- id: web4
+  title: What Metrics Measure Product-Led Sales Performance? The 10 That Actually Matter
+  url: https://www.sybill.ai/blogs/10-metrics-to-measure-product-led-sales-performance
+  publisher: Sybill (Mamta Tainwala)
+  date: '2026-07-19'
+  source_type: industry
+  quality: C
+  note: Compara la conversión de PQL tocados por ventas con la tasa self-serve y el ACV de ambos caminos; time to
+    convert en mediana. Blog de un proveedor.
+  verified: true
+- id: web5
+  title: 'Sales pipeline aging: how to identify stalled deals'
+  url: https://www.outreach.ai/resources/blog/sales-pipeline-ageing
+  publisher: Outreach (Maria Akhter)
+  date: '2026-05-05'
+  source_type: industry
+  quality: C
+  note: Edad en etapa vs edad total; umbral de 1,5–2× la mediana por etapa-segmento; revisión a 14 días sin actividad.
+    Modificado el 2026-08-25.
+  verified: true
+- id: web6
+  title: 'CAC payback: What it is + how to calculate it (with formula)'
+  url: https://www.withorb.com/blog/cac-payback
+  publisher: Orb (Pranathi Tipparam)
+  date: sin fecha
+  source_type: industry
+  quality: C
+  note: Fórmula de payback; no usar net new MRR; desfasar el gasto según el ciclo.
+  verified: true
+- id: web7
+  title: The Short Life of Online Sales Leads (Harvard Business Review 89(3), 2011)
+  url: https://scholarsarchive.byu.edu/facpub/9711
+  publisher: BYU ScholarsArchive / Harvard Business Review (Oldroyd, McElheran, Elkington)
+  date: '2011'
+  source_type: academic
+  quality: B
+  note: 'Solo se recuperó el abstract: la mayoría de empresas no responde lo bastante rápido a leads online. Las
+    cifras no se verificaron.'
+  verified: true
+- id: web8
+  title: Incrementality Testing vs Attribution
+  url: https://www.cometly.com/post/incrementality-testing-vs-attribution
+  publisher: Cometly (Matt Pattoli)
+  date: '2026-02-19'
+  source_type: marketing
+  quality: C
+  note: Atribución = con qué interactuó el cliente; incrementalidad = si eso causó la conversión; holdouts parciales
+    o por geografía.
+  verified: true
+- id: web9
+  title: Recycled Lead Rate
+  url: https://umbrex.com/resources/company-analysis/sales/recycled-lead-rate/
+  publisher: Umbrex
+  date: sin fecha
+  source_type: industry
+  quality: C
+  note: Fórmula de recycled lead rate; Recycle → re-MQL/SQL; cortes por motivo, dueño SDR y tiempo en recycle.
+  verified: true
+alternative_explanations:
+- 'Que el modelo no tenga datos de funnel no prueba que Finora no los tenga: puede existir un CRM que no se entregó
+  (ausencia de evidencia ≠ evidencia de ausencia).'
+- 'Buena parte de las 468 «reactivaciones» de pago pueden ser huecos de cobro y no clientes que se fueron y volvieron:
+  330 de 751 churn observados vuelven al mes siguiente.'
+- Si Hybrid A convierte más que Self Service, puede ser porque la persona elige cuentas más calientes, no por la
+  intervención.
+- Si Hybrid B trae menos MRR que Executive, puede ser porque son cuentas más chicas, no revenue que dejamos de capturar
+  por cerrar sin AE.
+what_is_established:
+- 'El modelo no tiene nada previo al pago: ni leads, ni etapas, ni toques, ni dueño, ni canal.'
+- 'Solo existen en total: altas observadas, M0 pagado, churn y retorno de pago, y S&M por alta (con unidad no documentada).'
+- La «reactivación» del modelo es de clientes que vuelven a pagar (468; 330 al mes siguiente), no de leads.
+- Los marcos de referencia miden volumen, conversión y tiempo por etapa, y comparan por separado los caminos tocados
+  vs self-serve.
+what_is_contested:
+- 'Qué significa «terminó solo» en Hybrid B: ¿pagó solo o siguió solo (comprara o no)?'
+- Si Reactivate es un recorrido propio (lo que propongo) o una dimensión de entrada de los otros cuatro funnels.
+- Si los umbrales externos de estancamiento (1,5–2× la mediana por etapa; 2–3× el ciclo) sirven para Finora.
+- Si una diferencia observada entre Hybrid A y Self Service dice algo causal.
+what_remains_unknown:
+- Si Finora tiene un CRM con etapas, toques y dueño, y una llave hacia el customer_id de los pagos.
+- Cuáles son las etapas AE entre SQL y Won, y dónde va exactamente Engaged.
+- El margen bruto y la unidad del gasto S&M.
+- Si existe un disparador (señal de producto/PQL) para intervenir en Hybrid A.
+- A qué funnel va el win-back de ex-clientes.
+case_implication: 'Para el bloque Growth / CRO, lo que se puede defender ante el CRO y el CFO es el diseño, no un
+  número. Es un catálogo MECE: cada funnel tiene su propio volumen, alcance por etapa, tiempo y estancamiento, más
+  la métrica del mecanismo de su ruta; y una capa común (Won, MRR inicial, retención M3, CAC, payback) va siempre
+  cortada por funnel. Con los datos del caso no se puede medir ningún funnel. La brecha del WoW es de instrumentación,
+  no de análisis: faltan los recorridos, los toques humanos, quién cierra, el cierre como Estancado y la llave al
+  customer_id. Hoy solo se puede mostrar la capa común en total, en amarillo. Efecto en los claims: C-009 recibe
+  su semáforo (0 verde, 4 amarillo, 31 rojo); C-006 pasa a 7 familias, con las comunes cortadas por funnel; C-021
+  queda aterrizado en el stage_map por ruta y canal, con dueño; y C-023 gana un primer corte aditivo (Σ Won por
+  funnel = altas). Cuidado: la reactivación de pagos debe quedarse en el MRR bridge y no caer en la hoja Reactivate.'
+changes_current_story:
+  value: maybe
+  why: 'No cambia la dirección (proponer medición por funnel con semáforo), pero ajusta C-006: son 7 familias, y
+    valor, calidad de cliente y eficiencia de costo van como métricas comunes cortadas por funnel. Además, Hugo
+    tiene que cerrar dos definiciones antes de las láminas: Hybrid B y dónde va Reactivate.'
+affected_hypotheses: []
+affected_claims:
+- id: C-006
+  effect: changes_framing
+  why: 'Se sostiene, con dos ajustes: son 7 familias (se agrega eficiencia), y valor, calidad de cliente y eficiencia
+    de costo van como métricas comunes cortadas por funnel. Volumen, conversión, velocidad y estancamiento sí son
+    propias de cada funnel.'
+- id: C-009
+  effect: supports
+  why: El semáforo queda en 0 verde, 4 amarillo (solo en total y con cuidado) y 31 rojo. Las 5 comunes son MECE
+    y aditivas por funnel.
+- id: C-021
+  effect: supports
+  why: El stage_map usa por ruta solo las etapas del Executive que aplican, con canal y dueño. Self Service queda
+    en New → Won, y Reactivate agrega Estancado → Reactivado → Asignado, tomado de la definición de Hugo.
+- id: C-023
+  effect: supports
+  why: 'Σ Won por funnel = altas en pagos da un primer corte aditivo del árbol. Ojo: la reactivación de pagos del
+    MRR bridge no debe caer en la hoja Reactivate (esa hoja es de leads).'
+suggested_action: 'Llevar a Hugo tres definiciones que bloquean el MECE: qué significa «terminó solo» en Hybrid
+  B, si Reactivate es un recorrido propio cortado por funnel asignado, y si el win-back queda fuera de Reactivate.
+  Con eso cerrado, pasar a Data Engineering el pedido de eventos y de la llave CRM ↔ customer_id. Mientras tanto,
+  en las láminas usar solo las 4 comunes que existen hoy, en total y marcadas en amarillo.'
+new_questions:
+- En Hybrid B, ¿«terminó solo» significa que pagó sin persona o que siguió sin persona (comprara o no)?
+- ¿Finora tiene un CRM con etapas, toques humanos y dueño por lead, y una llave que lo una al customer_id de los
+  pagos?
+- Un ex-cliente que vuelve a comprar (win-back), ¿entra en Reactivate o se queda en la reactivación del MRR bridge?
+handoff_to_cos:
+  summary: 'R-036 listo: catálogo MECE de 35 métricas (30 por funnel + 5 comunes cortadas por funnel), con fórmula,
+    porqué y semáforo. Hoy: 0 verde, 4 amarillo (solo en total), 31 rojo. El modelo no tiene nada previo al pago,
+    y su «reactivación» es de pagos, no el Reactivate de leads.'
+  recommended_next: Pedir a Hugo que decida sobre Hybrid B, Reactivate y win-back. Después, pedir a Data Engineering
+    la tabla de recorridos con la llave a customer_id, y a Analytics la capa común en total para las láminas de
+    C-009.
+confidence_buckets:
+  high_confidence:
+  - 'El modelo no tiene nada previo al pago: hoy no se calcula ninguna métrica de funnel.'
+  - La capa común existe solo en total y con cuidado (altas, M0, retorno de pago, S&M por alta).
+  - La «reactivación» del modelo es de clientes que vuelven a pagar, no de leads.
+  plausible:
+  - Las 35 métricas cubren las 7 familias en los 5 funnels sin duplicar.
+  - Clasificar al cierre de una ventana fija, con reglas persona/producto, hace MECE los funnels.
+  - Sin holdout, el uplift de Hybrid A y la incrementalidad de Hybrid B solo asignan crédito.
+  contested:
+  - 'Qué significa «terminó solo» en Hybrid B: pagó solo vs siguió solo.'
+  - Reactivate como recorrido propio vs como dimensión de entrada.
+  - Si los umbrales externos de estancamiento aplican a Finora.
+  unknown:
+  - Si existe un CRM con etapas, toques, dueño y llave al customer_id.
+  - Las etapas AE entre SQL y Won, y la posición de Engaged.
+  - El margen bruto y la unidad del gasto S&M.
+  - A qué funnel va el win-back de ex-clientes.
+specialist:
+  measurement:
+    problem_interpretation: 'Hugo pide un catálogo por funnel × familia (7 familias), con fórmula, porqué y estado
+      actual. El reto no es listar KPIs. Los 5 funnels son recorridos distintos: los definen quién inicia y quién
+      cierra (persona vs producto), más un reingreso desde estancados (Reactivate), y todos terminan en los mismos
+      resultados económicos. Con un funnel lineal y una conversión mezclada, los híbridos y los reactivados se cuentan
+      dos veces o no se cuentan. Y hoy el modelo solo tiene pagos, industria y gasto: nada de lo previo al pago.'
+    measurement_objective: Poder decidir dónde poner capacidad y presupuesto entre rutas (SDR/AE, routing de intervención,
+      contacto a New, reactivación del pool), y saber qué ruta trae clientes que pagan y retienen por peso gastado.
+      Todo con un catálogo MECE que diga qué se mide hoy y qué hay que instrumentar.
+    recommended_framework:
+      name: Funnels por motion sobre las etapas del Executive + capa común de resultados (recorrido de cuenta, por
+        cohorte)
+      structure: '1) Unidad: el recorrido de cuenta. Una cuenta puede tener varios: el original y uno por cada reactivación.
+        Grano: evento → recorrido → cohorte mensual de entrada, más una foto semanal para stock y estancados. 2)
+        Clasificación MECE al cierre de una ventana fija W (mientras está en curso, es provisional). ¿Nace de un
+        estancado? → Reactivate, cortado por funnel asignado. Si no, ¿quién inició? Si fue el producto: sin toque
+        humano es Self Service; con toque, Hybrid A. Si fue una persona: si pasa a self-serve sin cierre del AE
+        es Hybrid B; si no, Executive (entrada por New o SQL directo). 3) Por funnel: volumen de entrada; alcance
+        por etapa (llega a s o a una posterior dentro de W ÷ entradas); tiempo por tramo (mediana); estancamiento
+        (edad en etapa > k × la mediana propia, o inactividad); más la métrica del mecanismo propio. 4) Capa común
+        cortada por funnel: Won, MRR inicial, retención M3, CAC y payback, con Σ Won por funnel = altas en pagos
+        como control. 5) Semáforo por métrica: verde (se mide hoy), amarillo (con cuidado), rojo (no se puede).'
+      why: Respeta las definiciones de Hugo y C-021 (cada ruta usa solo las etapas del Executive que le aplican).
+        Evita la tasa mezclada que no describe a nadie y separa volumen, tasa y valor. Deja una partición aditiva
+        que cuadra con los pagos y sirve de primer corte del árbol de C-023. Es el patrón del Bowtie (volumen, conversión
+        y tiempo por etapa) aplicado por motion, con la comparación tocado vs self-serve de product-led sales y
+        el ciclo de recycle para Reactivate.
+    alternative_frameworks:
+    - name: Máquina de estados del ciclo de vida (estados + matriz de transiciones)
+      when_better: Cuando los recorridos van y vuelven mucho (persona ↔ producto, estancado ↔ reactivado) y ponerle
+        un solo funnel a cada recorrido obliga a reglas arbitrarias.
+      tradeoff: Es más fiel a lo que pasa, pero cuesta más leerlo para el CRO, el CFO y las láminas; no da un funnel
+        por ruta y pide los mismos eventos.
+    - name: Bowtie completo (adquisición + Onboard, Impact, Expansion)
+      when_better: Cuando la pregunta pasa a retención y expansión (bloque Revenue) y se quiere un solo modelo de
+        punta a punta.
+      tradeoff: Requiere instrumentación post-venta (uso, onboarding) que no existe, y amplía el alcance más allá
+        de la pregunta de funnel.
+    metric_definitions:
+    - metric: Entradas Executive por punto de entrada
+      funnel: Executive
+      family: volumen
+      definition: Recorridos de cuenta que entran al Executive en el mes, separados en entrada por New (SDR) y entrada
+        directa a SQL.
+      formula: Entradas_E(c,p) = COUNT(recorridos con funnel = Executive, mes_entrada = c, punto_entrada = p); p
+        ∈ {New, SQL directo}
+      grain: punto de entrada × cohorte mensual de entrada
+      milestone: 'Entrada: New creado, o SQL creado sin pasar por SDR'
+      today: 'Rojo — No se puede: el modelo no tiene leads, etapas ni punto de entrada (solo pagos, industria y
+        gasto S&M).'
+      notes: 'Por qué: separa volumen de tasa y evita que los SQL directos inflen la conversión del SDR. Se clasifica
+        al cierre de W: un recorrido que inicia una persona y pasa a self-serve se reporta en Hybrid B; mientras
+        está abierto, es Executive provisional.'
+    - metric: Alcance por etapa Executive (cohorte)
+      funnel: Executive
+      family: conversión
+      definition: Porcentaje de una cohorte de entrada que llega a cada etapa del Executive (o a una posterior)
+        dentro de W, por punto de entrada.
+      formula: 'Alcance_E(s|c,p) = # recorridos de (c,p) que llegan a s o posterior dentro de W ÷ Entradas_E(c,p).
+        Etapa a etapa = Alcance(s+1) ÷ Alcance(s). Win rate AE = Alcance(Won) ÷ Alcance(SQL). s ∈ {Working SDR,
+        Engaged, SQL, etapas AE, Won} para New; {etapas AE, Won} para SQL directo'
+      grain: punto de entrada × etapa × cohorte de entrada
+      milestone: Entrada (New o SQL directo) → Won o fin de W
+      today: 'Rojo — No se puede: no hay historial de etapas, y los pagos no incluyen a quien no compró.'
+      notes: 'Por qué: es la CR del Bowtie (VM2 ÷ VM1) sobre una cohorte, no sobre una foto (SQL del mes ÷ New del
+        mes mezcla cohortes). Contar «llega a s o posterior» evita caídas falsas cuando se salta una etapa.'
+    - metric: Speed to lead SDR
+      funnel: Executive
+      family: velocidad
+      definition: Tiempo desde que se crea el New hasta el primer toque humano del SDR.
+      formula: 'mediana(t_primer_toque_humano − t_New) en horas; complemento: % de New con primer toque ≤ X horas
+        (X lo aprueba Hugo)'
+      grain: cohorte × SDR
+      milestone: New creado → primer toque humano
+      today: 'Rojo — No se puede: no hay eventos de toque ni timestamps de lead.'
+      notes: 'Por qué: es la primera palanca que controla el SDR; el estudio de HBR de 2011 documentó que la mayoría
+        de empresas responde lento a leads online. Solo aplica a la entrada New.'
+    - metric: Días por tramo y ciclo Executive
+      funnel: Executive
+      family: velocidad
+      definition: Días que pasa un recorrido en cada etapa del Executive, y ciclo total hasta Won.
+      formula: Días_en_etapa(s) = mediana(t_salida(s) − t_entrada(s)); Ciclo = mediana(t_Won − t_entrada) de los
+        Won, por punto de entrada
+      grain: punto de entrada × etapa × cohorte
+      milestone: Entrada a cada etapa → salida; entrada → Won
+      today: 'Rojo — No se puede: no hay historial de etapas.'
+      notes: 'Por qué: dice dónde se va el tiempo (tramo SDR vs tramo AE), fija W y alimenta el umbral de estancamiento
+        y el desfase del CAC. Se usa mediana por las colas largas. Pipeline velocity se deriva de este catálogo
+        y no se agrega aparte porque mezcla cuatro familias.'
+    - metric: Aceptación de SQL por AE
+      funnel: Executive
+      family: calidad
+      definition: Porcentaje de los SQL entregados al AE que el AE acepta, por origen (SDR o directo).
+      formula: '# SQL aceptados por AE ÷ # SQL entregados, por origen y cohorte de SQL; + motivos de rechazo'
+      grain: origen del SQL × mes de SQL × AE
+      milestone: SQL entregado → decisión del AE
+      today: 'Rojo — No se puede: no hay registro de SQL ni de la decisión del AE.'
+      notes: 'Por qué: controla la calidad del handoff SDR→AE. Sin ella, más SQL puede significar peor pipeline.
+        Los SQL que nacen en Hybrid A o Reactivate se leen en su propio funnel.'
+    - metric: Estancamiento por etapa Executive
+      funnel: Executive
+      family: estancamiento
+      definition: Recorridos abiertos que llevan en su etapa más tiempo que el umbral de esa etapa, y los que se
+        cierran como Estancado.
+      formula: '# abiertos en s con edad_en_etapa > k × mediana(Executive, s, segmento) o sin actividad en N días
+        ÷ # abiertos en s (foto semanal); Salida_a_estancado = # cerrados como Estancado en el mes'
+      grain: etapa × segmento × semana (foto) y mes (salidas)
+      milestone: Entrada a la etapa actual; última actividad
+      today: 'Rojo — No se puede: no hay etapas ni actividad registrada.'
+      notes: 'Por qué: muestra dónde se acumula el pipeline que no avanza, y es la puerta de entrada al pool de
+        Reactivate. k y N se calibran con la distribución de Finora; las referencias externas (1,5–2× la mediana;
+        14 días; 2–3× el ciclo) son contexto.'
+    - metric: Productividad comercial Executive
+      funnel: Executive
+      family: eficiencia
+      definition: Producción por persona-mes de capacidad comercial.
+      formula: SQL entregados ÷ SDR-mes activos; Won Executive ÷ AE-mes activos
+      grain: rol (SDR, AE) × mes
+      milestone: SQL entregado; Won
+      today: 'Rojo — No se puede: existen los rubros Team y PayrollExpenses, pero sin headcount ni asignación por
+        motion.'
+      notes: 'Por qué: sirve para la decisión de capacidad (contratar o reasignar SDR/AE). Complementa el CAC por
+        funnel con esfuerzo humano.'
+    - metric: Entradas Self Service
+      funnel: Self Service
+      family: volumen
+      definition: Recorridos iniciados por producto que cierran W sin ningún toque humano.
+      formula: Entradas_SS(c) = COUNT(recorridos con start_actor = producto, mes_entrada = c y 0 toques humanos
+        dentro de W)
+      grain: cohorte mensual de entrada × segmento
+      milestone: New creado por producto (registro o checkout sin persona)
+      today: 'Rojo — No se puede: no hay eventos de producto ni de toque.'
+      notes: 'Por qué: es la base de la conversión sin persona. Entradas_SS + Recorridos Hybrid A = todas las entradas
+        por producto (partición MECE).'
+    - metric: Alcance New → Won sin persona
+      funnel: Self Service
+      family: conversión
+      definition: Porcentaje de las entradas Self Service que pagan sin persona dentro de W.
+      formula: '# Self Service con Won (primer pago self-serve) dentro de W ÷ Entradas_SS(c)'
+      grain: cohorte de entrada × segmento
+      milestone: New → Won
+      today: 'Rojo — No se puede: los pagos no incluyen a quien no compró.'
+      notes: 'Por qué: mide si el producto vende solo. Ojo con el sesgo de selección: el denominador excluye a las
+        cuentas que el equipo decidió intervenir.'
+    - metric: Días New → Won Self Service
+      funnel: Self Service
+      family: velocidad
+      definition: Tiempo desde la entrada por producto hasta el primer pago, entre los que pagan.
+      formula: mediana(t_Won − t_New) de los Won Self Service, por cohorte y segmento
+      grain: cohorte × segmento
+      milestone: New → Won (primer pago)
+      today: 'Rojo — No se puede: hay mes de primer pago, pero no fecha de entrada.'
+      notes: 'Por qué: fija W para este funnel y dice cuándo tiene sentido intervenir. Es la misma definición que
+        usa product-led sales.'
+    - metric: Estancamiento Self Service por inactividad
+      funnel: Self Service
+      family: estancamiento
+      definition: Recorridos Self Service abiertos sin pago y sin actividad de producto en N días, y los que se
+        cierran como Estancado.
+      formula: '# abiertos sin Won y sin evento de producto en N días ÷ # abiertos (foto semanal); + # cerrados
+        como Estancado en el mes'
+      grain: segmento × semana (foto) y mes (salidas)
+      milestone: Último evento de producto
+      today: 'Rojo — No se puede: no hay eventos de producto.'
+      notes: 'Por qué: sin persona no hay edad en etapa comercial, así que la señal es la inactividad. Un hito intermedio
+        de producto sería una etapa nueva, y la aprueba Hugo.'
+    - metric: Recorridos Hybrid A (intervenidos)
+      funnel: Hybrid A
+      family: volumen
+      definition: Recorridos iniciados por producto que reciben al menos un toque humano dentro de W.
+      formula: COUNT(recorridos con start_actor = producto, mes_entrada = c y ≥ 1 toque humano dentro de W)
+      grain: cohorte de entrada × disparador × segmento
+      milestone: New por producto → primer toque humano
+      today: 'Rojo — No se puede: no hay toques registrados.'
+      notes: 'Por qué: dimensiona cuánta capacidad humana consume el self-serve, cortado por disparador.'
+    - metric: Tasa de intervención
+      funnel: Hybrid A
+      family: conversión
+      definition: Porcentaje de las entradas por producto que interviene una persona.
+      formula: Recorridos Hybrid A(c) ÷ (Entradas_SS(c) + Recorridos Hybrid A(c))
+      grain: cohorte de entrada × disparador × segmento
+      milestone: New por producto → primer toque humano
+      today: Rojo — No se puede.
+      notes: 'Por qué: es la palanca de routing producto→persona. Si sube sin que suba el uplift, se gasta capacidad
+        en cuentas que comprarían solas.'
+    - metric: Alcance post-intervención a SQL y Won
+      funnel: Hybrid A
+      family: conversión
+      definition: Porcentaje de recorridos intervenidos que llegan a SQL y a Won dentro de W.
+      formula: '# Hybrid A que llegan a SQL (o a Won) dentro de W ÷ Recorridos Hybrid A(c), por etapa de reingreso
+        (Working SDR o SQL)'
+      grain: etapa de reingreso × cohorte
+      milestone: Primer toque humano → SQL → Won
+      today: Rojo — No se puede.
+      notes: 'Por qué: dice si la intervención convierte, sin mezclarla con la tasa Self Service. Usa solo las etapas
+        del Executive que le aplican.'
+    - metric: Tiempo disparador → intervención → Won
+      funnel: Hybrid A
+      family: velocidad
+      definition: Qué tan rápido se responde a la señal, y cuánto tarda el cierre después de intervenir.
+      formula: mediana(t_primer_toque − t_disparador) en horas; mediana(t_Won − t_primer_toque) en días
+      grain: disparador × cohorte
+      milestone: Disparador (o New, si no hay disparador) → primer toque → Won
+      today: 'Rojo — No se puede: no hay disparador definido ni toques.'
+      notes: 'Por qué: es el speed to lead del self-serve intervenido. Si la persona llega tarde, la intervención
+        no puede mover nada.'
+    - metric: Estancamiento post-intervención
+      funnel: Hybrid A
+      family: estancamiento
+      definition: Recorridos Hybrid A abiertos en una etapa con persona por encima de su umbral, y los que se cierran
+        como Estancado.
+      formula: '# abiertos en s con edad_en_etapa > k × mediana(Hybrid A, s, segmento) o sin actividad en N días
+        ÷ # abiertos en s (foto semanal); + cerrados como Estancado en el mes'
+      grain: etapa × semana (foto) y mes (salidas)
+      milestone: Entrada a la etapa actual después de la intervención
+      today: Rojo — No se puede.
+      notes: 'Por qué: una intervención que deja la cuenta quieta es peor que no intervenir. Las medianas son las
+        de Hybrid A, no las del Executive.'
+    - metric: Uplift por intervención (Won y MRR)
+      funnel: Hybrid A
+      family: eficiencia
+      definition: Conversión y MRR adicionales que produce la intervención frente a no intervenir.
+      formula: 'Observado: Alcance_Won(Hybrid A) − Alcance_Won(Self Service) y MRR_inicial_mediano(Hybrid A) − MRR_inicial_mediano(Self
+        Service), mismo segmento y cohorte. Causal: Won%(tratados) − Won%(holdout) entre cuentas que cumplen el
+        disparador; lo mismo para MRR'
+      grain: cohorte × disparador × segmento × grupo de experimento
+      milestone: Disparador → Won
+      today: 'Rojo — No se puede: no hay toques, disparador ni holdout.'
+      notes: 'Por qué: justifica (o no) el toque humano en el self-serve. La comparación observada asigna crédito,
+        pero está sesgada; solo el holdout mide causa.'
+    - metric: Recorridos Hybrid B
+      funnel: Hybrid B
+      family: volumen
+      definition: Recorridos iniciados por contacto humano en New que siguen por self-serve, sin cierre del AE.
+      formula: COUNT(recorridos con start_actor = persona en New, mes_entrada = c, evento self-serve posterior al
+        contacto y close_actor ≠ persona dentro de W)
+      grain: cohorte de entrada × SDR × segmento
+      milestone: New contactado → primer evento self-serve
+      today: Rojo — No se puede.
+      notes: 'Por qué: dimensiona el esfuerzo SDR que termina en un recorrido sin persona. Supone que «terminó solo»
+        = siguió solo. Si significa «pagó solo», Hybrid B tiene 100% de conversión por definición.'
+    - metric: Tasa de salida a self-serve
+      funnel: Hybrid B
+      family: conversión
+      definition: Porcentaje de los New contactados por persona que pasan a self-serve.
+      formula: Recorridos Hybrid B(c) ÷ (Entradas_E(c, New) + Recorridos Hybrid B(c))
+      grain: cohorte × SDR × segmento
+      milestone: New contactado → primer evento self-serve
+      today: Rojo — No se puede.
+      notes: 'Por qué: si sube, el SDR está calentando cuentas que cierran sin AE. Es bueno si pagan y retienen
+        igual, y malo si se pierde valor.'
+    - metric: Alcance a Won self-serve (Hybrid B)
+      funnel: Hybrid B
+      family: conversión
+      definition: Porcentaje de recorridos Hybrid B que pagan dentro de W.
+      formula: '# Hybrid B con Won self-serve dentro de W ÷ Recorridos Hybrid B(c)'
+      grain: cohorte × segmento
+      milestone: Salida a self-serve → Won
+      today: Rojo — No se puede.
+      notes: 'Por qué: separa a los que se fueron a self-serve y compraron de los que se fueron y se perdieron.'
+    - metric: Tiempo contacto → salida → Won (Hybrid B)
+      funnel: Hybrid B
+      family: velocidad
+      definition: Días entre el contacto humano, la salida a self-serve y el pago.
+      formula: mediana(t_primer_evento_self-serve − t_primer_toque); mediana(t_Won − t_primer_evento_self-serve)
+      grain: cohorte × segmento
+      milestone: Primer toque → salida a self-serve → Won
+      today: Rojo — No se puede.
+      notes: 'Por qué: si el pago llega muy lejos del contacto, el crédito del SDR es dudoso. Alimenta el diseño
+        del holdout.'
+    - metric: Estancamiento tras salida a self-serve
+      funnel: Hybrid B
+      family: estancamiento
+      definition: Recorridos Hybrid B abiertos sin pago y sin actividad de producto en N días, y los que se cierran
+        como Estancado.
+      formula: '# Hybrid B abiertos sin Won y sin evento de producto en N días ÷ # Hybrid B abiertos (foto semanal);
+        + cerrados como Estancado en el mes'
+      grain: segmento × semana (foto) y mes (salidas)
+      milestone: Último evento de producto después de la salida
+      today: Rojo — No se puede.
+      notes: 'Por qué: detecta cuentas que el SDR soltó al self-serve y quedaron en el aire. Son candidatas naturales
+        a Reactivate.'
+    - metric: Brecha de MRR Hybrid B vs Executive
+      funnel: Hybrid B
+      family: valor
+      definition: Diferencia de MRR inicial entre las cuentas que cerraron solas tras el contacto y cuentas comparables
+        cerradas por AE.
+      formula: MRR_inicial_mediano(Hybrid B) − MRR_inicial_mediano(Executive, entrada New), mismo segmento y cohorte
+        de Won
+      grain: cohorte de Won × segmento
+      milestone: Won
+      today: 'Rojo — No se puede: no hay funnel ni MRR contratado ligado al recorrido.'
+      notes: 'Por qué: pone a prueba (sin asumirlo) si terminar solo deja revenue que dejamos de capturar. Observado
+        ≠ causal: los que cierran solos pueden ser cuentas más chicas.'
+    - metric: Incrementalidad del contacto SDR
+      funnel: Hybrid B
+      family: eficiencia
+      definition: Qué parte del Won self-serve de los New contactados no habría ocurrido sin el contacto, y cuánto
+        esfuerzo cuesta.
+      formula: Won%(New contactados) − Won%(New en holdout sin contacto), mismo segmento y periodo; esfuerzo = toques
+        SDR ÷ Won Hybrid B
+      grain: experimento × cohorte × segmento
+      milestone: New → Won
+      today: 'Rojo — No se puede: requiere holdout y registro de toques.'
+      notes: 'Por qué: sin esto, Hybrid B puede ser crédito que se le atribuye al SDR por compras que iban a ocurrir
+        igual.'
+    - metric: Pool estancado y reactivaciones
+      funnel: Reactivate
+      family: volumen
+      definition: Stock de recorridos cerrados como Estancado que no se han reactivado, y reactivaciones del mes.
+      formula: 'Pool(m) = # recorridos cerrados como Estancado (de cualquier funnel) sin reactivar al cierre de
+        m; Reactivaciones(m) = # recorridos Reactivate creados en m, por funnel/etapa de origen y funnel asignado'
+      grain: mes × funnel de origen × etapa de origen × funnel asignado
+      milestone: Cierre como Estancado; reactivación
+      today: 'Rojo — No se puede: no hay leads. La «reactivación» del modelo (468 eventos) es de clientes que vuelven
+        a pagar.'
+      notes: 'Por qué: dimensiona la materia prima de Reactivate. Las entradas al pool se cuentan en el estancamiento
+        de cada funnel de origen (MECE).'
+    - metric: Tasa de reactivación
+      funnel: Reactivate
+      family: conversión
+      definition: Porcentaje de estancados que se reactivan dentro de un plazo T.
+      formula: '# reactivados dentro de T desde el cierre como Estancado ÷ # cerrados como Estancado en la cohorte'
+      grain: cohorte de estancamiento × funnel/etapa de origen × motivo
+      milestone: Cierre como Estancado → reactivación
+      today: Rojo — No se puede.
+      notes: 'Por qué: dice si el pool se trabaja o se entierra. Es el análogo de Recycle → re-MQL. T lo fija Hugo.'
+    - metric: Alcance a Won de reactivados por funnel asignado
+      funnel: Reactivate
+      family: conversión
+      definition: Porcentaje de reactivados que llegan a cada etapa y a Won en el funnel al que se asignaron.
+      formula: '# reactivados que llegan a s (o posterior) o a Won dentro de W ÷ # reactivados de la cohorte, por
+        funnel asignado'
+      grain: funnel asignado × etapa × cohorte de reactivación
+      milestone: Asignado → etapas del funnel asignado → Won
+      today: Rojo — No se puede.
+      notes: 'Por qué: compara reactivados con entradas nuevas del mismo funnel sin mezclarlos. Se reporta aquí
+        para no contarlo dos veces.'
+    - metric: Tiempo en pool y de reactivación a Won
+      funnel: Reactivate
+      family: velocidad
+      definition: Cuánto pasa un recorrido estancado antes de reactivarse, y cuánto tarda luego en asignarse y en
+        pagar.
+      formula: mediana(t_reactivación − t_estancado) en días; mediana(t_asignación − t_reactivación) en horas; mediana(t_Won
+        − t_reactivación) en días
+      grain: funnel asignado × cohorte × banda de tiempo en pool
+      milestone: Estancado → Reactivado → Asignado → Won
+      today: Rojo — No se puede.
+      notes: 'Por qué: muestra hasta qué antigüedad del pool la reactivación todavía convierte.'
+    - metric: Re-estancamiento
+      funnel: Reactivate
+      family: calidad
+      definition: Porcentaje de reactivados que vuelven a cerrarse como Estancado sin llegar a Won.
+      formula: '# reactivados cerrados de nuevo como Estancado dentro de W ÷ # reactivados de la cohorte'
+      grain: cohorte de reactivación × disparador × funnel asignado
+      milestone: Reactivado → nuevo Estancado
+      today: Rojo — No se puede.
+      notes: 'Por qué: distingue una reactivación real de patear la lata. Si es alto, el disparador de reactivación
+        está mal calibrado.'
+    - metric: Envejecimiento del pool
+      funnel: Reactivate
+      family: estancamiento
+      definition: Parte del pool que lleva más de T días sin reactivarse.
+      formula: '# en Pool(m) con (fin de m − t_estancado) > T ÷ Pool(m)'
+      grain: mes × funnel de origen × motivo
+      milestone: Cierre como Estancado
+      today: Rojo — No se puede.
+      notes: 'Por qué: ayuda a decidir si depurar o trabajar el pool, y evita inflar el stock con cuentas muertas.'
+    - metric: Won por funnel
+      funnel: Común (cortada por los 5 funnels)
+      family: volumen
+      definition: Cuentas que pasan a cliente en el mes, por funnel.
+      formula: 'COUNT(recorridos con Won en m) por funnel; control: Σ funnels = altas del mes en pagos'
+      grain: funnel × mes de Won
+      milestone: Won (y primer pago)
+      today: 'Amarillo — Con cuidado, solo en total: 1.584 altas observadas entre 2022-01 y 2024-10 (1.476 en cosechas
+        limpias). Por funnel no se puede.'
+      notes: 'Por qué: es aditiva, así que la suma cuadra con los pagos y da el primer corte MECE del árbol. Hoy
+        la primera transacción es solo la primera aparición.'
+    - metric: MRR inicial por Won
+      funnel: Común (cortada por los 5 funnels)
+      family: valor
+      definition: MRR contratado al Won (mediana y suma), por funnel.
+      formula: 'MRR_inicial = MRR contratado en el evento Won (proxy de hoy: M0 pagado); se reportan mediana y Σ
+        por funnel × cohorte de Won'
+      grain: funnel × cohorte de Won × segmento
+      milestone: Won / primer pago (M0)
+      today: 'Amarillo — Con cuidado, solo en total: la mediana del M0 pagado es 63.000 COP (cosecha 2022 limpia),
+        36.750 (2023) y 42.000 (2024). Es monto pagado observado, no MRR contratado. Por funnel no se puede.'
+      notes: 'Por qué: separa valor de volumen (más Won baratos pueden traer menos MRR).'
+    - metric: Retención de logos a M3
+      funnel: Común (cortada por los 5 funnels)
+      family: calidad
+      definition: Porcentaje de las cuentas ganadas en una cohorte que siguen pagando tres meses después.
+      formula: '# Won de la cohorte c con pago en M3 ÷ # Won de la cohorte c, por funnel'
+      grain: funnel × cohorte de Won
+      milestone: M0 → M3
+      today: 'Amarillo — Con cuidado, solo en total: se puede armar desde los pagos, pero 330 de 751 churn observados
+        vuelven al mes siguiente, así que un hueco de pago puede leerse como churn. Por funnel no se puede.'
+      notes: 'Por qué: un funnel que convierte mucho pero trae clientes que se van rápido es peor. La ventana la
+        aprueba Hugo; la cosecha 2024 tiene poca observación.'
+    - metric: CAC por funnel
+      funnel: Común (cortada por los 5 funnels)
+      family: eficiencia
+      definition: Gasto S&M asignado a cada funnel por cada Won de ese funnel.
+      formula: Gasto S&M asignado al funnel f en el periodo (desfasado según el ciclo de f) ÷ Won de f
+      grain: funnel × trimestre
+      milestone: Gasto → Won
+      today: 'Amarillo — Con cuidado, solo en total: el S&M por alta tiene estado ok en 32 meses (mar-22 a oct-24),
+        con unidad no documentada. Por funnel no se puede: los 7 rubros no tienen corte por motion.'
+      notes: 'Por qué: sirve para la decisión de presupuesto entre rutas. La regla para repartir el gasto compartido
+        la aprueba Hugo; repartir crédito no prueba causa.'
+    - metric: Payback de CAC por funnel
+      funnel: Común (cortada por los 5 funnels)
+      family: eficiencia
+      definition: Meses para recuperar el CAC de cada funnel con el margen del MRR que trae.
+      formula: CAC_f ÷ (MRR_inicial_mediano_f × margen bruto)
+      grain: funnel × trimestre
+      milestone: Won → recuperación del CAC
+      today: 'Rojo — No se puede: falta el margen bruto, y la unidad del gasto S&M no está documentada.'
+      notes: 'Por qué: junta costo y valor en la métrica que usa el CFO. Hay que usar el MRR de clientes nuevos,
+        no el net new MRR.'
+    stage_map:
+    - funnel: Executive
+      channel: Entrada por New (SDR)
+      stages:
+      - New
+      - Working SDR
+      - Engaged
+      - SQL
+      - Etapas AE (por confirmar)
+      - Won
+      owner: SDR de New a SQL · AE de SQL a Won
+      notes: 'Salidas: Lost o Estancado (este último va al pool de Reactivate). Engaged y las etapas AE vienen del
+        vocabulario de Hugo: confirmar nombres y orden contra su Executive.'
+    - funnel: Executive
+      channel: Entrada directa a SQL
+      stages:
+      - SQL
+      - Etapas AE (por confirmar)
+      - Won
+      owner: AE
+      notes: No pasa por New, Working SDR ni Engaged. Se mide aparte para no inflar la conversión del SDR.
+    - funnel: Self Service
+      channel: Entrada por producto sin persona
+      stages:
+      - New
+      - Won
+      owner: Growth / producto (dueño por confirmar)
+      notes: Solo usa las etapas del Executive que le aplican. Si recibe un toque humano dentro de W, pasa a Hybrid
+        A.
+    - funnel: Hybrid A
+      channel: Entrada por producto + intervención humana
+      stages:
+      - New
+      - Working SDR
+      - Engaged
+      - SQL
+      - Etapas AE (por confirmar)
+      - Won
+      owner: Growth hasta la intervención · SDR/AE después
+      notes: Tras la intervención reingresa en Working SDR o directamente en SQL, y desde ahí sigue las etapas del
+        Executive. Hoy no está definido el disparador de la intervención.
+    - funnel: Hybrid B
+      channel: Contacto humano en New + cierre self-serve
+      stages:
+      - New
+      - Working SDR
+      - Won
+      owner: SDR hasta la salida a self-serve · producto después
+      notes: El Won se da con close_actor = self-serve; puede pasar por Engaged antes de salir. Por confirmar si
+        «terminó solo» significa pagó solo o siguió solo.
+    - funnel: Reactivate
+      channel: Pool de estancados de cualquier funnel
+      stages:
+      - Estancado
+      - Reactivado
+      - Asignado a funnel
+      - Etapas del funnel asignado
+      - Won
+      owner: Por definir quién reactiva · después, el dueño de cada etapa del funnel asignado
+      notes: Se mide como recorrido propio, cortado por funnel asignado, para no contarlo dos veces. El win-back
+        de ex-clientes queda fuera (por confirmar).
+    required_events:
+    - event: journey_started
+      trigger: 'Se crea un recorrido: New (por SDR o inbound), SQL directo, registro/checkout self-serve o reactivación'
+      properties:
+      - journey_id
+      - account_id
+      - entry_point
+      - start_actor (persona/producto)
+      - source_channel
+      - segment
+      - entry_ts
+    - event: human_touch
+      trigger: Cada contacto humano 1:1 (llamada, email, reunión, chat) sobre un recorrido abierto
+      properties:
+      - journey_id
+      - actor_role (SDR/AE/otro)
+      - actor_id
+      - touch_type
+      - touch_ts
+    - event: stage_changed
+      trigger: Cambio de etapa en el CRM
+      properties:
+      - journey_id
+      - from_stage
+      - to_stage
+      - owner_role
+      - owner_id
+      - change_ts
+    - event: product_event
+      trigger: Acción en el producto sin persona (registro, uso clave, checkout iniciado)
+      properties:
+      - account_id
+      - journey_id
+      - event_name
+      - event_ts
+    - event: sql_decision
+      trigger: El AE acepta o rechaza un SQL
+      properties:
+      - journey_id
+      - sql_origin (SDR/directo/intervención/reactivado)
+      - decision
+      - reject_reason
+      - decision_ts
+    - event: intervention_trigger
+      trigger: Una cuenta self-serve cumple la señal que dispara la intervención, o se marca a mano
+      properties:
+      - journey_id
+      - trigger_type
+      - trigger_ts
+    - event: experiment_assignment
+      trigger: Al cumplir el disparador (Hybrid A) o al crearse un New elegible (Hybrid B)
+      properties:
+      - journey_id
+      - experiment_id
+      - group (tratamiento/holdout)
+      - assignment_ts
+    - event: journey_closed
+      trigger: El recorrido termina en Won, Lost o Estancado
+      properties:
+      - journey_id
+      - outcome
+      - close_actor (persona/self-serve)
+      - contracted_mrr
+      - plan
+      - loss_or_stall_reason
+      - stage_at_close
+      - close_ts
+    - event: journey_reactivated
+      trigger: Un recorrido cerrado como Estancado se reactiva y se asigna a un funnel
+      properties:
+      - new_journey_id
+      - origin_journey_id
+      - origin_funnel
+      - origin_stage
+      - stalled_ts
+      - reactivation_trigger
+      - assigned_funnel
+      - assigned_ts
+    - event: first_payment_linked
+      trigger: Primer pago en facturación de una cuenta con recorrido Won
+      properties:
+      - account_id
+      - customer_id (llave a raw.transactions)
+      - journey_id
+      - amount
+      - payment_month
+    - event: sm_cost_allocated
+      trigger: Cierre contable mensual
+      properties:
+      - month
+      - rubro
+      - funnel o motion asignado
+      - source_channel
+      - amount
+      - moneda/unidad
+    - event: capacity_snapshot
+      trigger: Cierre de mes
+      properties:
+      - month
+      - rol (SDR/AE)
+      - FTE activos
+      - funnel asignado
+    required_dimensions:
+    - dimension: funnel_type (Executive, Self Service, Hybrid A, Hybrid B, Reactivate)
+      why: 'Es la partición MECE: toda métrica se corta por aquí y nunca se mezcla.'
+    - dimension: entry_point / canal de entrada (New SDR, SQL directo, producto, reactivación)
+      why: Separa las dos entradas del Executive y define el denominador del alcance.
+    - dimension: start_actor y close_actor (persona/producto)
+      why: Son las reglas que clasifican los híbridos.
+    - dimension: stage (literal del Executive) + owner_role/owner_id
+      why: Tiempo, estancamiento y productividad por dueño (SDR, AE, Growth).
+    - dimension: cohorte de entrada (mes) + ventana W
+      why: Cohortes en vez de fotos, con una ventana fija para comparar.
+    - dimension: origin_funnel, origin_stage y assigned_funnel
+      why: 'Para Reactivate: de dónde viene el estancado y a qué funnel va.'
+    - dimension: segmento (tamaño/plan) e industria
+      why: Umbrales y comparaciones justas. La industria ya existe en el modelo.
+    - dimension: motivos (stall_reason, loss_reason, sql_reject_reason)
+      why: Para diagnosticar estancamientos, pérdidas y rechazos de SQL.
+    - dimension: source_channel ↔ rubro de gasto
+      why: Para asignar PaidMedia, PublicidadNoWeb y el resto a los funnels en el CAC.
+    - dimension: trigger (disparador de intervención o reactivación)
+      why: Para saber qué señal disparó la acción en Hybrid A y Reactivate.
+    - dimension: experiment_group (tratamiento/holdout)
+      why: Para el uplift causal de los híbridos.
+    decision_enabled: 'Dónde poner la siguiente unidad de capacidad o presupuesto: más SDR/AE (Executive), mejor
+      routing de intervención (Hybrid A), dejar de contactar New que compran solos (Hybrid B) o trabajar el pool
+      (Reactivate). Y qué ruta trae clientes que pagan más y retienen por peso gastado. Para el caso: qué se puede
+      mostrar hoy (la capa común en total) y qué es brecha del WoW (instrumentación).'
+    limitations:
+    - Hoy no se puede calcular ninguna métrica de funnel; el diseño no está probado con datos de Finora.
+    - 'W, k, N, T y X no se fijan aquí: se calibran con la distribución propia de Finora. Las referencias externas
+      son contexto.'
+    - 'Clasificar al cierre de W retrasa el reporte: los recorridos abiertos son provisionales y pueden cambiar
+      de funnel.'
+    - Sin holdout, las comparaciones entre rutas están sesgadas por selección.
+    - El monto pagado observado no es MRR contratado, y la primera transacción es solo la primera aparición.
+    - 'Quedan casos borde sin definir: SQL directo que termina en self-serve, win-back de ex-clientes y expansión.'
+    - Las fuentes externas son sobre todo de proveedores; no se leyeron el PDF del Bowtie ni las cifras del estudio
+      de HBR.
+    implementation_implications:
+    - 'Data Engineering: una tabla de recorridos (grano recorrido) con funnel_type, entry_point, start_actor, close_actor
+      y W; un historial de etapas (grano evento); y una foto semanal de los abiertos.'
+    - 'Llave cuenta CRM ↔ customer_id de pagos: sin ella no hay valor, calidad ni eficiencia por funnel, aunque
+      exista el CRM.'
+    - 'Registrar todo toque humano, no solo los cambios de etapa: es lo que separa Self Service de Hybrid A y Executive
+      de Hybrid B.'
+    - Formalizar Estancado como salida, con fecha y motivo. La reactivación crea un recorrido nuevo enlazado al
+      de origen.
+    - Asignar gasto S&M y headcount SDR/AE por motion, con una regla que apruebe Hugo.
+    - Diseñar un holdout pequeño para Hybrid A y otro para Hybrid B antes de leer el uplift.
+    - Renombrar en el modelo la «reactivación» de pagos (p. ej., retorno de pago) para que no choque con Reactivate.
+    - 'Analytics: mientras no haya CRM, solo la capa común en total, en amarillo.'
+sql_runs:
+- catalogo_modelo()
+- SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS new_customers_total,
+  SUM(reactivated_customers) AS reactivated_total, SUM(churned_customers) AS churned_total FROM mart.monthly_metrics
+- SELECT movement_type, COUNT(*) AS rows_n FROM mart.customer_month GROUP BY movement_type ORDER BY rows_n DESC
+- SELECT rubro, COUNT(*) AS months, SUM(amount) AS total_amount FROM staging.stg_sm_spend GROUP BY rubro ORDER BY
+  total_amount DESC
+- SELECT vintage, clean, COUNT(*) AS altas, MIN(cohort_month) AS first_cohort, MAX(cohort_month) AS last_cohort
+  FROM mart.new_customers GROUP BY vintage, clean ORDER BY first_cohort
+- SELECT COUNT(*) AS churn_events, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_before_oct24,
+  SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS returned_next_month, MEDIAN(months_to_return) AS median_months_to_return
+  FROM mart.churn_events
+- SELECT efficiency_status, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM mart.monthly_metrics_phase1
+  GROUP BY efficiency_status ORDER BY first_month
+- SELECT vintage, COUNT(*) AS altas, MEDIAN(m0_cop) AS median_m0_cop, MEDIAN(early_run_rate_cop) AS median_early_run_rate_cop,
+  AVG(early_months_observed) AS avg_early_months_observed FROM mart.new_customers GROUP BY vintage ORDER BY vintage
+completed_at: '2026-09-30T10:33:27-06:00'
+findings:
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+run_ids:
+- RUN-20260930-101530-measurement-2c63
+usage:
+  RUN-20260930-101530-measurement-2c63:
+    cost_usd: 3.1383286000000004
+    turns: 35
+    ms: 1076140
+    input_tokens: 22
+    output_tokens: 123754
+    cache_read: 307868
+    cache_write: 36289
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: measurement-strategy
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: cro-advisor
+  mode: dynamic
+  why: 2 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+  kind: vendor
+  digest: cd712605d907
+validation:
+  unverified_sources: []
+  bare_claims: []
+  seen_urls: 84
+  ok: true

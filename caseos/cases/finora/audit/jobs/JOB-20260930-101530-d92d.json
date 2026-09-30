@@ -1,0 +1,249 @@
+{
+ "id": "JOB-20260930-101530-d92d",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · Con las definiciones textuales de Hugo, ¿qué métricas espec…",
+ "params": {
+  "research_id": "R-036"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-30T10:15:30-06:00",
+ "started_at": "2026-09-30T10:15:30-06:00",
+ "finished_at": "2026-09-30T10:33:27-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-30T10:15:30-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-30T10:15:30-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260930-101530-measurement-2c63",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-30T10:15:31-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-30T10:15:38-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-30T10:15:55-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS new_customers_total, SUM(reactivated_c"
+  },
+  {
+   "t": "2026-09-30T10:15:55-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS rows_n FROM mart.customer_month GROUP BY movement_type ORDER BY rows_n DESC"
+  },
+  {
+   "t": "2026-09-30T10:15:56-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT rubro, COUNT(*) AS months, SUM(amount) AS total_amount FROM staging.stg_sm_spend GROUP BY rubro ORDER BY total_amount DESC"
+  },
+  {
+   "t": "2026-09-30T10:15:57-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, clean, COUNT(*) AS altas, MIN(cohort_month) AS first_cohort, MAX(cohort_month) AS last_cohort FROM mart.new_customers GROUP "
+  },
+  {
+   "t": "2026-09-30T10:16:08-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_events, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_before_oct24, SUM(CASE WHEN retur"
+  },
+  {
+   "t": "2026-09-30T10:16:09-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT efficiency_status, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM mart.monthly_metrics_phase1 GROUP BY "
+  },
+  {
+   "t": "2026-09-30T10:16:10-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, COUNT(*) AS altas, MEDIAN(m0_cop) AS median_m0_cop, MEDIAN(early_run_rate_cop) AS median_early_run_rate_cop, AVG(early_month"
+  },
+  {
+   "t": "2026-09-30T10:16:15-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model volume conversion rate time metrics each stage”"
+  },
+  {
+   "t": "2026-09-30T10:16:15-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “sales pipeline velocity formula number of opportunities win rate average deal size sales cycle length”"
+  },
+  {
+   "t": "2026-09-30T10:16:16-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product-led sales PQL metrics hybrid self-serve and sales-assisted funnel measurement”"
+  },
+  {
+   "t": "2026-09-30T10:16:17-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester SiriusDecisions demand waterfall recycle nurture leads metrics”"
+  },
+  {
+   "t": "2026-09-30T10:16:33-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplifypartners.com/blog-posts/sales-metrics-101"
+  },
+  {
+   "t": "2026-09-30T10:16:35-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-30T10:16:36-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/advanced-demand-creation"
+  },
+  {
+   "t": "2026-09-30T10:16:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://count.co/metric/pipeline-velocity"
+  },
+  {
+   "t": "2026-09-30T10:16:47-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.amplifypartners.com/blog-posts/sales-metrics-101"
+  },
+  {
+   "t": "2026-09-30T10:16:48-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/advanced-demand-creation/"
+  },
+  {
+   "t": "2026-09-30T10:16:50-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics"
+  },
+  {
+   "t": "2026-09-30T10:16:50-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “stalled deals definition days in stage no activity sales pipeline metric aging”"
+  },
+  {
+   "t": "2026-09-30T10:17:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.sybill.ai/blogs/10-metrics-to-measure-product-led-sales-performance"
+  },
+  {
+   "t": "2026-09-30T10:17:08-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.outreach.ai/resources/blog/sales-pipeline-ageing"
+  },
+  {
+   "t": "2026-09-30T10:17:08-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “CAC payback period formula gross margin new MRR sales and marketing spend definition”"
+  },
+  {
+   "t": "2026-09-30T10:17:09-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Harvard Business Review \"The Short Life of Online Sales Leads\" response time within an hour qualify”"
+  },
+  {
+   "t": "2026-09-30T10:17:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://scholarsarchive.byu.edu/facpub/9711"
+  },
+  {
+   "t": "2026-09-30T10:17:21-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.withorb.com/blog/cac-payback"
+  },
+  {
+   "t": "2026-09-30T10:17:23-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/time-to-rethink-b2b-lead-nurture/"
+  },
+  {
+   "t": "2026-09-30T10:17:23-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “incrementality holdout test vs attribution causal lift sales outreach control group B2B”"
+  },
+  {
+   "t": "2026-09-30T10:17:43-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “recycled leads metrics recycle rate re-engaged lead conversion back to sales nurture SLA definition”"
+  },
+  {
+   "t": "2026-09-30T10:17:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.cometly.com/post/incrementality-testing-vs-attribution"
+  },
+  {
+   "t": "2026-09-30T10:17:45-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.enrichlabs.ai/blog/product-led-growth-complete-guide-2026"
+  },
+  {
+   "t": "2026-09-30T10:17:54-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://umbrex.com/resources/company-analysis/sales/recycled-lead-rate/"
+  },
+  {
+   "t": "2026-09-30T10:17:55-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/hasyourdemandwaterfallgonegreen"
+  },
+  {
+   "t": "2026-09-30T10:33:27-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-036",
+  "findings": [
+   "F-248",
+   "F-249",
+   "F-250",
+   "F-251",
+   "F-252"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

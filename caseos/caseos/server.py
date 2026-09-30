@@ -684,6 +684,8 @@ class HandoffBody(BaseModel):
     critic: bool = True
     run: bool = True
     style: dict | None = None
+    reuse_from: str = ""               # a previous deck whose unchanged slides the Storyteller reuses
+    via: str = ""
 
 
 @app.put("/api/cases/{cid}/slides/style")
@@ -700,10 +702,10 @@ def slides_style_save(cid: str, body: dict):
 @app.post("/api/cases/{cid}/slides/handoff")
 def slides_handoff(cid: str, body: HandoffBody):
     s = S(cid)
-    rec = storyteller.prepare(s, direction=body.direction, critic=body.critic, style=body.style)
+    rec = storyteller.prepare(s, direction=body.direction, critic=body.critic, style=body.style, reuse_from=body.reuse_from)
     out = {"deck": rec}
     if body.run:
-        out.update(storyteller.submit_run(s, rec["id"]))
+        out.update(storyteller.submit_run(s, rec["id"], via=body.via))
     return out
 
 

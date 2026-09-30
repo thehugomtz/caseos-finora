@@ -1,0 +1,66 @@
+id: F-252
+type: finding
+headline: Solo 4 métricas comunes existen hoy, en total y con cuidado. Y la «reactivación» del modelo es retorno
+  de pago de clientes, no el Reactivate de leads.
+evidence_text: 34 meses (2022-01 a 2024-10). Hay 1.584 altas (1.476 en cosechas limpias). La mediana del M0 es 63.000
+  / 36.750 / 42.000 COP según la cosecha. El S&M por alta tiene estado ok en 32 meses. De 751 churn observados,
+  468 vuelven a pagar y 330 lo hacen al mes siguiente.
+confidence: high
+limitations:
+- El monto pagado observado no es MRR contratado. La primera transacción es la primera aparición, no una adquisición
+  confirmada. La unidad del gasto S&M no está documentada. Sin margen bruto no hay payback.
+kind: measurement
+claims:
+- claim: El panel cubre 34 meses (2022-01 a 2024-10), con 1.584 altas observadas, 751 churn observados y 468 reactivaciones
+    de pago.
+  source_id: mod2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: Alta = primer pago observado (primera aparición), no adquisición confirmada.
+- claim: 'De las 1.584 altas, 108 (feb-22) están marcadas como posible arrastre y 1.476 son cosechas limpias: 272
+    (2022 mar–dic), 650 (2023) y 554 (2024 ene–oct).'
+  source_id: mod5
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: Es la base del control Σ Won por funnel = altas.
+- claim: De 751 churn observados, 468 vuelven a pagar antes de oct-24 y 330 al mes siguiente (mediana de 1 mes entre
+    los que vuelven). La «reactivación» del modelo es de clientes que vuelven a pagar, no de leads estancados.
+  source_id: mod6
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: contests
+  notes: Descarta usar la reactivación del modelo como proxy de Reactivate. Además, avisa que los huecos de pago
+    de un mes inflan el churn en la retención M3.
+- claim: La métrica S&M por alta existe en el mart con estado ok en 32 meses (mar-22 a oct-24). Ene-22 no se puede
+    calcular y feb-22 se excluye.
+  source_id: mod7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: 'Existe solo en total y con unidad no documentada: amarillo.'
+- claim: La mediana del M0 pagado por alta es 63.000 COP en la cosecha 2022 limpia, 36.750 en 2023 y 42.000 en 2024.
+  source_id: mod8
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-30; datos hasta oct-24
+  supports_or_contests: context
+  notes: 'Proxy de valor en total: es monto pagado observado, no MRR contratado, y no tiene corte por funnel.'
+unverified: false
+source_ref:
+  research: R-036
+links:
+- R-036
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:33:27-06:00'
+updated_at: '2026-09-30T10:33:27-06:00'
+version: 1

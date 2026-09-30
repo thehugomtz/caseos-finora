@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T23:43:11-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-30T10:33:27-06:00 · motivo: COS: R-036 podría afectar C-023
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -13,21 +13,21 @@ Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) O
 CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación
 
 ## Current Phase
-**Slides**
+**Framing**
 
 | Fase | Estado | Ready |
 |---|---|---|
 | 01 Briefing | ready | v1 · 2026-09-29T00:13 |
-| 02 Framing | ready | v2 · 2026-09-29T20:32 |
+| 02 Framing | needs_review | v2 · 2026-09-29T20:32 |
 | 03 Research | ready | v1 · 2026-09-29T20:33 |
 | 04 Synthesis | ready | v1 · 2026-09-29T20:45 |
 | 05 Story | ready | v1 · 2026-09-29T20:47 |
 | 06 Slides | review | — |
 
 ## Current Status
-32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 18 decisiones activas · 158 alertas abiertas.
+34 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 20 decisiones activas · 167 alertas abiertas.
 
-COS: R-033 cierra, junto con R-034, el diseño as-is/to-be del modelo de datos. El as-is del caso es solo de después del pago (confianza alta) y el to-be sale de patrones de afuera (confianza media); falta saber qué sistemas tiene Finora y qué es un «Cliente N». La research está prácticamente cerrada (R-007 y R-008 siguen bloqueadas por falta de data) y el cuello de botella ahora es la revisión: hay 0 findings aceptados de 242 propuestos, así que ningún claim está listo para el story, y sigue pendiente D-018, que decide si las propuestas de modelo y tablero entran a la historia.
+COS: Story está Ready y Slides en revisión. R-035 cierra el catálogo de métricas (35 en tres capas; 3 verdes, 11 ámbar y 21 rojas; nada se puede cortar por ruta) y respalda la arquitectura de la story. Quedan tres decisiones de Hugo: dónde vive la vuelta de pagadores (C-022 frente a F-213, junto con X-127 y X-080), un solo catálogo y un solo semáforo (C-009; R-031 frente a R-035), y marcar como supuesto el mapa de etapas de Hybrid A/B (C-021).
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
@@ -57,6 +57,8 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-027** Delegación a Claude (4): aprobar la historia v4 y lanzar el deck de corrido · 2026-09-30 → «Delego y sigue de corrido»: Claude acepta la evidencia nue…
+- **D-026** Revisión del deck v3: los ajustes los hacen los agentes y quedan en CaseOS; Claude coordina · 2026-09-30 → «Ojo los ajustes los tienen que hacer los agentes y quedar…
 - **D-025** Story marcada Ready (v1) · 2026-09-29 → Ready
 - **D-024** Synthesis marcada Ready (v1) · 2026-09-29 → Ready
 - **D-023** Delegación a Claude (3): aceptar la historia con su evidencia · 2026-09-29 → «Pero tu dale accept a todo lo de la story»
@@ -65,9 +67,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **D-020** Research marcada Ready (v1) · 2026-09-29 → Ready
 - **D-019** Framing marcada Ready (v2) · 2026-09-29 → Ready
 - **D-017** Delegación a Claude (2): que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y el storytelling lo mues… · 2026-09-29 → «Voy a comer pero ahí checa con el chief y las herramientas…
-- **D-016** Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling · 2026-09-29 → «Vale, voy a desayunar ahorita que acabes lo corres, creo q…
-- **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
-- … y 8 más
+- … y 10 más
 
 _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
@@ -121,7 +121,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 91 más
+- … y 94 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -134,7 +134,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **R-008** (W7) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-009** (Q2) La caída se concentra en quién entra, no en la base previa · completed · por revisar
 - **R-010** Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (… · completed · por revisar
-- … y 24 más
+- … y 26 más
 
 ## Accepted Frameworks
 - **D-001** CRO pasa de cuatro a tres ramas
@@ -197,16 +197,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 23:43 · Deck finora-v3-20260929-212258: 25 slides · completed
-- 2026-09-29 23:43 · Slides: in_progress → review (deck terminado; pendiente de revisión de Hugo)
-- 2026-09-29 21:53 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258) · vía Claude: reintento tras arreglar el búfer del SDK que cortó la corrida de las 21:23; retoma la carpeta
-- 2026-09-29 21:23 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258)
-- 2026-09-29 21:23 · Story Package v3 preparado para el Visual Storyteller (finora-v3-20260929-212258)
-- 2026-09-29 21:23 · Slides: not_started → in_progress (trabajo iniciado)
-- 2026-09-29 20:47 · Story marcada Ready (v1)
-- 2026-09-29 20:47 · Hugo decidió: Story marcada Ready (v1)
-- 2026-09-29 20:45 · Synthesis marcada Ready (v1)
-- 2026-09-29 20:45 · Hugo decidió: Synthesis marcada Ready (v1)
+- 2026-09-30 10:33 · COS: R-036 podría afectar C-023
+- 2026-09-30 10:33 · COS: R-036 podría afectar C-021
+- 2026-09-30 10:33 · COS: R-036 podría afectar C-009
+- 2026-09-30 10:33 · COS: R-036 podría afectar C-006
+- 2026-09-30 10:33 · R-036 completada: Propongo 35 métricas sin solapes (MECE): 30 son propias de cada funnel (entradas, alcance por etapa en cohort…
+- 2026-09-30 10:33 · R-036: finding propuesto — Solo 4 métricas comunes existen hoy, en total y con cuidado. Y la «reactivación…
+- 2026-09-30 10:33 · R-036: finding propuesto — Los dos híbridos necesitan holdout: comparar tocados vs no tocados asigna crédi…
+- 2026-09-30 10:33 · R-036: finding propuesto — Los 5 funnels solo son MECE con reglas explícitas, evaluadas al cierre de una v…
+- 2026-09-30 10:33 · R-036: finding propuesto — Catálogo MECE de 35 métricas. Por funnel: volumen, alcance por etapa, tiempo po…
+- 2026-09-30 10:33 · R-036: finding propuesto — Hoy no se puede calcular ninguna de las 30 métricas propias de funnel: el model…
 
 
-<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->
+<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

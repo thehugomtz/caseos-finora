@@ -1,0 +1,70 @@
+id: F-249
+type: finding
+headline: 'Catálogo MECE de 35 métricas. Por funnel: volumen, alcance por etapa, tiempo por tramo y estancamiento,
+  más la métrica del mecanismo de cada ruta. En común: Won, MRR inicial, retención M3, CAC y payback, siempre cortadas
+  por funnel.'
+evidence_text: 'Los marcos revisados coinciden en cuatro puntos. Miden volumen, conversión y tiempo por etapa (Bowtie:
+  CR = VM2 ÷ VM1). Comparan caminos tocados vs self-serve en conversión y ACV (product-led sales). Leen el estancamiento
+  por edad en etapa, según etapa y segmento (pipeline aging). Y tratan el reciclaje de leads con su propia tasa
+  y tiempos (recycle).'
+confidence: medium
+limitations:
+- 'El diseño no está probado con datos de Finora. W, k, N, T y X quedan por calibrar. Las fuentes externas son sobre
+  todo de proveedores (calidad C): sirven de contexto, no de evidencia sobre Finora.'
+kind: measurement
+claims:
+- claim: El Bowtie Standard de Winning by Design conecta métricas de volumen, conversión y velocidad en cada etapa
+    del recorrido del cliente, desde Awareness hasta Expansion.
+  source_id: web1
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-01-22
+  supports_or_contests: supports
+  notes: Solo se leyó la página de resumen, no el PDF. Respalda la estructura de C-006.
+- claim: En el Bowtie, la conversión entre etapas se calcula como CR = VM2 ÷ VM1, y la velocidad como el tiempo
+    que tarda el volumen en pasar de una etapa a la siguiente.
+  source_id: web2
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2025-08-08
+  supports_or_contests: supports
+  notes: Blog de un proveedor. Base de la fórmula de alcance por etapa.
+- claim: En product-led sales se propone comparar la conversión de PQL tocados por ventas con la tasa self-serve
+    y el ACV de ambos caminos, y medir el tiempo a convertir como mediana desde el registro o el PQL hasta el primer
+    pago.
+  source_id: web4
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-07-19
+  supports_or_contests: supports
+  notes: Blog de un proveedor. Respalda el uplift de Hybrid A y la velocidad de Self Service.
+- claim: El envejecimiento del pipeline se lee mejor por edad en etapa que por edad total. Se usan umbrales de 1,5–2×
+    la mediana de días en etapa para cada combinación etapa-segmento, y se revisa tras 14 días sin actividad en
+    etapas medias o tardías.
+  source_id: web5
+  source_type: industry
+  confidence: medium
+  freshness: Publicado 2026-05-05; modificado 2026-08-25
+  supports_or_contests: context
+  notes: 'Benchmark de un proveedor: sirve de contexto para calibrar k y N, no es una recomendación.'
+- claim: Recycled Lead Rate = MQL marcados como Recycle ÷ MQL entregados. Viene con métricas de reactivación (Recycle
+    → re-MQL, → SAL/SQL, pipeline por lead reciclado) cortadas por motivo y por tiempo en recycle.
+  source_id: web9
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha
+  supports_or_contests: supports
+  notes: Referencia para las métricas de Reactivate. Las ventanas que cita son contexto.
+unverified: false
+source_ref:
+  research: R-036
+links:
+- R-036
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:33:27-06:00'
+updated_at: '2026-09-30T10:33:27-06:00'
+version: 1

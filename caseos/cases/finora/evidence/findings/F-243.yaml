@@ -1,0 +1,50 @@
+id: F-243
+type: finding
+headline: 'Hoy solo existe el lado post-pago: las 17 métricas propias de Executive, Self Service, Hybrid A y Hybrid
+  B no se pueden calcular y ninguna métrica común se puede cortar por ruta.'
+evidence_text: 'El modelo tiene pagos cliente × mes, industria y S&M por rubro. No tiene leads, etapas, ruta, canal
+  ni uso de producto (DM1). Los 1.961 clientes del archivo de industria tienen al menos un pago (DM9): no hay nadie
+  que no haya comprado. El gasto S&M viene en 7 rubros y en una unidad no documentada (DM1, DM10). Semáforo del
+  catálogo: 3 verdes, 11 ámbar y 21 rojas.'
+confidence: high
+limitations:
+- 'Describe el dataset del caso, no a Finora: puede existir un CRM o un sistema de cobro fuera de lo que recibimos
+  (ausencia de evidencia ≠ evidencia de ausencia).'
+kind: measurement
+claims:
+- claim: 'El modelo del caso solo tiene pagos cliente × mes, industria y gasto S&M por rubro: no hay leads, etapas,
+    ruta de entrada, canal ni uso de producto.'
+  source_id: DM1
+  source_type: data_model
+  confidence: high
+  freshness: Modelo consultado 2026-09-30; datos de 2022-01 a 2024-10
+  supports_or_contests: supports
+  notes: 'Sustenta el semáforo de C-009: todo lo pre-pago queda en rojo.'
+- claim: Los 1.961 clientes del archivo de industria tienen al menos un pago; hay 6 industrias y 7 rubros de S&M.
+  source_id: DM9
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-30
+  supports_or_contests: supports
+  notes: 'No hay nadie que no haya comprado: ninguna conversión pre-pago se puede calcular (regla del caso).'
+- claim: 'El S&M por alta existe solo como total mensual en unidades reportadas: ene-22 no computable, feb-22 excluido
+    por spillover y estado «ok» desde mar-22.'
+  source_id: DM10
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-30
+  supports_or_contests: supports
+  notes: 'La unidad del gasto no está documentada (DM1): no es CAC en COP.'
+unverified: false
+source_ref:
+  research: R-035
+links:
+- R-035
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:14:35-06:00'
+updated_at: '2026-09-30T10:14:35-06:00'
+version: 1

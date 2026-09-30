@@ -348,3 +348,18 @@ def test_a_slide_spec_with_a_stray_colon_still_imports(tmp_path):
                  "  composition: formula_anatomy (hoy vs CAC: término contra término)\n  family: economics\n", encoding="utf-8")
     spec = storyteller._spec(p)
     assert spec["id"] == "S12" and spec["claim_id"] == "C-010" and spec["headline"] == "Hoy no es CAC"
+
+
+def test_a_new_deck_knows_which_slides_of_the_previous_one_it_can_reuse(case, tmp_path):
+    f, t = _accepted_evidence(case)
+    story.apply_package(case, _package(f, t, key="entry"), actor="cos")
+    cid = case.read_data("story/package.yaml")["claims"][0]["claim_id"]
+    prev = tmp_path / "prev"
+    (prev / "slide-specs").mkdir(parents=True)
+    (prev / "slide-specs" / "S01.yaml").write_text(f"slide:\n  id: S01\n  claim_id: {cid}\n  headline: Entrada\n", encoding="utf-8")
+    (prev / "slide-specs" / "S02.yaml").write_text("slide:\n  id: S02\n  claim_id: C-999\n  composition: a: b\n", encoding="utf-8")
+    idx = storyteller.reuse_index(case, prev, since="9999-12-31")
+    assert idx[0] == {"claim_id": cid, "spec": "slide-specs/S01.yaml", "slide": "slides/01.html", "render": "renders/01.png",
+                      "headline": "Entrada", "unchanged": True}
+    assert idx[1]["unchanged"] is False                                            # a claim that no longer exists is redrawn
+    assert storyteller.reuse_index(case, prev, since="2000-01-01")[0]["unchanged"] is False   # changed after the old deck

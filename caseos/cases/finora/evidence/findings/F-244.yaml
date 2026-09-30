@@ -1,0 +1,71 @@
+id: F-244
+type: finding
+headline: 'La arquitectura que aguanta rutas distintas: las etapas viven en la ruta, el dinero en una capa común
+  cortada por ruta de entrada y el ex-cliente en el loop de Reactivate.'
+evidence_text: 'Forrester: cada tipo de oportunidad convierte a tasas distintas y pasa tiempos distintos en cada
+  etapa, y la mezcla mueve el desempeño total (EXT1). Bowtie: volumen, conversión y velocidad siguen después del
+  cierre; «el funnel clásico se detiene donde empieza el ingreso recurrente» (EXT2, EXT3). Los CRM ya registran
+  la fecha de entrada y salida y el tiempo acumulado por etapa (EXT6), y la velocidad por etapa se resume con medianas
+  y umbrales propios por segmento (EXT7).'
+confidence: medium
+limitations:
+- Las fuentes son consultoras y vendors, no estudios. Hybrid A (producto → sales-assist) y Hybrid B (SQL directo)
+  son supuestos de este research.
+kind: measurement
+claims:
+- claim: 'Forrester: cada tipo de oportunidad convierte a tasas distintas y pasa tiempos distintos en cada etapa,
+    y la mezcla de tipos influye masivamente en el desempeño total del motor de revenue.'
+  source_id: EXT1
+  source_type: industry
+  confidence: medium
+  freshness: 2021 (según el título); consultado 2026-09-30
+  supports_or_contests: supports
+  notes: Respaldo externo para no usar una tasa mezclada. Es contexto, no evidencia sobre Finora.
+- claim: 'Winning by Design presenta el Bowtie como modelo de datos para ingreso recurrente que conecta volumen,
+    conversión y velocidad en todo el recorrido (adquisición, onboarding, retención y expansión): «el funnel clásico
+    se detiene donde empieza el ingreso recurrente».'
+  source_id: EXT2
+  source_type: industry
+  confidence: medium
+  freshness: 2026 según la ruta del PDF; consultado 2026-09-30
+  supports_or_contests: supports
+  notes: Solo se pudo leer la página; el PDF no fue legible en esta corrida.
+- claim: En el Bowtie, volumen mide cuántos y cuánto, conversión mide la eficiencia del avance entre etapas y velocidad
+    mide cuánto tarda el volumen en pasar de una etapa a la siguiente. Las etapas post-venta son Adoption → Retention
+    → Expansion.
+  source_id: EXT3
+  source_type: company
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-30
+  supports_or_contests: supports
+  notes: Fuente secundaria que resume a Winning by Design.
+- claim: HubSpot calcula por etapa «Date entered», «Date exited», «Latest time in», «Cumulative time in» y «Time
+    in current stage».
+  source_id: EXT6
+  source_type: company
+  confidence: high
+  freshness: Vigente al consultar 2026-09-30
+  supports_or_contests: supports
+  notes: Muestra que velocidad y estancamiento se pueden instrumentar si el CRM guarda el historial de etapas.
+- claim: La velocidad por etapa se calcula como fecha de salida − fecha de entrada, resumida con medianas. Los deals
+    que pasan de 1,5× el benchmark se marcan como lentos, y los benchmarks se separan por segmento y tipo de negocio.
+  source_id: EXT7
+  source_type: marketing
+  confidence: low
+  freshness: Sin fecha visible; consultado 2026-09-30
+  supports_or_contests: context
+  notes: Es un glosario de vendor. El 1,5× sirve de referencia para calibrar, no como umbral para Finora. Sus cifras
+    de win rate no se usan.
+unverified: false
+source_ref:
+  research: R-035
+links:
+- R-035
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:14:35-06:00'
+updated_at: '2026-09-30T10:14:35-06:00'
+version: 1

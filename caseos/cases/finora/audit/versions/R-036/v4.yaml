@@ -1,0 +1,107 @@
+id: R-036
+type: research
+research_question: Con las definiciones textuales de Hugo, ¿qué métricas específicas se miden por tipo de funnel
+  en cada familia (volumen, conversión, velocidad, valor, calidad, estancamiento y eficiencia), con fórmula, por
+  qué se propone cada una y si existe hoy? Executive = el funnel SDR→AE, incluida la entrada directa a SQL; Self
+  Service = sin persona; Hybrid A = empezó solo y lo intervino una persona; Hybrid B = lo contactó una persona como
+  New y terminó solo; Reactivate = leads estancados que se reactivan y se asignan a un funnel.
+case_question: C-006, C-009, C-021, C-023
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 0
+    analytics: 0
+    business: 2
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - C-006
+    - C-009
+    - C-021
+    - C-023
+    suggested:
+    - H-072
+    - H-055
+    - H-053
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-006
+- C-009
+- C-021
+- C-023
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-30T10:15:29-06:00'
+updated_at: '2026-09-30T10:15:30-06:00'
+version: 4
+job_id: JOB-20260930-101530-d92d
+error: null
+started_at: '2026-09-30T10:15:30-06:00'
+shaping_task: RT-035
+slides:
+- S2.3
+- S2.5
+task_why: R-035 cambió las definiciones de Hybrid B y de Reactivate; se reformula con las palabras textuales de
+  Hugo (D-026, coordinación de Claude).
+task:
+  work: propuesta
+  draft_answer: 'Reformula RT-034 (R-035). R-035 tomó Hybrid B como «SQL directo» y Reactivate como clientes que
+    dejaron de pagar y vuelven; con las definiciones de Hugo (C-021, R-029): la entrada directa a SQL es Executive
+    con etapa de entrada SQL; Hybrid B es New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Checkout Self →
+    Won; Reactivate es un loop de leads estancados (estancado → reactivado → reasignado a una ruta, sin contar como
+    entrada nueva); la vuelta de pagadores es un loop de Revenue aparte. Se reutiliza de R-035 lo que no depende
+    de esas definiciones: la capa común (valor, calidad, eficiencia con CAC y payback por ruta) y el porqué, dueño
+    y foro de cada métrica.'
+  hugo_said:
+  - text: recordemos que el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie /
+      Proposal Account Executive / Won /// ese es el punto de partida
+    ref: N-033
+  - text: Hybrid que se refiere que en alguna parte del funnel fuepor Self Service y en algun otro fue intervenido
+      por una persona (pudo haber empzado hasta arriba y ser intervenido abajo, o pudo ser contactado como new y
+      el solito lo acabó, hay que bajar bien esa definición)
+    ref: N-037
+  - text: tal vez añadir un reactivate que son los que dicen que están estancados pero hay formas de reactivarlos
+      y asignarlos a un funnel de acuerdo al caso
+    ref: N-038
+  - text: me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
+      mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi
+    ref: N-058
+  steps:
+  - kind: proposal
+    what: Matriz funnel × familia con métricas específicas por etapa (nombre, fórmula, grano), sobre el stage_map
+      de R-031, con la eficiencia en cada funnel (costo por etapa o por Won, productividad por SDR/AE, CAC y payback
+      por ruta).
+    where: []
+  - kind: proposal
+    what: 'Por cada métrica: por qué se propone (qué decisión del CRO o qué hoja del árbol de C-023 sirve), dueño,
+      foro y si existe hoy.'
+    where: []
+  - kind: proposal
+    what: 'Prueba de MECE y de fidelidad: cada funnel con las definiciones de Hugo; nada de la vuelta de pagadores
+      dentro de Reactivate (va aparte, del lado Revenue).'
+    where: []
+requested_via: 'vía Claude (D-026): reformula RT-034 con las definiciones de Hugo'

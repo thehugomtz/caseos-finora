@@ -1,0 +1,243 @@
+{
+ "id": "JOB-20260930-095730-3fba",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · Por tipo de funnel —Executive, Self Service, Hybrid A, Hybr…",
+ "params": {
+  "research_id": "R-035"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-30T09:57:30-06:00",
+ "started_at": "2026-09-30T09:57:30-06:00",
+ "finished_at": "2026-09-30T10:14:35-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-30T09:57:30-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-30T09:57:30-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260930-095730-measurement-069c",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-30T09:57:32-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-30T09:57:54-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-30T09:58:01-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS total_new, SUM(churned_customers) AS t"
+  },
+  {
+   "t": "2026-09-30T09:58:02-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_events, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS returned_before_end, SUM(CASE WHEN returne"
+  },
+  {
+   "t": "2026-09-30T09:58:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS customers FROM mart.customer_month GROUP BY cohort_flag"
+  },
+  {
+   "t": "2026-09-30T09:58:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, efficiency_status, total_sm_spend, new_customers, total_sm_per_new_customer, window_flag FROM mart.monthly_metrics_phase1 ORDE"
+  },
+  {
+   "t": "2026-09-30T09:58:07-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT months_to_return, COUNT(*) AS events FROM mart.churn_events GROUP BY months_to_return ORDER BY months_to_return"
+  },
+  {
+   "t": "2026-09-30T09:58:09-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS rows_n, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month_n, SUM(CASE WHEN mul"
+  },
+  {
+   "t": "2026-09-30T09:58:10-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm, ROUND(SUM(reactivation_mrr_cop)"
+  },
+  {
+   "t": "2026-09-30T09:58:30-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN c.months_to_return = 1 THEN 'gap_1' ELSE 'gap_2plus' END AS gap, r.multi_month_payment_signature AS sig, COUNT(*) AS n FROM"
+  },
+  {
+   "t": "2026-09-30T09:58:31-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS new_clean, SUM(CASE WHEN m0_cop > early_run_rate_cop * 1.05 THEN 1 ELSE 0 END) AS m0_above_early_rr, SUM(CASE WHEN m0_cop"
+  },
+  {
+   "t": "2026-09-30T09:58:40-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS returns_total, SUM(CASE WHEN r.multi_month_payment_signature = c.months_to_return + 1 THEN 1 ELSE 0 END) AS catch_up_sign"
+  },
+  {
+   "t": "2026-09-30T09:58:47-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design Bowtie model volume conversion time metrics recurring revenue”"
+  },
+  {
+   "t": "2026-09-30T09:58:48-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall opportunity-centric multiple entry points buying groups”"
+  },
+  {
+   "t": "2026-09-30T09:58:49-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product-led sales hybrid PLG sales-assist metrics PQL conversion rate definition”"
+  },
+  {
+   "t": "2026-09-30T09:58:49-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “reactivation MRR definition ChartMogul MRR movements new expansion contraction churn reactivation”"
+  },
+  {
+   "t": "2026-09-30T09:59:03-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-30T09:59:04-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://go.forrester.com/blogs/why-we-have-a-new-waterfall-for-2021-and-why-you-should-care/"
+  },
+  {
+   "t": "2026-09-30T09:59:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/4416682609426"
+  },
+  {
+   "t": "2026-09-30T09:59:07-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.pocus.com/blog/product-led-growth-metrics-to-measure"
+  },
+  {
+   "t": "2026-09-30T09:59:26-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/01/The-Bowtie-Standard.pdf"
+  },
+  {
+   "t": "2026-09-30T09:59:27-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “stalled deals time in stage metric definition pipeline \"days in stage\" sales velocity formula”"
+  },
+  {
+   "t": "2026-09-30T09:59:27-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “involuntary churn failed payments delinquency definition recovered revenue subscription metrics”"
+  },
+  {
+   "t": "2026-09-30T09:59:28-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “SaaS magic number formula CAC payback period definition gross margin Scale Venture Partners”"
+  },
+  {
+   "t": "2026-09-30T09:59:45-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HubSpot \"time in deal stage\" properties cumulative time entered stage date knowledge base”"
+  },
+  {
+   "t": "2026-09-30T09:59:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.metabase.com/metrics/failed-payment-rate"
+  },
+  {
+   "t": "2026-09-30T09:59:47-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://corporatefinanceinstitute.com/resources/valuation/saas-magic-number"
+  },
+  {
+   "t": "2026-09-30T09:59:48-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://saber.app/glossary/stage-velocity"
+  },
+  {
+   "t": "2026-09-30T10:00:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT (SELECT COUNT(*) FROM staging.stg_customers) AS customers_in_industry_file, (SELECT COUNT(DISTINCT customer_id) FROM mart.customer_mo"
+  },
+  {
+   "t": "2026-09-30T10:00:04-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics"
+  },
+  {
+   "t": "2026-09-30T10:00:05-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/properties/stage-calculated-properties"
+  },
+  {
+   "t": "2026-09-30T10:03:02-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Finora case funnel Executive \"Self Service\" Hybrid \"Working SDR\" Engaged Reactivate”"
+  },
+  {
+   "t": "2026-09-30T10:03:13-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://support.fullcircleinsights.com/hc/en-us/articles/43900048943892-Reactivation-Configuration"
+  },
+  {
+   "t": "2026-09-30T10:14:35-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-035",
+  "findings": [
+   "F-243",
+   "F-244",
+   "F-245",
+   "F-246",
+   "F-247"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

@@ -1,0 +1,107 @@
+id: R-035
+type: research
+research_question: Por tipo de funnel —Executive, Self Service, Hybrid A, Hybrid B y el loop de Reactivate—, ¿qué
+  métricas específicas se miden en cada familia (volumen, conversión, velocidad, valor, calidad, estancamiento y
+  eficiencia), con su fórmula, por qué se propone cada una (qué decisión o hipótesis del CRO sirve) y cuáles no
+  existen hoy?
+case_question: C-006, C-009, C-022, C-021, C-023
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - C-006
+    - C-009
+    - C-022
+    - C-021
+    - C-023
+    suggested:
+    - Q-046
+    - H-072
+    - C-005
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-006
+- C-009
+- C-022
+- C-021
+- C-023
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-30T09:57:30-06:00'
+updated_at: '2026-09-30T09:57:30-06:00'
+version: 4
+job_id: JOB-20260930-095730-3fba
+error: null
+started_at: '2026-09-30T09:57:30-06:00'
+shaping_task: RT-034
+slides:
+- S2.3
+- S2.5
+task_why: 'Hugo, al revisar el deck v3 (30-sep): la lámina de medición no dice qué métrica concreta se mide por
+  tipo de funnel, falta eficiencia y falta el porqué de cada métrica.'
+task:
+  work: propuesta
+  draft_answer: 'De arranque, sobre las etapas literales de R-031: en cada funnel, una métrica concreta por familia
+    y etapa. Executive: New por canal (volumen), Working→Engaged y Proposal→Won (conversión), tiempo a primer contacto
+    y tiempo de cierre (velocidad), MRR de entrada por Won (valor), SQL aceptados por el AE (calidad), leads sin
+    actividad por etapa (estancamiento) y costo por SQL y Won por AE (eficiencia). Self Service: leads digitales
+    y CR digital de registro a pago, tiempo de registro a activación, activación temprana y CAC digital. Hybrid
+    A y B: la señal que dispara el contacto, tiempo de señal a contacto y costo de la intervención por Won. Reactivate:
+    stock estancado, re-enganche y costo por re-enganche. Cada métrica dice qué decisión del CRO habilita y si hoy
+    se calcula.'
+  hugo_said:
+  - text: me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
+      mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi
+    ref: N-058
+  - text: por lo que veo falta lo de eficiencia pero por que proponemos esas métricas? tambien hay que dejarlo claro
+    ref: N-059
+  steps:
+  - kind: proposal
+    what: Matriz funnel × familia con métricas específicas (nombre, fórmula, grano, etapa), incluida la familia
+      de eficiencia (costo por etapa, CAC por funnel y canal, productividad por SDR/AE, payback).
+    where: []
+  - kind: proposal
+    what: 'Por cada métrica: por qué se propone (qué decisión del CRO o qué hoja del árbol de hipótesis de C-023
+      sirve) y si existe hoy, con cuidado o no.'
+    where: []
+  - kind: proposal
+    what: 'Prueba de MECE: ninguna métrica en dos funnels salvo las comunes, y ninguna etapa del stage_map de R-031
+      sin métrica.'
+    where: []
+  - kind: data
+    what: 'Lo que ya se puede medir hoy con los pagos y el gasto: el nudo (primer pago), el ticket estabilizado
+      y el S&M por alta como proxy.'
+    where:
+    - mart.new_customers
+    - mart.customer_month
+    - mart.sm_monthly
+requested_via: vía Claude (Hugo lo pidió en el chat, 30-sep, D-026)

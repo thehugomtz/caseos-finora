@@ -65,8 +65,24 @@ def _upsert_deck(store: CaseStore, deck: dict) -> None:
 
 
 # ------------------------------------------------------------------------------------------ prepare
+def reuse_index(store: CaseStore, prev_dir: Path, since: str) -> list[dict]:
+    """The slides of a previous deck by claim: a claim whose entity did not change after `since` (when that deck was
+    prepared) can keep its slide, re-themed; anything new or changed is drawn again."""
+    out = []
+    for sp in sorted((prev_dir / "slide-specs").glob("S*.yaml")) if (prev_dir / "slide-specs").is_dir() else []:
+        spec = _spec(sp)
+        s = spec.get("slide") or spec
+        num = re.sub(r"\D", "", s.get("id") or sp.stem) or "0"
+        cid = s.get("claim_id") or spec.get("claim_id") or ""
+        c = store.get(cid) if cid else None
+        out.append({"claim_id": cid or None, "spec": f"slide-specs/{sp.name}", "slide": f"slides/{int(num):02d}.html",
+                    "render": f"renders/{int(num):02d}.png", "headline": s.get("headline") or s.get("title") or "",
+                    "unchanged": bool(c) and str(c.get("updated_at") or "") <= since})
+    return out
+
+
 def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = True, title: str = "",
-            actor: str = "hugo", style: dict | None = None) -> dict:
+            actor: str = "hugo", style: dict | None = None, reuse_from: str = "") -> dict:
     meta = store.meta()
     if meta["phases"]["story"].get("status") != "ready":
         raise StoreError("El Story Package tiene que estar aprobado (Story Ready) antes de pasarlo al Visual Storyteller.")
@@ -89,6 +105,24 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
                         (meta.get("language") or {}).get("primary", "es")], capture_output=True, text=True, timeout=60)
     if p.returncode != 0:
         raise StoreError(f"new-deck.mjs falló: {p.stderr[-400:]}")
+    reuse = None
+    if reuse_from:
+        # the previous deck's slides travel with the new one so the Storyteller redraws only what changed
+        prev = next((x for x in decks(store) if x["id"] == reuse_from), None)
+        if not prev:
+            raise StoreError(f"No encuentro el deck {reuse_from} para reutilizar.")
+        prev_dir = store.root / prev["path"]
+        dst = deck / "reuse" / prev["slug"]
+        for sub in ("slides", "slide-specs"):
+            if (prev_dir / sub).is_dir():
+                shutil.copytree(prev_dir / sub, dst / sub)
+        (dst / "renders").mkdir(parents=True, exist_ok=True)
+        for png in (prev_dir / "renders").glob("[0-9][0-9].png") if (prev_dir / "renders").is_dir() else []:
+            shutil.copy2(png, dst / "renders" / png.name)
+        idx = reuse_index(store, prev_dir, prev.get("created_at") or "")
+        (dst / "index.yaml").write_text(yaml_dump({"from": prev["slug"], "slides": idx}), encoding="utf-8")
+        reuse = {"from": prev["slug"], "dir": f"reuse/{prev['slug']}", "index": f"reuse/{prev['slug']}/index.yaml",
+                 "unchanged": sum(1 for x in idx if x["unchanged"]), "slides": len(idx)}
     applied = None
     if style and not slidestyle.is_empty(style):
         base_dir = theme if theme in ("editorial", "modern", "blueprint") else "editorial"
@@ -127,12 +161,18 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
                                 if applied else {"note": "Sin marca impuesta: tokens del tema elegido."}),
                "rules": ["No cambies el argumento ni las cifras del Story Package; si algo no se sostiene, anótalo en storyline.md §7.",
                          "Toda cifra de una slide sale de data/*.yaml (usa los valores literales).",
-                         "Conserva claim_id en cada slide spec (campo claim_id) para el linaje CaseOS."]}
+                         "Conserva claim_id en cada slide spec (campo claim_id) para el linaje CaseOS."]
+                        + (["Reutiliza: en " + reuse["index"] + " están las láminas del deck anterior por claim_id; si una dice "
+                            "unchanged: true, copia su spec y su HTML a tu numeración nueva y adáptalos al tema nuevo en vez de "
+                            "rehacerlos. Rehaz solo lo nuevo, lo que cambió y lo que la guía de formato pide (portadas, separadores)."]
+                           if reuse else []),
+               **({"reuse": reuse} if reuse else {})}
     (deck / "caseos-handoff.yaml").write_text(yaml_dump(handoff), encoding="utf-8")
     rec = {"id": f"DECK-{stamp()}", "slug": slug, "path": str(deck.relative_to(store.root)), "title": title,
            "direction": "caseos" if applied else direction, "critic": critic, "status": "prepared", "created_at": now_iso(),
            "style": applied,
-           "package_version": pkg.get("version"), "tables": len(tables), "claims": len(pkg.get("claims") or [])}
+           "package_version": pkg.get("version"), "tables": len(tables), "claims": len(pkg.get("claims") or []),
+           **({"reuse_from": reuse_from, "reused_unchanged": reuse["unchanged"]} if reuse else {})}
     _upsert_deck(store, rec)
     phases.touch(store, "slides", actor=actor)
     store.log(actor, "handoff", [rec["id"]], f"Story Package v{pkg.get('version')} preparado para el Visual Storyteller ({slug})",
@@ -389,6 +429,9 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
                 f"storyline.md, visual-direction.md, {len(specs)} specs de lámina y {len(built)} láminas en slides/. Retoma desde ahí: "
                 "conserva lo hecho salvo que la crítica visual pida cambiarlo y termina el render, la crítica y el deck final. "
                 "Revisa los renders de a una lámina a la vez.")
+    elif (deck / "reuse").is_dir():
+        ask += (" En reuse/ están las láminas del deck anterior por claim (caseos-handoff.yaml › reuse): reutiliza las que no "
+                "cambiaron, re-tematizadas; rehaz solo lo nuevo o cambiado. Revisa los renders de a una lámina a la vez.")
 
     async def prompt_stream():
         yield {"type": "user", "message": {"role": "user", "content": ask}}
