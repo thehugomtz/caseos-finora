@@ -1,0 +1,41 @@
+table_id: FIN-F-081
+caseos_id: T-036
+title: El gasto comercial por alta es menor en 2024 que en 2022 (0,105 u frente a 0,036 u en la unidad reportada,
+  un…
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - cac_sm_2022
+  - S&M total por alta, 2022 (unidad reportada)
+  - 0,105 u
+- - cac_sm_2024
+  - S&M total por alta, 2024 (unidad reportada)
+  - 0,036 u
+- - total_sm_per_new_customer_chg
+  - Cambio del S&M total por alta, 2022 a 2024
+  - −66%
+units: {}
+definitions: {}
+message: El gasto comercial por alta es menor en 2024 que en 2022 (0,105 u frente a 0,036 u en la unidad reportada,
+  un cambio de −66%), y la correlación en niveles entre el gasto total y las altas del mismo mes es −0,57.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-INV-02
+  - EC-INV-03
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: table
+analysis_reference: INV-20260929-103202-db67 · C-012
+period: {}
+grain: según evidencia

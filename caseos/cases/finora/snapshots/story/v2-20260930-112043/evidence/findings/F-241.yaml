@@ -1,0 +1,58 @@
+id: F-241
+type: finding
+headline: Seis reglas del modelo son decisiones de negocio, no hechos, y tienen que quedar escritas antes de construir.
+evidence_text: 'Stripe deja configurable si los descuentos recurrentes y de una vez restan del MRR (restarlos es
+  «más conservador»; los permanentes siempre restan), y si un suscriptor cuenta como activo desde que inicia la
+  suscripción o desde el primer pago. Define churn por cancelación o impago, no por un mes sin cobro, y arma las
+  cohortes por primer MRR positivo. Para Finora quedan por decidir: el descuento temporal en el MRR, si una cuenta
+  es activa desde el contrato o desde el pago, churn vs mora, la regla y el orden de las puertas, la ventana W y
+  el N de estancamiento.'
+confidence: high
+limitations:
+- Los defaults de un proveedor son referencia, no recomendación.
+kind: data_engineering
+claims:
+- claim: Stripe deja configurable si los descuentos recurrentes y los de una vez restan del MRR, y justifica restarlos
+    como una postura conservadora.
+  source_id: W-07
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: context
+  notes: W-06 agrega que los descuentos recurrentes permanentes siempre restan. Confirma que cómo se trata el descuento
+    temporal es una decisión de negocio.
+- claim: Stripe deja configurable cuándo un suscriptor cuenta como activo (al iniciar la suscripción o al recibir
+    el primer pago), arma las cohortes por el primer mes con MRR positivo y exporta un log de cambios de MRR por
+    cliente (nuevo, upgrade, downgrade, reactivación, churn).
+  source_id: W-06
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: context
+  notes: La fecha de «alta» también es una decisión. C-006 usa cohorte de entrada, que es distinta de la cohorte
+    de ingreso.
+- claim: Stripe calcula el MRR como la suma normalizada al mes de las suscripciones active y past_due (un plan anual
+    cuenta 1/12); una suscripción canceled o unpaid cuenta como churn.
+  source_id: W-06
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es referencia de definición, no recomendación. En ese marco, una mora no es churn hasta que la suscripción
+    se cancela o queda impaga.
+unverified: false
+source_ref:
+  research: R-033
+links:
+- R-033
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:19:55-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

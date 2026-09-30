@@ -1,0 +1,33 @@
+id: X-044
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-011
+target: H-015
+title: R-011 requiere más investigación H-015
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'No se puede evaluar como explicación de 2022–2024: no hay campo de descuento y R-011 no puede concluir si
+  hubo descuentos. F-134 (propuesto: 34 de 1.247 contracciones tienen la huella limpia de un descuento temporal)
+  es consistente con que no los hubo, pero no lo prueba. Además, un descuento que compensa un cambio de suscripción
+  no deja huella. Hacia adelante, la regla de R-011 lo resuelve con la línea «Descuento».'
+options: []
+recommended: Va con la opción A de Q-002 y con la pregunta a Finora
+recommended_why: 'El caso habla de introducir descuentos: su lugar natural es como caso que el modelo debe separar,
+  no como explicación del histórico.'
+detected_by: cos
+links:
+- R-011
+- H-015
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

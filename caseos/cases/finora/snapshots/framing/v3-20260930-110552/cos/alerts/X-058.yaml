@@ -1,0 +1,48 @@
+id: X-058
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-012
+target: framing
+title: R-012 cambia el framing
+finding_text: Las cifras del Overview se reproducen con ventana completa; el resto es composición
+why: 'R-012 deja definido qué significan en este panel las palabras con que el caso presenta el Overview: «MRR»
+  es la suma de pagos > 0 del mes con la escala fija de amount; «cliente activo» es un cliente con pago > 0 en el
+  mes; el «−38%» es el MRR pagado por cliente activo. Hoy el framing prohíbe en bloque «MRR contratado» y etiquetas
+  como alta, baja o expansión sin vigencia verificada. Pero los propios findings de R-012 ya dicen «MRR pagado»,
+  «altas» y «MRR de expansión» (F-073, F-077, F-078, F-081), igual que R-004 y R-015. Si se aceptan así, el deck
+  carga etiquetas que el framing no permite; si se reescriben todos, se pierde el lenguaje del CEO/CFO, y «expansión»
+  es palabra tuya. El framing está en needs_review, así que es buen momento para resolverlo de una vez.'
+options:
+- key: A
+  label: 'Añadir al framing un glosario corto: los nombres del caso con su definición observada'
+  consequence: 'Términos: «MRR pagado observado», «cliente activo» (pago > 0 en el mes), «alta observada» (primer
+    pago observado, con flujo desde mar-22; no es el hito del CRO), «expansión y contracción observadas», «churn
+    observado vs. persistente». Se habla en el lenguaje del CEO/CFO sin afirmar nada contractual, y se define una
+    sola vez para todo el caso. No es fijar métricas definitivas (D-007): es nombrar lo que el panel mide.'
+- key: B
+  label: Reescribir cada finding al aceptarlo con el vocabulario actual del framing («monto pagado observado», «primera
+    aparición de pago»)
+  consequence: El framing no cambia, pero hay que reescribir finding por finding y el deck suena a método, no a
+    negocio.
+- key: C
+  label: Aceptar los findings como están y resolverlo con una lámina de definiciones
+  consequence: Rápido, pero los findings aceptados quedan con etiquetas que el framing prohíbe, y la regla deja
+    de servir como protección.
+recommended: A
+recommended_why: 'Es la única opción que respeta a la vez la regla del framing y tu vocabulario. Y R-012 es justo
+  lo que la hace posible: ahora sí sabemos qué mide cada cifra del caso.'
+detected_by: cos
+links:
+- R-012
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-d4c8
+created_at: '2026-09-29T11:46:03-06:00'
+updated_at: '2026-09-29T11:46:03-06:00'
+version: 1

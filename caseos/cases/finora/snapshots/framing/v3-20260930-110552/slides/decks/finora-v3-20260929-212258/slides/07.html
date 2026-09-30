@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S07 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S07"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .val { font-size: 30px; font-weight: 600; color: var(--ink); }
+  .in { font-size: 22px; font-weight: 600; color: var(--ink); text-align: center; line-height: 1.25; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S07" data-composition="bridge + ranked_bars" data-family="economics" data-word-budget="95" data-page="8">
+  <header class="header">
+    <div class="kicker">Growth · dónde se concentra la pérdida</div>
+    <h1 class="headline">La pérdida está en el monto por cliente de cosechas de menor ticket</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; cosechas con base dic-22 (con ene-22, la composición explica 108%); churn persistente = no vuelve a pagar en 3 meses · F-097, F-092, F-094, F-096, CFO-03</span><span class="page"></span></footer>
+  <aside class="notes">No se concentra en una industria: el MRR pagado observado por cliente activo bajó en las 6 entre dic-22 y oct-24. Cayó más en Servicios profesionales (−46,6%), Restaurantes (−45,6%) y Retail (−43,1%) que en Producción (−18,8%), Tecnología (−15,5%) y Salud (−14,4%). Se asocia a cosechas: con base dic-22, la composición explica 84% del cambio (−COP 26,6 mil de −31,7 mil), y el menor ticket de entrada ocurre dentro de cada industria (96% del cambio 2022→2024). No se asocia a salidas persistentes: el churn observado baja de 3,52% a 2,04%, mientras que el de quienes no vuelven a pagar en un trimestre queda en 0,98% y 0,96%. Límites: la industria es un corte disponible, no un sustituto de canal ni de ruta; no hay tamaño de cliente, motivos de churn ni estado de suscripción (F-106); quienes se van pagaban más en promedio pero no en mediana (F-101, F-102); la cifra de composición depende de la base elegida (X-060).</aside>
+</main>
+<script>
+P.draw('S07', (s, P) => {
+  // Bridge (cols 1–6): F-097, base dic-22, COP mil por cliente activo.
+  const c = s.chart({ x: 200, y: 372, w: 760, h: 450 });
+  const keys = ['dic-22', 'comp', 'dentro', 'oct-24'];
+  const x = c.band(keys, { padding: 0.36 }), y = c.linear([0, 100]);
+  s.label(200, 322, 'MRR pagado por cliente activo, COP mil', { cls: 'label' });
+  const bars = c.waterfall([
+    { k: 'dic-22', v: 89.54, total: true },
+    { k: 'comp', v: -26.55, tone: 'accent', focal: true },
+    { k: 'dentro', v: -5.18, tone: 'ink-4' },
+    { k: 'oct-24', v: 57.81, total: true },
+  ], { x, y, totalTone: 'ink' });
+  s.line(200, c.b, 960, c.b, { stroke: 'ink-4', w: 1.5 });
+  s.label(bars[0].cx, bars[0].top - 10, '89,5', { anchor: 'bc', cls: 'val num' });
+  s.label(bars[1].cx, (bars[1].top + bars[1].bottom) / 2, '−26,6<br>84%', { anchor: 'mc', cls: 'in num' });
+  s.label(bars[2].cx, bars[2].top - 10, '−5,2', { anchor: 'bc', cls: 'val num' });
+  s.label(bars[3].cx, bars[3].top - 10, '57,8', { anchor: 'bc', cls: 'val num' });
+  [['dic-22', 'dic-22'], ['comp', 'Composición de cosechas'], ['dentro', 'Dentro de las cosechas'], ['oct-24', 'oct-24']]
+    .forEach(([k, t]) => s.label(x.center(k), c.b + 12, t, { anchor: 'tc', cls: 'label-sm', w: 150, align: 'center' }));
+
+  // Ranked bars (cols 9–12): F-094, variación dic-22 → oct-24.
+  const ind = [['Servicios profesionales', 46.6], ['Restaurantes', 45.6], ['Retail', 43.1], ['Producción', 18.8], ['Tecnología', 15.5], ['Salud', 14.4]];
+  const X = P.grid.col(9);
+  s.label(X, 322, 'MRR por cliente activo, variación dic-22 → oct-24', { cls: 'label', w: 540 });
+  s.label(X, 354, 'Baja en las 6, con distinta intensidad', { cls: 'label-sm', w: 540 });
+  const bx = 1500, bw = 250;
+  ind.forEach(([n, v], i) => {
+    const yy = 430 + i * 62;
+    s.label(bx - 14, yy + 15, n, { anchor: 'mr', cls: 'label-sm' });
+    s.rect(bx, yy, v / 50 * bw, 30, { fill: 'ink-3', role: 'bar' });
+    s.label(bx + v / 50 * bw + 10, yy + 15, `−${String(v).replace('.', ',')}%`, { anchor: 'ml', cls: 'label num' });
+  });
+
+  s.line(112, 912, 1808, 912, { stroke: 'rule', w: 1 });
+  s.label(112, 930, 'No se asocia a salidas persistentes: el churn observado baja de 3,52% a 2,04%; el que no vuelve a pagar en un trimestre queda en 0,98% y 0,96%.', { cls: 'annotation', w: 1600 });
+});
+</script>
+</body>
+</html>

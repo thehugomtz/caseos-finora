@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S20 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S20"] {
+  .cap { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .og { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .mo { font-family: var(--font-mono); font-size: 20px; color: var(--ink); line-height: 1.35; }
+  .sm { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .sm code, .ct code { font-family: var(--font-mono); font-size: 19px; color: var(--ink); }
+  .gh { font-family: var(--font-mono); font-size: 24px; font-weight: 600; color: var(--ink); }
+  .gf { font-size: 20px; line-height: 1.45; color: var(--ink-2); }
+  .br { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+  .nv { font-size: 20px; line-height: 1.3; color: var(--ink); }
+  .ct { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .cs { font-size: 20px; line-height: 1.4; color: var(--ink-2); }
+  .cs b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S20" data-composition="lineage_flow + separate_contract_lane" data-family="process" data-word-budget="130" data-page="21">
+  <header class="header">
+    <div class="kicker">Revenue · cómo introducir descuentos · propuesta</div>
+    <h1 class="headline">El descuento se registra como objeto propio, con origen, source y fecha de fin</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de modelo de datos (R-034, C-017): diseño hacia adelante; los ejemplos de promociones son ilustrativos, no datos de Finora · F-150, F-152, F-153, F-154, F-233–F-237</span><span class="page"></span></footer>
+  <aside class="notes">As-is: un solo monto por cliente y mes; no guarda lista, plan, contratado, descuento, origen, source ni la diferencia entre factura y pago, así que un descuento se vería igual que una contracción, un pago multimes o un mes sin cobro (44% de los churn observados vuelve a pagar al mes siguiente). To-be: lista y contrato (price_list_version con vigencia; subscription_item_version = plan × cantidad × precio acordado, sin descuentos, que solo cambia con un subscription_change_event). Descuento: discount_grant con tipo, valor, duración, vigencia pactada y real, alcance, apilamiento, motivo, aprobación y un solo origen. Atribución: campaign (con su rubro de S&amp;M) → promotion (la oferta) → promo_code (código, link o QR, con medio, canal asignado, UTM y landing) → promo_redemption (el canje, ligado a la sesión), más acquisition_touch con el source observado de todo cliente, tenga o no descuento. Aplicación: discount_application (cuánto descontó cada grant en cada línea de factura y en qué orden). Medición: foto de cierre por suscripción y mes con lista, contratado, descuento recurrente, neto, descuento único, facturado y cobrado. Casuística → puente: promoción digital → «Descuento (inicio)» con origen promoción y, al vencer, «Descuento (fin)», nunca expansión; promoción física → la misma línea con origen promoción física, comparable con la digital; negociado → grant ligado al deal y su aprobación, con precio especial = lista + descuento; retención → «Descuento» con origen retención, o Contracción real si baja de plan; partner → «Descuento» con origen partner; apilados → cada grant con su orden y su línea; mes gratis → descuento total con bandera sin cobro, no churn; pausa → estado de la suscripción, no descuento. No sabemos si Finora captura hoy el source en el alta de todos los clientes (H-073). Sin la regla «precio especial = lista + descuento», negociados, partner y retención quedarían como precio menor (H-074).</aside>
+</main>
+<script>
+P.draw('S20', (s, P) => {
+  // Plan: origins cols 1–2 → attribution cols 3–4 → discount_grant (lime) cols 5–7 → application + closing snapshot cols 8–9
+  // → bridge line cols 11–12. Contract runs in its own lane underneath. Dashed = proposed objects.
+  [['Origen', 112], ['Atribución', 440], ['Objeto propio', 800], ['Aplicación y foto', 1170], ['Puente del MRR', 1500]]
+    .forEach(([t, x]) => s.label(x, 338, t, { anchor: 'bl', cls: 'cap' }));
+
+  // Origins.
+  const O = [['Promoción digital', 404], ['Promoción física', 464], ['Negociado', 612], ['Retención', 672], ['Partner', 732]];
+  O.forEach(([t, y], i) => s.label(112, y, t, { anchor: 'ml', cls: 'og', id: `s20-o${i}` }));
+
+  // Attribution for promotions (digital and physical share the object, with a different source).
+  s.rect(440, 372, 290, 124, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash', id: 's20-promo' });
+  s.label(460, 386, 'promo_code<br>promo_redemption', { cls: 'mo' });
+  s.label(460, 448, 'UTM y landing · QR o código', { cls: 'sm', w: 260 });
+  s.label(440, 512, '<code>acquisition_touch</code>: source de todo cliente', { cls: 'sm', w: 300 });
+  s.connect('#s20-o0', [436, 408], { route: 'curve', fromSide: 'right', tone: 'ink-3', w: 2, gap: 12 });
+  s.connect('#s20-o1', [436, 460], { route: 'curve', fromSide: 'right', tone: 'ink-3', w: 2, gap: 12 });
+
+  // The grant: where every origin converges.
+  const GX = 800, GY = 384, GW = 300, GH = 372;
+  s.rect(GX, GY, GW, GH, { fill: 'bg', stroke: 'accent', w: 4, id: 's20-grant' });
+  s.rect(GX, GY, GW, 56, { fill: 'accent', focal: true });
+  s.label(GX + 20, GY + 28, 'discount_grant', { anchor: 'ml', cls: 'gh' });
+  s.label(GX + 20, GY + 80, 'tipo · valor · duración<br>vigencia pactada y real<br>alcance · apilamiento<br>motivo · aprobación', { cls: 'gf', w: GW - 40 });
+  s.line(GX + 20, GY + 256, GX + GW - 20, GY + 256, { stroke: 'rule', w: 1 });
+  s.label(GX + 20, GY + 272, '<b style="color:var(--ink)">un solo origen</b>', { cls: 'gf', w: GW - 40 });
+  s.connect([734, 434], [GX - 4, 440], { route: 'curve', tone: 'ink-3', w: 2, gap: 0 });
+  [['s20-o2', 'deal y aprobación', 616], ['s20-o3', 'motivo', 668], ['s20-o4', 'acuerdo', 720]].forEach(([id, lab, ty]) =>
+    s.connect(`#${id}`, [GX - 4, ty], { route: 'curve', fromSide: 'right', tone: 'ink-3', w: 2, gap: 12, label: lab, labelAt: 0.55 }));
+
+  // Application → closing snapshot.
+  s.rect(1170, 384, 270, 84, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash', id: 's20-app' });
+  s.label(1190, 398, 'discount_application', { cls: 'mo' });
+  s.label(1190, 430, 'por línea de factura', { cls: 'sm' });
+  s.connect([GX + GW + 4, 426], '#s20-app', { route: 'straight', toSide: 'left', tone: 'ink-3', w: 2, gap: 6 });
+  s.rect(1170, 512, 270, 208, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash', id: 's20-snap' });
+  s.label(1190, 526, 'Foto de cierre', { cls: 'og' });
+  s.label(1190, 562, 'lista · contratado<br>descuento · neto<br>facturado · cobrado', { cls: 'sm', w: 240 });
+  s.connect('#s20-app', '#s20-snap', { route: 'straight', fromSide: 'bottom', toSide: 'top', tone: 'ink-3', w: 2, gap: 6 });
+
+  // Bridge line.
+  s.label(1500, 616, '«Descuento (inicio)»<br>«Descuento (fin)»', { anchor: 'ml', cls: 'br', id: 's20-br' });
+  s.label(1500, 672, 'con su origen · nunca Expansión ni Contracción', { cls: 'nv', w: 300 });
+  s.line(1446, 616, 1486, 616, { stroke: 'ink', w: 3, arrow: 'end', headSize: 12 });
+
+  // Separate lane: the contract only changes with a subscription change.
+  const CY = 836;
+  s.line(GX, CY, 1480, CY, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end', headSize: 12 });
+  s.label(GX, CY - 14, '<code>subscription_item_version</code>: lo contratado; solo cambia con un <code>subscription_change_event</code>', { anchor: 'bl', cls: 'ct', w: 660 });
+  s.label(1500, CY, 'New · Expansión · Contracción · Churn', { anchor: 'ml', cls: 'nv', w: 308 });
+  s.label(112, CY, 'Lo contratado va aparte', { anchor: 'ml', cls: 'og' });
+
+  // Special cases.
+  s.line(112, 894, 1808, 894, { stroke: 'rule', w: 1.5 });
+  s.label(112, 912, '<b>Retención con downgrade</b> → Contracción real · <b>Mes gratis</b> → descuento total, no churn · <b>Pausa</b> → estado, no descuento · <b>Apilados</b> → una línea por grant', { cls: 'cs', w: 1696 });
+});
+</script>
+</body>
+</html>

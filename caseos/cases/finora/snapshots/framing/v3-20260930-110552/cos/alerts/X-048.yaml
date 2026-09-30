@@ -1,0 +1,31 @@
+id: X-048
+type: alert
+kind: research_needed
+status: open
+severity: low
+effect: requires_research
+source: R-011
+target: H-010
+title: R-011 requiere más investigación H-010
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'Es lo mismo que H-012 y H-015, pero a la entrada: sin tarifa de lista, precio pactado ni descuento no se ve
+  si hubo descuentos documentados al entrar ni cuánto reducían el precio. La escalera de R-011 lo haría visible
+  desde el primer mes.'
+options: []
+recommended: Va con la opción A de Q-002
+recommended_why: Sin dato de descuento a la entrada, H-010 no se puede evaluar en el histórico.
+detected_by: cos
+links:
+- R-011
+- H-010
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

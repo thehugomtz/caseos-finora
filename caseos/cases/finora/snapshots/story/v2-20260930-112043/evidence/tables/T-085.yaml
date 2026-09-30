@@ -1,0 +1,89 @@
+id: T-085
+type: table
+table_key: FIN-F-183
+title: El churn observado bajó entre 2022 y 2024 mientras el churn que no vuelve a pagar en el trimestre siguiente
+  s…
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_obs_2022
+  - Churn observado mensual de logos, 2022 (mar–dic)
+  - 3,52%
+- - churn_obs_2023
+  - Churn observado mensual de logos, 2023
+  - 2,24%
+- - churn_obs_2024
+  - Churn observado mensual de logos, 2024 (ene–jul)
+  - 2,04%
+- - churn_dur3_2022
+  - Churn mensual que no vuelve a pagar en 3 meses, 2022
+  - 0,98%
+- - churn_dur3_2023
+  - Churn mensual que no vuelve a pagar en 3 meses, 2023
+  - 1,09%
+- - churn_dur3_2024
+  - Churn mensual que no vuelve a pagar en 3 meses, 2024 (ene–jul)
+  - 0,96%
+units: {}
+definitions: {}
+message: 'El churn observado bajó entre 2022 y 2024 mientras el churn que no vuelve a pagar en el trimestre siguiente
+  se mantuvo: pasó de 3,52% a 2,04% el observado y de 0,98% a 0,96% el que no vuelve.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-03
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-RET-03 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-c4dd · C-009
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2022'
+  - '2023'
+  - '2024'
+  formato: pct
+  series:
+  - nombre: Churn observado
+    valores:
+    - 0.035218783351120594
+    - 0.02244320773652039
+    - 0.020378151260504202
+  - nombre: Churn que no vuelve a pagar en 3 meses
+    valores:
+    - 0.009782995375311278
+    - 0.010947906212936776
+    - 0.009558823529411765
+  claim_fase1: C-RET-03
+created_at: '2026-09-29T14:45:38-06:00'
+status: valid
+validation_errors: []
+finding: F-183
+links:
+- F-183
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

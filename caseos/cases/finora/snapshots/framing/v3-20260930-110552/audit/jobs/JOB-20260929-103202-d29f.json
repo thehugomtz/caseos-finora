@@ -1,0 +1,471 @@
+{
+ "id": "JOB-20260929-103202-d29f",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Analytics · ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y…",
+ "params": {
+  "research_id": "R-013"
+ },
+ "agent": "analytics",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:02-06:00",
+ "started_at": "2026-09-29T10:32:02-06:00",
+ "finished_at": "2026-09-29T10:36:18-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "workspace",
+   "summary": "Investigación en vivo INV-20260929-103202-c958 en el Business Exploration Workspace"
+  },
+  {
+   "t": "2026-09-29T10:32:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · inicio"
+  },
+  {
+   "t": "2026-09-29T10:32:05-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · sesion"
+  },
+  {
+   "t": "2026-09-29T10:32:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · nota"
+  },
+  {
+   "t": "2026-09-29T10:32:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · brain_lookup {'tema': 'S&M unidad moneda rubros CV-SM-UNIDAD CV-SM-ASIGNACION'}"
+  },
+  {
+   "t": "2026-09-29T10:32:09-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · brain_lookup {'ids': ['CV-SM-UNIDAD', 'CV-SM-ASIGNACION', 'CV-FREELANCE-CERO', 'CV-PAYROLL-NEG', 'total_sm_spend…"
+  },
+  {
+   "t": "2026-09-29T10:32:39-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · upsert_hypotheses {'encuadre': {'pregunta_analitica': '¿Qué documenta de forma verificable el archivo de gasto de S&M…"
+  },
+  {
+   "t": "2026-09-29T10:32:39-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · encuadre"
+  },
+  {
+   "t": "2026-09-29T10:32:39-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipotesis"
+  },
+  {
+   "t": "2026-09-29T10:32:39-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:32:43-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · search_evidence {'ids': ['C-DAT-01', 'C-INV-01', 'C-INV-02']}"
+  },
+  {
+   "t": "2026-09-29T10:32:43-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:43-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:43-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · search_evidence {'texto': 'composición de rubros del gasto de S&M, Freelance en cero, Team porcentaje del total', '…"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:52-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': 'SELECT * FROM mart.sm_monthly ORDER BY 1', 'proposito': 'Inspeccionar el archivo de S&M co…"
+  },
+  {
+   "t": "2026-09-29T10:32:52-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:32:52-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:33:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': \"WITH r AS (\\n  SELECT 'paid_media' AS rubro, month, paid_media AS v FROM mart.sm_monthly\\n…"
+  },
+  {
+   "t": "2026-09-29T10:33:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:33:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': \"WITH r AS (\\n  SELECT month, total_sm_spend AS tot, 'team' AS rubro, team AS v FROM mart.s…"
+  },
+  {
+   "t": "2026-09-29T10:33:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:33:19-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': \"WITH sm AS (\\n  SELECT CAST(substr(month,1,4) AS INT) AS anio, month,\\n         total_sm_s…"
+  },
+  {
+   "t": "2026-09-29T10:33:19-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T10:33:54-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · nota"
+  },
+  {
+   "t": "2026-09-29T10:33:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor…"
+  },
+  {
+   "t": "2026-09-29T10:33:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · validacion"
+  },
+  {
+   "t": "2026-09-29T10:33:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-001 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:33:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:34:02-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Los siete rubros del archivo de S&M cubren los mismos {meses} meses de ene-22 a oct-…"
+  },
+  {
+   "t": "2026-09-29T10:34:02-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · claim_rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:02-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:34:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo:…"
+  },
+  {
+   "t": "2026-09-29T10:34:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · claim_rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:34:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Todos los rubros del archivo de S&M cubren los mismos {meses} meses de ene-22 a oct-…"
+  },
+  {
+   "t": "2026-09-29T10:34:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-004 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:34:20-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo:…"
+  },
+  {
+   "t": "2026-09-29T10:34:20-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-005 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:20-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:34:24-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'La serie de Habilitación cambia de composición a mitad del panel: Freelance registra…"
+  },
+  {
+   "t": "2026-09-29T10:34:24-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · claim_rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:24-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:34:32-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'La serie de Habilitación cambia de composición dentro del panel: Freelance registra…"
+  },
+  {
+   "t": "2026-09-29T10:34:32-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-007 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:32-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:34:37-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habi…"
+  },
+  {
+   "t": "2026-09-29T10:34:37-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-008 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:37-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:34:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Habilitación pesa {share_2022} del S&M total en 2022 y {share_2024} en 2024, y el ga…"
+  },
+  {
+   "t": "2026-09-29T10:34:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-009 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:34:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:35:00-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Ningún rubro del archivo de S&M tiene meses ausentes: PaidMedia, PublicidadNoWeb, Te…"
+  },
+  {
+   "t": "2026-09-29T10:35:00-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-010 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:35:00-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:35:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'El peso de Habilitación en el S&M total no es estable: pasa de {s22} en 2022 a {s23}…"
+  },
+  {
+   "t": "2026-09-29T10:35:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-011 rechazada"
+  },
+  {
+   "t": "2026-09-29T10:35:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:35:12-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-004', 'intencion': 'detalle', 'evidence_id': 'E-002', 'principal': True}"
+  },
+  {
+   "t": "2026-09-29T10:35:12-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T10:35:13-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-005', 'intencion': 'composicion', 'evidence_id': 'E-001'}"
+  },
+  {
+   "t": "2026-09-29T10:35:13-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:35:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-007', 'intencion': 'tendencia', 'evidence_id': 'E-001'}"
+  },
+  {
+   "t": "2026-09-29T10:35:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:35:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-009', 'intencion': 'comparacion', 'evidence_id': 'E-004'}"
+  },
+  {
+   "t": "2026-09-29T10:35:14-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · tool_error"
+  },
+  {
+   "t": "2026-09-29T10:35:20-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-005', 'intencion': 'detalle', 'evidence_id': 'E-003'}"
+  },
+  {
+   "t": "2026-09-29T10:35:20-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T10:35:21-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-009', 'intencion': 'detalle', 'evidence_id': 'E-004'}"
+  },
+  {
+   "t": "2026-09-29T10:35:21-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T10:35:22-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-001', 'intencion': 'cifra', 'evidence_id': 'EC-INV-01'}"
+  },
+  {
+   "t": "2026-09-29T10:35:22-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T10:35:27-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-007', 'intencion': 'detalle', 'evidence_id': 'E-004'}"
+  },
+  {
+   "t": "2026-09-29T10:35:27-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T10:35:40-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T10:35:40-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · composicion"
+  },
+  {
+   "t": "2026-09-29T10:36:18-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · composición (intento 1)"
+  },
+  {
+   "t": "2026-09-29T10:36:18-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · publicada"
+  },
+  {
+   "t": "2026-09-29T10:36:18-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · final"
+  },
+  {
+   "t": "2026-09-29T10:36:18-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-013",
+  "findings": [
+   "F-063",
+   "F-064",
+   "F-065",
+   "F-066",
+   "F-067",
+   "F-068",
+   "F-069",
+   "F-070"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

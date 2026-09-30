@@ -1,0 +1,85 @@
+id: F-233
+type: finding
+headline: 'Hoy el modelo no puede separar un descuento de una contracción, un pago multi-mes o un mes sin cobro:
+  solo hay cliente × mes × monto.'
+evidence_text: 'El catálogo no tiene ningún campo de lista, plan, cantidad, descuento, promoción, código, UTM, partner,
+  aprobador ni factura (DM-01). El grano es cliente × mes: 66.674 pares únicos, 1.961 clientes y 34 meses (DM-02).
+  De 1.247 contracciones, 311 son exactamente a la mitad del mes anterior, 932 vienen justo después de una expansión,
+  alta o reactivación y 332 justo después de un mes con firma de pago multi-mes (DM-07); además se concentran en
+  razones redondas: 63 a un tercio y 27 a un cuarto (DM-04). De 751 churn observados, 330 vuelven a pagar en t+1
+  (87 con el mismo monto) (DM-05). Hay 512 filas con firma de pago multi-mes (DM-03).'
+confidence: high
+limitations:
+- 'No dice si hubo descuentos en el histórico (el caso habla de introducirlos) ni cuál explicación domina: timing
+  de pago, pausa, cambio real o un descuento futuro dejarían la misma huella.'
+kind: data_engineering
+claims:
+- claim: 'El as-is tiene grano cliente × mes con un solo monto: 66.674 filas, que son 66.674 pares únicos cliente-mes,
+    de 1.961 clientes en 34 meses (2022-01 a 2024-10); 33.703 filas en cero y ninguna negativa.'
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Respalda C-017 y C-019: no hay dónde registrar la lista ni el descuento. El monto es pagado observado,
+    no MRR contratado.'
+- claim: Ninguna tabla del modelo tiene precio de lista, plan, cantidad, descuento, promoción, código, UTM/source,
+    partner, aprobador ni factura; raw.transactions solo trae ID, month y amount.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Verificado sobre el catálogo; information_schema no se puede consultar en este entorno.
+- claim: 'Hay 1.247 contracciones observadas: 311 son exactamente a la mitad del mes anterior, 932 vienen justo
+    después de una expansión, alta o reactivación y 332 justo después de un mes con firma de pago multi-mes.'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: El bucket «contracción» de hoy mezcla timing de pago con cambios reales. No permite afirmar que hubo descuentos
+    en el histórico.
+- claim: De 751 churn observados, 330 vuelven a pagar en t+1, 87 con el mismo monto; 468 vuelven antes de oct-24.
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Hoy un mes sin cobro (pausa, pago atrasado o, a futuro, un descuento del 100%) se registra como churn
+    + reactivación. Ojo: el catálogo describe returned_next_month como «con el mismo monto», pero da 330 frente
+    a 87; se lee como «vuelve con cualquier monto».'
+- claim: 512 filas cliente-mes tienen firma de pago multi-mes (monto = k × monto usual); 194 expansiones y 17 contracciones
+    revierten al mes siguiente.
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Confirma que el monto observado mezcla timing de pago con valor recurrente (en la escalera de C-019, pagado
+    ≠ contratado).
+- claim: 'Las contracciones se concentran en razones redondas frente al mes anterior: 311 a la mitad, 63 a un tercio,
+    27 a un cuarto y 20 a dos tercios.'
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: Cuando exista, un descuento de porcentaje fijo dejará la misma huella en cliente-mes-monto; por eso el
+    as-is no puede separarlos. No implica que haya habido descuentos en el histórico.
+unverified: false
+source_ref:
+  research: R-034
+links:
+- R-034
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:01:14-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

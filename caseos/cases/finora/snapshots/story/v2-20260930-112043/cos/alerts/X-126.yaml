@@ -1,0 +1,54 @@
+id: X-126
+type: alert
+kind: weakening
+status: open
+severity: low
+effect: weakens
+source: R-024
+target: H-037
+title: R-024 debilita H-037
+finding_text: 'Los artefactos quedan acotados: el estancamiento de altas sigue siendo señal contrastable'
+why: 'En 2023→2024, contar o no las reactivaciones no cambia la lectura: son 12 y 16 por mes frente a 54 y 55 altas,
+  y ambos periodos quedan en el mismo orden (F-201). Tampoco hay doble conteo: ningún mes-cliente es alta y reactivación
+  a la vez (F-197).
+
+
+  El peso de las reactivaciones sí se movió (F-200: 17, 12 y 16 frente a 27, 54 y 55 altas), pero en esa ventana
+  no produce el «no crecen».
+
+
+  Donde sigue viva es en 2022→2024, porque cambia la magnitud. Con reactivaciones, las entradas a pago van de ≈44
+  a ≈71 por mes. Es una cuenta directa de F-200 que no está en ninguna tabla: cerca de +60%, contra +104% sin ellas
+  (T-019).
+
+
+  Eso solo importa si el CRO habla de 2022→2024 (Q-051) y cuenta como nuevo a quien vuelve. Si H-059 se sostiene,
+  la mayoría de esas vueltas ni siquiera pasa por el CRM.'
+options:
+- key: A
+  label: Acotar H-037 a 2022→2024 y atarla a Q-051
+  consequence: Si el CRO habla de 2023→2024, se cierra sola. Si habla de 2022→2024, sigue viva como efecto de definición
+    sobre la magnitud.
+- key: B
+  label: Marcarla como no soportada
+  consequence: Más simple, pero se pierde que en la ventana larga contar reactivaciones achica el escalón.
+- key: C
+  label: Tabla de entradas a pago con y sin reactivaciones por periodo
+  consequence: Deja la magnitud rastreable (los insumos están en T-097) si Growth usa 2022→2024. Hoy esa suma no
+    está en ninguna tabla.
+recommended: A
+recommended_why: El test de R-024 es justo el que H-037 necesitaba para 2023→2024, y ahí no cambia nada. La ventana
+  larga depende de Q-051; C solo hace falta si se elige esa ventana.
+detected_by: cos
+links:
+- R-024
+- H-037
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162147-cos-c496
+created_at: '2026-09-29T16:45:29-06:00'
+updated_at: '2026-09-29T16:45:29-06:00'
+version: 1

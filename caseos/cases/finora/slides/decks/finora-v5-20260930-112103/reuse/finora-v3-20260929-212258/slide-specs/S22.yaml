@@ -1,0 +1,49 @@
+slide:
+  id: S22
+  file: slides/22.html
+  claim_id: C-019
+  role_in_story: recommendation
+  kicker: "Revenue · separar suscripción y precio pagado · propuesta"
+  headline: "La propuesta de modelo de datos separa el valor en una escalera con vigencias"
+  takeaway: "De la lista a lo cobrado, cada peldaño tiene su tabla y su vigencia; el MRR se clasifica en los primeros peldaños y la caja solo genera efecto de cobro."
+  question: "¿Cómo separar el valor de la suscripción del precio efectivamente pagado?"
+  relationship: "value STEPS DOWN from list to collected; each difference has a name, a table and a validity"
+  evidence_type: structure
+  composition: staircase (peldaños esquemáticos) + two_brackets
+  family: economics
+  alternatives_considered:
+    - id: waterfall con cifras
+      score: {fidelity: 2, focal: 2, evidence: 0, variety: 1, risk: 0}
+      rejected_because: "no hay cifras por peldaño en data/; un waterfall con números sería inventado"
+    - id: capas apiladas
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "no transmite que el valor baja de un peldaño al siguiente"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: 0}
+  focal_point: net_step
+  visual_hierarchy:
+    1: peldaño MRR neto = contratado − descuento recurrente (lima)
+    2: los seis peldaños con su tabla
+    3: llave MRR (lista y neto) contra llave caja (efecto de cobro)
+    4: conciliación con el monto pagado de hoy
+  objects:
+    - {id: steps, kind: bar, content: "Lista · Contratado · Descuento recurrente · MRR neto · Facturado · Cobrado"}
+    - {id: net_step, kind: bar, content: "MRR neto"}
+    - {id: brackets, kind: bracket, content: "MRR: se clasifica comparando fotos de cierre · Caja: solo efecto de cobro"}
+  encodings:
+    y_position: "valor (esquema, sin escala)"
+    mono: "tabla fuente de cada peldaño"
+    accent: "el MRR neto"
+    dashed: "todo el modelo es propuesto"
+  annotations:
+    - {at: contracted, text: "Lo contratado solo cambia con un subscription_change_event"}
+    - {at: bottom, text: "El monto pagado de hoy sigue como «monto pagado observado» y se concilia contra lo cobrado"}
+  layout_intent:
+    grid: "escalera cols 1–12 descendiendo de izquierda a derecha; llaves arriba"
+    reading_path: "izquierda → derecha, bajando"
+    whitespace: "bajo los primeros peldaños"
+  text_budget: 95
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "tres cards", "cifras inventadas"]
+  data: {source: "propuesta (R-034, C-019); esquema sin cifras", values: []}
+  notes: "El puente por capas no se puede construir con el histórico (F-168): mide hacia adelante. Las reglas del modelo son decisiones por escribir antes de construir (F-241). F-130, F-132 y F-133 tienen la fuente sin verificar."
+  sources: [F-130, F-132, F-133, F-151, F-152, F-168, F-234, F-240]

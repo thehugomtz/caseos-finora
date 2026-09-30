@@ -1,0 +1,51 @@
+slide:
+  id: S24
+  file: slides/24.html
+  claim_id: C-025
+  role_in_story: implication
+  kicker: "Revenue · los casos del CFO con el modelo"
+  headline: "Con el modelo propuesto, cada caso del CFO se lee en su capa"
+  takeaway: "El mismo monto pagado se separa en suscripción, descuento y cobro: el caso que hoy se ve «sin cambio» es Expansión más «Descuento (inicio)»."
+  question: "Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece el descuento: ¿cómo se lee cada caso?"
+  relationship: "the same paid amount DECOMPOSES into subscription, discount and billing layers; each case moves a different line"
+  evidence_type: comparison
+  composition: small_multiples (tres casos, mini puentes con la misma escala)
+  family: comparison
+  alternatives_considered:
+    - id: tabla caso × línea
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "prohibida por el brief; no muestra que el neto queda igual"
+    - id: un solo puente con los tres casos
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "mezcla casos que son alternativos, no sucesivos"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: -1}
+  focal_point: case_b
+  visual_hierarchy:
+    1: caso 2 (100 → 130 con −30): Expansión +30 y «Descuento (inicio)» −30 (lima), neto 100
+    2: caso 3: «Descuento (fin)» +30, no Expansión
+    3: caso 1: tres lecturas posibles de 100 → 80
+    4: hoy con monto pagado; hacia adelante lista − neto
+  objects:
+    - {id: case_a, kind: bar, content: "100 → 80: Contracción · «Descuento (inicio)» · efecto de cobro (fuera del MRR)"}
+    - {id: case_b, kind: bar, content: "100 +30 Expansión −30 «Descuento (inicio)» = 100"}
+    - {id: case_c, kind: bar, content: "100 +30 «Descuento (fin)» = 130"}
+  encodings:
+    height: "monto del ejemplo (misma escala en los tres casos)"
+    accent: "la línea que hoy queda escondida"
+    label_under: "cómo se ve hoy con el monto pagado"
+  annotations:
+    - {at: case_b, text: "Hoy se vería «sin cambio»"}
+    - {at: case_c, text: "Hoy se vería como expansión"}
+    - {at: bottom, text: "Hoy el puente ya mezcla cobro: 29% del MRR de expansión se revierte al mes siguiente y 44% de los churn observados vuelve a pagar al mes siguiente"}
+  layout_intent:
+    grid: "tres casos en cols 1–4, 5–8, 9–12; banda inferior cols 1–12"
+    reading_path: "caso 1 → 2 → 3; luego hoy vs hacia adelante"
+    whitespace: "sobre las barras"
+  text_budget: 125
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "tres cards de texto", "cifra histórica de revenue no capturado"]
+  data:
+    source: "ejemplos del enunciado (100, 80, 130, 30); data/FIN-F-172.yaml, FIN-F-174.yaml, FIN-F-178.yaml"
+    values: "29%; 44%; −38% no se puede repartir entre lista y descuento"
+  notes: "Los casos son ejemplos del enunciado, no observaciones de Finora. No damos cifra histórica de revenue no capturado. La lectura depende de la convención que declare el CFO (C-018). Para Q-026, hacia adelante: MRR de lista − MRR neto = revenue que dejamos de capturar, por origen."
+  sources: [F-168, F-172, F-174, F-177, F-178, F-150, F-151]

@@ -1,0 +1,170 @@
+id: C-029
+type: claim
+key: hipotesis-datos
+question: ¿Qué dato valida o descarta cada hoja del árbol, y lo tenemos hoy?
+headline: Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso
+answer: 'En el mismo orden del árbol, cada hoja tiene una firma y un dato mínimo. Artefactos: export de leads con
+  fecha, fuente y dominio, cruzado con customer_id y con leads previos, para quitar no-prospectos y duplicados,
+  y el cruce de identidad para ver la misma demanda por otra puerta; las entradas únicas con fecha (con canal, motion
+  y segmento) y su vínculo con el pago bastan para separar conteo, mezcla y tiempo. Mezcla o calidad: señales de
+  ajuste congeladas al crear el lead, comparando mezcla contra tasa dentro de cada puerta, nunca con lo que Sales
+  opinó después. Antes del SQL: tiempo a primer toque humano y carga por SDR/AE, con un roster semanal que distinga
+  ramp (capacidad), y la bolsa de estancados con fechas por etapa y lo que compran los retomados (estancamiento).
+  Después del SQL: aceptación del AE según el origen del SQL (incentivos del SDR) y motivos validados con compradores
+  (oferta o precio), porque las razones de pérdida del CRM no alcanzan. Cobro: Won ligado al primer pago. Nada de
+  esto está en el caso: el modelo empieza en el primer pago, el gasto de S&M no sirve como proxy de capacidad ni
+  de leads, y probar la palanca de capacidad pide un experimento; la prueba más rápida es que Finora etiquete hacia
+  atrás, desde su CRM, a los pagadores ya observados.'
+role_in_story: recommendation
+evidence_ids:
+- F-121
+- F-122
+- F-127
+- F-128
+- F-129
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-207
+- F-225
+- F-191
+- F-120
+- F-124
+- F-126
+- F-159
+table_ids: []
+research_ids:
+- R-032
+- R-014
+- R-010
+- R-025
+- R-031
+- R-023
+- R-022
+framework_ids: []
+confidence: medium
+limitations:
+- 'Es propuesta: ninguna hoja tiene hoy su dato en el caso (F-230, F-126).'
+- 'Que el caso no traiga canal ni etapas no prueba que Finora no los registre: parte puede estar en su CRM, aunque
+  no siempre con historia (F-128, H-076).'
+- Ventana de deduplicación, SLA y umbral de estancamiento son parámetros a acordar con Finora, no estándar de mercado.
+- Comparar tocados contra no tocados asigna crédito, no efecto; la palanca de capacidad pide experimento (F-159).
+- 'Comparar entradas directas a SQL contra SQL del SDR no es un experimento: solo sirve ver cómo cambia cada grupo
+  en el tiempo, y sigue siendo asociación.'
+- Con los pagos solo se acotan los artefactos del lado de pagadores; los del lado de leads necesitan el CRM.
+visual_intent: 'Match: cada hoja del árbol, en el mismo orden, se empareja con su firma y su dato mínimo; ninguna
+  tiene hoy su dato.'
+hugo_wording: …y qué datos validarían o descartarían cada una; aquí no hay que hacer research en data, es una propuesta.
+links:
+- F-121
+- F-122
+- F-127
+- F-128
+- F-129
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-207
+- F-225
+- F-191
+- F-120
+- F-124
+- F-126
+- F-159
+- R-032
+- R-014
+- R-010
+- R-025
+- R-031
+- R-023
+- R-022
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103401-cos-03df
+created_at: '2026-09-30T11:03:59-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 4
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-121
+  - F-122
+  - F-127
+  - F-128
+  - F-129
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-207
+  - F-225
+  - F-191
+  - F-120
+  - F-124
+  - F-126
+  - F-159
+  - F-121
+  - F-122
+  - F-127
+  - F-128
+  - F-129
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-207
+  - F-225
+  - F-191
+  - F-120
+  - F-124
+  - F-126
+  - F-159
+  accepted:
+  - F-121
+  - F-122
+  - F-127
+  - F-128
+  - F-129
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-207
+  - F-225
+  - F-191
+  - F-120
+  - F-124
+  - F-126
+  - F-159
+  - F-121
+  - F-122
+  - F-127
+  - F-128
+  - F-129
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-207
+  - F-225
+  - F-191
+  - F-120
+  - F-124
+  - F-126
+  - F-159
+  pending: []
+  tables: []
+  unsupported_numbers: []
+  stale: []

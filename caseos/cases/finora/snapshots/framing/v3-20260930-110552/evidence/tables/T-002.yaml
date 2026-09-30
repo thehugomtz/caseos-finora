@@ -1,0 +1,62 @@
+id: T-002
+type: table
+table_key: CFO-03
+title: Churn observado vs churn persistente
+question: ¿El churn mejoró o solo bajaron las ausencias temporales de pago?
+columns:
+- year
+- observed_churn
+- persistent_churn
+rows:
+- - 2022
+  - 3.52
+  - 0.98
+- - 2023
+  - 2.24
+  - 1.09
+- - 2024
+  - 2.04
+  - 0.96
+units:
+  observed_churn: percent
+  persistent_churn: percent
+definitions:
+  observed_churn: Clientes que pagaban el mes anterior y este mes pagan cero, sobre activos (churn observado, no
+    cancelación confirmada).
+  persistent_churn: Churn observado que no vuelve a pagar en los tres meses siguientes.
+message: El churn observado bajó de 3,52% en 2022 a 2,04% en 2024 mientras el churn persistente se mantuvo casi
+  plano (0,98% → 0,96%).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: brain/evidence/canonical_findings.yaml#C-RET-03
+  generated_by: finora_eda.py · verification_views
+query: ''
+transformation: Tasas anuales promedio de churn observado y de churn sin retorno a 3 meses.
+filters: []
+period:
+  from: 2022-03
+  to: 2024-10
+grain: año
+analysis_id: Verificación 28-sep · C-RET-03
+limitations:
+- El churn observado no representa cancelación confirmada (CV-CHURN-PAUSAS).
+preferred_visual: slope
+visual_artifact: null
+created_at: '2026-09-28T22:22:26-06:00'
+status: valid
+validation_errors: []
+links:
+- F-033
+- F-015
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: import
+  source: brain/evidence/canonical_findings.yaml#C-RET-03
+  imported_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

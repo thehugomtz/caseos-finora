@@ -1,0 +1,50 @@
+slide:
+  id: S08
+  file: slides/08.html
+  claim_id: C-008
+  role_in_story: implication
+  kicker: "Growth · dónde se concentra la pérdida"
+  headline: "Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar"
+  takeaway: "Salud queda sola en bajo churn persistente, ticket alto y poca base: una señal para validar, no un segmento."
+  question: "¿Hay industrias de bajo churn, ticket alto y poco volumen que valga la pena mirar?"
+  relationship: "industries are POSITIONED by persistent churn vs entry ticket, sized by base; Salud TRADES volume for retention and ticket"
+  evidence_type: two_variable
+  composition: bubble_matrix
+  family: comparison
+  alternatives_considered:
+    - id: harvey por industria
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "tres columnas de bolitas no muestran el trade-off en un plano"
+    - id: barras ordenadas por churn
+      score: {fidelity: 1, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "una dimensión sola no aísla a Salud"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 3, risk: -1}
+  focal_point: salud_bubble
+  visual_hierarchy:
+    1: burbuja de Salud en lima, arriba a la izquierda
+    2: Restaurantes (mismo ticket, mucha más base)
+    3: las otras cuatro industrias
+    4: rango estrecho del churn observado
+  objects:
+    - {id: salud_bubble, kind: marker, content: "Salud · 0,56 · COP 52,5 mil · 124 clientes"}
+    - {id: others, kind: marker, content: "Restaurantes, Servicios profesionales, Tecnología, Producción, Retail"}
+  encodings:
+    x_position: "churn persistente 2024 (pp mensuales, no vuelve a pagar en un trimestre)"
+    y_position: "ticket de entrada mediano 2024 (COP mil)"
+    area: "clientes activos oct-24 (r ∝ √n)"
+    accent: "Salud"
+  annotations:
+    - {at: salud_bubble, text: "Salud: menor churn persistente (0,56), ticket mediano más alto (COP 52,5 mil, igual que Restaurantes) y 124 clientes frente a 459"}
+    - {at: right, text: "Señal para validar con tamaño, canal y motivos de salida; no un segmento"}
+  layout_intent:
+    grid: "plano cols 1–8; anotación cols 9–12"
+    reading_path: "burbuja lima → anotación → resto"
+    whitespace: "cuadrante bajo churn / ticket bajo vacío"
+  text_budget: 80
+  must_show: [la relación de la intención visual]
+  avoid: ["clustering inventado", "tabla", "tres cards", "leyenda de colores"]
+  data:
+    source: "data/FIN-F-104.yaml (= F-103): churn persistente, ticket mediano 2024, activos oct-24"
+    values: "Salud 0,56/52.500/124 · Rest 0,62/52.500/459 · SP 0,87/31.500/140 · Tec 0,91/49.350/206 · Prod 1,07/39.900/389 · Retail 1,33/26.250/360"
+  notes: "Con pocos clientes por industria las medianas se mueven con pocas altas. Salud es la excepción del tramo 2022→2023: su ticket baja recién en 2024 (F-165). En 2024 el churn observado va de 1,46 a 2,57: rango estrecho."
+  sources: [F-104, F-099, F-103, F-105, F-165]

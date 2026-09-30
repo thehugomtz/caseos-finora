@@ -1,0 +1,129 @@
+id: C-025
+type: claim
+key: cfo-casos
+question: 'Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece
+  el descuento: ¿cómo se lee cada caso y qué pasa con el negocio subyacente?'
+headline: Con el modelo propuesto, cada caso del CFO se lee en su capa
+answer: 'Con el modelo propuesto, cada caso del enunciado (ejemplos, no datos de Finora) cae en su capa. Si paga
+  100 y luego 80, el modelo distingue una contracción real (lo contratado baja a 80) de un inicio de descuento (lo
+  contratado sigue en 100 y la diferencia va a «Descuento»). Si la suscripción pasa de 100 a 130 con un descuento
+  de 30 y sigue pagando 100, el puente muestra expansión de 30 e inicio de descuento de −30, con el neto sin cambio;
+  si después desaparece el descuento, la subida del pago va a fin de descuento, no a expansión. Hoy ese puente por
+  capas no es construible (no hay lista, plan ni descuento en los datos), y el puente actual mezcla orígenes: 29%
+  del MRR de expansión se revierte al mes siguiente y 44% de los 751 churns observados vuelve a pagar al mes siguiente.
+  Sobre el negocio subyacente, lo que se observa es composición de la base, no un efecto separable de precio o descuento:
+  el MRR pagado observado por cliente activo pasa de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24 (−38%), mientras
+  el de la base previa cambia +5%; el revenue que dejamos de capturar por descuentos solo se medirá hacia adelante,
+  con la capa de descuento.'
+role_in_story: recommendation
+evidence_ids:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+- F-075
+table_ids:
+- T-080
+- T-074
+- T-076
+- T-030
+research_ids:
+- R-027
+- R-011
+- R-021
+- R-012
+framework_ids: []
+confidence: medium
+limitations:
+- 'Los casos son los ejemplos del enunciado del CFO: prueban qué distingue el modelo, no describen lo que pasó en
+  Finora.'
+- El puente por capas (lista, descuento y neto) no es construible con los datos del caso (F-168).
+- 'No se puede repartir la caída por cliente entre un precio de lista distinto y un descuento: ambos coinciden en
+  el mismo monto observado (F-177).'
+- 'El −38% no se presenta como deterioro de la salud: todavía no se separan la mezcla de entrada, el precio y las
+  salidas.'
+- 'El revenue que dejamos de capturar no tiene cifra histórica: el histórico no trae tarifas ni descuentos; se mide
+  hacia adelante.'
+- La convención de cómo pega el descuento en el MRR la decide el CFO (F-151).
+visual_intent: 'Unfold: el mismo pago observado se abre en capas (contratado, descuento, neto) y cada caso del CFO
+  cae en una capa distinta.'
+hugo_wording: 'Preguntas del CFO contestadas con el modelo propuesto: qué pasa con el negocio subyacente y cuánto
+  revenue dejamos de capturar por decisiones comerciales.'
+links:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+- F-075
+- T-080
+- T-074
+- T-076
+- T-030
+- R-027
+- R-011
+- R-021
+- R-012
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 9
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-075
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-075
+  accepted:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-075
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-075
+  pending: []
+  tables:
+  - T-080
+  - T-074
+  - T-076
+  - T-030
+  - T-080
+  - T-074
+  - T-076
+  - T-030
+  unsupported_numbers: []
+  stale: []

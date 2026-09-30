@@ -1,0 +1,148 @@
+id: T-016
+type: table
+table_key: FIN-F-110
+title: Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…
+question: ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación
+  de Demanda ToFu, Team, Habilitación) a lo largo del tiempo? ¿Hasta dónde se pueden relacionar cruzando fechas
+  sin pasar de asociación a efecto?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - new_2022_pm
+  - Altas por mes, 2022 (mar–dic)
+  - 27,2
+- - new_2324_pm
+  - Altas por mes, ene-23 a oct-24
+  - 54,7
+- - plateau_slope
+  - Pendiente de las altas por mes desde ene-23 (cambio por mes)
+  - +0,47
+- - plateau_lo
+  - Límite inferior del intervalo de 95% de esa pendiente
+  - −0,40
+- - plateau_hi
+  - Límite superior del intervalo de 95% de esa pendiente
+  - +1,33
+units: {}
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en
+  jun-24 con 84.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-09
+  - E-001
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-001
+
+  SELECT month AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer)) / COUNT(DISTINCT
+  month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10'' GROUP BY ALL
+  ORDER BY periodo'
+transformation: EC-ADQ-09 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-001 · query_metric
+  · Métrica del catálogo · Altas
+filters:
+- periodo 2022-03–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month
+analysis_id: INV-20260929-103202-2167 · C-001
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: annotated_line
+visual_artifact:
+  tipo: linea
+  x:
+  - mar-22
+  - abr-22
+  - may-22
+  - jun-22
+  - jul-22
+  - ago-22
+  - sep-22
+  - oct-22
+  - nov-22
+  - dic-22
+  - ene-23
+  - feb-23
+  - mar-23
+  - abr-23
+  - may-23
+  - jun-23
+  - jul-23
+  - ago-23
+  - sep-23
+  - oct-23
+  - nov-23
+  - dic-23
+  - ene-24
+  - feb-24
+  - mar-24
+  - abr-24
+  - may-24
+  - jun-24
+  - jul-24
+  - ago-24
+  - sep-24
+  - oct-24
+  series:
+  - nombre: Altas
+    valores:
+    - 30.0
+    - 19.0
+    - 38.0
+    - 33.0
+    - 32.0
+    - 26.0
+    - 17.0
+    - 32.0
+    - 19.0
+    - 26.0
+    - 60.0
+    - 30.0
+    - 38.0
+    - 51.0
+    - 47.0
+    - 46.0
+    - 65.0
+    - 66.0
+    - 56.0
+    - 64.0
+    - 72.0
+    - 55.0
+    - 57.0
+    - 32.0
+    - 43.0
+    - 69.0
+    - 66.0
+    - 84.0
+    - 48.0
+    - 56.0
+    - 49.0
+    - 50.0
+  formato: int
+created_at: '2026-09-29T10:47:36-06:00'
+status: valid
+validation_errors: []
+finding: F-110
+links:
+- F-110
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: hugo
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

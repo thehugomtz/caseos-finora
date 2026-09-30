@@ -1,0 +1,116 @@
+id: T-083
+type: table
+table_key: FIN-F-181
+title: La reactivación se concentra en interrupciones de un solo mes de pago
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- semestre
+- mrr_reactivacion_cop
+- share_hueco_un_mes_pct
+rows:
+- - 2022 S1
+  - 14354631.0
+  - 92.9
+- - 2022 S2
+  - 27280975.0
+  - 36.5
+- - 2023 S1
+  - 11528157.0
+  - 74.8
+- - 2023 S2
+  - 11664787.0
+  - 50.1
+- - 2024 S1
+  - 13118938.0
+  - 57.6
+- - 2024 S2
+  - 8555938.0
+  - 52.6
+units:
+  semestre: texto
+  mrr_reactivacion_cop: num2
+  share_hueco_un_mes_pct: num2
+definitions: {}
+message: 'La reactivación se concentra en interrupciones de un solo mes de pago: por semestre de la ventana limpia,
+  la parte del MRR de reactivación que viene de un hueco de un mes va de 36,5% a 92,9%.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-010
+  - E-008
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-010\nWITH b AS (\n  SELECT customer_id, month, month_index, paid_mrr_cop, reactivated_customer, reactivation_mrr_cop,
+  active_customer,\n    MAX(CASE WHEN active_customer=1 THEN month_index END) OVER (PARTITION BY customer_id ORDER
+  BY month_index ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS last_idx\n  FROM mart.customer_month\n), r
+  AS (\n  SELECT CASE WHEN CAST(substr(month,6,2) AS INT) <= 6 THEN substr(month,1,4) || ' S1' ELSE substr(month,1,4)
+  || ' S2' END AS semestre,\n    reactivation_mrr_cop AS mrr, (month_index - last_idx) AS gap\n  FROM b WHERE reactivated_customer=1
+  AND month >= '2022-03' AND month <= '2024-10'\n)\nSELECT semestre,\n  ROUND(SUM(mrr)) AS mrr_reactivacion_cop,\n
+  \ ROUND(100.0*SUM(CASE WHEN gap=2 THEN mrr ELSE 0 END)/NULLIF(SUM(mrr),0),1) AS share_hueco_un_mes_pct\nFROM r
+  GROUP BY semestre ORDER BY semestre\n\n-- E-008\nWITH b AS (\n  SELECT customer_id, month, month_index, paid_mrr_cop,
+  reactivated_customer, reactivation_mrr_cop,\n    MAX(CASE WHEN active_customer=1 THEN month_index END) OVER (PARTITION
+  BY customer_id ORDER BY month_index ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS last_idx,\n    LAST_VALUE(CASE
+  WHEN active_customer=1 THEN paid_mrr_cop END IGNORE NULLS) OVER (PARTITION BY customer_id ORDER BY month_index
+  ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS prev_amt\n  FROM mart.customer_month\n), r AS (\n  SELECT
+  reactivation_mrr_cop AS mrr,\n    (month_index - last_idx) AS gap,\n    paid_mrr_cop / NULLIF(prev_amt,0) AS ratio\n
+  \ FROM b WHERE reactivated_customer=1 AND month >= '2022-03' AND month <= '2024-10' AND prev_amt > 0\n), k AS
+  (\n  SELECT mrr, CASE\n    WHEN gap = 2 AND ratio BETWEEN 0.95 AND 1.05 THEN 'A. Un mes sin pago, regresa al monto
+  previo'\n    WHEN gap = 2 THEN 'B. Un mes sin pago, monto distinto del previo'\n    WHEN gap >= 3 AND abs(ratio
+  - (gap-1)) <= 0.05*(gap-1) THEN 'C. Varios meses sin pago, monto cubre los meses pendientes'\n    ELSE 'D. Varios
+  meses sin pago, otro monto' END AS clase\n  FROM r\n)\nSELECT clase, COUNT(*) AS eventos, ROUND(SUM(mrr)) AS mrr_cop,\n
+  \ ROUND(100.0*SUM(mrr)/SUM(SUM(mrr)) OVER (),1) AS share_pct\nFROM k GROUP BY clase ORDER BY clase"
+transformation: E-010 · run_sql · SQL ad hoc de solo lectura; E-008 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-c4dd · C-012
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: annotated_line
+visual_artifact:
+  tipo: linea
+  x:
+  - 2022 S1
+  - 2022 S2
+  - 2023 S1
+  - 2023 S2
+  - 2024 S1
+  - 2024 S2
+  series:
+  - nombre: mrr_reactivacion_cop
+    valores:
+    - 14354631.0
+    - 27280975.0
+    - 11528157.0
+    - 11664787.0
+    - 13118938.0
+    - 8555938.0
+  - nombre: share_hueco_un_mes_pct
+    valores:
+    - 92.9
+    - 36.5
+    - 74.8
+    - 50.1
+    - 57.6
+    - 52.6
+  formato: num2
+created_at: '2026-09-29T14:45:37-06:00'
+status: valid
+validation_errors: []
+finding: F-181
+links:
+- F-181
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:45:37-06:00'
+version: 1

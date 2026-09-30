@@ -1,0 +1,43 @@
+table_id: FIN-F-075
+caseos_id: T-030
+title: Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición
+  de l…
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - base_arpa_start
+  - MRR por cliente de la base previa (activos en ene-22), ene-22
+  - COP 92,8 mil
+- - base_arpa_end
+  - MRR por cliente de la base previa (activos en ene-22), oct-24
+  - COP 97,4 mil
+- - base_arpa_change
+  - Cambio del MRR por cliente de la base previa, ene-22 a oct-24
+  - +5%
+units: {}
+definitions: {}
+message: Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición
+  de la base, que explica 108% del cambio, y el efecto dentro de las cosechas, que explica −8%; el MRR por cliente
+  de los clientes activos en ene-22 pasa de COP 92,8 mil a COP 97,4 mil.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-MON-01
+  - EC-MON-04
+  - E-007
+  tools:
+  - run_analysis
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: waterfall
+analysis_reference: INV-20260929-103202-db67 · C-006
+period: {}
+grain: según evidencia

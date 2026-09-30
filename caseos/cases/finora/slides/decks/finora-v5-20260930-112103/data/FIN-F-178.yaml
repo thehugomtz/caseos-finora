@@ -1,0 +1,41 @@
+table_id: FIN-F-178
+caseos_id: T-080
+title: Lo que sí se observa es composición, no beneficio comercial
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - arpa_start
+  - MRR por cliente activo, ene-22
+  - COP 92,8 mil
+- - arpa_end
+  - MRR por cliente activo, oct-24
+  - COP 57,8 mil
+- - arpa_change
+  - Cambio del MRR por cliente activo, ene-22 a oct-24
+  - −38%
+units: {}
+definitions: {}
+message: 'Lo que sí se observa es composición, no beneficio comercial: el MRR por cliente activo pasó de COP 92,8
+  mil en ene-22 a COP 57,8 mil en oct-24 (−38%), mientras el de la base previa cambió +5% y las cosechas 2023–24
+  ya concentran 65% de los clientes activos en oct-24.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RES-02
+  - EC-MON-04
+  - EC-MON-01
+  - EC-MON-02
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-3f07 · C-012
+period: {}
+grain: según evidencia

@@ -1,0 +1,440 @@
+{
+ "run_id": "RUN-20260929-104841-cos-f5e7",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-011",
+ "started_at": "2026-09-29T11:34:16-06:00",
+ "duration_ms": 2734998,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-011\nTipo: research · revisión: proposed\nTexto: Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto → facturado → cobrado) y una clasificación por componente comparando cierres de mes: si la suscripción no cambia, el inicio o el fin de un descuento va a una línea «Descuento» y no es contracción ni expansión; si el cliente sale, su descuento se cuenta dentro del churn. Ojo con el histórico: el 57,6 % del COP de «contracción» observada ocurre el mes siguiente a un primer pago o a una reactivación, con forma de pago de varios meses o de atrasos, así que también hay que separar el momento de cobro (…\nRespuesta corta: Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto → facturado → cobrado) y una clasificación por componente comparando cierres de mes: si la suscripción no cambia, el inicio o el fin de un descuento va a una línea «Descuento» y no es contracción ni expansión; si el cliente sale, su descuento se cuenta dentro del churn. Ojo con el histórico: el 57,6 % del COP de «contracción» observada ocurre el mes siguiente a un primer pago o a una reactivación, con forma de pago de varios meses o de atrasos, así que también hay que separar el momento de cobro (confianza media en esa lectura).\nEstablecido: El modelo actual (raw, staging, mart) solo tiene cliente × mes × monto. No hay plan, cantidad, tarifa de lista, precio pactado, descuento, periodo de servicio, factura ni estado de pago (D8). | El panel clasifica 1.294 expansiones (+41,2 M COP) y 1.247 contracciones (−90,9 M COP) solo por la variación del monto pagado (D1). | 366 contracciones (57,6 % del COP de contracción) ocurren el mes siguiente a un primer pago observado o a una reactivación (D2); 608 regresan al monto usual desde un mes más alto (D3). | 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble del monto previo (D4).\nNo podemos concluir: Qué representa cada fila de raw.transactions (factura emitida, pago recibido o valor del periodo de servicio) y a qué fecha corresponde el campo month. | Si Finora tiene un sistema de facturación o CRM con plan, cantidad, catálogo con fechas y registro de descuentos por suscripción, y desde qué mes. | Si hubo descuentos o cambios de tarifa entre 2022 y 2024 (el caso habla de introducir descuentos). | Frecuencias de facturación, cargos de instalación, pagos parciales y política de mora de Finora.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- H-012 (HF2b) [hypothesis] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [hypothesis] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [hypothesis] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [hypothesis] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [hypothesis] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- Q-002 (CFO) [question] ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-009 (F3) [question] ¿Qué cambió en quienes permanecen?\n- Q-011 (W1) [question] ¿El monto identifica los escenarios del CFO?\n- Q-017 (W7) [question] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente?\n- Q-025 [question] Tres casos donde el pago observado no alcanza: una expansión compensada por descuento (100→130 con −30, y sigue pagando 100), contracción vs descuento (100→80) y fin de descuento vs expansión.\n- Q-026 [question] ¿Qué está pasando con el negocio subyacente (el valor de la suscripción antes de descuentos) y cuánto revenue deja de capturar Finora por decisiones comerciales, como los descuentos temporales?\nMotivo de Hugo: research completado\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [completed · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc… → Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad (H-00…\n- R-011 [completed · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent… → Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias (tar…\n- R-012 [running · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [completed · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d… → No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son d…\n- R-015 [completed · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem… → Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y…\n- R-016 [running · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se…\n- R-017 [running · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti…\n- R-018 [running · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los…\n- R-019 [running · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?…\n- R-020 [running · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-130 [proposed] El monto pagado no identifica los componentes: con los campos actuales no se puede separar suscripción, tarifa, descuento ni momento de cobro.\n- F-131 [proposed] Más de la mitad del COP de «contracción» observada tiene forma de efecto de cobro (el cliente vuelve a su monto usual después de un mes más alto), no necesariamente de suscripciones más pequeñas.\n- F-132 [proposed] No hay una convención única de mercado para el descuento en el MRR, y la convención «solo neto» borra justo las distinciones que pide el CFO. El modelo debe guardar bruto, descuento y neto por separado; la convención oficial queda como decisión.\n- F-133 [proposed] Se sabe qué forma tiene la evidencia que confirmaría cada componente; lo que no se sabe es si Finora la tiene.\n- F-134 [proposed] La huella de un descuento temporal limpio casi no aparece en el histórico (34 de 1.247 contracciones). Eso es consistente con que los descuentos sean algo por introducir, pero no prueba que no existieran.\n\n## Findings propuestos sin revisar: 134 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n- T-005 `FIN-F-063` [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala\n- T-006 `FIN-F-064` [proposed] Ningún rubro del archivo de S&M tiene meses ausentes\n- T-007 `FIN-F-065` [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero…\n- T-008 `FIN-F-066` [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo\n- T-009 `FIN-F-067` [proposed] La serie de Habilitación cambia de composición dentro del panel\n- T-010 `FIN-F-068` [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a ga…\n- T-011 `FIN-F-069` [proposed] El peso de Habilitación en el S&M total no es estable\n- T-012 `FIN-F-070` [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…\n- T-013 `FIN-F-107` [proposed] En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación de…\n- T-014 `FIN-F-108` [proposed] El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45 u…\n- T-015 `FIN-F-109` [proposed] El mes de mayor S&M total de la ventana limpia es oct-22, con 3,75 u y 32 altas; el mes con más altas es jun-…\n- T-016 `FIN-F-110` [proposed] Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…\n- T-017 `FIN-F-111` [proposed] Las altas anuales de primeros pagadores son mayores en 2023 que en 2022 mar-dic en Retail (de 49 a 169), Serv…\n- T-018 `FIN-F-112` [proposed] El ticket de entrada mediano es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el prome…\n- T-019 `FIN-F-113` [proposed] Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% me…\n- T-020 `FIN-F-114` [proposed] Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.\n- T-021 `FIN-F-115` [proposed] Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23.\n- T-022 `FIN-F-116` [proposed] La participación de Team en el S&M total es 12% en 2022 mar-dic, 30% en 2023 jun-dic y 23% en 2024 ene-oct, y…\n- T-023 `FIN-F-117` [proposed] El gasto de habilitación por mes pasa de 0,34 u en 2022 mar-dic a 0,07 u en 2023 jun-dic y 0,09 u en 2024 ene…\n- T-024 `FIN-F-118` [proposed] La correlación en niveles entre el S&M total y las altas del mismo mes es −0,57; en cambios mes a mes el mayo…\n- T-025 `FIN-F-119` [proposed] El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados no es eval…\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-011 sigue en revisión (proposed); todo lo que sigue asume que lo aceptas. Confirma con confianza alta que con cliente × mes × monto no se puede separar suscripción, tarifa ni descuento. Eso refuerza H-016. También responde la parte diagnóstica de Q-011 y Q-025 y dice qué datos harían falta para Q-017. En cambio, H-010 y H-012 a H-015 no se pueden evaluar sobre 2022–2024. Lo nuevo e importante es el momento de cobro: 366 contracciones (57,6 % del COP de contracción) caen el mes siguiente a un primer pago o a una reactivación. Además, 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Esto cambia cómo se cuenta el puente (T-003), abre una duda sobre el ticket de entrada (T-004), contradice H-017 y afecta la definición de cliente activo que revisa R-012. En el bloque Revenue (CFO), Q-002 y Q-026 ya no pueden dar una atribución histórica. Se responden con lo observado más la Propuesta de Modelo de datos, y para usar esa propuesta hay que aclarar D-007.",
+  "impacts": [
+   {
+    "target": "Q-002",
+    "effect": "changes_story",
+    "why": "R-011 confirma con confianza alta que con cliente × mes × monto no se puede separar suscripción, tarifa ni descuento. Además, el monto mezcla una cuarta cosa: el momento de cobro. La parte «cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos» no tendrá cifra histórica con los datos actuales. Lo que sí se sostiene: la escalera de R-011 es consistente con D-002 (entrantes, salientes y continuos, con suscripción y descuento dentro de cada grupo).",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Responder Q-002 en dos capas: lo observado y la Propuesta de Modelo de datos",
+      "consequence": "El bloque Revenue dice qué cambió en el monto pagado (con el momento de cobro separado), qué no se puede saber con estos datos y qué modelo lo haría visible. Versión ejecutiva: «Hoy vemos cuánto cambió lo que pagan los clientes, no por qué; esto es lo que Finora tiene que registrar para saberlo». H-010, H-012 y H-015 pasan a ser casos que el modelo debe separar. H-013 y H-014 quedan escritas como limitación (D-005: que hoy no se puedan medir no las hace irrelevantes). Depende de D-007."
+     },
+     {
+      "key": "B",
+      "label": "Pedir a Finora datos de facturación/CRM antes de Synthesis y buscar la atribución histórica",
+      "consequence": "Si el dato existe, habría una cifra por componente. Si no existe o tarda, el bloque Revenue queda bloqueado."
+     },
+     {
+      "key": "C",
+      "label": "Responder solo con la propuesta, sin el puente observado",
+      "consequence": "Es más simple, pero se pierde la evidencia de por qué hace falta el modelo: el monto no distingue los casos y el momento de cobro contamina las cifras."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es lo que el brief le pide al CFO (mecanismo, modelo de datos y clasificación) y no inventa una atribución. El pedido de datos de B puede ir en paralelo sin bloquear. Conviene que R-021 (en curso) construya sobre la escalera de R-011 en vez de armar otra."
+   },
+   {
+    "target": "T-003",
+    "effect": "changes_story",
+    "why": "Según R-011, 366 contracciones (57,6 % del COP de contracción) caen el mes siguiente a un primer pago o a una reactivación, y 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Si se confirma que es momento de cobro (confianza media), las líneas del puente —nuevo, reactivación, contracción y churn observado— pueden estar infladas aunque el total cuadre. Parte de la expansión podría ser el mismo pico visto desde el otro lado (es una inferencia, no está medido). Además, las cifras no cuadran: R-011 da expansión +41,2 M y contracción −90,9 M COP, y R-004/T-003 da +39,8 M y −89,5 M; no se sabe si es por ventana o por definición. Y las cifras de R-011 todavía no tienen tabla.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Separar el momento de cobro en el puente (en R-020 o como tarea corta), conciliando antes las cifras con R-011",
+      "consequence": "La lámina del puente se cuenta con líneas defendibles y cada cifra con su tabla. Cuesta una vuelta más de análisis con los datos que ya hay."
+     },
+     {
+      "key": "B",
+      "label": "Mantener T-003 y contarlo con una advertencia explícita",
+      "consequence": "Es rápido, pero la contracción se seguirá leyendo como clientes que bajan de suscripción."
+     },
+     {
+      "key": "C",
+      "label": "Contar solo el total y el churn persistente (T-002)",
+      "consequence": "Evita la lectura equivocada, pero se pierde el detalle del puente, que es lo que responde al «por qué cambió» del CFO."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Se calcula con los datos actuales (R-011 ya identificó los patrones) y evita presentar como suscripciones más pequeñas algo que en buena parte parece efecto del cobro. Conciliar las cifras es condición para que cualquier número del puente entre en la historia."
+   },
+   {
+    "target": "Q-026",
+    "effect": "changes_framing",
+    "why": "Q-026 pregunta por el negocio subyacente (valor antes de descuentos) y por cuánto revenue se deja de capturar por decisiones comerciales. Según R-011, el modelo no tiene tarifa de lista, precio pactado ni descuento, y no se puede concluir si hubo descuentos o cambios de tarifa en 2022–2024. Con los datos actuales no hay respuesta histórica. Sí hay una forma de medirlo: la distancia entre tarifa de lista, precio pactado y MRR neto en la escalera.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Reformular Q-026 como pregunta de medición",
+      "consequence": "Versión Hugo: «¿Cómo vamos a ver el negocio subyacente y el revenue que dejamos de capturar cuando metamos descuentos?». Versión ejecutiva: «Qué tiene que registrar Finora para medir su valor antes de descuentos y el costo de sus decisiones comerciales». Se responde con la escalera de R-011 y no promete una cifra."
+     },
+     {
+      "key": "B",
+      "label": "Mantenerla como está y condicionarla a los datos de facturación/CRM de Finora",
+      "consequence": "Si el dato existe, habría una cifra. Si no, Q-026 queda abierta sin fecha de cierre."
+     },
+     {
+      "key": "C",
+      "label": "Aproximar el negocio subyacente con el monto pagado, con una advertencia",
+      "consequence": "Da un número, pero trata el monto como MRR contratado (choca con «No afirmar todavía») y convierte la falta de evidencia (F-134) en una respuesta."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Conserva tu pregunta y lo que le aporta al CFO, encaja con el brief (los descuentos están por introducirse) y no pone cifras sin soporte. El pedido de datos de B puede ir a Finora sin bloquear."
+   },
+   {
+    "target": "D-007",
+    "effect": "changes_framing",
+    "why": "D-007 (activa) deja fuera de «esta etapa» los dashboards, las métricas definitivas y el modelo de datos. Pero R-011 entrega una Propuesta de Modelo de datos (escalera con vigencias y reglas de clasificación). El brief le pide al CFO «mecanismo, modelo de datos y clasificación», y D-015 (propuesta) metería este tipo de propuestas en el research. Si «esta etapa» era Framing, no hay choque, pero D-007 no lo dice. R-016, R-018, R-019 y R-021 van a toparse con lo mismo.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Reemplazar D-007 con una decisión nueva que la cite",
+      "consequence": "Queda escrito que en Research y Synthesis se permiten propuestas marcadas como tales (modelo de datos, métricas, funnel), y que dashboards y métricas definitivas siguen fuera. R-011 y los research en curso tienen un lugar claro, y queda el rastro de D-007."
+     },
+     {
+      "key": "B",
+      "label": "Mantener D-007 y dejar la escalera para una fase posterior",
+      "consequence": "El bloque Revenue pierde el modelo de datos que pide el brief, y R-011 queda como insumo sin uso."
+     },
+     {
+      "key": "C",
+      "label": "Confirmar D-015 sin tocar D-007",
+      "consequence": "Quedan dos decisiones activas que dicen cosas opuestas; la próxima propuesta vuelve a abrir la duda."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Así D-007 no se sobreescribe en silencio: se reemplaza dejando rastro. Encaja con la pregunta ejecutiva del framing («qué modelos se proponen») y habilita la opción A de Q-002 y de Q-026."
+   },
+   {
+    "target": "H-017",
+    "effect": "contradicts",
+    "why": "H-017 dice que se pueden comparar montos y primeras apariciones sin distorsiones importantes. R-011 documenta una distorsión concreta: el momento de cobro. Una caída del monto no es necesariamente una suscripción más pequeña (el 57,6 % del COP de contracción cae el mes siguiente a un primer pago o a una reactivación). Y el primer pago no es necesariamente el valor mensual de entrada. Coincide con la evaluación del agente (No soportada).",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Documentar el momento de cobro en H-017 y sumar una línea a «No afirmar todavía»",
+      "consequence": "Nueva línea: «Que el primer pago sea el valor mensual de entrada: puede incluir más de un mes, cargos iniciales o atrasos». A la línea de etiquetas contractuales se le agrega que una contracción observada puede ser momento de cobro. Protege Overview, Growth y Revenue."
+     },
+     {
+      "key": "B",
+      "label": "Documentarlo solo en H-017, sin tocar el framing",
+      "consequence": "Menos cambios mientras Framing está en needs_review, pero en Growth y Overview se pueden colar claims con esas lecturas."
+     },
+     {
+      "key": "C",
+      "label": "Esperar a que Finora diga qué representa cada fila",
+      "consequence": "Evita un cambio prematuro, pero el research sigue corriendo sin esa protección."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "No afirma que sea efecto del cobro (la confianza es media); solo impide afirmar lo contrario sin evidencia. Framing ya está en needs_review, así que es el momento de ajustarlo."
+   },
+   {
+    "target": "T-004",
+    "effect": "opens_new_hypothesis",
+    "why": "T-004 y T-018 miden el ticket de entrada con el primer pago (mediana COP 63,0 mil en 2022 y 36,8 mil en 2023). R-011 muestra que parte de los primeros pagos y reactivaciones va seguida de una bajada el mes siguiente, como si fueran pagos de varios meses o de atrasos. Si esa proporción cambió entre años, parte de la caída se debería a la forma de cobro y no a suscripciones más pequeñas. No está evaluado: R-011 no separa las 366 contracciones entre primer pago y reactivación, ni por año. Afecta a R-003 y R-006; a R-009 menos, porque usa todos los meses del cliente y no solo el primero.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Añadir la comprobación a R-020",
+      "consequence": "Separar las 366 contracciones entre primer pago y reactivación por año de entrada, y recalcular el ticket con el monto usual (el segundo mes pagado, comparando solo a quienes lo tienen). Si la caída se mantiene, el mensaje de entrada queda más fuerte; si no, cambia lo que se le dice al CEO y al CRO."
+     },
+     {
+      "key": "B",
+      "label": "Mantener T-004 con la advertencia «primer pago observado; puede incluir más de un mes»",
+      "consequence": "No requiere trabajo extra, pero deja la duda abierta en el mensaje central de entrada."
+     },
+     {
+      "key": "C",
+      "label": "Esperar a que Finora explique qué representa cada fila",
+      "consequence": "Depende de un dato externo sin fecha."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Se calcula con los datos actuales, es barato y protege la conclusión que más se repite en el research: el cambio se concentra en la entrada (R-003, R-004, R-006, R-009)."
+   },
+   {
+    "target": "R-012",
+    "effect": "requires_research",
+    "why": "R-012 (en curso) revisa la definición de cliente activo detrás del 4,5×, el 2,8× y el −38%. R-011 muestra que 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Si son atrasos, definir activo como «pagó ese mes» saca de la base a clientes que seguían y, a la vez, infla el churn observado y la reactivación.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Pasarle este patrón a R-012 antes de que cierre",
+    "recommended_why": "Es más barato ajustar la definición de cliente activo ahora que rehacer después las cifras del Overview."
+   },
+   {
+    "target": "H-016",
+    "effect": "supports",
+    "why": "Es la segunda línea de evidencia, después de R-002: en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta), y el modelo no tiene plan, cantidad, tarifa, descuento, periodo de servicio ni factura. Al contarlo, ojo: prueba qué no se puede distinguir, no qué pasó.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Revisar F-130 junto con R-002",
+    "recommended_why": "Si aceptas F-130, H-016 queda como la primera afirmación defendible del bloque Revenue, con la limitación escrita y el ejemplo de Q-025 marcado como ilustrativo."
+   },
+   {
+    "target": "Q-025",
+    "effect": "supports",
+    "why": "R-011 responde la parte diagnóstica: con el pago observado, los tres casos no se pueden distinguir (confianza alta). La regla propuesta resuelve dos casos: contracción vs descuento y fin de descuento vs expansión. Si la suscripción no cambia, el movimiento va a la línea «Descuento». El caso 1 —la suscripción sube y el descuento empieza el mismo mes— no queda explícito en lo que se ve de R-011.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Pedir que R-011 explicite la regla del caso 1",
+    "recommended_why": "Es el caso más difícil: el pago no se mueve y hay dos cambios que se compensan. Sin esa regla, la escalera no cierra Q-025 del todo."
+   },
+   {
+    "target": "Q-017",
+    "effect": "supports",
+    "why": "R-008 (W7) quedó bloqueada con «la respuesta es la lista de evidencia que falta». R-011 da esa lista: tarifa de lista, precio pactado, descuento con inicio, fin y motivo, MRR neto, facturado y cobrado, todo con vigencias. La pertenencia recurrente queda cubierta solo si la escalera incluye el periodo de servicio, que R-011 marca como faltante. Lo que no se sabe es si Finora tiene esos datos (F-133).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Evaluar si R-011 cubre R-008",
+    "recommended_why": "Evita arrastrar una research bloqueada cuya respuesta ya existe. Cerrarla o no es decisión tuya."
+   },
+   {
+    "target": "Q-011",
+    "effect": "supports",
+    "why": "Confirma la respuesta de R-002 (el monto no identifica los escenarios del CFO) y suma algo que no estaba en esos escenarios: el momento de cobro.",
+    "severity": "low",
+    "options": [],
+    "recommended": "Sin acción propia",
+    "recommended_why": "Queda cubierta por H-016 y por la alerta de T-003."
+   },
+   {
+    "target": "Q-009",
+    "effect": "requires_research",
+    "why": "En quienes permanecen solo se ve la variación del monto, y más de la mitad del COP de contracción parece efecto del momento de cobro (confianza media). La respuesta observada necesita el puente con el cobro separado (alerta en T-003). La parte «qué cambió» en plan, tarifa o descuento no se puede identificar con estos datos (H-013, H-014, H-015).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Resolver primero la alerta de T-003",
+    "recommended_why": "Sin separar el momento de cobro, la respuesta a Q-009 contaría como cambio de suscripción algo que en buena parte es efecto del cobro."
+   },
+   {
+    "target": "H-015",
+    "effect": "requires_research",
+    "why": "No se puede evaluar como explicación de 2022–2024: no hay campo de descuento y R-011 no puede concluir si hubo descuentos. F-134 (propuesto: 34 de 1.247 contracciones tienen la huella limpia de un descuento temporal) es consistente con que no los hubo, pero no lo prueba. Además, un descuento que compensa un cambio de suscripción no deja huella. Hacia adelante, la regla de R-011 lo resuelve con la línea «Descuento».",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Va con la opción A de Q-002 y con la pregunta a Finora",
+    "recommended_why": "El caso habla de introducir descuentos: su lugar natural es como caso que el modelo debe separar, no como explicación del histórico."
+   },
+   {
+    "target": "H-012",
+    "effect": "requires_research",
+    "why": "No se puede evaluar en el histórico: no hay descuento ni valor antes de descuento por cliente. R-011 propone contar el descuento de quien sale dentro del churn. Si ese churn se reporta por lo que el cliente pagaba (neto) o por lo que valía su suscripción (bruto) es justo la distinción de H-012, y sigue sin decidirse (F-132).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Va con la opción A de Q-002 y con la convención pendiente de F-132",
+    "recommended_why": "H-012 se responde con una convención de reporte más el dato de descuento por suscripción, y hoy no existe ninguno de los dos."
+   },
+   {
+    "target": "H-013",
+    "effect": "requires_research",
+    "why": "Sin plan ni cantidad no se puede ver si cambió lo que el cliente contrata. Y la contracción observada no sirve como indicio: más de la mitad de su COP parece efecto del momento de cobro (confianza media).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Incluir plan y cantidad, con sus vigencias, en el pedido de datos a Finora",
+    "recommended_why": "Es el dato que separa H-013 de H-014 y H-015. Mientras tanto queda como explicación posible, escrita como limitación."
+   },
+   {
+    "target": "H-014",
+    "effect": "requires_research",
+    "why": "No hay tarifa de lista ni catálogo con fechas, y R-011 no puede concluir si hubo cambios de tarifa en 2022–2024.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Pedir a Finora el historial de tarifas y, mientras tanto, que R-020 busque meses en que muchos clientes cambian su monto en la misma proporción",
+    "recommended_why": "Esa búsqueda daría una señal, no una prueba (no hay vigencias verificadas), pero es barata y dice si vale la pena insistir con el dato."
+   },
+   {
+    "target": "H-010",
+    "effect": "requires_research",
+    "why": "Es lo mismo que H-012 y H-015, pero a la entrada: sin tarifa de lista, precio pactado ni descuento no se ve si hubo descuentos documentados al entrar ni cuánto reducían el precio. La escalera de R-011 lo haría visible desde el primer mes.",
+    "severity": "low",
+    "options": [],
+    "recommended": "Va con la opción A de Q-002",
+    "recommended_why": "Sin dato de descuento a la entrada, H-010 no se puede evaluar en el histórico."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "Más de la mitad del COP de contracción observada es momento de cobro —un primer pago o una reactivación que cubre más de un mes, cargos iniciales o atrasos—, no suscripciones que se achican.",
+    "falsifier": "Se descarta si Finora confirma que cada fila es el valor del periodo de servicio (no el pago recibido) y que no cobra varios meses juntos, cargos de instalación ni atrasos. También se descarta si su facturación muestra cambios de plan o cantidad en la mayoría de esas 366 contracciones."
+   },
+   {
+    "statement": "Los meses en cero seguidos de un pago del doble son atrasos, no bajas seguidas de un regreso: inflan el churn observado de ese mes y la reactivación.",
+    "falsifier": "Se descarta si la política de mora de Finora no permite pagar meses atrasados, o si la facturación muestra esas suscripciones como canceladas o suspendidas en el mes en cero."
+   },
+   {
+    "statement": "Parte de la caída del ticket de entrada (T-018: mediana COP 63,0 mil en 2022 y 36,8 mil en 2023) se debe a un cambio en la forma del primer cobro, no a suscripciones de entrada más pequeñas.",
+    "falsifier": "Se descarta si, midiendo la entrada con el monto usual del cliente (su segundo mes pagado, comparando solo a quienes lo tienen), la caída de 2022 a 2023 se mantiene con una magnitud parecida. También si la proporción de primeros pagos seguidos de una bajada es similar entre años."
+   }
+  ],
+  "new_questions": [
+   "¿Qué representa cada fila de raw.transactions (factura emitida, pago recibido o valor del periodo de servicio) y a qué fecha corresponde month? Es la pregunta a Finora que más desbloquea: decide si el monto se puede leer alguna vez como MRR.",
+   "¿Tiene Finora facturación o CRM con plan, cantidad, tarifa de lista con fechas y descuentos por suscripción? ¿Desde qué mes? ¿Hubo descuentos o cambios de tarifa entre 2022 y 2024?",
+   "¿Cómo cobra Finora: frecuencia de facturación, cargos de instalación, pagos parciales y política de mora?",
+   "De las 366 contracciones tras un primer pago o una reactivación, ¿cuántas siguen a un primer pago y cuántas a una reactivación, por año de entrada?",
+   "¿Por qué R-011 da expansión +41,2 M y contracción −90,9 M COP y R-004/T-003 da +39,8 M y −89,5 M? ¿Es por ventana o por definición? ¿En qué tabla quedan las cifras de R-011?",
+   "Con la regla de R-011, ¿cómo se clasifica el caso 1 de Q-025 (la suscripción sube de 100 a 130 y el mismo mes empieza un −30)? ¿Como expansión +30 y Descuento −30, o como precio pactado de 100 sin expansión? ¿La fecha de fin del −30 es lo que decide?",
+   "Cuando sale un cliente con descuento, ¿el churn se reporta por lo que pagaba (neto) o por lo que valía su suscripción (bruto)? Es la convención que F-132 deja como decisión y la que define cómo se ve H-012.",
+   "Al revisar F-131: en R-011, el 57,6 % corresponde a las 366 contracciones tras un primer pago o una reactivación. ¿F-131 lo ata a ese patrón, o lo mezcla con las 608 contracciones que vuelven al monto usual desde un mes más alto?"
+  ],
+  "status_note": "Research en curso (12 completados, 2 bloqueados, 7 corriendo), Framing en needs_review y ningún finding aceptado: todavía no hay nada listo para story. R-011 cierra el diagnóstico del bloque Revenue (CFO) y trae la escalera de valor, pero para usarla hay que aclarar D-007; además, el momento de cobro afecta el histórico de montos (T-003, T-004, R-012). Lo que más desbloquea: preguntar a Finora qué representa cada fila de raw.transactions, separar el momento de cobro en R-020 y revisar F-130–F-134."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 870798,
+  "input_tokens": 2,
+  "output_tokens": 97545,
+  "cache_read": 3781,
+  "cache_write": 9846,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 2.0388652000000005,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

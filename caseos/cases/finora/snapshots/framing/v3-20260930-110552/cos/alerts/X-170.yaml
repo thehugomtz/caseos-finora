@@ -1,0 +1,63 @@
+id: X-170
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-036
+target: C-022
+title: R-036 cambia la historia C-022
+finding_text: 'Propongo 35 métricas sin solapes (MECE): 30 son propias de cada funnel (entradas, alcance por etapa
+  en cohorte, tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta: speed to lead, aceptación
+  de SQL y productividad en Executive; tasa y uplift de intervención en Hybrid A; salida a…'
+why: 'R-036 propone 35 métricas (30 por funnel + 5 comunes siempre por funnel) y ya es el tercer catálogo del caso:
+
+  - R-031 tiene 33. Es el que X-144 leía como el catálogo de C-022.
+
+  - R-035 tiene 35 en tres capas, con Reactivate como loop.
+
+
+  R-035 y R-036 dan el mismo «35» con distinto contenido. C-022 promete que cada métrica vive en un solo lugar.
+  Con tres catálogos vivos y Slides en review, esa promesa no aguanta en el deck.
+
+
+  Antes de usar R-036 hay dos chequeos chicos:
+
+  1. Conteo: con lo que resume R-036, 5 funnels × 4 familias + 11 métricas de mecanismo dan 31, no 30. Cuadraría
+  si, por ejemplo, el estancamiento de Reactivate es su re-estancamiento.
+
+  2. Posibles dobles conteos: speed to lead contra el primer tiempo por tramo del Executive, y aceptación de SQL
+  contra el alcance a esa etapa.'
+options:
+- key: A
+  label: Adoptar R-036 como único catálogo (F-249 con las reglas de F-250) y dejar R-031 y R-035 como contexto
+  consequence: La historia pasa a 5 funnels y 35 métricas con semáforo 0/4/31. Hay que cambiar la evidencia de C-006,
+    C-009, C-021 y C-022 a F-248–F-252, que hoy están propuestos y necesitan tu aceptación. X-144 y las alertas
+    de linaje de R-035 (X-161–X-165) dejan de aplicar. Los dos chequeos los corre el agente antes de la lámina (D-026).
+- key: B
+  label: Mantener R-031 como catálogo (lo que proponía X-144) y tomar de R-036 solo las métricas de mecanismo y
+    el holdout
+  consequence: 'Cambia menos la evidencia que la historia ya usa (F-223–F-227). Pero el catálogo mezcla dos lógicas:
+    comunes por puerta (R-031) y comunes cortadas por funnel (R-036). Así es difícil defender que no hay solapes.'
+- key: C
+  label: Pedir antes una tabla de equivalencias R-031 ↔ R-035 ↔ R-036 (misma métrica con otro nombre, cuál sobra,
+    cuál falta)
+  consequence: Es una corrida más de measurement y Slides espera. A cambio, el catálogo que quede se defiende métrica
+    por métrica.
+recommended: A
+recommended_why: R-036 es la más reciente y se pidió con tus definiciones textuales. Trae la regla que hace MECE
+  el mix (F-250) y su semáforo es el más conservador. Los dos chequeos caben dentro de A; pasaría a C solo si aparece
+  más de un doble conteo.
+detected_by: cos
+links:
+- R-036
+- C-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103327-cos-85f7
+created_at: '2026-09-30T10:46:13-06:00'
+updated_at: '2026-09-30T10:46:13-06:00'
+version: 1

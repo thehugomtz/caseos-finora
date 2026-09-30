@@ -1,0 +1,124 @@
+id: T-031
+type: table
+table_key: FIN-F-076
+title: En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente
+  de C…
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Cosecha
+- '% clientes ene-22'
+- '% clientes oct-24'
+- MRR / cliente ene-22
+- MRR / cliente oct-24
+- Contribución composición
+- Contribución dentro
+rows:
+- - Base previa (activos en ene-22)
+  - 1.0
+  - 0.17759237187127533
+  - 92839.01419098144
+  - 97387.82768456376
+  - -78222.00291664255
+  - 2678.324035553832
+- - Altas de feb-22 (marcadas)
+  - 0.0
+  - 0.048271752085816445
+  - null
+  - 69859.96888888889
+  - 3372.2630989272943
+  - 0.0
+- - Cosecha 2022 (mar–dic)
+  - 0.0
+  - 0.12216924910607867
+  - null
+  - 65436.706829268296
+  - 7994.353337306317
+  - 0.0
+- - Cosecha 2023
+  - 0.0
+  - 0.3396901072705602
+  - null
+  - 46297.025157894735
+  - 15726.641442193088
+  - 0.0
+- - Cosecha 2024
+  - 0.0
+  - 0.31227651966626935
+  - null
+  - 42983.56385496183
+  - 13422.757723480332
+  - 0.0
+units:
+  '% clientes ene-22': pct
+  '% clientes oct-24': pct
+  MRR / cliente ene-22: cop
+  MRR / cliente oct-24: cop
+  Contribución composición: cop
+  Contribución dentro: cop
+definitions: {}
+message: En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente
+  de COP 46,3 mil y COP 43,0 mil, frente a COP 97,4 mil de los clientes activos en ene-22, que conservan 17,8% de
+  los clientes activos.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  tools:
+  - run_analysis
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-007
+
+  run_analysis(''vintage_arpa'', {"desde": "2022-01", "hasta": "2024-10"})'
+transformation: E-007 · run_analysis · Descomposición de Shapley (punto medio) del MRR por cliente por cosecha
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-db67 · C-011
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: slope
+visual_artifact:
+  tipo: puntos
+  filas:
+  - Base previa (activos en ene-22)
+  - Altas de feb-22 (marcadas)
+  - Cosecha 2022 (mar–dic)
+  - Cosecha 2023
+  - Cosecha 2024
+  formato: cop
+  series:
+  - nombre: ene-22
+    valores:
+    - 92839.01419098144
+    - null
+    - null
+    - null
+    - null
+  - nombre: oct-24
+    valores:
+    - 97387.82768456376
+    - 69859.96888888889
+    - 65436.706829268296
+    - 46297.025157894735
+    - 42983.56385496183
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-076
+links:
+- F-076
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

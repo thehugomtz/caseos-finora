@@ -1,0 +1,279 @@
+{
+ "id": "JOB-20260929-190141-65e4",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Data Engineering · Propuesta de modelo de datos para operar el funnel, as-is v…",
+ "params": {
+  "research_id": "R-033"
+ },
+ "agent": "data_engineering",
+ "status": "succeeded",
+ "created_at": "2026-09-29T19:01:41-06:00",
+ "started_at": "2026-09-29T19:01:41-06:00",
+ "finished_at": "2026-09-29T19:19:56-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T19:01:41-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T19:01:41-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-190141-data_engineering-cc86",
+   "agent": "data_engineering",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T19:01:42-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T19:01:46-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T19:02:10-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM raw.transactions LIMIT 5"
+  },
+  {
+   "t": "2026-09-29T19:02:10-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM raw.industry LIMIT 5"
+  },
+  {
+   "t": "2026-09-29T19:02:11-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM raw.sm_spend LIMIT 3"
+  },
+  {
+   "t": "2026-09-29T19:02:13-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month) AS primer_mes, MAX(month) AS u"
+  },
+  {
+   "t": "2026-09-29T19:02:18-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUM(CASE WHEN mx = 0 THEN 1 ELSE 0 END) AS clientes_nunca_pagan, SUM(CASE WHEN mx > 0 THEN 1 ELSE 0 END) AS clientes_con_algun_pago, "
+  },
+  {
+   "t": "2026-09-29T19:02:20-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT (SELECT COUNT(DISTINCT customer_id) FROM staging.stg_customer_month) AS clientes_en_pagos, (SELECT COUNT(DISTINCT customer_id) FROM s"
+  },
+  {
+   "t": "2026-09-29T19:02:21-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC"
+  },
+  {
+   "t": "2026-09-29T19:02:22-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY movement_type ORDER BY fi"
+  },
+  {
+   "t": "2026-09-29T19:02:22-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT DISTINCT rubro FROM staging.stg_sm_spend ORDER BY rubro"
+  },
+  {
+   "t": "2026-09-29T19:02:31-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUM(CASE WHEN movement_type = 'churn' THEN 1 ELSE 0 END) AS eventos_churn, SUM(CASE WHEN movement_type = 'churn' AND returned_next_mo"
+  },
+  {
+   "t": "2026-09-29T19:02:32-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag ORDER BY clientes DESC"
+  },
+  {
+   "t": "2026-09-29T19:02:33-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(DISTINCT observed_amount) AS montos_distintos, COUNT(DISTINCT usual_amount_cop) AS montos_usuales_distintos, MIN(CASE WHEN obse"
+  },
+  {
+   "t": "2026-09-29T19:02:41-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS eventos_churn, SUM(CASE WHEN n.observed_amount > 0 THEN 1 ELSE 0 END) AS paga_en_t1, SUM(CASE WHEN n.observed_amount > 0 "
+  },
+  {
+   "t": "2026-09-29T19:03:01-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce OpportunityHistory object reference StageName CreatedById fields”"
+  },
+  {
+   "t": "2026-09-29T19:03:01-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kimball accumulating snapshot fact table milestones pipeline dates”"
+  },
+  {
+   "t": "2026-09-29T19:03:01-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Google Analytics UTM parameters utm_source utm_medium utm_campaign help”"
+  },
+  {
+   "t": "2026-09-29T19:03:02-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Segment spec B2B SaaS events Account Created Signed Up Trial Started”"
+  },
+  {
+   "t": "2026-09-29T19:03:02-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Stripe Billing MRR calculation discounts subscription analytics docs”"
+  },
+  {
+   "t": "2026-09-29T19:03:18-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunityhistory.htm"
+  },
+  {
+   "t": "2026-09-29T19:03:19-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/accumulating-snapshot-fact-table/"
+  },
+  {
+   "t": "2026-09-29T19:03:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://support.google.com/analytics/answer/10917952"
+  },
+  {
+   "t": "2026-09-29T19:03:22-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.twilio.com/docs/segment/connections/spec/b2b-saas"
+  },
+  {
+   "t": "2026-09-29T19:03:23-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://support.stripe.com/questions/metric-configurations"
+  },
+  {
+   "t": "2026-09-29T19:03:31-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://developer.salesforce.com/docs/atlas.en-us.264.0.api.meta/api/sforce_api_objects_opportunityhistory.htm"
+  },
+  {
+   "t": "2026-09-29T19:03:33-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/api/subscriptions/object"
+  },
+  {
+   "t": "2026-09-29T19:03:34-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/billing/subscriptions/analytics/glossary"
+  },
+  {
+   "t": "2026-09-29T19:03:47-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://cdn.cdata.com/help/RFM/py/pg_table-opportunityhistory.htm"
+  },
+  {
+   "t": "2026-09-29T19:03:49-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://github.com/fivetran/dbt_salesforce"
+  },
+  {
+   "t": "2026-09-29T19:03:49-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HubSpot \"date entered\" lifecycle stage property history knowledge base”"
+  },
+  {
+   "t": "2026-09-29T19:03:50-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce Lead object fields ConvertedOpportunityId ConvertedAccountId LeadSource IsConverted ConvertedDate”"
+  },
+  {
+   "t": "2026-09-29T19:04:02-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/records/use-lifecycle-stages"
+  },
+  {
+   "t": "2026-09-29T19:04:03-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://cdn.cdata.com/help/RFM/py/pg_table-lead.htm"
+  },
+  {
+   "t": "2026-09-29T19:04:05-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://cdn.cdata.com/help/RFM/py/pg_table-campaignmember.htm"
+  },
+  {
+   "t": "2026-09-29T19:04:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/"
+  },
+  {
+   "t": "2026-09-29T19:04:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://cdn.cdata.com/help/RFM/py/pg_table-task.htm"
+  },
+  {
+   "t": "2026-09-29T19:04:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/periodic-snapshot-fact-table/"
+  },
+  {
+   "t": "2026-09-29T19:04:33-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT (SELECT MIN(month) FROM staging.stg_sm_spend) AS sm_primer_mes, (SELECT MAX(month) FROM staging.stg_sm_spend) AS sm_ultimo_mes, (SELE"
+  },
+  {
+   "t": "2026-09-29T19:19:56-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-033",
+  "findings": [
+   "F-238",
+   "F-239",
+   "F-240",
+   "F-241",
+   "F-242"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

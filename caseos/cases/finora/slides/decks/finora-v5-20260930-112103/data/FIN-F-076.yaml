@@ -1,0 +1,76 @@
+table_id: FIN-F-076
+caseos_id: T-031
+title: En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente
+  de C…
+columns:
+- Cosecha
+- '% clientes ene-22'
+- '% clientes oct-24'
+- MRR / cliente ene-22
+- MRR / cliente oct-24
+- Contribución composición
+- Contribución dentro
+rows:
+- - Base previa (activos en ene-22)
+  - 1.0
+  - 0.17759237187127533
+  - 92839.01419098144
+  - 97387.82768456376
+  - -78222.00291664255
+  - 2678.324035553832
+- - Altas de feb-22 (marcadas)
+  - 0.0
+  - 0.048271752085816445
+  - null
+  - 69859.96888888889
+  - 3372.2630989272943
+  - 0.0
+- - Cosecha 2022 (mar–dic)
+  - 0.0
+  - 0.12216924910607867
+  - null
+  - 65436.706829268296
+  - 7994.353337306317
+  - 0.0
+- - Cosecha 2023
+  - 0.0
+  - 0.3396901072705602
+  - null
+  - 46297.025157894735
+  - 15726.641442193088
+  - 0.0
+- - Cosecha 2024
+  - 0.0
+  - 0.31227651966626935
+  - null
+  - 42983.56385496183
+  - 13422.757723480332
+  - 0.0
+units:
+  '% clientes ene-22': pct
+  '% clientes oct-24': pct
+  MRR / cliente ene-22: cop
+  MRR / cliente oct-24: cop
+  Contribución composición: cop
+  Contribución dentro: cop
+definitions: {}
+message: En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente
+  de COP 46,3 mil y COP 43,0 mil, frente a COP 97,4 mil de los clientes activos en ene-22, que conservan 17,8% de
+  los clientes activos.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  tools:
+  - run_analysis
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: slope
+analysis_reference: INV-20260929-103202-db67 · C-011
+period: {}
+grain: según evidencia

@@ -1,0 +1,48 @@
+table_id: FIN-F-184
+caseos_id: T-086
+title: La contracción observada no muestra la firma de momento de cobro
+columns:
+- clase
+- eventos
+- mrr_cop
+- share_pct
+rows:
+- - A. Al mes siguiente regresa al nivel previo a la baja
+  - 225
+  - -3452877.0
+  - 4.0
+- - B. Al mes siguiente sube, sin llegar al nivel previo
+  - 56
+  - -6219184.0
+  - 7.1
+- - C. Al mes siguiente sigue igual o mas abajo
+  - 854
+  - -77641095.0
+  - 88.9
+units:
+  clase: texto
+  eventos: int
+  mrr_cop: num2
+  share_pct: num2
+definitions: {}
+message: 'La contracción observada no muestra la firma de momento de cobro: la parte que regresa al nivel previo
+  a la baja al mes siguiente explica 4,0% del MRR de contracción, mientras la parte que al mes siguiente sigue igual
+  o más abajo explica 88,9%.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-009
+  - E-007
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: bar
+analysis_reference: INV-20260929-143800-c4dd · C-003
+period: {}
+grain: según evidencia

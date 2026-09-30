@@ -1,0 +1,46 @@
+id: X-061
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-017
+target: H-021
+title: R-017 requiere más investigación H-021
+finding_text: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+why: 'H-021 (agente: No soportada) lee la diferencia entre cosechas como fijada en la entrada, en línea con R-006
+  («concentrado en la entrada»). R-017 lo respalda en lo grueso: composición 84% (F-097) y ticket de entrada más
+  bajo (F-098). Pero también ve bajar a la cosecha 2022 dentro de la ventana (efecto dentro de −COP 5,2 mil) y advierte
+  que su ticket de entrada incluye pagos iniciales grandes. Si esa baja es real, hay diferencias después de la entrada
+  y H-021 se acercaría a soportada. Si es el paso de un primer pago grande al pago recurrente (F-085, F-086), no.
+  R-017 no compara las cosechas a igual edad, así que no permite decidirlo.'
+options:
+- key: A
+  label: 'Chequeo corto: cosechas 2022, 2023 y 2024 a igual edad midiendo desde el segundo pago, y recalcular F-097
+    sin el mes del primer pago'
+  consequence: Es un análisis con datos que ya existen. Dice si cambió la economía posterior (H-021, Q-015) y si
+    el efecto dentro de las cosechas de F-097 es real o viene del primer pago.
+- key: B
+  label: Quedarse con la lectura de R-006 y dejar «la cosecha 2022 también baja» como caveat
+  consequence: Sin más análisis. El Overview dice «se concentra en quién entra», con un matiz abierto que el CFO
+    puede preguntar y que hoy no tiene respuesta.
+- key: C
+  label: Llevar las dos lecturas tal cual a la story
+  consequence: 'Honesto pero ambiguo: «se concentra en quién entra, pero no se limita a las altas nuevas» invita
+    a preguntar si la base se deteriora, y no hay respuesta.'
+recommended: A
+recommended_why: Es barato, usa los pagos del caso y resuelve de una vez H-021, Q-015 y el matiz entre R-009 y R-017.
+  Sin él, cualquier frase sobre la base previa se apoya en una lectura que puede deberse al primer pago.
+detected_by: cos
+links:
+- R-017
+- H-021
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-5c65
+created_at: '2026-09-29T11:52:09-06:00'
+updated_at: '2026-09-29T11:52:09-06:00'
+version: 1

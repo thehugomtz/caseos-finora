@@ -1,0 +1,63 @@
+id: T-010
+type: table
+table_key: FIN-F-068
+title: No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o
+  a ga…
+question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance
+  va en Habilitación comercial o en producto?
+columns:
+- Dato
+- Valor
+rows: []
+units: {}
+definitions: {}
+message: 'No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial
+  o a gasto de producto: el archivo solo trae el nombre del rubro y su monto mensual, sin centro de costo, proveedor
+  ni atribución funcional; agruparlos en Habilitación es una convención del catálogo de métricas.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids: []
+  tools: []
+  data_version: null
+  brain_version: null
+query: ''
+transformation: ''
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-c958 · C-008
+limitations:
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: table
+visual_artifact:
+  tipo: datos
+  filas:
+  - dato: Monto pagado por cliente y mes (amount)
+    estado: Disponible
+    campos: ''
+  - dato: Industria del cliente
+    estado: Disponible
+    campos: ''
+  - dato: Gasto de S&M por mes y rubro
+    estado: Disponible, sin unidad documentada
+    campos: ''
+  - dato: Fuente del lead y atribución por canal
+    estado: No existe
+    campos: lead_source, channel
+created_at: '2026-09-29T10:37:12-06:00'
+status: invalid
+validation_errors:
+- falta 'rows'
+finding: F-068
+links:
+- F-068
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+updated_at: '2026-09-29T10:37:12-06:00'
+version: 1

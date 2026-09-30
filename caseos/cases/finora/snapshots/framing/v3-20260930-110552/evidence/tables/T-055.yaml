@@ -1,0 +1,100 @@
+id: T-055
+type: table
+table_key: FIN-F-087
+title: Entre las altas de ventana limpia, el segundo pago coincide exactamente con el primero en 73,5% de las altas…
+question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos,
+  sin leerla como descuento?
+columns:
+- anio_cohorte
+- altas
+- m0_mediana_cop
+- m1_mediana_cop
+- pct_m0_supera_1_5x_m1
+- pct_m1_supera_1_5x_m0
+- pct_m1_igual_m0
+rows:
+- - 2022
+  - 272
+  - 63000.0
+  - 46200.0
+  - 23.2
+  - 1.1
+  - 73.5
+- - 2023
+  - 650
+  - 36750.0
+  - 35007.0
+  - 7.1
+  - 1.5
+  - 90.3
+- - 2024
+  - 554
+  - 42000.0
+  - 37800.0
+  - 11.6
+  - 0.9
+  - 77.3
+units:
+  anio_cohorte: int
+  altas: int
+  m0_mediana_cop: num2
+  m1_mediana_cop: num2
+  pct_m0_supera_1_5x_m1: num2
+  pct_m1_supera_1_5x_m0: num2
+  pct_m1_igual_m0: num2
+definitions: {}
+message: Entre las altas de ventana limpia, el segundo pago coincide exactamente con el primero en 73,5% de las
+  altas de 2022, 90,3% de 2023 y 77,3% de 2024.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-006\nSELECT year AS anio_cohorte,\n       COUNT(*) AS altas,\n       ROUND(MEDIAN(m0_cop), 0) AS m0_mediana_cop,\n
+  \      ROUND(MEDIAN(m1_cop), 0) AS m1_mediana_cop,\n       ROUND(100.0 * SUM(CASE WHEN m0_cop > 1.5 * m1_cop THEN
+  1 ELSE 0 END) / COUNT(*), 1) AS pct_m0_supera_1_5x_m1,\n       ROUND(100.0 * SUM(CASE WHEN m1_cop > 1.5 * m0_cop
+  THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_m1_supera_1_5x_m0,\n       ROUND(100.0 * SUM(CASE WHEN m1_cop = m0_cop
+  THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_m1_igual_m0\nFROM mart.new_customers\nWHERE clean\nGROUP BY 1 ORDER BY
+  1"
+transformation: E-006 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-30ce · C-008
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2022'
+  - '2023'
+  - '2024'
+  formato: num1
+  series:
+  - nombre: m1 igual m0
+    valores:
+    - 73.5
+    - 90.3
+    - 77.3
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-087
+links:
+- F-087
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

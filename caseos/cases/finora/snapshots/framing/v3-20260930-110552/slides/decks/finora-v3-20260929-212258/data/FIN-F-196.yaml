@@ -1,0 +1,39 @@
+table_id: FIN-F-196
+caseos_id: T-093
+title: Excluyendo oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyendo oct-24 son 55.
+columns:
+- Periodo
+- Altas
+- Altas por mes
+rows:
+- - '2023'
+  - 650.0
+  - 54.166666666666664
+- - '2024'
+  - 504.0
+  - 56.0
+units:
+  Altas: int
+  Altas por mes: int
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: Excluyendo oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyendo oct-24 son 55.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-010
+  - E-003
+  tools:
+  - query_metric
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+analysis_reference: INV-20260929-143800-2198 · C-016
+period:
+  desde: 2023-01
+  hasta: 2024-09
+grain: year

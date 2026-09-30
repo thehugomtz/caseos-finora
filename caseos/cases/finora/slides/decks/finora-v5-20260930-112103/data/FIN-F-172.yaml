@@ -1,0 +1,33 @@
+table_id: FIN-F-172
+caseos_id: T-074
+title: Parte del movimiento del puente no corresponde a un cambio sostenido de nivel
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - exp_mrr_revert
+  - MRR de expansión que se revierte al mes siguiente
+  - 29%
+units: {}
+definitions: {}
+message: 'Parte del movimiento del puente no corresponde a un cambio sostenido de nivel: 29% del MRR de expansión
+  se revierte al mes siguiente y 25,3% del movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-03
+  - EC-DAT-06
+  - EC-DAT-07
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: stacked_bar
+analysis_reference: INV-20260929-143800-3f07 · C-005
+period: {}
+grain: según evidencia

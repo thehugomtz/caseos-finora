@@ -1,0 +1,52 @@
+slide:
+  id: S01
+  file: slides/01.html
+  claim_id: C-001
+  role_in_story: context
+  kicker: "Overview · salud del modelo"
+  headline: "Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8×"
+  takeaway: "Los clientes crecen mucho más rápido que el monto pagado: esa brecha abre Growth y Revenue."
+  question: "¿Qué tan sano está el modelo si suma clientes mucho más rápido que monto pagado?"
+  relationship: "active customers OUTGROW paid MRR; the gap between the two indexed lines IS la brecha, and per-client MRR falls as its consequence"
+  evidence_type: series
+  composition: annotated_chart (divergence) + per_client_strip
+  family: evidence
+  alternatives_considered:
+    - id: hero_metric (−38%)
+      score: {fidelity: 2, focal: 3, evidence: 1, variety: 2, risk: 0}
+      rejected_because: "el título es sobre 4,5× contra 2,8×; un número solo no muestra la divergencia"
+    - id: side_by_side_two_charts
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "dos gráficas separadas esconden que es la misma brecha"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: -1}
+  focal_point: gap_wedge
+  visual_hierarchy:
+    1: la cuña lima entre las dos líneas (la brecha) con 4,5× y 2,8× al final
+    2: las dos líneas indexadas (ene-22 = 100)
+    3: MRR pagado por cliente activo −38% (COP 92,8 mil → 57,8 mil)
+    4: ejes, fuente
+  objects:
+    - {id: clients_line, kind: path, content: "clientes activos, índice ene-22 = 100 → 445"}
+    - {id: mrr_line, kind: path, content: "MRR pagado observado, índice → 277"}
+    - {id: gap_wedge, kind: band, content: "área entre ambas: la brecha"}
+    - {id: per_client, kind: metric, content: "−38% · COP 92,8 mil → 57,8 mil, sparkline T-027"}
+  encodings:
+    y_position: "índice ene-22 = 100"
+    accent: "la brecha (área entre líneas)"
+    line_weight: "3px ambas series; clientes en tinta, MRR en ink-2"
+  annotations:
+    - {at: clients_end, text: "4,5× · 377 → 1.678 clientes activos"}
+    - {at: mrr_end, text: "2,8× · COP 35,0 → 97,0 millones"}
+    - {at: per_client, text: "Todavía no separa mezcla de entrada, precio y salidas: no se lee como deterioro"}
+  layout_intent:
+    grid: "gráfica cols 1–8; tira por cliente cols 10–12"
+    reading_path: "izquierda: divergencia → derecha: consecuencia por cliente"
+    whitespace: "arriba a la izquierda del área de gráfica"
+  text_budget: 75
+  must_show: ["4,5×", "2,8×"]
+  avoid: ["tres cards con bullets", "tabla", "eje dual", "cifras fuera de data/"]
+  data:
+    source: "data/FIN-F-071.yaml (índice clientes), data/FIN-GROWTH-01.yaml (MRR pagado y por cliente, T-001), data/FIN-F-072.yaml (T-027)"
+    values: "34 meses ene-22–oct-24; el índice del MRR se grafica como total_paid / total_paid(ene-22) × 100 solo para trazar (se etiqueta 277 del mensaje de F-071)"
+  notes: "Monto pagado observado (campo amount con escala fija), no MRR contratado. Cliente activo = pago > 0. Stock con ventana completa desde ene-22; flujos desde mar-22."
+  sources: [F-071, F-072, T-001, F-074]

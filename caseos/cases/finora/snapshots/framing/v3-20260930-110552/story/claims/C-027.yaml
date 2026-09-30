@@ -1,0 +1,168 @@
+id: C-027
+type: claim
+key: funnel-medicion
+question: ¿Cómo se mide cada tipo de funnel y qué métricas específicas de cada familia mediríamos en cada uno?
+headline: Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes
+answer: 'Cada funnel se mide con las mismas familias sobre sus propias etapas (volumen de entrada, alcance por etapa
+  de la cohorte dentro de una ventana fija, tiempo por tramo y estancamiento), más la métrica de su mecanismo. En
+  Executive: speed to lead del SDR y aceptación de SQL por el AE, separando la entrada por New de la entrada directa
+  a SQL. En Self Service: alcance de New a Won sin persona. En Hybrid A: tasa de intervención y su uplift. En Hybrid
+  B: salida a self-serve, brecha de MRR e incrementalidad del contacto. En Reactivate: tasa de reactivación, re-estancamiento
+  y envejecimiento del pool. Entre funnels solo se compara la capa común (Won, MRR inicial, retención temprana,
+  CAC y payback), cortada por funnel y conciliada contra las altas observadas en pagos. El funnel se asigna al cierre
+  de la ventana con reglas explícitas: ¿nace de un estancado?, ¿quién inició?, ¿hubo toque humano?, ¿quién cerró?
+  Hoy no se puede calcular ninguna métrica propia de funnel, porque el modelo empieza en el primer pago. Además,
+  el uplift de los híbridos pide un holdout: comparar tocados contra no tocados reparte crédito, pero no prueba
+  efecto.'
+role_in_story: recommendation
+evidence_ids:
+- F-141
+- F-155
+- F-158
+- F-212
+- F-223
+- F-224
+- F-225
+- F-226
+- F-213
+- F-227
+- F-140
+- F-244
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+table_ids: []
+research_ids:
+- R-036
+- R-035
+- R-031
+- R-022
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-248 a F-252 (R-036) y F-244 (R-035) están propuestos. Sin ellos el paquete no puede
+  marcarse Ready.'
+- R-035 cambió las definiciones de Hybrid B (entrada directa a SQL) y Reactivate (ex-clientes). De R-035 solo se
+  reusa la capa común cortada por ruta de entrada.
+- La ventana, el múltiplo de estancamiento y el plazo del speed to lead son parámetros a acordar con Finora. Los
+  benchmarks externos son contexto, no metas.
+- Won solo existe en las rutas con vendedor. Won y primer pago no son lo mismo, y la conciliación mide justamente
+  esa brecha (X-052).
+- Las tasas de etapas intermedias no se comparan entre rutas (por ejemplo, SQL contra activación).
+- La «reactivación» de los pagos es la vuelta de clientes (loop de Revenue), no el Reactivate de leads (F-213, F-226).
+- El catálogo completo (fórmula, grano e hito por métrica) queda en anexo (R-036). Reemplaza a C-006.
+visual_intent: 'Split y converge: a la izquierda, cada funnel con sus propias familias y la métrica de su mecanismo;
+  todos convergen a la derecha en una capa común cortada por funnel. La conciliación con las altas en pagos cierra
+  el lazo.'
+hugo_wording: «me gustaría saber como en cada tipo de funnel y que métricas especificas de cada una de esas categorias
+  mediriamos por tipo de funnel, quiero otra propuesta de lámina ahi» (N-058).
+links:
+- F-141
+- F-155
+- F-158
+- F-212
+- F-223
+- F-224
+- F-225
+- F-226
+- F-213
+- F-227
+- F-140
+- F-244
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+- R-036
+- R-035
+- R-031
+- R-022
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103401-cos-03df
+created_at: '2026-09-30T11:03:59-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 2
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  accepted:
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  pending:
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  tables: []
+  unsupported_numbers: []
+  stale: []

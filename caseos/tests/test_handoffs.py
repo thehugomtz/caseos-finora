@@ -358,8 +358,14 @@ def test_a_new_deck_knows_which_slides_of_the_previous_one_it_can_reuse(case, tm
     (prev / "slide-specs").mkdir(parents=True)
     (prev / "slide-specs" / "S01.yaml").write_text(f"slide:\n  id: S01\n  claim_id: {cid}\n  headline: Entrada\n", encoding="utf-8")
     (prev / "slide-specs" / "S02.yaml").write_text("slide:\n  id: S02\n  claim_id: C-999\n  composition: a: b\n", encoding="utf-8")
-    idx = storyteller.reuse_index(case, prev, since="9999-12-31")
+    c = case.get(cid)
+    (prev / "caseos-handoff.yaml").write_text(yaml.safe_dump({"claims": [{"claim_id": cid, "headline": c["headline"], "answer": c["answer"]}]},
+                                                             allow_unicode=True), encoding="utf-8")
+    idx = storyteller.reuse_index(case, prev)
     assert idx[0] == {"claim_id": cid, "spec": "slide-specs/S01.yaml", "slide": "slides/01.html", "render": "renders/01.png",
-                      "headline": "Entrada", "unchanged": True}
+                      "headline": "Entrada", "unchanged": True}                     # same words as the old deck drew
     assert idx[1]["unchanged"] is False                                            # a claim that no longer exists is redrawn
-    assert storyteller.reuse_index(case, prev, since="2000-01-01")[0]["unchanged"] is False   # changed after the old deck
+    case.set_review(cid, "accepted", actor="hugo")                                 # touching the claim is not changing it
+    assert storyteller.reuse_index(case, prev)[0]["unchanged"] is True
+    case.update(cid, {"answer": "Otra respuesta"}, actor="cos")
+    assert storyteller.reuse_index(case, prev)[0]["unchanged"] is False            # new words: the slide is drawn again

@@ -1,0 +1,53 @@
+id: X-033
+type: alert
+kind: story_change
+status: open
+severity: medium
+effect: changes_story
+source: R-018
+target: Q-003
+title: R-018 cambia la historia Q-003
+finding_text: 'Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado»
+  y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn
+  (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acu…'
+why: 'Hallazgo: hoy no se pueden calcular CAC en COP, CAC por Self Service/Assisted/Executive o por Digital/KAM,
+  payback, LTV con margen, LTV:CAC ni UCM. Faltan la unidad del S&M, el margen o costo de servir, y el motion y
+  canal de cada cliente. Por qué importa: son justo las métricas que conectarían cómo conseguimos clientes con qué
+  mueve el ingreso recurrente. Lo que sí hay es una conexión observada, en paralelo: más primeros pagadores con
+  un primer pago menor (R-003), menor aporte por cohorte a igual edad (R-006), una caída del monto por cliente concentrada
+  en quién entra (R-009) y un S&M por alta que baja −66% en unidades reportadas entre 2022 y 2024 (R-015, T-014).
+  Es asociación, no efecto (T-025).'
+options:
+- key: A
+  label: Conexión observada más propuesta de medición
+  consequence: 'El Overview cuenta la conexión con lo que ya se puede calcular: puente, ARPA por cohorte e ingreso
+    acumulado por cohorte (el «LTV empírico de ingreso» de F-138). El S&M por alta aparece solo como tendencia en
+    unidades reportadas, sin dividirlo contra montos en COP. CAC, payback, LTV:CAC y UCM van como propuesta, y los
+    campos que faltan se suman a la Propuesta de Modelo de datos (R-011). El CEO ve el hueco explícito; no hay cifra
+    de eficiencia comercial en COP.'
+- key: B
+  label: Indicador de eficiencia indexado
+  consequence: Compara el ingreso acumulado por cohorte con el S&M por alta, ambos indexados. Le da al CEO una señal
+    de dirección, pero se lee fácil como LTV:CAC y depende de que el S&M sea comparable en el tiempo, algo que T-008
+    pone en duda para el primer tramo. Confianza baja.
+- key: C
+  label: Pedir los datos y esperar
+  consequence: Pedir a Finora la unidad y moneda del S&M, el margen o costo de servir, y el motion y canal de cada
+    cliente antes de armar el bloque del CEO. Si llegan, Q-003 se responde con CAC, LTV y payback; si no, el Overview
+    queda sin conexión.
+recommended: A
+recommended_why: Es lo único que se sostiene con la evidencia actual y respeta que asociación no es efecto. El pedido
+  de C puede salir en paralelo sin frenar el Overview. B arriesga que una comparación frágil se lea como LTV:CAC.
+detected_by: cos
+links:
+- R-018
+- Q-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110140-cos-d716
+created_at: '2026-09-29T11:32:01-06:00'
+updated_at: '2026-09-29T11:32:01-06:00'
+version: 1

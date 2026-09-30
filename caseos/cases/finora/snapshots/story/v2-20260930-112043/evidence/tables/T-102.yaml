@@ -1,0 +1,72 @@
+id: T-102
+type: table
+table_key: FIN-F-215
+title: El S&M total pasó de 3,45 u en su pico de may-23 a 1,10 u en su valle de ago-23 (−68%), mientras las altas
+  po…
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - sm_peak
+  - S&M total en su pico, may-23 (unidad reportada, sin escala en COP)
+  - 3,45 u
+- - sm_trough
+  - S&M total en su valle, ago-23 (unidad reportada)
+  - 1,10 u
+- - sm_drop
+  - Caída del S&M total de pico a valle
+  - −68%
+units: {}
+definitions: {}
+message: El S&M total pasó de 3,45 u en su pico de may-23 a 1,10 u en su valle de ago-23 (−68%), mientras las altas
+  por mes fueron 27,2 en 2022 (mar–dic) y 54,7 entre ene-23 y oct-24.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-INV-01
+  - EC-ADQ-09
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-INV-01 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-ADQ-09 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-001
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '4.1'
+  claim_fase1: C-INV-01
+  cubre:
+  - C-INV-01
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-215
+links:
+- F-215
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1

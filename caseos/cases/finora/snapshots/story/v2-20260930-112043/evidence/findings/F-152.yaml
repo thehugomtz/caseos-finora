@@ -1,0 +1,100 @@
+id: F-152
+type: finding
+headline: Para no perder el porqué del MRR, cada descuento tiene que registrarse como objeto propio con fecha de
+  fin, separado de la cantidad y del precio de lista, y leerse desde la factura. Hay cinco trampas concretas que
+  evitar.
+evidence_text: 'Los sistemas de facturación ya modelan el descuento con tipo (% o monto), alcance y duración: una
+  vez, N meses o para siempre (SRC-05). Trampas: (1) un cupón de una sola vez desaparece de la suscripción cuando
+  se emite la factura, aunque la factura lo conserva (SRC-05); (2) montar el descuento como un precio más barato
+  lo confunde con un cambio de tarifa, mientras que las partidas negativas dejan rastro de qué descuento fue, cuándo
+  y por qué (SRC-05); (3) un cambio de cantidad y un descuento hechos en la misma actualización llegan como un solo
+  monto (SRC-05); (4) con el MRR neto, un descuento del 100% se lee como churn más reactivación (SRC-04); (5) la
+  mora y la cobranza mueven el pago sin que cambie la suscripción (SRC-04). Si se registran cantidad, precio de
+  lista y descuento por línea, la convención precio-volumen (SRC-14) cuadra sin residuo.'
+confidence: high
+limitations:
+- No sabemos qué sistema de facturación usa Finora ni si registra plan, cantidad o precio de lista; hoy raw.transactions
+  solo trae el monto.
+kind: external
+claims:
+- claim: Si el MRR se calcula neto de descuentos, Stripe considera en churn a un suscriptor con un cupón del 100%
+    y lo vuelve a contar como activo cuando se quita el cupón.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Riesgo directo para las banderas de churn observado y reactivación de mart.customer_month si Finora da
+    meses gratis.
+- claim: En Stripe, el MRR excluye impuestos, planes gratis y productos que se cobran por uso, e incluye suscripciones
+    con pago pendiente (past_due). Las canceladas o marcadas como impagas (unpaid) cuentan como churn.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'El MRR no es lo cobrado: la mora mueve el pago sin mover la suscripción. Por eso conviene conservar el
+    monto pagado observado como capa aparte.'
+- claim: 'En Stripe, un descuento tiene tipo (porcentaje o monto fijo), alcance (a qué productos aplica) y duración:
+    una vez (por defecto, solo la primera factura), varios meses (repeating, con duration_in_months) o para siempre
+    (forever). Un cupón de una sola vez desaparece de la suscripción cuando se emite la factura, aunque la factura
+    conserva el descuento.'
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Implica leer los descuentos desde las líneas de factura, guardando el historial, y no desde el estado actual
+    de la suscripción.
+- claim: Stripe ofrece alternativas al cupón (saldo negativo del cliente, partidas negativas en la factura o un
+    segundo precio más barato) y señala que las partidas negativas dan más detalle de qué descuento se creó, cuándo
+    y por qué.
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'Inferencia nuestra: con un segundo precio más barato se pierde la distinción entre tarifa y descuento.'
+- claim: En Stripe, cambiar solo el descuento no genera prorrateo y se aplica en la siguiente factura. Si se combina
+    con un cambio de cantidad en la misma actualización, el prorrateo refleja las dos cosas a la vez.
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Por eso el caso 1 de Q-025 llegaría como un solo monto; hay que registrarlo como dos eventos.
+- claim: Stripe distingue los cupones que decide la empresa (por ejemplo, un descuento negociado por ventas) de
+    los códigos promocionales que ingresa el cliente (campañas, solo para primeras compras, con límite de canjes
+    y fecha de vencimiento).
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Se corresponde con Assisted/KAM frente a Self Service/Digital.
+- claim: En el análisis precio-volumen-mix de FTI, el efecto precio es el cambio de precio por el volumen del periodo
+    anterior y el efecto volumen es el cambio de volumen por el precio actual (menos el mix). Recomienda calcularlo
+    al nivel más detallado posible (SKU).
+  source_id: SRC-14
+  source_type: industry
+  confidence: high
+  freshness: '2024-05-03'
+  supports_or_contests: context
+  notes: Aplicado a Finora por cliente × línea, la descomposición cuadra sin residuo (es aritmética).
+unverified: false
+source_ref:
+  research: R-021
+links:
+- R-021
+- H-015
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: business_research
+created_at: '2026-09-29T11:15:51-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

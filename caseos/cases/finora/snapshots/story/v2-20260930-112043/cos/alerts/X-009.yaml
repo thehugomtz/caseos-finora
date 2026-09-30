@@ -1,0 +1,37 @@
+id: X-009
+type: alert
+kind: weakening
+status: open
+severity: low
+effect: weakens
+source: R-015
+target: H-019
+title: R-015 debilita H-019
+finding_text: Altas y gasto de S&M no se mueven en el mismo sentido
+why: 'Por industria, R-015 va en la misma línea que R-005: el aumento de primeras apariciones (F-111) y la caída
+  del ticket (F-114) aparecen repartidos en 6 industrias, no concentrados. Pero H-019 habla de «grupos» en general,
+  y la distancia entre el promedio y la mediana del ticket (F-112) sugiere que el cambio podría concentrarse en
+  una banda de ticket. Eso es lo que está mirando R-017.'
+options:
+- key: A
+  label: Cerrar solo el corte por industria
+  consequence: H-019 queda «no soportada por industria» y sigue abierta para las bandas de ticket hasta que termine
+    R-017.
+- key: B
+  label: Cerrar H-019 completa
+  consequence: Simplifica, pero deja fuera justo el corte donde sí podría aparecer concentración.
+recommended: A
+recommended_why: Cerrarla entera descartaría un corte que R-017 está mirando y que F-112 hace plausible.
+detected_by: cos
+links:
+- R-015
+- H-019
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103957-cos-6a2b
+created_at: '2026-09-29T11:19:36-06:00'
+updated_at: '2026-09-29T11:19:36-06:00'
+version: 1

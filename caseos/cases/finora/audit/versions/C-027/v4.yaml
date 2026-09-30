@@ -1,0 +1,171 @@
+id: C-027
+type: claim
+key: funnel-medicion
+question: ¿Cómo se mide cada funnel si no todos lo recorren igual, y qué se puede comparar entre ellos?
+headline: Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes
+answer: 'Proponemos medir cada funnel (Executive, Self Service, Hybrid A, Hybrid B y el loop de Reactivate) en sus
+  propias etapas y con las mismas familias: volumen de entradas, alcance por etapa en cohorte de entrada con ventana
+  fija (solo en cohortes que ya la cumplieron), tiempo por tramo, estancamiento y la métrica del mecanismo de cada
+  ruta, como el speed to lead en Executive o el uplift de la intervención en Hybrid A, medido con holdout. Entre
+  funnels solo se comparan resultados comunes desde el nudo (Won, MRR inicial, retención temprana, CAC y payback),
+  siempre cortados por funnel, y las tasas se comparan por puerta, no por ruta. Con tus definiciones, Hybrid A empieza
+  solo y luego interviene una persona, Hybrid B empieza con persona y termina solo, y Reactivate es el loop de los
+  leads estancados; la vuelta de clientes que se ve en los pagos es otra población y se mide aparte. La clasificación
+  sale de reglas explícitas al cierre de una ventana fija: si nace de un estancado, quién inició, si hubo toque
+  humano y quién cerró. Hoy no se puede calcular ninguna métrica propia de funnel: el modelo empieza en el primer
+  pago.'
+role_in_story: recommendation
+evidence_ids:
+- F-141
+- F-155
+- F-158
+- F-212
+- F-223
+- F-224
+- F-225
+- F-226
+- F-213
+- F-227
+- F-140
+- F-244
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+table_ids: []
+research_ids:
+- R-036
+- R-035
+- R-031
+- R-029
+- R-022
+- R-016
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de aceptación: F-244, F-248, F-249, F-250, F-251 y F-252 están propuestos (R-035, R-036), tuya o bajo
+  D-027.'
+- 'Es propuesta: hoy no se puede calcular ninguna métrica propia de funnel (F-248, F-223).'
+- La ventana fija, el nudo común (Q-050) y el umbral de estancamiento (Q-064) son parámetros a acordar con Finora,
+  no estándar de mercado.
+- 'Comparar tocados contra no tocados en los híbridos asigna crédito, no prueba efecto: hace falta holdout (F-251,
+  H-050).'
+- Con la regla resumida, «¿quién cerró?» puede dejar sin ruta entradas que iniciaron con persona y no cierran en
+  la ventana (H-078).
+- R-035 usa otras definiciones de Hybrid B y Reactivate; esta lámina sigue las tuyas (R-036).
+- 'Es el tercer catálogo del caso (R-031, R-035, R-036): falta consolidarlo en uno (X-170).'
+visual_intent: 'Split → converge: cada funnel se mide dentro de sus propias etapas y todos convergen en el nudo
+  común, el único punto donde se comparan resultados.'
+hugo_wording: 'Mis definiciones: Hybrid A empezó solo y luego intervino una persona; Hybrid B empezó con persona
+  y terminó solo; Reactivate es el loop de los estancados.'
+links:
+- F-141
+- F-155
+- F-158
+- F-212
+- F-223
+- F-224
+- F-225
+- F-226
+- F-213
+- F-227
+- F-140
+- F-244
+- F-248
+- F-249
+- F-250
+- F-251
+- F-252
+- R-036
+- R-035
+- R-031
+- R-029
+- R-022
+- R-016
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103401-cos-03df
+created_at: '2026-09-30T11:03:59-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 4
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  accepted:
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  - F-141
+  - F-155
+  - F-158
+  - F-212
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-213
+  - F-227
+  - F-140
+  pending:
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  - F-244
+  - F-248
+  - F-249
+  - F-250
+  - F-251
+  - F-252
+  tables: []
+  unsupported_numbers: []
+  stale: []

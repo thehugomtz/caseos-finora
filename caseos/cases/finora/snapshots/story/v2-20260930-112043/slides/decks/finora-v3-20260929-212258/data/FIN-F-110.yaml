@@ -1,0 +1,48 @@
+table_id: FIN-F-110
+caseos_id: T-016
+title: Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - new_2022_pm
+  - Altas por mes, 2022 (mar–dic)
+  - 27,2
+- - new_2324_pm
+  - Altas por mes, ene-23 a oct-24
+  - 54,7
+- - plateau_slope
+  - Pendiente de las altas por mes desde ene-23 (cambio por mes)
+  - +0,47
+- - plateau_lo
+  - Límite inferior del intervalo de 95% de esa pendiente
+  - −0,40
+- - plateau_hi
+  - Límite superior del intervalo de 95% de esa pendiente
+  - +1,33
+units: {}
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en
+  jun-24 con 84.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-09
+  - E-001
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: annotated_line
+analysis_reference: INV-20260929-103202-2167 · C-001
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month

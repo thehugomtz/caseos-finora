@@ -1,0 +1,273 @@
+{
+ "id": "JOB-20260929-141547-760a",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué métricas MECE le corresponden a cada casuística de fun…",
+ "params": {
+  "research_id": "R-022"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T14:15:47-06:00",
+ "started_at": "2026-09-29T14:15:47-06:00",
+ "finished_at": "2026-09-29T14:30:20-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T14:15:47-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T14:15:47-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-141547-measurement-14f1",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:15:55-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:15:58-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T14:15:59-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “bowtie model revenue metrics Winning by Design conversion rate time volume”"
+  },
+  {
+   "t": "2026-09-29T14:16:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product-led sales hybrid funnel metrics self-serve sales-assisted PQL conversion measurement”"
+  },
+  {
+   "t": "2026-09-29T14:16:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/01/The-Bowtie-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T14:16:13-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/design/bowtie-data-model"
+  },
+  {
+   "t": "2026-09-29T14:16:24-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics"
+  },
+  {
+   "t": "2026-09-29T14:16:26-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/?p=14899"
+  },
+  {
+   "t": "2026-09-29T14:16:26-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “growth accounting new retained resurrected churned quick ratio definition Jonathan Hsu”"
+  },
+  {
+   "t": "2026-09-29T14:16:27-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B revenue waterfall opportunity-centric multiple entry points buying group measurement”"
+  },
+  {
+   "t": "2026-09-29T14:16:38-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplitude.com/blog/growth-accounting.md"
+  },
+  {
+   "t": "2026-09-29T14:16:39-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Simpson's paradox blended conversion rate channel mix funnel analysis misleading”"
+  },
+  {
+   "t": "2026-09-29T14:16:39-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kyle Poyar hybrid PLG sales-assist metrics self-serve conversion product qualified account”"
+  },
+  {
+   "t": "2026-09-29T14:16:40-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “cohort conversion rate vs period conversion rate funnel conversion window time-bound definition analytics”"
+  },
+  {
+   "t": "2026-09-29T14:17:04-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month, SUM(new_customers) AS new_custome"
+  },
+  {
+   "t": "2026-09-29T14:17:06-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN months_to_return IS NULL THEN 'no vuelve antes de oct-24' WHEN months_to_return = 1 THEN '1' WHEN months_to_return = 2 THEN"
+  },
+  {
+   "t": "2026-09-29T14:17:18-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH r AS (SELECT customer_id, month AS churn_month, months_to_return, CAST(substr(month,1,4) AS INTEGER) AS y, CAST(substr(month,6,2) AS IN"
+  },
+  {
+   "t": "2026-09-29T14:17:19-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_rows_returning_next_month, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS same_amount_next"
+  },
+  {
+   "t": "2026-09-29T14:17:20-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT multi_month_payment_signature AS k, COUNT(*) AS rows_, COUNT(DISTINCT customer_id) AS customers FROM mart.customer_month WHERE multi_"
+  },
+  {
+   "t": "2026-09-29T14:17:25-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH r AS (SELECT customer_id, months_to_return, CAST(substr(month,1,4) AS INTEGER) AS y, CAST(substr(month,6,2) AS INTEGER) AS m FROM mart."
+  },
+  {
+   "t": "2026-09-29T14:17:26-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS reactivation_rows, SUM(CASE WHEN multi_month_payment_signature >= 2 THEN 1 ELSE 0 END) AS with_multi_month_signatur"
+  },
+  {
+   "t": "2026-09-29T14:17:39-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH c AS (SELECT cm.customer_id, cm.month_index, ce.months_to_return FROM mart.churn_events ce JOIN mart.customer_month cm ON cm.customer_i"
+  },
+  {
+   "t": "2026-09-29T14:18:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS months, MAX(ABS(customer_bridge_diff)) AS max_abs_customer_bridge_diff, MAX(ABS(mrr_bridge_diff_cop)) AS max_abs_mrr_brid"
+  },
+  {
+   "t": "2026-09-29T14:18:03-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ChartMogul reactivation MRR definition churned customer returns involuntary churn failed payment”"
+  },
+  {
+   "t": "2026-09-29T14:18:04-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “sales velocity formula opportunities win rate average deal size sales cycle length definition”"
+  },
+  {
+   "t": "2026-09-29T14:18:04-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Harvard Business Review \"The Short Life of Online Sales Leads\" response time qualify lead”"
+  },
+  {
+   "t": "2026-09-29T14:18:16-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://flexprice.io/glossary/involuntary-churn"
+  },
+  {
+   "t": "2026-09-29T14:18:18-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://scholarsarchive.byu.edu/facpub/9711"
+  },
+  {
+   "t": "2026-09-29T14:18:19-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://madkudu.com/plg-challenges/simpsons-paradox"
+  },
+  {
+   "t": "2026-09-29T14:18:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.revenuecat.com/docs/dashboard-and-metrics/charts/trial-conversion-chart"
+  },
+  {
+   "t": "2026-09-29T14:18:28-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://production-docs.revenuecat.com/docs/dashboard-and-metrics/charts/initial-conversion-chart"
+  },
+  {
+   "t": "2026-09-29T14:18:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.optibase.io/glossary/simpsons-paradox"
+  },
+  {
+   "t": "2026-09-29T14:18:31-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pocus.com/blog/product-led-sales-pls-ama-kyle-poyar-openview-pls-benchmarks"
+  },
+  {
+   "t": "2026-09-29T14:18:41-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.salesforce.com/blog/sales-velocity/"
+  },
+  {
+   "t": "2026-09-29T14:18:42-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/why-we-have-a-new-waterfall-for-2021-and-why-you-should-care"
+  },
+  {
+   "t": "2026-09-29T14:18:43-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.sybill.ai/blogs/10-metrics-to-measure-product-led-sales-performance"
+  },
+  {
+   "t": "2026-09-29T14:18:56-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://go.forrester.com/blogs/why-we-have-a-new-waterfall-for-2021-and-why-you-should-care/"
+  },
+  {
+   "t": "2026-09-29T14:23:07-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, new_customers, reactivated_customers, churned_customers FROM mart.monthly_metrics WHERE month IN ('2022-02','2022-03','2022-04"
+  },
+  {
+   "t": "2026-09-29T14:30:20-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-022",
+  "findings": [
+   "F-155",
+   "F-156",
+   "F-157",
+   "F-158",
+   "F-159"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

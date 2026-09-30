@@ -1,0 +1,122 @@
+id: C-025
+type: claim
+key: cfo-casos
+question: '(CFO) Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100;
+  desaparece el descuento: ¿cómo se lee cada caso, qué pasa con el negocio subyacente y cuánto revenue dejamos de
+  capturar?'
+headline: Con el modelo propuesto, cada caso del CFO se lee en su capa
+answer: 'Si paga 100 y luego 80, el modelo lo registra como contracción si bajó la suscripción, o como inicio de
+  descuento si el valor de lista no cambió; hoy el panel marca los dos casos como contracción. Si la suscripción
+  pasa de 100 a 130 con un descuento de 30 y sigue pagando 100, se registran una expansión de +30 y un inicio de
+  descuento de −30, y el neto no cambia; cuando el descuento desaparece, ese +30 va a «fin de descuento», no a expansión.
+  El negocio subyacente se lee en el MRR de lista, y el revenue que dejamos de capturar, en la línea «Descuento»
+  por origen, de aquí en adelante. Con el histórico solo se ve composición: el MRR pagado por cliente activo baja
+  de COP 92,8 mil a COP 57,8 mil (−38%), con la base previa en +5%.'
+role_in_story: recommendation
+evidence_ids:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+table_ids:
+- T-080
+- T-074
+- T-076
+research_ids:
+- R-027
+- R-011
+- R-021
+- R-034
+framework_ids: []
+confidence: medium
+limitations:
+- 'Los casos son ejemplos del enunciado, no observaciones de Finora: prueban qué se puede distinguir, no qué pasó
+  (X-097).'
+- Sin precios ni descuentos registrados, una lista mayor con descuento y un precio neto menor dan el mismo monto
+  (F-177).
+- No hay cifra histórica de revenue no capturado ni puente histórico por tarifa y descuento.
+- La composición no es beneficio comercial (F-178). Q-026 junta dos preguntas distintas (X-072).
+visual_intent: 'Split por capas: cada caso del CFO cae en la capa que lo explica (suscripción, descuento, neto),
+  frente a la lectura única que da hoy el monto pagado.'
+hugo_wording: Preguntas del CFO contestadas con el modelo propuesto.
+links:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+- T-080
+- T-074
+- T-076
+- R-027
+- R-011
+- R-021
+- R-034
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 6
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  accepted: []
+  pending:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  tables:
+  - T-074
+  - T-076
+  - T-080
+  - T-074
+  - T-076
+  - T-080
+  unsupported_numbers:
+  - '100'
+  - '80'
+  - '100'
+  - '100'
+  - '130'
+  - '30'
+  - '100'
+  - '130'
+  - '30'
+  - '100'
+  - '30'
+  stale: []

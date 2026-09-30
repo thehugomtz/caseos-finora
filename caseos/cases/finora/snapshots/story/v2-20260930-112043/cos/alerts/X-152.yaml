@@ -1,0 +1,47 @@
+id: X-152
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-032
+target: H-005
+title: R-032 cambia el framing H-005
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: 'R-032 pone H-005 en la rama 2, «entra peor mezcla», medida solo con señales congeladas al crear el lead (lo
+  de congelar ya venía de X-086). Lo nuevo es el lugar: en el framing, H-005 es HC3q, una causa debajo de «la diferencia
+  persiste», no mezcla. Con eso comparte rama con H-002. Y la calidad que las señales no capturan se va a las tasas
+  de las ramas 3–5, donde no se separa de H-006 sin un experimento (X-082).'
+options:
+- key: A
+  label: 'Aceptar el lugar, con orden dentro de la rama 2: primero H-002 (mezcla por segmento) y después H-005 (mezcla
+    por señales al entrar). Así H-005 conserva su sentido de HC3q (calidad más allá del segmento) y encaja con su
+    redacción («al entrar, muestran…»). La calidad no observada se escribe como límite de las ramas 3–5.'
+  consequence: H-005 se vuelve medible con un dato concreto y no cuenta dos veces con H-002. La rama «mezcla» de
+    D-001 se conserva y H-005 entra en ella.
+- key: B
+  label: Mantener H-005 como HC3q, fuera de la mezcla, y usar las señales congeladas solo como su prueba.
+  consequence: Respeta D-001 tal cual, pero la parte de la brecha que explique H-005 no tiene lugar propio en el
+    cociente y puede solaparse con H-002.
+- key: C
+  label: Fusionar H-002 y H-005 en una sola hipótesis de mezcla.
+  consequence: Árbol más simple, pero se pierde la hipótesis en palabras de Hugo y la diferencia entre segmento
+    y señal.
+recommended: A
+recommended_why: Respeta la redacción de Hugo, evita el doble conteo con H-002 y deja escrito, no escondido, el
+  límite de la calidad que no se ve.
+detected_by: cos
+links:
+- R-032
+- H-005
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

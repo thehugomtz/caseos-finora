@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S24 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S24"] {
+  .ct { font-size: 24px; font-weight: 600; line-height: 1.25; color: var(--ink); }
+  .ct i { font-style: normal; color: var(--ink-3); margin-right: 8px; }
+  .v { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cl { font-size: 20px; line-height: 1.2; color: var(--ink-2); }
+  .md { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .md b { color: var(--ink); font-weight: 600; }
+  .hy { font-size: 22px; line-height: 1.3; color: var(--ink); }
+  .hy span { color: var(--ink-3); font-weight: 600; font-size: 18px; letter-spacing: .08em; text-transform: uppercase; margin-right: 8px; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S24" data-composition="small_multiples (mini puentes)" data-family="comparison" data-word-budget="125" data-page="25">
+  <header class="header">
+    <div class="kicker">Revenue · los casos del CFO con el modelo</div>
+    <h1 class="headline">Con el modelo propuesto, cada caso del CFO se lee en su capa</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Casos = ejemplos del enunciado (100, 80, 130, 30), no observaciones de Finora; la lectura depende de la convención del CFO · 29%: FIN-F-172 · 44%: FIN-F-174 · −38%: FIN-F-178 · F-150, F-151, F-168, F-177</span><span class="page"></span></footer>
+  <aside class="notes">Con el modelo, los ejemplos del enunciado se separan. De 100 a 80: si bajó lo contratado, es Contracción; si lo contratado sigue en 100 y empezó un descuento, es «Descuento (inicio)»; si solo cambió el mes del cobro, es efecto de cobro, fuera del MRR. De 100 a 130 con descuento de 30: Expansión por el paso de 100 a 130 y «Descuento (inicio)» por 30, con el neto en 100. Cuando desaparece el descuento: «Descuento (fin)» por 30, no Expansión. Hoy, con el monto pagado, el segundo caso se vería «sin cambio» y el tercero como expansión, y el puente ya mezcla cobro: 29% del MRR de expansión se revierte al mes siguiente y 44% de los churn observados vuelve a pagar al mes siguiente. Para la pregunta del CFO sobre revenue no capturado, hacia adelante: MRR de lista − MRR neto = revenue que dejamos de capturar, por origen. Hoy el −38% por cliente activo no se puede repartir entre lista y descuento. No damos una cifra histórica de revenue no capturado: el histórico no trae tarifas ni descuentos.</aside>
+</main>
+<script>
+P.draw('S24', (s, P) => {
+  // Plan: three mini bridges on one shared scale (0–140), cols 1–4 · 5–8 · 9–12; "hoy" read under each;
+  // lime only on the line that today stays hidden (case 2). Bottom band: today's bridge already mixes billing.
+  const PX = [112, 688, 1264], SLOT = 108, BW = 64, BASE = 650, K = 1.9;
+  const y = (v) => BASE - v * K;
+  const cases = [
+    { t: '<i>1</i>Paga 100 y luego 80', steps: [{ v: 100, tot: true }, { from: 100, to: 80, lab: '−20', cl: '?', tone: 'ink-4' }, { v: 80, tot: true }],
+      md: '<b>−20</b>: Contracción, «Descuento (inicio)» o efecto de cobro, según qué cambió', hoy: 'una baja de 20 sin porqué' },
+    { t: '<i>2</i>Pasa de 100 a 130 con descuento de 30; sigue pagando 100', steps: [{ v: 100, tot: true }, { from: 100, to: 130, lab: '+30', cl: 'Expansión', tone: 'ink-4' }, { from: 130, to: 100, lab: '−30', cl: '«Descuento (inicio)»', tone: 'accent', focal: true }, { v: 100, tot: true, cl: 'neto' }],
+      md: '', hoy: '«sin cambio»' },
+    { t: '<i>3</i>Desaparece el descuento', steps: [{ v: 100, tot: true }, { from: 100, to: 130, lab: '+30', cl: '«Descuento (fin)»', tone: 'ink-4' }, { v: 130, tot: true }],
+      md: '', hoy: 'expansión' },
+  ];
+  cases.forEach((c, k) => {
+    const x0 = PX[k];
+    s.label(x0, 350, c.t, { anchor: 'bl', cls: 'ct', w: 470 });
+    s.line(x0, BASE, x0 + SLOT * 4 - 20, BASE, { stroke: 'rule', w: 1.5 });
+    c.steps.forEach((st, i) => {
+      const cx = x0 + i * SLOT + SLOT / 2 - 10, bx = cx - BW / 2;
+      if (st.tot) {
+        s.rect(bx, y(st.v), BW, st.v * K, { fill: 'ink' });
+        s.label(cx, y(st.v) - 8, String(st.v), { anchor: 'bc', cls: 'v' });
+      } else {
+        const top = y(Math.max(st.from, st.to)), h = Math.abs(st.to - st.from) * K;
+        s.rect(bx, top, BW, h, { fill: st.tone, id: st.focal ? 's24-hidden' : null, focal: st.focal });
+        s.label(cx, top - 8, st.lab, { anchor: 'bc', cls: 'v' });
+        if (i) s.line(bx - (SLOT - BW), y(st.from), bx, y(st.from), { stroke: 'ink-3', w: 1.5 });
+      }
+      if (st.tot && i) s.line(bx - (SLOT - BW), y(st.v), bx, y(st.v), { stroke: 'ink-3', w: 1.5 });
+      if (st.cl) s.label(cx, BASE + 12, st.cl, { anchor: 'tc', cls: 'cl', w: SLOT - 8, align: 'center' });
+    });
+    if (c.md) s.label(x0, 734, c.md, { cls: 'md', w: 440 });
+    s.label(x0, 852, `<span>Hoy</span>${c.hoy}`, { anchor: 'bl', cls: 'hy', w: 460 });
+  });
+
+  // Today vs forward.
+  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
+  s.label(112, 900, '<b>Hoy el puente mezcla cobro</b>: 29% de la expansión se revierte y 44% de los churn vuelve a pagar al mes siguiente. <b>Hacia adelante</b>: lista − neto = revenue no capturado, por origen; hoy el −38% no se puede repartir entre lista y descuento.', { cls: 'nt', w: 1696 });
+});
+</script>
+</body>
+</html>

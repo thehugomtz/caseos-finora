@@ -1,0 +1,29 @@
+/* Direction B · Modern Strategy
+   Warm off-white, near-black ink, one vivid vermilion accent. Bold, slightly expanded
+   grotesk headlines. Geometric diagrams, heavier structure lines, asymmetric compositions.
+   Vermilion fails small-text contrast on off-white: use --accent-text (darker) for text. */
+@layer theme {
+  :root {
+    --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --font-text: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+    --bg: #f4f1ec; --surface: #ebe6de;
+    --ink: #121212; --ink-2: #3b3833; --ink-3: #635d55; --ink-4: #c9c2b7; --ink-5: #e4ded4;
+    --rule: #d3ccc0;
+    --accent: #ff4b1f; --accent-text: #c2320e; --accent-ink: #ffffff; --accent-soft: #ffe1d6; --accent-2: #121212;
+    --neg: #c2320e; --pos: #1f7a4d; --highlight: #ffd7c7;
+
+    --headline-weight: 700; --headline-tracking: -0.022em; --headline-leading: 1.04;
+    --display-weight: 700;
+    --kicker-transform: uppercase; --kicker-tracking: 0.12em; --kicker-weight: 700;
+    --label-weight: 650;
+    --radius: 0px;
+    --structure-w: 2.5px;
+  }
+  .headline, .statement { font-stretch: 108%; }
+  .metric { font-stretch: 100%; font-weight: 800; letter-spacing: -0.045em; }
+  .kicker { color: var(--ink); display: flex; align-items: center; gap: 14px; }
+  .kicker::before { content: ''; width: 14px; height: 14px; background: var(--ink); flex: none; }
+  .label { font-stretch: 104%; }
+}

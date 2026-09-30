@@ -1,0 +1,3 @@
+# QA — Finora · La brecha clientes–monto se asocia a quién entra; el porqué no está e…
+
+> Producido por `slide-critic`. El reporte automático vive en renders/qa-summary.md.

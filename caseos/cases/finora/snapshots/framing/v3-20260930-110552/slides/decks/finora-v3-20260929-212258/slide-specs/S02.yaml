@@ -1,0 +1,53 @@
+slide:
+  id: S02
+  file: slides/02.html
+  claim_id: C-002
+  role_in_story: diagnosis
+  kicker: "Overview · quién entra"
+  headline: "La caída por cliente se asocia a quién entra; la base previa sostiene su monto"
+  takeaway: "Las cosechas 2023–24, con menos monto por cliente, ya son 65% de los activos y arrastran el promedio; la base previa sube +5%."
+  question: "¿El −38% por cliente viene de la base que ya teníamos o de quién entra?"
+  relationship: "new low-ticket cohorts GAIN WEIGHT and DRAG DOWN the average while the prior base HOLDS its amount"
+  evidence_type: parts
+  composition: marimekko (ancho = % de clientes activos oct-24, alto = MRR por cliente oct-24) + reference lines
+  family: economics
+  alternatives_considered:
+    - id: waterfall (composición vs dentro)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "muestra el 108% pero no quién arrastra; además S07 usa el puente"
+    - id: slope por cosecha
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "muestra niveles pero no el peso de cada cosecha, que es lo que baja el promedio"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 3, risk: -1}
+  focal_point: new_cohorts
+  visual_hierarchy:
+    1: columnas anchas y bajas de las cosechas 2023 y 2024 (lima)
+    2: columna alta de la base previa (tinta) sobre la línea de ene-22
+    3: línea del promedio oct-24 (57,8 mil) contra la de ene-22 (92,8 mil)
+    4: 108% / 84% según la ventana
+  objects:
+    - {id: base_col, kind: bar, content: "Base previa · 17,8% · COP 97,4 mil"}
+    - {id: new_cohorts, kind: bar, content: "Cosecha 2023 · 34% · 46,3 mil; Cosecha 2024 · 31% · 43,0 mil"}
+    - {id: context_cols, kind: bar, content: "Altas feb-22 · 5% · 69,9 mil; Cosecha 2022 · 12% · 65,4 mil"}
+    - {id: avg_lines, kind: marker, content: "promedio ene-22 COP 92,8 mil · promedio oct-24 COP 57,8 mil"}
+  encodings:
+    width: "participación en clientes activos oct-24"
+    height: "MRR pagado por cliente activo oct-24"
+    area: "MRR de la cosecha"
+    accent: "cosechas 2023–24 (quién entra)"
+  annotations:
+    - {at: new_cohorts, text: "Cosechas 2023–24: 65% de los clientes activos y 50% del MRR"}
+    - {at: base_col, text: "Base previa: COP 92,8 → 97,4 mil por cliente (+5%)"}
+    - {at: bottom, text: "La composición explica 108% del cambio (base ene-22) u 84% (base dic-22): la cifra depende de la ventana; la dirección no"}
+  layout_intent:
+    grid: "marimekko cols 1–8; anotaciones cols 9–12"
+    reading_path: "columna alta a la izquierda → columnas anchas bajas → promedio"
+    whitespace: "sobre las cosechas nuevas"
+  text_budget: 90
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards con bullets", "tabla", "pie", "cifras fuera de data/"]
+  data:
+    source: "data/FIN-F-076.yaml (T-031), data/FIN-F-075.yaml, data/FIN-F-097.yaml, data/FIN-F-072.yaml"
+    values: "oct-24: base previa 0,1776 / 97.388; feb-22 0,0483 / 69.860; 2022 0,1222 / 65.437; 2023 0,3397 / 46.297; 2024 0,3123 / 42.984"
+  notes: "Composición no es causa: no separa tipo de cliente, plan, tarifa ni descuento. La base de comparación (ene-22 o dic-22) la decides tú (X-060). La salida de pocas cuentas grandes también baja el promedio (F-101, F-102)."
+  sources: [F-075, F-076, F-097, F-072]

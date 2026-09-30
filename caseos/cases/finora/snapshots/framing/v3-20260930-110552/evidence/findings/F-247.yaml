@@ -1,0 +1,41 @@
+id: F-247
+type: finding
+headline: La eficiencia por ruta (CAC, payback) no existe hoy. Lo único calculable es el S&M por alta total y un
+  magic number sin umbrales comparables.
+evidence_text: El S&M por alta existe solo como total, desde mar-22 (ene-22 no computable, feb-22 excluido) y en
+  unidades reportadas (DM10). Magic number de CFI = (ingreso recurrente t − t−1) × 4 ÷ S&M t−1, sin margen bruto
+  y con umbrales guía de 0,5/0,75/1,0 (EXT9). Esos umbrales no aplican mientras la unidad del gasto no esté documentada.
+confidence: high
+limitations:
+- Si Finora documenta la unidad y asigna los rubros a rutas, CM-CAC y CM-PAYBACK pasan a ámbar rápido.
+kind: measurement
+claims:
+- claim: 'El S&M por alta existe solo como total mensual en unidades reportadas: ene-22 no computable, feb-22 excluido
+    por spillover y estado «ok» desde mar-22.'
+  source_id: DM10
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-30
+  supports_or_contests: supports
+  notes: 'La unidad del gasto no está documentada (DM1): no es CAC en COP.'
+- claim: 'CFI: Magic number = (ingreso recurrente del trimestre actual − el del anterior) × 4 ÷ S&M del trimestre
+    anterior. No incluye margen bruto (a diferencia del payback) y sus umbrales de 0,5/0,75/1,0 son guías «back-of-the-envelope».'
+  source_id: EXT9
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-30
+  supports_or_contests: context
+  notes: Los umbrales no aplican a Finora mientras la unidad del gasto no esté documentada.
+unverified: false
+source_ref:
+  research: R-035
+links:
+- R-035
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:14:35-06:00'
+updated_at: '2026-09-30T10:14:35-06:00'
+version: 1

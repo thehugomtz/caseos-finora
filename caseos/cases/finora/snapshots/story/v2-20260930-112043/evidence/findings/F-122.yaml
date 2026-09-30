@@ -1,0 +1,69 @@
+id: F-122
+type: finding
+headline: 'La comparación que separa es mezcla vs. tasa por grupo de entrada: la mezcla de ajuste habla de H-005;
+  la tasa dentro de cada banda, si cae sobre todo en entradas lentas y en semanas de alta carga, habla de H-006.'
+evidence_text: 'La descomposición de Kitagawa parte el cambio de conversión en dos: efecto mezcla (Σ r̄_b·Δp_b)
+  y efecto tasa (Σ p̄_b·Δr_b). Es equivalente a Oaxaca-Blinder cuando el resultado es sí/no y las variables son
+  categorías. Huella esperada de H-006: la espera crece poco hasta cierta carga y luego se dispara (ρ/(1−ρ), Kingman),
+  y en la teoría de dotación de demanda entrante el abandono es un tema central (Gans et al., 2003). Por eso se
+  busca un codo en el P90 del tiempo a primer contacto y más entradas sin trabajar. Bastan tres lecturas por grupo:
+  mezcla de bandas; carga más P90 de espera; y conversión, dentro de cada banda, de las entradas atendidas dentro
+  del SLA. Si esta última cae, H-006 se debilita, como dice su propia condición.'
+confidence: medium
+limitations:
+- Si las bandas son gruesas, la calidad que no se ve dentro de cada banda aparece como 'efecto tasa'. Además, los
+  reps atienden primero lo que parece mejor, y eso mezcla velocidad con calidad.
+kind: measurement
+claims:
+- claim: La descomposición de Kitagawa separa la diferencia entre dos tasas en efecto de tasas específicas y efecto
+    de composición, y equivale a Oaxaca-Blinder cuando el resultado es binario y las covariables son categóricas.
+  source_id: SRC-02
+  source_type: academic
+  confidence: high
+  freshness: 2025-05
+  supports_or_contests: context
+  notes: Es el método para separar 'cambió qué entra' (mezcla) de 'cambió qué pasa después de entrar' (tasa).
+- claim: Según la fórmula de Kingman, la espera media en una cola crece con ρ/(1−ρ) y se dispara cuando la utilización
+    se acerca a 1.
+  source_id: SRC-05
+  source_type: community
+  confidence: medium
+  freshness: Resultado de 1961; página consultada el 2026-09-29
+  supports_or_contests: context
+  notes: Los reps no son una cola pura porque priorizan; por eso el codo es una huella esperada de H-006, no una
+    ley.
+- claim: La teoría de dotación de centros de llamadas trata como temas centrales la espera en tráfico pesado (Erlang
+    C), la dotación de seguridad de raíz cuadrada y el abandono (Erlang A).
+  source_id: SRC-06
+  source_type: academic
+  confidence: medium
+  freshness: 2003 (teoría estable)
+  supports_or_contests: context
+  notes: 'Solo se recuperó la estructura del documento. Análogo para el caso: un lead que se enfría equivale a un
+    abandono.'
+- claim: El 70% de los leads generados por marketing no son perseguidos por los reps, y esto puede deberse a que
+    el tiempo del rep tiene otras demandas.
+  source_id: SRC-01
+  source_type: academic
+  confidence: high
+  freshness: 2013 (más de 18 meses; describe un mecanismo estable, no un dato de mercado)
+  supports_or_contests: context
+  notes: 461 reps en cuatro empresas. Hace plausible el mecanismo de H-006 en general; no es evidencia sobre Finora.
+unverified: false
+source_ref:
+  research: R-014
+links:
+- R-014
+- H-005
+- H-006
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:45:59-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

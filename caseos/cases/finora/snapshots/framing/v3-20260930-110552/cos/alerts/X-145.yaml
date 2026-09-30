@@ -1,0 +1,48 @@
+id: X-145
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-031
+target: H-039
+title: R-031 debilita H-039
+finding_text: 'Propongo cuatro rutas que se clasifican al final del recorrido, según los eventos: Executive (arranca
+  con persona y nunca pasa por Checkout Self), Self Service (nunca interviene una persona), Hybrid A (arranca en
+  el producto y después entra una persona) e Hybrid B (arranca con persona y pasa por Ch…'
+why: 'R-031 separa dos cifras que H-039 junta. De 751 churns observados, 330 vuelven a pagar al mes siguiente (44%),
+  pero solo 87 lo hacen con el mismo monto. Eso es el 12% de los churns y el 26% de los que vuelven (cálculo mío).
+  H-039 lee el 44% como «vuelve con el mismo monto». Su mecanismo, un desfase entre el cobro y la suscripción vigente,
+  puede seguir valiendo para esos 87. Pero su alcance baja: de hasta 44% del churn observado a hasta 12%. Los otros
+  243 que vuelven con otro monto (cálculo mío) son terreno de H-034 (atrasos que vuelven pagando el doble), H-040
+  y H-061. Esto responde la duda que dejó abierta X-102. Falta un chequeo: si F-199 (T-096) dice «bajo el mismo
+  monto» y no «bajo el mismo identificador», dos research se contradicen y hay que revisarlo.'
+options:
+- key: A
+  label: 'Reformular H-039 con las cifras de R-031: el desfase explicaría a lo sumo los 87 regresos con el mismo
+    monto, y los 243 con otro monto se leen con H-034, H-040 y H-061.'
+  consequence: H-039 conserva su mecanismo con el tamaño correcto, y el peso de la explicación pasa a las hipótesis
+    de calendario y atrasos.
+- key: B
+  label: Absorber H-039 en H-061 (el monto se registra por fecha de cobro) y cerrarla como hipótesis aparte.
+  consequence: 'Hay una hipótesis menos, pero se pierde el caso más limpio de probar contra la suscripción vigente:
+    el regreso con el mismo monto.'
+- key: C
+  label: Dejarla como está hasta leer F-199 y el DM-4 de origen.
+  consequence: Hoy no cambia nada, pero el 44% puede llegar a la story como «mismo monto», y según R-031 no lo es.
+recommended: A
+recommended_why: Corrige el tamaño sin tirar un mecanismo que se puede probar, y deja a la vista cuánto del churn
+  observado sigue sin explicación.
+detected_by: cos
+links:
+- R-031
+- H-039
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-184141-cos-dca6
+created_at: '2026-09-29T18:55:24-06:00'
+updated_at: '2026-09-29T18:55:24-06:00'
+version: 1

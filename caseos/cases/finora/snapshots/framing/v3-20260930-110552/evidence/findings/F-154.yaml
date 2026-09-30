@@ -1,0 +1,72 @@
+id: F-154
+type: finding
+headline: El descuento cambia la composición de las cohortes. La evidencia externa asocia la adquisición con descuento
+  a clientes de menor valor, y el churn al vencer el descuento tiene otras causas posibles; Finora tendría que marcar
+  esas cohortes y medir contra un grupo de control.
+evidence_text: 'Lewis 2006: a mayor descuento de adquisición, menos recompra y menor valor del cliente (con 35%
+  de descuento, cerca de la mitad del valor) (SRC-11). Foubert, Datta y van Heerde 2015: los clientes captados con
+  prueba gratis tienen 59% menos valor de vida, pero responden más al marketing y al uso (SRC-10). Paddle 2022:
+  cerca de 32% menos LTV en las empresas que descuentan de forma agresiva, con una metodología débil (SRC-12). Gieng
+  2026: el churn al vencer el descuento suele coincidir con el fin del proyecto que motivó la compra; propone diferencias
+  en diferencias para separar ambos efectos (SRC-15).'
+confidence: medium
+limitations:
+- Son contextos B2C (periódico, supermercado online, TV digital), un estudio observacional de proveedor y una simulación.
+  Nada de esto describe a Finora ni sirve como cifra esperada.
+kind: external
+claims:
+- claim: 'Lewis (2006), con datos de un periódico y de un supermercado online, encontró que cuanto más profundo
+    es el descuento de adquisición, menores son la recompra y el valor del cliente: con un descuento de 35%, los
+    clientes valían cerca de la mitad a largo plazo.'
+  source_id: SRC-11
+  source_type: academic
+  confidence: medium
+  freshness: '2006'
+  supports_or_contests: context
+  notes: Contexto B2C. El resumen salió de los resultados de búsqueda porque la página del editor devolvió error
+    403. Es un benchmark, no evidencia sobre Finora.
+- claim: Foubert, Datta y van Heerde (2015), con datos de un proveedor europeo de TV digital, estimaron que el valor
+    de vida de los clientes captados con prueba gratis es 59% menor que el de los clientes regulares, aunque responden
+    más a la comunicación de marketing y al uso.
+  source_id: SRC-10
+  source_type: academic
+  confidence: high
+  freshness: '2015'
+  supports_or_contests: context
+  notes: Contexto B2C; el estudio controla la selección de clientes. Es el análogo más cercano a dar meses al 100%.
+    No es una cifra esperada para Finora.
+- claim: Un estudio de Paddle/ProfitWell comparó 33 empresas que descuentan de forma agresiva con 55 que casi no
+    descuentan, y reportó un LTV hasta 32,41% menor en el primer grupo.
+  source_id: SRC-12
+  source_type: marketing
+  confidence: low
+  freshness: '2022-07-20'
+  supports_or_contests: context
+  notes: Estudio observacional de un proveedor, sin controles ni pruebas de significancia documentadas; no permite
+    atribuir causa.
+- claim: Gieng (2026) plantea que el churn al vencer una tarifa introductoria suele coincidir con el fin del proyecto
+    que motivó la compra, y propone diferencias en diferencias, regresión con interacción y Shapley para separar
+    ambos efectos. Lo ilustra con una simulación.
+  source_id: SRC-15
+  source_type: community
+  confidence: low
+  freshness: '2026-05-08'
+  supports_or_contests: context
+  notes: 'Es una simulación: muestra qué se puede distinguir, no qué pasó. Vale como advertencia de método.'
+unverified: false
+source_ref:
+  research: R-021
+links:
+- R-021
+- H-015
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: business_research
+created_at: '2026-09-29T11:15:51-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

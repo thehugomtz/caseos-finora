@@ -1,0 +1,708 @@
+id: R-024
+type: research
+research_question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros
+  pagadores observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con
+  otro ID) y cuánto queda para contrastar con causas?'
+case_question: H-024, H-029, H-037, Q-036, Q-051, C-011
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 2
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - H-024
+    - H-029
+    - H-037
+    - Q-036
+    - Q-051
+    - C-011
+    suggested:
+    - H-052
+    - H-036
+    - H-053
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-024
+- H-029
+- H-037
+- Q-036
+- Q-051
+- C-011
+- F-192
+- F-193
+- F-194
+- F-195
+- F-196
+- F-197
+- F-198
+- F-199
+- F-200
+- F-201
+- F-202
+- F-203
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T16:45:29-06:00'
+version: 7
+job_id: JOB-20260929-143800-3eaf
+error: null
+started_at: '2026-09-29T14:38:00-06:00'
+shaping_task: RT-024
+slides:
+- S2.6
+task_why: Es la única parte de C-011 que se puede hacer hoy con los datos del caso. Sin ella, el paso 2 se contrasta
+  sobre una brecha que puede estar inflada o desinflada por cómo se cuenta. Se apoya en RT-003 para saber qué meses
+  están completos; aquí el foco es el conteo de nuevos.
+task:
+  work: datos
+  draft_answer: 'Con los pagos se acota solo la mitad del paso 1, la de pagadores; la de leads (conteo, registro
+    CRM, no-prospectos) necesita el CRM. De arranque: el −19% de jul–oct 2024 (H-029) es la cifra más expuesta a
+    borde o rezago. La meseta 2023→2024 (54,2 → 55,4 por mes, F-078) depende menos de octubre, pero sí de si las
+    reactivaciones cuentan como nuevos (H-037) y de IDs que cambian (H-024). El resultado fija sobre qué brecha
+    se contrastan las causas; no dice nada de leads ni de conversión.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Octubre-24 frente a los meses previos: pagadores, filas y monto. Repetir jul–sep 2024 contra jul–sep
+      2023, sin octubre (Q-036).'
+    where:
+    - raw.transactions
+    - mart.monthly_metrics
+  - kind: data
+    what: 'Altas y reactivaciones por mes: contar «clientes nuevos» con y sin reactivaciones y ver si su peso se
+      movió entre 2022 y 2024 (H-037).'
+    where:
+    - mart.customer_month
+  - kind: data
+    what: 'Reapariciones con otro ID: salidas observadas y primeras apariciones cercanas que coinciden en industria
+      y monto, sobre todo alrededor de ene-23 (H-024).'
+    where:
+    - mart.customer_month
+    - raw.industry
+  - kind: proposal
+    what: 'Brecha limpia: tabla con cuánto mueve cada artefacto el conteo de primeros pagadores observados y qué
+      queda para el paso 2. Lo que no se puede acotar sin CRM va como pedido a Finora.'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+workspace_run_started: INV-20260929-143800-2198
+why_it_matters: ''
+short_answer: 'Los artefactos quedan acotados: el estancamiento de altas sigue siendo señal contrastable. Al excluir
+  el último mes observado, las altas por mes de 2024 son 56 frente a 54 en 2023, así que el cierre de la serie no
+  arrastra la lectura hacia abajo. Las reactivaciones se registran en un flujo aparte, donde también aparecen los
+  retornos del churn observado. Queda señal para contrastar contra causas de negocio'
+headline: 'Los artefactos quedan acotados: el estancamiento de altas sigue siendo señal contrastable'
+what_is_established:
+- 'Las altas por mes pasan de 27 en 2022 (mar–dic) a 54 en 2023 y 55 en 2024 (ene–oct): hay un escalón y después
+  un nivel plano. La pendiente posterior, +0,47 por mes con intervalo entre −0,40 y +1,33, es una señal sin dirección
+  distinguible.'
+- El último mes observado registra 50 altas frente a un promedio de 55 altas por mes en 2024 (ene–oct), con clientes
+  activos en 1.678 contra 1.645 el mes anterior, y el panel mantiene 1.961 filas cliente-mes con MRR pagado de COP
+  97,0 millones. Excluir ese mes deja las altas por mes de 2024 en 56 frente a 54 en 2023.
+- Con el mes final excluido, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyéndolo son 55. El nivel
+  plano se sostiene bajo ambas lecturas y queda disponible para contrastar contra causas de negocio.
+- Hay 0 meses-cliente marcados a la vez como alta y reactivación y 0 altas con un pago anterior registrado; las
+  reactivaciones suman 468 eventos en un flujo aparte. De 751 eventos de churn observado, 44% vuelve a pagar al
+  mes siguiente bajo el mismo identificador y se registra en ese flujo de reactivaciones.
+- Las reactivaciones por mes son 17 en 2022 (mar–dic), 12 en 2023 y 16 en 2024 (ene–oct), frente a 27, 54 y 55 altas
+  por mes. Sumarlas o separarlas deja 2023 y 2024 en el mismo orden, aunque el peso relativo es mayor en 2022.
+- No es posible verificar si un cliente nuevo corresponde a un negocio que ya pagaba bajo otro identificador. El
+  panel trae identificador de cliente, industria, mes y monto, y faltan estado de suscripción, fuente del lead y
+  motivo de salida.
+- En 2023, 175 de 650 altas coinciden en monto exacto e industria con el último pago de un churn reciente, frente
+  a 196 altas bajo un emparejamiento placebo con churns muy posteriores. La coincidencia es consistente con azar
+  de montos repetidos más que con reaparición; los retornos identificables ya viven en el flujo de reactivaciones.
+what_is_contested: []
+what_remains_unknown:
+- 'No podemos afirmar ni descartar que un cliente nuevo sea un negocio que ya pagaba bajo otro identificador: el
+  panel no trae estado de suscripción, fuente del lead ni motivo de salida.'
+- 'El proxy de coincidencia por monto e industria no permite cuantificar reapariciones: su lectura es direccional
+  y sensible a montos extremos y a la concentración en pocas cuentas.'
+- El churn observado incluye pausas y atrasos, de modo que las salidas y los retornos registrados no equivalen a
+  cancelaciones ni a clientes recuperados.
+alternative_explanations: []
+case_implication: Si se reporta la serie de altas hacia adelante, convendría publicarla con el mes final marcado
+  como preliminar y con las reactivaciones en una línea aparte, dado que altas y reactivaciones ya son flujos separados.
+  Si el nivel plano de altas va a contrastarse contra causas de negocio, convendría abrirlo por industria y por
+  cohorte, ya que las altas por mes de 2024 son 56 frente a 54 en 2023 al excluir el mes final.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿El nivel plano de altas aparece en todas las industrias o solo en las que más aportan MRR nuevo?
+- ¿Las altas recientes se sostienen igual en los primeros meses de vida que las del periodo inicial, o el nivel
+  plano esconde una caída de calidad?
+- ¿Cómo se comporta el gasto comercial por cliente nuevo dentro del periodo plano frente al del escalón?
+- ¿Qué parte del churn observado que vuelve a pagar corresponde a pausas de facturación y cómo cambiaría la lectura
+  de altas netas si se tratara como continuidad?
+handoff_to_cos:
+  summary: 'Los artefactos quedan acotados: el estancamiento de altas sigue siendo señal contrastable'
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-143800-2198
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: Las altas por mes pasan de 27 en 2022 (mar–dic) a 54 en 2023 y 55 en 2024 (ene–oct).
+  spec:
+    tipo: linea
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
+    formato: int
+  claim: C-001
+- id: V-02
+  title: En oct-24 se registran 50 altas frente a un promedio de 55 altas por mes en 2024 (ene–oct), y los clientes
+    activos de oct-24 son 1.678 contra 1.645 en sep-24 y 1.283 en ene-24.
+  spec:
+    tipo: barras
+    x:
+    - '2024'
+    - ene-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas
+      valores:
+      - null
+      - null
+      - null
+      - 50.0
+    - nombre: Altas
+      valores:
+      - 55.4
+      - null
+      - null
+      - null
+    - nombre: Clientes activos
+      valores:
+      - null
+      - 1283.0
+      - 1645.0
+      - 1678.0
+    formato: int
+  claim: C-003
+- id: V-03
+  title: Las reactivaciones por mes son 17 en 2022 (mar–dic), 12 en 2023 y 16 en 2024 (ene–oct), frente a 27, 54
+    y 55 altas por mes en los mismos periodos.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    series:
+    - nombre: Reactivaciones
+      valores:
+      - 16.6
+      - 11.666666666666666
+      - 16.2
+    - nombre: Altas
+      valores:
+      - 27.2
+      - 54.166666666666664
+      - 55.4
+    formato: int
+  claim: C-008
+- id: V-04
+  title: En 2023, 175 de 650 altas coinciden en monto exacto e industria con el último pago de un churn reciente,
+    frente a 196 altas bajo un emparejamiento placebo con churns muy posteriores; en 2022 (mar–dic) las cifras son
+    76 de 272 contra 68.
+  spec:
+    tipo: barras
+    x:
+    - '2023'
+    - '2022'
+    formato: int
+    series:
+    - nombre: altas match reciente
+      valores:
+      - 175.0
+      - 76.0
+    - nombre: altas
+      valores:
+      - 650.0
+      - 272.0
+    - nombre: altas match placebo
+      valores:
+      - 196.0
+      - 68.0
+  claim: C-014
+- id: V-05
+  title: Desde ene-23 la pendiente de las altas por mes es +0,47 por mes, con un intervalo de confianza entre −0,40
+    y +1,33 que contiene cero.
+  spec:
+    tipo: linea
+    formato: int
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas por mes
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
+    claim_fase1: C-ADQ-09
+  claim: C-005
+- id: V-06
+  title: El panel registra 1.961 filas cliente-mes en oct-24, mismo número que en ene-24, y el MRR pagado de oct-24
+    es COP 97,0 millones frente a COP 92,7 millones en sep-24 y COP 76,5 millones en ene-24.
+  spec:
+    tipo: barras
+    x:
+    - oct-24
+    - sep-24
+    - ene-24
+    formato: cop
+    series:
+    - nombre: mrr cop
+      valores:
+      - 97007447.0
+      - 92663693.0
+      - 76506002.0
+  claim: C-006
+- id: V-07
+  title: 'No es posible verificar si un cliente nuevo corresponde a un negocio que ya pagaba bajo otro identificador:
+    el panel solo trae identificador de cliente, industria, mes y monto, sin estado de suscripción, fuente del lead
+    ni motivo de salida.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Fuente del lead y atribución por canal
+      estado: No existe
+      campos: lead_source, channel
+    - dato: Motivos de churn, downgrade o reactivación
+      estado: No existe
+      campos: churn_reason
+    - dato: Tamaño, geografía u otra segmentación además de la industria
+      estado: No existe
+      campos: employees, city
+  claim: C-011
+- id: V-08
+  title: En 2023 y en 2024 (ene–oct) las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas por mes, de modo
+    que sumarlas o separarlas deja ambos periodos en el mismo orden.
+  spec:
+    tipo: barras
+    x:
+    - '2023'
+    - '2024'
+    series:
+    - nombre: Reactivaciones
+      valores:
+      - 11.666666666666666
+      - 16.2
+    - nombre: Altas
+      valores:
+      - 54.166666666666664
+      - 55.4
+    formato: int
+  claim: C-013
+- id: V-09
+  title: En oct-24 se registran 50 altas y 16 reactivaciones como flujos separados, y el mismo mes muestra 33 salidas
+    observadas.
+  spec:
+    tipo: barras
+    x:
+    - oct-24
+    series:
+    - nombre: Altas
+      valores:
+      - 50.0
+    - nombre: Reactivaciones
+      valores:
+      - 16.0
+    formato: int
+  claim: C-015
+- id: V-10
+  title: Excluyendo oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyendo oct-24 son 55.
+  spec:
+    tipo: barras
+    x:
+    - '2023'
+    - '2024'
+    series:
+    - nombre: Altas
+      valores:
+      - 54.166666666666664
+      - 56.0
+    - nombre: Altas
+      valores:
+      - null
+      - 55.4
+    formato: int
+  claim: C-016
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-143800-2198
+  path: investigations/runs/INV-20260929-143800-2198.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T14:46:22-06:00'
+findings:
+- F-192
+- F-193
+- F-194
+- F-195
+- F-196
+- F-197
+- F-198
+- F-199
+- F-200
+- F-201
+- F-202
+- F-203
+run_ids:
+- INV-20260929-143800-2198
+usage:
+  INV-20260929-143800-2198:
+    cost_usd: 2.037428
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-024 corre el Paso 1 de C-011 con los pagos. Lo que deja firme: la meseta de primeros pagadores observados
+    2023→2024 (54 → 55 por mes; 56 sin octubre) no la produce el último mes ni la forma de contar las reactivaciones.
+    Además, desde ene-23 no se distingue una tendencia.
+
+
+    Lo que no cubre:
+
+    1. Los artefactos del lado de la entrada (H-001, H-002, H-003, H-052), porque sin leads no se pueden probar.
+
+    2. La reaparición de un cliente con otro ID, que no se puede verificar (F-202).
+
+    3. El tramo del −19% de jul–oct 2024, porque compara promedios anuales y no los mismos meses. Por eso Q-036
+    queda contestada solo a medias.
+
+
+    Efectos:
+
+    - Debilita H-029 (la parte de «octubre incompleto») y H-037 (en la ventana 2023→2024).
+
+    - Debilita H-024, pero solo como indicio, sin descartarla.
+
+    - Sostiene Q-051 (lectura 2023→2024), H-058 y C-003.
+
+    - Cambia cómo se cuenta C-011. Esto llena X-091, que solo marcaba el vínculo; no abro una alerta nueva.
+
+
+    F-192 a F-203 siguen propuestos: nada de esto entra a la historia hasta que Hugo los revise.
+
+
+    Orden sugerido:
+
+    1. Q-051: Hugo fija el periodo y el hito del CRO (o se los pregunta). Eso decide si H-024 y H-037 pesan.
+
+    2. Q-036: pedir el corte comparando los mismos meses.
+
+    3. H-024: revisar mes a mes el salto de ene-23, solo si el periodo incluye 2022 o si C-003 usa el +104%.'
+  run_id: RUN-20260929-162147-cos-c496
+  at: '2026-09-29T16:45:29-06:00'
+  impacts:
+  - target: C-011
+    effect: changes_story
+    why: 'R-024 es el Paso 1 de C-011 hecho con pagos. Este es el contenido de X-091, que está abierta pero solo
+      marca el vínculo: no abro alerta nueva.
+
+
+      Qué cambia: C-011 deja de ser solo método y trae un resultado. Con pagos, la meseta 2023→2024 no sale del
+      último mes ni de contar dos veces a quien se reactiva (F-196, F-197, F-201). Desde ene-23 la pendiente no
+      se distingue de cero (F-193).
+
+
+      Alcance: cubre solo los artefactos de la serie de primeros pagos. Los de la entrada que nombra R-010 (conteo
+      H-001, mezcla H-002, tiempo H-003/H-004) y H-052 no se prueban sin leads. R-025 (X-092) deja el Paso 2 igual
+      de bloqueado.
+
+
+      Límites que hay que escribir: la reaparición con otro ID no se puede verificar (F-202); la prueba de coincidencias
+      solo da una dirección (F-203); el churn observado incluye pausas y atrasos.
+
+
+      En la lámina, «altas» quiere decir primeros pagadores observados. El framing no deja usar la etiqueta contractual
+      sin vigencia verificada.
+
+
+      Ninguno de F-192 a F-203 está aceptado.'
+  - target: H-029
+    effect: weakens
+    why: 'La parte de «octubre-24 incompleto» pierde apoyo. Frente a sep-24, en oct-24 suben los clientes activos
+      (1.678 contra 1.645, F-194) y el MRR pagado (COP 97,0 contra 92,7 millones, F-195). Si faltaran pagos se vería
+      lo contrario: activos y MRR abajo y un pico de salidas.
+
+
+      Cuenta directa mía, no medida en R-024: las 33 salidas de oct-24 (F-198) son ≈2,0% de los activos de sep-24,
+      en línea con el churn observado de 2024 (F-175; ver X-101).
+
+
+      Ojo con F-195: las 1.961 filas no prueban que el mes esté completo, porque el panel tiene esas filas en todos
+      los meses (X-031).
+
+
+      Lo que no cubre:
+
+      - R-024 compara promedios anuales (2024 sin octubre, 56, contra 2023 completo, 54; F-196), no el tramo del
+      −19% de jul–oct 2024 (R-025).
+
+      - La otra explicación, más tiempo entre Won y primer pago, no se puede evaluar: no hay fechas de Won (F-202).'
+  - target: Q-036
+    effect: requires_research
+    why: 'R-024 contesta la primera mitad, de forma indirecta: octubre-24 no se ve incompleto, porque activos y
+      MRR suben frente a sep-24 (F-194, F-195).
+
+
+      La segunda mitad queda sin responder. R-024 compara 2024 ene–sep (56) contra 2023 completo (54), no jul–sep
+      2024 contra jul–sep 2023, que es justo donde R-025 pone el −19%.
+
+
+      Además, diez meses contra doce no son los mismos meses, y 2023 tuvo un ene–may bajo y un jun–dic alto (T-013).'
+  - target: H-024
+    effect: weakens
+    why: 'Con pagos no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202).
+
+
+      La única prueba disponible no encuentra más coincidencias que las esperables por azar en 2023. De 650 altas,
+      175 coinciden en monto exacto e industria con el último pago de un churn reciente. La comparación de control
+      da 196: cruza con churns posteriores, así que mide lo que coincide por azar. En 2022 hay un exceso chico:
+      76 contra 68 (F-203).
+
+
+      Pesa poco por tres razones:
+
+      - Solo da una dirección y es sensible a montos extremos.
+
+      - Es anual, y H-024 habla de un solo mes, ene-23.
+
+      - La vía «cambio de sistema de cobro» puede no dejar un churn previo en el panel.
+
+
+      Ojo: «0 altas con un pago anterior» (F-197) solo comprueba la clasificación bajo el mismo ID; no dice nada
+      de H-024.
+
+
+      Contexto: ene-23 (60, T-016) queda por encima del promedio de ene–may-23, que lo incluye (45,2, T-013). Entonces
+      feb–may-23 promedian menos: ≈41,5, cuenta directa mía. Parece un pico de un mes. Eso es lo que dejaría un
+      evento de registro, pero también una campaña o un efecto de enero.'
+  - target: H-037
+    effect: weakens
+    why: 'En 2023→2024, contar o no las reactivaciones no cambia la lectura: son 12 y 16 por mes frente a 54 y 55
+      altas, y ambos periodos quedan en el mismo orden (F-201). Tampoco hay doble conteo: ningún mes-cliente es
+      alta y reactivación a la vez (F-197).
+
+
+      El peso de las reactivaciones sí se movió (F-200: 17, 12 y 16 frente a 27, 54 y 55 altas), pero en esa ventana
+      no produce el «no crecen».
+
+
+      Donde sigue viva es en 2022→2024, porque cambia la magnitud. Con reactivaciones, las entradas a pago van de
+      ≈44 a ≈71 por mes. Es una cuenta directa de F-200 que no está en ninguna tabla: cerca de +60%, contra +104%
+      sin ellas (T-019).
+
+
+      Eso solo importa si el CRO habla de 2022→2024 (Q-051) y cuenta como nuevo a quien vuelve. Si H-059 se sostiene,
+      la mayoría de esas vueltas ni siquiera pasa por el CRM.'
+  - target: Q-051
+    effect: supports
+    why: 'R-024 sostiene la lectura «2023→2024 + primer pago»: la meseta (54 → 55 por mes; 56 sin octubre) se mantiene
+      aunque se saque el último mes o se cambie la forma de contar reactivaciones (F-196, F-201).
+
+
+      Matiz para la lámina: «plano» sale de los promedios (F-192). La pendiente (F-193) solo dice que no se distingue
+      dirección, y su rango también admite crecimiento. Va mejor «sin tendencia distinguible».
+
+
+      La lectura 2022→2024 sigue siendo un escalón (27 → 55, F-192), con F-202 como límite.
+
+
+      R-024 no contesta qué periodo ni qué hito usa el CRO. Además, la cifra 2024 contra 2023 cambia según los meses
+      que se comparen (X-016 trae otra). La lámina necesita una sola, con los mismos meses.'
+  - target: C-003
+    effect: supports
+    why: 'R-024 confirma la parte de volumen de C-003: escalón 2022→2023 y meseta después (F-192, F-193), sin que
+      el último mes jale la cifra (F-196).
+
+
+      Si la lámina dice «entran más», tiene que decir contra qué periodo: contra 2022 sí (+104%, T-019); contra
+      2023, no.
+
+
+      El límite de F-202 (no se puede verificar que el salto sea entrada nueva) ya lo cubre el framing al hablar
+      de «primera aparición observada». Aun así, conviene citarlo junto al +104%.'
+  - target: H-058
+    effect: supports
+    why: 'Las reactivaciones por mes se quedan entre 12 y 17 mientras las altas se duplican (F-200). El peso cambia
+      por el lado de las altas, como dice H-058, en línea con T-035/F-080.
+
+
+      Al citar el peso de 2022 hay que fijar el periodo: H-058 usa feb–dic (30,4%). Con los promedios de mar–dic
+      de F-200 sale cerca de 38% (cuenta directa), que es el techo de R-016.'
+  - target: H-039
+    effect: no_material_impact
+    why: F-199 repite el 44% como «vuelve a pagar al mes siguiente bajo el mismo ID», sin decir con qué monto. Es
+      el mismo hueco que X-102 ya señaló para F-182. No agrega evidencia sobre un desfase del cobro.

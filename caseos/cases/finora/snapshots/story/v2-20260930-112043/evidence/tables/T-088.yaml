@@ -1,0 +1,68 @@
+id: T-088
+type: table
+table_key: FIN-F-186
+title: El puente normalizado exacto que pide repartir un pago entre los meses que cubre no es medible con los datos…
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- Dato
+- Valor
+rows: []
+units: {}
+definitions: {}
+message: 'El puente normalizado exacto que pide repartir un pago entre los meses que cubre no es medible con los
+  datos disponibles: no hay definición del campo de monto ni estado de la suscripción ni periodo devengado por pago,
+  de modo que el reparto solo puede acotarse con firmas de reversión y de liquidación de atrasos.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids: []
+  tools: []
+  data_version: null
+  brain_version: null
+query: ''
+transformation: ''
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-c4dd · C-011
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+visual_artifact:
+  tipo: datos
+  filas:
+  - dato: Monto pagado por cliente y mes (amount)
+    estado: Disponible
+    campos: ''
+  - dato: Industria del cliente
+    estado: Disponible
+    campos: ''
+  - dato: Gasto de S&M por mes y rubro
+    estado: Disponible, sin unidad documentada
+    campos: ''
+  - dato: Definición de amount (facturado, cobrado o contratado)
+    estado: No existe
+    campos: amount_definition
+  - dato: Estado de la suscripción (activa, pausada, cancelada)
+    estado: No existe
+    campos: subscription_status
+  - dato: Créditos y concesiones no recurrentes
+    estado: No existe
+    campos: credits
+created_at: '2026-09-29T14:45:39-06:00'
+status: invalid
+validation_errors:
+- falta 'rows'
+finding: F-186
+links:
+- F-186
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:45:39-06:00'
+version: 1

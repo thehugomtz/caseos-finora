@@ -1,0 +1,52 @@
+id: F-119
+type: finding
+headline: 'El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados no
+  es evaluable con estos datos: no hay etapas del funnel con fechas ni fuente del lead que liguen el gasto de un
+  mes con clientes concretos, y la unidad del gasto no está documentada.'
+epistemic_state: No evaluable
+confidence: medium
+kind: analytics
+visual:
+  tipo: datos
+  filas:
+  - dato: Monto pagado por cliente y mes (amount)
+    estado: Disponible
+    campos: ''
+  - dato: Industria del cliente
+    estado: Disponible
+    campos: ''
+  - dato: Gasto de S&M por mes y rubro
+    estado: Disponible, sin unidad documentada
+    campos: ''
+  - dato: Etapas del funnel con fechas de entrada y salida
+    estado: No existe
+    campos: stage, stage_entered_at, stage_exited_at
+  - dato: Fuente del lead y atribución por canal
+    estado: No existe
+    campos: lead_source, channel
+  - dato: Definición de amount (facturado, cobrado o contratado)
+    estado: No existe
+    campos: amount_definition
+visual_title: 'El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados
+  no es evaluable con estos datos: no hay etapas del funnel con fechas ni fuente del lead que liguen el gasto de
+  un mes con clientes concretos, y la unidad del gasto no está documentada.'
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103202-2167
+  claim: C-014
+  evidence: []
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-025
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:39:57-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 3

@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-30T10:33:27-06:00 · motivo: COS: R-036 podría afectar C-023
+> Actualizado: 2026-09-30T11:21:56-06:00 · motivo: Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): relanzado con el reu…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -13,27 +13,27 @@ Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) O
 CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación
 
 ## Current Phase
-**Framing**
+**Slides**
 
 | Fase | Estado | Ready |
 |---|---|---|
 | 01 Briefing | ready | v1 · 2026-09-29T00:13 |
-| 02 Framing | needs_review | v2 · 2026-09-29T20:32 |
+| 02 Framing | ready | v3 · 2026-09-30T11:05 |
 | 03 Research | ready | v1 · 2026-09-29T20:33 |
 | 04 Synthesis | ready | v1 · 2026-09-29T20:45 |
-| 05 Story | ready | v1 · 2026-09-29T20:47 |
+| 05 Story | ready | v2 · 2026-09-30T11:20 |
 | 06 Slides | review | — |
 
 ## Current Status
-34 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 20 decisiones activas · 167 alertas abiertas.
+34 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 155 findings aceptados · 22 decisiones activas · 169 alertas abiertas.
 
-COS: Story está Ready y Slides en revisión. R-035 cierra el catálogo de métricas (35 en tres capas; 3 verdes, 11 ámbar y 21 rojas; nada se puede cortar por ruta) y respalda la arquitectura de la story. Quedan tres decisiones de Hugo: dónde vive la vuelta de pagadores (C-022 frente a F-213, junto con X-127 y X-080), un solo catálogo y un solo semáforo (C-009; R-031 frente a R-035), y marcar como supuesto el mapa de etapas de Hybrid A/B (C-021).
+COS: R-036 trae el tercer catálogo de métricas del caso (35: 30 por funnel + 5 comunes, semáforo 0/4/31); F-248–F-252 siguen propuestos. Con Story Ready y Slides en review, lo que bloquea es elegir un solo catálogo (C-022) y reconciliar el semáforo de C-009 (en total vs por funnel) antes de tocar láminas. Siguen abiertas dos definiciones de Hugo (Reactivate como funnel o loop, y dónde va Engaged) y la pregunta a Finora por los datos previos al pago con llave a customer_id.
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
 
 ## Approved Framing
-v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
+v3 aprobada el 2026-09-30 → `framing/approved/current.v3.md`
 
 ## Governing Question
 ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
@@ -45,18 +45,20 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 
 ## Current Story
 **Governing thought:** La brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos: proponemos medir por funnel y separar descuento de suscripción.
-- **C-001** Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8× · pending
-- **C-002** La caída por cliente se asocia a quién entra; la base previa sostiene su monto · pending
-- **C-003** Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias · pending
-- **C-004** Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas · pending
-- **C-005** Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar · pending
-- **C-006** Proponemos medir cada funnel por volumen, conversión, velocidad, valor, calidad y estancamiento · pending
-- **C-007** La pérdida está en el monto por cliente de cosechas de menor ticket · pending
-- **C-008** Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar · pending
-- **C-009** Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta · pending
-- **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
+- **C-001** Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8× · supported
+- **C-002** La caída por cliente se asocia a quién entra; la base previa sostiene su monto · superseded
+- **C-003** Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias · superseded
+- **C-004** Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas · superseded
+- **C-005** Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar · superseded
+- **C-006** Proponemos medir cada funnel por volumen, conversión, velocidad, valor, calidad y estancamiento · superseded
+- **C-007** La pérdida está en el monto por cliente de cosechas de menor ticket · supported
+- **C-008** Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar · superseded
+- **C-009** Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta · superseded
+- **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · superseded
 
 ## Decisions
+- **D-029** Story marcada Ready (v2) · 2026-09-30 → Ready
+- **D-028** Framing marcada Ready (v3) · 2026-09-30 → Ready
 - **D-027** Delegación a Claude (4): aprobar la historia v4 y lanzar el deck de corrido · 2026-09-30 → «Delego y sigue de corrido»: Claude acepta la evidencia nue…
 - **D-026** Revisión del deck v3: los ajustes los hacen los agentes y quedan en CaseOS; Claude coordina · 2026-09-30 → «Ojo los ajustes los tienen que hacer los agentes y quedar…
 - **D-025** Story marcada Ready (v1) · 2026-09-29 → Ready
@@ -65,9 +67,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **D-022** R-013 requiere más investigación H-022: Sin impacto material · 2026-09-29 → Sin impacto material
 - **D-021** R-013 cambia el framing Q-018: Sin impacto material · 2026-09-29 → Sin impacto material
 - **D-020** Research marcada Ready (v1) · 2026-09-29 → Ready
-- **D-019** Framing marcada Ready (v2) · 2026-09-29 → Ready
-- **D-017** Delegación a Claude (2): que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y el storytelling lo mues… · 2026-09-29 → «Voy a comer pero ahí checa con el chief y las herramientas…
-- … y 10 más
+- … y 12 más
 
 _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
@@ -82,7 +82,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 67 más
+- … y 68 más
 
 ## Evidence We Trust
 - **F-001** (C-RES-01) Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24. · high
@@ -95,7 +95,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **F-030** (C-ADQ-07) El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana de 2022; por encima de esa mediana, las altas por mes no aumentaron. · high
 - **F-033** (C-RET-03) El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos. · high
 - **F-037** (C-ADQ-08) El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones probadas, y entre 2023 y 2024 cambió menos de 10% en todas. · high
-- … y 137 más
+- … y 145 más
 
 ## Things We Cannot Claim
 - Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.
@@ -121,7 +121,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 94 más
+- … y 97 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -171,14 +171,14 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **X-037** R-011 cambia la historia T-003
 - **X-038** R-011 cambia el framing Q-026
 - **X-049** R-016 cambia el framing Q-001
-- … y 30 más
+- … y 31 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
-- Framing v2: `framing/approved/current.v2.md`
+- Framing v3: `framing/approved/current.v3.md`
 - Research v1: `research/approved/research.v1.yaml`
 - Synthesis v1: `cos/approved/synthesis.v1.yaml`
-- Story v1: `story/approved/current.v1.md`
+- Story v2: `story/approved/current.v2.md`
 - **A-001** Brief de trabajo v0.3 (fuente de verdad) (`brief/sources/alegra_brief_de_trabajo.html`)
 - **A-002** Business Exploration Workspace (Finora) (`/ws/finora/`)
 - **A-003** Propuesta de arquitectura v1.2 del workspace agentic (`finora-eda/docs/propuesta_arquitectura_v1.md`)
@@ -197,16 +197,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-30 10:33 · COS: R-036 podría afectar C-023
-- 2026-09-30 10:33 · COS: R-036 podría afectar C-021
-- 2026-09-30 10:33 · COS: R-036 podría afectar C-009
-- 2026-09-30 10:33 · COS: R-036 podría afectar C-006
-- 2026-09-30 10:33 · R-036 completada: Propongo 35 métricas sin solapes (MECE): 30 son propias de cada funnel (entradas, alcance por etapa en cohort…
-- 2026-09-30 10:33 · R-036: finding propuesto — Solo 4 métricas comunes existen hoy, en total y con cuidado. Y la «reactivación…
-- 2026-09-30 10:33 · R-036: finding propuesto — Los dos híbridos necesitan holdout: comparar tocados vs no tocados asigna crédi…
-- 2026-09-30 10:33 · R-036: finding propuesto — Los 5 funnels solo son MECE con reglas explícitas, evaluadas al cierre de una v…
-- 2026-09-30 10:33 · R-036: finding propuesto — Catálogo MECE de 35 métricas. Por funnel: volumen, alcance por etapa, tiempo po…
-- 2026-09-30 10:33 · R-036: finding propuesto — Hoy no se puede calcular ninguna de las 30 métricas propias de funnel: el model…
+- 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): relanzado con el reuso por contenido corregido (15 láminas sin cambio)
+- 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): deck con su selección para 5 min, su paleta, portadas, separadores y anexos (D-026)
+- 2026-09-30 11:21 · Story Package v5 preparado para el Visual Storyteller (finora-v5-20260930-112103)
+- 2026-09-30 11:20 · Story marcada Ready (v2)
+- 2026-09-30 11:20 · Hugo decidió: Story marcada Ready (v2)
+- 2026-09-30 11:20 · Hugo aceptó C-025 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
+- 2026-09-30 11:20 · Hugo aceptó C-019 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
+- 2026-09-30 11:20 · Hugo aceptó C-017 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
+- 2026-09-30 11:20 · Hugo aceptó C-024 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
+- 2026-09-30 11:20 · Hugo aceptó C-015 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

@@ -65,9 +65,11 @@ def _upsert_deck(store: CaseStore, deck: dict) -> None:
 
 
 # ------------------------------------------------------------------------------------------ prepare
-def reuse_index(store: CaseStore, prev_dir: Path, since: str) -> list[dict]:
-    """The slides of a previous deck by claim: a claim whose entity did not change after `since` (when that deck was
-    prepared) can keep its slide, re-themed; anything new or changed is drawn again."""
+def reuse_index(store: CaseStore, prev_dir: Path, since: str = "") -> list[dict]:
+    """The slides of a previous deck by claim: a claim whose headline and answer are the ones that deck drew (its
+    caseos-handoff.yaml) keeps its slide, re-themed; anything new or changed is drawn again. Content, not timestamps:
+    accepting or rescoring a claim touches it without changing what the slide says."""
+    before = {c.get("claim_id"): c for c in (read_yaml(prev_dir / "caseos-handoff.yaml", {}) or {}).get("claims") or []}
     out = []
     for sp in sorted((prev_dir / "slide-specs").glob("S*.yaml")) if (prev_dir / "slide-specs").is_dir() else []:
         spec = _spec(sp)
@@ -77,7 +79,8 @@ def reuse_index(store: CaseStore, prev_dir: Path, since: str) -> list[dict]:
         c = store.get(cid) if cid else None
         out.append({"claim_id": cid or None, "spec": f"slide-specs/{sp.name}", "slide": f"slides/{int(num):02d}.html",
                     "render": f"renders/{int(num):02d}.png", "headline": s.get("headline") or s.get("title") or "",
-                    "unchanged": bool(c) and str(c.get("updated_at") or "") <= since})
+                    "unchanged": bool(c) and cid in before and all((c.get(k) or "") == (before[cid].get(k) or "")
+                                                                   for k in ("headline", "answer"))})
     return out
 
 
@@ -119,7 +122,7 @@ def prepare(store: CaseStore, *, direction: str = "editorial", critic: bool = Tr
         (dst / "renders").mkdir(parents=True, exist_ok=True)
         for png in (prev_dir / "renders").glob("[0-9][0-9].png") if (prev_dir / "renders").is_dir() else []:
             shutil.copy2(png, dst / "renders" / png.name)
-        idx = reuse_index(store, prev_dir, prev.get("created_at") or "")
+        idx = reuse_index(store, prev_dir)
         (dst / "index.yaml").write_text(yaml_dump({"from": prev["slug"], "slides": idx}), encoding="utf-8")
         reuse = {"from": prev["slug"], "dir": f"reuse/{prev['slug']}", "index": f"reuse/{prev['slug']}/index.yaml",
                  "unchanged": sum(1 for x in idx if x["unchanged"]), "slides": len(idx)}

@@ -1,0 +1,123 @@
+id: T-041
+type: table
+table_key: FIN-F-097
+title: Entre dic-22 y oct-24 el MRR por cliente activo cambia −COP 31,7 mil (−35%), de lo cual la composición de
+  cos…
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- Cosecha
+- '% clientes dic-22'
+- '% clientes oct-24'
+- MRR / cliente dic-22
+- MRR / cliente oct-24
+- Contribución composición
+- Contribución dentro
+rows:
+- - Base previa (activos en ene-22)
+  - 0.49067431850789095
+  - 0.17759237187127533
+  - 96956.9895614035
+  - 97387.82768456376
+  - -30422.92685105237
+  - 143.95738332673739
+- - Altas de feb-22 (marcadas)
+  - 0.1492109038737446
+  - 0.048271752085816445
+  - 85820.98471153846
+  - 69859.96888888889
+  - -7857.15170298147
+  - -1576.0118982347076
+- - Cosecha 2022 (mar–dic)
+  - 0.3601147776183644
+  - 0.12216924910607867
+  - 80985.25422310756
+  - 65436.706829268296
+  - -17420.225454206444
+  - -3749.408023408324
+- - Cosecha 2023
+  - 0.0
+  - 0.3396901072705602
+  - null
+  - 46297.025157894735
+  - 15726.641442193088
+  - 0.0
+- - Cosecha 2024
+  - 0.0
+  - 0.31227651966626935
+  - null
+  - 42983.56385496183
+  - 13422.757723480332
+  - 0.0
+units:
+  '% clientes dic-22': pct
+  '% clientes oct-24': pct
+  MRR / cliente dic-22: cop
+  MRR / cliente oct-24: cop
+  Contribución composición: cop
+  Contribución dentro: cop
+definitions: {}
+message: Entre dic-22 y oct-24 el MRR por cliente activo cambia −COP 31,7 mil (−35%), de lo cual la composición
+  de cosechas explica −COP 26,6 mil (84%) y el efecto dentro de las cosechas −COP 5,2 mil; las cosechas 2023 y 2024
+  son 65% de los clientes activos y 50% del MRR en oct-24.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  - EC-MON-04
+  tools:
+  - run_analysis
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-006
+
+  run_analysis(''vintage_arpa'', {"desde": "2022-12", "hasta": "2024-10"})'
+transformation: E-006 · run_analysis · Descomposición de Shapley (punto medio) del MRR por cliente por cosecha;
+  EC-MON-04 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-010
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: waterfall
+visual_artifact:
+  tipo: cascada
+  formato: cop
+  pasos:
+  - etiqueta: dic-22
+    valor: 89543.71829268293
+    tipo: total
+  - etiqueta: Composición
+    corta: Comp.
+    valor: -26550.904842566866
+    tipo: delta
+  - etiqueta: 'Dentro de
+
+      cada cosecha'
+    corta: Dentro
+    valor: -5181.462538316295
+    tipo: delta
+  - etiqueta: oct-24
+    valor: 57811.35091179976
+    tipo: total
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-097
+links:
+- F-097
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

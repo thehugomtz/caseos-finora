@@ -1,0 +1,50 @@
+slide:
+  id: S06
+  file: slides/06.html
+  claim_id: C-021
+  role_in_story: recommendation
+  kicker: "Growth · cómo definir el funnel · propuesta"
+  headline: "Cada ruta usa las etapas del Executive que le aplican, por canal y con dueño"
+  takeaway: "Tu secuencia Executive es la base: cada ruta reusa sus etapas, salta algunas y cambia otras por etapas de producto; el dueño pasa de SDR a AE o al producto."
+  question: "¿Qué etapas aplican a cada funnel, por canal, literalmente como las del Executive?"
+  relationship: "each route REUSES a subset of the Executive stages, SKIPS some and REPLACES others with product stages, while ownership HANDS OFF between groups"
+  evidence_type: structure
+  composition: stage_matrix (metro map: filas ruta × canal, columnas etapas en orden, línea por las etapas usadas)
+  family: comparison
+  alternatives_considered:
+    - id: siete funnels verticales
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: -2}
+      rejected_because: "siete embudos no muestran qué etapa se reusa; es una galería"
+    - id: tabla de texto
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "prohibido por el brief y esconde la continuidad de cada ruta"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 3, risk: -1}
+  focal_point: exec_outbound_row
+  visual_hierarchy:
+    1: fila Executive · outbound SDR marcada en lima (tu secuencia literal)
+    2: las demás filas: puntos donde reusan, anillos donde se puede saltar
+    3: grupos de dueño en las columnas (Producto · SDR · AE · Producto)
+    4: notas de lo que falta confirmar
+  objects:
+    - {id: columns, kind: axis, content: "New · Signup Self · Activated Self · Working SDR · Engaged SDR · SQL SDR · Demo AE · Proposal AE · Checkout Self · Won"}
+    - {id: exec_outbound_row, kind: path, content: "Executive · outbound SDR"}
+    - {id: rows, kind: path, content: "Executive inbound · Executive referido/partner · Hybrid B outbound · Hybrid B inbound · Hybrid A signup · Self Service signup"}
+  encodings:
+    x_position: "etapa, en el orden en que la recorre cualquier ruta"
+    dot_filled: "la ruta usa la etapa"
+    dot_ring: "la ruta puede saltarla"
+    column_group: "dueño de la etapa (Producto, SDR, AE)"
+    accent: "la secuencia literal de Hugo (base que reusan las demás)"
+  annotations:
+    - {at: exec_outbound_row, text: "Tu secuencia literal"}
+    - {at: bottom, text: "Reactivate es un loop sobre cualquier etapa abierta: vuelve a su etapa con su puerta y su ruta"}
+  layout_intent:
+    grid: "etiquetas de fila cols 1–3; matriz cols 4–12"
+    reading_path: "fila lima → comparar filas debajo"
+    whitespace: "entre bloques de ruta"
+  text_budget: 115
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "tres cards", "siete funnels", "colores por ruta"]
+  data: {source: "propuesta (R-031); sin cifras", values: []}
+  notes: "Solo Executive outbound es literal de Hugo. Demo y Proposal hay que confirmarlas contra el CRM. Faltan el canal referido/partner y el dueño de Self Service. La frontera Executive inbound / Hybrid A depende de Q-063."
+  sources: [F-209, F-210, F-211, F-223, F-224, F-225, F-191, F-155]

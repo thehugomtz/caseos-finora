@@ -1,0 +1,101 @@
+id: C-012
+type: claim
+key: hipotesis-capacidad
+question: ¿Cómo se sabe si falta capacidad comercial o si bajó la calidad de la máquina de leads?
+headline: Calidad y capacidad se separan con mezcla contra tasa, dentro de cada puerta
+answer: 'En el árbol (C-023), la calidad es la hoja de mezcla y la capacidad es una hoja de antes del SQL. Se separan
+  por puerta, entre el periodo base y el de la caída. Si empeora la mezcla de ajuste al entrar y la velocidad de
+  atención está estable, apunta a calidad (H-005). Si la mezcla está estable, suben la carga y la espera y la caída
+  se concentra en entradas atendidas tarde, apunta a capacidad (H-006). Si pasan ambas cosas, apunta a las dos a
+  la vez (H-028). Dato mínimo: entradas con su banda de ajuste congelada al crearse y su primer contacto humano,
+  más un roster semanal de SDR/AE con su ramp; el gasto de Team no mide capacidad. Con datos observados es asociación,
+  porque SDR/AE eligen a quién tocar: para probar la palanca hacen falta experimentos naturales (llegadas fuera
+  de horario, reparto por turnos) o un piloto.'
+role_in_story: recommendation
+evidence_ids:
+- F-121
+- F-122
+- F-124
+- F-120
+- F-159
+- F-231
+- F-232
+table_ids: []
+research_ids:
+- R-014
+- R-032
+- R-022
+framework_ids: []
+confidence: medium
+limitations:
+- Pendiente de tu aceptación; F-120 tiene confianza baja.
+- 'Hoy no se puede separar H-005 de H-006: faltan entradas, reps y tiempos de contacto (F-120).'
+- 'No usamos Self Service como grupo de control: depende de que haya existido sin SDR/AE en ambos periodos (X-012).'
+- Las bandas de ajuste deben validarse antes en el periodo base. La capacidad también puede estar en el AE, no solo
+  en el SDR (X-153).
+visual_intent: 'Dos firmas distintas: calidad mueve la mezcla con la velocidad quieta; capacidad mueve la carga
+  y la espera con la mezcla quieta.'
+hugo_wording: La capacidad comercial instalada no alcanza la demanda generada, la calidad de la máquina de leads
+  bajó.
+links:
+- F-121
+- F-122
+- F-124
+- F-120
+- F-159
+- F-231
+- F-232
+- R-014
+- R-032
+- R-022
+phase: story
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 8
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-121
+  - F-122
+  - F-124
+  - F-120
+  - F-159
+  - F-231
+  - F-232
+  - F-121
+  - F-122
+  - F-124
+  - F-120
+  - F-159
+  - F-231
+  - F-232
+  accepted: []
+  pending:
+  - F-121
+  - F-122
+  - F-124
+  - F-120
+  - F-159
+  - F-231
+  - F-232
+  - F-121
+  - F-122
+  - F-124
+  - F-120
+  - F-159
+  - F-231
+  - F-232
+  tables: []
+  unsupported_numbers: []
+  stale:
+  - self
+stale: null

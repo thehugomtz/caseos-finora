@@ -1,0 +1,54 @@
+id: X-104
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-023
+target: Q-046
+title: R-023 cambia el framing Q-046
+finding_text: 'Sí se puede tener un mix MECE de cuatro funnels, con cuatro condiciones: 1) la unidad es la cuenta,
+  no la persona; 2) la puerta se asigna al entrar, con información previa al contacto, y queda fija; 3) una regla
+  de prioridad decide en este orden: Reactivate, Executive, Hybrid, Self Service y «sin c…'
+why: 'R-023 deja Q-046 abierta, pero cambia cómo hay que plantearla:
+
+  - **Choque de definición:** Q-046 define Self Service por el resultado («compra sin intervención humana»). R-023
+  asigna la puerta al entrar, con información previa al contacto, y registra aparte el contacto humano (F-188).
+  Con esa regla, una cuenta que entra por self-serve y después recibe ayuda sigue en Self Service, con su contacto
+  anotado aparte.
+
+  - **Consecuencia desactualizada:** sin Self Service ya no quedan dos puertas, sino Reactivate, Executive, Hybrid
+  y «sin clasificar».
+
+
+  R-029 (en curso) puede traer tu definición textual de Self Service. Conviene cruzarla con esto.'
+options:
+- key: A
+  label: Partir Q-046 en dos
+  consequence: (a) ¿Hay una entrada self-serve que se reconozca antes del contacto? Eso define la puerta. (b) ¿Qué
+    parte de esas cuentas compra sin intervención humana? Eso se mide aparte. La puerta deja de depender del resultado,
+    la pregunta se contesta por partes y la consecuencia se corrige a tres puertas más «sin clasificar».
+- key: B
+  label: Mantener la definición por resultado
+  consequence: 'Choca con F-188: la puerta cambiaría según a quién decidan contactar los SDR/AE, que es justo el
+    sesgo de H-050.'
+- key: C
+  label: Contestarla con el etiquetado hacia atrás de F-191
+  consequence: 'Se cuentan las cuentas sin contacto humano registrado antes del primer pago. Da una cifra rápida,
+    pero es un techo: mezcla Self Service con huecos de registro del CRM (H-051).'
+recommended: A
+recommended_why: Mantiene la regla de R-023 sin perder lo que te importa de Q-046 (si de verdad hay compra sin humanos),
+  que pasa a ser una métrica. La C sirve como primera prueba de la parte (b), leída como techo.
+detected_by: cos
+links:
+- R-023
+- Q-046
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-7294
+created_at: '2026-09-29T16:32:58-06:00'
+updated_at: '2026-09-29T16:32:58-06:00'
+version: 1

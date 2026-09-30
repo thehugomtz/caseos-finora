@@ -1,0 +1,52 @@
+slide:
+  id: S04
+  file: slides/04.html
+  claim_id: C-004
+  role_in_story: evidence
+  kicker: "Growth · lo que sí vemos"
+  headline: "Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas"
+  takeaway: "En 2023 jun–dic el gasto baja a la mitad mientras los primeros pagadores suben: no hay relación positiva que leer cruzando fechas."
+  question: "¿Hasta dónde se puede relacionar la Inversión en Marketing por categoría con las ventas cruzando fechas?"
+  relationship: "spend and first payers MOVE IN OPPOSITE directions over the same months (negative association, not attribution)"
+  evidence_type: series
+  composition: small_multiples_time (dos paneles apilados, mismo eje mensual) + window_highlight
+  family: evidence
+  alternatives_considered:
+    - id: scatter S&M vs altas con rezago
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "Hugo eligió los dos paneles; la dispersión queda como apoyo en notas"
+    - id: barras por ventana (S&M por alta)
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "un cociente oculta que los dos componentes se mueven en sentidos contrarios"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 1, risk: -1}
+  focal_point: window_band
+  visual_hierarchy:
+    1: franja lima 2023 jun–dic que cruza ambos paneles
+    2: las dos series mensuales (arriba S&M, abajo primeros pagadores)
+    3: promedios por ventana (3,01 → 1,44 u; 45,2 → 60,6)
+    4: correlación y calidad del archivo
+  objects:
+    - {id: sm_panel, kind: path, content: "S&M total por mes (u), feb-22–sep-24"}
+    - {id: new_panel, kind: path, content: "primeros pagadores por mes, mar-22–oct-24"}
+    - {id: window_band, kind: band, content: "2023 jun–dic"}
+  encodings:
+    x_position: "mes (mismo eje en ambos paneles)"
+    y_position: "valor de cada panel (escala propia; sin eje dual)"
+    accent: "la ventana donde van en sentidos opuestos"
+    step_lines: "promedio por ventana (F-214)"
+  annotations:
+    - {at: window_band, text: "S&M 3,01 u → 1,44 u por mes · primeros pagadores 45,2 → 60,6 por mes"}
+    - {at: right, text: "Correlación en niveles −0,57; en cambios mes a mes ninguna pasa |r| 0,27 (p mín. 0,14)"}
+    - {at: right, text: "Unidad del gasto no documentada; hasta may-23 Team es 12% fijo del total"}
+  layout_intent:
+    grid: "paneles cols 1–9; anotaciones cols 10–12"
+    reading_path: "franja → panel superior → inferior → nota"
+    whitespace: "entre paneles"
+  text_budget: 95
+  must_show: [la relación de la intención visual]
+  avoid: ["eje dual", "tres cards", "tabla", "atribuir ventas al gasto"]
+  data:
+    source: "data/FIN-F-220.yaml (serie mensual S&M y altas del mes siguiente), FIN-F-214 (ventanas), FIN-F-219, FIN-F-118, FIN-F-066, FIN-F-063"
+    values: "serie literal de F-220; altas del mes m+1 graficadas en m+1"
+  notes: "Coincidencia temporal, no efecto (F-119). El valle de ago-23 y el corte de jun-23 pueden ser contables. Propuesta: registrar gasto por canal y campaña (campaign_spend) y leerlo contra entradas y Won por cohorte."
+  sources: [F-214, F-220, F-219, F-221, F-217, F-107, F-118, F-066, F-063, F-067]

@@ -1,0 +1,510 @@
+id: R-027
+type: research
+research_question: 'Simulación ilustrativa con las cifras del enunciado del CFO: ¿cómo se leen los tres casos (paga
+  100 y luego 80; lista de 100 a 130 con descuento de 30 y pago de 100; fin de ese descuento) y el caso mixto en
+  un puente de tres capas —MRR de lista, descuento y MRR neto—, frente a cómo los lee hoy el puente de monto pagado?'
+case_question: Q-025, Q-026, H-048, H-049, C-016, C-018, C-020, D-002
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 2
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - Q-025
+    - Q-026
+    - H-048
+    - H-049
+    - C-016
+    - C-018
+    - C-020
+    - D-002
+    suggested:
+    - Q-059
+    - H-036
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-025
+- Q-026
+- H-048
+- H-049
+- C-016
+- C-018
+- C-020
+- D-002
+- F-168
+- F-169
+- F-170
+- F-171
+- F-172
+- F-173
+- F-174
+- F-175
+- F-176
+- F-177
+- F-178
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 7
+job_id: JOB-20260929-143800-d657
+error: null
+started_at: '2026-09-29T14:38:00-06:00'
+shaping_task: RT-027
+slides:
+- S3.4
+- S3.3
+task_why: 'Lo pidió el COS en su revisión de cobertura de las 8 preguntas (D-017), acción 4: es el remate (Q8) y
+  la regla de Q7; hoy ni H-048 ni C-020 tienen tabla.'
+task:
+  work: datos
+  draft_answer: 'Con solo el monto, cada caso se ve igual que su lectura alternativa (R-011, C-016). Con tres capas:
+    si paga 80 con la lista en 100, es un descuento nuevo, no contracción; si la lista sube a 130 con descuento
+    de 30, hay expansión de lista y un descuento nuevo, con el neto sin cambio; cuando el descuento termina, la
+    subida del neto va a «descuento terminado», no a expansión. El caso mixto se parte en dos líneas. Es una simulación
+    marcada como tal: muestra qué se puede distinguir, no qué pasó en Finora.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Construir la simulación con SQL (VALUES) en el motor del modelo, sin tocar los datos del caso: por caso
+      y mes, lista, descuento, neto y la línea del puente en cada lectura (monto pagado frente a tres capas). El
+      título dice «Simulación».'
+    where: []
+  - kind: data
+    what: 'Incluir el caso mixto (lista y descuento cambian el mismo mes) y los tres grupos de D-002: descuento
+      al entrar, descuento de quien sale (va dentro del churn) y descuento de clientes que continúan.'
+    where: []
+  - kind: proposal
+    what: 'Reglas en orden para Q7: ¿cambió la lista? → expansión, contracción o cambio de tarifa; ¿cambió el descuento?
+      → descuento nuevo o aumentado, reducido o terminado; ¿solo cambió el cobro? → momento de cobro. Para Q8: negocio
+      subyacente = MRR de lista; revenue que se deja de capturar = capa de descuento (vigente y por vencer), sin
+      llamarle pérdida mientras no haya grupo comparable (H-049).'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+workspace_run_started: INV-20260929-143800-3f07
+why_it_matters: ''
+short_answer: 'El puente por capas no es construible; el actual mezcla orígenes distintos. La simulación del enunciado
+  no se puede reproducir con datos propios: falta precio de lista, plan, descuento y crédito. Lo que sí se midió
+  es qué mezcla el puente de monto pagado vigente: subidas que vuelven exacto al nivel previo se registran como
+  expansión, y 44% de los churns observados vuelve a pagar al mes siguiente'
+headline: El puente por capas no es construible; el actual mezcla orígenes distintos
+what_is_established:
+- 'La simulación del enunciado no se puede reproducir con cifras propias: el panel cliente-mes guarda un solo monto,
+  sin precio de lista, plan, descuento ni crédito, y sin definición documentada de qué representa ese monto.'
+- 'El puente vigente mueve mucho más bruto que neto: COP 404 millones de movimientos brutos frente a COP 62 millones
+  de cambio neto. Los casos del enunciado caen en las mismas líneas sin quedar distinguidos.'
+- 'Como señal direccional: 29% del MRR de expansión se revierte al mes siguiente y 25,3% del movimiento bruto sin
+  altas vuelve exacto al nivel previo. Las bajadas, en cambio, tienden a sostenerse: COP 55,9 millones en 848 eventos
+  se mantienen en el nivel nuevo.'
+- 44% de los churns observados vuelve a pagar al mes siguiente y 32% de los retornos liquida exactamente los meses
+  pendientes. En oct-24 la reactivación fue la mayor entrada del puente con COP 4,5 millones, por encima del MRR
+  nuevo con COP 2,2 millones.
+- 'La hipótesis no queda soportada: sin precios ni descuentos registrados, el caso de lista mayor con descuento
+  vigente y el de precio neto menor coinciden en el mismo monto observado. Lo que sí se observa es composición:
+  el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil, mientras la base previa cambió +5% y las cosechas
+  2023–24 concentran 65% de los clientes activos en oct-24.'
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede construir el puente por capas ni reproducir la simulación del enunciado con cifras propias: faltan
+  precio de lista, plan, descuento y crédito, y falta la definición documentada del monto registrado.'
+- No se puede asignar la caída del MRR por cliente activo entre un precio de lista distinto y un descuento aplicado,
+  porque ambos casos coinciden en el mismo monto observado.
+- El puente vigente mezcla cambios sostenidos de nivel con movimientos que vuelven exacto al nivel previo, de modo
+  que sus líneas no se leen como decisiones comerciales limpias.
+alternative_explanations: []
+case_implication: Si se decide avanzar hacia el puente por capas, el paso previo sería capturar precio de lista,
+  descuento y crédito por cliente y mes, hoy ausentes del panel. Si se reclasificaran como ajuste de cobro las subidas
+  que vuelven exacto al nivel previo, la línea de expansión podría reflejar mejor el cambio sostenido de nivel.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Qué campos mínimos de precio de lista y de descuento por cliente y mes habría que capturar para reconciliar el
+  monto cobrado con un MRR neto y hacer construible el puente por capas?
+- ¿Cómo cambiaría el puente actual si las subidas de monto que vuelven exacto al nivel previo al mes siguiente se
+  reclasificaran como ajuste de cobro en lugar de expansión?
+- ¿Qué parte del churn y de la reactivación del puente actual quedaría fuera de las líneas de bajas y entradas si
+  existiera el estado de la suscripción (activa, pausada, cancelada)?
+- ¿Las bajadas de monto que se sostienen se concentran en cosechas, industrias o antigüedades concretas, o se reparten
+  de forma parecida en toda la base?
+handoff_to_cos:
+  summary: El puente por capas no es construible; el actual mezcla orígenes distintos
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-143800-3f07
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: Entre mar-22 y sep-24, las subidas de monto de clientes activos que al mes siguiente vuelven exacto al
+    nivel previo suman COP 10,6 millones en 182 eventos, mientras las que se mantienen en el nivel nuevo suman COP
+    5,1 millones en 460 eventos.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: direccion
+      nombre: direccion
+      formato: texto
+    - id: destino
+      nombre: destino
+      formato: texto
+    - id: eventos
+      nombre: eventos
+      formato: int
+    - id: pct_eventos
+      nombre: pct_eventos
+      formato: num2
+    - id: monto_cop
+      nombre: monto_cop
+      formato: num2
+    - id: pct_monto
+      nombre: pct_monto
+      formato: num2
+    filas:
+    - direccion: Bajada del monto
+      destino: Persiste en el nivel nuevo
+      eventos: 848
+      pct_eventos: 74.7
+      monto_cop: 55941264.0
+      pct_monto: 64.1
+    - direccion: Bajada del monto
+      destino: Otro nivel
+      eventos: 270
+      pct_eventos: 23.8
+      monto_cop: 30908845.0
+      pct_monto: 35.4
+    - direccion: Bajada del monto
+      destino: Vuelve al nivel previo
+      eventos: 17
+      pct_eventos: 1.5
+      monto_cop: 463047.0
+      pct_monto: 0.5
+    - direccion: Subida del monto
+      destino: Otro nivel
+      eventos: 506
+      pct_eventos: 44.1
+      monto_cop: 21947700.0
+      pct_monto: 58.2
+    - direccion: Subida del monto
+      destino: Vuelve al nivel previo
+      eventos: 182
+      pct_eventos: 15.9
+      monto_cop: 10646924.0
+      pct_monto: 28.2
+    - direccion: Subida del monto
+      destino: Persiste en el nivel nuevo
+      eventos: 460
+      pct_eventos: 40.1
+      monto_cop: 5120214.0
+      pct_monto: 13.6
+  claim: C-004
+- id: V-03
+  title: El churn observado pasó de 3,52% en 2022 a 2,04% en 2024, mientras el churn que no vuelve a pagar en el
+    plazo de seguimiento pasó de 0,98% a 0,96%.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-013
+- id: V-05
+  title: En 2024, el puente de monto pagado registra COP 13,6 millones de expansión y −COP 21,5 millones de contracción
+    frente a un cambio neto de COP 19,1 millones.
+  spec:
+    tipo: barras
+    x:
+    - '2024'
+    series:
+    - nombre: MRR de expansión
+      valores:
+      - 13556214.21
+    - nombre: MRR de contracción
+      valores:
+      - -21530332.95
+    - nombre: Cambio neto del MRR
+      valores:
+      - 19089441.63
+    formato: cop
+  claim: C-002
+- id: V-06
+  title: 'Parte del movimiento del puente no corresponde a un cambio sostenido de nivel: 29% del MRR de expansión
+    se revierte al mes siguiente y 25,3% del movimiento bruto del monto pagado sin altas vuelve exacto al nivel
+    previo.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - MRR de expansión
+    formato: pct
+    series:
+    - nombre: Se revierte al mes siguiente
+      valores:
+      - 0.2925602061079387
+    - nombre: Se mantiene
+      valores:
+      - 0.7074397938920614
+    claim_fase1: C-DAT-03
+  claim: C-005
+- id: V-07
+  title: 'El puente por capas del enunciado —MRR de lista, descuento y MRR neto— no es construible con los datos
+    disponibles: el panel cliente-mes registra un solo monto por cliente y mes, sin precio de lista, plan, descuento
+    ni crédito, y sin definición documentada de qué representa ese monto.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-007
+- id: V-10
+  title: 'No se puede asignar la caída del MRR por cliente activo entre un precio de lista distinto y un descuento
+    aplicado: sin precios ni descuentos registrados, el caso de lista mayor con descuento vigente y el caso de precio
+    neto menor coinciden en el mismo monto observado.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-014
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-143800-3f07
+  path: investigations/runs/INV-20260929-143800-3f07.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T14:44:05-06:00'
+findings:
+- F-168
+- F-169
+- F-170
+- F-171
+- F-172
+- F-173
+- F-174
+- F-175
+- F-176
+- F-177
+- F-178
+run_ids:
+- INV-20260929-143800-3f07
+usage:
+  INV-20260929-143800-3f07:
+    cost_usd: 1.3782634999999999
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-027 no trae la simulación ilustrativa que se le pidió, con las cifras del enunciado del CFO. Lo que
+    hace es confirmar otra vez que el puente por capas no se construye con datos propios, algo que ya sabíamos por
+    R-002, R-011 y R-021. Lo nuevo y útil es la medición de qué mezcla el puente de monto pagado vigente. 29% del
+    MRR de expansión se revierte al mes siguiente. 44% de los churns observados vuelve a pagar al mes siguiente.
+    Y 32% de los retornos liquida exactamente los meses pendientes (F-172, F-174).
+
+
+    Lo que cambia (material):
+
+    1. H-048 se debilita en «sigue cuadrando con el monto pagado». Con el calendario de cobro adentro, no cuadra
+    mes a mes sin una línea de conciliación.
+
+    2. Q-025 queda a medias. Falta el ejemplo trabajado, y ese ejemplo no necesita datos de Finora.
+
+    3. La story tiene regla para el descuento (C-020), pero no para el cobro.
+
+    4. F-178 dice «composición, no beneficio comercial», pero F-177 dice que eso no se puede separar.
+
+    5. El churn observado de 2024 sale 2,04% en F-175 y 1,9% en F-079. La de F-079 es la cifra que citan C-007 y
+    C-009.
+
+
+    Además, R-027 refuerza C-016, C-018, Q-026 y H-016, y en dirección H-031 y H-034. F-173 no debilita H-033 y
+    H-049 no cambia. H-017 queda aún más débil, pero ya tiene cuatro alertas abiertas (X-031, X-040, X-056, X-065);
+    no abro otra. X-077, X-078 y X-079 eran genéricas; esta evaluación les da contenido.
+
+
+    Orden sugerido:
+
+    1. Decidir H-048 y lanzar la simulación sintética de Q-025.
+
+    2. Corregir F-178 y conciliar el churn 2024 antes de revisar los findings de R-027.
+
+    3. Pedirle a Finora la definición del monto registrado.
+
+    4. Esperar R-028 antes de tocar las cifras de T-003.
+
+
+    Sugiero revisar R-027 como medición del puente vigente, no como respuesta a su pregunta.'
+  run_id: RUN-20260929-144406-cos-7321
+  at: '2026-09-29T14:59:09-06:00'
+  impacts:
+  - target: H-048
+    effect: weakens
+    why: 'Hallazgo: el monto pagado trae movimientos que no son cambios de valor de la suscripción. 29% del MRR
+      de expansión se revierte al mes siguiente (F-172). 44% de los churns observados vuelve a pagar al mes siguiente
+      y 32% de los retornos liquida exactamente los meses pendientes (F-174). Por qué afecta a H-048: si el MRR
+      neto se calcula por vigencia, como propone C-019, no registra esos saltos. Entonces no va a cuadrar mes a
+      mes con el monto pagado sin una pieza que conecte los dos: atrasos, pagos que cubren varios meses y créditos.
+      R-021 ya pone el monto pagado al lado de las tres capas (X-071), pero nadie dice cómo se concilian. La otra
+      mitad de H-048, «separa los tres casos», sigue sin probarse porque la simulación no se hizo (ver Q-025).'
+  - target: Q-025
+    effect: requires_research
+    why: 'Hallazgo: R-027 era justo la simulación ilustrativa con las cifras del enunciado y volvió sin ella. Respondió
+      que no se reproduce con cifras propias, algo ya establecido en R-002 y en R-011 (confianza alta), y midió
+      el puente vigente. Por qué afecta a Q-025: para ilustrar no hacen falta datos de Finora, y el framing permite
+      simulaciones siempre que prueben qué se puede distinguir, no qué pasó. Q-025 queda a medias. «El pago observado
+      no alcanza» está respondido (R-002, R-011; F-177 lo confirma para lista vs descuento). «Cómo se leería cada
+      caso con capas» no lo está.'
+  - target: C-020
+    effect: changes_story
+    why: 'Hallazgo: lo que más mezcla hoy el puente no es el descuento, que no se observa, sino el calendario de
+      cobro. Hay subidas de un mes registradas como expansión (F-171, F-172). Además, 44% de los churns observados
+      vuelve a pagar al mes siguiente y 32% de los retornos liquida exactamente lo pendiente (F-174). Por qué afecta
+      a C-020: la story propone la regla del descuento, pero no la del cobro. Un puente con línea «Descuento» y
+      sin regla de cobro seguiría contando esos movimientos como expansión, churn y reactivación. C-009 nombra el
+      problema (F-136) y C-019 lo resuelve de forma implícita con vigencias, pero ningún claim le dice la regla
+      al CFO. El diagnóstico ya está en X-037 (T-003) y X-034 (H-020); lo que falta es el lado de la propuesta.
+      Esta evaluación le da contenido a X-079.'
+  - target: F-178
+    effect: weakens
+    why: 'Hallazgo: F-177, de la misma research, dice que en el monto observado no se puede separar un precio de
+      lista distinto de un descuento aplicado. F-178, en cambio, cierra con «composición, no beneficio comercial».
+      Por qué afecta a F-178: si «beneficio comercial» se lee como descuento o concesión, F-178 afirma una ausencia
+      que F-177 declara no observable (ausencia de evidencia ≠ evidencia de ausencia). Llevada a C-002 o a la respuesta
+      de Q-026, esa frase le diría al CFO que no hubo revenue que dejamos de capturar. El «No afirmar todavía» cuida
+      un solo lado: «que hubo descuentos en el histórico».'
+  - target: C-009
+    effect: requires_research
+    why: 'Hallazgo: F-175 (R-027) da un churn observado de 2,04% en 2024, y F-079/T-034 (R-012), que citan C-009
+      y C-007, da 1,9% para el mismo año. En 2022 las dos coinciden (3,52% vs 3,5%). Por qué afecta a C-009: lo
+      más probable es una diferencia de definición (qué meses de 2024 entran, el denominador o el plazo de seguimiento
+      del persistente). Aun así, dos cifras para la misma métrica en láminas distintas no pasan con el CFO.'
+  - target: C-016
+    effect: supports
+    why: R-027 refuerza C-016. F-177 muestra que una lista mayor con descuento y un precio neto menor dan el mismo
+      monto, que es el ejemplo 100→80 del CFO. F-171 da un caso medido de subida que se revierte y queda registrada
+      como expansión. Si se suman como evidencia, hay dos cuidados. Primero, F-172 repite el 25,3% de F-090/T-058,
+      así que conviene citar una sola tabla. Segundo, el 6,5× de F-170 no prueba la mezcla por sí solo, porque en
+      cualquier negocio con altas y churn el bruto supera al neto; la prueba está en F-172 y F-174. Esta evaluación
+      le da contenido a X-077.
+  - target: C-018
+    effect: supports
+    why: 'Refuerza que MRR neto, revenue y caja se separan, y sugiere que esa separación ya existe hoy, sin descuentos
+      documentados: 32% de los retornos liquida exactamente los meses pendientes (F-174), un patrón compatible con
+      el cobro de atrasos (direccional, no verificado). A la convención del CFO le faltan dos piezas que hoy no
+      nombra. Una es qué representa el monto registrado (F-168: no hay definición documentada). La otra, si un cliente
+      con descuento del 100% cuenta como activo. Esta evaluación le da contenido a X-078.'
+  - target: Q-026
+    effect: supports
+    why: 'R-027 aporta la evidencia directa de lo que ya plantean X-038 y X-072: el revenue que dejamos de capturar
+      por decisiones comerciales no se puede medir en el histórico, porque precio de lista y descuento coinciden
+      en el mismo monto (F-177). Del negocio subyacente solo se ve un sustituto: el monto pagado por cosecha (F-178:
+      −38% por cliente activo, con la base previa en +5%). Eso no es valor antes de descuentos, y hay que nombrarlo
+      así. Ojo con la redacción de F-178 (ver el impacto sobre F-178).'
+  - target: H-049
+    effect: no_material_impact
+    why: 'H-049 mira hacia adelante y R-027 no la prueba ni la debilita. Una precisión para diseñar su prueba: por
+      F-177, las cohortes históricas no sirven como grupo «sin descuento», porque no se puede saber si lo tuvieron.
+      La comparación tiene que armarse con cohortes nuevas y un grupo sin descuento definido desde el diseño.'
+  - target: H-016
+    effect: supports
+    why: 'F-177 es el caso más directo de H-016 en este panel: sin precios ni descuentos registrados, una lista
+      mayor con descuento vigente y un precio neto menor producen el mismo monto observado. Refuerza la evaluación
+      del agente (Soportada) sin cambiarla.'
+  - target: H-031
+    effect: supports
+    why: 'Señal direccional fuerte: 44% de los churns observados vuelve a pagar al mes siguiente y 32% de los retornos
+      liquida exactamente lo pendiente (F-174). En oct-24 la reactivación fue la mayor entrada del puente (F-176),
+      aunque ese es el mes de borde (H-029). Con ventana de gracia y reparto de pagos, una parte de esa reactivación
+      y del churn que la precede debería desaparecer. La magnitud en COP la dará R-028, que está en curso; conviene
+      esperarla antes de tocar las cifras de T-003.'
+  - target: H-034
+    effect: supports
+    why: 'F-174 encuentra la huella que predice H-034: 32% de los retornos después de meses sin pago liquida exactamente
+      los meses pendientes. Es compatible con atrasos, pero no lo prueba. Sin estado de suscripción ni definición
+      del monto (F-168), también cabe, por ejemplo, una política de reactivación que cobra los meses pendientes.
+      El 44% que vuelve al mes siguiente ya estaba en H-039 (DM-4); R-027 solo lo replica.'
+  - target: H-033
+    effect: no_material_impact
+    why: 'F-173 dice que las bajadas «se sostienen» (COP 55,9 millones en 848 eventos). Eso no las convierte en
+      contracción de suscripción: una bajada después de un primer pago alto, o de una reactivación que cubrió varios
+      meses, también se queda en el nivel nuevo. Es compatible con H-033 y con X-037 (57,6% del COP de contracción
+      cae el mes siguiente a un primer pago o a una reactivación). No hay que leer F-173 como «la contracción es
+      real»; la prueba sigue siendo R-028.'

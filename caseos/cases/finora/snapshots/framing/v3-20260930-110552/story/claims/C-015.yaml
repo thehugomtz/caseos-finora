@@ -1,0 +1,107 @@
+id: C-015
+type: claim
+key: pricing-entrada
+question: ¿Qué data observable de pricing introductorio podemos sacar de los pagos?
+headline: Lo observable es el primer y segundo pago; el descuento no es verificable
+answer: 'Del histórico se saca el ticket de entrada: la mediana del primer pago observado de las altas es COP 63,0
+  mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y la del segundo pago, COP 52,5 mil, COP 36,8 mil y
+  COP 38,9 mil. El segundo pago coincide exactamente con el primero en 73,5%, 90,3% y 77,3% de las altas. El primero
+  supera con holgura al segundo en 23,2% de las altas de 2022, frente a 7,1% en 2023 y 11,6% en 2024, un patrón
+  que no dice si el primer pago incluye un cargo inicial, un cobro atrasado o un precio distinto. Con cliente, mes
+  y monto no se pueden separar lista, descuento, crédito ni pausa, y la huella de un descuento temporal limpio casi
+  no aparece: eso es consistente con que los descuentos sean algo por introducir, pero no prueba que no existieran.'
+role_in_story: evidence
+evidence_ids:
+- F-083
+- F-160
+- F-166
+- F-086
+- F-087
+- F-134
+- F-093
+table_ids:
+- T-051
+- T-062
+- T-054
+- T-055
+research_ids:
+- R-020
+- R-026
+framework_ids: []
+confidence: medium
+limitations:
+- Primer pago observado no es adquisición. El primer pago de 2022 incluye pagos iniciales grandes (F-166).
+- 'Es monto pagado, no MRR contratado: no hay catálogo de precios ni definición del campo (F-093).'
+- Que la huella limpia de descuento sea escasa no prueba ausencia (F-134).
+- No se afirman descuentos a partir del tamaño de un salto del monto.
+visual_intent: 'Converge: el primer y el segundo pago se juntan después de 2022. Lista, descuento, crédito y pausa
+  quedan fuera del dato.'
+hugo_wording: Qué data observable de pricing introductorio podemos sacar.
+links:
+- F-083
+- F-160
+- F-166
+- F-086
+- F-087
+- F-134
+- F-093
+- T-051
+- T-062
+- T-054
+- T-055
+- R-020
+- R-026
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 9
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-083
+  - F-160
+  - F-166
+  - F-086
+  - F-087
+  - F-134
+  - F-093
+  - F-083
+  - F-160
+  - F-166
+  - F-086
+  - F-087
+  - F-134
+  - F-093
+  accepted:
+  - F-083
+  - F-160
+  - F-166
+  - F-086
+  - F-087
+  - F-134
+  - F-093
+  - F-083
+  - F-160
+  - F-166
+  - F-086
+  - F-087
+  - F-134
+  - F-093
+  pending: []
+  tables:
+  - T-051
+  - T-062
+  - T-054
+  - T-055
+  - T-051
+  - T-062
+  - T-054
+  - T-055
+  unsupported_numbers: []
+  stale: []

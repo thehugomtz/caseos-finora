@@ -1,0 +1,225 @@
+id: T-009
+type: table
+table_key: FIN-F-067
+title: La serie de Habilitación cambia de composición dentro del panel
+question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance
+  va en Habilitación comercial o en producto?
+columns:
+- rubro
+- meses_en_archivo
+- meses_nulos
+- meses_positivos
+- meses_en_cero
+- meses_negativos
+- primer_mes
+- ultimo_mes
+- ultimo_mes_no_cero
+- minimo
+- maximo
+rows:
+- - freelance
+  - 34
+  - 0.0
+  - 17.0
+  - 17.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2023-06
+  - 0.0
+  - 0.338
+- - paid_media
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.4
+  - 1.505
+- - payroll_expenses
+  - 34
+  - 0.0
+  - 29.0
+  - 0.0
+  - 5.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - -0.053
+  - 0.863
+- - publicidad_no_web
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.156
+  - 0.63
+- - software_tools
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.033
+  - 0.195
+- - team
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.24
+  - 0.453
+- - travel
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.066
+  - 0.263
+units:
+  rubro: texto
+  meses_en_archivo: int
+  meses_nulos: num2
+  meses_positivos: num2
+  meses_en_cero: num2
+  meses_negativos: num2
+  primer_mes: texto
+  ultimo_mes: texto
+  ultimo_mes_no_cero: texto
+  minimo: num2
+  maximo: num2
+definitions: {}
+message: 'La serie de Habilitación cambia de composición dentro del panel: Freelance registra su último valor distinto
+  de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde ese corte Habilitación coincide con SoftwareTools,
+  que tiene valor positivo en 34 meses.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-002
+  - E-004
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-002\nWITH r AS (\n  SELECT 'paid_media' AS rubro, month, paid_media AS v FROM mart.sm_monthly\n  UNION
+  ALL SELECT 'publicidad_no_web', month, publicidad_no_web FROM mart.sm_monthly\n  UNION ALL SELECT 'team', month,
+  team FROM mart.sm_monthly\n  UNION ALL SELECT 'payroll_expenses', month, payroll_expenses FROM mart.sm_monthly\n
+  \ UNION ALL SELECT 'travel', month, travel FROM mart.sm_monthly\n  UNION ALL SELECT 'software_tools', month, software_tools
+  FROM mart.sm_monthly\n  UNION ALL SELECT 'freelance', month, freelance FROM mart.sm_monthly\n)\nSELECT rubro,\n
+  \ COUNT(*) AS meses_en_archivo,\n  SUM(CASE WHEN v IS NULL THEN 1 ELSE 0 END) AS meses_nulos,\n  SUM(CASE WHEN
+  v > 0 THEN 1 ELSE 0 END) AS meses_positivos,\n  SUM(CASE WHEN v = 0 THEN 1 ELSE 0 END) AS meses_en_cero,\n  SUM(CASE
+  WHEN v < 0 THEN 1 ELSE 0 END) AS meses_negativos,\n  MIN(month) AS primer_mes,\n  MAX(month) AS ultimo_mes,\n
+  \ MAX(CASE WHEN v <> 0 THEN month END) AS ultimo_mes_no_cero,\n  ROUND(MIN(v),3) AS minimo,\n  ROUND(MAX(v),3)
+  AS maximo\nFROM r GROUP BY rubro ORDER BY rubro\n\n-- E-004\nWITH sm AS (\n  SELECT CAST(substr(month,1,4) AS
+  INT) AS anio, month,\n         total_sm_spend, enablement_spend, software_tools, freelance\n  FROM mart.sm_monthly
+  WHERE month >= '2022-03'\n), alt AS (\n  SELECT CAST(substr(month,1,4) AS INT) AS anio, SUM(new_customers) AS
+  altas\n  FROM mart.monthly_metrics WHERE month >= '2022-03' GROUP BY 1\n)\nSELECT sm.anio,\n  ROUND(SUM(sm.total_sm_spend),3)
+  AS sm_total,\n  ROUND(SUM(sm.enablement_spend),3) AS habilitacion,\n  ROUND(SUM(sm.software_tools),3) AS software_tools,\n
+  \ ROUND(SUM(sm.freelance),3) AS freelance,\n  ROUND(SUM(sm.enablement_spend)/SUM(sm.total_sm_spend),4) AS share_habilitacion,\n
+  \ alt.altas,\n  ROUND(SUM(sm.total_sm_spend)/alt.altas,4) AS sm_por_alta_con_habilitacion,\n  ROUND((SUM(sm.total_sm_spend)-SUM(sm.enablement_spend))/alt.altas,4)
+  AS sm_por_alta_sin_habilitacion\nFROM sm JOIN alt ON alt.anio = sm.anio\nGROUP BY sm.anio, alt.altas ORDER BY
+  sm.anio"
+transformation: E-002 · run_sql · SQL ad hoc de solo lectura; E-004 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-c958 · C-007
+limitations:
+- 'CV-FREELANCE-CERO: Freelance en cero desde may-23'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: anio
+    nombre: anio
+    formato: int
+  - id: sm_total
+    nombre: sm_total
+    formato: num2
+  - id: habilitacion
+    nombre: habilitacion
+    formato: num2
+  - id: software_tools
+    nombre: software_tools
+    formato: num2
+  - id: freelance
+    nombre: freelance
+    formato: num2
+  - id: share_habilitacion
+    nombre: share_habilitacion
+    formato: num2
+  - id: altas
+    nombre: altas
+    formato: num2
+  - id: sm_por_alta_con_habilitacion
+    nombre: sm_por_alta_con_habilitacion
+    formato: num2
+  - id: sm_por_alta_sin_habilitacion
+    nombre: sm_por_alta_sin_habilitacion
+    formato: num2
+  filas:
+  - anio: 2022
+    sm_total: 28.656
+    habilitacion: 3.352
+    software_tools: 1.224
+    freelance: 2.128
+    share_habilitacion: 0.117
+    altas: 272.0
+    sm_por_alta_con_habilitacion: 0.1054
+    sm_por_alta_sin_habilitacion: 0.093
+  - anio: 2023
+    sm_total: 25.107
+    habilitacion: 1.805
+    software_tools: 1.077
+    freelance: 0.728
+    share_habilitacion: 0.0719
+    altas: 650.0
+    sm_por_alta_con_habilitacion: 0.0386
+    sm_por_alta_sin_habilitacion: 0.0358
+  - anio: 2024
+    sm_total: 19.755
+    habilitacion: 0.853
+    software_tools: 0.853
+    freelance: 0.0
+    share_habilitacion: 0.0432
+    altas: 554.0
+    sm_por_alta_con_habilitacion: 0.0357
+    sm_por_alta_sin_habilitacion: 0.0341
+created_at: '2026-09-29T10:37:12-06:00'
+status: valid
+validation_errors: []
+finding: F-067
+links:
+- F-067
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: hugo
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

@@ -1,0 +1,66 @@
+id: F-237
+type: finding
+headline: 'Negociación, retención y partner necesitan registro propio, y hay dos trampas: el precio especial que
+  esconde un descuento y el downgrade de retención.'
+evidence_text: 'Stripe lista como formas alternativas de descuento un segundo precio más barato y las partidas negativas
+  de factura (W-01). Si ventas negocia con un precio especial, la rebaja desaparece del descuento y su fin se lee
+  como expansión. En Salesforce, las reglas de aprobación se disparan por condiciones (su ejemplo: un descuento
+  de partner de 35%) y las cadenas ordenan a los aprobadores por paso (W-13). Las reglas de retención de Stripe
+  segmentan por motivo, antigüedad y gasto, cada rama ofrece descuento o downgrade (no ambos) y el descuento de
+  retención es de un solo uso por cliente (W-04). La atribución de partner usa llaves propias (W-14).'
+confidence: medium
+limitations:
+- No conocemos los umbrales, la política ni si Finora tendrá programa de partners. Que la comisión del partner no
+  sea descuento es una propuesta de diseño (inferencia), no un dato.
+kind: data_engineering
+claims:
+- claim: Stripe lista como métodos alternativos de descuento el saldo negativo del cliente, las partidas negativas
+    de factura y un segundo precio más barato; según Stripe, las partidas negativas dan más detalle de qué descuento
+    se creó, cuándo y por qué.
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: contests
+  notes: 'Riesgo: un precio especial esconde el descuento dentro de lo contratado. De ahí la regla de «descuento
+    implícito».'
+- claim: En Salesforce Advanced Approvals, las reglas de aprobación se disparan por condiciones como un descuento
+    de partner de 35% y las cadenas ordenan a los aprobadores por paso; se registra aprobador, paso y estado.
+  source_id: W-13
+  source_type: industry
+  confidence: medium
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Referencia para discount_approval. El 35% es el ejemplo de Salesforce, no un umbral para Finora.
+- claim: Las reglas de retención de Stripe segmentan por motivo de cancelación, antigüedad, gasto y metadatos; cada
+    rama ofrece descuento o downgrade (no ambos) y el descuento de retención es de un solo uso por cliente.
+  source_id: W-04
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Retención con downgrade = cambio de suscripción; retención con descuento = «Descuento».
+- claim: PartnerStack atribuye clientes de Stripe a partners con un parámetro en el link de referido (gspk) y con
+    customer_key y partner_key en los metadatos.
+  source_id: W-14
+  source_type: industry
+  confidence: medium
+  freshness: documentación v1.0, consultada 2026-09-29
+  supports_or_contests: supports
+  notes: Base de partner_key en acquisition_touch.
+unverified: false
+source_ref:
+  research: R-034
+links:
+- R-034
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:01:14-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

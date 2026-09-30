@@ -1,0 +1,393 @@
+{
+ "id": "JOB-20260929-141552-50fd",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Cómo definir y medir el funnel si no todos lo recorren igu…",
+ "params": {
+  "research_id": "R-023"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T14:15:52-06:00",
+ "started_at": "2026-09-29T14:15:52-06:00",
+ "finished_at": "2026-09-29T14:45:42-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T14:15:52-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T14:27:26-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-141553-measurement-9a78",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:27:27-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:27:31-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T14:27:31-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model stages recurring revenue measurement”"
+  },
+  {
+   "t": "2026-09-29T14:27:32-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “hybrid product-led sales-led funnel measurement self-serve sales-assisted metrics separate funnels”"
+  },
+  {
+   "t": "2026-09-29T14:27:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-29T14:27:45-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplifypartners.com/blog-posts/sales-metrics-101"
+  },
+  {
+   "t": "2026-09-29T14:27:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://clearbit.com/blog/plg-monetization-funnels"
+  },
+  {
+   "t": "2026-09-29T14:27:55-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/01/The-Bowtie-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T14:27:56-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.getmonetizely.com/articles/tracking-self-service-vs-assisted-sales-metrics-a-complete-guide-for-saas-executives"
+  },
+  {
+   "t": "2026-09-29T14:27:56-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall opportunity-centric buying group stages”"
+  },
+  {
+   "t": "2026-09-29T14:28:23-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers, SUM(reactivated_customers) AS reactivated_customers, ROUND(1.0*SUM(re"
+  },
+  {
+   "t": "2026-09-29T14:28:25-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN months_to_return IS NULL THEN 'no vuelve antes de oct-24' WHEN months_to_return = 1 THEN '1' WHEN months_to_return = 2 THEN"
+  },
+  {
+   "t": "2026-09-29T14:28:26-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT m0_cop, COUNT(*) AS altas, ROUND(1.0*COUNT(*)/SUM(COUNT(*)) OVER (),3) AS share FROM mart.new_customers WHERE clean = 1 GROUP BY m0_c"
+  },
+  {
+   "t": "2026-09-29T14:28:48-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH r AS (SELECT c.customer_id, c.month, c.month_index, c.multi_month_payment_signature AS sig, c.amount_vs_usual_ratio, (SELECT MAX(p.mont"
+  },
+  {
+   "t": "2026-09-29T14:28:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS altas_clean, SUM(CASE WHEN CAST(ROUND(m0_cop) AS INTEGER) % 2100 = 0 THEN 1 ELSE 0 END) AS multiplo_2100, SUM(CASE WHEN C"
+  },
+  {
+   "t": "2026-09-29T14:28:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, cohort_flag_hint, COUNT(*) FROM (SELECT vintage, CASE WHEN clean = 1 THEN 'clean' ELSE 'not_clean' END AS cohort_flag_hint F"
+  },
+  {
+   "t": "2026-09-29T14:29:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://businesswire.com/news/home/20231011112360/en/Winning-by-Design-Releases-Updated-Bowtie-Model-and-Benchmarks-to-Provide-Go-To-Market-Teams-with-a-Standardized-Customer-Journey-and-Data-Model"
+  },
+  {
+   "t": "2026-09-29T14:29:07-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/?p=14899"
+  },
+  {
+   "t": "2026-09-29T14:29:08-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce lead assignment rules rule entries evaluated in order first matching entry”"
+  },
+  {
+   "t": "2026-09-29T14:29:08-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Gartner B2B buying journey non-linear \"looping\" buying jobs”"
+  },
+  {
+   "t": "2026-09-29T14:29:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.gartner.com/en/sales/insights/b2b-buying-journey"
+  },
+  {
+   "t": "2026-09-29T14:29:21-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/206081485-Reactivation-MRR"
+  },
+  {
+   "t": "2026-09-29T14:29:22-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ChartMogul reactivation MRR definition customer churned returns”"
+  },
+  {
+   "t": "2026-09-29T14:29:22-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie Awareness Education Selection Commit Onboarding Impact Growth VM CR time stages”"
+  },
+  {
+   "t": "2026-09-29T14:29:35-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/press-newsroom/forrester-debuts-next-generation-b2b-revenue-waterfall-to-help-firms-accelerate-revenue-growth"
+  },
+  {
+   "t": "2026-09-29T14:29:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/201244842"
+  },
+  {
+   "t": "2026-09-29T14:29:38-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/blog/?p=7775"
+  },
+  {
+   "t": "2026-09-29T14:29:39-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://blog.revpartners.io/en/revops-articles/bowtie-model"
+  },
+  {
+   "t": "2026-09-29T14:29:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: http://www.forrester.com/press-newsroom/forrester-debuts-next-generation-b2b-revenue-waterfall-to-help-firms-accelerate-revenue-growth/"
+  },
+  {
+   "t": "2026-09-29T14:29:48-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.chargebee.com/docs/billing/1.0/kb/reports-and-analytics/how-is-reactivation-mrr-calculated"
+  },
+  {
+   "t": "2026-09-29T14:29:49-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.vasco.app/blog/the-bowtie-model"
+  },
+  {
+   "t": "2026-09-29T14:29:57-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “winningbydesign.com \"bowtie\" \"commit\" \"onboarding\" \"impact\" \"expansion\" stages volume conversion time”"
+  },
+  {
+   "t": "2026-09-29T14:29:57-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product-led sales \"sales-assist\" definition self-serve customers routed to sales PQL threshold OpenView”"
+  },
+  {
+   "t": "2026-09-29T14:30:10-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/02/The-Bowtie-A-Proposed-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T14:30:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://openviewpartners.com/blog/product-led-sales-blueprint/"
+  },
+  {
+   "t": "2026-09-29T14:30:13-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.inflection.io/post/winning-by-design-bowtie-funnel-is-the-new-siriusdecisions-demand-waterfall"
+  },
+  {
+   "t": "2026-09-29T14:30:33-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Gartner survey B2B buyers prefer rep-free buying experience purchase regret 2023 press release”"
+  },
+  {
+   "t": "2026-09-29T14:30:34-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Sabnis Chatterjee Grewal Lilien 2013 \"sales lead black hole\" Journal of Marketing follow-up marketing leads”"
+  },
+  {
+   "t": "2026-09-29T14:30:34-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Oldroyd McElheran Elkington \"The Short Life of Online Sales Leads\" Harvard Business Review response time”"
+  },
+  {
+   "t": "2026-09-29T14:30:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://gartner.com/en/newsroom/press-releases/2025-06-25-gartner-sales-survey-finds-61-percent-of-b2b-buyers-prefer-a-rep-free-buying-experience"
+  },
+  {
+   "t": "2026-09-29T14:30:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/"
+  },
+  {
+   "t": "2026-09-29T14:30:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://scholarsarchive.byu.edu/facpub/9711"
+  },
+  {
+   "t": "2026-09-29T14:30:54-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-sales-survey-finds-61-percent-of-b2b-buyers-prefer-a-rep-free-buying-experience?iframe=yes"
+  },
+  {
+   "t": "2026-09-29T14:30:55-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://isbm.org/business-readings/gartner-sales-survey-finds-61-of-b2b-buyers-prefer-a-rep-free-buying-experience/"
+  },
+  {
+   "t": "2026-09-29T14:30:58-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.demandgenreport.com/industry-news/news-brief/3-out-of-5-b2b-buyers-prefer-a-rep-free-buying-experience-gartner/49802"
+  },
+  {
+   "t": "2026-09-29T14:30:59-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.leadangel.com/blog/operations/what-are-salesforce-lead-assignment-rules/"
+  },
+  {
+   "t": "2026-09-29T14:31:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.mi-3.com.au/04-07-2025/gartner-survey-reveals-b2b-buyers-preference-rep-free-experience"
+  },
+  {
+   "t": "2026-09-29T14:31:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.salesforce.com/s/articleView?id=sf.customize_leadrules.htm&type=5"
+  },
+  {
+   "t": "2026-09-29T14:31:19-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://it-online.co.za/?p=245618"
+  },
+  {
+   "t": "2026-09-29T14:31:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://uk.marketscreener.com/quote/stock/GARTNER-INC-40311131/news/Gartner-Sales-Survey-Finds-61-of-B2B-Buyers-Prefer-a-Rep-Free-Buying-Experience-50340554/"
+  },
+  {
+   "t": "2026-09-29T14:32:41-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH r AS (SELECT c.customer_id, c.month, c.year, c.month_index, (SELECT MAX(p.month_index) FROM mart.customer_month p WHERE p.customer_id ="
+  },
+  {
+   "t": "2026-09-29T14:32:41-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “intention-to-treat analysis concept review Gupta Perspectives in Clinical Research 2011”"
+  },
+  {
+   "t": "2026-09-29T14:32:42-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://plato.stanford.edu/entries/paradox-simpson/"
+  },
+  {
+   "t": "2026-09-29T14:33:31-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pmc.ncbi.nlm.nih.gov/articles/PMC3159210"
+  },
+  {
+   "t": "2026-09-29T14:33:32-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.busyseed.com/the-hybrid-saas-funnel-balancing-demos-and-self-serve-conversions-in-2026"
+  },
+  {
+   "t": "2026-09-29T14:33:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS altas_clean_con_m1_observado, SUM(CASE WHEN m1_cop = 0 THEN 1 ELSE 0 END) AS sin_pago_en_m1, ROUND(1.0*SUM(CASE WHE"
+  },
+  {
+   "t": "2026-09-29T14:33:51-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT n.year, COUNT(*) AS altas_clean_sin_pago_m1, SUM(CASE WHEN EXISTS (SELECT 1 FROM mart.customer_month c WHERE c.customer_id = n.custom"
+  },
+  {
+   "t": "2026-09-29T14:38:43-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH r AS (SELECT c.customer_id, c.month_index, c.multi_month_payment_signature AS sig, (SELECT MAX(p.month_index) FROM mart.customer_month "
+  },
+  {
+   "t": "2026-09-29T14:45:42-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-023",
+  "findings": [
+   "F-187",
+   "F-188",
+   "F-189",
+   "F-190",
+   "F-191"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

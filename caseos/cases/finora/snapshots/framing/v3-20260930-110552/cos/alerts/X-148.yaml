@@ -1,0 +1,37 @@
+id: X-148
+type: alert
+kind: story_review
+status: open
+severity: medium
+effect: requires_research
+source: R-034
+target: C-020
+title: 'R-034 toca C-020: revisar el claim'
+finding_text: 'Con lo que hay hoy no se puede: el modelo del caso es solo cliente × mes × monto pagado, sin lista,
+  plan, descuento, origen ni source, así que un descuento se vería igual que una contracción, un pago multi-mes
+  o un mes sin cobro (confianza alta, verificado en el modelo). El to-be confirma y afina l…'
+why: La nueva evidencia comparte linaje (misma hipótesis o finding) con este claim de la story.
+options:
+- key: A
+  label: Revisar el claim con la nueva evidencia
+  consequence: El claim queda needs_review hasta que lo confirmes.
+- key: B
+  label: Pedir al COS que evalúe el efecto
+  consequence: Clasificación supports / weakens / contradicts con opciones.
+- key: C
+  label: Sin impacto material
+  consequence: Se registra la decisión y se cierra la alerta.
+recommended: B
+recommended_why: La relación existe por linaje; su efecto necesita lectura.
+detected_by: lineage
+links:
+- R-034
+- C-020
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+created_at: '2026-09-29T19:01:14-06:00'
+updated_at: '2026-09-29T19:01:14-06:00'
+version: 1

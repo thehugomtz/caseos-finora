@@ -1,0 +1,96 @@
+id: F-238
+type: finding
+headline: 'El as-is es un modelo de «después del pago»: tres fuentes con tres granos (cliente × mes, cliente, mes)
+  y ninguna mira antes del primer pago.'
+evidence_text: 'El panel está balanceado: 66.674 filas = 1.961 clientes × 34 meses (ene-22 a oct-24), con 33.703
+  filas en cero y 32.971 positivas. Los 1.961 clientes pagaron al menos una vez. El mes es una fecha de fin de mes,
+  sin día. La llave llega como «1» en pagos y como «Cliente 1» en industria (cruza al 100% después de parsear; hay
+  1 fila vacía). El gasto S&M viene en 7 rubros × mes, sin unidad y sin canal. El catálogo no tiene lead, canal,
+  campaña, oportunidad, etapa, actividad, asignación, eventos de producto ni suscripción. Lo que sí responde: stock
+  y puente de monto pagado, cortes por industria y por cohorte de primer pago, y eficiencia S&M agregada.'
+confidence: high
+limitations:
+- Describe el extracto que tiene el caso. No prueba que Finora no tenga esos datos en otros sistemas.
+kind: data_engineering
+claims:
+- claim: 'raw.transactions es un panel balanceado cliente × mes: 66.674 filas = 1.961 clientes × 34 meses (2022-01
+    a 2024-10), con 33.703 filas en cero y 32.971 positivas; sin negativos ni nulos.'
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29; datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Confirma el grano cliente × mes y que los ceros vienen explícitos (no es ausencia de fila).
+- claim: 'Los 1.961 clientes del archivo pagaron al menos un mes: no hay ningún registro de alguien que no compró.'
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Por construcción no hay denominador de funnel: nada antes del pago.'
+- claim: El campo month es una fecha de fin de mes (34 valores; p. ej. 1/31/2022, 2/28/2022). No hay día de pago,
+    factura ni hora.
+  source_id: DM-15
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Impide medir tiempos en días, incluso en la parte post-pago. Formato también visible en DM-02.
+- claim: 'La llave de cliente viene en dos formatos: «1» en raw.transactions y «Cliente 1» en raw.industry. Después
+    de parsear, 1.961 clientes cruzan en ambos sentidos sin huérfanos, y raw.industry trae 1 fila vacía (1.962 filas).'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Muestra que hoy la llave común de C-013 depende de parsear texto. Formatos en DM-02 y DM-03.
+- claim: 'La industria tiene 6 valores, uno fijo por cliente y sin fecha: Restaurantes 529, Producción 454, Retail
+    428, Tecnología 241, Servicios profesionales 165, Salud 144.'
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: 'No hay vigencia: si un cliente cambió de industria, no se sabe.'
+- claim: 'El gasto S&M viene como mes × 7 rubros (paid_media, publicidad_no_web, team, payroll_expenses, travel,
+    software_tools, freelance): 34 meses = 238 filas, en texto con «$» y unidad no documentada. No trae canal, campaña
+    ni cliente.'
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29; ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Formato en DM-04 y rango en DM-15. Solo permite eficiencia agregada, no por canal ni por puerta.
+- claim: El catálogo no tiene ninguna tabla ni columna de lead, canal, fuente, campaña, oportunidad, etapa, actividad,
+    dueño/asignación, evento de producto, plan, cantidad, precio, descuento, factura ni estado de suscripción.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Es ausencia en el extracto del caso, no prueba de que Finora no lo tenga en otros sistemas.
+- claim: Sobre monto pagado, customer_month clasifica 1.584 altas, 377 clientes ya activos al inicio de la ventana,
+    751 churn observados (549 clientes), 468 reactivaciones (340), 1.294 expansiones (831) y 1.247 contracciones
+    (788).
+  source_id: DM-09
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: Son movimientos de monto pagado observado, no de MRR contratado.
+unverified: false
+source_ref:
+  research: R-033
+links:
+- R-033
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:19:55-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

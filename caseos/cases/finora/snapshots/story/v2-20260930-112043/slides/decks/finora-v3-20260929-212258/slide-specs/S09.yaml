@@ -1,0 +1,50 @@
+slide:
+  id: S09
+  file: slides/09.html
+  claim_id: C-006
+  role_in_story: recommendation
+  kicker: "Growth · cómo medir cada funnel · propuesta"
+  headline: "Proponemos medir cada funnel por volumen, conversión, velocidad, valor, calidad y estancamiento"
+  takeaway: "Cada familia se mide donde ocurre en el journey; lo de las etapas se lee dentro de la ruta y solo la capa común se compara entre puertas."
+  question: "¿Cómo se mide cada funnel, más allá de la conversión?"
+  relationship: "metrics are PLACED where they are taken on the journey; per-route metrics stay inside the route and all CONVERGE on the knot, the only place compared across doors"
+  evidence_type: framework
+  composition: measurement_map (eje = journey; filas = 6 familias; puntos y tramos donde se mide)
+  family: process
+  alternatives_considered:
+    - id: matriz familia × alcance
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "es una tabla de texto; esconde dónde del journey se toma cada métrica"
+    - id: árbol de métricas
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "S10 ya es un árbol; y un árbol no muestra la convergencia en el nudo"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 3, risk: -1}
+  focal_point: knot_band
+  visual_hierarchy:
+    1: franja lima del nudo (Won y primer pago): aquí se comparan las puertas
+    2: seis familias como filas, con sus métricas donde se toman
+    3: zona «etapas de la ruta» (se lee dentro de la ruta)
+    4: nota de hoy
+  objects:
+    - {id: journey_axis, kind: axis, content: "Entrada (New) · etapas de la ruta · Won · primer pago"}
+    - {id: families, kind: label, content: "Volumen · Calidad · Conversión · Velocidad · Valor · Estancamiento"}
+    - {id: knot_band, kind: band, content: "nudo: Won y primer pago"}
+  encodings:
+    x_position: "dónde del journey se toma la métrica"
+    span_line: "métrica medida entre dos hitos (tasa o tiempo)"
+    dot_filled: "capa común (por puerta y canal, comparable)"
+    dot_ring: "por ruta (solo dentro de la ruta)"
+    accent: "el nudo, único lugar de comparación entre puertas"
+  annotations:
+    - {at: knot_band, text: "Aquí se comparan las puertas: por cohorte y con ventana fija W"}
+    - {at: bottom, text: "Hoy no se calcula nada antes del pago: solo existen los primeros pagos observados y su monto, sin puerta ni ruta"}
+  layout_intent:
+    grid: "familias cols 1–2; mapa cols 3–12"
+    reading_path: "fila por fila, izquierda → derecha hasta el nudo"
+    whitespace: "márgenes entre filas"
+  text_budget: 115
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "seis cards de familias", "iconos por familia"]
+  data: {source: "propuesta (R-031, C-006); sin cifras", values: []}
+  notes: "Fórmulas: win rate de cohorte = journeys con Won dentro de W ÷ journeys de la cohorte; tiempo de cierre = mediana y P75 de New→Won; estancamiento = abiertos sin actividad > umbral ÷ abiertos; calidad del handoff = aceptados ÷ recibidos. W, umbral de estancamiento y plazo Won→pago se acuerdan con Finora (Q-064)."
+  sources: [F-223, F-224, F-225, F-226, F-227, F-141, F-158, F-155, F-212, F-144, F-213]

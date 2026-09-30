@@ -1,0 +1,1269 @@
+id: R-032
+type: research
+research_question: ¿Cómo se ordenan las causas de «más leads, pero no más ventas» en un árbol MECE —cada brecha
+  observada en una sola rama—, con qué tendría que ser cierto para validar o descartar cada hoja, el dato mínimo
+  y la palanca del CRO?
+case_question: 'Sirve a C-023 (matriz de causas: qué la valida, qué la descarta y qué palanca mueve) y a C-011 (descartar
+  primero artefactos de medición y después contrastar ToFu, MoFu y BoFu). Ordena H-052, H-053, H-054, H-055, H-056,
+  H-057, H-005 y H-006, y usa H-007 como regla de ubicación, dentro de la pregunta ejecutiva: qué explicaciones
+  podemos defender ante el CRO y el CFO, qué huecos hay en su WoW y qué modelos proponemos.'
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  purpose:
+    mapped:
+    - C-023
+    - C-011
+    - H-052
+    - H-053
+    - H-054
+    - H-055
+    - H-056
+    - H-057
+    - H-005
+    - H-006
+    - H-007
+    suggested: []
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-023
+- C-011
+- H-052
+- H-053
+- H-054
+- H-055
+- H-056
+- H-057
+- H-005
+- H-006
+- H-007
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T18:24:05-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 6
+job_id: JOB-20260929-182405-ad40
+error: null
+started_at: '2026-09-29T18:24:05-06:00'
+shaping_task: RT-031
+slides:
+- S2.6
+task_why: 'Hugo en el chat (29-sep, revisión del Story v2): en C-023 hay mucho artefacto pero nada MECE, y confunde.'
+task:
+  work: propuesta
+  draft_answer: 'De arranque, en tres cortes: 1) ¿la brecha es real o de medición? (medición: cómo se cuentan los
+    leads, cómo se registra el CRM, tiempo o rezago); 2) si es real, ¿en qué tramo se pierde? (entrada, contacto,
+    calificación, cierre o pago); 3) en ese tramo, ¿por qué? (demanda, calidad, capacidad y velocidad, oferta y
+    precio). Cada hoja con una prueba y un dato; las causas de R-025 y H-052 a H-057 se acomodan en el árbol sin
+    repetirse.'
+  hugo_said:
+  - text: lo mismo en C-023mucho artefacto pero no hay nada MECE, me confunde
+    ref: N-051
+  steps:
+  - kind: proposal
+    what: Árbol MECE en 2–3 niveles, con la regla de corte de cada nivel y la prueba de que las ramas no se traslapan
+      ni dejan huecos.
+    where: []
+  - kind: proposal
+    what: 'Por hoja: qué tendría que ser cierto, qué la descarta, dato mínimo, si existe hoy o hay que pedirlo y
+      qué palanca del CRO mueve; cada causa de R-025 y H-052 a H-057 en una sola hoja.'
+    where: []
+  - kind: proposal
+    what: 'Una versión para lámina que se lea sin la palabra «artefacto»: medición vs negocio, con nombres claros.'
+    where: []
+requested_via: vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+why_it_matters: Si la misma caída se cuenta en dos ramas o cae en la rama equivocada, el CRO mueve la palanca equivocada;
+  por ejemplo, contrata SDR cuando el problema es que New cuenta clientes actuales. Además, el árbol define el pedido
+  mínimo de datos a Finora, porque hoy ninguna hoja se puede probar con el modelo.
+short_answer: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta); (2) entra peor mezcla
+  (H-005, solo con señales congeladas al crear el lead); (3) con entradas comparables, la caída está antes del SQL
+  (H-006 primer toque, H-055 estancados); (4) está después del SQL (H-054 como exceso del SQL del SDR; la parte
+  común va al avance del AE y a H-056); o (5) no llega al cobro (H-057). H-007 es la regla que ubica la caída, no
+  una causa. La confianza es alta en la estructura, porque cada pedazo de brecha cae en un solo término, y baja
+  sobre qué hoja explica a Finora, porque el modelo no tiene leads. Lo único que ya muestran los pagos es que la
+  brecha depende de la unidad y de la ventana: en mar–oct las altas pasan de 433 (2023) a 465 (2024), pero en T3
+  pasan de 187 a 153; y el arranque (paga M0 y no M1) es bajo y estable.'
+claims:
+- claim: El modelo del caso solo tiene pagos cliente × mes, industria por cliente y gasto S&M mensual por rubro;
+    no hay tablas de leads, estados del CRM, oportunidades ni registros de producto.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29; datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'Define qué hojas son comprobables hoy: ninguna de las ramas 1 a 4.'
+- claim: En las ventanas mar–oct, las altas (primer pago observado) fueron 227 en 2022, 433 en 2023 y 465 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29; datos hasta oct-24
+  supports_or_contests: context
+  notes: Primera aparición en pagos, no adquisición. Ventanas iguales de 8 meses con cobertura completa.
+- claim: En mar–oct, el monto promedio pagado en el primer mes por alta fue 118.771 COP en 2022, 45.002 en 2023
+    y 52.828 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es monto pagado observado (columna new_mrr_cop), no MRR contratado. El promedio es sensible a valores extremos.
+- claim: La mediana del primer pago de las altas limpias de mar–oct fue 63.000 COP (2022), 35.280 (2023) y 42.000
+    (2024).
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Muestra que «ventas» en logos y en valor pueden ir en direcciones distintas.
+- claim: Entre 2023 y 2024, las altas de T2 pasaron de 144 a 219 y las de T3 de 187 a 153; en T3, el gasto de generación
+    de demanda pasó de 2,215 a 3,327 (unidad no documentada).
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: La lectura «no más ventas» depende de la ventana. No es conversión ni relación causal entre gasto y altas.
+- claim: Las reactivaciones (vuelven a pagar tras al menos un mes en cero) fueron 148 en mar–oct 2022, 104 en 2023
+    y 131 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda separar Reactivate de New tanto en el numerador (ventas) como en el denominador (leads). Churn
+    observado ≠ cancelación.
+- claim: Entre 2022 y 2023, la mediana del primer pago bajó en 5 de 6 industrias (solo Salud subió) y Retail pasó
+    de 18,9% a 27,7% de las altas, con la mediana más baja de 2023 (21.000 COP).
+  source_id: DM-05
+  source_type: data_model
+  confidence: medium
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Ejemplo de mezcla y tasa moviéndose a la vez del lado observable. Hay industrias con n chico (Servicios
+    profesionales: 13 altas en 2022).'
+- claim: 'De las altas de mar–oct con M1 observable, no pagaron en M1: 17 de 227 (7,5%) en 2022, 12 de 433 (2,8%)
+    en 2023 y 13 de 415 (3,1%) en 2024.'
+  source_id: DM-03
+  source_type: data_model
+  confidence: medium
+  freshness: Consulta 2026-09-29
+  supports_or_contests: contests
+  notes: Debilita la parte de arranque de H-057 como problema creciente. Un pago de varios meses por adelantado
+    también deja M1 en cero. El tramo Won → primer pago no se ve.
+- claim: Un árbol de hipótesis parte de un árbol MECE y en cada hoja declara una respuesta falsable con la evidencia
+    que la probaría o la descartaría; hay que probar cada par de ramas por doble conteo, preguntar qué falta y parar
+    a 2–3 niveles, cuando la hoja se puede medir directamente.
+  source_id: W-01
+  source_type: expert
+  confidence: medium
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Método para la forma de C-023: valida, descarta y dato mínimo por hoja.'
+- claim: Una tendencia presente en varios subgrupos puede invertirse o desaparecer al combinarlos (paradoja de Simpson);
+    hay que mirar ambos niveles y decidir cuál responde la decisión.
+  source_id: W-02
+  source_type: industry
+  confidence: high
+  freshness: Sin fecha; fenómeno estadístico establecido
+  supports_or_contests: supports
+  notes: Fundamenta separar mezcla al entrar (H-005) de caída dentro de la banda (Ramas 3 y 4).
+- claim: El B2B Revenue Waterfall de Forrester (2021), sucesor del Demand Unit Waterfall, planea y mide en un mismo
+    marco las oportunidades de negocio nuevo y las de clientes existentes (renovación, cross-sell, upsell).
+  source_id: W-03
+  source_type: industry
+  confidence: medium
+  freshness: '2021-05-04'
+  supports_or_contests: supports
+  notes: Respalda no mezclar la demanda de clientes actuales con New (H-052). También es una alternativa de marco.
+- claim: HBR (Oldroyd, McElheran y Elkington, marzo 2011) sostiene que la mayoría de las empresas no responde a
+    los leads online lo bastante rápido.
+  source_id: W-04
+  source_type: academic
+  confidence: medium
+  freshness: 2011-03 (antiguo)
+  supports_or_contests: context
+  notes: Solo se recuperaron los metadatos y la afirmación principal (muro de pago).
+- claim: Según Venture Harbour, que reporta el estudio de HBR, responder en la primera hora se asoció con casi 7
+    veces más probabilidad de calificar el lead que responder una hora después, y más de 60 veces frente a 24 horas
+    o más.
+  source_id: W-05
+  source_type: marketing
+  confidence: low
+  freshness: Estudio de 2011, reportado por una fuente secundaria sin fecha
+  supports_or_contests: context
+  notes: Benchmark observacional para diseñar el test de H-006; no dice nada de Finora.
+- claim: TTEC relata que pagar al SDR por reuniones creó una cultura de cantidad que llevó a pasar a los vendedores
+    leads menos filtrados; al pagar el triple cuando la reunión se vuelve SAL u oportunidad, lo que pasan tiene
+    más probabilidad de ganarse.
+  source_id: W-06
+  source_type: company
+  confidence: low
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Caso de una sola empresa: hace plausible el mecanismo de H-054, no lo prueba.'
+- claim: 'Clozd comparó 1.000 oportunidades perdidas: los motivos del CRM coincidieron con lo que reportó el comprador
+    solo 15% de las veces y el competidor registrado fue incorrecto en casi 7 de cada 10.'
+  source_id: W-07
+  source_type: industry
+  confidence: medium
+  freshness: 2023-04-21 (modificado 2025-10-24)
+  supports_or_contests: supports
+  notes: Proveedor de win/loss (sesgo posible). Respalda que la opinión posterior de Sales no basta (H-005, H-056).
+- claim: Un holdout compara un grupo expuesto con uno similar no expuesto para estimar el efecto incremental; se
+    usa cuando la atribución sobre- o subcuenta.
+  source_id: W-08
+  source_type: industry
+  confidence: low
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Definición estándar de una fuente de baja autoridad; aplica al test causal de H-053 (holdout de ruteo).
+- claim: En Salesforce, el historial estándar de campos se conserva 18 meses en la interfaz y hasta 24 meses vía
+    API; Field Audit Trail permite retenerlo más tiempo.
+  source_id: W-09
+  source_type: company
+  confidence: high
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: context
+  notes: 'Riesgo de instrumentación si Finora usa Salesforce (dato no confirmado): el periodo base podría no reconstruirse.'
+sources:
+- id: DM-01
+  title: Qué tablas y columnas existen en el modelo (no hay leads, estados, oportunidades ni registros de producto)
+  url: ''
+  publisher: CaseOS · modelo de datos Finora (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: catalogo_modelo()
+  verified: true
+- id: DM-02
+  title: Altas, monto del primer pago, reactivaciones y gasto S&M en ventanas mar–oct 2022, 2023 y 2024
+  url: ''
+  publisher: CaseOS · modelo de datos Finora (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT substr(month,1,4) AS yr, COUNT(*) AS meses, SUM(new_customers) AS altas, ROUND(SUM(new_mrr_cop))
+    AS new_mrr_cop, ROUND(SUM(new_mrr_cop)/SUM(new_customers)) AS new_mrr_por_alta, SUM(reactivated_customers) AS
+    reactivaciones, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity,
+    ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(total_sm_spend)/SUM(new_customers),4) AS sm_por_alta FROM
+    mart.monthly_metrics_phase1 WHERE substr(month,6,2) BETWEEN '03' AND '10' GROUP BY substr(month,1,4) ORDER BY
+    yr
+  verified: true
+- id: DM-03
+  title: Mediana y p75 del primer pago y altas sin pago en M1, cohortes limpias de mar–oct
+  url: ''
+  publisher: CaseOS · modelo de datos Finora (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT year, COUNT(*) AS altas, median(m0_cop) AS mediana_m0, quantile_cont(m0_cop, 0.75) AS p75_m0, SUM(CASE
+    WHEN early_months_observed >= 2 THEN 1 ELSE 0 END) AS altas_con_m1_observable, SUM(CASE WHEN early_months_observed
+    >= 2 AND COALESCE(m1_cop,0) = 0 THEN 1 ELSE 0 END) AS altas_sin_pago_m1, ROUND(100.0 * SUM(CASE WHEN early_months_observed
+    >= 2 AND COALESCE(m1_cop,0) = 0 THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN early_months_observed >= 2 THEN 1
+    ELSE 0 END),0), 1) AS pct_sin_pago_m1 FROM mart.new_customers WHERE clean AND substr(cohort_month,6,2) BETWEEN
+    '03' AND '10' GROUP BY year ORDER BY year
+  verified: true
+- id: DM-04
+  title: Altas, monto del primer pago, reactivaciones y gasto por trimestre 2023–2024
+  url: ''
+  publisher: CaseOS · modelo de datos Finora (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT substr(month,1,4) AS yr, CASE WHEN substr(month,6,2) IN ('01','02','03') THEN 'T1' WHEN substr(month,6,2)
+    IN ('04','05','06') THEN 'T2' WHEN substr(month,6,2) IN ('07','08','09') THEN 'T3' ELSE 'T4' END AS trimestre,
+    COUNT(*) AS meses, SUM(new_customers) AS altas, ROUND(SUM(new_mrr_cop)) AS new_mrr_cop, SUM(reactivated_customers)
+    AS reactivaciones, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity
+    FROM mart.monthly_metrics_phase1 WHERE month >= '2023-01' GROUP BY 1,2 ORDER BY 1,2
+  verified: true
+- id: DM-05
+  title: Altas y mediana del primer pago por industria, cohortes limpias de mar–oct
+  url: ''
+  publisher: CaseOS · modelo de datos Finora (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT industry, year, COUNT(*) AS altas, median(m0_cop) AS mediana_m0, ROUND(100.0 * COUNT(*) / SUM(COUNT(*))
+    OVER (PARTITION BY year), 1) AS pct_altas_del_anio FROM mart.new_customers WHERE clean AND substr(cohort_month,6,2)
+    BETWEEN '03' AND '10' GROUP BY industry, year ORDER BY industry, year
+  verified: true
+- id: W-01
+  title: Problem Structuring & Hypothesis-Driven Consulting Playbook (Issue Trees, MECE)
+  url: https://thinkinsights.net/playbooks/problem-structuring-hypothesis-driven-consulting-playbook-issue-trees-mece
+  publisher: Think Insights
+  date: s.f. (consultado 2026-09-29)
+  source_type: expert
+  quality: C
+  note: Define el árbol MECE frente al árbol de hipótesis, las hojas falsables, la prueba de doble conteo y la profundidad.
+    Es un playbook de práctica, no académico.
+  verified: true
+- id: W-02
+  title: Simpson's paradox (glosario de Confidence)
+  url: https://confidence.spotify.com/glossary/simpsons-paradox
+  publisher: Spotify Confidence
+  date: s.f. (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: Definición y recomendación de mirar el segmento y el agregado.
+  verified: true
+- id: W-03
+  title: Forrester Debuts Next-Generation B2B Revenue Waterfall To Help Firms Accelerate Revenue Growth
+  url: https://www.forrester.com/press-newsroom/forrester-debuts-next-generation-b2b-revenue-waterfall-to-help-firms-accelerate-revenue-growth/
+  publisher: Forrester
+  date: '2021-05-04'
+  source_type: industry
+  quality: B
+  note: 'Comunicado de prensa: waterfall centrado en oportunidades que incluye renovación, cross-sell y upsell junto
+    al negocio nuevo.'
+  verified: true
+- id: W-04
+  title: The Short Life of Online Sales Leads
+  url: https://hbr.org/2011/03/the-short-life-of-online-sales-leads
+  publisher: Harvard Business Review (Oldroyd, McElheran, Elkington)
+  date: 2011-03
+  source_type: academic
+  quality: B
+  note: 'Muro de pago: solo se recuperaron los autores, la fecha y la afirmación principal.'
+  verified: true
+- id: W-05
+  title: How fast do marketing leads turn cold (and how to stop it happening)
+  url: https://ventureharbour.com/how-fast-do-marketing-leads-turn-cold-and-how-to-stop-it-happening/
+  publisher: Venture Harbour
+  date: s.f. (consultado 2026-09-29)
+  source_type: marketing
+  quality: C
+  note: Fuente secundaria que reporta las cifras del estudio de HBR (7 veces y 60 veces).
+  verified: true
+- id: W-06
+  title: 'Grow your sales pipeline: changing your SDR approach (we did it and you can too)'
+  url: https://ttec.com/blog/grow-your-sales-pipeline-changing-your-sdr-approach-we-did-it-and-you-can-too
+  publisher: TTEC (Adam Lightfield)
+  date: s.f. (consultado 2026-09-29)
+  source_type: company
+  quality: C
+  note: Caso propio sobre la comisión del SDR por reunión frente a SAL u oportunidad.
+  verified: true
+- id: W-07
+  title: 5 lies your CRM is telling you about your buyers
+  url: https://clozd.com/blog/5-lies-your-crm-is-telling-you-about-your-buyers
+  publisher: Clozd
+  date: 2023-04-21 (modificado 2025-10-24)
+  source_type: industry
+  quality: C
+  note: Comparación de 1.000 oportunidades perdidas entre el CRM y las entrevistas a compradores. Proveedor de win/loss.
+  verified: true
+- id: W-08
+  title: What Is a Holdout Test? Definition, Uses, and Business Value
+  url: https://racklify.com/encyclopedia/what-is-a-holdout-test-definition-uses-and-business-value/
+  publisher: Racklify
+  date: s.f. (consultado 2026-09-29)
+  source_type: industry
+  quality: C
+  note: Definición estándar de holdout frente a atribución; la fuente es de baja autoridad.
+  verified: true
+- id: W-09
+  title: Get Started with Field Audit Trail
+  url: https://trailhead.salesforce.com/content/learn/modules/field-audit-trail-basics/get-started-with-field-audit-trail
+  publisher: Salesforce Trailhead
+  date: s.f. (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: 'Retención del historial de campos: 18 meses en la interfaz y 24 vía API.'
+  verified: true
+alternative_explanations:
+- El «más leads» es un cambio de conteo (formulario nuevo, fuente integrada, deduplicación que dejó de correr) y
+  no más demanda.
+- 'Las ventas sí crecieron en logos pero no en valor, o al revés: en los pagos, el valor por alta está por debajo
+  de 2022 aunque las altas de mar–oct crecieron.'
+- 'El ciclo se alargó y las cohortes del aumento todavía no maduran: comparar leads del mes con ventas del mes fabrica
+  la brecha.'
+- 'Cayó el entorno de demanda (presupuestos, no-decisión): la caída sería común a todos los motions, incluido el
+  self-serve sin toque, y no es palanca del CRO.'
+- 'Estacionalidad o elección de ventana: T2-2024 tuvo más altas que T2-2023 y T3-2024 menos que T3-2023.'
+- 'Atribución: ventas influidas por el SDR que se registran como self-serve (o al revés) mueven la conversión del
+  funnel sin cambiar el total.'
+what_is_established:
+- El modelo no tiene leads, estados del CRM, oportunidades ni registros de producto (DM-01).
+- 'Altas de mar–oct: 227 (2022), 433 (2023) y 465 (2024); entre 2023 y 2024, T2 pasa de 144 a 219 y T3 de 187 a
+  153 (DM-02, DM-04).'
+- 'Monto del primer pago por alta en mar–oct: promedio de 118.771 → 45.002 → 52.828 COP y mediana de 63.000 → 35.280
+  → 42.000 COP (DM-02, DM-03).'
+- 'Las altas que no pagan en M1 son pocas y no crecen: 7,5% → 2,8% → 3,1% (DM-03).'
+- 'Método: un árbol MECE de hipótesis exige hojas falsables y prueba de doble conteo, y mezcla y tasa se leen por
+  separado (W-01, W-02).'
+what_is_contested:
+- 'Que haya habido «más leads», en qué meses y en qué motion: es la lectura del CRO, sin dato en el modelo.'
+- 'Qué cuenta el CRO como «venta»: Won, primer pago o monto del primer pago.'
+- Si los benchmarks de velocidad de respuesta (HBR 2011) y de comisiones del SDR (TTEC) aplican a Finora.
+- Si una caída en la aceptación del AE refleja SQL inmaduros o un cambio de criterio del propio AE.
+what_remains_unknown:
+- Volumen de leads por mes y motion, y cuántos son duplicados, clientes actuales, ex-clientes o spam.
+- Historial de estados con fecha y si el CRM lo guarda para el periodo base.
+- Headcount SDR/AE por semana y fechas de cambios en comisiones, criterio de SQL, precios, planes y formularios.
+- Registros de producto y marca de toque comercial por venta (Self-serve vs Hybrid).
+- Llave Won ↔ customer_id, pagos fallidos y plazo entre Won y primer pago.
+case_implication: 'Para Finora, C-023 ya se puede presentar como estructura: un Paso 0 y cinco ramas con diez hojas,
+  cada una con su firma observable, qué la valida, qué la descarta, el dato mínimo y la palanca del CRO; H-007 queda
+  como regla para ubicar, no como causa. Lo que todavía no podemos defender ante el CRO y el CFO es qué hoja explica
+  la brecha, porque el modelo no tiene un solo lead. Lo que sí podemos decir con datos es que «más leads, no más
+  ventas» depende de cómo se mida la venta: en mar–oct las altas crecieron (433 → 465) y el monto del primer pago
+  por alta subió frente a 2023 pero sigue debajo de 2022; en cambio, T3-2024 tuvo menos altas que T3-2023 (153 vs
+  187) con más gasto de generación de demanda. Por eso la primera conversación con el CRO no es sobre una causa,
+  sino sobre una definición (unidad de venta, ventana, New separado de Reactivate). El hueco central del WoW es
+  no tener leads con historial de estados unidos a customer_id; el pedido mínimo de datos sale directo de la columna
+  «dato mínimo» del árbol.'
+changes_current_story:
+  value: maybe
+  why: Confirma el orden de C-011 y da forma a C-023, pero agrega un Paso 0 que puede cambiar el titular. Si el
+    CRO mide la venta como altas de mar–oct, las ventas sí crecieron; si mide T3 o el valor frente a 2022, no. Hasta
+    fijar la unidad y la ventana, la historia no puede afirmar que exista la brecha, solo cómo se repartiría.
+affected_hypotheses:
+- id: H-052
+  effect: changes_framing
+  why: 'Queda como hoja 1.1, la primera en revisarse. Se amplía: los ex-clientes que entran como New pertenecen
+    a Reactivate. Se prueba cruzando leads con customer_id; hoy no hay leads.'
+- id: H-053
+  effect: requires_research
+  why: Hoja 1.3. Su prueba decisiva es el cruce de identidad (¿los New del aumento ya tenían registro en el producto?)
+    junto con la caída de las compras self-serve sin toque; para causalidad hace falta un holdout de ruteo. El modelo
+    no distingue motions.
+- id: H-005
+  effect: changes_framing
+  why: Solo cuenta como hoja ToFu (2.1) la parte de mezcla medida con señales congeladas al crear el lead. La calidad
+    no observada cae en las ramas de tasa, así que H-005 no puede usarse como residuo de todo lo demás.
+- id: H-006
+  effect: changes_framing
+  why: 'Se parte en dos hojas con firmas distintas: primer toque del SDR (3.1) y avance del AE (4.2). Es la misma
+    causa en dos etapas, no la misma caída contada dos veces.'
+- id: H-055
+  effect: requires_research
+  why: Hoja 3.2. Frente a calidad, la discrimina la compra de los estancados que se retoman; si el estancamiento
+    sigue a la carga, la palanca es capacidad y no cadencia.
+- id: H-054
+  effect: changes_framing
+  why: Hoja 4.1, medida como el exceso de caída post-SQL del SQL del SDR sobre el SQL directo, más la aceptación
+    del AE según el origen. La parte común de la caída va a 4.2 o 4.3.
+- id: H-056
+  effect: requires_research
+  why: 'Hoja 4.3. Los motivos del CRM no bastan (15% de coincidencia con compradores en W-07): hacen falta una muestra
+    de entrevistas y las fechas de los cambios de oferta.'
+- id: H-057
+  effect: weakens
+  why: 'El arranque visible (altas que pagan M0 y no M1) es bajo y no crece: 7,5% → 2,8% → 3,1%. El tramo Won →
+    primer pago sigue sin datos, así que la hoja 5.1 no se descarta.'
+- id: H-007
+  effect: changes_framing
+  why: 'Pasa a ser la regla que asigna la caída a una etapa en las Ramas 3 a 5: ubica, no explica.'
+affected_claims:
+- id: C-023
+  effect: supports
+  why: La matriz queda con diez hojas, cada una con qué la valida, qué la descarta, el dato mínimo y la palanca
+    del CRO; se puede presentar ya como estructura, con la columna «hoy se puede / no se puede».
+- id: C-011
+  effect: changes_framing
+  why: El orden se mantiene (artefactos primero, luego ToFu, MoFu y BoFu), pero se agregan un Paso 0 (qué es venta,
+    ventana por cohortes, New separado de Reactivate) y una rama posterior al Won.
+suggested_action: 'Propongo dos pasos en paralelo para que Hugo decida. Primero, llevar al CRO las tres definiciones
+  del Paso 0 (unidad de venta, ventana W, New separado de Reactivate) y preguntarle en qué meses y en qué motion
+  vio «más leads». Segundo, pedir a Finora el paquete mínimo del árbol: export de leads con historial de estados;
+  oportunidades con origen del SQL, decisión del AE y motivo de pérdida; registros de producto; equipo SDR/AE por
+  semana; y bitácora de cambios (formularios, criterio de SQL, comisiones, precios), todo con llave a customer_id.
+  Mientras llega, se puede armar la lámina de C-023 con las cifras de pagos como contexto, no como evidencia de
+  conversión.'
+new_questions:
+- ¿Qué cuenta el CRO como «venta» (Won, primer pago o monto del primer pago) y en qué meses y en qué motion vio
+  «más leads»?
+- ¿El CRM de Finora guarda el historial de estados con fecha (New, Working SDR, Engaged, SQL) y el origen del SQL,
+  y desde qué mes?
+- '¿Qué cambió, y en qué fecha, durante el aumento: formularios o fuentes, criterio de SQL, comisiones del SDR,
+  headcount, precios o planes?'
+handoff_to_cos:
+  summary: 'R-032 entrega el árbol MECE de «más leads, no más ventas»: un Paso 0 y cinco ramas con diez hojas, cada
+    una con firma observable, test, dato mínimo y palanca del CRO. Ordena H-052 a H-057, H-005 y H-006; H-007 queda
+    como regla de ubicación. Ninguna hoja de las Ramas 1 a 4 se puede probar con el modelo (no hay leads); los pagos
+    solo muestran que la brecha depende de la unidad y la ventana, y que el arranque (M0 sin M1) es bajo y estable.'
+  recommended_next: 'Que Hugo decida si lleva el Paso 0 al CRO y si aprueba el pedido mínimo de datos a Finora.
+    En paralelo: armar la lámina de C-023 con la columna «hoy se puede / no se puede», y que Data Engineering diseñe
+    leads, historial de estados, oportunidades y registros de producto con llave a customer_id.'
+confidence_buckets:
+  high_confidence:
+  - Aplicada en orden, la estructura Paso 0 + cinco ramas reparte la brecha sin doble conteo.
+  - Hoy no se puede validar ni descartar ninguna hoja de las Ramas 1 a 4 con el modelo.
+  - Las cifras de altas, monto del primer pago, reactivaciones y arranque del lado de pagos.
+  plausible:
+  - Que la baja de valor por alta desde 2022 sea en parte mezcla (más Retail) y en parte tasa (baja dentro de 5
+    de 6 industrias).
+  - Que capacidad, estancamiento e incentivos del SDR se distingan por sus firmas (tiempo y carga; retomados; origen
+    del SQL).
+  - Que el arranque (paga M0 y no M1) no explique una brecha creciente.
+  contested:
+  - 'Que la brecha exista tal como la describe el CRO: ventana, motion y unidad de venta sin definir.'
+  - Que los benchmarks externos (HBR 2011, TTEC, Clozd) describan a Finora.
+  unknown:
+  - Qué hoja explica la brecha en Finora.
+  - Si el CRM conserva el historial del periodo base.
+  - Qué cambió (comisiones, precios, formularios, headcount) y cuándo.
+specialist:
+  measurement:
+    problem_interpretation: Hugo pide un árbol de causas de «más leads, pero no más ventas» donde cada brecha observada
+      caiga en una sola rama, con test (qué valida, qué descarta), dato mínimo y palanca del CRO por hoja. En clave
+      de medición, la brecha es un cociente (ventas / leads) que cambia entre dos periodos y mezcla motions (Sales-assisted,
+      SQL directo, Self-serve, Hybrid, Reactivate). Para asignarla sin doble conteo hay que nombrar primero unidad,
+      grano e hito, y después descomponer la brecha en orden según la identidad, no según opiniones. El modelo actual
+      solo ve el lado de las ventas (primeros pagos), no el de los leads.
+    measurement_objective: Asignar el cambio en la conversión de cohorte (entrada válida → venta dentro de W días)
+      entre el periodo base (P0) y el del aumento (P1) a exactamente una hoja del árbol, por motion, para que el
+      CRO elija una palanca y sepa si seguir comprando volumen de leads o invertir en conversión.
+    recommended_framework:
+      name: Árbol MECE de la brecha por identidad, con cohortes y motions separados
+      structure: 'Unidad, grano e hito: Sales-assisted cuenta leads válidos desde su creación; SQL directo, SQL
+        desde su creación; Self-serve/Hybrid, registros de producto; Reactivate, ex-clientes. Grano: cohorte semanal
+        o mensual de creación. Resultado: «venta» (a acordar: Won o primer pago) dentro de una ventana W igual para
+        el periodo base (P0) y el del aumento (P1).
+
+        Identidad: ventas = Σ por motion [entradas válidas × Π conversión por etapa a W]. La brecha es conv(P1)
+        − conv(P0) por motion y se reparte en este orden, de modo que cada pedazo cae en un solo término: validez
+        → puerta → mezcla vs tasa (Σ Δmezcla × tasa P0 + Σ mezcla P1 × Δtasa, con regla fija para el término cruzado)
+        → etapa (Δln conv = Σ Δln de cada paso) → cobro.
+
+
+        PASO 0 · Definir la brecha (es una puerta, no una rama): unidad de venta, W, cohortes por fecha de creación
+        y New separado de Reactivate. Hoy solo existe el lado de pagos.
+
+
+        RAMA 1 · El aumento de New no es demanda nueva comprable (artefactos; van primero)
+
+        1.1 No-prospectos (H-052). Firma: sube la proporción de duplicados, clientes actuales, ex-clientes o spam
+        en New. Valida: al quitarlos, la brecha se cierra en esa magnitud. Descarta: proporción baja y estable,
+        o la brecha sigue igual sin ellos. Dato mínimo: export de leads (id, fecha, email/dominio, fuente) cruzado
+        con customer_id y con leads previos. Palanca CRO: definición de lead válido, deduplicación, ruteo de clientes
+        a CS y de ex-clientes a Reactivate.
+
+        1.2 Lectura: desfase o cambio de definición (hoja nueva, sin ID). Firma: las cohortes recientes aún no maduran,
+        o cambió qué se cuenta como lead o como venta. Valida: con cohortes a W iguales la conversión no cae, o
+        el aumento empieza con un formulario, fuente o definición nueva. Descarta: la caída sigue en cohortes maduras
+        y no hubo cambios. Dato mínimo: fechas de creación, Won y primer pago por lead, más la bitácora de cambios.
+        Palanca CRO: reporte por cohortes a W y diccionario de etapas congelado.
+
+        1.3 Misma demanda por otra puerta (H-053). Firma: los New del aumento ya tenían registro en el producto
+        y las compras self-serve sin toque bajan cuando suben los leads. Descarta: sin registro previo y self-serve
+        estable. Dato mínimo: registros de producto cruzables con leads y marca de toque comercial por venta. Palanca
+        CRO: reglas de ruteo y de crédito por motion; para causalidad, holdout de ruteo.
+
+
+        RAMA 2 · Entra demanda nueva con menor probabilidad de compra (ToFu)
+
+        2.1 Mezcla al entrar (H-005). Firma: el término de mezcla, es decir, más peso de bandas que siempre convirtieron
+        poco, con tasas por banda estables. Valida: con bandas fijadas al crear el lead (fuente, segmento, fit/intención),
+        la mezcla se movió a bandas bajas y explica la caída. Descarta: mezcla estable o término chico. Dato mínimo:
+        señales de entrada congeladas al crear y resultado por cohorte. Palanca CRO (con CMO): scoring/ICP, qué
+        pasa al SDR y presupuesto por fuente.
+
+
+        RAMA 3 · Con entradas comparables, la caída está antes del SQL (MoFu · SDR); H-007 es la regla que la ubica
+
+        3.1 Primer toque tarde o nunca (H-006, lado SDR). Firma: cae New → Working SDR a tiempo. Valida: sube el
+        tiempo a primer toque y la caída sigue a la carga por SDR. Descarta: carga y tiempos estables, o la caída
+        es igual en leads atendidos rápido. Dato mínimo: timestamp del primer toque, dueño y SDR activos por semana.
+        Palanca CRO: SLA de primer contacto, priorización por score y capacidad.
+
+        3.2 Contactados que se estancan (H-055). Firma: cae Working SDR/Engaged → SQL y crece la bolsa de estancados
+        por más de N días. Valida: sube la proporción de estancados por cohorte y los retomados sí compran. Descarta:
+        estancados estables, o retomados que casi no compran (entonces es Rama 2). Dato mínimo: historial de estados
+        con fecha y actividades. Palanca CRO: cadencias y regla de reasignar o reciclar a los N días; si el estancamiento
+        sigue a la carga, capacidad.
+
+
+        RAMA 4 · Con entradas comparables, la caída está después del SQL (BoFu)
+
+        4.1 Exceso en el SQL del SDR (H-054). Firma: la parte de la caída post-SQL que tiene el SQL del SDR y no
+        el SQL directo. Valida: baja la aceptación del AE en el SQL del SDR y la conversión cae más que en el SQL
+        directo, sobre todo si cambió la meta del SDR. Descarta: caída igual en ambos orígenes o aceptación estable.
+        Dato mínimo: origen del SQL, decisión y motivo del AE, versión del plan de comisiones. Palanca CRO: comisión
+        por SQL aceptado u oportunidad (no por reunión) y criterio de SQL con SLA de aceptación.
+
+        4.2 Avance del AE, SQL → Demo → Proposal (H-006, lado AE). Firma: la parte común de la caída antes de Proposal.
+        Valida: sube la carga por AE o el tiempo SQL → Demo. Descarta: carga estable, o la caída está solo en Proposal
+        → Won. Dato mínimo: historial de etapas de la oportunidad y AE activos por semana. Palanca CRO: capacidad
+        y priorización de AE.
+
+        4.3 Decisión en Proposal → Won (H-056). Firma: cae Proposal → Won en todos los orígenes. Valida: cambia
+        la mezcla de motivos (precio/plan, competidor, funcionalidad, no-decisión) validada con compradores, o la
+        caída coincide con un cambio de oferta. Descarta: win rate estable, motivos estables, o la caída es igual
+        donde la oferta no cambió. Dato mínimo: fechas de cambios de precio/plan, motivo de pérdida y muestra de
+        entrevistas. Palanca CRO: pricing/packaging (con CFO y CPO) y enablement competitivo.
+
+
+        RAMA 5 · El funnel cierra pero la venta no llega al cobro (solo si venta = cliente pagando)
+
+        5.1 Won sin primer pago (H-057). Firma: sube la proporción de Won sin pago a X días. Descarta: casi todos
+        pagan y la proporción es estable, o el CRO mide la venta como Won. Dato mínimo: llave Won ↔ customer_id,
+        fecha de primer pago y pagos fallidos. Palanca CRO: comisión al primer pago, handoff a onboarding y cobro,
+        medios de pago.
+
+
+        Prueba de doble conteo: 1.1 vs 1.3 (no puede comprar vs compraría igual por otra puerta); 2.1 vs Ramas 3–4
+        (mezcla vs tasa dentro de la banda); 3.1 vs 3.2 (antes vs después del primer toque); 4.1 vs 4.2/4.3 (exceso
+        del SDR vs parte común); 4.2 vs 4.3 (antes de Proposal vs en Proposal). Una causa puede tener dos hojas
+        (H-006 en 3.1 y 4.2) porque deja firmas en etapas distintas; la misma caída observada nunca va en dos. ¿Qué
+        falta? El entorno de demanda: se ve como caída común en 4.3 y en el self-serve sin cruce de identidad, y
+        no es palanca del CRO. Orden de revisión: Paso 0 → 1.2 → 1.1 → 1.3 → 2.1 → Rama 3 → Rama 4 → 5.1.'
+      why: Reparte la brecha por construcción, de modo que cada pedazo de caída cae en un solo término. Respeta
+        los motions híbridos sin una tasa mezclada, separa volumen, tasa y valor, y cada hoja trae su evento, su
+        métrica y su palanca. H-007 queda como regla para ubicar la caída, no como causa.
+    alternative_frameworks:
+    - name: Revenue Waterfall centrado en oportunidades (Forrester)
+      when_better: Si Finora ya gestiona oportunidades y grupos de compra, y quiere planear en el mismo marco logo
+        nuevo, renovación, cross-sell y upsell.
+      tradeoff: 'Empieza en la oportunidad: deja fuera la etapa SDR, donde viven H-006 y H-055, y los artefactos
+        a nivel lead (H-052).'
+    - name: Modelo de estados con transiciones y tiempo en estado
+      when_better: Si los recorridos dan vueltas (Working → Nurture → Working, Reactivate, self-serve ↔ SDR) y un
+        funnel lineal clasifica mal.
+      tradeoff: 'Pide el historial completo con fechas, que el CRM puede no guardar más de 18–24 meses, y es difícil
+        de mostrar en una lámina. Por sí solo no reparte la brecha: necesita el árbol encima.'
+    metric_definitions:
+    - metric: Altas (primer pago observado)
+      funnel: Común
+      family: volumen
+      definition: 'Clientes que pagan por primera vez en el mes: primera aparición en pagos, no necesariamente adquisición.'
+      formula: COUNT(customer_id) con new_customer = 1 en el mes (mart.monthly_metrics.new_customers)
+      grain: cliente; mes calendario
+      milestone: primer pago observado
+      today: Con cuidado — primera aparición ≠ adquisición; feb-22 con spillover y ene-22 no identificable
+      notes: Es la «venta» visible hoy. No incluye Won sin pago ni sirve para medir conversión de leads.
+    - metric: Monto del primer pago por alta (mediana y p75)
+      funnel: Común
+      family: valor
+      definition: Monto pagado observado en el mes de alta (M0), no MRR contratado.
+      formula: median(m0_cop) y quantile_cont(m0_cop, 0.75) por cohorte (mart.new_customers)
+      grain: alta; cohorte mensual
+      milestone: primer pago observado
+      today: Con cuidado — monto pagado observado; medianas por industria con n chico
+      notes: Separa «más ventas» en logos de «más ventas» en valor. Cortarlo por industria muestra mezcla vs tasa.
+    - metric: Altas sin pago en M1 (arranque)
+      funnel: Común (después de la venta)
+      family: calidad
+      definition: Altas que pagan en M0 y no pagan en M1.
+      formula: COUNT(altas con m1_cop = 0) / COUNT(altas con M1 observable)
+      grain: alta; cohorte mensual
+      milestone: primer pago observado
+      today: Con cuidado — un pago de varios meses por adelantado también deja M1 en cero
+      notes: Cubre solo la parte de arranque de H-057.
+    - metric: Conversión de cohorte a venta
+      funnel: Común (se calcula por motion, nunca mezclada)
+      family: conversión
+      definition: Entradas válidas de una cohorte que llegan a venta dentro de W días.
+      formula: ventas_m(c, ≤W) / entradas válidas_m(c), para cada motion m y cohorte c; brecha = conv(P1) − conv(P0)
+      grain: entrada (lead válido, SQL directo o registro); cohorte de creación
+      milestone: creación de la entrada
+      today: No se puede — el modelo no tiene entradas
+      notes: Es la métrica que el árbol reparte. W sale del ciclo.
+    - metric: Ciclo creación → venta (p50 y p90)
+      funnel: Común (por motion)
+      family: velocidad
+      definition: Días entre la creación de la entrada y la venta, para quienes compran.
+      formula: percentil 50 y 90 de (fecha_venta − fecha_creación) por motion y cohorte
+      grain: venta
+      milestone: creación de la entrada
+      today: No se puede — no hay fecha de creación
+      notes: 'Fija W: si W es menor que el p90, las cohortes recientes parecen peores (hoja 1.2).'
+    - metric: Leads New brutos
+      funnel: Sales-assisted
+      family: volumen
+      definition: Registros que entran en New en el periodo, tal como los cuenta el CRM.
+      formula: COUNT(lead_id) con created_at en el periodo
+      grain: lead; cohorte semanal o mensual
+      milestone: creación del lead
+      today: No se puede — no hay leads en el modelo
+      notes: Es el «más leads» del CRO. No es denominador de ninguna tasa.
+    - metric: Proporción de no-prospectos en New
+      funnel: Sales-assisted
+      family: calidad
+      definition: Duplicados, clientes actuales, ex-clientes (van a Reactivate) y spam dentro de New.
+      formula: (duplicados + clientes actuales + ex-clientes + spam) / Leads New brutos
+      grain: lead; cohorte
+      milestone: creación del lead
+      today: No se puede — el cruce con customer_id será posible cuando llegue el export
+      notes: Test de la hoja 1.1 (H-052).
+    - metric: Leads válidos
+      funnel: Sales-assisted
+      family: volumen
+      definition: Leads New brutos sin los no-prospectos.
+      formula: Leads New brutos − (duplicados + clientes actuales + ex-clientes + spam)
+      grain: lead; cohorte
+      milestone: creación del lead
+      today: No se puede
+      notes: Denominador de las tasas del Sales-assisted.
+    - metric: Mezcla por banda de entrada
+      funnel: Sales-assisted (el mismo corte se aplica como dimensión al SQL directo)
+      family: calidad
+      definition: 'Peso de cada banda definida con datos fijados al crear el lead: fuente × segmento × banda de
+        fit/intención.'
+      formula: leads válidos de la banda b / leads válidos; término de mezcla = Σ_b (s_b,P1 − s_b,P0) × tasa_b,P0
+      grain: banda; cohorte
+      milestone: creación del lead
+      today: No se puede
+      notes: Test de la hoja 2.1 (H-005). Nunca usar resultados posteriores para definir la banda.
+    - metric: Carga por SDR
+      funnel: Sales-assisted
+      family: volumen
+      definition: Leads válidos asignados por SDR activo.
+      formula: leads válidos asignados en la semana / SDR activos (FTE) en la semana
+      grain: SDR × semana
+      milestone: asignación del lead
+      today: No se puede — sales_capacity_spend es gasto en unidad no documentada, no headcount
+      notes: Discrimina capacidad en 3.1, y en 3.2 si el estancamiento sigue a la carga.
+    - metric: Tiempo a primer toque
+      funnel: Sales-assisted
+      family: velocidad
+      definition: Horas entre la creación del lead válido y el primer intento de contacto.
+      formula: p50 y p90 de (primer_toque_at − created_at)
+      grain: lead; cohorte semanal
+      milestone: creación del lead
+      today: No se puede
+      notes: Firma de la hoja 3.1.
+    - metric: Contacto a tiempo (New → Working SDR)
+      funnel: Sales-assisted
+      family: conversión
+      definition: Leads válidos que pasan a Working SDR dentro del SLA que fije Finora.
+      formula: leads válidos con Working SDR ≤ SLA / leads válidos de la cohorte
+      grain: lead; cohorte
+      milestone: creación del lead
+      today: No se puede
+      notes: Mide la etapa New.
+    - metric: Avance SDR (Working SDR → Engaged → SQL)
+      funnel: Sales-assisted
+      family: conversión
+      definition: Proporción que avanza a la etapa siguiente dentro de W_k días.
+      formula: leads que llegan a k+1 en ≤ W_k / leads que llegaron a k, para k ∈ {Working SDR, Engaged}
+      grain: lead; cohorte de entrada a la etapa
+      milestone: entrada a Working SDR
+      today: No se puede
+      notes: Mide las etapas Working SDR y Engaged.
+    - metric: Estancados en Working SDR / Engaged
+      funnel: Sales-assisted
+      family: estancamiento
+      definition: Leads en Working SDR o Engaged sin actividad ni cambio de estado por más de N días.
+      formula: leads en Working SDR/Engaged sin actividad ni cambio en N días / leads que llegaron a Working SDR,
+        por cohorte
+      grain: lead; cohorte
+      milestone: entrada a Working SDR
+      today: No se puede
+      notes: Firma de la hoja 3.2 (H-055). N se fija con el ciclo.
+    - metric: Compra de estancados retomados
+      funnel: Sales-assisted
+      family: conversión
+      definition: De los estancados que se retoman, cuántos llegan a venta dentro de W.
+      formula: estancados retomados con venta ≤ W / estancados retomados
+      grain: lead retomado; cohorte de retoma
+      milestone: retoma (primera actividad tras N días)
+      today: No se puede
+      notes: Separa seguimiento (3.2) de calidad (2.1).
+    - metric: SQL entregados por origen
+      funnel: SQL directo y handoff del Sales-assisted
+      family: volumen
+      definition: SQL creados en el periodo, marcados como SDR o directo.
+      formula: COUNT(sql_id) por origen y cohorte
+      grain: SQL; cohorte
+      milestone: SQL
+      today: No se puede
+      notes: Entrada del funnel SQL directo y grupo de comparación para la hoja 4.1.
+    - metric: Aceptación del AE por origen (SQL → Demo)
+      funnel: Tramo AE (compartido por Sales-assisted y SQL directo)
+      family: conversión
+      definition: SQL que el AE acepta y lleva a Demo, por origen.
+      formula: SQL que llegan a Demo en ≤ W / SQL entregados, por origen (SDR vs directo)
+      grain: SQL; cohorte
+      milestone: SQL
+      today: No se puede
+      notes: Firma de la hoja 4.1 (H-054) con la resta SDR − directo. Mide la etapa SQL.
+    - metric: Carga por AE
+      funnel: Tramo AE (compartido)
+      family: volumen
+      definition: Oportunidades abiertas por AE activo.
+      formula: oportunidades abiertas / AE activos (FTE), por semana
+      grain: AE × semana
+      milestone: aceptación del SQL
+      today: No se puede
+      notes: Firma de la hoja 4.2 (H-006, lado AE).
+    - metric: Avance AE (Demo → Proposal)
+      funnel: Tramo AE (compartido)
+      family: conversión
+      definition: Oportunidades en Demo que llegan a Proposal dentro de W.
+      formula: oportunidades con Proposal ≤ W / oportunidades en Demo
+      grain: oportunidad; cohorte de Demo
+      milestone: Demo
+      today: No se puede
+      notes: Mide la etapa Demo.
+    - metric: Win rate en Proposal (Proposal → Won)
+      funnel: Tramo AE (compartido)
+      family: conversión
+      definition: Oportunidades en Proposal que terminan en Won.
+      formula: Won / oportunidades que llegaron a Proposal, por cohorte de Proposal
+      grain: oportunidad
+      milestone: Proposal
+      today: No se puede
+      notes: Firma de la hoja 4.3 (H-056). Mide la etapa Proposal.
+    - metric: Motivos de pérdida validados
+      funnel: Tramo AE (compartido)
+      family: calidad
+      definition: Mezcla de motivos de pérdida del CRM (precio/plan, competidor, funcionalidad, no-decisión), contrastada
+        con una muestra de entrevistas a compradores.
+      formula: pérdidas con motivo r / pérdidas; % de coincidencia entre CRM y entrevista
+      grain: oportunidad perdida; trimestre
+      milestone: Lost
+      today: No se puede
+      notes: Sin validación externa no sirve como prueba (W-07).
+    - metric: Won → primer pago a X días
+      funnel: Común (después del cierre en Sales-assisted y SQL directo)
+      family: conversión
+      definition: Won que registran primer pago dentro de X días.
+      formula: Won con primer pago ≤ X días / Won
+      grain: Won; cohorte de Won
+      milestone: Won
+      today: No se puede — no hay Won ni llave a customer_id
+      notes: Firma de la hoja 5.1 (H-057). Mide las etapas Won y Primer pago.
+    - metric: Conversión de registros a primer pago, por toque
+      funnel: Self-serve y Hybrid (misma fórmula cortada por toque comercial)
+      family: conversión
+      definition: 'Registros de producto que pagan dentro de W: sin toque es Self-serve, con toque es Hybrid.'
+      formula: registros con primer pago ≤ W / registros de la cohorte, separado por toque (sí/no)
+      grain: registro; cohorte
+      milestone: registro en el producto
+      today: No se puede
+      notes: El numerador sin toque es el volumen self-serve que usa la hoja 1.3. Mide las etapas Registro, Toque
+        comercial y Primer pago.
+    - metric: Solapamiento New–registro previo
+      funnel: Self-serve ↔ Sales-assisted
+      family: calidad
+      definition: Leads válidos cuya persona o empresa ya tenía registro en el producto antes de crearse el lead.
+      formula: leads válidos con registro previo (email o dominio) / leads válidos
+      grain: lead; cohorte
+      milestone: creación del lead
+      today: No se puede
+      notes: Test de la hoja 1.3 (H-053).
+    - metric: Reactivaciones
+      funnel: Reactivate
+      family: volumen
+      definition: Clientes que vuelven a pagar tras al menos un mes en cero.
+      formula: COUNT(customer_id) con reactivated_customer = 1 en el mes (mart.customer_month)
+      grain: cliente; mes
+      milestone: vuelta a pagar
+      today: Con cuidado — churn observado ≠ cancelación; puede haber pagos de varios meses
+      notes: Se reporta aparte de las altas New. La bolsa de ex-clientes existe hoy como dormant_pool_prev.
+    stage_map:
+    - funnel: Sales-assisted
+      channel: Lead que entra como New y trabaja el SDR
+      stages:
+      - New
+      - Working SDR
+      - Engaged
+      - SQL
+      - Demo
+      - Proposal
+      - Won
+      - Primer pago
+      owner: Marketing (New) · SDR (Working SDR → SQL) · AE (SQL → Won) · Cobro/Onboarding (Won → Primer pago);
+        dueños a confirmar
+      notes: New, Working, Engaged, SQL y Won vienen del lenguaje del caso; Demo y Proposal salen de H-056 y hay
+        que confirmarlos contra las etapas literales del Executive y del CRM. Nurture y Descartado son salidas,
+        no etapas. Primer pago está fuera del CRM y se une por customer_id.
+    - funnel: SQL directo
+      channel: Entrada que se crea directamente como SQL, sin SDR
+      stages:
+      - SQL
+      - Demo
+      - Proposal
+      - Won
+      - Primer pago
+      owner: AE · Cobro/Onboarding
+      notes: Comparte el tramo AE con Sales-assisted y es el grupo de comparación de H-054.
+    - funnel: Self-serve
+      channel: Registro en el producto sin toque comercial
+      stages:
+      - Registro
+      - Primer pago
+      owner: Producto/Growth
+      notes: Si hay toque comercial antes del pago, la venta pasa a Hybrid. Es clave para H-053.
+    - funnel: Hybrid
+      channel: Registro en el producto con toque del SDR o del AE antes del pago
+      stages:
+      - Registro
+      - Toque comercial
+      - Primer pago
+      owner: Producto/Growth + SDR/AE
+      notes: Hitos mínimos propuestos; la definición literal de Hybrid hay que confirmarla con el Executive. Sin
+        esta marca, H-053 no se puede separar.
+    - funnel: Reactivate
+      channel: Ex-cliente que vuelve (como lead o directo en pagos)
+      stages:
+      - Ex-cliente (≥1 mes sin pago)
+      - Reactivación (vuelve a pagar)
+      owner: CS/AE (a confirmar)
+      notes: Hoy se ve en pagos (reactivated_customer). No se mezcla con New ni en leads ni en ventas.
+    required_events:
+    - event: lead_created
+      trigger: Se crea un lead en el CRM (formulario, importación o carga del SDR)
+      properties:
+      - lead_id
+      - created_at
+      - fuente/campaña/formulario
+      - email y dominio
+      - motion de entrada
+      - señales de entrada congeladas (segmento, tamaño, industria, fit/intención)
+      - match con customer_id (cliente actual o ex-cliente)
+      - flag de duplicado y de spam
+    - event: lead_status_changed
+      trigger: Cambia el estado del lead (New, Working SDR, Engaged, SQL, Nurture, Descartado)
+      properties:
+      - lead_id
+      - estado_desde
+      - estado_hasta
+      - changed_at
+      - owner_id (SDR)
+      - motivo de descarte
+    - event: sales_activity_logged
+      trigger: Se registra una llamada, un email o una reunión sobre un lead o una oportunidad
+      properties:
+      - lead_id u opportunity_id
+      - tipo de actividad
+      - timestamp
+      - owner_id
+      - resultado
+    - event: sql_created
+      trigger: El SDR entrega un SQL o se crea un SQL directo
+      properties:
+      - opportunity_id
+      - origen (SDR / directo)
+      - sdr_id
+      - ae_id
+      - criterios de calificación
+      - created_at
+    - event: sql_reviewed
+      trigger: El AE acepta o rechaza el SQL
+      properties:
+      - opportunity_id
+      - decisión
+      - motivo
+      - decided_at
+    - event: opportunity_stage_changed
+      trigger: La oportunidad pasa a Demo, Proposal, Won o Lost
+      properties:
+      - opportunity_id
+      - etapa_desde
+      - etapa_hasta
+      - changed_at
+      - plan y precio ofrecidos
+      - competidor
+      - motivo de pérdida
+    - event: product_signup
+      trigger: Se crea una cuenta en el producto
+      properties:
+      - account_id
+      - email y dominio
+      - signup_at
+      - plan
+      - lead_id si existe
+    - event: subscription_started
+      trigger: Compra o activación de un plan, por self-serve o cerrada por el AE
+      properties:
+      - account_id
+      - customer_id
+      - plan
+      - precio
+      - canal (self-serve / AE)
+      - toque comercial previo (sí/no)
+    - event: payment_attempted
+      trigger: Intento de cobro, exitoso o fallido
+      properties:
+      - customer_id
+      - opportunity_id
+      - attempted_at
+      - monto
+      - medio de pago
+      - resultado
+      - motivo del fallo
+    - event: team_roster_snapshot
+      trigger: Foto semanal del equipo comercial
+      properties:
+      - semana
+      - rep_id
+      - rol (SDR/AE)
+      - activo o en rampa
+      - fecha de ingreso
+    - event: definition_change_logged
+      trigger: Cambia un formulario, una fuente, una definición de etapa, el plan de comisiones, un precio o un
+        plan
+      properties:
+      - tipo de cambio
+      - fecha efectiva
+      - antes/después
+      - responsable
+    required_dimensions:
+    - dimension: Motion o canal de entrada (Sales-assisted, SQL directo, Self-serve, Hybrid, Reactivate)
+      why: Evita una tasa mezclada que no describe a nadie; cada rama se prueba por motion.
+    - dimension: Cohorte de creación (semana o mes) y periodo (P0 base / P1 aumento)
+      why: Compara con la misma madurez; es la prueba de la hoja 1.2.
+    - dimension: Tipo de registro (prospecto nuevo, cliente actual, ex-cliente, duplicado, spam)
+      why: Es la prueba de la hoja 1.1 y separa New de Reactivate.
+    - dimension: Banda de entrada fijada al crear (fuente × segmento × fit/intención; industria)
+      why: Separa mezcla y tasa (2.1). La industria ya existe en el modelo para el lado de pagos.
+    - dimension: Origen del SQL (SDR / directo)
+      why: Separa la hoja 4.1 de la parte común (4.2 y 4.3).
+    - dimension: Dueño y carga de la semana (SDR, AE)
+      why: Firma de capacidad en 3.1, 3.2 y 4.2.
+    - dimension: Versión de la oferta vigente (precio/plan) y competidor
+      why: Prueba de la hoja 4.3.
+    - dimension: Toque comercial previo a la venta (sí/no)
+      why: Separa Self-serve de Hybrid; es la prueba de la hoja 1.3.
+    - dimension: Unidad de venta (Won / primer pago / monto del primer pago)
+      why: 'Paso 0: se reportan las tres por separado hasta que el CRO elija una.'
+    decision_enabled: 'Qué palanca mueve primero el CRO: definición, deduplicación y ruteo de leads; scoring y mezcla
+      de fuentes con el CMO; capacidad y SLA del SDR; cadencias de seguimiento; criterio de SQL y comisiones; pricing
+      y respuesta a la competencia con el CFO y el CPO; o handoff a cobro. También si conviene seguir comprando
+      volumen de leads o invertir en conversión.'
+    limitations:
+    - 'El modelo no tiene leads, estados, oportunidades ni registros de producto: hoy no se puede validar ni descartar
+      ninguna hoja de las Ramas 1 a 4.'
+    - Del lado de ventas solo hay primer pago observado (primera aparición, no adquisición) y monto pagado observado
+      (no MRR contratado).
+    - 'El gasto S&M no tiene unidad documentada: no sirve como proxy de headcount ni para calcular costo por lead.'
+    - El shift-share deja un término cruzado; la regla para asignarlo (por ejemplo, pesos promedio de ambos periodos)
+      hay que fijarla antes de ver los datos.
+    - La calidad no observada al entrar cae en las ramas de tasa; los discriminantes (carga, retomados, origen del
+      SQL) reducen ese riesgo pero no lo eliminan.
+    - La resta entre el SQL del SDR y el SQL directo (4.1) supone que ambos grupos habrían evolucionado igual sin
+      el cambio.
+    - 'Todo es observacional: ubica la brecha, no prueba causa. Para causalidad hacen falta experimentos (holdout
+      de ruteo, cambio de comisiones escalonado).'
+    - 'Los volúmenes son chicos (465 altas en mar–oct 2024, unas 58 por mes): los cortes por banda × motion × etapa
+      pueden quedar sin potencia, así que conviene agrupar por trimestre.'
+    - Los benchmarks externos (HBR 2011, Clozd, TTEC) son contexto y no describen a Finora.
+    - Si el CRM no guarda el historial de estados del periodo base (por ejemplo, el límite de 18–24 meses de Salesforce
+      estándar), P0 no se puede reconstruir.
+    implementation_implications:
+    - 'Pedido mínimo a Finora: export de leads con historial de estados y fechas; oportunidades con origen del SQL,
+      decisión del AE y motivo de pérdida; registros de producto; equipo SDR/AE por semana; y bitácora de cambios.
+      Todo con llave a customer_id.'
+    - 'Data Engineering: stg_leads, stg_lead_status_history, stg_opportunities, stg_product_signups, stg_team_roster
+      y un mart de cohortes (entrada × etapa × fecha) que se una a mart.new_customers por customer_id.'
+    - Congelar las señales de entrada en la fecha de creación (snapshot), sin leerlas del registro actual.
+    - 'Acordar con el CRO antes de calcular: unidad de venta, W, N (días para considerar estancado un lead), SLA
+      de primer toque y regla del término cruzado.'
+    - Reportar siempre por motion y nunca una conversión mezclada; volumen, tasa y valor en columnas separadas.
+    - 'Para causalidad en H-053 y H-054: holdout de ruteo de registros de producto y cambio de comisiones escalonado
+      por equipo.'
+    - 'Orden de Analytics: primero las hojas 1.2 y 1.1 (baratas y cambian la lectura), luego mezcla vs tasa, y después
+      las etapas.'
+sql_runs:
+- catalogo_modelo()
+- SELECT month, window_flag, new_customers, new_mrr_cop, median_new_customer_mrr_cop, demand_gen_spend, sales_capacity_spend,
+  enablement_spend, total_sm_spend, paid_media, team, payroll_expenses FROM mart.monthly_metrics_phase1 ORDER BY
+  month
+- SELECT substr(month,1,4) AS yr, COUNT(*) AS meses, SUM(new_customers) AS altas, ROUND(SUM(new_mrr_cop)) AS new_mrr_cop,
+  ROUND(SUM(new_mrr_cop)/SUM(new_customers)) AS new_mrr_por_alta, SUM(reactivated_customers) AS reactivaciones,
+  ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity, ROUND(SUM(total_sm_spend),3)
+  AS total_sm, ROUND(SUM(total_sm_spend)/SUM(new_customers),4) AS sm_por_alta FROM mart.monthly_metrics_phase1 WHERE
+  substr(month,6,2) BETWEEN '03' AND '10' GROUP BY substr(month,1,4) ORDER BY yr
+- SELECT * FROM mart.new_customers ORDER BY cohort_month DESC LIMIT 5
+- SELECT year, COUNT(*) AS altas, median(m0_cop) AS mediana_m0, quantile_cont(m0_cop, 0.75) AS p75_m0, SUM(CASE
+  WHEN early_months_observed >= 2 THEN 1 ELSE 0 END) AS altas_con_m1_observable, SUM(CASE WHEN early_months_observed
+  >= 2 AND COALESCE(m1_cop,0) = 0 THEN 1 ELSE 0 END) AS altas_sin_pago_m1, ROUND(100.0 * SUM(CASE WHEN early_months_observed
+  >= 2 AND COALESCE(m1_cop,0) = 0 THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN early_months_observed >= 2 THEN 1 ELSE
+  0 END),0), 1) AS pct_sin_pago_m1 FROM mart.new_customers WHERE clean AND substr(cohort_month,6,2) BETWEEN '03'
+  AND '10' GROUP BY year ORDER BY year
+- SELECT substr(month,1,4) AS yr, CASE WHEN substr(month,6,2) IN ('01','02','03') THEN 'T1' WHEN substr(month,6,2)
+  IN ('04','05','06') THEN 'T2' WHEN substr(month,6,2) IN ('07','08','09') THEN 'T3' ELSE 'T4' END AS trimestre,
+  COUNT(*) AS meses, SUM(new_customers) AS altas, ROUND(SUM(new_mrr_cop)) AS new_mrr_cop, SUM(reactivated_customers)
+  AS reactivaciones, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity
+  FROM mart.monthly_metrics_phase1 WHERE month >= '2023-01' GROUP BY 1,2 ORDER BY 1,2
+- SELECT industry, year, COUNT(*) AS altas, median(m0_cop) AS mediana_m0, ROUND(100.0 * COUNT(*) / SUM(COUNT(*))
+  OVER (PARTITION BY year), 1) AS pct_altas_del_anio FROM mart.new_customers WHERE clean AND substr(cohort_month,6,2)
+  BETWEEN '03' AND '10' GROUP BY industry, year ORDER BY industry, year
+completed_at: '2026-09-29T18:42:02-06:00'
+findings:
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+run_ids:
+- RUN-20260929-182405-measurement-9f35
+usage:
+  RUN-20260929-182405-measurement-9f35:
+    cost_usd: 3.3681204
+    turns: 30
+    ms: 1068734
+    input_tokens: 24
+    output_tokens: 116820
+    cache_read: 531582
+    cache_write: 79251
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: measurement-strategy
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: cro-advisor
+  mode: dynamic
+  why: 1 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+  kind: vendor
+  digest: cd712605d907
+validation:
+  unverified_sources: []
+  bare_claims: []
+  seen_urls: 93
+  ok: true
+cos_assessment:
+  summary: 'R-032 no trae evidencia nueva sobre causas: trae la estructura. Ordena «más leads, pero no más ventas»
+    por el cociente ventas/leads. Primero va el Paso 0 (qué es venta y qué ventana se compara) y luego cinco ramas:
+    lo nuevo no es demanda comprable → peor mezcla → antes del SQL → después del SQL → cobro. Las cuatro causas
+    del CRO quedan casi una a una como ramas 1–4. Eso ordena C-011 y C-023, pero toca dos decisiones activas: D-001
+    (tres ramas) y D-003 (las causas se contrastan, no se suman). Mi lectura: el árbol suma lugares, no causas.
+    Así D-003 se sostiene y las hipótesis que tocan dos ramas (H-006, H-054, H-028) no quedan forzadas a una sola.
+    Con pagos, lo único nuevo es que la brecha depende de la ventana. En mar–oct las altas (primeros pagadores observados)
+    suben de 433 a 465; en T2 suben fuerte (144 → 219) y en T3 bajan (187 → 153). Eso abre una lectura de compra
+    adelantada que sí se puede revisar hoy. Ojo con las cifras: la mediana del primer pago 2023 de R-032 (35.280
+    COP, mar–oct) no es la de T-018 (36,8 mil). Es otra ventana, no un error, pero la story no debe mezclarlas.'
+  run_id: RUN-20260929-190141-cos-d151
+  at: '2026-09-29T19:17:28-06:00'
+  impacts:
+  - target: framing
+    effect: changes_framing
+    why: 'R-032 cambia la forma del árbol del CRO y toca dos decisiones activas. D-001 (tres ramas: cantidad, mezcla,
+      compra según tiempo): la calidad (H-005, HC3q) pasa de «la diferencia persiste» a «mezcla», el tiempo pasa
+      sobre todo al Paso 0 y H-007 deja de ser causa. D-003: R-032 dice que «cada pedazo de brecha cae en un solo
+      término», y D-003 pidió no sumar calidad, atención, post-SQL y oferta. Eso vale para los lugares del funnel,
+      no para las causas. H-006 toca al SDR (rama 3) y al AE (rama 4), H-054 nace antes del SQL y se ve después,
+      y H-028 cruza mezcla y tasa. Además, el reparto entre mezcla y tasa depende de cuál se calcule primero. Al
+      Paso 0 le faltan dos cosas. La primera es la unidad del lead (cuenta y episodio, con la caducidad de Q-064):
+      sin eso, un estancado que vuelve como New (H-069) cuenta en las ramas 1 y 3. La segunda es una ventana elegida
+      con la curva de tiempo a compra (Q-006/H-004): sin eso, «compran más tarde» se cuela en las ramas 3–5. El
+      «qué es venta» es el hito que el framing dejó por acordar (X-052).'
+  - target: C-011
+    effect: changes_story
+    why: 'C-011 dice «descartar primero artefactos de medición y después contrastar causas ToFu, MoFu y BoFu». Con
+      R-032 cambian tres cosas. La mezcla deja de ser artefacto: no es un error de medición, es un cambio real en
+      lo que entra, y pasa a la rama 2. Entran un Paso 0 (qué es venta y qué ventana) y una rama 5 (cobro). Y el
+      orden sale del cociente, no de ToFu/MoFu/BoFu. F-127 («se descartan los artefactos, 4 de 8») queda doblemente
+      en duda: X-017 ya sacó a HC3b y ahora sale también la mezcla. Las cifras de F-229 (mar–oct 433 → 465; T2 144
+      → 219; T3 187 → 153) no están en ninguna tabla con esos cortes; lo más cercano son T-016 y T-093. Un matiz
+      para la lámina: lo que en la rama 1 solo infla leads (no-prospectos, duplicados, cambios de definición, misma
+      demanda por otra puerta) no baja pagadores, así que no explica la caída de T3-24. El desfase sí podría, pero
+      eso es tiempo y va al Paso 0. Esta evaluación le da contenido a X-140, que hoy es solo de linaje.'
+  - target: H-007
+    effect: changes_framing
+    why: R-032 dice que H-007 no es una causa sino la regla que ubica la caída. Encaja con su redacción («el deterioro
+      aparece después de un punto del recorrido»). Pero H-007 es la «conversión post-SQL» que el caso trae como
+      una de sus cuatro causas y que D-003 nombra. Si sigue como causa, compite con H-054, el avance del AE y H-056
+      por la misma brecha.
+  - target: H-005
+    effect: changes_framing
+    why: 'R-032 pone H-005 en la rama 2, «entra peor mezcla», medida solo con señales congeladas al crear el lead
+      (lo de congelar ya venía de X-086). Lo nuevo es el lugar: en el framing, H-005 es HC3q, una causa debajo de
+      «la diferencia persiste», no mezcla. Con eso comparte rama con H-002. Y la calidad que las señales no capturan
+      se va a las tasas de las ramas 3–5, donde no se separa de H-006 sin un experimento (X-082).'
+  - target: H-006
+    effect: changes_framing
+    why: R-032 deja H-006 solo en la rama 3, con firma de tiempo a primer toque y carga (F-231). Pero H-006 habla
+      de SDRs y AEs, y X-085 ya incluía la carga por AE. La parte AE (demos y propuestas que se demoran con más
+      SQL por AE) cae en la rama 4, en el «avance del AE», que en R-032 no tiene hipótesis. Si se mide solo el primer
+      toque, se puede descartar H-006 aunque el cuello esté en los AEs.
+  - target: H-054
+    effect: changes_framing
+    why: 'R-032 define H-054 como el exceso de caída después del SQL en los SQL que genera el SDR frente a otros
+      orígenes. Lo común a todos va al avance del AE y a H-056. X-118 ya pedía SQL→Won por origen. Lo nuevo es la
+      regla del exceso y lo que exige: si casi todos los SQL vienen del SDR, no hay contra qué comparar y H-054
+      no se separa de la parte común. También deja claro que el árbol ubica dónde se ve la caída, no dónde nace
+      (H-054 nace antes del traspaso).'
+  - target: C-023
+    effect: changes_story
+    why: 'C-023 propone la matriz: qué valida cada causa, qué la descarta y qué palanca mueve. R-032 le da las filas
+      (las hojas del árbol) y parte de las columnas. «Qué la valida» son las firmas de F-231: primer toque y carga;
+      bolsa de estancados y compra de los retomados; aceptación del AE por origen del SQL. Aplica la condición de
+      F-232: datos que no dependan de lo que Sales opine después. R-032 no trae nada para la columna de palanca,
+      y F-230 obliga a decir que hoy no se valida ninguna hoja. Esta evaluación le da contenido a X-141, que hoy
+      es solo de linaje.'
+  - target: H-066
+    effect: opens_new_hypothesis
+    why: 'R-032 trae una cifra que no estaba: en T2 (abr–jun) las altas pasan de 144 a 219, justo antes de que T3
+      caiga de 187 a 153. Sumando los dos trimestres, suben de 331 a 372 (+12%, cálculo mío). H-066 lee jul-24 como
+      un escalón después del pico de jun-24. Otra lectura posible es compra adelantada a T2, por una campaña o por
+      un cambio de precio o plan (el chequeo que pide X-113). Oct-24 sigue abajo (50 vs 64, X-107), así que el adelanto
+      no alcanza para toda la caída, pero puede explicar una parte.'
+  - target: C-012
+    effect: supports
+    why: 'C-012 dice que capacidad y calidad se separan comparando mezcla contra tasa por grupo de entrada. F-228
+      pone justo ese corte en el árbol y F-231 le da a H-006 su firma. Se pueden sumar como evidencia de estructura,
+      con el mismo cuidado de X-082: la calidad que no captan las señales queda dentro de la tasa.'
+  - target: H-052
+    effect: no_material_impact
+    why: 'R-032 la deja donde ya estaba: primera en la rama 1, como dice su etiqueta («Paso 1 · artefacto»). Sigue
+      sin poder probarse sin leads por mes y fuente, ni marcas de duplicado, cliente actual o spam (X-116). No hay
+      nada nuevo que decidir.'
+  - target: H-053
+    effect: no_material_impact
+    why: 'R-032 la pone en la rama 1: misma demanda por otra puerta. Precisión útil: así definida, H-053 explica
+      que los leads suban sin que suban las ventas, pero no baja el total de pagadores. Si en el cambio de puerta
+      se pierden compradores, esa pérdida se ve en la rama 3, cerca de H-072, no en la hoja de H-053. Con la opción
+      A del framing, H-053 toca las ramas 1 y 3 sin otra decisión. Su prueba sigue siendo el cruce de identidad
+      con registros de producto (F-232), que no está en el modelo (X-117).'
+  - target: H-055
+    effect: no_material_impact
+    why: 'Queda en la rama 3 y gana una firma útil: además de la bolsa de estancados, la compra de los retomados
+      (F-231), que dice si vale la pena retomarlos. Lo que falta es lo mismo de X-119: estancados por cohorte con
+      fechas de etapa (Q-065). El riesgo de contarla dos veces con H-069 va en la alerta de framing (unidad y caducidad
+      del episodio, Q-064).'
+  - target: H-056
+    effect: no_material_impact
+    why: 'Queda en la rama 4, en la parte común con el avance del AE. Su prueba pide motivos validados con compradores,
+      no los que anota Sales (F-232); eso ya estaba en X-026 y X-113. Nota para la matriz: H-056 y H-008 dicen casi
+      lo mismo. Y como H-056 habla de «los tipos de cliente que están entrando», una parte puede caer en la mezcla
+      (rama 2).'
+  - target: H-057
+    effect: no_material_impact
+    why: 'R-032 repite con cifras lo que X-120 ya levantó con F-206: pocas altas pagan M0 y no M1 (7,5% → 2,8% →
+      3,1%). El arranque no explica una brecha que crece, y lo de Won que nunca llega al primer pago sigue sin verse.
+      Un cuidado: si el panel va por fecha de cobro (H-061), «paga M0 y no M1» puede incluir primeros pagos que
+      cubren más de un mes (H-033), sobre todo en 2022 (X-093). El 7,5% no dice por sí solo que el arranque de 2022
+      fuera peor.'

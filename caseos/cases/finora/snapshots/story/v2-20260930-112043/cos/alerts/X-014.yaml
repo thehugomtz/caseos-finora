@@ -1,0 +1,41 @@
+id: X-014
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-014
+target: framing
+title: R-014 cambia el framing
+finding_text: 'No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE
+  ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo
+  son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al…'
+why: 'R-014 cierra dos atajos que hoy no están en ''No afirmar todavía''. Uno: leer el gasto de Team/Payroll como
+  capacidad de SDR/AE. Dos: leer lo que sabemos de los compradores (primer pago menor, menor aporte posterior) como
+  peor calidad de leads o falta de capacidad (F-124). Los dos son tentadores en una lámina de Inversión en Marketing
+  o en el bloque CRO. Framing sigue en needs_review, así que esto entraría en esa revisión.'
+options:
+- key: A
+  label: Añadir los dos a 'No afirmar todavía'
+  consequence: El borrador de storytelling y las láminas quedan protegidos de ambos atajos desde ya. Es reversible.
+- key: B
+  label: Añadir solo el de Team/Payroll
+  consequence: El de los compradores se decide al revisar F-124. El framing queda más corto, pero depende de esa
+    revisión.
+- key: C
+  label: No tocar el framing
+  consequence: Queda como limitación en cada lámina donde aplique, y es más fácil de olvidar.
+recommended: A
+recommended_why: Es barato y evita que el borrador de storytelling de D-016 use cualquiera de los dos atajos.
+detected_by: cos
+links:
+- R-014
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104559-cos-afa0
+created_at: '2026-09-29T11:22:25-06:00'
+updated_at: '2026-09-29T11:22:25-06:00'
+version: 1

@@ -1,0 +1,52 @@
+id: X-071
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-021
+target: Q-002
+title: R-021 cambia la historia Q-002
+finding_text: 'Se puede, con una condición: el descuento tiene que existir en los datos como objeto propio (tipo,
+  monto, inicio, fin, motivo, Canal y aprobador), separado de la cantidad contratada y del precio de lista. Además,
+  el puente de MRR necesita líneas propias de «descuento nuevo/aumentado» y «descuento r…'
+why: 'R-021 dice que Q-002 se contesta de aquí en adelante con tres capas (MRR de lista, descuento y MRR neto) más
+  el monto pagado observado; el histórico no. Además pone una condición que pesa más que el descuento: si Finora
+  no tiene plan, cantidad y precio de lista en algún sistema, ni siquiera sin descuentos se puede separar lo que
+  el cliente contrata de la tarifa (H-013 vs H-014). Las tres capas separan el descuento de la lista, pero la lista
+  sigue mezclando cantidad y tarifa. El CFO también tiene que definir qué capa llama MRR (F-151) y, según el tipo
+  de contrato, si mira MRR neto, revenue reconocido o caja (F-153). Para el pasado, la respuesta a Q-002 no puede
+  ser «tanto por contrato, tanto por tarifa, tanto por descuento».'
+options:
+- key: A
+  label: Responder Q-002 en dos tiempos
+  consequence: 'Pasado: el puente del monto pagado observado (R-004, T-003) y dónde se concentra el cambio (R-009,
+    R-017), diciendo qué no se puede separar; todo esto depende de que aceptes sus findings. Adelante: Propuesta
+    de Modelo de datos (R-011 y R-021 juntas) con sus condiciones escritas: plan, cantidad y precio de lista; el
+    descuento como objeto propio; y la definición de MRR del CFO. El reparto contrato/tarifa/descuento se presenta
+    como lo que el modelo permitirá medir, no como un resultado.'
+- key: B
+  label: Esperar a que Finora diga si tiene plan, cantidad y precio de lista
+  consequence: Si los tiene con historial, podría recuperarse una parte del pasado (cantidad vs tarifa). Mientras
+    tanto el bloque CFO queda frenado, y puede que dentro del caso no haya a quién preguntarle.
+- key: C
+  label: Achicar Q-002 a lo que los datos permiten
+  consequence: Q-002 pasa a ser «¿qué movió el monto pagado observado?» y el reparto contrato/tarifa/descuento se
+    va a una pregunta de diseño aparte. Queda limpia, pero se aleja de cómo la planteó el CFO.
+recommended: A
+recommended_why: 'Contesta la pregunta tal como la hizo el CFO, no finge la descomposición y convierte cada hueco
+  en un requisito concreto. Es justo lo que pide la pregunta ejecutiva del framing: qué podemos defender, qué huecos
+  hay y qué modelos se proponen. Lo de B entra a la entrega como pregunta abierta para Finora, sin frenar el bloque.'
+detected_by: cos
+links:
+- R-021
+- Q-002
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-111551-cos-c920
+created_at: '2026-09-29T11:56:40-06:00'
+updated_at: '2026-09-29T11:56:40-06:00'
+version: 1

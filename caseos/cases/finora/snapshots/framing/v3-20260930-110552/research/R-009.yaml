@@ -1,0 +1,339 @@
+id: R-009
+type: research
+research_question: ¿Por qué disminuyó el MRR por cliente?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: Q2
+short_answer: La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a
+  la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran
+  65% de los clientes activos con un MRR por cliente por debajo del de la base previa (COP 97,4 mil), que se ubica
+  por encima de su nivel de ene-22
+headline: La caída se concentra en quién entra, no en la base previa
+findings:
+- F-055
+- F-056
+- F-057
+- F-058
+- F-059
+- F-060
+- F-061
+- F-062
+what_is_established:
+- 'El descenso sostenido del MRR por cliente activo coincide con altas que entran a un ticket menor: el promedio
+  de entrada pasó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024. Esas cosechas recientes ya representan 65% de
+  los activos en oct-24.'
+- El efecto dentro de cada industria explica 97% del cambio del ticket de entrada 2022→2024, y el ticket bajó en
+  6 industrias. El movimiento es transversal, no un reacomodo entre sectores.
+- Con base ene-22, el MRR por cliente de la base previa se ubica por encima de su nivel inicial (+5%) y el efecto
+  dentro de las cosechas aporta COP 2,7 mil. Con base dic-22, ese mismo efecto aporta −COP 5,2 mil, concentrado
+  en la cosecha 2022.
+- La razón de medias entre el monto usual de quienes hacen churn y el de los activos del mes previo es 1,5×, mientras
+  la razón de medianas es 1,0× con un intervalo que contiene la paridad. La brecha de medias coincide con la salida
+  de pocas cuentas grandes.
+- 'No es posible determinar si el menor ticket de entrada se asocia con precios de lista, planes, empaquetamiento
+  o descuentos: el panel no contiene esas tablas.'
+what_remains_unknown:
+- No se puede separar un menor nivel contractual de un menor monto cobrado, porque el panel no contiene precios
+  de lista, planes, empaquetamiento ni descuentos.
+- 'No se puede concluir que el cliente típico que se va pague más que el activo típico: la razón de medianas es
+  1,0× con un intervalo que contiene la paridad.'
+- 'El signo del efecto dentro de las cosechas depende del periodo base: con base dic-22 aporta −COP 5,2 mil, de
+  modo que no se puede fijar una dirección única.'
+case_implication: Si la composición de entrada concentra 108% del cambio, convendría anclar el diagnóstico y las
+  metas en el ticket de entrada antes que en la base previa. Si el ticket de entrada bajó en 6 industrias y el efecto
+  dentro de industria explica 97% del cambio, podría convenir revisar la política de entrada de forma transversal.
+new_questions:
+- ¿El escalón del ticket de entrada a comienzos de 2023 coincide con un cambio en la mezcla de tamaño de cliente,
+  dato que hoy no existe en el panel?
+- ¿Qué parte de la caída del ticket dentro de cada industria corresponde a montos fuera de la grilla de cobro y
+  no a un menor nivel contractual?
+- ¿Las cosechas recientes recuperan MRR por cliente con la madurez, comparando su trayectoria mensual contra la
+  cosecha 2022?
+- ¿La salida de cuentas grandes se concentra en alguna industria o cosecha específica?
+- ¿Puede documentarse la semántica de `amount` para distinguir monto cobrado de MRR contractual?
+changes_current_story: maybe
+purpose_ok: true
+visuals:
+- id: V-01
+  title: El MRR por cliente activo desciende de forma sostenida entre ene-22 y oct-24, desde COP 92,8 mil hasta
+    COP 57,8 mil, con el nivel de dic-23 (COP 62,8 mil) por debajo del de dic-22 (COP 89,5 mil).
+  spec:
+    tipo: linea
+    x:
+    - ene-22
+    - feb-22
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: MRR por cliente activo
+      valores:
+      - 92839.01419098144
+      - 95882.95385120349
+      - 84679.31042826553
+      - 97785.41464929859
+      - 92667.65763157894
+      - 76048.455
+      - 84263.42994880547
+      - 90461.4048275862
+      - 80228.56559618442
+      - 75334.00931192661
+      - 75148.32421524664
+      - 89543.71829268293
+      - 76893.68079126877
+      - 72763.91284403669
+      - 71579.38640151515
+      - 73093.43923357663
+      - 72034.96
+      - 68980.66288097887
+      - 67232.73197080292
+      - 66718.99901077374
+      - 64238.77928571428
+      - 63420.15254192409
+      - 63902.53950124688
+      - 62786.46672038679
+      - 59630.55491036633
+      - 58539.54116099072
+      - 59120.31061363637
+      - 60215.23539727988
+      - 58786.32895676047
+      - 58885.613980392154
+      - 57109.778927203064
+      - 56921.83353932584
+      - 56330.51234042553
+      - 57811.35091179976
+    formato: cop
+  claim: C-013
+- id: V-02
+  title: Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil, y la descomposición
+    por cosecha asigna a la composición de entrada 108% del cambio y al efecto dentro de las cosechas −8%.
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: ene-22
+      valor: 92839.01419098144
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -37705.98731473553
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: 2678.324035553832
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179977
+      tipo: total
+  claim: C-001
+- id: V-03
+  title: En oct-24 las cosechas 2023 y 2024 concentran 65% de los clientes activos, con un MRR por cliente de COP
+    46,3 mil y COP 43,0 mil, por debajo del de la base previa (COP 97,4 mil).
+  spec:
+    tipo: puntos
+    filas:
+    - Base previa (activos en ene-22)
+    - Altas de feb-22 (marcadas)
+    - Cosecha 2022 (mar–dic)
+    - Cosecha 2023
+    - Cosecha 2024
+    formato: cop
+    series:
+    - nombre: ene-22
+      valores:
+      - 92839.01419098144
+      - null
+      - null
+      - null
+      - null
+    - nombre: oct-24
+      valores:
+      - 97387.82768456376
+      - 69859.96888888889
+      - 65436.706829268296
+      - 46297.025157894735
+      - 42983.56385496183
+  claim: C-003
+- id: V-04
+  title: 'El monto usual de quienes hacen churn supera al de los activos del mes previo: la razón de medias del
+    periodo completo es 1,5×, con intervalo bootstrap entre 1,3× y 1,8×, y se mantiene por encima de la paridad
+    en 2022, 2023 y 2024.'
+  spec:
+    tipo: puntos
+    filas:
+    - 2022 · medias
+    - 2022 · medianas
+    - 2023 · medias
+    - 2023 · medianas
+    - 2024 · medias
+    - 2024 · medianas
+    - total · medias
+    - total · medianas
+    formato: num2
+    referencia: 1.0
+    series:
+    - nombre: IC 90% inferior
+      valores:
+      - 1.2634790795200008
+      - 0.87876
+      - 1.178530933374979
+      - 0.7761115001327191
+      - 1.095458963426737
+      - 0.9654208351271151
+      - 1.3104627355800427
+      - 0.966042846185038
+    - nombre: Razón
+      valores:
+      - 1.696338280232295
+      - 1.0
+      - 1.5770772720964885
+      - 0.9695267189897904
+      - 1.373072530255609
+      - 1.1112046013740944
+      - 1.5490242541706507
+      - 1.0409724208594457
+    - nombre: IC 90% superior
+      valores:
+      - 2.224080525675505
+      - 1.124964583333333
+      - 2.034690726227998
+      - 1.1631226077499652
+      - 1.7079014682480618
+      - 1.2624007474082342
+      - 1.7983999176874217
+      - 1.153745014943061
+  claim: C-011
+- id: V-05
+  title: El ticket de entrada promedio de las altas bajó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024, y la mediana
+    pasó de COP 63,0 mil a COP 42,0 mil.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: Ticket de entrada (M0)
+      valores:
+      - 128694.73080882353
+      - 50841.90861010831
+    - nombre: mediana
+      valores:
+      - 63000.0
+      - 42000.0
+  claim: C-002
+- id: V-06
+  title: 'No es posible determinar si el menor ticket de entrada se asocia con cambios de precios de lista, planes,
+    empaquetamiento o descuentos: el panel no contiene esas tablas.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-005
+- id: V-08
+  title: Con base dic-22, el efecto dentro de las cosechas aporta −COP 5,2 mil del cambio del MRR por cliente activo
+    (16% del total), concentrado en la cosecha 2022 (−COP 3,7 mil) y en las altas de feb-22 (−COP 1,6 mil).
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: dic-22
+      valor: 89543.71829268293
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -26550.904842566866
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: -5181.462538316295
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179977
+      tipo: total
+  claim: C-007
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260927-141235-68ab
+  path: investigations/golden/Q2.json
+sources:
+- id: SRC-1
+  title: Investigación dorada del workspace INV-20260927-141235-68ab
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/golden/Q2.json
+links:
+- Q-002
+- F-055
+- F-056
+- F-057
+- F-058
+- F-059
+- F-060
+- F-061
+- F-062
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/golden/Q2.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260927-141235-68ab
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

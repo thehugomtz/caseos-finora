@@ -1,0 +1,89 @@
+table_id: FIN-F-107
+caseos_id: T-013
+title: En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación
+  de…
+columns:
+- ventana
+- meses
+- altas_por_mes
+- demanda_por_mes
+- capacidad_por_mes
+- habilitacion_por_mes
+- sm_total_por_mes
+- sm_por_alta
+- demanda_por_alta
+- part_team_en_sm
+rows:
+- - 1. 2022 mar-dic
+  - 10
+  - 27.2
+  - 1.69
+  - 0.84
+  - 0.335
+  - 2.87
+  - 0.1054
+  - 0.0622
+  - 0.12
+- - 2. 2023 ene-may
+  - 5
+  - 45.2
+  - 1.73
+  - 1.02
+  - 0.265
+  - 3.01
+  - 0.0666
+  - 0.0382
+  - 0.12
+- - 3. 2023 jun-dic
+  - 7
+  - 60.6
+  - 0.82
+  - 0.55
+  - 0.069
+  - 1.44
+  - 0.0237
+  - 0.0136
+  - 0.303
+- - 4. 2024 ene-oct
+  - 10
+  - 55.4
+  - 1.2
+  - 0.69
+  - 0.085
+  - 1.98
+  - 0.0357
+  - 0.0217
+  - 0.227
+units:
+  ventana: texto
+  meses: int
+  altas_por_mes: num2
+  demanda_por_mes: num2
+  capacidad_por_mes: num2
+  habilitacion_por_mes: num2
+  sm_total_por_mes: num2
+  sm_por_alta: num2
+  demanda_por_alta: num2
+  part_team_en_sm: num2
+definitions: {}
+message: En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación
+  de demanda por mes baja de 1,73 u a 0,82 u y el S&M total por mes de 3,01 u a 1,44 u.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  - E-008
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: table
+analysis_reference: INV-20260929-103202-2167 · C-007
+period: {}
+grain: según evidencia

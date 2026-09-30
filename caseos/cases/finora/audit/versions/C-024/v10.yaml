@@ -1,0 +1,137 @@
+id: C-024
+type: claim
+key: observable-semaforo
+question: Con solo cliente, mes y monto pagado, ¿qué podemos afirmar del ingreso y qué no?
+headline: Con cliente, mes y monto se ve qué cambió, no por qué
+answer: 'Con el monto pagado se puede operar hoy el MRR pagado observado y su puente, pero el puente mezcla orígenes.
+  En la expansión, 29% del MRR se revierte al mes siguiente, y 25,3% del movimiento bruto sin altas (que suma COP
+  282,8 millones entre mar-22 y sep-24) vuelve exacto al nivel previo. En el churn, 44% de los 751 churns observados
+  vuelve a pagar al mes siguiente; en la reactivación, la parte cuyo monto cubre los meses del hueco más el corriente
+  explica 42,6% del MRR, frente a 11,5% que regresa al monto usual, y el resto, 45,9%, no encaja en esas firmas.
+  La contracción, en cambio, no muestra firma de cobro: 88,9% de su MRR sigue igual o más abajo al mes siguiente
+  y 4,0% regresa al nivel previo. Sin estado de suscripción ni periodo de servicio no se sabe por qué cambió: antes
+  de llamar churn o MRR a esos movimientos hace falta una regla de normalización y una ventana de gracia.'
+role_in_story: evidence
+evidence_ids:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-135
+- F-136
+- F-186
+- F-213
+table_ids:
+- T-074
+- T-076
+- T-082
+- T-086
+- T-087
+research_ids:
+- R-027
+- R-028
+- R-018
+- R-029
+framework_ids: []
+confidence: high
+limitations:
+- 'Es monto pagado observado: sin estado de suscripción, periodo de servicio ni fecha de factura, el puente normalizado
+  exacto no es medible, solo se acota (F-186).'
+- Las firmas de cobro son lecturas de patrón, no confirmación de atraso o prepago (F-136).
+- 'La prueba de la contracción solo mira el mes siguiente: no descarta cobros de primer pago o de reactivación que
+  caen en la contracción (X-100).'
+- El 44% dice que vuelve a pagar, no con qué monto (X-102, X-145).
+- La vuelta de pagadores es un loop de Revenue, no el Reactivate del CRO (F-213).
+visual_intent: 'Separate: lo que el monto pagado muestra (qué cambió) frente a lo que no puede decir (por qué);
+  dentro del puente, expansión y reactivación se revierten y la contracción se sostiene.'
+hugo_wording: 'Qué data observable podemos sacar (S3.1): lo que vemos y lo que no vemos con cliente, mes y monto.'
+links:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-135
+- F-136
+- F-186
+- F-213
+- T-074
+- T-076
+- T-082
+- T-086
+- T-087
+- R-027
+- R-028
+- R-018
+- R-029
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 10
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  accepted:
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  pending: []
+  tables:
+  - T-074
+  - T-076
+  - T-082
+  - T-086
+  - T-087
+  - T-074
+  - T-076
+  - T-082
+  - T-086
+  - T-087
+  unsupported_numbers: []
+  stale: []

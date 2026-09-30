@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S22 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S22"] {
+  .sn { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.15; }
+  .tb { font-family: var(--font-mono); font-size: 19px; line-height: 1.3; color: var(--ink); }
+  .rh { font-size: 20px; line-height: 1.25; color: var(--ink-3); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .bk { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .bk b { color: var(--ink); font-weight: 600; }
+  .in { font-size: 20px; line-height: 1.3; color: var(--ink); }
+  .in code { font-family: var(--font-mono); font-size: 18px; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S22" data-composition="staircase + two_brackets" data-family="economics" data-word-budget="95" data-page="23">
+  <header class="header">
+    <div class="kicker">Revenue · separar suscripción y precio pagado · propuesta</div>
+    <h1 class="headline">La propuesta de modelo de datos separa el valor en una escalera con vigencias</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de modelo de datos (R-034, C-019); esquema sin escala ni cifras; mide hacia adelante (F-168) · F-130, F-132, F-133, F-151, F-152, F-234, F-240</span><span class="page"></span></footer>
+  <aside class="notes">Por suscripción y mes, cada peldaño lleva su fuente y su vigencia: lista (price_list_version, precio por plan y frecuencia) → contratado (subscription_item_version: plan, cantidad y precio acordado, sin descuentos) → descuento recurrente (discount_grant) → MRR neto = contratado − descuento recurrente → facturado (línea de factura, con el descuento aplicado vía discount_application) → cobrado (pago asignado a la factura). Lo contratado solo cambia con un subscription_change_event. El MRR, de lista y neto, se clasifica sobre los primeros peldaños comparando fotos de cierre (subscription_month_snapshot); facturado y cobrado son caja y solo generan un «efecto de cobro», nunca movimientos de MRR. El monto pagado de hoy sigue como capa de «monto pagado observado» y se concilia contra lo cobrado. F-130, F-132 y F-133 tienen la fuente sin verificar. Las reglas del modelo son decisiones por escribir antes de construir (F-241).</aside>
+</main>
+<script>
+P.draw('S22', (s, P) => {
+  // Plan: row headers cols 1–2 · six schematic steps cols 3–12 descending left → right (no scale, no data);
+  // MRR bracket over the first four, cash bracket over the last two; source table under each step.
+  const X0 = 350, STEP = 246, W = 196, BASE = 792;
+  const steps = [
+    { n: 'Lista', t: 'price_list_version', top: 470, fill: 'ink-4' },
+    { n: 'Contratado', t: 'subscription_<wbr>item_<wbr>version', top: 488, fill: 'ink-4' },
+    { n: 'Descuento recurrente', t: 'discount_grant', top: 488, bot: 588, fill: 'ink-5' },
+    { n: 'MRR neto', t: 'contratado − descuento', top: 588, fill: 'accent' },
+    { n: 'Facturado', t: 'invoice', top: 600, fill: 'bg' },
+    { n: 'Cobrado', t: 'payment', top: 624, fill: 'bg' },
+  ];
+  s.label(112, 640, 'Valor por suscripción y mes', { anchor: 'ml', cls: 'rh', w: 200 });
+  s.label(112, 836, 'Tabla fuente, con vigencia', { anchor: 'ml', cls: 'rh', w: 200 });
+  s.line(X0 - 20, BASE, 1808, BASE, { stroke: 'rule', w: 1.5 });
+
+  steps.forEach((st, i) => {
+    const x = X0 + i * STEP, bot = st.bot ?? BASE;
+    if (st.fill === 'none') s.rect(x, st.top, W, bot - st.top, { fill: 'none', stroke: 'ink-3', w: 2, dash: 'dash' });
+    else if (st.fill === 'bg') s.rect(x, st.top, W, bot - st.top, { fill: 'bg', stroke: 'ink-3', w: 2 });
+    else s.rect(x, st.top, W, bot - st.top, { fill: st.fill, id: i === 3 ? 's22-net' : null, focal: i === 3 });
+    s.label(x + 14, st.top + 12, st.n, { cls: 'sn', w: W - 24 });
+    s.label(x, BASE + 22, st.t, { cls: 'tb', w: W + 20 });
+    // step connector: previous level → this level
+    if (i) s.line(x - (STEP - W), steps[i - 1].bot ?? steps[i - 1].top, x, steps[i - 1].bot ?? steps[i - 1].top, { stroke: 'ink-3', w: 1.5 });
+  });
+  // The contract only changes with a subscription change event.
+  s.label(X0 + STEP + 14, 640, 'solo cambia con un <code>subscription_<wbr>change_<wbr>event</code>', { cls: 'in', w: W - 24 });
+
+  // Brackets: what is MRR vs what is cash.
+  const bx = (i) => X0 + i * STEP;
+  s.path(`M${bx(0)},404 v-14 H${bx(3) + W} v14`, { stroke: 'ink', w: 2 });
+  s.label(bx(0), 374, '<b>MRR, de lista y neto</b>: se clasifica comparando fotos de cierre', { anchor: 'bl', cls: 'bk', w: 4 * STEP });
+  s.path(`M${bx(4)},404 v-14 H${bx(5) + W} v14`, { stroke: 'ink-3', w: 2 });
+  s.label(bx(4), 374, '<b>Caja</b>: solo efecto de cobro', { anchor: 'bl', cls: 'bk', w: 2 * STEP });
+
+  s.label(112, 900, 'El monto pagado de hoy sigue como «monto pagado observado» y se concilia contra lo cobrado.', { cls: 'nt', w: 1500 });
+});
+</script>
+</body>
+</html>

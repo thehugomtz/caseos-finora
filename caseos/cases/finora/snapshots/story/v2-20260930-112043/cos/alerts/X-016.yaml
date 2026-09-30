@@ -1,0 +1,63 @@
+id: X-016
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-010
+target: Q-001
+title: R-010 cambia el framing Q-001
+finding_text: 'Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002)
+  y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad
+  (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede v…'
+why: 'F-125: la premisa no es un dato dado.
+
+
+  - **Depende de la ventana.** Con pagos, los primeros pagadores observados de 2024 frente a 2023 suben 7% en mar–oct
+  (433→465) y caen 19% en jul–oct (251→203).
+
+  - **La caída está en los últimos cuatro meses.** Restando, mar–jun pasaría de 182 a 262 (+44%). Es cálculo mío,
+  sin tabla, y solo vale si ambas cifras salen de la misma serie. Si se confirma, dentro de mar–oct la caída estaría
+  solo en jul–oct, los últimos cuatro meses del panel.
+
+  - **Proporción vs nivel.** Q-001 habla de proporción; el caso habla de nivel («no más ventas»). Con pagos solo
+  se puede mirar el nivel. La proporción necesita contar leads, que hoy no están en el modelo.
+
+  - **Hito de venta.** Medir «venta» como primer pago no es necesariamente el hito del CRO (Won, primer pago o suscripción
+  activa siguen por acordar).
+
+
+  R-012, que está corriendo, dirá qué ventana usa el CRO. Las cifras de F-125 todavía no tienen tabla. Además, «altas»
+  está entre las etiquetas que no se deben afirmar: mejor decir «primeros pagadores observados».'
+options:
+- key: A
+  label: 'Paso 0: verificar la premisa'
+  consequence: 'Q-001 se queda en palabras del CRO (versión original) y se suma una versión ejecutiva: «¿En qué
+    ventana, contando qué y con qué hito de venta llegan más leads sin más clientes nuevos? Si se sostiene, ¿qué
+    lo explica?». El bloque CRO empieza con ese paso 0 y se agrega a «No afirmar»: «que ''no más ventas'' vale en
+    cualquier ventana». Pide una tabla para F-125 y comparar jul–sep sin octubre.'
+- key: B
+  label: Mantener Q-001 con un caveat de ventana
+  consequence: Menos retrabajo. Pero la story arranca dando la premisa por buena, y el +7% de mar–oct puede leerse
+    como que el CRO se equivoca, sin saber todavía qué ventana usa.
+- key: C
+  label: Esperar a R-012 antes de tocar Q-001
+  consequence: Hoy no cambia nada. Si el CRO compara una ventana donde la premisa se sostiene, alcanza con un caveat;
+    si no, el reencuadre llega con la story ya en marcha.
+recommended: A
+recommended_why: La dependencia de la ventana ya se ve en los pagos y no necesita esperar a R-012, que solo dirá
+  qué ventana usa el CRO. Empezar verificando ventana, nivel vs proporción e hito de venta evita que el bloque CRO
+  arranque discutiendo la cifra del CRO y ordena todo lo que viene después.
+detected_by: cos
+links:
+- R-010
+- Q-001
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104715-cos-fbed
+created_at: '2026-09-29T11:27:18-06:00'
+updated_at: '2026-09-29T11:27:18-06:00'
+version: 1

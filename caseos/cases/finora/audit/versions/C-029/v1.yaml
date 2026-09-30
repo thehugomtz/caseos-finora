@@ -1,0 +1,88 @@
+id: C-029
+type: claim
+key: hipotesis-datos
+question: ¿Qué datos usaríamos para validar o descartar cada hipótesis del árbol?
+headline: Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso
+answer: 'Una hoja se valida si, al controlarla, la brecha se cierra en esa magnitud, y se descarta si queda igual;
+  siempre con datos que no dependan de lo que Sales opine después. En el orden del árbol: venta y ventana, con la
+  fecha de entrada y de venta por cuenta; no-prospectos, con el export de leads cruzado con customer_id (¿sube la
+  proporción de duplicados, clientes actuales o spam?); desfase o definición, con una bitácora fechada de cambios
+  de formulario, regla o reparto; misma demanda por otra puerta, con la puerta por cuenta y el cruce de identidad;
+  calidad al entrar, con señales congeladas al crear el lead (empeora la mezcla de ajuste y no la tasa por banda);
+  capacidad, con el primer contacto humano y un roster semanal de SDR/AE con ramp (la tasa cae en entradas lentas
+  y en semanas de alta carga); estancados, con el historial de etapas y la última actividad (crece la bolsa y los
+  retomados sí compran); incentivos del SDR, con la aceptación del AE por origen del SQL; decisión en Proposal,
+  con motivos validados con compradores; y cobro, con la fecha de Won y la llave CRM ↔ customer_id. Ninguno de esos
+  datos está en el caso (del cobro solo se ve el arranque en los pagos), y el gasto de Team no sirve como proxy
+  de capacidad.'
+role_in_story: recommendation
+evidence_ids:
+- F-121
+- F-122
+- F-127
+- F-128
+- F-129
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-207
+- F-225
+- F-191
+- F-120
+- F-124
+- F-126
+- F-159
+table_ids: []
+research_ids:
+- R-032
+- R-014
+- R-025
+- R-010
+framework_ids: []
+confidence: medium
+limitations:
+- 'Es una propuesta: que esos datos no estén en el caso no prueba que Finora no los registre (H-076).'
+- Los motivos de pérdida del CRM no alcanzan para la decisión en Proposal (F-129).
+- Separar capacidad de calidad con mezcla contra tasa es observacional. Probar la palanca (que más capacidad recupere
+  compras) pide un experimento (F-159), y la priorización de los reps confunde la relación entre tiempo de contacto
+  y compra (H-028).
+- La banda de ajuste se fija al entrar y se valida en el periodo base antes de usarla.
+- La ventana de deduplicación, los días de estancado y el SLA son propuestas a acordar con Finora.
+- Sigue las hojas y el orden de hipotesis-matriz. Reemplaza a C-012, que queda en anexo.
+visual_intent: 'Split alineado: cada hoja del árbol, en el mismo orden, con su firma, qué la valida, qué la descarta,
+  su dato mínimo y si ese dato existe hoy en el caso.'
+hugo_wording: «y qué datos usarías para validar o descartar cada una? se deberia responder con 16 pero no me queda
+  claro tampoco deben relacionarse estas 2» (N-060).
+links:
+- F-121
+- F-122
+- F-127
+- F-128
+- F-129
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-207
+- F-225
+- F-191
+- F-120
+- F-124
+- F-126
+- F-159
+- R-032
+- R-014
+- R-025
+- R-010
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103401-cos-03df
+created_at: '2026-09-30T11:03:59-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 1

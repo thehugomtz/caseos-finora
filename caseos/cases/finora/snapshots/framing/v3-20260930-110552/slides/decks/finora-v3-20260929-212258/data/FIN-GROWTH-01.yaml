@@ -1,0 +1,169 @@
+table_id: FIN-GROWTH-01
+caseos_id: T-001
+title: Clientes activos y monto observado por cliente activo
+columns:
+- period
+- active_customers
+- total_paid_amount_cop
+- amount_per_active_cop
+rows:
+- - 2022-01
+  - 377
+  - 35000308.35
+  - 92839.01
+- - 2022-02
+  - 457
+  - 43818509.91
+  - 95882.95
+- - 2022-03
+  - 467
+  - 39545237.97
+  - 84679.31
+- - 2022-04
+  - 499
+  - 48794921.91
+  - 97785.41
+- - 2022-05
+  - 532
+  - 49299193.86
+  - 92667.66
+- - 2022-06
+  - 520
+  - 39545196.6
+  - 76048.46
+- - 2022-07
+  - 586
+  - 49378369.95
+  - 84263.43
+- - 2022-08
+  - 609
+  - 55090995.54
+  - 90461.4
+- - 2022-09
+  - 629
+  - 50463767.76
+  - 80228.57
+- - 2022-10
+  - 654
+  - 49268442.09
+  - 75334.01
+- - 2022-11
+  - 669
+  - 50274228.9
+  - 75148.32
+- - 2022-12
+  - 697
+  - 62411971.65
+  - 89543.72
+- - 2023-01
+  - 733
+  - 56363068.02
+  - 76893.68
+- - 2023-02
+  - 763
+  - 55518865.5
+  - 72763.91
+- - 2023-03
+  - 792
+  - 56690874.03
+  - 71579.39
+- - 2023-04
+  - 822
+  - 60082807.05
+  - 73093.44
+- - 2023-05
+  - 861
+  - 62022100.56
+  - 72034.96
+- - 2023-06
+  - 899
+  - 62013615.93
+  - 68980.66
+- - 2023-07
+  - 959
+  - 64476189.96
+  - 67232.73
+- - 2023-08
+  - 1021
+  - 68120097.99
+  - 66719.0
+- - 2023-09
+  - 1078
+  - 69249404.07
+  - 64238.78
+- - 2023-10
+  - 1133
+  - 71855032.83
+  - 63420.15
+- - 2023-11
+  - 1203
+  - 76874755.02
+  - 63902.54
+- - 2023-12
+  - 1241
+  - 77918005.2
+  - 62786.47
+- - 2024-01
+  - 1283
+  - 76506001.95
+  - 59630.55
+- - 2024-02
+  - 1292
+  - 75633087.18
+  - 58539.54
+- - 2024-03
+  - 1320
+  - 78038810.01
+  - 59120.31
+- - 2024-04
+  - 1397
+  - 84120683.85
+  - 60215.24
+- - 2024-05
+  - 1457
+  - 85651681.29
+  - 58786.33
+- - 2024-06
+  - 1530
+  - 90094989.39
+  - 58885.61
+- - 2024-07
+  - 1566
+  - 89433913.8
+  - 57109.78
+- - 2024-08
+  - 1602
+  - 91188777.33
+  - 56921.83
+- - 2024-09
+  - 1645
+  - 92663692.8
+  - 56330.51
+- - 2024-10
+  - 1678
+  - 97007446.83
+  - 57811.35
+units:
+  active_customers: clientes
+  total_paid_amount_cop: COP
+  amount_per_active_cop: COP
+definitions:
+  active_customers: Clientes con MRR pagado mayor que cero en el mes.
+  total_paid_amount_cop: Suma del monto pagado en el mes, multiplicado por 10.000 para expresarlo en COP. Es monto
+    observado; la lectura "cobrado" es hipótesis.
+  amount_per_active_cop: MRR pagado dividido entre clientes activos.
+message: Los clientes activos crecieron de 377 a 1.678 mientras el monto observado por cliente activo bajó de COP
+  92,8 mil a COP 57,8 mil (ene-22 → oct-24).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: finora_monthly_metrics.csv
+  generated_by: finora_eda.py · build_monthly()
+limitations:
+- El monto observado no es MRR contractual validado (CV-AMOUNT-COBRO).
+- Ene-22 está censurado a la izquierda y feb-22 tiene arrastre (CV-VENTANA).
+preferred_visual: annotated_line
+analysis_reference: Fase 1 · canonical C-RES-01 / C-RES-02
+period:
+  from: 2022-01
+  to: 2024-10
+grain: mes

@@ -1,0 +1,82 @@
+id: F-151
+type: finding
+headline: 'No hay un estándar para tratar los descuentos temporales en el MRR: es una decisión de definición que
+  el CFO tiene que tomar y declarar. Para Finora, lo más útil es mostrar las dos capas (lista y neto).'
+evidence_text: Stripe siempre resta los descuentos permanentes y deja a elección restar los temporales y los de
+  una sola vez; considera que restarlos es lo más conservador porque se acerca más al valor presente (SRC-03, SRC-04).
+  ChartMogul solo reporta el MRR neto (SRC-01). Baremetrics resta todos los descuentos sin importar su duración
+  (SRC-06). Chargebee incluso cuenta las reactivaciones dentro de la expansión (SRC-07). La cascada de precio de
+  McKinsey da el marco lista → neto para medir lo que no se captura (SRC-13).
+confidence: high
+limitations:
+- Son prácticas de proveedores, no una norma. Mostrar ambas capas a la vez es una propuesta nuestra, no algo documentado
+  en estas fuentes.
+kind: external
+claims:
+- claim: ChartMogul reporta el MRR solo neto de descuentos (un cliente con 20% de descuento de por vida cuenta 400
+    y no 500). Cuando una suscripción con descuento renueva a precio completo, lo registra como expansión.
+  source_id: SRC-01
+  source_type: company
+  confidence: high
+  freshness: '2025-01-20'
+  supports_or_contests: context
+  notes: Postura de un proveedor que defiende el neto como medida honesta; no ofrece vista en lista.
+- claim: 'Stripe siempre resta del MRR los descuentos recurrentes permanentes. Restar los descuentos recurrentes
+    temporales y los de una sola vez es configurable: uno, otro o ambos.'
+  source_id: SRC-03
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Muestra que tratar los descuentos temporales en el MRR es una elección de definición.
+- claim: Stripe describe restar los descuentos del MRR como el enfoque más conservador, porque refleja mejor el
+    valor presente de esos clientes.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Argumento a favor del neto como vista principal; no descarta tener también la vista en lista.
+- claim: Baremetrics resta del MRR todos los cupones y descuentos sin importar su duración, y lo contrasta con el
+    criterio de Stripe de no contar los descuentos temporales.
+  source_id: SRC-06
+  source_type: company
+  confidence: medium
+  freshness: 2024-05-31 (actualizado el 2026-04-23)
+  supports_or_contests: context
+  notes: Su descripción de Stripe corresponde al comportamiento por defecto; la documentación actual de Stripe lo
+    hace configurable (SRC-03).
+- claim: Chargebee calcula su Downgrade MRR como la caída de MRR por cambios de suscripción y considera ahí los
+    descuentos recurrentes, sin categoría propia. Su Expansion MRR junta upgrades, paso de gratis a pago y reactivaciones.
+  source_id: SRC-07
+  source_type: company
+  confidence: medium
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'Otra taxonomía distinta: aquí la reactivación va dentro de la expansión. La mención a descuentos en la
+    documentación es breve.'
+- claim: La cascada de precio de bolsillo (pocket price waterfall) de McKinsey muestra cuánto ingreso conserva realmente
+    una empresa en cada transacción después de descuentos y concesiones.
+  source_id: SRC-13
+  source_type: expert
+  confidence: medium
+  freshness: '2003-04-11'
+  supports_or_contests: context
+  notes: Marco conceptual para Q-026 (lista → neto → cobrado); no aporta una cifra aplicable a Finora.
+unverified: false
+source_ref:
+  research: R-021
+links:
+- R-021
+- H-015
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: business_research
+created_at: '2026-09-29T11:15:51-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

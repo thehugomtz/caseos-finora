@@ -1,0 +1,53 @@
+id: X-171
+type: alert
+kind: story_change
+status: open
+severity: medium
+effect: changes_story
+source: R-036
+target: C-005
+title: R-036 cambia la historia C-005
+finding_text: 'Propongo 35 métricas sin solapes (MECE): 30 son propias de cada funnel (entradas, alcance por etapa
+  en cohorte, tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta: speed to lead, aceptación
+  de SQL y productividad en Executive; tasa y uplift de intervención en Hybrid A; salida a…'
+why: 'R-036 trabaja con 5 funnels (Executive, Self Service, Hybrid A, Hybrid B y Reactivate). Los asigna con reglas
+  al cierre de una ventana fija (F-250): ¿nace de un estancado?, ¿quién inició?, ¿hubo toque humano?, ¿quién cerró?
+
+
+  C-005 dice «rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar». La puerta sí se fija
+  al entrar (¿quién inició?), pero la ruta solo se conoce al cerrar la ventana. Además, R-022, R-031 y R-035 tratan
+  Reactivate como loop, no como funnel.
+
+
+  No es solo un nombre: define dónde cuenta el Won de un lead reactivado y, con eso, todas las comunes «siempre
+  por funnel». Además, la regla «¿quién cerró?» no le asigna ruta a quien no cierra (ver hipótesis nueva).
+
+
+  Esto no reabre X-104 ni X-131, que tratan de Self Service en Q-046. Aquí se trata de la redacción de C-005.'
+options:
+- key: A
+  label: 'Alinear C-005 con F-250: 5 funnels, puerta y canal fijos al entrar, ruta asignada al cierre de la ventana,
+    y el episodio que nace de un estancado (con su Won) cuenta en Reactivate'
+  consequence: Cada Won cae en un solo funnel y las comunes por funnel cuadran. El deck pasa de «3 rutas» a «5 funnels»,
+    y las entradas con ventana abierta se reportan como «en curso».
+- key: B
+  label: Mantener 3 rutas en el título (Hybrid A/B como variantes) y Reactivate como loop que devuelve el lead a
+    su ruta de origen
+  consequence: El deck cambia menos, pero las métricas de Reactivate de R-036 (tasa, re-estancamiento, envejecimiento
+    del pool) quedan sin lugar en el catálogo y el conteo de 35 cambia.
+recommended: A
+recommended_why: 'Es la lectura de R-036 con tus definiciones y cierra dónde cuenta cada Won. Que Reactivate sea
+  funnel o loop es una definición tuya: esta recomendación no la da por cerrada.'
+detected_by: cos
+links:
+- R-036
+- C-005
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260930-103327-cos-85f7
+created_at: '2026-09-30T10:46:13-06:00'
+updated_at: '2026-09-30T10:46:13-06:00'
+version: 1

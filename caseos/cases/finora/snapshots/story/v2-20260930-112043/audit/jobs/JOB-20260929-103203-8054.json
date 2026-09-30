@@ -1,0 +1,279 @@
+{
+ "id": "JOB-20260929-103203-8054",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn,…",
+ "params": {
+  "research_id": "R-018"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:03-06:00",
+ "started_at": "2026-09-29T10:32:03-06:00",
+ "finished_at": "2026-09-29T11:01:40-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:03-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:47:15-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-103203-measurement-d0ef",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:47:16-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:47:18-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T10:47:23-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, window_flag, active_customers, new_customers, churned_customers, reactivated_customers, expanded_customers, contracted_custome"
+  },
+  {
+   "t": "2026-09-29T10:47:23-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM raw.sm_spend LIMIT 5"
+  },
+  {
+   "t": "2026-09-29T10:47:23-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM raw.transactions LIMIT 5"
+  },
+  {
+   "t": "2026-09-29T10:48:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month) AS primer_mes, MAX(month) AS u"
+  },
+  {
+   "t": "2026-09-29T10:48:04-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT multi_month_payment_signature AS k, COUNT(*) AS filas, ROUND(SUM(paid_mrr_cop),0) AS monto_cop FROM mart.customer_month WHERE observe"
+  },
+  {
+   "t": "2026-09-29T10:48:06-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN months_to_return IS NULL THEN 'no vuelve antes de oct-24' WHEN months_to_return = 1 THEN '1 mes' WHEN months_to_return = 2 "
+  },
+  {
+   "t": "2026-09-29T10:48:23-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_rows, SUM(returned_next_month) AS vuelve_t1, SUM(returned_same_amount_next_month) AS vuelve_t1_mismo_monto, SUM(CAS"
+  },
+  {
+   "t": "2026-09-29T10:48:24-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT ROUND(SUM(demand_gen_spend),3) AS generacion_demanda, ROUND(SUM(sales_capacity_spend),3) AS capacidad_comercial_team, ROUND(SUM(enabl"
+  },
+  {
+   "t": "2026-09-29T10:48:26-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT ROUND(SUM(CASE WHEN multi_month_payment_signature > 0 THEN paid_mrr_cop ELSE 0 END)/SUM(paid_mrr_cop),4) AS share_monto_firma_multime"
+  },
+  {
+   "t": "2026-09-29T10:48:29-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_rows, SUM(c.returned_next_month) AS vuelve_t1, SUM(c.returned_same_amount_next_month) AS vuelve_t1_mismo_monto, SUM"
+  },
+  {
+   "t": "2026-09-29T10:48:30-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT usual_amount_cop, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY usual_amount_cop ORDER BY clientes DESC L"
+  },
+  {
+   "t": "2026-09-29T10:48:31-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag ORDER BY 1"
+  },
+  {
+   "t": "2026-09-29T10:48:52-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS filas_con_pago, SUM(CASE WHEN CAST(ROUND(observed_amount*100) AS BIGINT) % 21 = 0 THEN 1 ELSE 0 END) AS filas_multiplo_21"
+  },
+  {
+   "t": "2026-09-29T10:48:54-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, COUNT(*) AS altas, SUM(CASE WHEN m1_cop IS NULL THEN 1 ELSE 0 END) AS sin_m1, SUM(CASE WHEN m1_cop > m0_cop THEN 1 ELSE 0 EN"
+  },
+  {
+   "t": "2026-09-29T10:48:55-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, MIN(month) AS desde, MAX(month) AS hasta, ROUND(MIN(arpa_cop),0) AS arpa_min, ROUND(MAX(arpa_cop),0) AS arpa_max FROM mart.v"
+  },
+  {
+   "t": "2026-09-29T10:49:16-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, COUNT(DISTINCT customer_id) AS altas, ROUND(SUM(CASE WHEN tenure_month BETWEEN 0 AND 11 THEN paid_mrr_cop ELSE 0 END)/COUNT("
+  },
+  {
+   "t": "2026-09-29T10:49:17-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT ROUND(SUM(total_sm_spend),3) AS sm_mar22_oct24_unidades, SUM(new_customers) AS altas_mar22_oct24, ROUND(SUM(total_sm_spend)/SUM(new_c"
+  },
+  {
+   "t": "2026-09-29T10:49:18-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ChartMogul churn recognition setting delinquent customers MRR definition”"
+  },
+  {
+   "t": "2026-09-29T10:49:28-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/article/303-handling-past-due-subscriptions"
+  },
+  {
+   "t": "2026-09-29T10:49:30-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/4416682609426-Understanding-MRR-movements"
+  },
+  {
+   "t": "2026-09-29T10:49:31-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/blog/when-should-you-recognize-churn/"
+  },
+  {
+   "t": "2026-09-29T10:49:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/saas-metrics/mrr/"
+  },
+  {
+   "t": "2026-09-29T10:49:39-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forentrepreneurs.com/saas-metrics-2/"
+  },
+  {
+   "t": "2026-09-29T10:49:39-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “a16z 16 startup metrics blended CAC vs paid CAC ARR run-rate definition”"
+  },
+  {
+   "t": "2026-09-29T10:49:49-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://a16z.com/16-startup-metrics/"
+  },
+  {
+   "t": "2026-09-29T10:49:49-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “SaaS unit economics contribution margin per customer definition cost to serve gross margin LTV formula”"
+  },
+  {
+   "t": "2026-09-29T10:49:50-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ARPA vs ARPU SaaS definition per account per user ChartMogul”"
+  },
+  {
+   "t": "2026-09-29T10:50:04-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/saas-metrics/arpa/"
+  },
+  {
+   "t": "2026-09-29T10:50:05-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/saas-metrics/revenue-churn/"
+  },
+  {
+   "t": "2026-09-29T10:50:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://chartmogul.com/saas-metrics/ltv/"
+  },
+  {
+   "t": "2026-09-29T10:50:43-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://kruzeconsulting.com/blog/unit-economics/"
+  },
+  {
+   "t": "2026-09-29T10:50:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.drivetrain.ai/strategic-finance-glossary/contribution-margin"
+  },
+  {
+   "t": "2026-09-29T10:51:10-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT c.multi_month_payment_signature >= 2 AS firma, COUNT(*) AS filas, SUM(CASE WHEN p.observed_amount = 0 THEN 1 ELSE 0 END) AS mes_previ"
+  },
+  {
+   "t": "2026-09-29T10:51:11-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS filas FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC"
+  },
+  {
+   "t": "2026-09-29T10:51:17-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS filas, SUM(reverts_next_month) AS revierte_t1, ROUND(1.0*SUM(reverts_next_month)/COUNT(*),3) AS share_revi"
+  },
+  {
+   "t": "2026-09-29T10:51:21-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC"
+  },
+  {
+   "t": "2026-09-29T10:54:59-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “\"unit contribution margin\" UCM SaaS metric per customer”"
+  },
+  {
+   "t": "2026-09-29T11:01:40-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-018",
+  "findings": [
+   "F-135",
+   "F-136",
+   "F-137",
+   "F-138",
+   "F-139"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

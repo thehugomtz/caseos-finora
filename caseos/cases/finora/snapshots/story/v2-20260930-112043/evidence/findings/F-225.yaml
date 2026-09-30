@@ -1,0 +1,59 @@
+id: F-225
+type: finding
+headline: Para medir velocidad y estancamiento hacen falta fechas de entrada y salida por etapa y la fecha de última
+  actividad. El umbral de estancamiento se calibra por etapa y se acuerda con Finora (Q-064).
+evidence_text: CRMs como HubSpot registran la entrada, la salida y el tiempo acumulado en cada etapa, reentradas
+  incluidas, y los calculan también hacia atrás con los datos que ya existen (EXT-2). Una práctica común pone el
+  umbral en 1,5–2× la mediana de días en etapa, por etapa y segmento, y usa 14 o más días sin actividad como señal
+  secundaria (EXT-1). Forrester advierte que el nurture pierde efecto cuanto más se pasa del tiempo típico de la
+  etapa (EXT-7).
+confidence: medium
+limitations:
+- 'Los rangos vienen de práctica externa: no son estándar ni recomendación para Finora. Tampoco sabemos qué CRM
+  usa Finora.'
+kind: measurement
+claims:
+- claim: Una práctica de RevOps pone el umbral de estancamiento en 1,5–2× la mediana de días en etapa para cada
+    combinación de etapa y segmento. Distingue el tiempo en la etapa del tiempo total del deal y usa 14 o más días
+    sin actividad como señal secundaria.
+  source_id: EXT-1
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es un método de calibración, no un estándar ni una recomendación para Finora (Q-064).
+- claim: CRMs como HubSpot registran la fecha de entrada y de salida de cada etapa, el tiempo de la última estancia
+    y el tiempo acumulado cuando hay reentradas, y los calculan también hacia atrás con los datos que ya existen.
+  source_id: EXT-2
+  source_type: company
+  confidence: high
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Solo aplica si Finora usa HubSpot o algo equivalente, y no sabemos qué CRM usa.
+- claim: Forrester trata a los leads sin cambios de actividad como candidatos a nurture pasivo reciclado. Advierte
+    que el nurture pierde efecto cuanto más se pasa del tiempo típico de la etapa y sugiere que su primer hogar
+    sea teleprospecting, no marketing.
+  source_id: EXT-7
+  source_type: expert
+  confidence: medium
+  freshness: '2018-01-01'
+  supports_or_contests: supports
+  notes: Solo está el resumen público; el informe completo es de pago.
+unverified: false
+source_ref:
+  research: R-031
+links:
+- R-031
+- Q-063
+- Q-064
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T18:41:41-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

@@ -1,0 +1,111 @@
+id: C-019
+type: claim
+key: modelo-escalera
+question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin
+  de un descuento?
+headline: La Propuesta de Modelo de datos separa el valor en una escalera con vigencias
+answer: 'Proponemos una escalera por suscripción y mes, en la que cada peldaño tiene su fuente y su vigencia: tarifa
+  de lista → precio pactado (plan, cantidad, add-ons) → descuento → MRR neto → facturado → cobrado. Los movimientos
+  de MRR (nuevo, expansión, contracción, churn, reactivación, tarifa y «Descuento») se clasifican comparando cierres
+  de mes sobre los peldaños de valor. Lo facturado y lo cobrado son caja y solo generan un efecto de cobro, y el
+  panel actual queda como capa de monto pagado observado que se concilia contra lo cobrado. Regla de clasificación:
+  si la suscripción no cambia, el inicio o el fin de un descuento va a la línea «Descuento», nunca a contracción
+  ni a expansión. Si suscripción y descuento cambian el mismo mes, primero se mide el efecto de la suscripción con
+  los términos de descuento previos y el resto va a «Descuento». Quien sale con un descuento vigente cuenta como
+  churn, sin registrar un fin de descuento.'
+role_in_story: recommendation
+evidence_ids:
+- F-130
+- F-132
+- F-133
+- F-150
+- F-151
+- F-152
+- F-168
+- F-234
+- F-236
+- F-240
+- F-241
+table_ids: []
+research_ids:
+- R-011
+- R-034
+- R-021
+framework_ids: []
+confidence: medium
+limitations:
+- 'Las reglas que son decisiones de negocio tienen que quedar escritas antes de construir (F-241): convención del
+  descuento, tarifa como línea propia, descuento porcentual que escala, recurrente contra único y mes gratis contra
+  pausa.'
+- Mide hacia adelante, salvo que Finora tenga historial en sus sistemas (F-242).
+- Los nombres de las tablas son ilustrativos (R-011, R-034).
+- Integra la regla de clasificación de C-020, que queda en anexo, como anticipaste en la nota de S3.4.
+visual_intent: 'Escalera: del valor de lista al monto cobrado, peldaño por peldaño y con vigencia. Los movimientos
+  de MRR se leen en los peldaños de arriba y la caja, abajo.'
+hugo_wording: 'Cómo separar el valor de la suscripción del precio efectivamente pagado: propuesta de modelo de datos
+  (campos, tablas, definiciones); la clasificación probablemente la integra la misma propuesta.'
+links:
+- F-130
+- F-132
+- F-133
+- F-150
+- F-151
+- F-152
+- F-168
+- F-234
+- F-236
+- F-240
+- F-241
+- R-011
+- R-034
+- R-021
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 8
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-240
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-240
+  accepted: []
+  pending:
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-240
+  - F-130
+  - F-132
+  - F-133
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-240
+  tables: []
+  unsupported_numbers: []
+  stale: []

@@ -1,0 +1,334 @@
+id: R-002
+type: research
+research_question: ¿El monto identifica los escenarios del CFO?
+case_question: ¿El monto identifica los escenarios del CFO?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W1
+why_it_matters: Responde un punto explícito del CFO con material existente y puede cerrar la discusión sobre qué
+  se puede inferir del monto solo. No requiere encontrar descuentos históricos.
+short_answer: 'El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas.
+  La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con
+  ajustes sincronizados con firma de cobro retroactivo exacto y con reversiones al mes siguiente, no solo con expansión
+  de la suscripción. El volumen anual de movimientos con lectura indeterminada es material. Es una prueba de observabilidad,
+  no una lectura del histórico.'
+headline: 'El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas'
+answer_states:
+- Hecho observado
+findings:
+- F-034
+- F-032
+- F-041
+what_is_established:
+- 'El monto observado admite lecturas alternativas para un mismo movimiento: la etiqueta del puente de MRR no se
+  puede leer como una decisión contractual del cliente, porque parte del movimiento bruto vuelve exacto al nivel
+  previo al mes siguiente y la proporción de meses-cliente fuera de la grilla de precios crece entre 2022 S2 y 2024
+  S2.'
+- Como señal, transiciones con el mismo nivel previo y el mismo nivel nuevo terminan en desenlaces posteriores distintos,
+  tanto en bajas como en subidas, lo que es consistente con que el nivel del monto por sí solo no fija la historia
+  detrás del cambio.
+- 'Como señal, en la ventana limpia buena parte de las transiciones no registra cambio del monto: en ese conjunto
+  un aumento de la suscripción acompañado de una rebaja de igual magnitud se observa igual que la ausencia de cambio.'
+what_is_contested: []
+what_remains_unknown:
+- 'No podemos fijar qué mide amount: su definición operativa (facturado, cobrado o contratado) no está declarada
+  en el modelo, y se comporta como monto cobrado y no como MRR contractual.'
+- No podemos separar una contracción de la suscripción de una concesión de precio aplicada sobre la misma suscripción,
+  porque el panel no contiene campos de precio, descuento, crédito ni estado de suscripción.
+- 'La persistencia del nivel nuevo tras una baja no resuelve la ambigüedad: una contracción contractual y una rebaja
+  recurrente comparten esa firma.'
+- 'Nada de esto permite afirmar que existieran descuentos históricos ni cuantificarlos: eso queda fuera de lo que
+  el modelo actual puede sostener.'
+cannot_claim:
+- 'Que hubo descuentos en el histórico: el caso habla de introducirlos.'
+- 'Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.'
+alternative_explanations: []
+case_implication: 'El monto observado admite lecturas alternativas para un mismo movimiento: la etiqueta del puente
+  de MRR no se puede leer como una decisión contractual del cliente, porque parte del movimiento bruto vuelve exacto
+  al nivel previo al mes siguiente y la proporción de meses-cliente fuera de la grilla de precios crece entre 2022
+  S2 y 2024 S2.'
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-016
+  alias: HIF
+  question: ¿Al menos un par de escenarios relevantes del CFO es indistinguible con el modelo cliente + mes + monto?
+  state: Soportada
+  effect: fortalecida
+  reading: Existen escenarios del CFO compatibles con la misma observación de cliente + mes + monto, con transiciones
+    idénticas que terminan en desenlaces posteriores distintos y con un volumen anual de movimientos de lectura
+    indeterminada que es material.
+- id: null
+  alias: ''
+  question: ¿Una baja del monto distingue una contracción de la suscripción de un descuento aplicado sobre la misma
+    suscripción?
+  state: Direccional
+  effect: señal direccional
+  reading: Como señal, una misma baja del monto coincide con continuaciones distintas —seguir en el nivel nuevo,
+    anteceder un mes sin pago o volver exacto al nivel previo—, mientras la persistencia del nivel nuevo es compatible
+    con ambas historias.
+- id: null
+  alias: ''
+  question: ¿El monto revela un crecimiento de la suscripción compensado por un descuento de la misma magnitud?
+  state: Direccional
+  effect: señal direccional
+  reading: Como señal, en el conjunto de transiciones sin cambio del monto un aumento de la suscripción acompañado
+    de una rebaja de igual magnitud se observa igual que la ausencia de cambio.
+- id: null
+  alias: ''
+  question: ¿Una subida del monto distingue el fin de un descuento temporal de una expansión de la suscripción?
+  state: Soportada
+  effect: fortalecida
+  reading: 'Una subida del monto no identifica por sí sola una expansión de la suscripción: hay eventos de ajuste
+    sincronizado con firma de cobro retroactivo exacto y 29% del MRR de expansión se revierte al mes siguiente.'
+- id: null
+  alias: rival
+  question: ¿El modelo actual y los campos existentes identifican los escenarios, de modo que los movimientos del
+    puente de MRR se leen como cambios contractuales del cliente?
+  state: No soportada
+  effect: debilitada
+  reading: 'La etiqueta del puente de MRR no coincide con una decisión contractual del cliente: parte del movimiento
+    bruto sin altas vuelve exacto al nivel previo al mes siguiente y hay subidas con firma de cobro retroactivo
+    exacto.'
+- id: null
+  alias: ''
+  question: ¿Qué parte de la pregunta del CFO depende de datos que no existen en el modelo actual?
+  state: No evaluable
+  effect: no evaluable
+  reading: Resolver los escenarios del CFO requiere datos que el modelo actual no contiene y ningún campo existente
+    del panel los sustituye, por lo que esta rama no es evaluable con lo disponible.
+affected_claims: []
+suggested_action: Es la siguiente según el brief y, cerrada la prueba de observabilidad, conviene volver a la evidencia
+  acotada sobre lo que sí se puede nombrar.
+next_question: W2
+new_questions:
+- ¿Qué definición operativa de amount declara el sistema de origen y quién puede confirmarla?
+- ¿Qué campos mínimos de suscripción contratada y de concesión con fecha de vencimiento harían identificable cada
+  escenario del CFO sin rehacer el panel?
+- ¿Qué parte de los movimientos hoy etiquetados como expansión y contracción quedaría reclasificada si se separara
+  el cobro del periodo de servicio al que corresponde?
+- ¿Qué reglas de reconocimiento debería fijar Finanzas para que el fin de una concesión y una ampliación de suscripción
+  no compartan etiqueta en el puente?
+handoff_to_cos:
+  summary: 'El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas'
+  recommended_next: ¿Qué cambió en los primeros pagadores observados?
+visuals:
+- id: V-01
+  title: 'Existen transiciones del monto con el mismo nivel previo y el mismo nivel nuevo que terminan en desenlaces
+    posteriores distintos: 19 grupos de bajas, que abarcan 124 eventos, y 20 grupos de subidas, que abarcan 72 eventos.'
+  spec:
+    tipo: barras
+    x:
+    - bajas
+    - subidas
+    formato: int
+    series:
+    - nombre: grupos ambiguos
+      valores:
+      - 19.0
+      - 20.0
+    - nombre: eventos ambiguos
+      valores:
+      - 124.0
+      - 72.0
+  claim: C-008
+- id: V-02
+  title: 'Entre las bajas del monto de la ventana limpia, 90,6% continúa en el nivel nuevo el mes siguiente, 7,9%
+    antecede un mes sin pago y 1,5% vuelve exacto al nivel previo: la misma baja observada coincide con continuaciones
+    distintas.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ''
+    series:
+    - nombre: baja persiste
+      valores:
+      - 0.9059999999999999
+    - nombre: baja cesa
+      valores:
+      - 0.079
+    - nombre: baja revierte
+      valores:
+      - 0.015
+    formato: pct
+  claim: C-007
+- id: V-03
+  title: 'Una subida del monto no identifica por sí sola una expansión de la suscripción: 260 eventos de ajuste
+    sincronizado en 249 clientes tienen firma de cobro retroactivo exacto y representan 8,5% de la expansión de
+    2023 y 8,3% de la de 2024, y 29% del MRR de expansión se revierte al mes siguiente.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Tramo de subida con cobro retroactivo exacto
+      valores:
+      - 0.08537936689506388
+      - 0.08286568820750435
+    - nombre: Resto de la expansión
+      valores:
+      - 0.9146206331049361
+      - 0.9171343117924956
+    claim_fase1: C-DAT-07
+  claim: C-009
+- id: V-04
+  title: 'El volumen anual de movimientos del monto cuya lectura queda indeterminada es material: la expansión fue
+    de COP 11,3 millones en 2022, COP 15,0 millones en 2023 y COP 13,6 millones en 2024, y la contracción de −COP
+    39,8 millones en 2022, −COP 28,1 millones en 2023 y −COP 21,5 millones en 2024.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    series:
+    - nombre: MRR de expansión
+      valores:
+      - 11308086.93
+      - 14979540.45
+      - 13556214.21
+    - nombre: MRR de contracción
+      valores:
+      - -39783914.31
+      - -28142105.88
+      - -21530332.95
+    formato: cop
+  claim: C-013
+- id: V-05
+  title: 'Con el modelo cliente + mes + monto no es posible separar una baja del monto por contracción de la suscripción
+    de una baja por un descuento aplicado sobre la misma suscripción: ambas historias son compatibles con la misma
+    observación y el panel no contiene campos de precio, descuento, crédito ni estado de suscripción que las distingan.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+  claim: C-003
+- id: V-06
+  title: 'En la ventana limpia, de las transiciones mes a mes del monto de clientes activos 26.298 no registran
+    cambio alguno, 92,0% del total: en ese conjunto un aumento de la suscripción acompañado de un descuento de igual
+    magnitud se observa igual que la ausencia de cambio.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ''
+    series:
+    - nombre: sin cambio
+      valores:
+      - 0.92
+    - nombre: Resto
+      valores:
+      - 0.07999999999999996
+    formato: pct
+  claim: C-006
+- id: V-08
+  title: En 90,6% de las bajas del monto el nivel nuevo continúa el mes siguiente, consistente con que el monto
+    registra niveles de pago duraderos; una contracción de la suscripción y un descuento recurrente comparten esa
+    firma de persistencia.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - ''
+    series:
+    - nombre: baja persiste
+      valores:
+      - 0.9059999999999999
+    - nombre: Resto
+      valores:
+      - 0.09400000000000008
+    formato: pct
+  claim: C-011
+- id: V-09
+  title: Resolver los escenarios del CFO —separar una contracción de un descuento, reconocer el vencimiento de una
+    concesión temporal y clasificar su fin frente a una expansión— requiere datos que el modelo actual no contiene,
+    y ningún campo existente del panel los sustituye.
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Precios de lista, planes y empaquetamiento
+      estado: No existe
+      campos: list_mrr, plan_id
+    - dato: Descuentos recurrentes y temporales, con su vencimiento
+      estado: No existe
+      campos: recurring_discount, temporary_discount, temporary_discount_end
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+    - dato: Motivos de churn, downgrade o reactivación
+      estado: No existe
+      campos: churn_reason
+  claim: C-012
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-163243-73da
+  path: investigations/caso/W1.json
+  modelo: claude-opus-5
+  finished_ms: 1790635198904
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-163243-73da
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W1.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-011
+- H-016
+- F-034
+- F-032
+- F-041
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W1.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-163243-73da
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

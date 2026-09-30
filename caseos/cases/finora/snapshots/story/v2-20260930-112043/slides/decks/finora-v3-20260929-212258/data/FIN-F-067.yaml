@@ -1,0 +1,128 @@
+table_id: FIN-F-067
+caseos_id: T-009
+title: La serie de Habilitación cambia de composición dentro del panel
+columns:
+- rubro
+- meses_en_archivo
+- meses_nulos
+- meses_positivos
+- meses_en_cero
+- meses_negativos
+- primer_mes
+- ultimo_mes
+- ultimo_mes_no_cero
+- minimo
+- maximo
+rows:
+- - freelance
+  - 34
+  - 0.0
+  - 17.0
+  - 17.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2023-06
+  - 0.0
+  - 0.338
+- - paid_media
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.4
+  - 1.505
+- - payroll_expenses
+  - 34
+  - 0.0
+  - 29.0
+  - 0.0
+  - 5.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - -0.053
+  - 0.863
+- - publicidad_no_web
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.156
+  - 0.63
+- - software_tools
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.033
+  - 0.195
+- - team
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.24
+  - 0.453
+- - travel
+  - 34
+  - 0.0
+  - 34.0
+  - 0.0
+  - 0.0
+  - 2022-01
+  - 2024-10
+  - 2024-10
+  - 0.066
+  - 0.263
+units:
+  rubro: texto
+  meses_en_archivo: int
+  meses_nulos: num2
+  meses_positivos: num2
+  meses_en_cero: num2
+  meses_negativos: num2
+  primer_mes: texto
+  ultimo_mes: texto
+  ultimo_mes_no_cero: texto
+  minimo: num2
+  maximo: num2
+definitions: {}
+message: 'La serie de Habilitación cambia de composición dentro del panel: Freelance registra su último valor distinto
+  de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde ese corte Habilitación coincide con SoftwareTools,
+  que tiene valor positivo en 34 meses.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-002
+  - E-004
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-FREELANCE-CERO: Freelance en cero desde may-23'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: table
+analysis_reference: INV-20260929-103202-c958 · C-007
+period: {}
+grain: según evidencia

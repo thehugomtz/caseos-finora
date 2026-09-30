@@ -1,0 +1,72 @@
+id: F-143
+type: finding
+headline: Los pagos no reemplazan la etiqueta de puerta, y el primer pago (M0) no sirve como valor de entrada.
+evidence_text: 'El 87,8% de las 1.476 altas limpias tiene un monto usual múltiplo exacto de 1.050 COP, y solo hay
+  268 montos distintos. Eso es compatible con planes estandarizados. Pero estar en la grilla o fuera de ella casi
+  no separa el tamaño: la mediana es 39.900 vs 43.761 COP. Además, 20 altas (1,4%) con M0 ≥ 500.000 COP concentran
+  el 20,3% del M0 total, y en 15 de ellas el M0 superó 1,5× su monto usual.'
+confidence: medium
+limitations:
+- No hay lista de precios ni contratos para confirmar la grilla. Los montos fuera de grilla pueden venir de prorrateos,
+  impuestos u otros ajustes; no se afirma que sean descuentos. Tampoco se sabe qué explica los M0 altos.
+kind: measurement
+claims:
+- claim: 20 altas limpias (1,4%) tuvieron un primer pago (M0) ≥ 500.000 COP. Juntas concentran el 20,3% de la suma
+    de M0 de las 1.476 altas limpias.
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: El M0 tiene una cola pesada.
+- claim: De esas 20 altas con M0 ≥ 500.000 COP, 15 pagaron en M0 más de 1,5× su monto usual y solo 5 tienen firma
+    de pago multi-mes. Su monto usual mediano (~109.000 COP) es parecido al del tramo de 100.000–500.000 COP (~105.000).
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Un M0 alto no indica una cuenta más grande. El valor de entrada debe medirse con el run-rate temprano o
+    el monto usual. No se sabe qué explica el M0 alto (prepago, setup u otra cosa).
+- claim: El 87,8% de las 1.476 altas limpias tiene un monto usual múltiplo exacto de 1.050 COP, y el 75,3% de 2.100
+    COP. El patrón es estable entre cosechas (80,9% a 90,8% para 1.050).
+  source_id: DM-09
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: 'Inferencia: la firma es compatible con una grilla de precios o planes, pero no hay lista de precios que
+    lo confirme.'
+- claim: Las 1.476 altas limpias tienen solo 268 montos usuales distintos.
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Refuerza la lectura de montos estandarizados (inferencia).
+- claim: 'Altas en grilla (1.296) vs fuera de grilla (180): monto usual mediano de 39.900 vs 43.761 COP, p90 de
+    84.000 vs 111.693 COP y activos en M3 de 94,8% vs 92,2%. Las diferencias son chicas, así que la grilla no sirve
+    como proxy de puerta.'
+  source_id: DM-10
+  source_type: data_model
+  confidence: medium
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: contests
+  notes: Descarta la idea de inferir Self Service vs Assisted/Executive a partir de los pagos. Es solo descriptivo,
+    sin prueba estadística.
+unverified: false
+source_ref:
+  research: R-016
+links:
+- R-016
+- H-003
+- Q-001
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:02:42-06:00'
+updated_at: '2026-09-29T11:02:42-06:00'
+version: 1

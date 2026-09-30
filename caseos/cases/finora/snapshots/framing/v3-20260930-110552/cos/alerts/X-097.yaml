@@ -1,0 +1,46 @@
+id: X-097
+type: alert
+kind: research_needed
+status: open
+severity: high
+effect: requires_research
+source: R-027
+target: Q-025
+title: R-027 requiere más investigación Q-025
+finding_text: El puente por capas no es construible; el actual mezcla orígenes distintos
+why: 'Hallazgo: R-027 era justo la simulación ilustrativa con las cifras del enunciado y volvió sin ella. Respondió
+  que no se reproduce con cifras propias, algo ya establecido en R-002 y en R-011 (confianza alta), y midió el puente
+  vigente. Por qué afecta a Q-025: para ilustrar no hacen falta datos de Finora, y el framing permite simulaciones
+  siempre que prueben qué se puede distinguir, no qué pasó. Q-025 queda a medias. «El pago observado no alcanza»
+  está respondido (R-002, R-011; F-177 lo confirma para lista vs descuento). «Cómo se leería cada caso con capas»
+  no lo está.'
+options:
+- key: A
+  label: Simulación sintética corta
+  consequence: 'Ejemplo trabajado con 3–4 clientes ficticios y las cifras del enunciado: 100→130 con −30 que sigue
+    pagando 100; 100→80 por contracción vs por descuento; fin de descuento vs expansión; descuento del 100%. Cada
+    caso se lee en el puente actual y en el de capas con conciliación (H-048, opción A), con tabla y rotulado como
+    simulación. La lámina del CFO gana su ejemplo trazable y H-048 sale probada o descartada como diseño.'
+- key: B
+  label: Redactar el ejemplo directo en la story
+  consequence: Más rápido, pero las cifras no tendrían tabla detrás y el claim no pasaría la regla de story readiness.
+- key: C
+  label: Cerrar Q-025 con el diagnóstico
+  consequence: Se responde «no se distingue» (R-002, R-011, R-027) y el cómo queda en texto en C-019 y C-020. El
+    CFO recibe el diagnóstico sin la demostración que pidió con sus propios ejemplos.
+recommended: A
+recommended_why: 'Es barata, no depende de datos que no existen y usa los ejemplos del propio CFO. De paso prueba
+  la parte de H-048 que R-027 no tocó: si el diseño separa los tres casos.'
+detected_by: cos
+links:
+- R-027
+- Q-025
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144406-cos-7321
+created_at: '2026-09-29T14:59:09-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 1

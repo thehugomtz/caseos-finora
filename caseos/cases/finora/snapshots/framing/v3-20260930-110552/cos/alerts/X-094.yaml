@@ -1,0 +1,45 @@
+id: X-094
+type: alert
+kind: contradiction
+status: open
+severity: medium
+effect: contradicts
+source: R-026
+target: H-032
+title: R-026 contradice H-032
+finding_text: La caída del ticket de entrada se sostiene con el ticket estabilizado
+why: 'R-026 muestra que el primer pago queda igual o por encima del 2.º pago y del monto usual en las tres cohortes,
+  y que esa brecha es mayor en 2022. H-032 predecía lo contrario: un primer pago por debajo del usual, con más brecha
+  en 2023–2024. En medianas, el primer pago es de 63,0 / 36,8 / 42,0 mil y el monto usual temprano de 60,9 / 36,8
+  / 37,8 mil (T-018, F-160). La razón entre medianas del 2.º y el 1.er pago es 0,83 en 2022, 1,00 en 2023 y 0,93
+  en 2024 (F-166). Va en la línea de F-085. No descarta un subconjunto de primeros pagadores con primer mes parcial,
+  pero sí la lectura general.'
+options:
+- key: A
+  label: Marcar H-032 como contradicha por R-026 (F-160, F-166) y F-085.
+  consequence: Se descarta la lectura «primer pago rebajado» como explicación de la caída; el tema del primer cobro
+    sigue en H-035.
+- key: B
+  label: 'Reformularla como subconjunto: medir qué parte de los primeros pagadores tiene un primer pago menor al
+    2.º y si esa parte cambia entre cohortes.'
+  consequence: Conserva una pista para el bloque CFO (primeros cobros parciales), pero no explica la caída de la
+    mediana y suma una corrida.
+- key: C
+  label: Dejarla abierta sin cambios.
+  consequence: Queda activa una hipótesis que la evidencia contradice, y eso confunde la lectura del ticket.
+recommended: A
+recommended_why: Medianas, promedios y la razón entre pagos van en contra en las tres cohortes. La variante de subconjunto
+  no cambia la historia del ticket y, sin descuentos en los datos, tampoco permite hablar de precio introductorio.
+detected_by: cos
+links:
+- R-026
+- H-032
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144317-cos-48de
+created_at: '2026-09-29T14:58:13-06:00'
+updated_at: '2026-09-29T14:58:13-06:00'
+version: 1

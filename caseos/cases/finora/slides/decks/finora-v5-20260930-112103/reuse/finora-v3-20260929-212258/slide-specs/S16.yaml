@@ -1,0 +1,50 @@
+slide:
+  id: S16
+  file: slides/16.html
+  claim_id: C-013
+  role_in_story: recommendation
+  kicker: "Growth · cómo operarlo · propuesta"
+  headline: "Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción"
+  takeaway: "Hoy hay tres fuentes aisladas de después del pago; el to-be las une en una llave de cuenta con demanda, comercial y suscripción, y cada brecha cerrada habilita una métrica."
+  question: "¿Qué modelo de datos se propone para operar el funnel, as-is vs to-be?"
+  relationship: "three isolated after-payment sources TRANSFORM into one account spine that JOINS demand, sales and subscription"
+  evidence_type: structure
+  composition: from_to_architecture (as-is | to-be con espina)
+  family: operating_model
+  alternatives_considered:
+    - id: diagrama entidad-relación completo
+      score: {fidelity: 2, focal: 1, evidence: 3, variety: 2, risk: -2}
+      rejected_because: "23 tablas con llaves no se leen en una lámina; va al anexo"
+    - id: tabla brecha → métrica
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "pierde el antes/después"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: spine
+  visual_hierarchy:
+    1: la espina account / account_xref (lima)
+    2: tres capas del to-be colgadas de la espina
+    3: as-is: tres fuentes aisladas
+    4: qué métrica habilita cada capa
+  objects:
+    - {id: asis, kind: node, content: "Pagos cliente × mes · Industria cliente · Gasto S&M mes × rubro sin unidad"}
+    - {id: spine, kind: node, content: "account · account_xref"}
+    - {id: layers, kind: node, content: "Demanda · Comercial · Producto y facturación"}
+    - {id: marts, kind: node, content: "funnel_entry → métricas del funnel · account_month → métricas comunes"}
+  encodings:
+    solid_outline: "existe hoy (as-is)"
+    dashed_outline: "propuesto, no existe todavía (to-be)"
+    mono: "nombres de tablas"
+    accent: "la llave común"
+  annotations:
+    - {at: asis, text: "Todo es de después del pago: no dice si un cero es cancelación, mora o desfase (44% de los churn vuelve a pagar al mes siguiente)"}
+    - {at: layers, text: "habilita: entradas, win rate y costo por Won por canal · conversión, tiempos, carga y handoff por etapa · churn por cancelación vs mora, MRR de lista y neto"}
+  layout_intent:
+    grid: "as-is cols 1–3; flecha col 4; to-be cols 5–12"
+    reading_path: "izquierda (hoy) → derecha (propuesta), la espina al centro del to-be"
+    whitespace: "entre as-is y to-be"
+  text_budget: 120
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "tres cards", "ERD ilegible"]
+  data: {source: "propuesta (R-033); cifra: data/FIN-F-199.yaml (44%)", values: "751 eventos de churn observado; 44% vuelve a pagar al mes siguiente"}
+  notes: "Es diseño, no algo construido. R-033 trata Reactivate como puerta y usa otras rutas; C-005 lo trata como loop: alinear antes de construir. Seis reglas son decisiones de negocio (F-241). Mide hacia adelante salvo que Finora tenga historial (F-242)."
+  sources: [F-238, F-239, F-240, F-241, F-242, F-145, F-146, F-144, F-191, F-213, F-136, F-199]

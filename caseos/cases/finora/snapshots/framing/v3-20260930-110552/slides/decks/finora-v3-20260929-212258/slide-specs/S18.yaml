@@ -1,0 +1,51 @@
+slide:
+  id: S18
+  file: slides/18.html
+  claim_id: C-015
+  role_in_story: evidence
+  kicker: "Revenue · pricing introductorio observable"
+  headline: "Lo observable es el primer y segundo pago; el descuento no es verificable"
+  takeaway: "El primer pago se acerca al segundo después de 2022; sin lista ni descuento registrados, eso no dice si hubo descuento."
+  question: "¿Qué data observable de pricing introductorio podemos sacar?"
+  relationship: "the first payment CONVERGES to the second after 2022; the initial gap closes"
+  evidence_type: comparison
+  composition: dumbbell (por cohorte) + aligned_shares
+  family: comparison
+  alternatives_considered:
+    - id: barras agrupadas por año
+      score: {fidelity: 2, focal: 2, evidence: 3, variety: 1, risk: 0}
+      rejected_because: "la brecha entre pagos queda implícita; el dumbbell la dibuja"
+    - id: histograma de primer pago
+      score: {fidelity: 1, focal: 1, evidence: 1, variety: 2, risk: -1}
+      rejected_because: "data/ no trae la distribución completa"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: gap_2022
+  visual_hierarchy:
+    1: la brecha 2022 entre primer y segundo pago (lima)
+    2: 2023 y 2024 con los pagos juntos
+    3: porcentajes alineados por cohorte (repite / supera con holgura)
+    4: lo que no es verificable
+  objects:
+    - {id: dumbbells, kind: marker, content: "2022 63,0 → 52,5 · 2023 36,8 = 36,8 · 2024 42,0 → 38,9 (COP mil, medianas)"}
+    - {id: gap_2022, kind: path, content: "brecha inicial 2022"}
+    - {id: shares, kind: text, content: "repite 73,5 · 90,3 · 77,3%; 1.º supera con holgura 23,2 · 7,1 · 11,6%"}
+  encodings:
+    x_position: "COP mil (mediana)"
+    dot_filled: "primer pago"
+    dot_ring: "segundo pago"
+    accent: "la brecha que se cierra"
+  annotations:
+    - {at: gap_2022, text: "Pagos iniciales grandes en 2022"}
+    - {at: bottom, text: "No dice si hubo descuento: sin precio de lista ni descuento registrados, no es verificable"}
+  layout_intent:
+    grid: "dumbbell cols 1–8; porcentajes cols 9–12 alineados por fila"
+    reading_path: "fila 2022 → 2023 → 2024; luego porcentajes"
+    whitespace: "entre filas"
+  text_budget: 80
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla", "inferir descuentos del tamaño del salto"]
+  data:
+    source: "data/FIN-F-083.yaml (primer pago), FIN-F-160.yaml (M1), FIN-F-086.yaml, FIN-F-087.yaml"
+    values: "M0 mediana 63.000 / 36.750 / 42.000; M1 mediana 52.500 / 36.750 / 38.850"
+  notes: "No se afirma que hubo descuentos en el histórico (F-134 no prueba ausencia). No se infieren descuentos del tamaño de un salto."
+  sources: [F-083, F-160, F-166, F-086, F-087, F-134, F-093]

@@ -1,0 +1,47 @@
+table_id: FIN-F-197
+caseos_id: T-094
+title: Entre mar-22 y oct-24 las altas corresponden a 1.476 clientes distintos, con 0 meses-cliente marcados a la
+  ve…
+columns:
+- altas_total
+- reactivaciones_total
+- solapamiento_banderas
+- altas_con_pago_previo
+- clientes_distintos_con_alta
+rows:
+- - 1476.0
+  - 468.0
+  - 0.0
+  - 0.0
+  - 1476
+units:
+  altas_total: num2
+  reactivaciones_total: num2
+  solapamiento_banderas: num2
+  altas_con_pago_previo: num2
+  clientes_distintos_con_alta: int
+definitions:
+  Reactivaciones: Clientes que vuelven a pagar después de al menos un mes en cero.
+message: Entre mar-22 y oct-24 las altas corresponden a 1.476 clientes distintos, con 0 meses-cliente marcados a
+  la vez como alta y reactivación y 0 altas con un pago anterior registrado; las reactivaciones suman 468 eventos
+  en un flujo aparte.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  - E-002
+  tools:
+  - query_metric
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-2198 · C-009
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month

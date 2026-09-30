@@ -1,0 +1,352 @@
+{
+ "run_id": "RUN-20260929-104559-cos-afa0",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-014",
+ "started_at": "2026-09-29T11:22:25-06:00",
+ "duration_ms": 2185751,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-014\nTipo: research · revisión: proposed\nTexto: No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al entrar, primer contacto humano y compra en ventana fija) y un roster semanal de SDR/AE que distinga ramp; la comparación, por grupo de entrada entre periodo base y periodo de caída, es: si empeora la mezcla de ajuste apunta a H-005, y si suben la carga y la espera y la caída se concentra en entradas lentas o sin trabajar, con Self Service estable, apunta a H-006 (confianza media: es un diseño apoyado en un método publicado, no un resultado).\nRespuesta corta: No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al entrar, primer contacto humano y compra en ventana fija) y un roster semanal de SDR/AE que distinga ramp; la comparación, por grupo de entrada entre periodo base y periodo de caída, es: si empeora la mezcla de ajuste apunta a H-005, y si suben la carga y la espera y la caída se concentra en entradas lentas o sin trabajar, con Self Service estable, apunta a H-006 (confianza media: es un diseño apoyado en un método publicado, no un resultado).\nEstablecido: El modelo del caso no tiene entradas, grupo de entrada, reps ni tiempos de contacto: con él no se puede probar ni descartar H-005 ni H-006. | El gasto de Team/Payroll/Travel no mide capacidad: su unidad no está documentada y PayrollExpenses es negativo en 5 meses. | En B2B, buena parte de los leads de marketing no se persigue, y que un rep los siga depende a la vez de la calidad percibida y del volumen (Sabnis et al., 2013). | Separar mezcla de tasa es un método publicado y verificable (Kitagawa / Oaxaca-Blinder).\nNo podemos concluir: Si Finora tiene CRM y roster con fecha de creación, primer contacto, campos de ajuste y fechas de alta y baja de reps, y desde cuándo. | Si en el periodo cambió la definición de lead, el formulario, la regla de calificación o el reparto de leads. | Qué significa 'New' en H-006 (entradas o clientes nuevos) y qué meses son 'la caída'. | Si Self Service existía como recorrido sin SDR/AE en ambos periodos.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- H-005 (HC3q) [hypothesis] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [hypothesis] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- Q-016 (W6) [question] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?\n- Q-021 (U06) [question] U06 · Demanda, calidad, atención y post-SQL\n- Q-023 (U12) [question] U12 · ¿Validar implica experimentos?\nMotivo de Hugo: research completado\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [running · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc…\n- R-011 [running · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent…\n- R-012 [running · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [completed · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d… → No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son d…\n- R-015 [completed · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem… → Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y…\n- R-016 [running · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se…\n- R-017 [running · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti…\n- R-018 [running · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los…\n- R-019 [running · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?…\n- R-020 [running · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-120 [proposed] Con el modelo actual no se puede separar H-005 de H-006: faltan las entradas, los reps y los tiempos de contacto.\n- F-121 [proposed] El dato mínimo son dos tablas: entradas con el ajuste congelado al entrar y el primer contacto humano, y un roster semanal de SDR/AE con su ramp.\n- F-122 [proposed] La comparación que separa es mezcla vs. tasa por grupo de entrada: la mezcla de ajuste habla de H-005; la tasa dentro de cada banda, si cae sobre todo en entradas lentas y en semanas de alta carga, habla de H-006.\n- F-123 [proposed] Self Service funciona como grupo de control, y los experimentos naturales van antes que un experimento aleatorio (Q-023).\n- F-124 [proposed] Lo que el modelo sí dice sobre los compradores no permite elegir entre H-005 y H-006.\n\n## Findings propuestos sin revisar: 124 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n- T-005 `FIN-F-063` [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala\n- T-006 `FIN-F-064` [proposed] Ningún rubro del archivo de S&M tiene meses ausentes\n- T-007 `FIN-F-065` [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero…\n- T-008 `FIN-F-066` [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo\n- T-009 `FIN-F-067` [proposed] La serie de Habilitación cambia de composición dentro del panel\n- T-010 `FIN-F-068` [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a ga…\n- T-011 `FIN-F-069` [proposed] El peso de Habilitación en el S&M total no es estable\n- T-012 `FIN-F-070` [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-014 no inclina H-005 ni H-006. Con el modelo del caso no se puede probar ni descartar ninguna de las dos, porque faltan las entradas, los grupos de entrada, los reps y los tiempos de contacto.\n\nLo que sí aporta:\n- **Dato mínimo y prueba para separarlas.** Es la primera pieza concreta de Q-016.\n- **Cierra dos atajos.** El gasto de Team/Payroll no mide capacidad. Y lo que sabemos de los compradores no permite elegir entre calidad y capacidad (F-124).\n\nPara tu revisión de F-120 a F-124:\n- F-120 y F-124 se sostienen como están.\n- F-121 deja fuera la 'compra en ventana fija' que R-014 sí pide.\n- F-122 debería medir la capacidad comparando semanas de más y menos carga, no entradas lentas contra rápidas, porque los reps eligen a quién atender.\n- F-123 llama 'grupo de control' a Self Service, cuando R-014 deja esa comparación sujeta a una condición que no verificó.\n\nChequeo aparte: PayrollExpenses es negativo en 5 meses. Eso puede mover las cifras de S&M por alta de R-015 y T-012, que sostienen H-022.\n\nVersión ejecutiva para el bloque CRO: 'Con los datos de hoy no se puede distinguir entre dos explicaciones: calidad de los leads o capacidad del equipo. Con dos tablas (entradas y equipo por semana) sí se podría.'",
+  "impacts": [
+   {
+    "target": "H-005",
+    "effect": "requires_research",
+    "why": "R-014 confirma (confianza alta) que el modelo no tiene entradas ni señales de ajuste al entrar, así que H-005 no se puede probar ni descartar. La prueba sería comparar la mezcla de ajuste por grupo de entrada entre el periodo base y el de caída. F-124 cierra el atajo de usar a los compradores: ni el primer pago menor (R-003) ni el menor aporte posterior (R-006) permiten elegir entre H-005 y H-006. Hay dos cosas que pueden ensuciar esa prueba. Primero, F-121 deja fuera la compra en ventana fija que R-014 sí pide; sin ella se cuela H-003 (las entradas recientes tienen menos tiempo para comprar). Segundo, R-014 no sabe si cambió la definición de lead, el formulario, la calificación o el reparto; si cambió, la mezcla empeora por cómo se cuenta y no porque la máquina de leads genere peor.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Completar el dato mínimo antes de aceptar F-121",
+      "consequence": "Se recupera la compra en ventana fija y se añade la pregunta sobre cambios de definición, formulario, calificación o reparto. Así la prueba de mezcla no confunde H-003 ni un cambio de medición con peor calidad. El pedido de datos crece dos líneas."
+     },
+     {
+      "key": "B",
+      "label": "Aceptar F-121 como está",
+      "consequence": "Más simple. Los dos riesgos quedan como limitación escrita y el pedido de datos que vería el CRO queda incompleto."
+     },
+     {
+      "key": "C",
+      "label": "Abrir aparte la hipótesis de cambio de definición",
+      "consequence": "Más trabajo. Tiene sentido si el enunciado sugiere un cambio así, y conecta con H-001 ('no creció tanto como parecía')."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es solo redacción, sale del propio R-014 y protege la única prueba que hay para H-005."
+   },
+   {
+    "target": "H-006",
+    "effect": "requires_research",
+    "why": "Sin reps, roster ni tiempos de contacto, H-006 no se puede probar ni descartar. R-014 también cierra el atajo del gasto: Team/Payroll no mide capacidad (la unidad no está documentada y PayrollExpenses es negativo en 5 meses). La prueba de F-122 tiene un punto flojo que el propio R-014 señala: que un rep siga una entrada depende de la calidad que percibe y del volumen (Sabnis et al., 2013). O sea, una 'entrada lenta' puede ser simplemente una entrada que el rep vio peor. Lo más limpio es comparar, dentro de la misma banda de ajuste, semanas con más y menos carga, y mejor si la carga cambia por el lado del equipo (ramp, bajas) que por picos de volumen, que pueden traer peor intención. Además, la tasa dentro de una banda también cae por H-007 u H-008. El diseño es de confianza media: un método publicado, no un resultado. Falta definir 'New' y los meses de la caída.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Reformular F-122 antes de aceptarla",
+      "consequence": "La señal de H-006 pasa a ser que, dentro de la misma banda de ajuste, la compra cae en las semanas de más carga (con Self Service estable, si sirve de comparación: ver F-123). Que caiga en entradas lentas o sin trabajar queda como apoyo, no como prueba. Mezcla y tasa no se presentan como '% calidad' y '% capacidad' (D-003). Así la prueba aguanta la objeción de que los reps eligieron no atender las peores."
+     },
+     {
+      "key": "B",
+      "label": "Aceptar F-122 como está",
+      "consequence": "Más rápido, pero una caída concentrada en entradas lentas podría ser que los reps priorizan por calidad percibida (H-005) y se lea como falta de capacidad (H-006)."
+     },
+     {
+      "key": "C",
+      "label": "Devolver el diseño a R-010 (en curso)",
+      "consequence": "Queda un solo diseño, revisado junto con H-007 y H-008, pero tarda más cerrar el bloque CRO."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es un ajuste de redacción con lo que R-014 ya trae; no hace falta research nuevo."
+   },
+   {
+    "target": "F-123",
+    "effect": "weakens",
+    "why": "F-123 afirma sin condición que Self Service 'funciona como grupo de control'. Pero el propio R-014 no sabe si Self Service existía sin SDR/AE en ambos periodos, ni si cambió el reparto de entradas. Además, quien entra por Self Service lo elige él mismo: sirve para comparar, pero no es un control como el de un experimento.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Reformular como condicional",
+      "consequence": "Quedaría así: 'Self Service puede servir como grupo de comparación si existió sin SDR/AE en ambos periodos y el reparto no cambió; los experimentos naturales van antes que uno aleatorio (Q-023).' Se conserva la idea y la story no promete un control que no sabemos si existe."
+     },
+     {
+      "key": "B",
+      "label": "Aceptar como está",
+      "consequence": "La respuesta a Q-023 y la prueba de H-006 quedarían apoyadas en un supuesto sin verificar."
+     },
+     {
+      "key": "C",
+      "label": "Dejarla en revisión hasta saber si Self Service existía en ambos periodos",
+      "consequence": "Q-023 queda sin respuesta mientras tanto."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Conserva lo útil (experimentos naturales primero) y deja a la vista la condición que R-014 no pudo cerrar."
+   },
+   {
+    "target": "Q-016",
+    "effect": "supports",
+    "why": "R-007 (W6) quedó bloqueada con 'la respuesta es la lista de evidencia que falta', y R-014 es la primera pieza concreta de esa lista: para el par H-005/H-006 ya hay dato mínimo, comparación y qué resultado apunta a cuál. Faltan H-007 (post-SQL) y H-008 (oferta). R-010 (en curso) pide la misma 'información mínima' para las hipótesis de ToFu y BoFu; si no reutiliza este diseño, el CRO podría recibir dos pedidos de datos distintos.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Respuesta parcial, y que R-010 complete el resto",
+      "consequence": "Q-016 toma R-014 para H-005/H-006 y R-010 cubre H-007 y H-008 con el mismo formato, reutilizando la tabla de entradas. Queda una sola lámina de 'qué necesitamos para distinguir'."
+     },
+     {
+      "key": "B",
+      "label": "Cerrar Q-016 con R-014 y la lista de R-007",
+      "consequence": "Menos trabajo, pero H-007 y H-008 quedan como 'falta dato' sin prueba propuesta."
+     },
+     {
+      "key": "C",
+      "label": "Research nuevo solo para H-007 y H-008",
+      "consequence": "Duplica en parte lo que ya está corriendo en R-010."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "R-010 ya está trabajando esa pregunta; alinearla evita dos diseños que el CRO tendría que reconciliar."
+   },
+   {
+    "target": "Q-021",
+    "effect": "requires_research",
+    "why": "De U06, R-014 cubre calidad (H-005) y atención (H-006), pero como diseño, no como resultado. Demanda y post-SQL (H-007) siguen sin dato mínimo; lo natural es que salgan de R-010 (ver Q-016).",
+    "severity": "low",
+    "options": [],
+    "recommended": "",
+    "recommended_why": ""
+   },
+   {
+    "target": "Q-023",
+    "effect": "supports",
+    "why": "R-014 da una primera respuesta a U12: validar no empieza por un experimento aleatorio. Primero van las comparaciones naturales (Self Service, semanas de más y menos carga) y después el aleatorio, si hace falta. La condición sobre Self Service está en el impacto sobre F-123.",
+    "severity": "low",
+    "options": [],
+    "recommended": "",
+    "recommended_why": ""
+   },
+   {
+    "target": "framing",
+    "effect": "changes_framing",
+    "why": "R-014 cierra dos atajos que hoy no están en 'No afirmar todavía'. Uno: leer el gasto de Team/Payroll como capacidad de SDR/AE. Dos: leer lo que sabemos de los compradores (primer pago menor, menor aporte posterior) como peor calidad de leads o falta de capacidad (F-124). Los dos son tentadores en una lámina de Inversión en Marketing o en el bloque CRO. Framing sigue en needs_review, así que esto entraría en esa revisión.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Añadir los dos a 'No afirmar todavía'",
+      "consequence": "El borrador de storytelling y las láminas quedan protegidos de ambos atajos desde ya. Es reversible."
+     },
+     {
+      "key": "B",
+      "label": "Añadir solo el de Team/Payroll",
+      "consequence": "El de los compradores se decide al revisar F-124. El framing queda más corto, pero depende de esa revisión."
+     },
+     {
+      "key": "C",
+      "label": "No tocar el framing",
+      "consequence": "Queda como limitación en cada lámina donde aplique, y es más fácil de olvidar."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es barato y evita que el borrador de storytelling de D-016 use cualquiera de los dos atajos."
+   },
+   {
+    "target": "H-022",
+    "effect": "requires_research",
+    "why": "R-014 establece que PayrollExpenses es negativo en 5 meses. Si el S&M total que usan R-015 (S&M total por alta −66%) y T-012 (gasto por alta de 0,11 a 0,04) incluye Team/Payroll, y esos meses caen en las ventanas comparadas, las cifras que hoy sostienen H-022 pueden moverse. En el estado no veo si R-015 o T-007 ya lo tratan.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Chequeo chico",
+      "consequence": "Confirmar si el S&M total de R-015 y T-012 incluye PayrollExpenses y en qué meses es negativo. Si esos meses caen en las ventanas, mostrar la cifra con y sin Team. Así la cifra queda defendible o se corrige antes de que la revises."
+     },
+     {
+      "key": "B",
+      "label": "Limitación escrita",
+      "consequence": "No cuesta trabajo, pero el riesgo sigue dentro de la cifra que llegaría a la story."
+     },
+     {
+      "key": "C",
+      "label": "Sacar Team de todo el S&M por alta",
+      "consequence": "Evita el problema, pero cambia la definición de S&M total sin saber si hacía falta."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es el chequeo más chico que dice si hay problema; si R-015 ya lo trató, se cierra sin cambios."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "Parte del aumento de entradas y de la peor mezcla viene de un cambio en cómo se cuentan o se reparten (definición de lead, formulario, regla de calificación o reparto), no de más demanda ni de una máquina de leads que genere peor.",
+    "falsifier": "El enunciado o Finora confirman que la definición de lead, el formulario, la regla de calificación y el reparto no cambiaron entre el periodo base y el de caída, o que ningún cambio coincide con el salto de entradas."
+   },
+   {
+    "statement": "H-005 y H-006 pueden operar a la vez: con más volumen, los SDR/AE dejan sin trabajar primero las entradas que perciben peores (R-014, citando a Sabnis et al., 2013). La palanca cambia según si esas entradas comprarían al ser atendidas: si no comprarían, más capacidad no las recupera; si comprarían, la capacidad importa.",
+    "falsifier": "La mezcla de ajuste al entrar no empeora entre periodos, o, dentro de una misma banda de ajuste, ni el primer contacto humano ni la compra cambian entre semanas de más y menos carga."
+   }
+  ],
+  "new_questions": [
+   "¿Qué significa 'New' en H-006: entradas o clientes nuevos? (La misma palabra aparece en H-001.) ¿Y qué meses son 'la caída'? Sin eso, la comparación de R-014 no tiene periodo base ni periodo de caída. R-012 (en curso) puede ayudar si fija el periodo del 4,5×, el 2,8× y el −38%.",
+   "¿Qué cuenta como 'compra' en la ventana fija de R-014: Won, primer pago o suscripción activa? El framing lo deja por acordar, y la prueba depende de eso.",
+   "¿El enunciado dice algo sobre Self Service (si existía sin SDR/AE en ambos periodos) o sobre cambios en la definición de lead, el formulario, la calificación o el reparto? Es el chequeo más barato antes de tratarlos como supuestos.",
+   "¿La tabla de entradas de R-014 (creación, grupo de entrada, compra en ventana fija) sirve también como dato mínimo para H-001 a H-004, con los mismos grupos que está definiendo R-016? Es inferencia mía. Si R-010 o R-016 lo confirman, el bloque CRO pediría una sola tabla base más el roster.",
+   "¿Las dos tablas de R-014 van a la story como 'dato mínimo para contrastar' o como parte de la Propuesta de Modelo de datos del CRO? D-007 (activa) deja el modelo de datos fuera de 'esta etapa' y D-015 sigue propuesta; decidir D-015 lo resuelve."
+  ],
+  "status_note": "Research en curso, Framing en needs_review y ningún finding aceptado (hay 124 propuestos sin revisar), así que todavía nada está listo para la story. R-014 deja H-005 y H-006 sin veredicto posible con los datos del caso y propone un diseño de dos tablas (entradas y roster de SDR/AE) que conviene afinar antes de aceptar F-121 a F-123. Lo que más desbloquea el bloque CRO: definir 'New' y los meses de la caída (R-012), acordar el hito de compra y alinear R-010 con este diseño."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 653585,
+  "input_tokens": 2,
+  "output_tokens": 71615,
+  "cache_read": 3781,
+  "cache_write": 8217,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.5059042,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

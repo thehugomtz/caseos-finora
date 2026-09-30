@@ -1,0 +1,86 @@
+id: F-139
+type: finding
+headline: 'El «ARPU» de hoy es en realidad ARPA (por cliente, no por usuario), y su caída total mezcla cohortes:
+  hay que reportarlo por cohorte y medir el ARPA de entrada con un monto estabilizado (M1 o monto usual), no con
+  el primer pago.'
+evidence_text: El ARPA baja de 92.839 COP (ene-22) a 57.811 COP (oct-24). La base previa se mueve entre 82.884 y
+  110.073 COP, y la cosecha 2024 entre 40.593 y 52.238 COP. M1 es menor que M0 en 66 de las 272 altas de 2022. El
+  69% de los pagos son múltiplos de 2.100 COP, lo que es compatible con un precio por unidad, pero no hay usuarios
+  ni licencias que lo confirmen. ChartMogul recomienda seguir aparte el ARPA de los clientes nuevos.
+confidence: medium
+limitations:
+- Aquí no se separa el efecto mezcla de una caída dentro de cada cohorte; eso le toca a Analytics. La señal de precio
+  por unidad es solo compatible, no prueba nada.
+kind: measurement
+claims:
+- claim: El ARPA (MRR pagado por cliente activo) pasa de 92.839 COP en ene-22 a 57.811 COP en oct-24.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es ARPA por cuenta. Aquí no se separa si es efecto mezcla o precio.
+- claim: Por cosecha, el ARPA mensual de la base previa se mueve entre 82.884 y 110.073 COP, y el de la cosecha
+    2024 entre 40.593 y 52.238 COP.
+  source_id: DM-17
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es compatible con un efecto mezcla en el ARPA total; separarlo le toca a Analytics.
+- claim: 22.865 de 32.971 pagos (69%) son múltiplos exactos de 2.100 COP, y hay 395 montos usuales distintos.
+  source_id: DM-09
+  source_type: data_model
+  confidence: medium
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Es compatible con un precio por unidad (¿usuarios o licencias?), pero el modelo no lo confirma: no hay
+    ARPU por usuario.'
+- claim: M1 es menor que M0 en 66 de las 272 altas de la cosecha 2022, en 48 de 650 de 2023 y en 68 de 554 de 2024
+    (y en 56 de las 108 altas de feb-22).
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: contests
+  notes: El ARPA de entrada debe usar M1 o el monto usual. En 2024 hay 50 altas sin M1 (oct-24).
+- claim: Los montos usuales más frecuentes son 42.000 COP (146 clientes), 63.000 COP (122) y 31.500 COP (106).
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: context
+  notes: El tramo de monto usual sirve hoy como proxy de plan.
+- claim: ARPA = MRR ÷ clientes activos. ARPA y ARPU usan la misma fórmula, pero la unidad cambia (cuenta frente
+    a usuario). Se recomienda seguir aparte el precio promedio de los clientes nuevos.
+  source_id: EXT-05
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Justifica llamar ARPA a lo que se pide como ARPU.
+- claim: Multiplicar por 12 los bookings de un mes para llegar al ARR es un error común cuando incluye cargos no
+    recurrentes.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29; fecha de publicación no verificada
+  supports_or_contests: context
+  notes: Por eso el ARR aquí solo puede ser run-rate.
+unverified: false
+source_ref:
+  research: R-018
+links:
+- R-018
+- H-017
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:01:40-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

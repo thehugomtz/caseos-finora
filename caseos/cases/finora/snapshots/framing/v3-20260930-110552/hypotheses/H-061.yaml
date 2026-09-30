@@ -1,0 +1,21 @@
+id: H-061
+type: hypothesis
+statement: El monto del panel se registra por fecha de cobro (caja), no por mes de servicio. Ese solo mecanismo
+  explicaría a la vez las subidas de un mes que se revierten (F-171), los churns que vuelven a pagar al mes siguiente,
+  los retornos que liquidan exactamente los meses pendientes (F-174) y los primeros pagos por encima del recurrente
+  (F-166).
+falsifier: Cae si la definición documentada de Finora dice que el monto es el valor del mes de servicio. También
+  cae si una muestra de facturas muestra que cada monto aparece en su periodo facturado y no en la fecha de pago;
+  por ejemplo, un pago atrasado registrado en su mes de servicio.
+status: open
+phase: synthesis
+links:
+- R-027
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144406-cos-7321
+created_at: '2026-09-29T14:59:09-06:00'
+updated_at: '2026-09-29T14:59:09-06:00'
+version: 1

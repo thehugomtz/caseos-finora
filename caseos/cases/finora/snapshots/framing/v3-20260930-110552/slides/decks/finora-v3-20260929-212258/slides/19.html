@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S19 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S19"] {
+  .rl { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .in { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .in.kn { color: var(--bg); }
+  .ds { font-size: 20px; color: var(--ink-2); }
+  .ds b { color: var(--ink); font-weight: 600; }
+  .lead2 { font-size: 26px; line-height: 1.3; color: var(--ink-2); }
+  .lead2 b { color: var(--ink); font-weight: 600; }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 26px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 8px; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S19" data-composition="stacked_decomposition" data-family="economics" data-word-budget="85" data-page="20">
+  <header class="header">
+    <div class="kicker">Revenue · pricing introductorio observable</div>
+    <h1 class="headline">Con cliente, mes y monto se ve qué cambió, no por qué</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, mar-22–oct-24; cada barra = 100% del MRR de esa línea del puente de monto pagado · FIN-F-174, FIN-F-180, FIN-F-172, FIN-F-184, FIN-F-185 · F-136, F-186</span><span class="page"></span></footer>
+  <aside class="notes">Se ve cuánto cambió el monto pagado y en qué movimiento del puente, pero parte de ese movimiento es calendario de cobro. 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente, 29% del MRR de expansión se revierte al mes siguiente y 44% de los 751 churn observados vuelve a pagar al mes siguiente (32% de los retornos tras meses sin pago liquida exactamente los meses pendientes). En la reactivación, 42,6% llega con un monto que cubre los meses del hueco más el corriente y 11,5% regresa al monto usual; 45,9% no encaja en esas firmas. En la contracción, solo 4,0% vuelve al nivel previo, 7,1% sube sin llegar y 88,9% sigue igual o más abajo. Lo que no se ve es el porqué: suscripción, tarifa, descuento o cobro. F-131 salió de este claim: su lectura de la contracción choca con F-184 (X-100); aquí se usa F-184 y la tensión queda abierta. El reparto exacto de un pago entre los meses que cubre no se puede medir; solo se acota (F-186). Las etiquetas del puente describen el monto pagado, no altas, bajas ni expansiones contractuales.</aside>
+</main>
+<script>
+P.draw('S19', (s, P) => {
+  // Plan: 100% bars per bridge line cols 1–8 (label · bar · descriptor under the bar) · note cols 10–12.
+  // Lime = billing-timing signature (undoes itself next month) · ink = holds · gray = no signature assigned (no number: we do not compute remainders).
+  const X0 = 400, BW = 780, H = 42, Y = [440, 560, 680, 800];
+  const bw = (p) => (p / 100) * BW;
+
+  s.label(112, 334, '<b>25,3%</b> del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente', { cls: 'lead2', w: 1100 });
+  s.rect(X0, 384, 22, 22, { fill: 'accent' });
+  s.label(X0 + 32, 395, 'firma de momento de cobro: se deshace al mes siguiente', { anchor: 'ml', cls: 'key' });
+
+  const rows = [
+    ['Churn observado', [[44, 'accent', '44%']], 'vuelve a pagar'],
+    ['Reactivación', [[42.6, 'accent', '42,6%'], [11.5, 'accent', '11,5%'], [45.9, 'ink-5', '']], 'cubre el hueco + el mes · vuelve al monto usual'],
+    ['Expansión', [[29, 'accent', '29%']], 'se revierte'],
+    ['Contracción', [[4.0, 'accent', ''], [7.1, 'ink-5', ''], [88.9, 'ink-3', '88,9%']], '<b>4,0%</b> vuelve al nivel previo · sigue igual o más abajo'],
+  ];
+  rows.forEach(([name, segs, desc], i) => {
+    const y = Y[i];
+    s.label(112, y + H / 2, name, { anchor: 'ml', cls: 'rl' });
+    s.rect(X0, y, BW, H, { fill: 'ink-5' });
+    let x = X0;
+    segs.forEach(([p, tone, lab], j) => {
+      const w = bw(p);
+      s.rect(x, y, w, H, { fill: tone, id: i === 1 && j === 0 ? 's19-react' : null, focal: i === 1 && j === 0 });
+      if (j) s.line(x, y, x, y + H, { stroke: 'bg', w: 3 });
+      if (lab) s.label(x + 14, y + H / 2, lab, { anchor: 'ml', cls: 'in' + (tone === 'ink-3' ? ' kn' : '') });
+      x += w;
+    });
+    s.label(X0, y + H + 12, desc, { cls: 'ds', w: BW });
+  });
+
+  // What cannot be seen.
+  s.line(1400, 440, 1400, 842, { stroke: 'rule', w: 1.5 });
+  s.label(1436, 440, '<b>No se ve el porqué</b>suscripción, tarifa, descuento o cobro', { cls: 'nt', w: 372 });
+});
+</script>
+</body>
+</html>

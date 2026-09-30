@@ -1,0 +1,96 @@
+id: F-189
+type: finding
+headline: 'La definición de Reactivate es la decisión de medición que más mueve la historia: su peso en las entradas
+  a pago va de 18–30% a 7–9% según cuántos meses sin pago se exijan.'
+evidence_text: 'Si basta cualquier mes en cero, las reactivaciones son 30,4%, 17,7% y 22,6% de las entradas a pago
+  en 2022, 2023 y 2024 [1]. Si se exigen 2 o más meses, son 7,1%, 8,1% y 8,6% [5]. El 70,5% de los regresos llega
+  tras un solo mes en cero [3], y el 44% de los churns observados vuelve a pagar al mes siguiente [2]. Al volver,
+  el 30% de quienes faltaron 1 mes y el 29% de quienes faltaron 2 pagan exactamente los meses que faltaban más el
+  actual [4]. Las herramientas de facturación no fijan un plazo estándar [9][10]: el umbral lo decide Finora.'
+confidence: high
+limitations:
+- 'Las cifras son firmes. Leerlas como pago atrasado es una inferencia a partir del monto, porque no tenemos el
+  estado de facturación. Además, antes de ene-22 no hay historia: un excliente que volvió en 2022 aparece como nuevo.'
+kind: measurement
+claims:
+- claim: 'Si basta cualquier mes en cero, las reactivaciones observadas son el 30,4% (2022: 166 de 546), el 17,7%
+    (2023: 140 de 790) y el 22,6% (2024: 162 de 716) de las entradas a pago (primeras apariciones + reactivaciones).'
+  source_id: S-DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; 2022 = feb–dic, 2024 = ene–oct; consulta del 2026-09-29
+  supports_or_contests: supports
+  notes: 'Consistente con la parte baja del rango de R-016, que usa otro corte. Son proporciones dentro de cada
+    año. Los conteos no se comparan entre años: la cobertura es distinta y 2022 incluye las altas marcadas de feb-22.'
+- claim: 330 de los 751 churns observados (43,9%) vuelven a pagar al mes siguiente; 283 (37,7%) no vuelven antes
+    de oct-24.
+  source_id: S-DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Es churn observado, no cancelación confirmada. Los churns recientes tienen menos tiempo para volver, porque
+    la ventana se corta en oct-24.
+- claim: 330 de las 468 reactivaciones observadas (70,5%) llegan tras un solo mes en cero; 100 de esas 330 pagan
+    al volver exactamente el doble de su monto usual.
+  source_id: S-DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29
+  supports_or_contests: contests
+  notes: Contradice leer esos regresos como clientes recuperados. Pagar el doble cuadra con un pago atrasado (el
+    mes faltante más el actual), aunque también podría ser un cambio de plan exacto. La detección exige que el monto
+    usual aparezca al menos 3 veces, así que 100 es un mínimo.
+- claim: Pagar al volver exactamente los meses en cero más el actual (señal de pago atrasado) aparece en el 30,3%
+    de los regresos tras 1 mes, el 29,0% tras 2, el 16,7% tras 3 y el 7,7% tras 4 o más. Con la regla «2 o más meses
+    en cero y sin esa señal» quedan 112 de las 468 reactivaciones.
+  source_id: S-DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29
+  supports_or_contests: contests
+  notes: '112 = (62−18) + (24−4) + (52−4), calculado sobre las filas de la consulta. Un umbral solo de tiempo (2
+    meses) no basta: la señal de pago atrasado sigue apareciendo a los 2 meses.'
+- claim: Si se exigen 2 o más meses sin pagar, las reactivaciones son el 7,1%, 8,1% y 8,6% de las entradas a pago
+    (2022, 2023, 2024). Si se exigen 4 o más, son el 2,8%, 3,7% y 2,8%.
+  source_id: S-DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29
+  supports_or_contests: contests
+  notes: Con 2 o más meses, el peso es chico y estable. La variación entre años de la cifra con 1 mes viene de los
+    regresos tras un solo mes en cero (137, 83 y 110).
+- claim: ChartMogul clasifica como Reactivation el MRR de un «former paying subscriber» y como New Business la primera
+    suscripción. No fija un plazo de inactividad y reporta el churn al final del período facturado.
+  source_id: S-EXT-03
+  source_type: company
+  confidence: high
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Reactivate se define por la historia de pago, no por la forma de comprar; el plazo lo decide Finora. Fechar
+    el churn al final del período pagado evita contar como churn los meses cubiertos por un pago de varios meses.
+- claim: Chargebee define Reactivation MRR como el MRR de clientes que antes hicieron churn o cancelaron y aportaron
+    $0 en el período previo. Excluye pruebas gratuitas y la cuenta como parte del expansion MRR.
+  source_id: S-EXT-04
+  source_type: company
+  confidence: high
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: context
+  notes: 'ChartMogul la separa de New Business y Chargebee la mete en expansión. No hay estándar: Finora tiene que
+    decidir y dejarlo por escrito.'
+unverified: false
+source_ref:
+  research: R-023
+links:
+- R-023
+- H-006
+- H-028
+- H-036
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:45:42-06:00'
+updated_at: '2026-09-29T14:45:42-06:00'
+version: 1

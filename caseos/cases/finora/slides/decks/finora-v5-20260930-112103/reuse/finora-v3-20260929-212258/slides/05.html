@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S05 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S05"] {
+  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .rr { font-size: 20px; color: var(--ink-2); margin-left: 8px; }
+  .zn { font-size: 20px; color: var(--ink-2); }
+  .zn b { color: var(--ink); font-weight: 600; }
+  .chip { background: var(--accent); color: var(--ink); padding: 6px 14px; font-size: 22px; font-weight: 600; }
+  .ttl { font-size: 30px; font-weight: 600; color: var(--ink); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S05" data-composition="split_and_converge + reactivate_loop" data-family="process" data-word-budget="120" data-page="6">
+  <header class="header">
+    <div class="kicker">Growth · cómo definir el funnel · propuesta</div>
+    <h1 class="headline">Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de diseño (R-031): hoy el modelo no tiene leads, etapas, dueños, canal ni ruta · F-209, F-210, F-211, F-212, F-213, F-188, F-190, F-140, F-155, F-223, F-224, F-226</span><span class="page"></span></footer>
+  <aside class="notes">La unidad es el journey: cuenta × intento (varias personas de una misma empresa son un solo journey). Al entrar se fijan dos atributos que ya no cambian: la puerta (producto o CRM/Ventas) y el canal (outbound SDR, inbound «hablar con ventas», referido o partner, o signup por paid media, publicidad no web u orgánico). Mientras el journey está abierto, la ruta es provisional. La ruta se clasifica al final, por eventos: Executive si arranca con persona y nunca pasa por Checkout Self; Self Service si nunca interviene una persona; Hybrid A si arranca en el producto y después entra una persona; Hybrid B si arranca con persona y cierra por Checkout Self. Mientras el journey está abierto, la ruta es provisional. Reactivate no es otra ruta: es un loop para journeys estancados, con bandera, que no crea un New nuevo. Los clientes que vuelven a pagar son un loop de Revenue y se miden aparte. Las tasas se comparan entre puertas (fijas al entrar), no entre rutas: la ruta se define por lo que pasó y eso sesga la conversión de Hybrid (H-050). Abierto: qué cuenta como intervención de persona (Q-063); si existe compra self-serve sin persona o prueba gratis (Q-046).</aside>
+</main>
+<script>
+P.draw('S05', (s, P) => {
+  // Entry (cols 1–3) → split → four routes (cols 4–8) → knot (col 10) → common right side (cols 11–12).
+  const SY = 625, SX = 600, L0 = 700, L1 = 1290, LM = 995, KX = 1440;
+  // The entry carries two fixed attributes into the split: the chip sits on the entry line.
+  s.label(112, SY - 72, 'Entrada', { anchor: 'bl', cls: 'ttl' });
+  s.label(112, SY - 40, 'journey = cuenta × intento', { anchor: 'ml', cls: 'label-sm' });
+  s.label(112, SY, 'Fijos al entrar', { anchor: 'ml', cls: 'chip', id: 's05-chip', focal: true });
+  s.line(s.box('#s05-chip').r + 8, SY, SX, SY, { stroke: 'ink-3', w: 2 });
+  s.dot(SX, SY, { r: 6, fill: 'ink-3' });
+  s.label(112, SY + 44, '<b>Puerta</b> · producto o CRM/Ventas', { cls: 'annotation', w: 420 });
+  s.label(112, SY + 92, '<b>Canal</b> · outbound SDR, inbound, referido o partner, signup', { cls: 'annotation', w: 420 });
+
+  // Pre-knot zone: nothing here is measured in today's data.
+  s.rect(672, 340, 654, 522, { fill: 'surface' });
+  s.label(L0, 366, '<b>Antes del nudo</b>: nada se mide hoy', { anchor: 'ml', cls: 'zn' });
+
+  const routes = [
+    ['Executive', 'persona de punta a punta', 452, ['P', 'P']],
+    ['Hybrid B', 'arranca con persona; cierra en Checkout Self', 572, ['P', 'S']],
+    ['Hybrid A', 'arranca en producto; luego entra una persona', 692, ['S', 'P']],
+    ['Self Service', 'nunca interviene una persona', 812, ['S', 'S']],
+  ];
+  routes.forEach(([name, rule, y, segs]) => {
+    s.path(`M${SX},${SY} C${SX + 60},${SY} ${L0 - 50},${y} ${L0},${y}`, { stroke: 'ink-3', w: 2 });
+    segs.forEach((k, j) => {
+      const a = j ? LM + 4 : L0, b = j ? L1 : LM - 4;
+      s.line(a, y, b, y, k === 'P' ? { stroke: 'ink', w: 7, cap: 'butt' } : { stroke: 'ink-3', w: 2 });
+    });
+    s.path(`M${L1},${y} C${L1 + 80},${y} ${KX - 90},${SY} ${KX - 18},${SY}`, { stroke: 'ink-3', w: 2 });
+    s.label(L0, y - 16, `<span class="rn">${name}</span><span class="rr">${rule}</span>`, { anchor: 'bl', cls: 'label' });
+  });
+  // Key for the lane weight (top-right of the panel).
+  s.line(1040, 360, 1080, 360, { stroke: 'ink', w: 7, cap: 'butt' });
+  s.label(1090, 360, 'con persona (SDR/AE)', { anchor: 'ml', cls: 'zn' });
+  s.line(1040, 390, 1080, 390, { stroke: 'ink-3', w: 2 });
+  s.label(1090, 390, 'sin persona', { anchor: 'ml', cls: 'zn' });
+
+  // Knot: first payment, the only common thing measured today (solid).
+  s.circle(KX, SY, 16, { fill: 'ink', id: 's05-knot' });
+  s.line(KX + 22, SY, 1790, SY, { stroke: 'ink', w: 3, arrow: 'end' });
+  s.label(1486, SY - 18, 'Desde el nudo se compara por puerta, no por ruta', { anchor: 'bl', cls: 'annotation', w: 300 });
+  s.label(1486, SY + 20, '<b>Nudo: primer pago</b>, lo único que hoy se mide', { cls: 'zn', w: 300 });
+  s.label(1486, SY + 96, 'La ruta se clasifica al final, por eventos', { cls: 'annotation', w: 300 });
+
+  // Reactivate: a loop over stalled journeys, not a fourth route.
+  s.path('M1180,866 C1180,940 850,940 850,872', { stroke: 'ink-3', w: 2, arrow: 'end' });
+  s.label(1015, 944, 'Reactivate: loop de estancados; vuelve a su etapa sin crear un New', { anchor: 'tc', cls: 'label-sm', w: 640, align: 'center' });
+});
+</script>
+</body>
+</html>

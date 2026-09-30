@@ -1,0 +1,44 @@
+id: F-073
+type: finding
+headline: 'Parte del movimiento del monto pagado corresponde a movimientos que se deshacen: 25,3% del movimiento
+  bruto sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte al mes siguiente,
+  lo que es consistente con que amount registre cobro y no importe contractual.'
+epistemic_state: Hecho observado
+confidence: high
+kind: analytics
+visual:
+  tipo: barras
+  apiladas: true
+  x:
+  - Movimiento bruto sin altas, mar-22 a sep-24
+  formato: pct
+  series:
+  - nombre: Vuelve exacto al nivel previo al mes siguiente
+    valores:
+    - 0.2529696008219224
+  - nombre: Resto del movimiento
+    valores:
+    - 0.7470303991780776
+  claim_fase1: C-DAT-06
+visual_title: 'Parte del movimiento del monto pagado corresponde a movimientos que se deshacen: 25,3% del movimiento
+  bruto sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte al mes siguiente,
+  lo que es consistente con que amount registre cobro y no importe contractual.'
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103202-db67
+  claim: C-013
+  evidence:
+  - EC-DAT-06
+  - EC-DAT-03
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-028
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:36:57-06:00'
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 2

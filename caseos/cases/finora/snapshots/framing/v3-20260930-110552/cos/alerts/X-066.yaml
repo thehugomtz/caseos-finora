@@ -1,0 +1,47 @@
+id: X-066
+type: alert
+kind: story_change
+status: open
+severity: medium
+effect: changes_story
+source: R-020
+target: framing
+title: R-020 cambia la historia framing
+finding_text: El ticket de entrada es medible; el descuento no es verificable aquí
+why: El bloque CFO parte de «introducir descuentos sin perder la respuesta a ¿por qué cambió el MRR?». R-020, junto
+  con R-002 y R-011, indica que con cliente × mes × monto esa respuesta ya está incompleta antes de cualquier descuento.
+  El 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente. El 32% de los retornos
+  tras meses sin pago liquidan exactamente los meses pendientes. Y hay 260 ajustes con cobro retroactivo exacto
+  (F-090). Además, no hay catálogo de precios ni una definición documentada del monto (F-093). La pregunta del CFO
+  no cambia; lo que cambia es cómo abre su bloque en el borrador de storytelling (D-016).
+options:
+- key: A
+  label: Abrir el bloque CFO con el hueco de hoy
+  consequence: 'Mensaje: «Con los datos que recibimos, el pago ya mezcla reversiones, liquidaciones y ajustes retroactivos;
+    el modelo propuesto los separa y además soporta descuentos». El modelo de datos se justifica por un problema
+    actual, no solo futuro. Hay que decir «con los datos que recibimos», porque no vemos los sistemas internos de
+    Finora.'
+- key: B
+  label: Mantener el bloque centrado en descuentos
+  consequence: Estos movimientos quedan como limitación del Overview. El bloque es más corto, pero el CFO puede
+    no ver que el hueco ya existe hoy.
+- key: C
+  label: Decidir cuando cierre R-021
+  consequence: El encuadre queda alineado con el modelo que proponga R-021, pero el borrador de storytelling queda
+    con este punto abierto.
+recommended: A
+recommended_why: Encaja en la pregunta ejecutiva del framing («qué huecos en su WoW»), es coherente con D-004 y
+  es el insight más útil para el CFO. Elijas la opción que elijas, conviene pasar F-090, F-091 y F-093 a R-021 para
+  que su modelo cubra reversiones, liquidaciones y ajustes retroactivos, no solo descuentos.
+detected_by: cos
+links:
+- R-020
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-150b
+created_at: '2026-09-29T11:55:06-06:00'
+updated_at: '2026-09-29T11:55:06-06:00'
+version: 1

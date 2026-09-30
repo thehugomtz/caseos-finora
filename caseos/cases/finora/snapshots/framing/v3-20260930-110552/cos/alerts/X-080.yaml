@@ -1,0 +1,49 @@
+id: X-080
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-022
+target: framing
+title: R-022 cambia el framing
+finding_text: 'Cada funnel tiene su propio lado izquierdo. Executive se mide por cuenta-oportunidad: win rate con
+  ventana fija, ciclo de venta, estancamientos y tiempo de Won a pago. Hybrid se mide por entrada de la máquina
+  de leads: cobertura y tiempo a primer contacto, carga por SDR/AE y conversión por banda de…'
+why: 'Hallazgo: en los pagos, el loop de Reactivate es sobre todo vueltas tras un solo mes en cero (70,5%, F-157),
+  y una parte vuelve pagando el doble. Además, R-022 no puede decir cuántas de las 283 bajas sin regreso son cancelaciones
+  y cuántas son fallos de cobro. Por qué toca el framing: el «No afirmar todavía» cuida alta, baja y expansión,
+  pero no dice nada de Reactivate. Fuera del lado derecho en agregado, el loop es lo único del funnel que se calcula
+  hoy (R-022), así que va a salir en la story. Es fácil leerlo como el Reactivate del CRO (si en su CRM es un tipo
+  de entrada, como New en H-001) o como win-back; con 70,5% de vueltas tras un mes, esa lectura mediría sobre todo
+  brechas de cobro. Del otro lado pasa lo mismo: el churn persistente (T-002) no es lo mismo que una cancelación.
+  Complementa X-034 y X-058; no los repite.'
+options:
+- key: A
+  label: Añadir dos límites al «No afirmar todavía»
+  consequence: Las líneas serían «Que una reactivación observada sea win-back o el loop de Reactivate del CRO» y
+    «Que una baja sin regreso sea una cancelación». En la story, el loop se muestra partido por largo del hueco
+    (un mes o más de un mes, y si vuelve pagando el doble) como aproximación, no como causa. Así se puede mostrar
+    hoy sin que se lea como win-back.
+- key: B
+  label: Poner un caveat en cada lámina, sin tocar el framing
+  consequence: Menos cambio ahora, pero el caveat se pierde fácil y el framing (en needs_review) sigue sin cubrirlo.
+- key: C
+  label: Sacar el loop de Reactivate de la story hasta tener CRM y eventos de cobro
+  consequence: No hay riesgo de mala lectura, pero se pierde la única pieza del funnel medible hoy y una de las
+    cuatro casuísticas de R-022.
+recommended: A
+recommended_why: Es la única parte del funnel con data hoy. El límite evita la lectura equivocada más probable,
+  y partir el loop por largo del hueco ya se puede hacer con los pagos.
+detected_by: cos
+links:
+- R-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-143020-cos-4d70
+created_at: '2026-09-29T14:44:06-06:00'
+updated_at: '2026-09-29T14:44:06-06:00'
+version: 1

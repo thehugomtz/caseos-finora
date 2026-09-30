@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S14 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S14"] {
+  .chip { background: var(--accent); color: var(--ink); padding: 6px 16px; font-size: 24px; font-weight: 600; }
+  .rt { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1.15; }
+  .rt span { display: block; font-size: 22px; font-weight: 400; color: var(--ink-2); margin-top: 8px; line-height: 1.3; }
+  .l1 { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .l2 { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .l3 { font-size: 20px; color: var(--ink-2); }
+  .lf { font-size: 22px; color: var(--ink-2); }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .lv { font-size: 22px; line-height: 1.25; color: var(--ink); }
+  .nt { font-size: 22px; color: var(--ink-2); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S14" data-composition="issue_tree + lever_column" data-family="logic" data-word-budget="135" data-page="15">
+  <header class="header">
+    <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
+    <h1 class="headline">Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta (C-023); hojas = causas candidatas, no hechos de Finora; reordena las ramas del árbol anterior (decisión pendiente) ·F-122, F-127, F-128, F-129, F-212, F-228, F-229, F-230, F-231, F-232</span><span class="page"></span></footer>
+  <aside class="notes">Paso 0, antes del árbol: fijar qué es venta (Won o primer pago), una ventana W igual para el periodo base y el del aumento, cohortes por fecha de creación y New separado de Reactivate. Identidad: ventas = Σ por puerta de las entradas válidas × la conversión de cada etapa dentro de W. La brecha se reparte en este orden y cada pedazo cae en una sola hoja. Medición · validez: no-prospectos (sube la parte de duplicados, clientes actuales, ex-clientes o spam, H-052); desfase o cambio de definición (ventana más corta que el ciclo o cambió qué se registra como New, H-003, H-004, H-027, H-069); misma demanda por otra puerta (compradores que antes entraban solos por producto ahora pasan por Ventas, H-053). Negocio · mezcla: efecto mezcla = Σ cambio de mezcla × tasa base; efecto tasa = Σ mezcla nueva × cambio de tasa; el término cruzado se asigna con una regla fija; hoja: entra peor mezcla (H-002, H-005), con señales congeladas al crear el lead. Tasa antes del SQL: capacidad, si el tiempo a primer toque sube con la carga (H-006); estancados sin seguimiento, si crece la bolsa y los retomados sí compran (H-055). Después del SQL: SQL menos maduros por la meta del SDR, si la aceptación del AE empeora solo en los SQL del SDR (H-054); decisión en Demo o Proposal por precio, plan, competidor o funcionalidad, con motivos validados con compradores (H-056, H-008). Cobro: el Won no llega a pagar o se cae en el arranque (H-057). H-007 no es hoja: es la regla que ubica la etapa. Palancas: validez → definición de lead válido, deduplicación y ruteo; mezcla → scoring y mezcla de fuentes con el CMO; antes del SQL → capacidad, SLA y cadencias; después del SQL → criterio de SQL y comisiones, o pricing y respuesta a la competencia con CFO y CPO; cobro → handoff a cobro y onboarding. Las hojas son causas candidatas: no afirmamos que cambiaron metas, comisiones, precio o competencia; la caída post-SQL no se atribuye al AE. Si aparecen a la vez las firmas de mezcla y de capacidad, se reportan como interacción (H-028). Reordena las tres ramas de D-001: si lo adoptas, hace falta una decisión nueva (X-150).</aside>
+</main>
+<script>
+P.draw('S14', (s, P) => {
+  // Plan: order rule (lime) as the reading header · root cols 1–2 · level 1 col 3 · level 2 col 4–5 ·
+  // stage col 5–6 · leaves cols 7–9 · CRO levers cols 10–12. Elbows share one spine per level.
+  s.label(112, 318, 'Orden fijo: validez → mezcla vs tasa → etapa → cobro', { cls: 'chip', id: 's14-rule', focal: true });
+  s.label(1440, 330, 'Palanca del CRO', { cls: 'cap' });
+
+  const XL = 1024, XLV = 1440, R = 8;
+  const rows = { v: [412, 458, 504], m: [574], a: [644, 690], d: [760, 806], c: [876] };
+  const leaves = [
+    ['v', 0, 'No-prospectos'], ['v', 1, 'Desfase o cambio de definición'], ['v', 2, 'Misma demanda por otra puerta'],
+    ['m', 0, 'Entra peor mezcla'], ['a', 0, 'Capacidad'], ['a', 1, 'Estancados sin seguimiento'],
+    ['d', 0, 'SQL menos maduros por la meta'], ['d', 1, 'Decisión en Demo o Proposal'], ['c', 0, 'El Won no llega a pagar'],
+  ];
+  leaves.forEach(([g, i, t]) => {
+    const y = rows[g][i];
+    if (g === 'c') { s.circle(XL, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M${XL},${y - R} A${R},${R} 0 0 0 ${XL},${y + R} Z`, { fill: 'ink', stroke: null }); }
+    else s.circle(XL, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
+    s.label(XL + 22, y, t, { anchor: 'ml', cls: 'lf', id: `s14-${g}${i}` });
+  });
+  const mid = (a) => (a[0] + a[a.length - 1]) / 2;
+
+  // Tree nodes.
+  const node = (x, y, html, cls, id, w) => s.label(x, y, html, { anchor: 'ml', cls, id, w });
+  const yRoot = (rows.v[0] + rows.c[0]) / 2;
+  node(112, yRoot, 'Brecha<span>más New, no más ventas</span><span>ventas = Σ puertas<br>(entradas válidas ×<br>conversión por etapa en W)</span>', 'rt', 's14-root', 272);
+  const yMed = mid(rows.v), yNeg = mid([rows.m[0], rows.c[0]]);
+  node(436, yMed, 'Medición · validez', 'l1', 's14-med');
+  node(436, yNeg, 'Negocio', 'l1', 's14-neg');
+  const yTasa = mid([rows.a[0], rows.c[0]]);
+  node(624, rows.m[0], 'Mezcla', 'l2', 's14-mez');
+  node(624, yTasa, 'Tasa', 'l2', 's14-tasa');
+  node(768, mid(rows.a), 'antes del SQL', 'l3', 's14-ant');
+  node(768, mid(rows.d), 'después del SQL', 'l3', 's14-des');
+  node(768, rows.c[0], 'cobro', 'l3', 's14-cob');
+
+  // Elbows share one spine per level; same-height links are straight.
+  const elbow = (from, toY, toX, midX) => {
+    const b = s.box(from), x0 = b.r + 10;
+    if (Math.abs(toY - b.cy) < 1) return s.line(x0, toY, toX, toY, { stroke: 'ink-3', w: 2 });
+    s.polyline([[x0, b.cy], [midX, b.cy], [midX, toY], [toX, toY]], { stroke: 'ink-3', w: 2, radius: 8 });
+  };
+  [yMed, yNeg].forEach((y) => elbow('#s14-root', y, 424, 406));
+  rows.v.forEach((y) => elbow('#s14-med', y, XL - 16, 690));
+  [rows.m[0], yTasa].forEach((y) => elbow('#s14-neg', y, 612, 590));
+  elbow('#s14-mez', rows.m[0], XL - 16, 0);
+  [mid(rows.a), mid(rows.d), rows.c[0]].forEach((y) => elbow('#s14-tasa', y, 756, 730));
+  rows.a.forEach((y) => elbow('#s14-ant', y, XL - 16, 980));
+  rows.d.forEach((y) => elbow('#s14-des', y, XL - 16, 980));
+  elbow('#s14-cob', rows.c[0], XL - 16, 0);
+
+  // CRO lever per branch.
+  const levers = [
+    [rows.v, 'lead válido, deduplicación y ruteo'], [rows.m, 'scoring y fuentes con el CMO'],
+    [rows.a, 'capacidad, SLA y cadencias'], [rows.d, 'criterio de SQL y comisiones; pricing'], [rows.c, 'handoff a cobro y onboarding'],
+  ];
+  levers.forEach(([ys, t]) => {
+    const y0 = ys[0] - 16, y1 = ys[ys.length - 1] + 16, ym = (y0 + y1) / 2;
+    if (ys.length > 1) s.path(`M${XLV - 44},${y0} H${XLV - 36} V${y1} H${XLV - 44}`, { stroke: 'ink-4', w: 1.5 });
+    s.line(XLV - 36, ym, XLV - 14, ym, { stroke: 'ink-4', w: 1.5 });
+    s.label(XLV, ym, t, { anchor: 'ml', cls: 'lv', w: 368 });
+  });
+
+  // Status key: what can be checked today.
+  const ky = 944;
+  s.circle(120, ky, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
+  s.label(138, ky, 'hoy no se valida ni se descarta', { anchor: 'ml', cls: 'nt' });
+  s.circle(520, ky, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M520,${ky - R} A${R},${R} 0 0 0 520,${ky + R} Z`, { fill: 'ink', stroke: null });
+  s.label(538, ky, 'de cobro solo se ve el arranque', { anchor: 'ml', cls: 'nt' });
+});
+</script>
+</body>
+</html>

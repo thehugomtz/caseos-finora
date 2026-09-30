@@ -1,0 +1,104 @@
+table_id: FIN-F-072
+caseos_id: T-027
+title: El MRR por cliente activo, definido como MRR pagado dividido entre los clientes con pago mayor que cero en
+  el…
+columns:
+- Periodo
+- MRR por cliente activo
+rows:
+- - ene-22
+  - 92839.01419098144
+- - feb-22
+  - 95882.95385120349
+- - mar-22
+  - 84679.31042826553
+- - abr-22
+  - 97785.41464929859
+- - may-22
+  - 92667.65763157894
+- - jun-22
+  - 76048.455
+- - jul-22
+  - 84263.42994880547
+- - ago-22
+  - 90461.4048275862
+- - sep-22
+  - 80228.56559618442
+- - oct-22
+  - 75334.00931192661
+- - nov-22
+  - 75148.32421524664
+- - dic-22
+  - 89543.71829268293
+- - ene-23
+  - 76893.68079126877
+- - feb-23
+  - 72763.91284403669
+- - mar-23
+  - 71579.38640151515
+- - abr-23
+  - 73093.43923357663
+- - may-23
+  - 72034.96
+- - jun-23
+  - 68980.66288097887
+- - jul-23
+  - 67232.73197080292
+- - ago-23
+  - 66718.99901077374
+- - sep-23
+  - 64238.77928571428
+- - oct-23
+  - 63420.15254192409
+- - nov-23
+  - 63902.53950124688
+- - dic-23
+  - 62786.46672038679
+- - ene-24
+  - 59630.55491036633
+- - feb-24
+  - 58539.54116099072
+- - mar-24
+  - 59120.31061363637
+- - abr-24
+  - 60215.23539727988
+- - may-24
+  - 58786.32895676047
+- - jun-24
+  - 58885.613980392154
+- - jul-24
+  - 57109.778927203064
+- - ago-24
+  - 56921.83353932584
+- - sep-24
+  - 56330.51234042553
+- - oct-24
+  - 57811.35091179976
+units:
+  MRR por cliente activo: cop
+definitions:
+  MRR por cliente activo: MRR pagado dividido entre clientes activos.
+message: El MRR por cliente activo, definido como MRR pagado dividido entre los clientes con pago mayor que cero
+  en el mes y expresado en COP tras aplicar la escala fija del campo amount, pasa de COP 92,8 mil en ene-22 a COP
+  57,8 mil en oct-24, una variación de −38%.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-003
+  - E-007
+  tools:
+  - query_metric
+  - run_analysis
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: annotated_line
+analysis_reference: INV-20260929-103202-db67 · C-004
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: month

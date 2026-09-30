@@ -1,0 +1,125 @@
+id: C-017
+type: claim
+key: descuento-objeto
+question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro
+  MRR?»?
+headline: El descuento se registra como objeto propio, con origen, source y fecha de fin
+answer: 'Mecanismo propuesto: cada descuento vive como objeto propio (tipo, valor, inicio, fin pactado y real, alcance,
+  motivo y aprobador) y tiene un solo origen: promoción con su oferta, código y canje; negociación; retención; o
+  partner. Va separado de la cantidad contratada y del precio de lista, para que ni un precio especial ni un downgrade
+  de retención escondan un descuento. El source se captura en la adquisición de todos los clientes, no solo en el
+  código, y el código guarda aparte el canal asignado y su medio (digital, físico o QR). Además, sin estado de suscripción
+  un mes gratis se confunde con churn, como pasa hoy, cuando 44% de los churns observados vuelve a pagar al mes
+  siguiente. Implicaciones multidisciplinarias: Finanzas declara la convención de cómo pega el descuento en el MRR
+  y qué vista usa (MRR neto, revenue o caja, según los contratos sean mensuales o a plazo fijo); Marketing marca
+  las cohortes con descuento y las mide contra un grupo comparable; Ventas y CS registran aprobaciones y casos de
+  retención; y Datos construye el modelo.'
+role_in_story: recommendation
+evidence_ids:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+- F-174
+table_ids:
+- T-076
+research_ids:
+- R-034
+- R-021
+- R-011
+framework_ids: []
+confidence: medium
+limitations:
+- 'Funciona hacia adelante: el histórico no trae tarifas ni descuentos, y no hay cifra histórica de revenue no capturado.'
+- La evidencia externa asocia la adquisición con descuento a clientes de menor valor, y el churn al vencer el descuento
+  tiene otras causas posibles (F-154).
+- La convención «fin de descuento no es expansión» se aparta del default del mercado y hay que declararla (F-236).
+- Si el source solo vive en el código, el código se vuelve la única atribución (H-073). Sin la regla «precio especial
+  = lista + descuento», parte de los descuentos quedaría como precio menor (H-074).
+- La lámina de convención y capas (C-018) queda en anexo; aquí queda en una línea.
+visual_intent: 'Converge: todos los orígenes (promoción, negociación, retención, partner) desembocan en un solo
+  objeto descuento, separado de la suscripción y del precio de lista, con sus implicaciones por área.'
+hugo_wording: Cómo debería Finora introducir descuentos temporales (mecanismo propuesto, implicaciones multidisciplinarias,
+  preguntas del CFO contestadas con el modelo propuesto).
+links:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+- F-174
+- T-076
+- R-034
+- R-021
+- R-011
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 8
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  accepted: []
+  pending:
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  tables:
+  - T-076
+  - T-076
+  unsupported_numbers: []
+  stale: []

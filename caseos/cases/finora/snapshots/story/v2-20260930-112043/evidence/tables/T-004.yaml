@@ -1,0 +1,66 @@
+id: T-004
+type: table
+table_key: CRO-TICKET-01
+title: Ticket de entrada de los nuevos pagadores por año
+question: ¿Cambió lo que pagan los nuevos pagadores al entrar?
+columns:
+- year
+- new_customers
+- m0_mean_cop
+- m0_median_cop
+- early_run_rate_median_cop
+rows:
+- - 2022
+  - 272
+  - 128695
+  - 63000
+  - 60900
+- - 2023
+  - 650
+  - 47945
+  - 36750
+  - 36750
+- - 2024
+  - 554
+  - 50842
+  - 42000
+  - 37800
+units:
+  new_customers: clientes
+  m0_mean_cop: COP
+  m0_median_cop: COP
+  early_run_rate_median_cop: COP
+definitions:
+  m0_median_cop: Mediana del primer pago observado de las altas del año.
+message: La mediana del ticket de entrada bajó de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil en
+  2024.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: supporting/new_customer_ticket_by_year.csv
+query: ''
+transformation: ''
+filters: []
+period:
+  from: 2022-03
+  to: 2024-10
+grain: año de alta
+analysis_id: Fase 1 · C-ADQ-01
+limitations:
+- 2022 incluye pagos iniciales grandes (CV-M0-PICOS-2022); primer pago ≠ hito de adquisición del CRO.
+preferred_visual: bar
+visual_artifact: null
+created_at: '2026-09-28T22:22:26-06:00'
+status: valid
+validation_errors: []
+links:
+- F-008
+- F-009
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: supporting/new_customer_ticket_by_year.csv
+  imported_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

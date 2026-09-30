@@ -1,0 +1,36 @@
+/* Direction C · Technical Blueprint
+   Dark navy canvas, bright blue accent, cyan secondary. Blueprint grid, mono labels,
+   architecture-diagram language (dimension lines, ticks, node markers). Controlled density.
+   The grid is theme texture drawn on the slide root only (QA exempts the root). */
+@layer theme {
+  :root {
+    --font-display: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+    --font-text: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+    --bg: #0a1628; --surface: #0f1f38;
+    --ink: #eaf1fb; --ink-2: #b4c3d8; --ink-3: #8397b3; --ink-4: #2c4264; --ink-5: #15294a;
+    --rule: #243a5c;
+    --accent: #3d8bff; --accent-text: #6aa6ff; --accent-ink: #06101f; --accent-soft: #14305c; --accent-2: #62e0d9;
+    --neg: #ff7a66; --pos: #4fd1a1; --highlight: #1d3e75;
+    --grid-line: rgba(118, 156, 214, 0.075);
+
+    --headline-weight: 500; --headline-tracking: -0.012em; --headline-leading: 1.1;
+    --display-weight: 400;
+    --kicker-transform: uppercase; --kicker-tracking: 0.14em; --kicker-weight: 500;
+    --label-weight: 500;
+    --radius: 2px;
+    --structure-w: 1.5px;
+  }
+  body { background: #05090f; }
+  .slide {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px; background-position: -1px -1px;
+  }
+  .kicker { font-family: var(--font-mono); color: var(--ink-3); }
+  .label-sm, .footer, .tag { font-family: var(--font-mono); letter-spacing: 0.02em; }
+  .metric { font-weight: 300; }
+}

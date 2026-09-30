@@ -1,0 +1,68 @@
+id: T-044
+type: table
+table_key: FIN-F-100
+title: El menor ticket de entrada no viene del mix de industrias
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - dec_within_share
+  - Parte del cambio del ticket de entrada 2022→2024 que ocurre dentro de las industrias
+  - 97%
+- - dec_within_ci
+  - Intervalo bootstrap de 90% de la parte dentro de las industrias
+  - 91–102%
+- - dec_within_share_min
+  - 'Parte dentro de las industrias: mínimo entre variantes'
+  - 96%
+- - dec_within_share_max
+  - 'Parte dentro de las industrias: máximo entre variantes'
+  - 97%
+units: {}
+definitions: {}
+message: 'El menor ticket de entrada no viene del mix de industrias: el efecto dentro de las industrias explica
+  97% del cambio 2022→2024 (intervalo bootstrap: 91–102%), con un mínimo de 96% entre variantes.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-04
+  - EC-ADQ-05
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-ADQ-04 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-ADQ-05 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-016
+limitations:
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '7.1'
+  claim_fase1: C-ADQ-04
+  cubre:
+  - C-ADQ-04
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-100
+links:
+- F-100
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

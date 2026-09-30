@@ -1,0 +1,37 @@
+table_id: FIN-F-174
+caseos_id: T-076
+title: El puente actual no separa una baja definitiva de una interrupción temporal
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_back_1m
+  - Churns observados que vuelven a pagar al mes siguiente
+  - 44%
+- - churn_events
+  - Eventos de churn observado (mar-22 a oct-24)
+  - '751'
+units: {}
+definitions: {}
+message: 'El puente actual no separa una baja definitiva de una interrupción temporal: 44% de los churns observados
+  vuelve a pagar al mes siguiente y 32% de los retornos después de meses sin pago liquidan exactamente los meses
+  pendientes.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-02
+  - EC-DAT-08
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-3f07 · C-008
+period: {}
+grain: según evidencia

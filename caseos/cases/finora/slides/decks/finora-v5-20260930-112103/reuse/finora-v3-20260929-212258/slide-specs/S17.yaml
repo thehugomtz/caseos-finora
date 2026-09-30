@@ -1,0 +1,48 @@
+slide:
+  id: S17
+  file: slides/17.html
+  claim_id: C-014
+  role_in_story: recommendation
+  kicker: "Growth · cómo operarlo · propuesta"
+  headline: "Proponemos dos vías: dashboards para los foros recurrentes y agentes de IA para el día a día"
+  headline_original: "Proponemos dos vías: una formal y ejecutiva a través de dashboards adhoc a los foros recurrentes y otro para preguntas del día a día a través de agentes de IA que permitan generar visualizaciones y hacer análisis adhoc"
+  takeaway: "Cada foro conecta pocas métricas con una decisión del CRO; por encima, agentes de IA y análisis ad hoc responden el día a día sobre métricas gobernadas."
+  question: "¿Cómo opera el CRO el funnel de forma recurrente y qué decide en cada foro?"
+  relationship: "each forum CONNECTS few metrics to one decision, from operational (weekly) to investment (quarterly); a continuous second way RUNS on the same governed metrics"
+  evidence_type: structure
+  composition: operating_cadence (escalera de horizonte) + continuous_lane
+  family: operating_model
+  alternatives_considered:
+    - id: anillos de cadencia
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "los anillos no dejan espacio para métrica → decisión, que es lo que importa"
+    - id: tres cards de foro
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "esconde el horizonte creciente y la segunda vía"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: decisions
+  visual_hierarchy:
+    1: las tres decisiones (qué decide el CRO en cada foro)
+    2: foros en el eje de horizonte (semanal → mensual → trimestral) con sus métricas
+    3: la vía del día a día (agentes de IA y ad hoc) corriendo debajo
+    4: base: métricas gobernadas sobre el modelo to-be
+  objects:
+    - {id: forums, kind: node, content: "Semanal · Mensual Growth & Revenue · Trimestral"}
+    - {id: decisions, kind: text, content: "avanzar, retomar o descalificar journeys y reasignar capacidad · mover inversión entre canales y ajustar el ruteo · repartir entre Generación de Demanda, Team y Habilitación"}
+    - {id: daily_lane, kind: path, content: "agentes de IA y análisis ad hoc por hoja del árbol"}
+  encodings:
+    x_position: "horizonte de la decisión"
+    accent: "la decisión que habilita cada foro"
+    dashed: "todo es propuesta: no existe hoy"
+  annotations:
+    - {at: daily_lane, text: "Solo sobre métricas gobernadas, con un piloto controlado; la atribución reparte crédito, no prueba causa"}
+  layout_intent:
+    grid: "etiquetas de vía cols 1–2; foros cols 3–12"
+    reading_path: "izquierda → derecha por horizonte, arriba decisiones, abajo día a día"
+    whitespace: "entre foros"
+  text_budget: 120
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla", "iconos de dashboard"]
+  data: {source: "propuesta (C-014); sin cifras", values: []}
+  notes: "Las decisiones del CRO aún no están definidas; los foros son propuesta. Depende del modelo de C-013; mientras tanto solo existen las métricas verdes de C-009. Título recortado sin cambiar el argumento (ver headline_original)."
+  sources: [F-147, F-148, F-149, F-144]

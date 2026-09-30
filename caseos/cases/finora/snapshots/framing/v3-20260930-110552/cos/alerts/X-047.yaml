@@ -1,0 +1,31 @@
+id: X-047
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-011
+target: H-014
+title: R-011 requiere más investigación H-014
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: No hay tarifa de lista ni catálogo con fechas, y R-011 no puede concluir si hubo cambios de tarifa en 2022–2024.
+options: []
+recommended: Pedir a Finora el historial de tarifas y, mientras tanto, que R-020 busque meses en que muchos clientes
+  cambian su monto en la misma proporción
+recommended_why: Esa búsqueda daría una señal, no una prueba (no hay vigencias verificadas), pero es barata y dice
+  si vale la pena insistir con el dato.
+detected_by: cos
+links:
+- R-011
+- H-014
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

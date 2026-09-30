@@ -1,0 +1,50 @@
+id: X-135
+type: alert
+kind: new_hypothesis
+status: open
+severity: medium
+effect: opens_new_hypothesis
+source: R-030
+target: H-025
+title: R-030 abre una hipótesis nueva H-025
+finding_text: Gasto de S&M y altas se mueven en direcciones opuestas
+why: 'R-030 afina la coincidencia que H-025 quiere explicar: entre ene-may y jun-dic 2023, los primeros pagadores
+  pasan de 45,2 a 60,6 por mes y el S&M de 3,01 a 1,44 u (F-214).
+
+
+  Pero en ese mismo corte el archivo cambia de forma: Team deja de ser un 12% fijo (F-218, F-115). R-030 reconoce
+  que antes de jun-23 no se distingue el gasto observado de un reparto porcentual.
+
+
+  Eso abre una rival igual de compatible con los datos: la caída del S&M es en parte un cambio en cómo se arma el
+  archivo y no tiene relación con los primeros pagadores. Pagos y gasto no separan las dos (F-222). Las separa la
+  documentación del archivo o una bitácora de cambios comerciales con fecha (X-110, X-118).'
+options:
+- key: A
+  label: Registrar la rival y dejar las dos abiertas
+  consequence: Sin trabajo extra. La story no cuenta un «cambio a mitad de 2023» como hecho. La pregunta sobre cómo
+    se armó el archivo entra a la lista de huecos del WoW.
+- key: B
+  label: Mantener H-025 como lectura principal, con caveat
+  consequence: Narrativa más limpia, pero presenta como explicación una coincidencia de fechas que R-030 no puede
+    atribuir (F-222) y que cae justo en un cambio del archivo.
+- key: C
+  label: Pedir a Finora la documentación del archivo y la bitácora de may–jul-23 antes de mover H-025
+  consequence: Es lo único que separa H-025 de la rival. Si en esta etapa no hay acceso a Finora, queda como requerimiento
+    de data y H-025 no avanza.
+recommended: A
+recommended_why: Es la opción honesta y barata. No descarta H-025, pero evita que la story la use como explicación
+  mientras exista una rival igual de compatible. La pregunta de C entra de todos modos a la lista de lo que falta.
+detected_by: cos
+links:
+- R-030
+- H-025
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-180911-cos-f1c8
+created_at: '2026-09-29T18:19:59-06:00'
+updated_at: '2026-09-29T18:19:59-06:00'
+version: 1

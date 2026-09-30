@@ -1,0 +1,37 @@
+id: X-163
+type: alert
+kind: story_review
+status: open
+severity: medium
+effect: requires_research
+source: R-035
+target: C-021
+title: 'R-035 toca C-021: revisar el claim'
+finding_text: 'Propongo 35 métricas en tres capas MECE. (1) Las etapas viven en cada ruta: volumen, conversión cohortada,
+  velocidad y estancamiento en Executive, Self Service, Hybrid A y Hybrid B, y además rebote en Hybrid B. (2) El
+  dinero vive en una capa común cortada por ruta de entrada: valor, calidad y efici…'
+why: La nueva evidencia comparte linaje (misma hipótesis o finding) con este claim de la story.
+options:
+- key: A
+  label: Revisar el claim con la nueva evidencia
+  consequence: El claim queda needs_review hasta que lo confirmes.
+- key: B
+  label: Pedir al COS que evalúe el efecto
+  consequence: Clasificación supports / weakens / contradicts con opciones.
+- key: C
+  label: Sin impacto material
+  consequence: Se registra la decisión y se cierra la alerta.
+recommended: B
+recommended_why: La relación existe por linaje; su efecto necesita lectura.
+detected_by: lineage
+links:
+- R-035
+- C-021
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+created_at: '2026-09-30T10:14:35-06:00'
+updated_at: '2026-09-30T10:14:35-06:00'
+version: 1

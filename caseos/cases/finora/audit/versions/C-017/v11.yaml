@@ -1,0 +1,134 @@
+id: C-017
+type: claim
+key: descuento-objeto
+question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro
+  MRR?»?
+headline: El descuento se registra como objeto propio, con origen, source y fecha de fin
+answer: 'Mecanismo Propuesto: cada descuento se registra como objeto propio, con tipo, valor, duración, fecha de
+  inicio y de fin, motivo, aprobador y origen exclusivo (promoción digital o física, negociación, retención o partner),
+  separado de la cantidad contratada y del precio de lista, y se lee desde la factura; el modelo separa la oferta,
+  el código que la distribuye y el descuento aplicado con su vigencia. El source se captura en la adquisición de
+  todos los clientes, no solo en el descuento, y el canal asignado al código se guarda aparte; negociación, retención
+  y partner llevan registro propio, para que un precio especial no esconda un descuento ni un downgrade de retención
+  se confunda con uno. Cómo pega el descuento en el MRR no es un estándar de mercado: es una convención que el CFO
+  decide y declara, y las herramientas revisadas no separan por sí solas descuento de cambio de suscripción. Implicaciones
+  Multidisciplinarias: con descuentos, MRR neto, revenue reconocido y caja pueden separarse según el tipo de contrato;
+  el descuento cambia la composición de las cohortes, que hay que marcar y medir contra un grupo comparable; y el
+  puente actual ya mezcla interrupciones con bajas (44% de los 751 churns observados vuelve a pagar al mes siguiente),
+  lo mismo que un descuento que vence volvería a mezclar si no tiene fecha de fin.'
+role_in_story: recommendation
+evidence_ids:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+- F-174
+table_ids:
+- T-076
+research_ids:
+- R-034
+- R-021
+- R-027
+framework_ids: []
+confidence: medium
+limitations:
+- 'Es propuesta: el histórico no trae tarifas ni descuentos y no se afirma que hubo descuentos; el caso habla de
+  introducirlos.'
+- La convención de cómo pega el descuento en el MRR la decide y declara el CFO; la propuesta se aparta del default
+  del mercado (F-236).
+- 'Qué vista aplica (MRR neto, revenue o caja) depende de si los contratos son mensuales cancelables o a plazo fijo:
+  falta confirmarlo (F-153).'
+- La relación entre descuento y clientes de menor valor es evidencia externa, no dato de Finora; se mide con cohortes
+  marcadas y un grupo comparable (F-154).
+- Si el source no se captura para todos los clientes, el código de descuento quedaría como la única atribución (H-073).
+- 'El revenue que dejamos de capturar no tiene cifra histórica: se mide hacia adelante.'
+visual_intent: 'Separate: el descuento sale de lo contratado y del precio de lista como pieza propia, con su origen
+  y su fecha de fin.'
+hugo_wording: Cómo debería Finora introducir descuentos temporales (mecanismo propuesto, implicaciones multidisciplinarias,
+  preguntas del CFO contestadas con el modelo propuesto).
+links:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+- F-174
+- T-076
+- R-034
+- R-021
+- R-027
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 11
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-151
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-151
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  accepted:
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-151
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  - F-233
+  - F-234
+  - F-235
+  - F-236
+  - F-237
+  - F-150
+  - F-151
+  - F-152
+  - F-153
+  - F-154
+  - F-174
+  pending: []
+  tables:
+  - T-076
+  - T-076
+  unsupported_numbers: []
+  stale: []

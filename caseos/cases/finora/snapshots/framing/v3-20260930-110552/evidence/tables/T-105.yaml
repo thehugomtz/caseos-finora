@@ -1,0 +1,213 @@
+id: T-105
+type: table
+table_key: FIN-F-218
+title: La participación de Team en el S&M total se observa en 12% en cada uno de los 17 meses hasta may-23, y despué…
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - team_fixed_months
+  - Meses en que Team es exactamente 12% del S&M total
+  - '17'
+- - team_fixed_until
+  - Último mes con Team fijo en 12%
+  - may-23
+units: {}
+definitions: {}
+message: La participación de Team en el S&M total se observa en 12% en cada uno de los 17 meses hasta may-23, y
+  después sube a 38% en ago-23 y 23% en oct-24.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-01
+  - E-003
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-003\nWITH s AS (SELECT month, total_sm_spend, team FROM mart.sm_monthly),\nn AS (SELECT month, new_customers
+  FROM mart.monthly_metrics)\nSELECT s.month AS mes,\n       ROUND(s.total_sm_spend,3) AS sm_total_u,\n       ROUND(s.team
+  / NULLIF(s.total_sm_spend,0),4) AS team_participacion,\n       n.new_customers AS altas_mismo_mes,\n       LEAD(n.new_customers)
+  OVER (ORDER BY s.month) AS altas_mes_siguiente\nFROM s LEFT JOIN n ON n.month = s.month\nORDER BY s.month"
+transformation: EC-DAT-01 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-003 · run_sql
+  · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-003
+limitations:
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: annotated_line
+visual_artifact:
+  tipo: linea
+  x:
+  - 2022-01
+  - 2022-02
+  - 2022-03
+  - 2022-04
+  - 2022-05
+  - 2022-06
+  - 2022-07
+  - 2022-08
+  - 2022-09
+  - 2022-10
+  - 2022-11
+  - 2022-12
+  - 2023-01
+  - 2023-02
+  - 2023-03
+  - 2023-04
+  - 2023-05
+  - 2023-06
+  - 2023-07
+  - 2023-08
+  - 2023-09
+  - 2023-10
+  - 2023-11
+  - 2023-12
+  - 2024-01
+  - 2024-02
+  - 2024-03
+  - 2024-04
+  - 2024-05
+  - 2024-06
+  - 2024-07
+  - 2024-08
+  - 2024-09
+  - 2024-10
+  series:
+  - nombre: sm_total_u
+    valores:
+    - 2.0
+    - 2.3
+    - 2.3
+    - 2.351
+    - 2.7
+    - 2.351
+    - 2.2
+    - 3.251
+    - 3.5
+    - 3.752
+    - 3.0
+    - 3.251
+    - 3.251
+    - 2.5
+    - 2.9
+    - 2.951
+    - 3.451
+    - 1.8
+    - 1.751
+    - 1.1
+    - 1.252
+    - 1.351
+    - 1.3
+    - 1.5
+    - 1.851
+    - 2.0
+    - 1.751
+    - 2.251
+    - 2.351
+    - 2.0
+    - 1.8
+    - 1.9
+    - 1.851
+    - 2.0
+  - nombre: team_participacion
+    valores:
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.1199
+    - 0.12
+    - 0.1199
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.1199
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.12
+    - 0.2289
+    - 0.237
+    - 0.3782
+    - 0.3347
+    - 0.3131
+    - 0.3323
+    - 0.2953
+    - 0.2388
+    - 0.2215
+    - 0.2467
+    - 0.1964
+    - 0.1893
+    - 0.2235
+    - 0.2489
+    - 0.2363
+    - 0.2426
+    - 0.2265
+  - nombre: altas_mismo_mes
+    valores:
+    - 0
+    - 108
+    - 30
+    - 19
+    - 38
+    - 33
+    - 32
+    - 26
+    - 17
+    - 32
+    - 19
+    - 26
+    - 60
+    - 30
+    - 38
+    - 51
+    - 47
+    - 46
+    - 65
+    - 66
+    - 56
+    - 64
+    - 72
+    - 55
+    - 57
+    - 32
+    - 43
+    - 69
+    - 66
+    - 84
+    - 48
+    - 56
+    - 49
+    - 50
+  formato: num2
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-218
+links:
+- F-218
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1

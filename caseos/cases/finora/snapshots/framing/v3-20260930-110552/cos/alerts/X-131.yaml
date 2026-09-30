@@ -1,0 +1,44 @@
+id: X-131
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-029
+target: Q-046
+title: R-029 cambia el framing Q-046
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: 'X-104 dejó abierto un choque de definición: Q-046 define Self Service por el resultado (compra sin intervención
+  humana) y R-023 lo define por la puerta asignada al entrar. R-029 (F-209) lo resuelve con dos ejes: Self Service
+  como ruta («nada con persona», por resultado) y la puerta aparte, fija al entrar. Las dos definiciones dejan de
+  competir porque miden cosas distintas. Lo que R-029 no responde es si Self Service existe en Finora: sus hitos
+  y canales siguen entre lo que no puede concluir.'
+options:
+- key: A
+  label: Partir Q-046 en ruta y puerta
+  consequence: '(i) Ruta: ¿hay cuentas que llegan al primer pago sin interacción de ida y vuelta con SDR/AE (según
+    cómo se resuelva Q-063)? (ii) Puerta: ¿qué hitos y canales tiene el Self Service de Finora (registro, prueba,
+    compra en línea), y se registran con una llave hacia la cuenta? Con esto se resuelve X-104: cada mitad tiene
+    su fuente (CRM para la ruta, producto para la puerta) y ninguna definición le gana a la otra.'
+- key: B
+  label: Mantener Q-046 por resultado y dejar la puerta a R-023
+  consequence: Hay menos cambios, pero la puerta Self Service se queda sin pregunta propia y sin denominador, y
+    es justo la que F-212 necesita para comparar tasas.
+recommended: A
+recommended_why: 'La historia necesita las dos mitades: la ruta para describir el mix y la puerta para comparar
+  tasas (F-212).'
+detected_by: cos
+links:
+- R-029
+- Q-046
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

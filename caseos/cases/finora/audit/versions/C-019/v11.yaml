@@ -1,0 +1,130 @@
+id: C-019
+type: claim
+key: modelo-escalera
+question: ¿Cómo separar el valor de la suscripción del precio efectivamente pagado, y cómo clasificar el inicio
+  y el fin de un descuento para que no se confundan con contracción o expansión reales?
+headline: La Propuesta de Modelo de datos separa el valor en una escalera con vigencias
+answer: 'Proponemos una escalera de valor por suscripción y mes, cada peldaño con su fuente y su vigencia: tarifa
+  de lista, precio pactado (plan, cantidad y add-ons), descuento con inicio, fin y motivo, MRR neto recurrente,
+  facturado y cobrado. El MRR bruto y el neto se clasifican comparando cierres de mes sobre lo contratado y el descuento;
+  lo facturado y lo cobrado son caja y nunca generan movimientos de MRR, solo un efecto de cobro, y el monto pagado
+  de hoy queda como capa observada que se concilia contra lo cobrado. Regla de clasificación: si la suscripción
+  no cambia, el inicio o el fin de un descuento va a una línea propia «Descuento» y no es contracción ni expansión;
+  si cambian suscripción y descuento el mismo mes, primero se calcula el efecto de la suscripción con los términos
+  de descuento del mes anterior y el resto va a «Descuento»; a quien sale con descuento se le registra churn, no
+  fin de descuento. Las reglas que son decisiones de negocio (base lista o neto del puente, mes gratis, pausa, descuento
+  único, tarifa en línea propia) se escriben antes de construir.'
+role_in_story: recommendation
+evidence_ids:
+- F-130
+- F-132
+- F-133
+- F-150
+- F-151
+- F-152
+- F-168
+- F-234
+- F-236
+- F-240
+- F-241
+table_ids: []
+research_ids:
+- R-011
+- R-034
+- R-021
+- R-033
+- R-027
+framework_ids: []
+confidence: medium
+limitations:
+- 'Es propuesta: hoy el modelo es cliente × mes × monto pagado y no separa suscripción, tarifa, descuento ni momento
+  de cobro (F-130).'
+- Se sabe qué evidencia confirmaría cada componente; no se sabe si Finora la tiene (F-133).
+- 'La regla de «Descuento» es convención, no hecho: se aparta del default del mercado y el CFO la declara (F-236,
+  F-151).'
+- Las reglas que son decisiones de negocio quedan por escribir antes de construir (F-241).
+- Los ejemplos de clasificación son ilustrativos, no datos del caso.
+visual_intent: 'Ladder: el valor baja peldaño a peldaño, de la tarifa de lista a lo cobrado, y cada movimiento del
+  mes se ubica en el peldaño donde nace.'
+hugo_wording: 'Cómo separar el valor de la suscripción del precio efectivamente pagado: propuesta de modelo de datos
+  (campos, tablas, definiciones); el inicio y fin de un descuento probablemente lo integra la misma propuesta de
+  modelo de datos.'
+links:
+- F-130
+- F-132
+- F-133
+- F-150
+- F-151
+- F-152
+- F-168
+- F-234
+- F-236
+- F-240
+- F-241
+- R-011
+- R-034
+- R-021
+- R-033
+- R-027
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-30T11:20:26-06:00'
+version: 11
+status: supported
+strength:
+  level: supported
+  evidence:
+  - F-130
+  - F-132
+  - F-133
+  - F-150
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-236
+  - F-240
+  - F-241
+  - F-130
+  - F-132
+  - F-133
+  - F-150
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-236
+  - F-240
+  - F-241
+  accepted:
+  - F-130
+  - F-132
+  - F-133
+  - F-150
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-236
+  - F-240
+  - F-241
+  - F-130
+  - F-132
+  - F-133
+  - F-150
+  - F-151
+  - F-152
+  - F-168
+  - F-234
+  - F-236
+  - F-240
+  - F-241
+  pending: []
+  tables: []
+  unsupported_numbers: []
+  stale: []

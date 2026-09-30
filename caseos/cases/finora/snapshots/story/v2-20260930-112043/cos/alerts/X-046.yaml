@@ -1,0 +1,31 @@
+id: X-046
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-011
+target: H-013
+title: R-011 requiere más investigación H-013
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'Sin plan ni cantidad no se puede ver si cambió lo que el cliente contrata. Y la contracción observada no sirve
+  como indicio: más de la mitad de su COP parece efecto del momento de cobro (confianza media).'
+options: []
+recommended: Incluir plan y cantidad, con sus vigencias, en el pedido de datos a Finora
+recommended_why: Es el dato que separa H-013 de H-014 y H-015. Mientras tanto queda como explicación posible, escrita
+  como limitación.
+detected_by: cos
+links:
+- R-011
+- H-013
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

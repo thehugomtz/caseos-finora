@@ -1,0 +1,77 @@
+id: F-145
+type: finding
+headline: El lado Revenue ya se puede operar mes a mes, pero con pagos observados el CRO confundiría el momento
+  del cobro con churn y expansión. La facturación es la primera pieza técnica.
+evidence_text: El puente de MRR pagado y el de clientes cuadran en 33 de 33 meses (DM-10). Pero de 751 churn observados,
+  330 (44%) vuelven a pagar al mes siguiente con el mismo monto y 468 (62%) vuelven antes de oct-24 (DM-4). De 1.294
+  expansiones, 194 (15%) se revierten al mes siguiente (DM-5). Además, 325 de 1.961 clientes (17%) tienen al menos
+  un mes con firma de pago de varios meses (DM-9). Un sistema de facturación separa estos casos. Stripe, por ejemplo,
+  calcula el MRR normalizado de las suscripciones active y past_due, y solo cuenta churn cuando la suscripción se
+  cancela o queda unpaid (ST-1).
+confidence: high
+limitations:
+- Que el ruido venga de cobros tardíos o prepagos es compatible con los datos, pero no está confirmado. Stripe es
+  un ejemplo de cómo lo define un proveedor; no sabemos qué sistema usa Finora.
+kind: measurement
+claims:
+- claim: El puente de MRR pagado y el de clientes cuadran en 33 de 33 meses (feb-22 a oct-24).
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Es una base consistente para el lado Revenue, pero de pagos observados, no de contrato.
+- claim: De 751 churn observados, 330 (44%) vuelven a pagar al mes siguiente con el mismo monto y 468 (62%) vuelven
+    antes de oct-24.
+  source_id: DM-4
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Compatible con cobros tardíos, prepagos o pausas; no confirma cancelaciones. Soporta la necesidad de tener
+    el estado contractual.
+- claim: De 1.294 expansiones observadas, 194 (15%) se revierten al mes siguiente y 126 (10%) tienen firma de pago
+    de varios meses. De 1.247 contracciones, 17 se revierten.
+  source_id: DM-5
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Parte de la expansión observada puede ser el momento del cobro y no upsell.
+- claim: 325 de 1.961 clientes (17%) tienen al menos un mes en que pagan k veces su monto usual (firma de pago de
+    varios meses).
+  source_id: DM-9
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: La firma es una heurística del mart (±0,5% y monto usual repetido 3 veces o más); no confirma un plan trimestral
+    o anual.
+- claim: Stripe define el MRR como el valor mensual normalizado de las suscripciones active y past_due (un plan
+    anual se divide entre 12). Una suscripción cancelada o unpaid pasa a churn. Los descuentos se pueden restar
+    del MRR y hay un log por cliente con cada cambio de MRR (nuevo, upgrade, downgrade, reactivación y churn).
+  source_id: ST-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: Es la definición de un proveedor de facturación; no sabemos qué sistema usa Finora. No implica que haya
+    habido descuentos en el histórico.
+unverified: false
+source_ref:
+  research: R-019
+links:
+- R-019
+- Q-016
+- Q-003
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:06:06-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

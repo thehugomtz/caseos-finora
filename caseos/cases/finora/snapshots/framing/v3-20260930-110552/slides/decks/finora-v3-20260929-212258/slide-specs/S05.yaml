@@ -1,0 +1,50 @@
+slide:
+  id: S05
+  file: slides/05.html
+  claim_id: C-005
+  role_in_story: recommendation
+  kicker: "Growth · cómo definir el funnel · propuesta"
+  headline: "Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar"
+  takeaway: "Puerta y canal se fijan al entrar; la ruta sale de quién movió cada tramo y todas llegan al mismo nudo: el primer pago."
+  question: "¿Cómo definir el funnel si no todos lo recorren igual?"
+  relationship: "one entry with fixed door and channel SPLITS into routes by who moves each stretch, and all CONVERGE on one knot (first payment)"
+  evidence_type: process
+  composition: split_and_converge (diverging → converging paths) + reactivate_loop
+  family: process
+  alternatives_considered:
+    - id: funnel único
+      score: {fidelity: 0, focal: 2, evidence: 0, variety: 1, risk: 0}
+      rejected_because: "es justo lo que no pasa: no todos recorren las mismas etapas"
+    - id: swimlane por actor
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "muestra actores pero no que la entrada se abre y converge en un nudo común"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: entry_chip
+  visual_hierarchy:
+    1: la entrada con «puerta y canal fijos al entrar» (lima)
+    2: cuatro rutas que se abren (tramo con persona grueso, sin persona delgado)
+    3: el nudo común (primer pago), lo único que hoy se mide
+    4: loop Reactivate y regla de clasificación
+  objects:
+    - {id: entry_chip, kind: node, content: "Entrada: journey = cuenta × intento; puerta y canal fijos"}
+    - {id: routes, kind: path, content: "Executive · Hybrid B · Hybrid A · Self Service"}
+    - {id: knot, kind: node, content: "Nudo común: primer pago"}
+    - {id: loop, kind: path, content: "Reactivate: loop sobre estancados"}
+  encodings:
+    line_weight: "tramo con persona (SDR/AE) = 5px tinta; tramo sin persona (producto) = 2px gris"
+    accent: "atributos fijos al entrar"
+    dash: "loop Reactivate (no crea un New)"
+    zone: "antes del nudo = hoy no se mide"
+  annotations:
+    - {at: routes, text: "La ruta se clasifica al final, por eventos; mientras el journey está abierto es provisional"}
+    - {at: knot, text: "Las tasas se comparan entre puertas, no entre rutas"}
+  layout_intent:
+    grid: "entrada cols 1–3; rutas cols 4–9; nudo col 10; lado derecho cols 11–12"
+    reading_path: "izquierda → derecha: entra, se abre, converge"
+    whitespace: "arriba de las rutas"
+  text_budget: 110
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards de motion", "funnel único", "tabla de rutas", "iconos por ruta"]
+  data: {source: "propuesta (R-031); sin cifras", values: []}
+  notes: "Qué cuenta como intervención de persona sigue abierto (Q-063). No sabemos si existe compra self-serve sin persona (Q-046). La tasa de Hybrid refleja a quién eligen tocar SDR/AE (H-050)."
+  sources: [F-209, F-210, F-211, F-212, F-213, F-188, F-190, F-140, F-155, F-223, F-224, F-226]

@@ -1,0 +1,52 @@
+slide:
+  id: S21
+  file: slides/21.html
+  claim_id: C-018
+  role_in_story: recommendation
+  kicker: "Revenue · cómo introducir descuentos · propuesta"
+  headline: "El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan"
+  takeaway: "Con un descuento temporal el MRR de lista y el neto se separan por el descuento, y la caja se aparta de ambos; el CFO declara qué vista manda."
+  question: "¿Cómo debería Finora introducir descuentos temporales sin perder el porqué del MRR?"
+  relationship: "list MRR and net MRR DIVERGE by the discount (revenue que dejamos de capturar) and cash SEPARATES from both"
+  evidence_type: series
+  composition: layered_divergence (esquema) + mechanism_sequence + implications_strip
+  family: evidence
+  alternatives_considered:
+    - id: tres columnas Mecanismo / Implicaciones / Preguntas
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "cards de texto; no se ve la separación de capas"
+    - id: before_after del MRR
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "S24 ya lee casos antes/después; aquí se trata del tiempo de vida de un descuento"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: gap_area
+  visual_hierarchy:
+    1: área lima entre MRR de lista y neto: revenue que dejamos de capturar
+    2: caja apartándose de ambas líneas
+    3: Mecanismo Propuesto en tres pasos
+    4: Implicaciones Multidisciplinarias
+  objects:
+    - {id: list_line, kind: path, content: "MRR de lista (negocio subyacente)"}
+    - {id: net_line, kind: path, content: "MRR neto"}
+    - {id: gap_area, kind: band, content: "descuento = revenue que dejamos de capturar, por origen"}
+    - {id: cash_line, kind: bar, content: "caja: carril propio de barras mensuales irregulares (esquema); se mueve con el cobro, no con el contrato"}
+    - {id: mechanism, kind: text, content: "1 el CFO declara la convención · 2 MRR en dos capas · 3 cohortes con descuento marcadas"}
+    - {id: implications, kind: text, content: "Finanzas · Marketing y Ventas · Producto y Billing · Data"}
+  encodings:
+    x_position: "meses (esquema, sin escala)"
+    y_position: "monto (esquema, sin cifras)"
+    accent: "la diferencia lista − neto"
+    gray_bars: "caja en su propio carril (se mueve con el cobro, no con el contrato)"
+  annotations:
+    - {at: gap_area, text: "Descuento: revenue que dejamos de capturar, abierto por origen"}
+    - {at: cash_line, text: "Cuál vista manda depende de si los contratos son mensuales cancelables o a plazo fijo"}
+  layout_intent:
+    grid: "esquema cols 1–7; mecanismo cols 9–12; implicaciones banda inferior cols 1–12"
+    reading_path: "esquema → mecanismo → implicaciones"
+    whitespace: "sobre la línea de lista"
+  text_budget: 120
+  must_show: [Mecanismo Propuesto, Implicaciones Multidisciplinarias]
+  avoid: ["tres cards de texto", "tabla", "cifras inventadas en el esquema"]
+  data: {source: "propuesta; esquema ilustrativo sin cifras", values: []}
+  notes: "No hay estándar de mercado para el descuento en el MRR; la convención de «Descuento» se aparta del default de herramientas como ChartMogul (F-236). No sabemos si los contratos son mensuales cancelables o a plazo fijo. La comparación de cohortes con y sin descuento necesita un grupo comparable (H-049)."
+  sources: [F-151, F-153, F-154, F-132, F-236]

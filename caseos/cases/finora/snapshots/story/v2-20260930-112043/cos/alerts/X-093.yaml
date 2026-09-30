@@ -1,0 +1,47 @@
+id: X-093
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-026
+target: H-041
+title: R-026 requiere más investigación H-041
+finding_text: La caída del ticket de entrada se sostiene con el ticket estabilizado
+why: R-026 muestra que el primer pago de 2022 está inflado por pagos iniciales grandes y cobros retroactivos (promedio
+  de 128,7 mil contra 59,0 mil del 2.º mes; F-166), pero no separa por mes de alta. Eso encaja con el mecanismo
+  de H-041 (un cliente previo al panel que vuelve pagando atrasos), aunque no lo prueba. Usar el 2.º pago quita
+  el efecto de esos atrasos, pero no quita a esos clientes de la cohorte. Si parte de los primeros pagadores de
+  mar–may-22 son clientes previos al panel y pagan más que un cliente nuevo, la base 2022 del ticket estabilizado
+  (52,5 mil) seguiría inflada y la caída a 36,8 mil estaría exagerada. Hoy no se sabe.
+options:
+- key: A
+  label: 'Pedir un corte chico: mediana del 2.º pago y del monto usual de los primeros pagadores de mar–may-22 frente
+    a los de jun–dic-22. En la misma corrida, la serie por mes de alta de dic-22 a jun-23. Puede ir como extensión
+    de R-026 o dentro de R-024, que ya revisa artefactos en primeros pagadores.'
+  consequence: En una sola corrida se sabe si la base 2022 de C-003 y C-007 está limpia y en qué mes cae el escalón
+    (H-045, H-024, H-025). Si jun–dic-22 sigue cerca de 52,5 mil, H-041 deja de amenazar la caída.
+- key: B
+  label: Usar desde ya jun–dic-22 como base 2022 del ticket en la story.
+  consequence: Evita el riesgo sin comprobar si existe, pero cambia cifras de F-160 sin evidencia de que haga falta
+    y achica la muestra de 2022.
+- key: C
+  label: Dejar H-041 abierta y usar R-026 tal cual, con un caveat.
+  consequence: No cuesta nada ahora, pero C-003 queda expuesta a la objeción de que la base 2022 incluye clientes
+    viejos.
+recommended: A
+recommended_why: Es el corte más barato que puede mover la base 2022 de la que dependen C-003 y C-007, y la misma
+  corrida responde en qué mes cae el escalón para H-045.
+detected_by: cos
+links:
+- R-026
+- H-041
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144317-cos-48de
+created_at: '2026-09-29T14:58:13-06:00'
+updated_at: '2026-09-29T14:58:13-06:00'
+version: 1

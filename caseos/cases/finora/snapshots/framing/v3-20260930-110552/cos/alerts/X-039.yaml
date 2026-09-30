@@ -1,0 +1,45 @@
+id: X-039
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-011
+target: D-007
+title: R-011 cambia el framing D-007
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: D-007 (activa) deja fuera de «esta etapa» los dashboards, las métricas definitivas y el modelo de datos. Pero
+  R-011 entrega una Propuesta de Modelo de datos (escalera con vigencias y reglas de clasificación). El brief le
+  pide al CFO «mecanismo, modelo de datos y clasificación», y D-015 (propuesta) metería este tipo de propuestas
+  en el research. Si «esta etapa» era Framing, no hay choque, pero D-007 no lo dice. R-016, R-018, R-019 y R-021
+  van a toparse con lo mismo.
+options:
+- key: A
+  label: Reemplazar D-007 con una decisión nueva que la cite
+  consequence: Queda escrito que en Research y Synthesis se permiten propuestas marcadas como tales (modelo de datos,
+    métricas, funnel), y que dashboards y métricas definitivas siguen fuera. R-011 y los research en curso tienen
+    un lugar claro, y queda el rastro de D-007.
+- key: B
+  label: Mantener D-007 y dejar la escalera para una fase posterior
+  consequence: El bloque Revenue pierde el modelo de datos que pide el brief, y R-011 queda como insumo sin uso.
+- key: C
+  label: Confirmar D-015 sin tocar D-007
+  consequence: Quedan dos decisiones activas que dicen cosas opuestas; la próxima propuesta vuelve a abrir la duda.
+recommended: A
+recommended_why: 'Así D-007 no se sobreescribe en silencio: se reemplaza dejando rastro. Encaja con la pregunta
+  ejecutiva del framing («qué modelos se proponen») y habilita la opción A de Q-002 y de Q-026.'
+detected_by: cos
+links:
+- R-011
+- D-007
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

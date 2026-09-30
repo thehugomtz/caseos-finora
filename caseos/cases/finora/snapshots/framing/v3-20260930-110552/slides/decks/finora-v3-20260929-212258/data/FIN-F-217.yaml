@@ -1,0 +1,92 @@
+table_id: FIN-F-217
+caseos_id: T-104
+title: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad…
+columns:
+- periodo
+- demanda_u
+- capacidad_u
+- habilitacion_u
+- part_demanda
+- part_capacidad
+- part_habilitacion
+- part_team
+rows:
+- - 2022 S1
+  - 8.94
+  - 3.61
+  - 1.45
+  - 0.6384
+  - 0.258
+  - 0.1036
+  - 0.12
+- - 2022 S2
+  - 10.83
+  - 5.84
+  - 2.29
+  - 0.5713
+  - 0.308
+  - 0.1207
+  - 0.12
+- - 2023 ene-may
+  - 8.64
+  - 5.09
+  - 1.32
+  - 0.5741
+  - 0.3379
+  - 0.088
+  - 0.12
+- - 2023 jun-dic
+  - 5.75
+  - 3.82
+  - 0.48
+  - 0.5718
+  - 0.3803
+  - 0.0478
+  - 0.2944
+- - 2024 S1
+  - 7.66
+  - 4.0
+  - 0.55
+  - 0.6273
+  - 0.3276
+  - 0.0451
+  - 0.2172
+- - 2024 jul-oct
+  - 4.37
+  - 2.88
+  - 0.3
+  - 0.5783
+  - 0.3817
+  - 0.04
+  - 0.2382
+units:
+  periodo: texto
+  demanda_u: num2
+  capacidad_u: num2
+  habilitacion_u: num2
+  part_demanda: num2
+  part_capacidad: num2
+  part_habilitacion: num2
+  part_team: num2
+definitions: {}
+message: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad
+  comercial de 26% a 38% y la habilitación de 10% a 4%.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  - E-002
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-PAYROLL-NEG: PayrollExpenses es negativo en algunos meses'
+preferred_visual: table
+analysis_reference: INV-20260929-180321-0787 · C-004
+period: {}
+grain: según evidencia

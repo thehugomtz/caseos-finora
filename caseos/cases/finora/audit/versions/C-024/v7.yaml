@@ -1,0 +1,133 @@
+id: C-024
+type: claim
+key: observable-semaforo
+question: ¿Qué se puede leer hoy del MRR con cliente, mes y monto, y qué no?
+headline: Con cliente, mes y monto se ve qué cambió, no por qué
+answer: 'Con cliente, mes y monto se arma el puente del MRR pagado observado, pero el monto mezcla fecha de cobro
+  con mes de servicio. 29% del MRR de expansión se revierte al mes siguiente, 44% de los churns observados vuelve
+  a pagar al mes siguiente y 42,6% del MRR de reactivación llega con un monto que cubre los meses del hueco más
+  el corriente. La contracción no muestra esa firma (88,9% sigue igual o más abajo al mes siguiente), pero tampoco
+  dice si fue suscripción, tarifa o descuento. Semáforo: en verde, el MRR pagado observado y su puente, los clientes
+  activos, el ARPA, el churn observado y las cohortes; en amarillo, el MRR normalizado y el churn con ventana de
+  gracia, que piden una regla que apruebes; en rojo, lista, descuento y MRR contratado.'
+role_in_story: diagnosis
+evidence_ids:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-135
+- F-136
+- F-186
+- F-213
+table_ids:
+- T-074
+- T-076
+- T-082
+- T-086
+- T-087
+research_ids:
+- R-028
+- R-027
+- R-018
+- R-001
+framework_ids: []
+confidence: high
+limitations:
+- La prueba de contracción solo mira el mes siguiente (X-100).
+- El 44% vuelve a pagar, pero no necesariamente con el mismo monto (X-102, X-145).
+- 'El puente normalizado exacto no se puede medir: no hay periodo devengado por pago (F-186).'
+- No se usan etiquetas contractuales (alta, baja, expansión) sin vigencia verificada.
+visual_intent: 'Split: lo que el monto deja ver (qué cambió) frente a lo que no separa (por qué), con el semáforo
+  verde, amarillo y rojo.'
+hugo_wording: 'Revenue: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción
+  o descuento).'
+links:
+- F-172
+- F-174
+- F-180
+- F-182
+- F-184
+- F-185
+- F-135
+- F-136
+- F-186
+- F-213
+- T-074
+- T-076
+- T-082
+- T-086
+- T-087
+- R-028
+- R-027
+- R-018
+- R-001
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-30T11:03:59-06:00'
+version: 7
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  accepted: []
+  pending:
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  - F-172
+  - F-174
+  - F-180
+  - F-182
+  - F-184
+  - F-185
+  - F-135
+  - F-136
+  - F-186
+  - F-213
+  tables:
+  - T-074
+  - T-076
+  - T-082
+  - T-086
+  - T-074
+  - T-076
+  - T-082
+  - T-086
+  unsupported_numbers:
+  - 25,3%
+  stale: []

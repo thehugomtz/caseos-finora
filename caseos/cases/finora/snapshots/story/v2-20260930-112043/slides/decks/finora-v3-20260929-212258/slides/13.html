@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S13 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S13"] {
+  .chip { background: var(--accent); color: var(--ink); padding: 6px 16px; font-size: 26px; font-weight: 600; }
+  .p0 { font-size: 26px; line-height: 1.3; color: var(--ink-2); }
+  .p0 b { color: var(--ink); font-weight: 600; }
+  .p0s { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .gt { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .gr { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .gr b { color: var(--ink); font-weight: 600; }
+  .pm { font-size: 22px; color: var(--ink-2); }
+  .res { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .ld { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .ld b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S13" data-composition="filter_pipeline" data-family="process" data-word-budget="110" data-page="14">
+  <header class="header">
+    <div class="kicker">Growth · hipótesis ToFu y BoFu</div>
+    <h1 class="headline">Primero se fija qué es venta; revisar la medición en pagos no cierra la brecha</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; altas = primer pago observado, no Won · FIN-F-196, FIN-F-197, FIN-F-203, FIN-F-192 · F-125, F-126, F-201, F-202, F-204, F-205, F-229, F-230</span><span class="page"></span></footer>
+  <aside class="notes">Paso 0 del árbol (C-023): fijar qué es «venta» (Won o primer pago) y qué ventana se compara, porque en los pagos la respuesta cambia: la premisa «no más ventas» se sostiene en jul–oct 2024 y no en mar–oct. Del lado de los pagadores, tres revisiones de medición no cambian la lectura. Sin oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023 (55 con octubre). Altas y reactivaciones son flujos separados: 1.476 clientes con alta, 468 reactivaciones y 0 meses marcados como ambos; las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas, así que sumarlas o separarlas deja el mismo orden. Las altas que coinciden en monto e industria con un churn reciente no superan al emparejamiento placebo (175 de 650 frente a 196 en 2023; 76 de 272 contra 68 en 2022). En 2024 el placebo no sirve porque hay pocos churns posteriores. No se afirma que la medición quedó descartada: con los pagos solo se acotan las revisiones del lado de pagadores; no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202). Primer pago no es Won. La ventana jul–oct 2024 es corta y puede incluir compra adelantada (H-066, H-075). Lo del lado de los leads necesita el CRM.</aside>
+</main>
+<script>
+P.draw('S13', (s, P) => {
+  // Plan: Paso 0 cols 1–3 (lime) → premise line y=600 through three gates (cols 5, 7, 9–10) → result cols 11–12;
+  // leads-side branch dashed underneath (needs data that does not exist today).
+  const Y = 572, G = [812, 1092, 1372], X0 = 508, X1 = 1616;
+
+  // Paso 0 comes first: the premise leaves from it.
+  s.label(112, Y - 128, 'Paso 0', { anchor: 'bl', cls: 'chip', id: 's13-p0', focal: true });
+  s.label(112, Y - 106, '<b>Fijar qué es venta</b> (Won o primer pago) <b>y qué ventana</b>', { cls: 'p0', w: 350 });
+  s.label(112, Y + 40, 'En pagos, se sostiene en <span style="white-space:nowrap">jul–oct 2024</span>, no en <span style="white-space:nowrap">mar–oct</span>', { cls: 'p0s', w: 340 });
+  s.line(112, Y, X0, Y, { stroke: 'accent', w: 8, cap: 'butt' });
+
+  // The premise travels left → right and survives every payment-side check.
+  s.line(X0, Y, X1 - 16, Y, { stroke: 'ink', w: 4, arrow: 'end', headSize: 16 });
+  s.dot(X0, Y, { r: 8, fill: 'ink' });
+  s.label(X0 + 16, Y - 18, 'Premisa «no más ventas»', { anchor: 'bl', cls: 'pm' });
+
+  const gates = [
+    ['¿Octubre incompleto?', 'Sin oct-24: <b>56</b> por mes en 2024 vs <b>54</b> en 2023 (55 con octubre)'],
+    ['¿Altas o reactivaciones?', '<b>1.476</b> altas, <b>468</b> reactivaciones, <b>0</b> meses marcados como ambas'],
+    ['¿Recompras con otro ID?', '<b>175</b> de 650 altas de 2023 coinciden con un churn reciente; placebo: <b>196</b>'],
+  ];
+  gates.forEach(([t, r], i) => {
+    const x = G[i];
+    s.line(x, Y - 64, x, Y - 14, { stroke: 'ink-3', w: 3, cap: 'butt' });
+    s.line(x, Y + 14, x, Y + 64, { stroke: 'ink-3', w: 3, cap: 'butt' });
+    s.label(x - 2, Y - 80, t, { anchor: 'bl', cls: 'gt', w: 280 });
+    s.label(x - 2, Y + 84, r, { cls: 'gr', w: 250 });
+  });
+  s.label(X1 + 10, Y, 'La brecha sigue en pie', { anchor: 'ml', cls: 'res', w: 176, id: 's13-res' });
+
+  // Leads side: waits for the CRM (dashed = data that does not exist today).
+  const BY = 872;
+  s.path(`M${X0 + 150},${Y + 8} V${BY} H${X0 + 250}`, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end' });
+  s.label(X0 + 266, BY, '<b>Lado de leads</b>: no-prospectos, duplicados y cambios de definición esperan al CRM', { anchor: 'ml', cls: 'ld', w: 1000 });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+slide:
+  id: S03
+  file: slides/03.html
+  claim_id: C-003
+  role_in_story: evidence
+  kicker: "Growth · lo que sí vemos"
+  headline: "Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias"
+  takeaway: "El volumen de entrada se duplica en escalón mientras el ticket estabilizado de cada entrada baja, dentro de cada industria."
+  question: "¿Qué cambió en quién entra y en qué industrias?"
+  relationship: "entrants STEP UP (×2) while the stabilized ticket per entrant FALLS — within every industry (outgrow)"
+  evidence_type: comparison
+  composition: diverging_small_multiples (volumen ↑ | ticket ↓, mismo eje de cohortes) + within_industry_bar
+  family: evidence
+  alternatives_considered:
+    - id: dumbbell por industria
+      score: {fidelity: 2, focal: 2, evidence: 1, variety: 2, risk: 0}
+      rejected_because: "data/ no trae el ticket 2024 por industria (solo 2022→2023, donde Salud sube); forzaría cifras fuera de data/"
+    - id: línea mensual de altas
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "muestra el escalón pero no el valor que trae cada entrada, que es la mitad del título"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: ticket_bars
+  visual_hierarchy:
+    1: barras del ticket estabilizado 2023–24 en lima (bajan)
+    2: barras de primeros pagadores por mes (suben en escalón)
+    3: «6 de 6 industrias» y efecto dentro 96%
+    4: +104% contra +6% / +17%
+  objects:
+    - {id: volume_bars, kind: bar, content: "primeros pagadores por mes: 27 · 54 · 55"}
+    - {id: ticket_bars, kind: bar, content: "mediana del 2.º pago: COP 52,5 · 36,8 · 38,9 mil"}
+    - {id: industries, kind: metric, content: "6 de 6 industrias; efecto dentro 96% vs mezcla 4%"}
+  encodings:
+    x_position: "cohorte de primer pago (2022 mar–dic · 2023 · 2024 ene–oct)"
+    height: "valor de cada panel con su propia escala"
+    accent: "ticket estabilizado menor de las cosechas nuevas"
+  annotations:
+    - {at: volume_bars, text: "Escalón a inicios de 2023 (26 en dic-22 → 60 en ene-23), sin tendencia después"}
+    - {at: ticket_bars, text: "+104% primeros pagadores por mes contra +6% a +17% del valor inicial que incorporan (2022→2024)"}
+  layout_intent:
+    grid: "volumen cols 1–4; ticket cols 5–8; industrias cols 10–12"
+    reading_path: "izquierda a derecha: más → menor → en todas"
+    whitespace: "sobre las barras bajas del ticket"
+  text_budget: 85
+  must_show: ["6 "]
+  avoid: ["tres cards con bullets", "tabla", "eje dual", "cifras fuera de data/"]
+  data:
+    source: "data/FIN-F-192 (27/54/55), FIN-F-110 (26, 60, pendiente), FIN-F-160 (medianas M1), FIN-F-113 (+104/+6/+17), FIN-F-164 (91/96%), FIN-F-114 (6)"
+    values: "altas/mes 27 · 54 · 55; M1 mediana 52.500 · 36.750 · 38.850"
+  notes: "Primer pago observado no es adquisición (ni Won ni suscripción activa). El escalón de 2023 puede ser registro u operación (H-024, H-025). El ticket estabilizado sigue siendo monto pagado: no separa tarifa, plan ni descuento."
+  sources: [F-110, F-113, F-160, F-164, F-114, F-192]

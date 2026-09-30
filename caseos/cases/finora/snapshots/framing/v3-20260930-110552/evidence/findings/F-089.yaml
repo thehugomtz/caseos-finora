@@ -1,0 +1,75 @@
+id: F-089
+type: finding
+headline: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo del
+  monto usual del cliente pasan de 20,7% en 2022 a 8,8% en 2023 y 2,9% en 2024, los pagos por encima del monto usual
+  pasan de 10,4% a 18,3% y la firma de pago de varios meses pasa de 6,8% a 1,8%.
+epistemic_state: Direccional
+confidence: medium
+kind: analytics
+visual:
+  tipo: tabla
+  columnas:
+  - id: anio
+    nombre: anio
+    formato: int
+  - id: meses_cliente
+    nombre: meses_cliente
+    formato: int
+  - id: pct_en_monto_usual
+    nombre: pct_en_monto_usual
+    formato: num2
+  - id: pct_sobre_usual
+    nombre: pct_sobre_usual
+    formato: num2
+  - id: pct_bajo_usual
+    nombre: pct_bajo_usual
+    formato: num2
+  - id: pct_1_5x_o_mas_del_usual
+    nombre: pct_1_5x_o_mas_del_usual
+    formato: num2
+  - id: pct_firma_pago_multimes
+    nombre: pct_firma_pago_multimes
+    formato: num2
+  filas:
+  - anio: 2022
+    meses_cliente: 5590
+    pct_en_monto_usual: 68.9
+    pct_sobre_usual: 10.4
+    pct_bajo_usual: 20.7
+    pct_1_5x_o_mas_del_usual: 6.0
+    pct_firma_pago_multimes: 6.8
+  - anio: 2023
+    meses_cliente: 10855
+    pct_en_monto_usual: 80.9
+    pct_sobre_usual: 10.4
+    pct_bajo_usual: 8.8
+    pct_1_5x_o_mas_del_usual: 2.5
+    pct_firma_pago_multimes: 2.4
+  - anio: 2024
+    meses_cliente: 14216
+    pct_en_monto_usual: 78.8
+    pct_sobre_usual: 18.3
+    pct_bajo_usual: 2.9
+    pct_1_5x_o_mas_del_usual: 2.6
+    pct_firma_pago_multimes: 1.8
+visual_title: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo
+  del monto usual del cliente pasan de 20,7% en 2022 a 8,8% en 2023 y 2,9% en 2024, los pagos por encima del monto
+  usual pasan de 10,4% a 18,3% y la firma de pago de varios meses pasa de 6,8% a 1,8%.
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103203-30ce
+  claim: C-011
+  evidence:
+  - E-007
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-057
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:37:39-06:00'
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 2

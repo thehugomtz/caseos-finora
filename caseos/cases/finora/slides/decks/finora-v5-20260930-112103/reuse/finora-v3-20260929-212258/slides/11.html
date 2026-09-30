@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S11 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S11"] {
+  .nd { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .nd span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 6px; }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .chip { background: var(--accent); color: var(--ink); padding: 8px 16px; font-size: 24px; font-weight: 600; }
+  .fd { font-size: 22px; color: var(--ink-2); }
+  .fd b { color: var(--ink); font-weight: 600; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S11" data-composition="hub_and_spoke (registro del catálogo)" data-family="relationships" data-word-budget="105" data-page="12">
+  <header class="header">
+    <div class="kicker">Growth · métricas · propuesta</div>
+    <h1 class="headline">Cada métrica vive en un solo lugar del catálogo, con dueño, fuente y foro</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de diseño (C-022), sin cifras; los dueños se definen con Finora · F-135, F-139, F-148, F-155, F-158, F-159, F-213, F-224</span><span class="page"></span></footer>
+  <aside class="notes">El catálogo no suma métricas: gobierna las del funnel (C-006) y las comunes (C-009). Cada métrica entra una sola vez con nombre, fórmula versionada, grano, dueño, semáforo de hoy, el evento o la tabla que le falta en el to-be (C-013) y el foro que la usa (C-014). Reglas MECE: un nombre, una fórmula y un lugar; puerta, ruta, canal, industria y cohorte son cortes; las tasas de etapa se leen dentro de su ruta y solo la capa común se compara entre puertas. Controles de cada mes: las entradas por puerta suman el total; los primeros pagos por ruta, más los que no se cruzan con el CRM, igualan los primeros pagos del mes; y los puentes de clientes y de MRR cierran. Es diseño: los dueños de cada métrica se definen con Finora. Construirlo choca con D-007 tal como está redactada; D-018 lo decides tú.</aside>
+</main>
+<script>
+P.draw('S11', (s, P) => {
+  // Plan: inputs cols 1–3 → record (hub) cols 5–8 → outputs cols 10–12; reading rules in a bottom band cols 1–12.
+  const RX = 688, RY = 372, RW = 544, RH = 440;
+  s.rect(RX, RY, RW, RH, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash', id: 's11-rec' });
+  s.label(RX, RY - 14, 'Registro del catálogo', { anchor: 'bl', cls: 'cap' });
+  s.label(RX + 28, RY + 30, 'un nombre · una fórmula · un lugar', { cls: 'chip', id: 's11-rule', focal: true });
+
+  const fields = [['f-name', 'nombre'], ['f-form', 'fórmula versionada'], ['f-grain', 'grano'], ['f-owner', 'dueño'],
+    ['f-light', 'semáforo de hoy'], ['f-src', 'evento o tabla que le falta'], ['f-forum', 'foro que la usa']];
+  const F0 = 482, DF = 44;
+  fields.forEach(([id, t], i) => {
+    const y = F0 + i * DF;
+    if (i) s.line(RX + 28, y - DF / 2, RX + RW - 28, y - DF / 2, { stroke: 'rule', w: 1 });
+    s.label(RX + 28, y, t, { anchor: 'ml', cls: 'fd', id: `s11-${id}`, w: RW - 56 });
+  });
+
+  // Inputs: every metric enters once.
+  s.label(112, 500, 'Métricas del funnel<span>hasta el primer pago</span>', { anchor: 'ml', cls: 'nd', id: 's11-in1' });
+  s.label(112, 700, 'Métricas comunes<span>la cuenta que ya paga</span>', { anchor: 'ml', cls: 'nd', id: 's11-in2' });
+  s.connect([430, 500], [RX - 4, 562], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, label: 'entra una vez', labelAt: 0.42 });
+  s.connect([430, 700], [RX - 4, 602], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, label: 'entra una vez', labelAt: 0.42 });
+  s.dot(430, 500, { r: 5, fill: 'ink-3' });
+  s.dot(430, 700, { r: 5, fill: 'ink-3' });
+
+  // Outputs: each entry points to its source (to-be model) and its forum.
+  s.label(1440, 604, 'Fuente<span>tabla o evento del modelo to-be</span>', { anchor: 'ml', cls: 'nd', id: 's11-out1', w: 368 });
+  s.label(1440, 760, 'Foro<span>semanal · mensual · trimestral</span>', { anchor: 'ml', cls: 'nd', id: 's11-out2', w: 368 });
+  s.connect([RX + RW + 2, F0 + 5 * DF], '#s11-out1', { route: 'curve', toSide: 'left', gap: 14, tone: 'ink-3', w: 2 });
+  s.connect([RX + RW + 2, F0 + 6 * DF], '#s11-out2', { route: 'curve', toSide: 'left', gap: 14, tone: 'ink-3', w: 2 });
+  s.dot(RX + RW, F0 + 5 * DF, { r: 5, fill: 'ink-3' });
+  s.dot(RX + RW, F0 + 6 * DF, { r: 5, fill: 'ink-3' });
+
+  // Reading rules.
+  s.line(112, 866, 1808, 866, { stroke: 'rule', w: 1.5 });
+  s.label(112, 890, '<b>Cortes, no métricas</b>: puerta · ruta · canal · industria · cohorte', { cls: 'nt', w: 640 });
+  s.label(832, 890, '<b>Controles de cada mes</b>: entradas por puerta = total; primeros pagos por ruta + no cruzados = los del mes; los puentes cierran.', { cls: 'nt', w: 976 });
+});
+</script>
+</body>
+</html>

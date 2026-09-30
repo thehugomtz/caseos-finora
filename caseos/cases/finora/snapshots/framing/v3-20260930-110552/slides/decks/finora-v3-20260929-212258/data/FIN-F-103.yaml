@@ -1,0 +1,77 @@
+table_id: FIN-F-103
+caseos_id: T-047
+title: En 2024 el churn observado por industria va de 1,46 en Restaurantes a 2,57 en Tecnología, y medido solo por
+  c…
+columns:
+- industry
+- churn_persistente_pct
+- churn_observado_pct
+- ticket_mediano_2024
+- activos_oct24
+- mrr_oct24_millones
+rows:
+- - Salud
+  - 0.56
+  - 1.67
+  - 52500.0
+  - 124.0
+  - 8.56
+- - Restaurantes
+  - 0.62
+  - 1.46
+  - 52500.0
+  - 459.0
+  - 31.32
+- - Servicios profesionales
+  - 0.87
+  - 1.62
+  - 31500.0
+  - 140.0
+  - 6.43
+- - Tecnología
+  - 0.91
+  - 2.57
+  - 49350.0
+  - 206.0
+  - 15.28
+- - Producción
+  - 1.07
+  - 2.01
+  - 39900.0
+  - 389.0
+  - 22.94
+- - Retail
+  - 1.33
+  - 2.51
+  - 26250.0
+  - 360.0
+  - 12.48
+units:
+  industry: texto
+  churn_persistente_pct: num2
+  churn_observado_pct: num2
+  ticket_mediano_2024: num2
+  activos_oct24: num2
+  mrr_oct24_millones: num2
+definitions: {}
+message: En 2024 el churn observado por industria va de 1,46 en Restaurantes a 2,57 en Tecnología, y medido solo
+  por churns que no vuelven a pagar en un trimestre va de 0,56 en Salud a 1,33 en Retail (puntos porcentuales mensuales).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-011
+  - EC-RET-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+analysis_reference: INV-20260929-103203-505c · C-023
+period: {}
+grain: según evidencia

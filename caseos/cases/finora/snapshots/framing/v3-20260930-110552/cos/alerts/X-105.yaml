@@ -1,0 +1,53 @@
+id: X-105
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-023
+target: H-036
+title: R-023 requiere más investigación H-036
+finding_text: 'Sí se puede tener un mix MECE de cuatro funnels, con cuatro condiciones: 1) la unidad es la cuenta,
+  no la persona; 2) la puerta se asigna al entrar, con información previa al contacto, y queda fija; 3) una regla
+  de prioridad decide en este orden: Reactivate, Executive, Hybrid, Self Service y «sin c…'
+why: 'R-023 no mide la puerta (F-191) y deja abierto si existe Self Service (Q-046), así que H-036 sigue sin prueba.
+
+
+  Lo nuevo es que trae su prueba más corta: que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024
+  (F-191). Para que la prueba no sea circular hacen falta dos condiciones:
+
+  - La puerta tiene que salir de información previa al contacto (F-188), no del plan ni del monto que se compró.
+
+  - El valor se compara con el ticket estabilizado (T-062), no con el primer pago.
+
+
+  Reactivate no entra en este puente tal como se mide hoy: altas y reactivaciones se cuentan como flujos separados
+  (T-094, T-095).'
+options:
+- key: A
+  label: Llevarla a la story con su prueba y sin nombrar Self Service
+  consequence: 'H-036 queda como posibilidad: «la mezcla se movió hacia una puerta de menor valor», con la prueba
+    F-191 × T-062. El puente de Q-003 tiene una prueba concreta sin depender de Q-046. La prueba depende de que
+    el ID del CRM cruce con «Cliente N».'
+- key: B
+  label: Mantenerla con Self Service como ejemplo
+  consequence: Es más concreta para el CEO, pero se apoya en una puerta que quizá no existe (Q-046).
+- key: C
+  label: Sacarla de la story hasta medir la puerta
+  consequence: El bloque del CEO se queda sin el único puente Growth–Revenue que está formulado.
+recommended: A
+recommended_why: Le da al CEO el puente como posibilidad, con una prueba barata. No afirma nada que la data no sostenga
+  ni se apoya en una puerta sin confirmar.
+detected_by: cos
+links:
+- R-023
+- H-036
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-7294
+created_at: '2026-09-29T16:32:58-06:00'
+updated_at: '2026-09-29T16:32:58-06:00'
+version: 1

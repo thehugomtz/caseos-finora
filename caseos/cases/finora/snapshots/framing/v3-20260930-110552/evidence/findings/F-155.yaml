@@ -1,0 +1,86 @@
+id: F-155
+type: finding
+headline: Entre Executive, Self Service y Hybrid solo se compara del nudo hacia la derecha. Antes del nudo, cada
+  funnel tiene su propia unidad, sus etapas y sus tiempos, y sus tasas no se comparan ni se promedian.
+evidence_text: 'Forrester sostiene que cada tipo de oportunidad convierte a tasas distintas y pasa tiempos distintos
+  en cada etapa. También muestra que la unidad cambia la tasa: contar lead-persona en vez de oportunidad la baja
+  de 25% a 8% en su ejemplo ilustrativo (SRC-FOR). El bowtie separa volumen, conversión y tiempo, y conecta adquisición
+  con retención (SRC-WBD, SRC-DRV). La distinción entre PQL (persona) y PQA (cuenta) muestra que hasta la unidad
+  de Self Service e Hybrid es una elección (SRC-POC). Agregar grupos cuya mezcla cambia puede invertir la tendencia:
+  es la paradoja de Simpson (SRC-OPT). El win rate de periodo mezcla cohortes (SRC-SF).'
+confidence: high
+limitations:
+- Son marcos de práctica y definiciones, no pruebas empíricas. Ninguno es evidencia sobre Finora.
+kind: measurement
+claims:
+- claim: El bowtie de Winning by Design organiza la medición en métricas de volumen (cuántos llegan a cada etapa),
+    conversión (dónde avanzan) y tiempo (qué tan rápido). Mide adquisición, retención y expansión como un solo sistema,
+    y su diseño contempla una línea de negocio con hasta tres motions de GTM.
+  source_id: SRC-WBD
+  source_type: industry
+  confidence: high
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: La página no detalla cómo se tratan self-serve y sales-led dentro del modelo.
+- claim: En la versión de Drivetrain del bowtie, la conversión entre etapas es un cociente de volúmenes (CR1 = VM2/VM1)
+    y el tiempo es la duración entre etapas. El lado derecho termina en churn y no contempla reactivación.
+  source_id: SRC-DRV
+  source_type: company
+  confidence: medium
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: El hueco de reactivación es justo lo que el Funnel Propuesto agrega como loop.
+- claim: 'Cada tipo de oportunidad (logo nuevo, cross-sell, upsell, retención) convierte a tasas distintas y pasa
+    tiempos distintos en cada etapa. Contar leads-persona en vez de oportunidades del grupo de compra baja la conversión
+    de forma artificial: en el ejemplo ilustrativo de Forrester, de 25% a 8%.'
+  source_id: SRC-FOR
+  source_type: industry
+  confidence: high
+  freshness: Blog de 2021; consultado el 2026-09-29.
+  supports_or_contests: supports
+  notes: Es un ejemplo ilustrativo, no un benchmark. Respalda no mezclar tasas y usar la cuenta-oportunidad como
+    unidad en Executive.
+- claim: Una tendencia que se observa dentro de cada grupo puede desaparecer o invertirse al agregar los grupos
+    (paradoja de Simpson). La recomendación es analizar por subgrupos relevantes.
+  source_id: SRC-OPT
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: supports
+  notes: El concepto estadístico es estándar, pero la fuente es un glosario de proveedor.
+- claim: Kyle Poyar distingue el PQL (centrado en una persona y su actividad) del PQA (usuarios conectados de una
+    misma cuenta que en conjunto muestran potencial de compra).
+  source_id: SRC-POC
+  source_type: expert
+  confidence: medium
+  freshness: AMA sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: Respalda usar la cuenta como unidad en Self Service e Hybrid.
+- claim: Salesforce define sales velocity = (oportunidades × valor promedio × win rate) ÷ duración del ciclo, con
+    win rate = ganados ÷ oportunidades del periodo.
+  source_id: SRC-SF
+  source_type: company
+  confidence: high
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: Mezcla volumen, valor, tasa y tiempo en un solo número y usa tasa de periodo, no de cohorte. Sirve como
+    vista derivada, no como KPI para comparar motions.
+unverified: false
+source_ref:
+  research: R-022
+links:
+- R-022
+- H-037
+- H-006
+- H-005
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:30:20-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

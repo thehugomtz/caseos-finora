@@ -1,0 +1,74 @@
+table_id: FIN-F-070
+caseos_id: T-012
+title: Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…
+columns:
+- anio
+- sm_total
+- habilitacion
+- software_tools
+- freelance
+- share_habilitacion
+- altas
+- sm_por_alta_con_habilitacion
+- sm_por_alta_sin_habilitacion
+rows:
+- - 2022
+  - 28.656
+  - 3.352
+  - 1.224
+  - 2.128
+  - 0.117
+  - 272.0
+  - 0.1054
+  - 0.093
+- - 2023
+  - 25.107
+  - 1.805
+  - 1.077
+  - 0.728
+  - 0.0719
+  - 650.0
+  - 0.0386
+  - 0.0358
+- - 2024
+  - 19.755
+  - 0.853
+  - 0.853
+  - 0.0
+  - 0.0432
+  - 554.0
+  - 0.0357
+  - 0.0341
+units:
+  anio: int
+  sm_total: num2
+  habilitacion: num2
+  software_tools: num2
+  freelance: num2
+  share_habilitacion: num2
+  altas: num2
+  sm_por_alta_con_habilitacion: num2
+  sm_por_alta_sin_habilitacion: num2
+definitions: {}
+message: Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndola
+  y de 0,09 a 0,03 excluyéndola.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-004
+  - EC-INV-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+analysis_reference: INV-20260929-103202-c958 · C-009
+period: {}
+grain: según evidencia

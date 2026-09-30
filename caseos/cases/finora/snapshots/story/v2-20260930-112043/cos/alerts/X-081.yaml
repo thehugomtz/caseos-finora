@@ -1,0 +1,49 @@
+id: X-081
+type: alert
+kind: story_change
+status: open
+severity: medium
+effect: changes_story
+source: R-022
+target: C-005
+title: R-022 cambia la historia C-005
+finding_text: 'Cada funnel tiene su propio lado izquierdo. Executive se mide por cuenta-oportunidad: win rate con
+  ventana fija, ciclo de venta, estancamientos y tiempo de Won a pago. Hybrid se mide por entrada de la máquina
+  de leads: cobertura y tiempo a primer contacto, carga por SDR/AE y conversión por banda de…'
+why: 'R-022 confirma el bowtie de C-005: cada funnel tiene su lado izquierdo y entre funnels solo se compara desde
+  el nudo (F-155). Además le agrega la regla que hace MECE el conteo: primero Reactivación o Nueva, después una
+  sola motion de origen asignada al entrar (F-156). Cambian dos cosas del claim: R-022 dice Hybrid (tu término)
+  donde C-005 dice Assisted, y Reactivate entra como clasificación previa. El texto necesita dos límites. Uno: que
+  el conteo cierre con diferencia 0 contra los puentes muestra que está completo, no que la clasificación sea correcta
+  (X-031). Dos: en el histórico, «¿pagó antes?» solo se contesta desde ene-22, así que «Nueva» significa primera
+  aparición observada (H-041).'
+options:
+- key: A
+  label: Actualizar C-005 con Hybrid y la regla de dos pasos
+  consequence: Hybrid en lugar de Assisted (si son la misma puerta), la regla Reactivación/Nueva → una motion de
+    origen, y F-155 y F-156 como evidencia cuando los aceptes. El dato del loop (F-157) va aparte, como observado.
+    C-005 queda en tu vocabulario y sigue siendo propuesta, porque hoy nada se calcula por motion.
+- key: B
+  label: Dejar C-005 y abrir un claim aparte para la regla MECE
+  consequence: No tocas lo que ya está armado, pero la story tendría dos nombres para la misma puerta y la regla
+    quedaría lejos del bowtie que la necesita.
+- key: C
+  label: Esperar a R-023 antes de tocar C-005
+  consequence: Evitas reescribir dos veces si R-023 cambia algo, pero C-005 sigue con Assisted y sin regla. Además,
+    R-023 pregunta casi lo mismo que R-016 y R-022.
+recommended: A
+recommended_why: R-016 y R-022 coinciden en lo de fondo. El cambio es de nombre y de regla, y deja el claim con
+  tu término.
+detected_by: cos
+links:
+- R-022
+- C-005
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-143020-cos-4d70
+created_at: '2026-09-29T14:44:07-06:00'
+updated_at: '2026-09-29T14:44:07-06:00'
+version: 1

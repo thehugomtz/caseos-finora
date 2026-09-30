@@ -1,0 +1,42 @@
+table_id: FIN-F-199
+caseos_id: T-096
+title: De los 751 eventos de churn observado entre mar-22 y oct-24, 44% vuelve a pagar al mes siguiente bajo el
+  mism…
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_back_1m
+  - Churns observados que vuelven a pagar al mes siguiente
+  - 44%
+- - churn_events
+  - Eventos de churn observado (mar-22 a oct-24)
+  - '751'
+units: {}
+definitions:
+  Reactivaciones: Clientes que vuelven a pagar después de al menos un mes en cero.
+message: De los 751 eventos de churn observado entre mar-22 y oct-24, 44% vuelve a pagar al mes siguiente bajo el
+  mismo identificador de cliente, y esos retornos se registran en el flujo de reactivaciones.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-02
+  - E-002
+  - E-007
+  tools:
+  - query_metric
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-2198 · C-017
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month

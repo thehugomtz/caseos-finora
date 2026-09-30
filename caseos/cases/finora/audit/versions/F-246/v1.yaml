@@ -1,0 +1,49 @@
+id: F-246
+type: finding
+headline: Las métricas de valor deben usar run-rate y guardarraíles, no el primer pago ni cada expansión tal cual.
+evidence_text: '126 de 1.476 altas limpias tienen un M0 más de 5% por encima de su run-rate temprano (DM8). 194
+  de 1.294 expansiones revierten al mes siguiente (DM5). 377 clientes ya pagaban en ene-22 y 108 son spillover de
+  feb-22 (DM11): hay que excluirlos de las cohortes.'
+confidence: medium
+limitations:
+- El run-rate temprano usa de 1 a 3 meses observados. La firma multi-mes usa una tolerancia de ±0,5% y un monto
+  usual que aparece ≥3 veces.
+kind: measurement
+claims:
+- claim: 126 de 1.476 altas limpias tienen un M0 más de 5% por encima de su run-rate temprano (y 20 más de 5% por
+    debajo).
+  source_id: DM8
+  source_type: data_model
+  confidence: medium
+  freshness: Consulta 2026-09-30
+  supports_or_contests: supports
+  notes: El run-rate temprano se observa con 1 a 3 meses. Respalda medir el valor de alta con run-rate y no con
+    M0.
+- claim: 194 de 1.294 expansiones y 17 de 1.247 contracciones vuelven al monto previo al mes siguiente.
+  source_id: DM5
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-30
+  supports_or_contests: supports
+  notes: 'Guardarraíl para CM-NRR: un pico de un mes no es upsell.'
+- claim: 377 clientes ya pagaban en ene-22 (left_censored), 108 son altas sospechosas de spillover en feb-22 y 1.476
+    son altas limpias.
+  source_id: DM11
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-30
+  supports_or_contests: context
+  notes: Estas cohortes se excluyen de retención y NRR.
+unverified: false
+source_ref:
+  research: R-035
+links:
+- R-035
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-30T10:14:35-06:00'
+updated_at: '2026-09-30T10:14:35-06:00'
+version: 1

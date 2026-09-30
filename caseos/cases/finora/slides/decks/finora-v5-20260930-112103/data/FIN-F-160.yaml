@@ -1,0 +1,80 @@
+table_id: FIN-F-160
+caseos_id: T-062
+title: En cohortes de ventana limpia, la mediana del segundo pago (M1) de las altas es COP 52,5 mil en 2022, COP
+  36,…
+columns:
+- year
+- altas
+- m0_mediana
+- m0_promedio
+- altas_con_m1
+- m1_mediana
+- m1_promedio
+- rr_mediana
+- rr_promedio
+- razon_m1_m0_mediana
+rows:
+- - 2022
+  - 272
+  - 63000.0
+  - 128695.0
+  - 250
+  - 52500.0
+  - 59001.0
+  - 60900.0
+  - 87462.0
+  - 0.833
+- - 2023
+  - 650
+  - 36750.0
+  - 47945.0
+  - 630
+  - 36750.0
+  - 42650.0
+  - 36750.0
+  - 44937.0
+  - 1.0
+- - 2024
+  - 554
+  - 42000.0
+  - 50842.0
+  - 486
+  - 38850.0
+  - 46205.0
+  - 37800.0
+  - 45447.0
+  - 0.925
+units:
+  year: int
+  altas: int
+  m0_mediana: num2
+  m0_promedio: num2
+  altas_con_m1: int
+  m1_mediana: num2
+  m1_promedio: num2
+  rr_mediana: num2
+  rr_promedio: num2
+  razon_m1_m0_mediana: num2
+definitions: {}
+message: En cohortes de ventana limpia, la mediana del segundo pago (M1) de las altas es COP 52,5 mil en 2022, COP
+  36,8 mil en 2023 y COP 38,9 mil en 2024, y la mediana del monto usual temprano (M0–M2) pasa de COP 60,9 mil en
+  2022 a COP 36,8 mil en 2023 y COP 37,8 mil en 2024.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-005
+  - EC-ADQ-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: bar
+analysis_reference: INV-20260929-143800-15c0 · C-001
+period: {}
+grain: según evidencia
