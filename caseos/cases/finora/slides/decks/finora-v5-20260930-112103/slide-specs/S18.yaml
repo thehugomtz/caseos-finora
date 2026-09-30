@@ -1,0 +1,50 @@
+slide:
+  id: S18
+  file: slides/18.html
+  claim_id: C-025
+  brief: S14
+  based_on: finora-v3-20260929-212258/S24 (mismos mini puentes; caso 1 y negocio subyacente según el claim v5)
+  role_in_story: recommendation
+  kicker: "Revenue · casos del CFO"
+  headline: "Con el modelo propuesto, cada caso del CFO se lee en su capa"
+  takeaway: "Cada ejemplo del CFO cae en su capa; hoy ese puente no es construible y el −38% por cliente es composición, no precio ni descuento."
+  question: "Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece el descuento: ¿cómo se lee cada caso y qué pasa con el negocio subyacente?"
+  relationship: "the same observed payment UNFOLDS into layers (contracted, discount, net) and each CFO case falls in a different layer"
+  evidence_type: comparison
+  composition: small_multiples (mini puentes) + underlying_business
+  family: comparison
+  alternatives_considered:
+    - id: one_combined_bridge
+      score: {fidelity: 1, focal: 2, evidence: 2, variety: 1, risk: -1}
+      rejected_because: "los tres casos son independientes; un solo puente los confunde"
+    - id: decision_table_per_case
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "una tabla de lecturas no muestra que el neto no cambia en el caso 2"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: hidden_discount_bar
+  visual_hierarchy:
+    1: el −30 «Descuento (inicio)» del caso 2 (acento): lo que hoy no se ve
+    2: los tres mini puentes en la misma escala
+    3: lectura bajo cada caso
+    4: hoy no construible · negocio subyacente
+  objects:
+    - {id: case1, kind: bar, content: "100 → −20 → 80: Contracción si lo contratado baja; «Descuento (inicio)» si sigue en 100"}
+    - {id: case2, kind: bar, content: "100 → +30 Expansión → −30 «Descuento (inicio)» → 100 neto"}
+    - {id: case3, kind: bar, content: "100 → +30 «Descuento (fin)» → 130: no es Expansión"}
+    - {id: today, kind: text, content: "no hay lista, plan ni descuento; 29% de la expansión se revierte; 44% de 751 churns vuelve a pagar"}
+    - {id: underlying, kind: text, content: "−38% por cliente activo con la base previa en +5%: composición"}
+  encodings:
+    bar_height: "monto del ejemplo (misma escala 0–140)"
+    accent: "la línea que el monto pagado esconde"
+  annotations:
+    - {at: underlying, text: "lo no capturado se mide hacia adelante, con la capa de descuento"}
+  layout_intent:
+    grid: "tres paneles cols 1–4 · 5–8 · 9–12; banda inferior en dos mitades"
+    reading_path: "caso 1 → 2 → 3 → hoy → negocio subyacente"
+    whitespace: "sobre los puentes bajos"
+  text_budget: 130
+  must_show: ["cada caso en su capa", "hoy no construible", "negocio subyacente (−38% vs +5%)"]
+  avoid: ["tabla de casos", "cifras históricas de revenue no capturado", "cifras fuera de data/"]
+  data: {source: "data/FIN-F-178.yaml (T-080), FIN-F-172.yaml (T-074), FIN-F-174.yaml (T-076), FIN-F-075.yaml (T-030)", values: "literales; los casos son ejemplos del enunciado"}
+  notes: "Los casos no describen a Finora; F-168; F-177; el −38% no es deterioro; convención del CFO (F-151)."
+  sources: [F-168, F-172, F-174, F-177, F-178, F-150, F-151, F-075]

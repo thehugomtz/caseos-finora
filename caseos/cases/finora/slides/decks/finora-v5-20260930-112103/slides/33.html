@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S33 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S33"] {
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .ln { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .ln.lt { color: var(--ink-2); font-weight: 400; }
+  .ax { font-size: 20px; color: var(--ink-3); }
+  .gp { font-size: 22px; line-height: 1.3; color: var(--ink); }
+  .gp b { font-weight: 600; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .n { font-family: var(--font-display); font-size: 40px; color: var(--ink); line-height: 1; }
+  .st { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .st b { color: var(--ink); font-weight: 600; }
+  .im { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .im b { display: block; color: var(--ink); font-weight: 600; font-size: 22px; margin-bottom: 4px; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S33" data-composition="layered_divergence + mechanism_sequence + implications_strip" data-family="evidence" data-word-budget="120" data-page="33">
+  <header class="header">
+    <div class="kicker">Anexo · convención y regla del descuento</div>
+    <h1 class="headline">El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta; esquema ilustrativo, sin cifras de Finora; no hay estándar de mercado para el descuento en el MRR (F-151, F-132, F-236) · F-153, F-154</span><span class="page"></span></footer>
+  <aside class="notes">Mecanismo propuesto: (1) el CFO declara la convención, porque no hay un estándar de mercado y la de «Descuento» se aparta del default de herramientas como ChartMogul (F-236); (2) el MRR se reporta en dos capas, lista y neto, y el descuento es la diferencia: el revenue que dejamos de capturar, abierto por origen; (3) las cohortes que entren con descuento se marcan y se comparan con cohortes sin descuento (necesita un grupo comparable; con datos observados es asociación, H-049). Con descuentos, el MRR neto, el revenue reconocido y la caja se separan; cuál vista manda depende de si los contratos son mensuales cancelables o a plazo fijo, algo que hoy no sabemos. Implicaciones multidisciplinarias: Finanzas fija la convención y el reconocimiento; Marketing y Ventas crean promociones, códigos y aprobaciones; Producto y Billing registran el descuento con su vigencia; Data arma la foto de cierre y el puente. La evidencia externa asocia la adquisición con descuento a clientes de menor valor, y el churn al vencer el descuento tiene otras causas posibles (F-154): es evidencia externa, no de Finora.</aside>
+</main>
+<script>
+P.draw('S33', (s, P) => {
+  // Plan: schematic (no data) cols 1–7: list vs net MRR diverge by the discount (accent), cash (dashed) moves with billing ·
+  // mechanism cols 9–12 · implications strip cols 1–12.
+  const XA = 150, XB = 1020, YL = 432, YN = 540, D0 = 360, D1 = 780, CB = 700;
+  s.line(XA, CB, XB + 20, CB, { stroke: 'rule', w: 1.5, arrow: 'end', headSize: 10 });
+  s.label(XB + 20, CB + 12, 'meses', { anchor: 'tr', cls: 'ax' });
+
+  // Discount window.
+  [D0, D1].forEach((x) => s.line(x, 372, x, CB, { stroke: 'ink-4', w: 1.5 }));
+  s.label(D0, 364, 'inicio del descuento', { anchor: 'bc', cls: 'ax' });
+  s.label(D1, 364, 'fin', { anchor: 'bc', cls: 'ax' });
+
+  // The gap = discount = revenue we stop capturing.
+  s.rect(D0, YL, D1 - D0, YN - YL, { fill: 'accent', id: 's33-gap', focal: true });
+  s.label(D0 + 20, (YL + YN) / 2, '<b>Descuento</b>: revenue que dejamos de capturar, abierto por origen', { anchor: 'ml', cls: 'gp', w: D1 - D0 - 40 });
+
+  // List MRR (flat) and net MRR (dips during the discount).
+  s.line(XA, YL, XB, YL, { stroke: 'ink', w: 4 });
+  s.polyline([[XA, YL + 10], [D0, YL + 10], [D0, YN], [D1, YN], [D1, YL + 10], [XB, YL + 10]], { stroke: 'ink-2', w: 2.5 });
+  s.label(XB + 14, YL - 6, 'MRR de lista', { anchor: 'ml', cls: 'ln' });
+  s.label(D0 + 20, YN + 14, 'MRR neto', { cls: 'ln lt' });
+
+  // Cash lane: moves with billing, not with the contract (illustrative monthly bars, no data).
+  const cash = [1, 1, 0, 2.2, 0, 0, 1.6, 0.4, 0.8, 0, 1.9, 1, 1];
+  const bwid = (XB - XA) / cash.length;
+  cash.forEach((v, i) => { if (v) s.rect(XA + i * bwid + 8, CB - v * 40, bwid - 16, v * 40, { fill: 'ink-4' }); });
+  s.label(XB + 14, CB - 40, 'caja', { anchor: 'ml', cls: 'ln lt' });
+
+  s.label(112, 736, 'Qué vista manda (MRR neto, revenue reconocido o caja) depende de si los contratos son mensuales cancelables o a plazo fijo.', { cls: 'nt', w: 1000 });
+
+  // Proposed mechanism.
+  const MX = 1264;
+  s.label(MX, 344, 'Mecanismo propuesto', { anchor: 'bl', cls: 'cap' });
+  const steps = [
+    '<b>El CFO declara la convención</b>: no hay estándar de mercado',
+    '<b>MRR en dos capas</b>: lista y neto; el descuento es la diferencia',
+    '<b>Cohortes con descuento marcadas</b> y comparadas',
+  ];
+  steps.forEach((t, i) => {
+    const y = 380 + i * 128;
+    s.label(MX, y, String(i + 1), { cls: 'n' });
+    s.label(MX + 52, y + 2, t, { cls: 'st', w: 490 });
+    if (i < 2) s.line(MX, y + 112, 1808, y + 112, { stroke: 'rule', w: 1 });
+  });
+
+  // Multidisciplinary implications.
+  s.line(112, 856, 1808, 856, { stroke: 'rule', w: 1.5 });
+  s.label(112, 872, 'Implicaciones multidisciplinarias', { cls: 'cap' });
+  const im = [['Finanzas', 'convención y reconocimiento'], ['Marketing y Ventas', 'promociones, códigos y aprobaciones'], ['Producto y Billing', 'descuento con su vigencia'], ['Data', 'foto de cierre y puente']];
+  im.forEach(([a, b], i) => {
+    const x = 112 + i * 432;
+    if (i) s.line(x - 20, 914, x - 20, 978, { stroke: 'rule', w: 1.5 });
+    s.label(x, 912, `<b>${a}</b>${b}`, { cls: 'im', w: 400 });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S23 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S23"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .avg { font-size: 22px; font-weight: 600; color: var(--ink); background: var(--bg); padding: 0 6px; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S23" data-composition="small_multiples_time + window_highlight" data-family="evidence" data-word-budget="100" data-page="23">
+  <header class="header">
+    <div class="kicker">Anexo · Overview</div>
+    <h1 class="headline">Gasto de S&amp;M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: archivo S&amp;M_spend y pagos cliente × mes de Finora; S&amp;M en unidad reportada (u), sin escala a COP; primeros pagadores del mes siguiente al gasto · F-220, F-214, F-219, F-118, F-066, F-063</span><span class="page"></span></footer>
+  <aside class="notes">En 2023 jun–dic hay 60,6 primeros pagadores por mes, frente a 45,2 en ene–may. En esos mismos tramos, la Generación de Demanda (ToFu) baja de 1,73 u a 0,82 u por mes y el S&amp;M total, de 3,01 u a 1,44 u. La correlación en niveles entre S&amp;M total y primeros pagadores del mismo mes es −0,57; en cambios mes a mes, el mayor valor absoluto es 0,27 (p mínimo 0,14, ninguna significativa): no hay una relación positiva que leer. Apoyo: con un mes de rezago, el mes de mayor S&amp;M (oct-22, 3,75) precede a 19 altas y el de menor S&amp;M (ago-23, 1,10) a 56. El archivo viene en unidades reportadas (u), sin escala a COP, y hasta may-23 Team es un 12% fijo del total durante 17 meses; PayrollExpenses es negativo en 5 meses y Freelance queda en cero desde jun-23. No se puede decidir si SoftwareTools y Freelance son Habilitación o producto (F-068). Es coincidencia temporal, no efecto (F-119, F-222). Propuesta: que Finora documente la unidad del gasto y lo registre por canal y campaña (campaign_spend, C-013).</aside>
+</main>
+<script>
+P.draw('S23', (s, P) => {
+  // F-220: S&M total del mes (feb-22 → sep-24) y primeros pagadores del mes siguiente (mar-22 → oct-24). Índice 0 = ene-22.
+  const sm = [null, 2.3, 2.3, 2.351, 2.7, 2.351, 2.2, 3.251, 3.5, 3.752, 3.0, 3.251, 3.251, 2.5, 2.9, 2.951, 3.451, 1.8, 1.751, 1.1, 1.252, 1.351, 1.3, 1.5, 1.851, 2.0, 1.751, 2.251, 2.351, 2.0, 1.8, 1.9, 1.851, null];
+  const al = [null, null, 30, 19, 38, 33, 32, 26, 17, 32, 19, 26, 60, 30, 38, 51, 47, 46, 65, 66, 56, 64, 72, 55, 57, 32, 43, 69, 66, 84, 48, 56, 49, 50];
+  // F-214 windows: [from, to, S&M/mes, primeros pagadores/mes]
+  const win = [[2, 11, 2.866, 27.2], [12, 16, 3.011, 45.2], [17, 23, 1.436, 60.6], [24, 33, 1.976, 55.4]];
+
+  const X0 = 200, W = 980;
+  const A = s.chart({ x: X0, y: 390, w: W, h: 210 }), B = s.chart({ x: X0, y: 706, w: W, h: 210 });
+  const x = A.linear([0, 33], { axis: 'x' }), ys = A.linear([0, 4]), ya = B.linear([0, 90]);
+
+  // Focal: the window where they move apart (2023 jun–dic).
+  const b0 = x(16.5), b1 = x(23.5);
+  s.rect(b0, 358, b1 - b0, 572, { fill: 'accent', opacity: 0.24, role: 'area', id: 's23-band', focal: true });
+  s.label(b0 + 10, 366, '<b>2023 jun–dic</b>', { cls: 'label-sm', color: 'ink' });
+
+  A.gridY(ys, [1, 2, 3]); B.gridY(ya, [30, 60]);
+  A.axisY(ys, [0, 2, 4], { format: (v) => `${v} u` });
+  B.axisY(ya, [0, 30, 60, 90]);
+  s.line(X0, A.b, X0 + W, A.b, { stroke: 'ink-4', w: 1.5 });
+  s.line(X0, B.b, X0 + W, B.b, { stroke: 'ink-4', w: 1.5 });
+  s.label(X0, 340, 'S&amp;M total por mes, unidad reportada (u)', { anchor: 'bl', cls: 'label' });
+  s.label(X0, 660, 'Primeros pagadores por mes', { anchor: 'bl', cls: 'label' });
+
+  const series = (arr, sc) => {
+    const pts = arr.map((v, i) => (v == null ? null : [x(i), sc(v)])).filter(Boolean);
+    s.polyline(pts, { stroke: 'ink-4', w: 2 });
+    pts.forEach((p) => s.dot(p[0], p[1], { r: 3.5, fill: 'ink-4' }));
+  };
+  series(sm, ys); series(al, ya);
+
+  // Window averages as bold steps.
+  win.forEach(([f, t, m, n]) => {
+    s.line(x(f - 0.5), ys(m), x(t + 0.5), ys(m), { stroke: 'ink', w: 4, cap: 'butt' });
+    s.line(x(f - 0.5), ya(n), x(t + 0.5), ya(n), { stroke: 'ink', w: 4, cap: 'butt' });
+  });
+  s.label(x(14), ys(3.011) - 10, '3,01', { anchor: 'bc', cls: 'avg num' });
+  s.label(x(20), ys(1.436) + 10, '1,44', { anchor: 'tc', cls: 'avg num' });
+  s.label(x(14), ya(45.2) + 10, '45,2', { anchor: 'tc', cls: 'avg num' });
+  s.label(x(20), ya(60.6) - 10, '60,6', { anchor: 'bc', cls: 'avg num' });
+
+  [[0, 'ene-22'], [12, 'ene-23'], [17, 'jun-23'], [24, 'ene-24'], [33, 'oct-24']].forEach(([i, t]) => s.label(x(i), B.b + 14, t, { anchor: 'tc', cls: 'label-sm' }));
+
+  // Reading notes, cols 9–12.
+  const X = P.grid.col(9) + 40, w = 500;
+  s.label(X, 390, 'Correlación en niveles <b>−0,57</b>; mes a mes, ninguna significativa (|r| ≤ 0,27).', { cls: 'annotation', w });
+  s.label(X, 560, 'Gasto en unidades reportadas, sin escala a COP; hasta may-23, Team es 12% fijo del total.', { cls: 'annotation', w });
+  s.label(X, 730, '<b>Propuesta</b>: registrar el gasto por canal y campaña y leerlo contra entradas y Won por cohorte.', { cls: 'annotation', w });
+  s.line(X - 24, 390, X - 24, 820, { stroke: 'rule', w: 1.5 });
+});
+</script>
+</body>
+</html>

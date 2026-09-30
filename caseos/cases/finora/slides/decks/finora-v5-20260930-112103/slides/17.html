@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S17 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S17"] {
+  .sn { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.15; }
+  .sn span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
+  .sn.dk, .sn.dk span { color: var(--bg); }
+  .mv { font-size: 20px; line-height: 1.3; color: var(--ink); }
+  .mv.hot { color: var(--accent-text); font-weight: 600; }
+  .rh { font-size: 20px; line-height: 1.25; color: var(--ink-3); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .bk { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .bk b { color: var(--ink); font-weight: 600; }
+  .rl { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .rl b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S17" data-composition="staircase (dónde nace cada movimiento) + rule_strip" data-family="economics" data-word-budget="130" data-page="17">
+  <header class="header">
+    <div class="kicker">Revenue · modelo de datos · propuesta</div>
+    <h1 class="headline">La Propuesta de Modelo de datos separa el valor en una escalera con vigencias</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de modelo de datos (R-034, R-011); esquema sin escala ni cifras; la regla de «Descuento» es convención del CFO (F-236, F-151) · F-130, F-132, F-133, F-150, F-152, F-168, F-234, F-240, F-241</span><span class="page"></span></footer>
+  <aside class="notes">Proponemos una escalera de valor por suscripción y mes, cada peldaño con su fuente y su vigencia: tarifa de lista, precio pactado (plan, cantidad y add-ons), descuento con inicio, fin y motivo, MRR neto recurrente, facturado y cobrado. El MRR bruto y el neto se clasifican comparando cierres de mes sobre lo contratado y el descuento; lo facturado y lo cobrado son caja y nunca generan movimientos de MRR, solo un efecto de cobro, y el monto pagado de hoy queda como capa observada que se concilia contra lo cobrado. Regla de clasificación (integra C-020): si la suscripción no cambia, el inicio o el fin de un descuento va a una línea propia «Descuento» y no es contracción ni expansión; si cambian suscripción y descuento el mismo mes, primero se calcula el efecto de la suscripción con los términos de descuento del mes anterior y el resto va a «Descuento»; a quien sale con descuento se le registra churn, no fin de descuento. Las reglas que son decisiones de negocio (base lista o neto del puente, mes gratis, pausa, descuento único, tarifa en línea propia) se escriben antes de construir. Límites: hoy el modelo es cliente × mes × monto pagado y no separa suscripción, tarifa, descuento ni momento de cobro (F-130); se sabe qué evidencia confirmaría cada componente, no si Finora la tiene (F-133); la regla de «Descuento» es convención, no hecho: se aparta del default del mercado y el CFO la declara (F-236, F-151); los ejemplos de clasificación son ilustrativos. El árbol de decisión completo de la regla está en el anexo (C-020).</aside>
+</main>
+<script>
+P.draw('S17', (s, P) => {
+  // Plan: six schematic steps cols 3–12 descending left → right (no scale, no data) · brackets MRR vs cash ·
+  // under each step, the monthly movement born there · rule strip (C-020) at the bottom. Accent: the discount step.
+  const X0 = 350, STEP = 246, W = 196, BASE = 712;
+  const steps = [
+    { n: 'Lista', d: 'tarifa por plan', top: 432, fill: 'ink-4' },
+    { n: 'Pactado', d: 'plan, cantidad y add-ons', top: 450, fill: 'ink-4' },
+    { n: 'Descuento', d: 'inicio, fin y motivo', top: 450, bot: 548, fill: 'accent', focal: true },
+    { n: 'MRR neto', d: 'pactado − descuento', top: 548, fill: 'ink-2', dark: true },
+    { n: 'Facturado', d: '', top: 560, fill: 'bg' },
+    { n: 'Cobrado', d: '', top: 584, fill: 'bg' },
+  ];
+  s.line(X0 - 20, BASE, 1808, BASE, { stroke: 'rule', w: 1.5 });
+  steps.forEach((st, i) => {
+    const x = X0 + i * STEP, bot = st.bot ?? BASE;
+    if (st.fill === 'bg') s.rect(x, st.top, W, bot - st.top, { fill: 'bg', stroke: 'ink-3', w: 2 });
+    else s.rect(x, st.top, W, bot - st.top, { fill: st.fill, id: st.focal ? 's17-dsc' : null, focal: !!st.focal });
+    s.label(x + 14, st.top + 10, `${st.n}${st.d ? `<span>${st.d}</span>` : ''}`, { cls: st.dark ? 'sn dk' : 'sn', w: W - 24 });
+    if (i) s.line(x - (STEP - W), steps[i - 1].bot ?? steps[i - 1].top, x, steps[i - 1].bot ?? steps[i - 1].top, { stroke: 'ink-3', w: 1.5 });
+  });
+  s.label(112, 580, 'Valor por suscripción y mes', { anchor: 'ml', cls: 'rh', w: 200 });
+
+  // Brackets: MRR (classified by comparing month closes) vs cash (billing effect only).
+  const bx = (i) => X0 + i * STEP;
+  s.path(`M${bx(0)},396 v-14 H${bx(3) + W} v14`, { stroke: 'ink', w: 2 });
+  s.label(bx(0), 366, '<b>MRR, de lista y neto</b>: se clasifica comparando cierres de mes', { anchor: 'bl', cls: 'bk', w: 4 * STEP });
+  s.path(`M${bx(4)},396 v-14 H${bx(5) + W} v14`, { stroke: 'ink-3', w: 2 });
+  s.label(bx(4), 366, '<b>Caja</b>: solo efecto de cobro', { anchor: 'bl', cls: 'bk', w: 2 * STEP });
+
+  // Where each monthly movement is born.
+  s.label(112, 752, 'Dónde nace el movimiento', { anchor: 'ml', cls: 'rh', w: 200 });
+  const mv = [[0, 'cambio de tarifa'], [1, 'New · Expansión · Contracción · Churn'], [2, '«Descuento»: inicio y fin', true]];
+  mv.forEach(([i, t, hot]) => s.label(bx(i), 736, t, { cls: `mv${hot ? ' hot' : ''}`, w: W + 30 }));
+  s.label(bx(4), 736, 'efecto de cobro, nunca MRR; concilia el monto pagado', { cls: 'mv', w: 2 * STEP - 20 });
+
+  // Classification rule (C-020) and the business decisions to write down first.
+  s.line(112, 842, 1808, 842, { stroke: 'rule', w: 1.5 });
+  s.label(112, 860, '<b>Regla</b>: sin cambio de suscripción, inicio o fin va a «Descuento», no a Contracción ni Expansión · si cambian ambos, primero la suscripción con el descuento previo · quien sale con descuento es churn', { cls: 'rl', w: 1696 });
+  s.label(112, 940, '<b>Antes de construir</b>: base del puente, mes gratis, pausa, descuento único, tarifa propia', { cls: 'rl', w: 1696 });
+});
+</script>
+</body>
+</html>

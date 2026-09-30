@@ -1,0 +1,50 @@
+slide:
+  id: S10
+  file: slides/10.html
+  claim_id: C-023
+  brief: S07
+  based_on: finora-v3-20260929-212258/S14 (claim cambiado: ramas ordenadas y sin columna de palancas)
+  role_in_story: recommendation
+  kicker: "Growth · hipótesis ToFu y BoFu · propuesta"
+  headline: "Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja"
+  takeaway: "Antes del árbol se fija qué es venta y qué ventana; después se descarta en orden: artefactos, mezcla, antes del SQL, después del SQL, cobro."
+  question: "¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas», y en qué orden se descartan?"
+  relationship: "the gap BRANCHES into five ordered branches, each piece falling in one leaf; Paso 0 GATES the tree"
+  evidence_type: structure
+  composition: issue_tree (ramas ordenadas + paso 0)
+  family: logic
+  alternatives_considered:
+    - id: two_level_tree + lever_column (v3)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "el claim v5 ordena en cinco ramas planas y ya no trae la columna de palancas"
+    - id: funnel_with_leak_points
+      score: {fidelity: 2, focal: 2, evidence: 1, variety: 2, risk: -1}
+      rejected_because: "sugiere volúmenes por etapa que no existen y mezcla artefactos con caídas reales"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 2, risk: 0}
+  focal_point: order_spine
+  visual_hierarchy:
+    1: el orden 1 → 5 en acento
+    2: Paso 0 (fijar venta y ventana) antes del árbol
+    3: las hojas de cada rama
+    4: estado de las hojas (ninguna se valida hoy; del cobro solo el arranque)
+  objects:
+    - {id: root, kind: text, content: "Brecha: más leads, no más ventas"}
+    - {id: step0, kind: node, content: "Paso 0: qué es venta (Won o primer pago) y la ventana, por cohorte de entrada"}
+    - {id: order_spine, kind: path, content: "1 Artefactos · 2 Mezcla (ToFu) · 3 Antes del SQL · 4 Después del SQL (BoFu) · 5 Cobro"}
+    - {id: leaves, kind: text, content: "no-prospectos y duplicados · cambio de definición · misma demanda, otra puerta · peor mezcla al entrar · capacidad y primer toque · estancados · incentivos del SDR · decisión en Proposal · Won que no llega a pagar"}
+  encodings:
+    accent: "el orden de descarte"
+    hollow_marker: "hoy no se valida ni se descarta"
+    half_marker: "del cobro solo se ve el arranque"
+  annotations:
+    - {at: order_spine, text: "en este orden"}
+  layout_intent:
+    grid: "raíz cols 1–2; paso 0 cols 3–4; ramas cols 5–7; hojas cols 8–12"
+    reading_path: "izquierda → derecha, de arriba abajo en las ramas"
+    whitespace: "arriba a la izquierda"
+  text_budget: 120
+  must_show: ["qué es venta y qué ventana, antes", "orden artefactos → mezcla → antes del SQL → después del SQL → cobro", "cada pedazo en una sola hoja"]
+  avoid: ["matriz de hipótesis con bullets", "cards por hipótesis", "cifras"]
+  data: {source: "sin datos: propuesta (R-032)", values: []}
+  notes: "Reordena las ramas de D-001 (X-150, decisión de Hugo); premisa depende de la ventana (F-125, F-229); comprobación en pagos en anexo (C-011, C-012)."
+  sources: [F-228, F-229, F-230, F-231, F-232, F-127, F-128, F-129, F-122, F-212, F-125]

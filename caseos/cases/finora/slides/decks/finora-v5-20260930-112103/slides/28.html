@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S28 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S28"] {
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .tm { font-size: 36px; font-weight: 600; color: var(--ink); line-height: 1.1; }
+  .tm.to { color: var(--ink-2); font-weight: 400; }
+  .op { font-size: 36px; color: var(--ink-3); line-height: 1; }
+  .gp { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .val { font-size: 24px; line-height: 1.35; color: var(--ink-2); }
+  .val b { color: var(--ink); font-weight: 600; }
+  .chip { background: var(--accent); color: var(--ink); padding: 8px 18px; font-size: 36px; font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S28" data-composition="formula_anatomy (término contra término)" data-family="economics" data-word-budget="85" data-page="28">
+  <header class="header">
+    <div class="kicker">Anexo · métricas comunes y catálogo</div>
+    <h1 class="headline">Hoy solo existe S&amp;M por primer pagador en unidades reportadas: no es CAC</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: archivo S&amp;M_spend y pagos cliente × mes de Finora; unidad del gasto sin documentar (u), sin canal ni ruta · FIN-F-081, FIN-F-069, FIN-F-070 · F-081, F-108, F-022, F-137</span><span class="page"></span></footer>
+  <aside class="notes">Lo único que se puede calcular es el S&amp;M total por primer pagador observado, en la unidad del archivo: 0,105 u en 2022 y 0,036 u en 2024 (−66%). No es CAC, término a término: la unidad del gasto no está documentada (u, no COP); el denominador es el primer pago observado, no el Won (el hito de adquisición lo acuerda el CRO); y no hay canal ni ruta. Además depende de qué rubros se cuenten: Habilitación pesa 12% del S&amp;M en 2022, 7% en 2023 y 4% en 2024; el gasto por alta baja de 0,11 a 0,04 si se incluye y de 0,09 a 0,03 si se excluye. El −66% puede venir de cómo se arma el archivo (X-005, H-070): no se lee como más eficiencia comercial. En las métricas comunes queda como proxy del CAC, en rojo, hasta tener la unidad y el canal. No se da ningún valor de CAC en COP.</aside>
+</main>
+<script>
+P.draw('S28', (s, P) => {
+  // Plan: today's ratio (solid) on top and the CAC (dashed, does not exist) below, term against term across the
+  // full width; each column's gap is named on a dashed connector; «no es CAC» (accent) closes the middle band.
+  const C = [{ x: 112, w: 520 }, { x: 760, w: 470 }, { x: 1360, w: 448 }];
+  const TOP = 380, BOT = 716;
+  const row = (y, terms, to) => terms.forEach((t, i) => {
+    const el = s.label(C[i].x, y, t, { cls: 'tm' + (to ? ' to' : ''), id: `s28-${to ? 'c' : 'h'}${i}` });
+    const b = s.box(el);
+    s.line(b.l, b.b + 10, b.r, b.b + 10, { stroke: to ? 'ink-3' : 'ink', w: 2.5, dash: to ? 'dash' : null });
+  });
+  const ops = (y) => { s.label(C[1].x - 64, y + 20, '÷', { anchor: 'ml', cls: 'op' }); s.label(C[2].x - 64, y + 20, '·', { anchor: 'ml', cls: 'op' }); };
+
+  // Today (exists).
+  s.label(112, TOP - 16, 'Hoy', { anchor: 'bl', cls: 'cap' });
+  row(TOP, ['S&amp;M total (u)', 'primeros pagadores', 'sin canal ni ruta']);
+  ops(TOP);
+  s.label(112, TOP + 76, '<b>0,105 u</b> (2022) → <b>0,036 u</b> (2024), −66%: no se lee como eficiencia comercial', { cls: 'val', w: 1300 });
+
+  // The three gaps, term against term.
+  const G0 = TOP + 130, G1 = BOT - 44;
+  [['u → COP', 0], ['primer pago → Won', 1], ['sin canal → por canal', 2]].forEach(([t, i]) => {
+    const x = C[i].x + 24;
+    s.line(x, G0, x, G1, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end', headSize: 11 });
+    s.label(x + 20, (G0 + G1) / 2, t, { anchor: 'ml', cls: 'gp' });
+  });
+  s.label(510, (G0 + G1) / 2, 'no es CAC', { anchor: 'mc', cls: 'chip', id: 's28-chip', focal: true });
+
+  // CAC (does not exist).
+  s.label(112, BOT - 16, 'CAC · no existe hoy', { anchor: 'bl', cls: 'cap' });
+  row(BOT, ['S&amp;M en COP', 'Won', 'por canal'], true);
+  ops(BOT);
+
+  // Sensitivity in one line.
+  s.line(112, 846, 1808, 846, { stroke: 'rule', w: 1.5 });
+  s.label(112, 868, 'Con Habilitación, <b>0,105 u</b>; sin ella, <b>0,093 u</b> (2022): el nivel depende de si es comercial; pesa 12%, 7% y 4% (2022–2024).', { cls: 'val', w: 1696 });
+});
+</script>
+</body>
+</html>

@@ -85,6 +85,8 @@ Governing thought: La brecha clientes–monto se asocia a quién entra; el porqu
 | S13 | ¿Cómo separar el valor de la suscripción del precio efectivamente pagado, y cómo clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión reales? | La Propuesta de Modelo de datos separa el valor en una escalera con vigencias | recommendation | C-019 |
 | S14 | Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece el descuento: ¿cómo se lee cada caso y qué pasa con el negocio subyacente? | Con el modelo propuesto, cada caso del CFO se lee en su capa | recommendation | C-025 |
 
+**Numeración en el deck** (la portada y los separadores desplazan los números; ver `visual-direction.md`): S01→03 · S02→04 · S03→06 · S04→07 · S05→08 · S06→09 · S07→10 · S08→11 · S09→12 · S10→14 · S11→15 · S12→16 · S13→17 · S14→18. Portada 01 y 19; separadores 02 (Overview), 05 (Growth), 13 (Revenue), 20 (Anexos); anexos 21–34. Ningún título se cambió.
+
 **Read-through (solo títulos):** Los clientes activos crecen 4,5× y el MRR pagado observado, 2,8× → La caída por cliente coincide con quién entra, y el gasto no acompaña las altas → Cada ruta usa las etapas del Executive que le aplican, por canal y con dueño → Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes → La pérdida está en el monto por cliente de cosechas de menor ticket → Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO → Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja → Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso → Proponemos una vía formal por foro y otra de agentes para el día a día → Lo observable es el primer y segundo pago; el descuento no es verificable → Con cliente, mes y monto se ve qué cambió, no por qué → El descuento se registra como objeto propio, con origen, source y fecha de fin → La Propuesta de Modelo de datos separa el valor en una escalera con vigencias → Con el modelo propuesto, cada caso del CFO se lee en su capa
 
 ## 5. Slide briefs
@@ -1677,3 +1679,14 @@ evidence_gaps: []
 - Limitación: Usa tus definiciones de Hybrid B y Reactivate. R-035 las había cambiado y aquí no se usa esa versión.
 - Limitación: Ventana de deduplicación, SLA y umbral de estancamiento son parámetros a acordar con Finora, no estándar de mercado.
 - (El Storyteller anota aquí lo que no se sostenga al diseñar.)
+
+### Notas del Visual Storyteller (30-sep-2026, deck v5)
+
+- **C-026 (lámina 04), cifras por celda.** Apliqué el criterio de D-026 que ya anotaste arriba: «65%» se muestra como sus celdas, «34,0% y 31,2%» (T-041/T-031), y el 91% va sin cifra en la lámina («dentro de cada industria, no por el mix»). Las dos cifras siguen en las notas del orador. Si decides que el mensaje de la tabla basta, se reponen con un cambio de texto.
+- **C-007 (lámina 08).** Sin montos de la descomposición (D-026): el puente del deck v3 se reemplazó por un slope por cosecha, solo con celdas de T-041, T-038, T-040 y T-002.
+- **C-025 (lámina 18).** El v3 mostraba la lectura de hoy por caso («sin cambio», «expansión»); el claim v5 ya no la trae y se quitó. El caso 1 ahora distingue contracción real de inicio de descuento, como dice el claim.
+- **C-021 (lámina 06).** La tercera entrada del Executive es «entrada directa a SQL» (claim v5) en lugar de «referido o partner» (v3); referido o partner sigue por confirmar contra el CRM (limitación del claim).
+- **Sin lámina de respuesta.** El guion no trae una lámina de resumen y no la agregué: la idea central va en las notas de la portada. Si el comité llega sin contexto, conviene una lámina de respuesta entre la portada y Overview.
+- **Densidad de Growth.** Growth tiene siete láminas densas seguidas (06–12), porque el guion pone siete preguntas. Para 5 minutos es mucho: si aprieta el tiempo, C-029 (lámina 11) puede pasar a anexo, porque el árbol de la lámina 10 ya dice que ninguna hoja se valida hoy.
+- **Anexos.** Las 14 láminas del anexo son las del deck v3 sin cambios de contenido: se re-tematizaron y sus kickers ahora dicen «Anexo · …». Sus cifras vienen de los contratos de datos del deck v3; este deck no trae esos archivos en `data/`.
+- **Formato.** La menta del separador de Growth y el coral («lo que no existe hoy») vienen de tu guía, pero no estaban como tokens: los agregué al final de `assets/theme.css` sin tocar los existentes. El separador de Anexos va en tinta #101010, porque la guía no le asigna color.

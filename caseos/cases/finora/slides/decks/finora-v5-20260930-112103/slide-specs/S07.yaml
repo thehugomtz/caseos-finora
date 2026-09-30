@@ -1,0 +1,53 @@
+slide:
+  id: S07
+  file: slides/07.html
+  claim_id: C-027
+  brief: S04
+  role_in_story: recommendation
+  kicker: "Growth · cómo medir cada funnel · propuesta"
+  headline: "Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes"
+  takeaway: "Dentro de cada funnel se mide con sus etapas; entre funnels solo se comparan resultados comunes desde el nudo, cortados por funnel."
+  question: "¿Cómo se mide cada funnel si no todos lo recorren igual, y qué se puede comparar entre ellos?"
+  relationship: "each funnel is MEASURED INSIDE its own stages (split) and all CONVERGE on one knot, the only place where results are compared"
+  evidence_type: process
+  composition: split_and_converge (dos zonas: dentro de cada funnel · entre funnels)
+  family: process
+  alternatives_considered:
+    - id: measurement_matrix (familias × etapas)
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "es la lámina del anexo (C-006); repite su forma y esconde que el nudo es el único punto de comparación"
+    - id: metric_catalog_table
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "una tabla de 35 métricas no muestra qué se compara y qué no"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: knot
+  visual_hierarchy:
+    1: el nudo (acento) donde convergen los carriles
+    2: las dos zonas, dentro de cada funnel (gris) y entre funnels (acento suave)
+    3: carriles con grosor = con persona (definiciones de Hugo de Hybrid A y B) y el loop de Reactivate
+    4: la regla de clasificación al cierre y lo que hoy no existe (coral)
+  objects:
+    - {id: lanes, kind: path, content: "Executive con persona · Hybrid B persona → solo · Hybrid A solo → persona · Self Service sin persona"}
+    - {id: reactivate_loop, kind: path, content: "loop de los estancados"}
+    - {id: knot, kind: node, content: "Nudo · Won"}
+    - {id: common_results, kind: text, content: "Won · MRR inicial · retención temprana · CAC · payback; cortados por funnel; tasas por puerta"}
+    - {id: classification, kind: text, content: "¿nace de un estancado? → ¿quién inició? → ¿hubo toque humano? → ¿quién cerró?"}
+    - {id: none_today, kind: text, content: "hoy no existe ninguna métrica de funnel (coral)"}
+  encodings:
+    line_weight: "tramo con persona (grueso) o sin persona (fino)"
+    zone_fill: "gris = se mide dentro; acento suave = se compara entre funnels"
+    accent: "el nudo"
+    coral: "lo que no existe hoy (guía de Hugo)"
+  annotations:
+    - {at: lanes, text: "speed to lead (Executive) · uplift con holdout (Hybrid A)"}
+    - {at: common_results, text: "Siempre cortados por funnel; tasas por puerta, no por ruta"}
+  layout_intent:
+    grid: "zona interna cols 1–7; nudo en el borde; zona común cols 9–12; banda inferior con regla y estado"
+    reading_path: "carriles → convergen → nudo → resultados comunes"
+    whitespace: "entre familias y carriles"
+  text_budget: 125
+  must_show: ["cada funnel en sus etapas", "nudo común", "resultados comunes cortados por funnel", "definiciones de Hugo", "regla de clasificación"]
+  avoid: ["tres cards con bullets", "tabla de métricas", "funnel único", "cifras"]
+  data: {source: "sin datos: propuesta (R-036)", values: []}
+  notes: "F-244, F-248–F-252 pendientes de aceptación; ventana, nudo (Q-050) y umbral (Q-064) por acordar; holdout para híbridos; H-078; tercer catálogo (X-170)."
+  sources: [F-141, F-155, F-158, F-212, F-223, F-224, F-225, F-226, F-244, F-248, F-249, F-250, F-251, F-252]

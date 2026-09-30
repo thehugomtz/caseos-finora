@@ -1,0 +1,49 @@
+slide:
+  id: S09
+  file: slides/09.html
+  claim_id: C-028
+  brief: S06
+  role_in_story: recommendation
+  kicker: "Growth · métricas nuevas · propuesta"
+  headline: "Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO"
+  takeaway: "Cada métrica nueva existe para una decisión del CRO; la eficiencia hoy solo es S&M por alta en unidad reportada, que no es CAC."
+  question: "¿Qué métricas propondrías que hoy no existen, y para qué decisión sirve cada una?"
+  relationship: "each new metric ENABLES one CRO decision (link), ordered from entry to money; what exists today is only totals"
+  evidence_type: structure
+  composition: enable_links (métrica → decisión del CRO)
+  family: logic
+  alternatives_considered:
+    - id: driver_tree_of_metrics
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "repite el árbol con semáforo del anexo (C-009) y no dice para qué decisión sirve cada métrica"
+    - id: two_by_two (hoy/falta × decisión)
+      score: {fidelity: 1, focal: 2, evidence: 1, variety: 2, risk: -1}
+      rejected_because: "todas las métricas por ruta están en el mismo cuadrante (no existen): la matriz no separa nada"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 2, risk: 0}
+  focal_point: efficiency_link
+  visual_hierarchy:
+    1: la fila de eficiencia (acento) → repartir el S&M
+    2: las decisiones del CRO (columna derecha, en negrita)
+    3: las métricas por ruta, en orden del funnel
+    4: el proxy de hoy en coral y lo que existe solo en total
+  objects:
+    - {id: metric_rows, kind: text, content: "volumen y tasa · capacidad · estancamiento · valor y calidad · eficiencia"}
+    - {id: efficiency_link, kind: path, content: "CAC y payback por ruta → repartir el S&M entre rutas y canales"}
+    - {id: proxy_today, kind: text, content: "T-036: S&M por alta 0,105 u → 0,036 u (−66%); no es CAC"}
+    - {id: exists_today, kind: text, content: "MRR pagado y su puente, activos, ARPA, churn observado, cohortes (solo en total)"}
+  encodings:
+    arrow: "habilita"
+    accent: "eficiencia (pedida explícitamente)"
+    coral: "lo que no existe (CAC)"
+  annotations:
+    - {at: proxy_today, text: "Hoy: S&M por alta 0,105 u → 0,036 u (−66%); no es CAC"}
+  layout_intent:
+    grid: "métricas cols 1–5; flechas cols 6–7; decisiones cols 8–12"
+    reading_path: "cada fila de izquierda a derecha; de arriba (entrada) a abajo (dinero)"
+    whitespace: "entre las flechas"
+  text_budget: 125
+  must_show: ["métricas que hoy no existen", "eficiencia", "decisión que habilita cada una", "por qué S&M por alta no es CAC"]
+  avoid: ["tabla de métricas sin decisión", "semáforo repetido del anexo", "cifras fuera de data/"]
+  data: {source: "data/FIN-F-081.yaml (T-036)", values: "0,105 u · 0,036 u · −66%"}
+  notes: "F-246, F-247, F-249, F-252 pendientes de aceptación; F-146; F-136; decisiones del CRO por definir; reactivación ≠ Reactivate (F-252)."
+  sources: [F-135, F-136, F-137, F-138, F-139, F-081, F-141, F-144, F-146, F-148, F-227, F-231, F-232, F-246, F-247, F-249, F-252]

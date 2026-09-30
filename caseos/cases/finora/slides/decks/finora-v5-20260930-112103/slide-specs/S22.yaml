@@ -1,0 +1,42 @@
+slide:
+  id: S22
+  file: slides/22.html
+  claim_id: C-003
+  reused_from: finora-v3-20260929-212258/S03 (claim sin cambios; re-tematizada; va en anexo)
+  role_in_story: appendix
+  kicker: "Anexo · Overview"
+  headline: "Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias"
+  takeaway: "El volumen de entrada se duplica en escalón mientras el ticket estabilizado baja, dentro de cada industria."
+  question: "¿Qué cambió en quién entra y en qué industrias?"
+  relationship: "entrants STEP UP (×2) while the stabilized ticket per entrant FALLS — within every industry"
+  evidence_type: comparison
+  composition: diverging_small_multiples + within_industry_bar
+  family: evidence
+  alternatives_considered:
+    - id: dumbbell por industria
+      score: {fidelity: 2, focal: 2, evidence: 1, variety: 2, risk: 0}
+      rejected_because: "data/ no trae el ticket 2024 por industria; forzaría cifras fuera de data/"
+    - id: línea mensual de altas
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "muestra el escalón pero no el valor que trae cada entrada"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: ticket_bars
+  visual_hierarchy:
+    1: barras del ticket estabilizado 2023–24 en acento (bajan)
+    2: barras de primeros pagadores por mes (suben en escalón)
+    3: «6 de 6 industrias» y efecto dentro 96%
+    4: +104% contra +6% / +17%
+  objects:
+    - {id: volume_bars, kind: bar, content: "primeros pagadores por mes: 27 · 54 · 55"}
+    - {id: ticket_bars, kind: bar, content: "mediana del 2.º pago: COP 52,5 · 36,8 · 38,9 mil"}
+    - {id: industries, kind: metric, content: "6 de 6 industrias; efecto dentro 96% vs mezcla 4%"}
+  encodings: {x_position: "cohorte de primer pago", height: "valor de cada panel con su propia escala", accent: "ticket estabilizado menor de las cosechas nuevas"}
+  annotations:
+    - {at: volume_bars, text: "Escalón de 26 (dic-22) a 60 (ene-23), sin tendencia después"}
+    - {at: ticket_bars, text: "+104% primeros pagadores por mes contra +6% a +17% del valor inicial (2022→2024)"}
+  layout_intent: {grid: "volumen cols 1–4; ticket cols 5–8; industrias cols 10–12", reading_path: "más → menor → en todas"}
+  text_budget: 100
+  avoid: ["tres cards con bullets", "tabla", "eje dual", "cifras fuera de data/"]
+  data: {source: "FIN-F-192, FIN-F-110, FIN-F-160, FIN-F-113, FIN-F-164, FIN-F-114 (contratos del deck v3)", values: "altas/mes 27 · 54 · 55; M1 mediana 52.500 · 36.750 · 38.850"}
+  notes: "Primer pago observado no es adquisición. El escalón puede ser registro u operación (H-024, H-025)."
+  sources: [F-110, F-113, F-160, F-164, F-114, F-192]

@@ -1,0 +1,49 @@
+slide:
+  id: S14
+  file: slides/14.html
+  claim_id: C-015
+  brief: S10
+  based_on: finora-v3-20260929-212258/S18 (misma composición; texto del claim v5)
+  role_in_story: evidence
+  kicker: "Revenue · pricing introductorio observable"
+  headline: "Lo observable es el primer y segundo pago; el descuento no es verificable"
+  takeaway: "Solo se ve lo que pagan las altas en sus primeros meses; 2022 trae pagos iniciales grandes o retroactivos, y el descuento no se puede separar."
+  question: "¿Qué data observable de pricing introductorio podemos sacar?"
+  relationship: "first payment vs second payment COMPARED by cohort; the 2022 gap CLOSES afterwards and the discount does not appear as data"
+  evidence_type: comparison
+  composition: dumbbell + aligned_shares
+  family: comparison
+  alternatives_considered:
+    - id: grouped_bars_by_year
+      score: {fidelity: 2, focal: 1, evidence: 3, variety: 1, risk: 0}
+      rejected_because: "seis barras esconden la brecha primero-segundo que es el hallazgo"
+    - id: slope_2022_2024
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "pierde el par primer/segundo pago dentro de cada año"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: gap_2022
+  visual_hierarchy:
+    1: la brecha 2022 (acento) entre 63,0 y 52,5
+    2: 2023 iguales (36,8) y 2024 cerca (42,0 / 38,9)
+    3: proporciones alineadas (repite: 73,5 · 90,3 · 77,3%; supera con holgura: 23,2 · 7,1 · 11,6%)
+    4: no es verificable
+  objects:
+    - {id: dumbbells, kind: path, content: "T-051/T-062: medianas del primer y segundo pago 2022–2024"}
+    - {id: shares, kind: bar, content: "T-054, T-055"}
+  encodings:
+    x_position: "mediana del pago (COP mil)"
+    filled_dot: "primer pago"
+    hollow_dot: "segundo pago"
+    accent: "la brecha 2022"
+  annotations:
+    - {at: gap_2022, text: "Pagos iniciales grandes o retroactivos, más que un cambio de tarifa"}
+  layout_intent:
+    grid: "dumbbell cols 1–8; proporciones cols 9–12; nota abajo"
+    reading_path: "2022 → 2023 → 2024; luego las proporciones de la misma fila"
+    whitespace: "debajo de 2023–2024 en la zona de 50–70"
+  text_budget: 90
+  must_show: ["primer y segundo pago por cohorte", "el descuento no es verificable"]
+  avoid: ["tabla", "inferir descuentos del tamaño de un salto", "cifras fuera de data/"]
+  data: {source: "data/FIN-F-083.yaml, FIN-F-160.yaml, FIN-F-086.yaml, FIN-F-087.yaml", values: "literales"}
+  notes: "Monto pagado observado; primer pago ≠ adquisición; bases distintas (T-062 vs T-054/T-055); F-134 no prueba ausencia."
+  sources: [F-083, F-160, F-166, F-086, F-087, F-134, F-093]

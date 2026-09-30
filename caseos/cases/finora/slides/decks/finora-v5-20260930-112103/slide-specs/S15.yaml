@@ -1,0 +1,48 @@
+slide:
+  id: S15
+  file: slides/15.html
+  claim_id: C-024
+  brief: S11
+  based_on: finora-v3-20260929-212258/S19 (misma composición; texto y cifras del claim v5)
+  role_in_story: evidence
+  kicker: "Revenue · qué vemos y qué no"
+  headline: "Con cliente, mes y monto se ve qué cambió, no por qué"
+  takeaway: "El puente de monto pagado mezcla orígenes: expansión y reactivación se revierten; la contracción se sostiene; el porqué no se ve."
+  question: "Con solo cliente, mes y monto pagado, ¿qué podemos afirmar del ingreso y qué no?"
+  relationship: "what the paid amount SHOWS (what changed) is SEPARATED from what it cannot say (why); inside the bridge, expansion and reactivation revert while contraction holds"
+  evidence_type: parts
+  composition: stacked_decomposition (100% por línea del puente)
+  family: economics
+  alternatives_considered:
+    - id: bridge_waterfall_of_paid_amount
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: -1}
+      rejected_because: "mostraría montos del puente que no son el punto; el punto es qué parte se revierte"
+    - id: traffic_light_table
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "una tabla de semáforos no enseña proporciones"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: reactivation_segment
+  visual_hierarchy:
+    1: las firmas de cobro en acento (44% · 42,6% + 11,5% · 29%)
+    2: la contracción que se sostiene (88,9%)
+    3: 25,3% del movimiento bruto (COP 282,8 millones)
+    4: no se ve el porqué; antes de nombrarlo, regla de normalización
+  objects:
+    - {id: bars, kind: bar, content: "T-076 44% de 751 · T-082 42,6/11,5/45,9% · T-074 29% · T-086 4,0/88,9%"}
+    - {id: lead, kind: text, content: "T-087 25,3% de COP 282,8 millones"}
+  encodings:
+    width: "% del MRR de cada línea del puente"
+    accent: "firma de momento de cobro"
+    dark: "se sostiene"
+  annotations:
+    - {at: bars, text: "Antes de llamarlo churn o MRR: regla de normalización y ventana de gracia"}
+  layout_intent:
+    grid: "barras cols 1–8; lo que no se ve cols 10–12"
+    reading_path: "lead → barras → columna derecha"
+    whitespace: "bajo el título"
+  text_budget: 105
+  must_show: ["qué cambió vs por qué", "expansión y reactivación se revierten", "contracción se sostiene"]
+  avoid: ["tabla", "pie", "cifras fuera de data/"]
+  data: {source: "data/FIN-F-172.yaml, FIN-F-174.yaml, FIN-F-180.yaml, FIN-F-184.yaml, FIN-F-185.yaml", values: "literales"}
+  notes: "F-186; F-136; X-100; X-102/X-145; F-213."
+  sources: [F-172, F-174, F-180, F-182, F-184, F-185, F-135, F-136, F-186, F-213]

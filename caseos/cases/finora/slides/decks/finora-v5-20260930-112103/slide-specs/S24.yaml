@@ -1,0 +1,40 @@
+slide:
+  id: S24
+  file: slides/24.html
+  claim_id: C-005
+  reused_from: finora-v3-20260929-212258/S05 (claim sin cambios; re-tematizada; va en anexo — su nota clave se rescata en S06)
+  role_in_story: appendix
+  kicker: "Anexo · rutas, puertas y medición anterior"
+  headline: "Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar"
+  takeaway: "Puerta y canal se fijan al entrar; la ruta sale de quién movió cada tramo y todas llegan al mismo nudo: el primer pago."
+  question: "¿Cómo definir el funnel si no todos lo recorren igual?"
+  relationship: "one entry with fixed door and channel SPLITS into routes by who moves each stretch, and all CONVERGE on one knot"
+  evidence_type: process
+  composition: split_and_converge + reactivate_loop
+  family: process
+  alternatives_considered:
+    - id: funnel único
+      score: {fidelity: 0, focal: 2, evidence: 0, variety: 1, risk: 0}
+      rejected_because: "es justo lo que no pasa: no todos recorren las mismas etapas"
+    - id: swimlane por actor
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "no muestra que la entrada se abre y converge en un nudo común"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: entry_chip
+  visual_hierarchy:
+    1: la entrada con «fijos al entrar» (acento)
+    2: cuatro rutas (tramo con persona grueso, sin persona delgado)
+    3: el nudo común (primer pago)
+    4: loop Reactivate y regla de clasificación
+  objects:
+    - {id: entry_chip, kind: node, content: "Entrada: journey = cuenta × intento; puerta y canal fijos"}
+    - {id: routes, kind: path, content: "Executive · Hybrid B · Hybrid A · Self Service"}
+    - {id: knot, kind: node, content: "Nudo común: primer pago"}
+    - {id: loop, kind: path, content: "Reactivate: loop sobre estancados"}
+  encodings: {line_weight: "con persona = grueso; sin persona = fino", accent: "atributos fijos al entrar", zone: "antes del nudo = hoy no se mide"}
+  layout_intent: {grid: "entrada cols 1–3; rutas cols 4–9; nudo col 10; lado derecho cols 11–12", reading_path: "entra, se abre, converge"}
+  text_budget: 120
+  avoid: ["tres cards de motion", "funnel único", "tabla de rutas", "iconos por ruta"]
+  data: {source: "propuesta (R-031); sin cifras", values: []}
+  notes: "Q-063, Q-046, H-050."
+  sources: [F-209, F-210, F-211, F-212, F-213, F-188, F-190, F-140, F-155, F-223, F-224, F-226]

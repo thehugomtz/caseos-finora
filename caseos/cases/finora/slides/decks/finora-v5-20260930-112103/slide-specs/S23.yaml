@@ -1,0 +1,42 @@
+slide:
+  id: S23
+  file: slides/23.html
+  claim_id: C-004
+  reused_from: finora-v3-20260929-212258/S04 (claim sin cambios; re-tematizada; banda al 24%; va en anexo)
+  role_in_story: appendix
+  kicker: "Anexo · Overview"
+  headline: "Gasto de S&M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas"
+  takeaway: "En 2023 jun–dic el gasto baja mientras los primeros pagadores suben: no hay relación positiva que leer cruzando fechas."
+  question: "¿Hasta dónde se puede relacionar la Inversión en Marketing por categoría con las ventas cruzando fechas?"
+  relationship: "spend and first payers MOVE IN OPPOSITE directions over the same months (negative association, not attribution)"
+  evidence_type: series
+  composition: small_multiples_time + window_highlight
+  family: evidence
+  alternatives_considered:
+    - id: scatter S&M vs altas con rezago
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "Hugo eligió los dos paneles; la dispersión queda como apoyo en notas"
+    - id: barras por ventana (S&M por alta)
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "un cociente oculta que los dos componentes se mueven en sentidos contrarios"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 1, risk: -1}
+  focal_point: window_band
+  visual_hierarchy:
+    1: franja en acento 2023 jun–dic que cruza ambos paneles
+    2: las dos series mensuales
+    3: promedios por ventana (3,01 → 1,44 u; 45,2 → 60,6)
+    4: correlación y calidad del archivo
+  objects:
+    - {id: sm_panel, kind: path, content: "S&M total por mes (u), feb-22–sep-24"}
+    - {id: new_panel, kind: path, content: "primeros pagadores por mes, mar-22–oct-24"}
+    - {id: window_band, kind: band, content: "2023 jun–dic"}
+  encodings: {x_position: "mes (mismo eje)", y_position: "valor de cada panel (sin eje dual)", accent: "la ventana donde van en sentidos opuestos", step_lines: "promedio por ventana (F-214)"}
+  annotations:
+    - {at: right, text: "Correlación en niveles −0,57; mes a mes ninguna significativa"}
+    - {at: right, text: "Unidad del gasto no documentada; hasta may-23 Team es 12% fijo"}
+  layout_intent: {grid: "paneles cols 1–9; anotaciones cols 10–12", reading_path: "franja → panel superior → inferior → nota"}
+  text_budget: 100
+  avoid: ["eje dual", "tres cards", "tabla", "atribuir ventas al gasto"]
+  data: {source: "FIN-F-220, FIN-F-214, FIN-F-219, FIN-F-118, FIN-F-066, FIN-F-063 (contratos del deck v3)", values: "serie literal de F-220"}
+  notes: "Coincidencia temporal, no efecto (F-119). Propuesta: registrar gasto por canal y campaña."
+  sources: [F-214, F-220, F-219, F-221, F-217, F-107, F-118, F-066, F-063, F-067]

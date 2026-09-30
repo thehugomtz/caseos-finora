@@ -1,0 +1,59 @@
+slide:
+  id: S04
+  file: slides/04.html
+  claim_id: C-026
+  brief: S02
+  role_in_story: diagnosis
+  kicker: "Overview · observaciones"
+  headline: "La caída por cliente coincide con quién entra, y el gasto no acompaña las altas"
+  takeaway: "Tres observaciones de los pagos convergen en la pregunta que abre Growth: por qué ruta, canal y etapa entra cada cliente."
+  question: "¿Qué observaciones sostienen los datos antes de entrar a Growth y qué dejan abierto?"
+  relationship: "three observations (mix, entries, spend) CONVERGE on one open question that the payments cannot answer"
+  evidence_type: comparison
+  composition: converging_evidence (tres mini-exhibits → pregunta abierta)
+  family: process
+  alternatives_considered:
+    - id: three_cards_with_bullets
+      score: {fidelity: 0, focal: 1, evidence: 1, variety: 0, risk: 0}
+      rejected_because: "el brief lo prohíbe; tres tarjetas no muestran que las tres observaciones llevan a la misma pregunta"
+    - id: dashboard_of_three_charts
+      score: {fidelity: 1, focal: 1, evidence: 3, variety: 1, risk: -1}
+      rejected_because: "repite C-002, C-003 y C-004 del anexo en miniatura y pierde la pregunta que conecta con Growth"
+    - id: issue_tree_from_the_gap
+      score: {fidelity: 2, focal: 2, evidence: 1, variety: 2, risk: 0}
+      rejected_because: "un árbol descompone; aquí las observaciones no suman a un total, convergen en lo que falta"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: open_question
+  visual_hierarchy:
+    1: la pregunta abierta a la derecha, donde convergen las tres líneas
+    2: las tres observaciones en negrita (la base sostiene · entran más con menor ticket · el gasto no acompaña)
+    3: los mini-exhibits con las cifras literales (anchos y altos del marimekko, tijeras)
+    4: periodos, unidades y fuente
+  objects:
+    - {id: mix_strip, kind: bar, content: "marimekko mínimo oct-24: ancho = % de activos, alto = MRR por cliente; base previa 97,4 · cosechas 2023 46,3 y 2024 43,0 (COP mil)"}
+    - {id: entries_scissors, kind: path, content: "tijera 2022→2023: altas/mes 27,2 → 54,7 sube; ticket estabilizado 52,5 → 36,8 baja"}
+    - {id: spend_scissors, kind: path, content: "tijera 2023 ene–may → jun–dic: altas/mes 45,2 → 60,6 sube; S&M/mes 3,01 u → 1,44 u baja"}
+    - {id: open_question, kind: text, content: "Lo que los pagos no dicen: ¿por qué ruta, canal y etapa entra cada cliente? → Growth"}
+  encodings:
+    accent: "quién entra (cosechas 2023–24, altas); lo mismo en las tres filas"
+    x_position: "antes → después dentro de cada tijera"
+    y_position: "cambio relativo desde el mismo punto de partida (misma escala en las dos tijeras); solo se rotulan cifras literales"
+    width: "% de clientes activos en oct-24 (marimekko)"
+    connectors: "cada observación converge en la pregunta"
+  annotations:
+    - {at: mix_strip, text: "La base previa sostiene su monto (+5%); las cosechas 2023–24 ya son 65% de los activos"}
+    - {at: entries_scissors, text: "91% del cambio del ticket ocurre dentro de cada industria"}
+    - {at: spend_scissors, text: "cruzar fechas no atribuye ventas"}
+  layout_intent:
+    grid: "hallazgos cols 1–4; mini-exhibits cols 5–8; conectores col 9; pregunta cols 10–12"
+    reading_path: "tres filas de izquierda a derecha → convergen en la pregunta"
+    asymmetry: "pregunta a la derecha, más grande; filas separadas con hairlines"
+    whitespace: "arriba a la derecha de la pregunta"
+  text_budget: 120   # síntesis de tres láminas del anexo; la siguiente es un separador (respiro)
+  must_show: ["la base sostiene", "las cosechas nuevas diluyen", "el gasto va en sentido contrario a las altas", "la pregunta que abre Growth"]
+  avoid: ["tres cards con bullets", "tabla", "tres gráficas completas en miniatura", "eje dual", "cifras que no estén en data/"]
+  data:
+    source: "data/FIN-F-075.yaml (+5%), FIN-F-076.yaml (T-031 marimekko), FIN-F-097.yaml (65%), FIN-F-110.yaml (27,2 → 54,7), FIN-F-160.yaml (52,5 → 36,8), FIN-F-164.yaml (91%), FIN-F-214.yaml (3,01 → 1,44; 45,2 → 60,6), FIN-F-219.yaml y FIN-F-217.yaml (solo notas)"
+    values: "literales de los contratos; la geometría de las tijeras usa razones de esos valores sin rotular cifras nuevas"
+  notes: "Composición no es causa; 84% con base dic-22 y 108% con ene-22; primer pago observado no es adquisición; el escalón de 2023 puede ser registro u operación; S&M en unidad reportada; la industria no sustituye canal ni ruta; detalle en anexo (C-002, C-003, C-004)."
+  sources: [F-075, F-076, F-097, F-110, F-160, F-164, F-214, F-219, F-217]

@@ -1,0 +1,53 @@
+slide:
+  id: S06
+  file: slides/06.html
+  claim_id: C-021
+  brief: S03
+  based_on: finora-v3-20260929-212258/S06 (claim cambiado: se rehízo)
+  role_in_story: recommendation
+  kicker: "Growth · cómo definir el funnel · propuesta"
+  headline: "Cada ruta usa las etapas del Executive que le aplican, por canal y con dueño"
+  takeaway: "Una lista maestra de etapas; cada ruta toma solo sus tramos, con dueño y canal de entrada; las tasas se comparan por puerta."
+  question: "¿Qué etapas recorre cada ruta, por qué canal entra y quién es dueño de cada tramo?"
+  relationship: "each route TAKES a subset of one master list of stages (split), owned by SDR, AE or Growth/Producto; Reactivate LOOPS stalled journeys back"
+  evidence_type: structure
+  composition: stage_matrix (metro map) + reactivate_loop
+  family: comparison
+  alternatives_considered:
+    - id: swimlane_by_owner
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "ordena por dueño y pierde que todas las rutas leen la misma lista maestra"
+    - id: four_route_cards
+      score: {fidelity: 0, focal: 1, evidence: 1, variety: 0, risk: 0}
+      rejected_because: "tarjetas por ruta esconden qué etapas comparten y cuáles se saltan"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: -1}
+  focal_point: master_list_row
+  visual_hierarchy:
+    1: la fila Executive outbound en acento = lista maestra
+    2: qué etapas toma cada ruta (puntos llenos, saltos en círculo vacío)
+    3: dueños sobre las columnas (Growth/Producto · SDR · AE · Producto)
+    4: loop de Reactivate y la nota de puerta fija (C-005)
+  objects:
+    - {id: master_list_row, kind: path, content: "Executive · outbound SDR: New → Working → Engaged → SQL → Demo → Proposal → Won"}
+    - {id: route_rows, kind: path, content: "inbound salta Working; entrada directa a SQL arranca en SQL; Hybrid B cierra por Checkout Self; Hybrid A arranca en producto; Self Service sin SDR/AE"}
+    - {id: owner_brackets, kind: bracket, content: "Growth/Producto · SDR · AE · Producto"}
+    - {id: reactivate_loop, kind: path, content: "loop de estancados que vuelve a su etapa con fecha y puerta"}
+    - {id: door_note, kind: text, content: "las tasas se comparan por puerta, fija al entrar (nota de C-005)"}
+  encodings:
+    x_position: "etapa de la lista maestra (orden monotónico)"
+    filled_dot: "usa la etapa"
+    hollow_dot: "se puede saltar"
+    accent: "la lista maestra (Executive outbound)"
+  annotations:
+    - {at: door_note, text: "Las tasas se comparan por puerta, fija al entrar: la ruta sesga la conversión de Hybrid"}
+    - {at: reactivate_loop, text: "Reactivate: loop de estancados; no es otra ruta"}
+  layout_intent:
+    grid: "rutas y canales cols 1–4; etapas cols 5–12; nota y loop abajo"
+    reading_path: "fila acentuada → filas que saltan etapas → loop y nota"
+    whitespace: "arriba a la izquierda (leyenda)"
+  text_budget: 120
+  must_show: ["lista maestra", "canal como atributo de la entrada", "dueño por tramo", "Reactivate como loop", "puerta fija (C-005)"]
+  avoid: ["tres cards con bullets", "tabla de texto", "iconos por ruta", "cifras"]
+  data: {source: "sin datos: propuesta de diseño (R-031, R-036)", values: []}
+  notes: "Propuesta; Demo, Proposal y referido/partner por confirmar con el CRM; Q-046, Q-063, Q-064 abiertos; definiciones de Hybrid B y Reactivate de Hugo."
+  sources: [F-209, F-210, F-211, F-212, F-188, F-223, F-224, F-225, F-191]

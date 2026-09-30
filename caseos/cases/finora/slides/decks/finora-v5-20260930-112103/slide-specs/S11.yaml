@@ -1,0 +1,48 @@
+slide:
+  id: S11
+  file: slides/11.html
+  claim_id: C-029
+  brief: S08
+  role_in_story: recommendation
+  kicker: "Growth · hipótesis ToFu y BoFu · propuesta"
+  headline: "Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso"
+  takeaway: "Cada rama tiene el dato que la valida o descarta; ninguno está en el caso; la prueba más rápida es etiquetar desde el CRM a los pagadores observados."
+  question: "¿Qué dato valida o descarta cada hoja del árbol, y lo tenemos hoy?"
+  relationship: "each branch of the tree (same order) is MATCHED with its signature and minimum data; none EXISTS in the case today"
+  evidence_type: comparison
+  composition: match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + fastest_test
+  family: comparison
+  alternatives_considered:
+    - id: tree_repeated_with_data_leaves
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 0, risk: -2}
+      rejected_because: "repetir el árbol de la lámina anterior con más texto en cada hoja no cabe y no deja ver el «no» común"
+    - id: harvey_matrix (hoja × fuente)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: -1}
+      rejected_because: "las fuentes no están definidas en el caso; la matriz inventaría columnas"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 2, risk: 0}
+  focal_point: fastest_test
+  visual_hierarchy:
+    1: la columna «no» en coral (ninguna hoja tiene su dato)
+    2: el dato mínimo de cada rama, en el mismo orden del árbol (números en acento)
+    3: la prueba más rápida (acento suave)
+    4: el gasto no sirve de proxy
+  objects:
+    - {id: branch_rows, kind: text, content: "1 Artefactos · 2 Mezcla · 3 Antes del SQL · 4 Después del SQL · 5 Cobro, con su firma y dato mínimo"}
+    - {id: status_column, kind: text, content: "¿En el caso? no × 5 (coral)"}
+    - {id: fastest_test, kind: text, content: "etiquetar desde el CRM, hacia atrás, a los pagadores ya observados"}
+  encodings:
+    numbers_accent: "mismo orden del árbol (hilo con S10)"
+    coral: "lo que no existe (guía de Hugo)"
+    accent_soft: "la siguiente acción"
+  annotations:
+    - {at: fastest_test, text: "Prueba más rápida: etiquetar desde el CRM a los pagadores ya observados"}
+  layout_intent:
+    grid: "ramas cols 1–4; firma y dato cols 5–10; estado col 12; banda inferior"
+    reading_path: "fila por fila → la columna «no» → la prueba más rápida"
+    whitespace: "entre dato y estado (líneas punteadas)"
+  text_budget: 130
+  must_show: ["mismo orden del árbol", "dato mínimo por rama", "ninguno está hoy", "prueba más rápida"]
+  avoid: ["tabla sin orden", "cards por hipótesis", "cifras"]
+  data: {source: "sin datos: propuesta (R-032, R-014)", values: []}
+  notes: "Parte del dato puede estar en el CRM de Finora sin historia (F-128, H-076); parámetros por acordar; tocados vs no tocados asigna crédito (F-159)."
+  sources: [F-121, F-122, F-127, F-128, F-129, F-228, F-229, F-230, F-231, F-232, F-207, F-225, F-191, F-120, F-124, F-126, F-159]

@@ -1,0 +1,49 @@
+slide:
+  id: S17
+  file: slides/17.html
+  claim_id: C-019
+  brief: S13
+  based_on: finora-v3-20260929-212258/S22 (misma escalera; integra la regla de C-020 y quita nombres de tabla)
+  role_in_story: recommendation
+  kicker: "Revenue · modelo de datos · propuesta"
+  headline: "La Propuesta de Modelo de datos separa el valor en una escalera con vigencias"
+  takeaway: "El valor baja de la lista a lo cobrado; cada movimiento del mes nace en su peldaño, y el inicio o fin de un descuento va a «Descuento»."
+  question: "¿Cómo separar el valor de la suscripción del precio efectivamente pagado, y cómo clasificar el inicio y el fin de un descuento?"
+  relationship: "value STEPS DOWN from list to collected; each monthly movement is LOCATED on the step where it is born; MRR vs cash are SEPARATED"
+  evidence_type: structure
+  composition: staircase (dónde nace cada movimiento) + rule_strip
+  family: economics
+  alternatives_considered:
+    - id: entity_diagram (tablas y llaves)
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 2, risk: -2}
+      rejected_because: "para el CFO la escalera cuenta la idea; el diagrama de tablas es anexo técnico"
+    - id: decision_tree_only (C-020)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "la regla sola pierde dónde vive cada peldaño; va en la franja inferior y el árbol completo en anexo"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 2, risk: -1}
+  focal_point: discount_step
+  visual_hierarchy:
+    1: el peldaño Descuento (acento) y su movimiento «Descuento»
+    2: la escalera lista → pactado → descuento → MRR neto → facturado → cobrado
+    3: MRR (clasifica cierres de mes) vs caja (solo efecto de cobro)
+    4: la regla y las decisiones por escribir
+  objects:
+    - {id: steps, kind: bar, content: "Lista · Pactado · Descuento · MRR neto · Facturado · Cobrado (esquema sin escala)"}
+    - {id: movements, kind: text, content: "cambio de tarifa · New/Expansión/Contracción/Churn · «Descuento» inicio y fin · efecto de cobro"}
+    - {id: rule, kind: text, content: "sin cambio de suscripción → «Descuento»; si cambian ambos, primero la suscripción; quien sale con descuento es churn"}
+  encodings:
+    height: "esquemático: el valor baja peldaño a peldaño (sin escala)"
+    outline: "caja (facturado, cobrado)"
+    accent: "el peldaño Descuento"
+  annotations:
+    - {at: steps, text: "MRR, de lista y neto: se clasifica comparando cierres de mes · Caja: solo efecto de cobro"}
+  layout_intent:
+    grid: "encabezados cols 1–2; peldaños cols 3–12; regla a todo el ancho"
+    reading_path: "izquierda → derecha, bajando; luego la regla"
+    whitespace: "arriba a la derecha de los peldaños bajos"
+  text_budget: 130
+  must_show: ["escalera con vigencias", "MRR vs caja", "regla de «Descuento» (C-020)", "reglas de negocio por escribir"]
+  avoid: ["nombres de tabla en el lienzo", "cifras", "cards por peldaño"]
+  data: {source: "sin datos: propuesta (R-034, R-011)", values: []}
+  notes: "F-130, F-133, F-236/F-151 (convención), F-241; ejemplos ilustrativos; árbol completo de la regla en anexo (C-020)."
+  sources: [F-130, F-132, F-133, F-150, F-151, F-152, F-168, F-234, F-236, F-240, F-241]

@@ -1,0 +1,50 @@
+slide:
+  id: S16
+  file: slides/16.html
+  claim_id: C-017
+  brief: S12
+  based_on: finora-v3-20260929-212258/S20 (rehecha: el claim v5 es conceptual e incluye convención e implicaciones)
+  role_in_story: recommendation
+  kicker: "Revenue · cómo introducir descuentos · propuesta"
+  headline: "El descuento se registra como objeto propio, con origen, source y fecha de fin"
+  takeaway: "Cada descuento es un registro propio con un solo origen y fecha de fin, aparte de lo contratado; el CFO declara cómo pega en el MRR."
+  question: "¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»?"
+  relationship: "the discount is SEPARATED from contract and list price as its own object; five exclusive origins CONVERGE into it; implications FOLLOW for finance, cohorts and the bridge"
+  evidence_type: structure
+  composition: object_anatomy (orígenes → objeto propio → aplicación) + implications_strip
+  family: operating_model
+  alternatives_considered:
+    - id: lineage_flow_with_tables (v3)
+      score: {fidelity: 3, focal: 2, evidence: 2, variety: 2, risk: -2}
+      rejected_because: "nombres de tabla y casuística detallada; el claim v5 pide el mecanismo y las implicaciones, no el esquema"
+    - id: before_after (monto único → objeto propio)
+      score: {fidelity: 2, focal: 2, evidence: 1, variety: 1, risk: 0}
+      rejected_because: "el antes ya está en S15; aquí importa el objeto y su origen"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 2, risk: -1}
+  focal_point: discount_object
+  visual_hierarchy:
+    1: el objeto Descuento (acento) con sus campos
+    2: cinco orígenes que convergen en él (uno por descuento)
+    3: oferta → código → descuento aplicado; source del alta aparte; convención del CFO
+    4: Implicaciones Multidisciplinarias
+  objects:
+    - {id: origins, kind: text, content: "promoción digital · promoción física · negociación · retención · partner"}
+    - {id: discount_object, kind: node, content: "tipo · valor · duración · inicio y fin · motivo · aprobador · un solo origen; aparte de lo contratado y de la lista; se lee de la factura"}
+    - {id: chain, kind: path, content: "oferta → código con su canal → descuento aplicado con su vigencia"}
+    - {id: cfo_convention, kind: text, content: "no es estándar: el CFO lo decide y lo declara"}
+    - {id: implications, kind: text, content: "MRR neto, revenue y caja · cohortes con descuento · fecha de fin (44% de 751 churns vuelve a pagar)"}
+  encodings:
+    convergence: "cada descuento tiene un solo origen"
+    accent: "el objeto propio"
+  annotations:
+    - {at: implications, text: "sin fecha de fin se mezcla, como hoy: 44% de 751 churns vuelve a pagar"}
+  layout_intent:
+    grid: "orígenes cols 1–3; objeto cols 4–6; cadena cols 8–9; convención cols 10–12; implicaciones abajo"
+    reading_path: "orígenes → objeto → aplicación → convención → implicaciones"
+    whitespace: "entre objeto y cadena"
+  text_budget: 130
+  must_show: ["Mecanismo Propuesto", "objeto propio con origen, source y fecha de fin", "convención del CFO", "Implicaciones Multidisciplinarias"]
+  avoid: ["nombres de tabla en el lienzo", "cards de casuística", "cifras fuera de data/"]
+  data: {source: "data/FIN-F-174.yaml (T-076: 44% de 751)", values: "literales"}
+  notes: "Propuesta; no se afirma que hubo descuentos; F-236, F-153, F-154, H-073; lo no capturado se mide hacia adelante; convención y regla en anexo (C-018, C-020)."
+  sources: [F-233, F-234, F-235, F-236, F-237, F-150, F-151, F-152, F-153, F-154, F-174]

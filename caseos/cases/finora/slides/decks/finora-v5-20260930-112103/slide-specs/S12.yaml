@@ -1,0 +1,51 @@
+slide:
+  id: S12
+  file: slides/12.html
+  claim_id: C-014
+  brief: S09
+  based_on: finora-v3-20260929-212258/S17 (claim cambiado: capa técnica primero)
+  role_in_story: recommendation
+  kicker: "Growth · cómo operarlo · propuesta"
+  headline: "Proponemos una vía formal por foro y otra de agentes para el día a día"
+  takeaway: "Las dos vías se apoyan en una capa técnica común; la facturación es la primera pieza."
+  question: "¿Qué solución analítica le permite al CRO operar el funnel de forma recurrente y qué decisiones le permite tomar?"
+  relationship: "a technical layer SUPPORTS two ways of use (stack): formal forums by horizon and a day-to-day way"
+  evidence_type: structure
+  composition: layered_stack (capa técnica → dos vías de uso)
+  family: operating_model
+  alternatives_considered:
+    - id: operating_cadence + continuous_lane (v3)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "no muestra la capa técnica que el claim v5 pone primero"
+    - id: concentric_rings (semanal → trimestral)
+      score: {fidelity: 1, focal: 2, evidence: 1, variety: 2, risk: -1}
+      rejected_because: "los anillos ocultan que la vía del día a día corre aparte, sobre la misma base"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 3, risk: 0}
+  focal_point: billing_first_chip
+  visual_hierarchy:
+    1: las dos vías arriba (foros en escalera por horizonte · día a día)
+    2: la capa técnica que las sostiene
+    3: facturación como primera pieza (acento)
+    4: notas (si existe se conecta; sin facturación el cobro se confunde con churn)
+  objects:
+    - {id: forum_staircase, kind: path, content: "semanal: oportunidades, estancamientos y handoffs · mensual: mezcla de motion y canal · trimestral: inversión y capacidad"}
+    - {id: day_to_day, kind: text, content: "Análisis Ad hoc por hipótesis · agentes de IA sobre métricas gobernadas, con piloto"}
+    - {id: tech_layer, kind: band, content: "cuenta común · historial de etapas · puerta y canal · gasto por canal · facturación con estado de suscripción"}
+    - {id: billing_first_chip, kind: label, content: "primera pieza"}
+  encodings:
+    step_height: "horizonte del foro (semanal → trimestral)"
+    arrows_up: "la capa sostiene las vías"
+    accent: "la primera pieza técnica"
+  annotations:
+    - {at: tech_layer, text: "Si existe, se conecta; si no, se instrumenta: lo que no se capture ya no se reconstruye"}
+    - {at: billing_first_chip, text: "Sin ella, el cobro se confunde con churn y expansión"}
+  layout_intent:
+    grid: "vía formal cols 1–8; día a día cols 9–12; capa técnica a todo el ancho abajo"
+    reading_path: "arriba (usos) → abajo (base) → primera pieza"
+    whitespace: "sobre la escalera"
+  text_budget: 125
+  must_show: ["capa técnica primero", "vía formal por foro", "vía del día a día con agentes", "cuenta común e historial de etapas (de C-013)"]
+  avoid: ["org chart de cajas", "iconos de dashboard", "cards por foro"]
+  data: {source: "sin datos: propuesta (R-019, R-033)", values: []}
+  notes: "Decisiones por foro por definir; no se afirma problema de CRM (H-076); atribución ≠ causa (F-144, F-149); mide hacia adelante (F-242)."
+  sources: [F-147, F-148, F-149, F-144, F-238, F-240, F-242, F-145]

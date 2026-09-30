@@ -1,0 +1,50 @@
+slide:
+  id: S08
+  file: slides/08.html
+  claim_id: C-007
+  brief: S05
+  based_on: finora-v3-20260929-212258/S07 (el puente con montos se quitó por la corrección D-026)
+  role_in_story: diagnosis
+  kicker: "Growth · dónde se concentra la pérdida"
+  headline: "La pérdida está en el monto por cliente de cosechas de menor ticket"
+  takeaway: "La base previa sostiene su monto; las cosechas 2023–24 entran más abajo y ya pesan más; por industria cae en las seis."
+  question: "¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?"
+  relationship: "the prior base HOLDS its amount while new cohorts ENTER lower and GAIN weight (split); by industry every one falls, with different intensity"
+  evidence_type: comparison
+  composition: cohort_slope (tamaño = peso) + ranked_bars
+  family: comparison
+  alternatives_considered:
+    - id: bridge_with_decomposition_amounts (v3)
+      score: {fidelity: 3, focal: 3, evidence: 0, variety: 2, risk: -2}
+      rejected_because: "D-026: los montos de la descomposición no están como celda en ninguna tabla del claim"
+    - id: marimekko_oct24
+      score: {fidelity: 2, focal: 2, evidence: 3, variety: 0, risk: 0}
+      rejected_because: "es la forma de S04 y del anexo C-002; no muestra que la base se sostiene entre dic-22 y oct-24"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: -1}
+  focal_point: cohort_2023_dot
+  visual_hierarchy:
+    1: cosechas 2023 y 2024 (acento), abajo y grandes
+    2: la base previa plana en ~97 mil
+    3: barras por industria (todas caen)
+    4: churn persistente plano (banda inferior)
+  objects:
+    - {id: cohort_slope, kind: path, content: "T-041: base 97,0 → 97,4; feb-22 85,8 → 69,9; 2022 81,0 → 65,4; 2023 46,3 (34,0%); 2024 43,0 (31,2%)"}
+    - {id: industry_bars, kind: bar, content: "T-038: −46,6 · −45,6 · −43,1 · −18,8 · −15,5 · −14,4%"}
+    - {id: churn_note, kind: text, content: "T-002: observado 3,52% → 2,04%; persistente 0,98% → 0,96%"}
+  encodings:
+    y_position: "MRR pagado por cliente (COP mil)"
+    area: "% de clientes activos (r ∝ √share)"
+    accent: "cosechas 2023–24"
+  annotations:
+    - {at: industry_bars, text: "El menor ticket ocurre dentro de cada industria, no por el mix"}
+    - {at: churn_note, text: "No se asocia a salidas persistentes"}
+  layout_intent:
+    grid: "slope cols 1–8; barras cols 10–12; banda inferior"
+    reading_path: "base plana → cosechas abajo → industrias → churn"
+    whitespace: "arriba a la derecha del slope"
+  text_budget: 110
+  must_show: ["base previa sostiene", "cosechas nuevas más abajo y con más peso", "las 6 industrias caen"]
+  avoid: ["montos de la descomposición", "bridge", "tabla", "pie"]
+  data: {source: "data/FIN-F-097.yaml (T-041), FIN-F-094.yaml (T-038), FIN-F-096.yaml (T-040), CFO-03.yaml (T-002)", values: "literales"}
+  notes: "Composición no es causa; base dic-22 vs ene-22 (X-060); H-042/X-062; X-099/X-101; Salud en anexo (C-008)."
+  sources: [F-097, F-092, F-096, F-094, F-164, F-075, F-033, F-183, F-059, F-101, F-102]

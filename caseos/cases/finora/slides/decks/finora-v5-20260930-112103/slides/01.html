@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S01 · Portada</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S01"] {
+  .statement b { font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S01" data-composition="cover" data-family="editorial" data-word-budget="12" data-page="1">
+  <aside class="notes">Business case de Finora para CEO, CRO y CFO, en 5 minutos. La idea central: la brecha clientes–monto se asocia a quién entra; el porqué no está en los pagos, y proponemos medir por funnel y separar el descuento de la suscripción. Orden: Overview (la brecha y las observaciones que la sostienen), Growth (cómo se recorre y se mide cada funnel, dónde está la pérdida, qué métricas faltan, qué hipótesis y con qué dato, cómo se opera) y Revenue (lo que el monto pagado deja ver, el mecanismo del descuento, el modelo de datos y los casos del CFO).</aside>
+</main>
+<script>
+P.draw('S01', (s, P) => {
+  // Portada (guía de Hugo): título, nombre y fecha. La franja de tres colores es la clave de las
+  // tres secciones (Overview turquesa · Growth menta · Revenue lima), la misma que abre cada separador.
+  s.rect(112, 330, 96, 12, { fill: 'accent', stroke: null });
+  s.rect(208, 330, 96, 12, { fill: 'var(--mint)', stroke: null });
+  s.rect(304, 330, 96, 12, { fill: 'accent-2', stroke: null });
+  s.label(112, 392, 'Business case: <b>Finora</b>', { cls: 'statement', w: 1500, size: 120, id: 's01-title', focal: true });
+  s.line(112, 700, 1808, 700, { stroke: 'rule', w: 1.5 });
+  s.label(112, 736, 'Victor Hugo Martinez Medina', { cls: 'lead', color: 'ink', id: 's01-name' });
+  s.label(112, 784, '30 de septiembre de 2026', { cls: 'lead', id: 's01-date' });
+});
+</script>
+</body>
+</html>

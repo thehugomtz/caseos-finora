@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S18 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S18"] {
+  .ct { font-size: 24px; font-weight: 600; line-height: 1.25; color: var(--ink); }
+  .ct i { font-style: normal; color: var(--ink-3); margin-right: 8px; }
+  .v { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cl { font-size: 20px; line-height: 1.2; color: var(--ink-2); }
+  .md { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .md b { color: var(--ink); font-weight: 600; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+  .num { font-variant-numeric: tabular-nums; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S18" data-composition="small_multiples (mini puentes) + underlying_business" data-family="comparison" data-word-budget="130" data-page="18">
+  <header class="header">
+    <div class="kicker">Revenue · casos del CFO</div>
+    <h1 class="headline">Con el modelo propuesto, cada caso del CFO se lee en su capa</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Casos = ejemplos del enunciado (100, 80, 130, 30), no datos de Finora; la lectura depende de la convención del CFO · 29%: T-074 · 44%: T-076 · −38% y +5%: T-080, T-030 · F-150, F-151, F-168, F-177</span><span class="page"></span></footer>
+  <aside class="notes">Con el modelo propuesto, cada caso del enunciado (ejemplos, no datos de Finora) cae en su capa. Si paga 100 y luego 80, el modelo distingue una contracción real (lo contratado baja a 80) de un inicio de descuento (lo contratado sigue en 100 y la diferencia va a «Descuento»). Si la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100, el puente muestra expansión de 30 e inicio de descuento de −30, con el neto sin cambio; si después desaparece el descuento, la subida del pago va a fin de descuento, no a expansión. Hoy ese puente por capas no es construible (no hay lista, plan ni descuento en los datos), y el puente actual mezcla orígenes: 29% del MRR de expansión se revierte al mes siguiente y 44% de los 751 churns observados vuelve a pagar al mes siguiente. Sobre el negocio subyacente, lo que se observa es composición de la base, no un efecto separable de precio o descuento: el MRR pagado observado por cliente activo pasa de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24 (−38%), mientras el de la base previa cambia +5%; el revenue que dejamos de capturar por descuentos solo se medirá hacia adelante, con la capa de descuento. Límites: los casos prueban qué distingue el modelo, no describen lo que pasó en Finora; el puente por capas no es construible con los datos del caso (F-168); no se puede repartir la caída por cliente entre un precio de lista distinto y un descuento (F-177); el −38% no se presenta como deterioro; la convención la decide el CFO (F-151).</aside>
+</main>
+<script>
+P.draw('S18', (s, P) => {
+  // Plan: three mini bridges on one shared scale (0–140), cols 1–4 · 5–8 · 9–12; the reading under each ·
+  // bottom band: today (not buildable, the current bridge mixes origins) · the underlying business.
+  // Accent only on the line that the observed amount hides (case 2).
+  const PX = [112, 688, 1264], SLOT = 108, BW = 64, BASE = 640, K = 1.9;
+  const y = (v) => BASE - v * K;
+  const cases = [
+    { t: '<i>1</i>Paga 100 y luego 80', steps: [{ v: 100, tot: true }, { from: 100, to: 80, lab: '−20', cl: '¿qué capa?', tone: 'ink-4' }, { v: 80, tot: true }],
+      md: '<b>Contracción</b> si lo contratado baja a 80; <b>«Descuento (inicio)»</b> si sigue en 100' },
+    { t: '<i>2</i>Pasa de 100 a 130 con descuento de 30; sigue pagando 100', steps: [{ v: 100, tot: true }, { from: 100, to: 130, lab: '+30', cl: 'Expansión', tone: 'ink-4' }, { from: 130, to: 100, lab: '−30', cl: '«Descuento (inicio)»', tone: 'accent', focal: true }, { v: 100, tot: true, cl: 'neto' }],
+      md: '' },
+    { t: '<i>3</i>Desaparece el descuento', steps: [{ v: 100, tot: true }, { from: 100, to: 130, lab: '+30', cl: '«Descuento (fin)»', tone: 'ink-4' }, { v: 130, tot: true }],
+      md: '<b>No es Expansión</b>' },
+  ];
+  cases.forEach((c, k) => {
+    const x0 = PX[k];
+    s.label(x0, 350, c.t, { anchor: 'bl', cls: 'ct', w: 470 });
+    s.line(x0, BASE, x0 + SLOT * 4 - 20, BASE, { stroke: 'rule', w: 1.5 });
+    c.steps.forEach((st, i) => {
+      const cx = x0 + i * SLOT + SLOT / 2 - 10, bx = cx - BW / 2;
+      if (st.tot) {
+        s.rect(bx, y(st.v), BW, st.v * K, { fill: 'ink' });
+        s.label(cx, y(st.v) - 8, String(st.v), { anchor: 'bc', cls: 'v' });
+      } else {
+        const top = y(Math.max(st.from, st.to)), h = Math.abs(st.to - st.from) * K;
+        s.rect(bx, top, BW, h, { fill: st.tone, id: st.focal ? 's18-hidden' : null, focal: st.focal });
+        s.label(cx, top - 8, st.lab, { anchor: 'bc', cls: 'v' });
+        if (i) s.line(bx - (SLOT - BW), y(st.from), bx, y(st.from), { stroke: 'ink-3', w: 1.5 });
+      }
+      if (st.tot && i) s.line(bx - (SLOT - BW), y(st.v), bx, y(st.v), { stroke: 'ink-3', w: 1.5 });
+      if (st.cl) s.label(cx, BASE + 12, st.cl, { anchor: 'tc', cls: 'cl', w: SLOT + 16, align: 'center' });
+    });
+    if (c.md) s.label(x0, 732, c.md, { cls: 'md', w: 460 });
+  });
+
+  // Today · the underlying business.
+  s.line(112, 842, 1808, 842, { stroke: 'rule', w: 1.5 });
+  s.label(112, 862, '<b>Hoy no es construible</b>: no hay lista, plan ni descuento; el puente actual mezcla orígenes (29% de la expansión se revierte; 44% de 751 churns vuelve a pagar).', { cls: 'nt', w: 800 });
+  s.label(1000, 862, '<b>Negocio subyacente</b>: −38% por cliente activo con la base previa en +5% es composición, no precio ni descuento; lo no capturado se mide hacia adelante.', { cls: 'nt num', w: 808 });
+});
+</script>
+</body>
+</html>

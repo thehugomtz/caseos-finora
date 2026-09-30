@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S31 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S31"] {
+  .hd { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .hd span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 6px; }
+  .rl { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .ax { font-size: 20px; color: var(--ink-3); }
+  .mv { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S31" data-composition="signature_small_multiples" data-family="comparison" data-word-budget="100" data-page="31">
+  <header class="header">
+    <div class="kicker">Anexo · premisa y capacidad</div>
+    <h1 class="headline">Calidad y capacidad se separan con mezcla contra tasa, dentro de cada puerta</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta (C-012); esquema ilustrativo, sin cifras: hoy faltan entradas, reps y tiempos de contacto (F-120) · F-121, F-122, F-124, F-159, F-231, F-232</span><span class="page"></span></footer>
+  <aside class="notes">En el árbol, la calidad es la hoja de mezcla y la capacidad es una hoja de antes del SQL. Se separan por puerta, entre el periodo base y el de la caída. Si empeora la mezcla de ajuste al entrar y la velocidad de atención está estable, apunta a calidad (H-005). Si la mezcla está estable, suben la carga y la espera y la caída de la tasa se concentra en entradas atendidas tarde, apunta a capacidad (H-006). Si pasan ambas cosas, apunta a las dos a la vez (H-028). Dato mínimo: entradas con su banda de ajuste congelada al crearse y su primer contacto humano, más un roster semanal de SDR/AE con su ramp; el gasto de Team no mide capacidad. Con datos observados es asociación, porque SDR/AE eligen a quién tocar: para probar la palanca hacen falta experimentos naturales (llegadas fuera de horario, reparto por turnos) o un piloto. No usamos Self Service como grupo de control (X-012). La capacidad también puede estar en el AE, no solo en el SDR (X-153). Las bandas de ajuste deben validarse antes en el periodo base.</aside>
+</main>
+<script>
+P.draw('S31', (s, P) => {
+  // Plan: indicator labels cols 1–3 · «calidad» cols 4–6 · «capacidad» cols 7–9 · notes cols 10–12.
+  // Each cell: schematic slope base → caída (no data). Accent = the indicator that moves (the signature); gray = quiet.
+  const COLS = [{ x: 560, w: 380 }, { x: 992, w: 380 }], ROWS = [468, 616, 764], H = 34;
+  s.label(COLS[0].x, 376, 'Si bajó la calidad de los leads', { anchor: 'bl', cls: 'hd', w: 400 });
+  s.label(COLS[1].x, 376, 'Si falta capacidad comercial', { anchor: 'bl', cls: 'hd', w: 400 });
+
+  const rows = ['Mezcla de ajuste al entrar', 'Tasa dentro de cada banda de ajuste', 'Carga por SDR/AE y espera al primer contacto'];
+  rows.forEach((t, i) => s.label(112, ROWS[i], t, { anchor: 'ml', cls: 'rl', w: 380 }));
+  [ROWS[0] - 74, ROWS[1] - 74, ROWS[2] - 74, ROWS[2] + 100].forEach((y) => s.line(112, y, 1372, y, { stroke: 'rule', w: 1.5 }));
+
+  // signatures: -1 = baja, 0 = quieta, +1 = sube
+  const sig = [[-1, 0], [0, -1], [0, 1]];
+  sig.forEach((r, i) => r.forEach((d, j) => {
+    const cy = ROWS[i], xa = COLS[j].x + 40, xb = COLS[j].x + 250;
+    const ya = cy - d * -H, yb = cy + d * -H;
+    const hot = d !== 0;
+    s.line(xa, ya, xb, yb, { stroke: hot ? 'accent' : 'ink-4', w: hot ? 7 : 3, focal: hot && i === 0 && j === 0, id: hot ? `s31-sig-${i}${j}` : null });
+    s.dot(xa, ya, { r: 7, fill: hot ? 'ink' : 'ink-4' });
+    s.dot(xb, yb, { r: 7, fill: hot ? 'ink' : 'ink-4' });
+    if (hot) s.label(xb + 18, yb, d < 0 ? (i === 0 ? 'empeora' : 'cae') : 'suben', { anchor: 'ml', cls: 'mv' });
+  }));
+  COLS.forEach(({ x }) => {
+    s.label(x + 40, ROWS[2] + 58, 'periodo base', { anchor: 'tc', cls: 'ax' });
+    s.label(x + 250, ROWS[2] + 58, 'periodo de caída', { anchor: 'tc', cls: 'ax' });
+  });
+
+  // Notes: both at once · minimum data.
+  s.label(1440, 404, '<b>Si se mueven ambas</b>, apunta a las dos', { cls: 'nt', w: 368 });
+  s.label(1440, 560, '<b>Dato mínimo</b>: entradas con ajuste congelado y primer contacto humano; roster semanal de SDR/AE', { cls: 'nt', w: 368 });
+  s.label(112, 914, 'Con datos observados es asociación: probar la palanca requiere experimentos naturales o un piloto.', { cls: 'nt', w: 1300 });
+});
+</script>
+</body>
+</html>
