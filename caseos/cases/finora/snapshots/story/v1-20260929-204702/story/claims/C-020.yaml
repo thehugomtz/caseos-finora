@@ -1,0 +1,89 @@
+id: C-020
+type: claim
+key: descuento-clasificacion
+question: ¿Cómo clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión
+  reales?
+headline: Si la suscripción no cambia, inicio o fin de descuento va a «Descuento»
+answer: 'Regla base: New, Expansión, Contracción, Churn y Reactivación se definen sobre el MRR contratado y el estado
+  de la suscripción entre cierres de mes, nunca sobre el monto pagado. La línea «Descuento» se define sobre cambios
+  en los términos de los descuentos y lleva su origen (promoción digital o física, negociación, retención o partner).
+  Si la suscripción no cambia, el inicio de un descuento es «Descuento (inicio)», con signo negativo, y su fin es
+  «Descuento (fin)», positivo: nunca Contracción ni Expansión. Si cambian las dos cosas el mismo mes, se aplica
+  una regla secuencial: primero el efecto suscripción, con los términos de descuento del mes anterior; lo que resta
+  es efecto descuento. Además: cambio de términos → «Descuento (cambio)»; descuento único → fuera del MRR, resta
+  solo en lo facturado; mes gratis → «Descuento (inicio)» con bandera sin cobro, no churn; pausa → estado de suscripción,
+  no descuento; downgrade de retención → Contracción; quien sale con descuento → Churn por su neto, sin «Descuento
+  (fin)». Control: por suscripción y mes, la suma de líneas iguala el cambio del MRR neto.'
+role_in_story: recommendation
+evidence_ids:
+- F-150
+- F-152
+- F-151
+- F-236
+- F-237
+table_ids: []
+research_ids:
+- R-034
+- R-011
+- R-021
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- 'Es una convención por declarar: ChartMogul, por defecto, manda el inicio y el fin a contracción y expansión (F-236).'
+- Recurrente contra único, mes gratis y pausa son decisiones, no hechos.
+- 'F-131 salió del claim: su lectura de la contracción choca con F-184 (X-100).'
+visual_intent: 'Separación: el cambio del MRR neto se reparte entre la línea de suscripción y la línea de descuento,
+  sin que una contamine a la otra.'
+hugo_wording: Cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión
+  reales (probablemente lo integra la misma propuesta de modelo de datos).
+links:
+- F-150
+- F-152
+- F-151
+- F-236
+- F-237
+- R-034
+- R-011
+- R-021
+phase: story
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 7
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-150
+  - F-152
+  - F-151
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-151
+  - F-236
+  - F-237
+  accepted: []
+  pending:
+  - F-150
+  - F-152
+  - F-151
+  - F-236
+  - F-237
+  - F-150
+  - F-152
+  - F-151
+  - F-236
+  - F-237
+  tables: []
+  unsupported_numbers: []
+  stale: []

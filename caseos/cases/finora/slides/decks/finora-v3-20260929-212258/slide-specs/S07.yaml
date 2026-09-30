@@ -1,0 +1,51 @@
+slide:
+  id: S07
+  file: slides/07.html
+  claim_id: C-007
+  role_in_story: diagnosis
+  kicker: "Growth · dónde se concentra la pérdida"
+  headline: "La pérdida está en el monto por cliente de cosechas de menor ticket"
+  takeaway: "La composición de cosechas explica 84% de la caída por cliente; por industria la caída es difusa y no viene de salidas persistentes."
+  question: "¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?"
+  relationship: "the per-client fall is DIFFUSE across industries but CONCENTRATED in cohort composition (bridge)"
+  evidence_type: parts
+  composition: bridge (waterfall) + ranked_bars
+  family: economics
+  alternatives_considered:
+    - id: heatmap industria × cosecha
+      score: {fidelity: 2, focal: 1, evidence: 1, variety: 2, risk: -1}
+      rejected_because: "data/ no trae el cruce industria × cosecha"
+    - id: solo barras por industria
+      score: {fidelity: 1, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "sugeriría una causa industrial, justo lo que el claim descarta"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: composition_step
+  visual_hierarchy:
+    1: paso lima «composición de cosechas −26,6 mil (84%)»
+    2: dic-22 COP 89,5 mil → oct-24 COP 57,8 mil
+    3: barras por industria, todas negativas (difusión)
+    4: churn observado contra persistente
+  objects:
+    - {id: bridge, kind: bar, content: "89,5 → −26,6 composición → −5,2 dentro → 57,8"}
+    - {id: composition_step, kind: bar, content: "−26,6 mil · 84%"}
+    - {id: industries, kind: bar, content: "SP −46,6 · Rest −45,6 · Retail −43,1 · Prod −18,8 · Tec −15,5 · Salud −14,4 (%)"}
+  encodings:
+    height: "COP mil por cliente activo"
+    bar_length: "variación % dic-22 → oct-24"
+    accent: "el paso de composición (donde se concentra)"
+  annotations:
+    - {at: composition_step, text: "Composición de cosechas: 84% del cambio"}
+    - {at: industries, text: "Baja en las 6 industrias, con distinta intensidad"}
+    - {at: bottom, text: "No se asocia a salidas persistentes: churn observado 3,52% → 2,04%; el que no vuelve a pagar, 0,98% y 0,96%"}
+  layout_intent:
+    grid: "puente cols 1–7; barras por industria cols 9–12"
+    reading_path: "puente izquierda → barras derecha → nota de churn"
+    whitespace: "sobre el paso de dentro de las cosechas"
+  text_budget: 85
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla", "mapa de calor inventado", "cifras fuera de data/"]
+  data:
+    source: "data/FIN-F-097.yaml (puente base dic-22), FIN-F-094 (industrias), FIN-F-096 (6), CFO-03 (churn)"
+    values: "89,5 → −26,6 → −5,2 → 57,8 (COP mil); industrias en %"
+  notes: "La cifra de composición depende de la base (con ene-22, 108%). La industria es un corte disponible, no un sustituto de canal ni ruta. Quienes se van pagaban más en promedio pero no en mediana (F-101, F-102)."
+  sources: [F-097, F-092, F-094, F-096, F-164, F-075, CFO-03, F-183]

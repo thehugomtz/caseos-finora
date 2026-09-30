@@ -1,0 +1,48 @@
+id: X-064
+type: alert
+kind: research_needed
+status: open
+severity: high
+effect: requires_research
+source: R-020
+target: Q-012
+title: R-020 requiere más investigación Q-012
+finding_text: El ticket de entrada es medible; el descuento no es verificable aquí
+why: 'La dirección de lo que respondió R-003 se sostiene: el primer pago es más bajo, bajó en 6 industrias y el
+  97% del cambio ocurre dentro de cada una (F-084, F-088). La magnitud no está asegurada. Entre las altas de ventana
+  limpia, el 23,2% de las de 2022 pagó el primer mes bastante más que el segundo, frente al 11,6% en 2024 (F-086).
+  Medida con el 2.º pago, la mediana pasa de COP 46,2 mil a 37,8 mil: ≈ −18%, frente al −33% con el 1.er pago. Es
+  un cálculo mío sobre F-085 y no tiene tabla propia. El −60% del promedio (F-084) no se puede contrastar con el
+  2.º pago y es la cifra más frágil. La lectura de R-009 (composición de cosechas) no queda igual de expuesta, porque
+  mide el monto en dic-22 y oct-24, no el primer pago.'
+options:
+- key: A
+  label: Mostrar la mediana con las dos lecturas
+  consequence: 'No hace falta otra corrida. La lámina usa T-051 y T-053: sostiene la dirección y acota la magnitud
+    entre ≈ −18% y −33%. El −60% del promedio sale del titular. Falta pasar a una tabla la variación medida con
+    el 2.º pago.'
+- key: B
+  label: Chequeo corto de robustez
+  consequence: 'Una corrida más: ticket de entrada medido con el 2.º pago y con el monto usual de los meses 2–3,
+    en media y mediana, sobre la misma población de ventana limpia. Da una sola cifra defendible y pone a prueba
+    la hipótesis nueva del primer cobro.'
+- key: C
+  label: Mantener −33% / −60% con un aviso
+  consequence: 'Es lo más rápido, pero deja la cifra expuesta a que el CFO diga: «tu 2022 está inflado por el primer
+    cobro».'
+recommended: B
+recommended_why: Es barato, entra en la delegación de D-016 y el ticket de entrada es el eje de Revenue (R-009,
+  R-017, R-020). Si no quieres más corridas, A es la salida honesta con lo que ya hay.
+detected_by: cos
+links:
+- R-020
+- Q-012
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-150b
+created_at: '2026-09-29T11:55:06-06:00'
+updated_at: '2026-09-29T11:55:06-06:00'
+version: 1

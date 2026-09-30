@@ -1,0 +1,167 @@
+table_id: FIN-F-165
+caseos_id: T-067
+title: Salud es la excepción en el tramo 2022→2023
+columns:
+- industry
+- year
+- altas
+- m0_mediana
+- m1_mediana
+- rr_mediana
+- rr_promedio
+rows:
+- - Producción
+  - 2022
+  - 70
+  - 63000.0
+  - 52500.0
+  - 55125.0
+  - 53075.0
+- - Producción
+  - 2023
+  - 155
+  - 42000.0
+  - 42000.0
+  - 42000.0
+  - 51195.0
+- - Producción
+  - 2024
+  - 113
+  - 39900.0
+  - 38850.0
+  - 37800.0
+  - 43061.0
+- - Restaurantes
+  - 2022
+  - 78
+  - 65625.0
+  - 58800.0
+  - 61950.0
+  - 117465.0
+- - Restaurantes
+  - 2023
+  - 164
+  - 42000.0
+  - 42000.0
+  - 42000.0
+  - 50858.0
+- - Restaurantes
+  - 2024
+  - 153
+  - 52500.0
+  - 48300.0
+  - 48300.0
+  - 54325.0
+- - Retail
+  - 2022
+  - 49
+  - 50400.0
+  - 31150.0
+  - 35700.0
+  - 61717.0
+- - Retail
+  - 2023
+  - 169
+  - 21000.0
+  - 21000.0
+  - 21000.0
+  - 30020.0
+- - Retail
+  - 2024
+  - 133
+  - 26250.0
+  - 25200.0
+  - 25200.0
+  - 32485.0
+- - Salud
+  - 2022
+  - 21
+  - 63000.0
+  - 63000.0
+  - 63000.0
+  - 62550.0
+- - Salud
+  - 2023
+  - 37
+  - 63000.0
+  - 63000.0
+  - 63000.0
+  - 67025.0
+- - Salud
+  - 2024
+  - 46
+  - 52500.0
+  - 50400.0
+  - 48825.0
+  - 50197.0
+- - Servicios profesionales
+  - 2022
+  - 17
+  - 63000.0
+  - 60900.0
+  - 63000.0
+  - 69454.0
+- - Servicios profesionales
+  - 2023
+  - 61
+  - 21000.0
+  - 19950.0
+  - 19950.0
+  - 27983.0
+- - Servicios profesionales
+  - 2024
+  - 48
+  - 31500.0
+  - 31500.0
+  - 31500.0
+  - 45059.0
+- - Tecnología
+  - 2022
+  - 37
+  - 67200.0
+  - 63000.0
+  - 63000.0
+  - 145780.0
+- - Tecnología
+  - 2023
+  - 64
+  - 44625.0
+  - 43050.0
+  - 46725.0
+  - 57392.0
+- - Tecnología
+  - 2024
+  - 61
+  - 49350.0
+  - 46725.0
+  - 44100.0
+  - 52590.0
+units:
+  industry: texto
+  year: int
+  altas: int
+  m0_mediana: num2
+  m1_mediana: num2
+  rr_mediana: num2
+  rr_promedio: num2
+definitions: {}
+message: 'Salud es la excepción en el tramo 2022→2023: su mediana del monto usual temprano es COP 63,0 mil en 2022
+  y COP 63,0 mil en 2023, mientras su promedio pasa de COP 62,5 mil a COP 67,0 mil; el descenso de esa industria
+  aparece solo en 2024 (COP 48,8 mil).'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-15c0 · C-005
+period: {}
+grain: según evidencia

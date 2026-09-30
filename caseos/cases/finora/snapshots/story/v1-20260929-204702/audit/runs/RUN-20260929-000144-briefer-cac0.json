@@ -1,0 +1,337 @@
+{
+ "run_id": "RUN-20260929-000144-briefer-cac0",
+ "agent": "briefer",
+ "role": "briefer",
+ "purpose": "Turno de briefing",
+ "started_at": "2026-09-29T00:09:41-06:00",
+ "duration_ms": 477504,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/055b16e44ac4f2ec.md",
+ "system_prompt_hash": "055b16e44ac4f2ec",
+ "prompt": "## Brief actual (lo aprobado es lo que leen los demás agentes)\n- title (Nombre del caso) [importado]: Business Analytics: del dato a la decisión\n- objective (Objetivo, requerido) [importado]: Entender qué explicaciones podríamos defender ante CRO y CFO, qué sigue siendo una posibilidad y qué información permitiría elegir entre ellas.\n- audience (Audiencia, requerido) [importado]: CEO; CRO; CFO\n- context (Contexto) [importado]: Caso 1 · CRO: más volumen arriba del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won, con entradas self-serve, entradas directas a SQL y leads estancados) sin que los clientes nuevos crezcan al mismo ritmo. Caso 2 · CFO: ¿el modelo cliente + mes + monto permite separar el comportamiento del cliente del precio y de los descuentos temporales que se van a introducir? El caso relata más entradas en primeras etapas y menor crecimiento relativo de clientes nuevos; también plantea introducir descuentos temporales. Todavía no fijamos el periodo ni el signo del cambio económico.\n- deliverables (Entregables, requerido) [importado]: Video ejecutivo ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción; Link a la demo + video ≤ 5 min del proceso con IA; Material de soporte; Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA\n- constraints (Restricciones) [importado]: El reto original da cinco días; no sabemos cuánto queda. Esfuerzo relativo, no fechas. (brief v0.3 §01); No vamos a llamar “causa” a algo que sólo muestra una asociación. (brief v0.3 §01); No hay datos de funnel: el Caso 1 se responde como propuesta de medición, no como diagnóstico. (notas del proyecto); Solución fuera de esta etapa: sin dashboards, métricas definitivas, modelo de datos ni deck hasta que se decida. (brief v0.3 §11)\n- success_criteria (Criterios de éxito) [importado]: Preguntas separadas sin contar lo mismo dos veces; hipótesis con una explicación alternativa; evidencia que ayude a distinguirlas; tareas que sepamos cuándo cerrar. (brief v0.3 §01)\n- data_available (Datos disponibles) [APROBADO]: Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación OK.; raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × mes); raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente); raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes); mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure, cohorte y cosecha (66.674 filas; grano cliente × mes); mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde custome…\n- stakeholders (Stakeholders y fuentes de contexto) [vacío]: —\n- timeline (Tiempos) [vacío]: —\n- gaps (Vacíos de información) [importado]: El texto literal del enunciado de Alegra no está en el repositorio: este brief se reconstruyó desde las notas del proyecto (27-sep) y el brief v0.3. Pendiente adjuntar el enunciado original.; Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa (sin fijar).; Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece (sin confirmar).\n- brief_text (Enunciado original) [vacío]: —\n\n## Modelo de datos del caso\nElegido por Hugo: Finora · modelo analítico. data_available ya viene de él (no lo reescribas):\n- Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación OK.\n- raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × mes)\n- raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente)\n- raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes)\n- mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure, cohorte y cosecha (66.674 filas; grano cliente × mes)\n- mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde customer_month; cuadran al centavo con la Fase 1 (34 filas; grano mes)\n- mart.new_customers — Cada alta con su primer pago (M0), run-rate temprano, cohorte e industria (1.584 filas; grano alta)\n\n## Conversación reciente\n(primer turno)\n\n## Mensaje de Hugo\nel storytelling lo visualizo más o menos así: Seccion 1 Overview: Meter observacines generales como la que te dije Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil. y profunizar un poco en insights generales y salud en genera, algo que permita introducir a las siguientes secciones. Seccion 2: Growth, Lamina 1: las relaciones que te comenté, lámina 2:\nEntradas y Actividad económica de los clientes y de diferentes segmentos \n\nInversión en Marketing\n\n¿Hasta donde si podemos determinar y relacionar un incremento en ventas con la inversión en las diferentes categorías? (Cruzar con fechas)\nInversión en Generación de de Demanda para ToFu (Paide Media y Publicidad no web)\nTeam + Payroll Expenses + Travel\nHabilitación ¿producto tal vez? (Software Tools + Freelance)\nLamina 3 algo asi ¿Cómo definirías y medirías el funnel si no todos los clientes lo recorren igual (self-serve, entrada directa a SQL, estancamientos de semanas)?\n\nAssisted\n\nSelf Service\n\nExecutive\n\nCanales\n\nCanal de adquisición 3\n\nCanal de adquisición 2\n\nDigital\n\nWoM\n\nClientes que no requirieron un KAM\n\nFunnel Propuesto\n\nFunnel Propuesto\n\nFunnel Propuesto\n\nAAARRR\n\nConversion Rate\n\n\nMétricas Clave\n\nMétricas Clave\n\nMétricas Clave\nlamina 4: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento? ¿Qué métricas propondrías que hoy no existen?\n\nActividad por Industria\nSegmentos de churn\nLow tickets\nMix\n\nTal vez aquí funcione una matriz (combinación de métricas y burbuja) ver que funciona, industrias de bajo churn y ticket alto y poco volumen\nLamina 5: ¿Qué métricas propondrías que hoy no existen?\n\nNo es posible determinar las métricas actuales, pero tipicamente pensaría en abordar estos frameworks de Growth (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) entonces vamos a hablar de como debemos medirlo Lamina6: ¿Qué hipótesis explicarían el fenómeno (demanda, calidad, velocidad de atención, conversión post-SQL) y qué datos usarías para validar o descartar cada una?\n\nToFu\n\nBoFu\n\nLa capacidad comercial instalada no alcanza la demanda generada\n\nLa calidad de la máquina de leads bajó\nCosas asi, obvio hay que profundizar. Lamina 7: ¿Qué solución analítica construirías para que el CRO opere el funnel de forma recurrente, y qué decisiones le permitiría tomar?\n\nTécnica\n\nDecision Making\n\nPor lo que se puede observar tienen un problema\nPulir su CRM\nImplementación de Analítica Digital\n\n\nSeguimientos:\nDashboards automatizados con métricas de acuerdo a los foros\n\nAnálisis Adhoc\nAgentes de inteligencia artificial como el mío jaja (el de Analyitcs)\nMismo caso de profudizar Seccion 3: Revenue Lamina 1: hayq ue ver que data observable de pricing introductiroa podemos sacar Lamina 2: Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo?\n\nMecanismo Propuesto\n\nImplicaciones Multidisciplinarias\n\nPreguntas CFO\n\nQué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100?\n\nSi un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento?\n\n¿Y cuando desaparezca el descuento, eso cuenta como expansión?\n\nHay que contestarlo con el modelo propuesto, Lamina 3: ¿Cómo separarías el valor de la suscripción del precio efectivamente pagado? ¿Qué campos, tablas o definiciones agregarías?\n\nPropuesta de Modelo de datos\nLamina 4: ¿Cómo clasificarías el inicio y el fin de un descuento para que no se confundan con contracción o expansión reales?\n\nCreo que la misma Propuesta de Modelo de datos tambien lo integra\n\nDevuelve el BrieferTurn: propuestas solo de secciones que cambian; listas completas; base en cada una; una pregunta como máximo; si el mensaje es el enunciado pegado, message_is_source_text = true.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "reply",
+   "proposals",
+   "message_is_source_text",
+   "question",
+   "language"
+  ],
+  "properties": {
+   "reply": {
+    "type": "string"
+   },
+   "proposals": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "section",
+      "value",
+      "hugo_wording",
+      "basis",
+      "why"
+     ],
+     "properties": {
+      "section": {
+       "type": "string",
+       "enum": [
+        "title",
+        "objective",
+        "audience",
+        "context",
+        "deliverables",
+        "constraints",
+        "success_criteria",
+        "data_available",
+        "stakeholders",
+        "timeline",
+        "gaps",
+        "brief_text"
+       ]
+      },
+      "value": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "hugo_wording": {
+       "type": "string"
+      },
+      "basis": {
+       "type": "string",
+       "enum": [
+        "hugo",
+        "enunciado",
+        "inferido"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "message_is_source_text": {
+    "type": "boolean"
+   },
+   "question": {
+    "type": "string"
+   },
+   "language": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "register",
+     "technical_level",
+     "formality",
+     "preserved_terms",
+     "introduced_terms"
+    ],
+    "properties": {
+     "register": {
+      "type": "string"
+     },
+     "technical_level": {
+      "type": "string"
+     },
+     "formality": {
+      "type": "string"
+     },
+     "preserved_terms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "introduced_terms": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "term",
+        "plain"
+       ],
+       "properties": {
+        "term": {
+         "type": "string"
+        },
+        "plain": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "clarification-protocol",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS adaptation (no upstream skill with this name in alirezarezvani/claude-skills)",
+   "kind": "custom",
+   "digest": "0394648c4f9b"
+  },
+  {
+   "id": "brief-builder",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "256a052cfe2a"
+  },
+  {
+   "id": "business-case-partner",
+   "mode": "dynamic",
+   "why": "2 disparador(es) en la pregunta",
+   "source": "Hugo (~/.codex/skills/business-case-partner)",
+   "kind": "vendor",
+   "digest": "d310b71c0a76"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "reply": "Capturé el esqueleto y lo crucé con el brief y el modelo de datos. Son propuestas: nada queda aprobado hasta que lo apruebes en la UI.\n\n- **Contexto:** agregué tu dato del Overview: clientes 4,5× contra ingreso 2,8×, y el MRR por cliente activo baja 38% (de COP 92,8 mil a 57,8 mil). Los números cuadran entre sí (2,8/4,5 ≈ 0,62). Lo dejo como algo observado, no como explicación de por qué pasó. Falta fijar qué meses se comparan.\n- **Entregables:** metí Overview, Growth (7 láminas) y Revenue (4) como estructura del material de soporte. Growth L1 (\"las relaciones que te comenté\") no aparece en esta conversación, así que queda pendiente de precisar.\n- **Objetivo y audiencia:** te propongo ampliarlos. Growth L7 y Revenue L2–L4 piden proponer una solución, no solo explicar. Qué decide el CEO sigue abierto.\n- **Criterios de éxito:** tu \"hay que contestarlo con el modelo propuesto\" queda como criterio. Los tres casos del CFO tienen que resolverse con ese modelo.\n- **Vacíos:** agregué lo que piden las láminas y el modelo no trae:\n  - datos de funnel y CRM, canal y KAM\n  - precio de lista y descuentos\n  - unidad de sm_spend\n  - moneda y escala del monto\n  - métricas que Finora usa hoy\n  - costos\n\nLo que cuestionaría:\n- **Qué se puede diagnosticar:** Growth L2 y L4 sí se pueden diagnosticar con pagos, industria y S&M. L3, L6 y L7 no, porque no hay datos de funnel. La restricción importada decía que todo el Caso 1 era propuesta, y eso chocaba con tu esqueleto, así que te propongo un ajuste.\n- **S&M contra ventas:** son 34 meses y la unidad no está documentada. El \"¿hasta dónde?\" probablemente se queda en que se mueven juntos, sin probar causa. Además, si las dos suben con el tiempo, van a parecer relacionadas aunque no lo estén.\n- **L4 y L5:** las dos traían \"¿Qué métricas propondrías que hoy no existen?\". La dejé solo en L5.\n- **CRM:** \"tienen un problema de CRM\" lo trato como hipótesis, porque no tenemos datos de CRM para comprobarlo.\n\nVarias preguntas de las láminas suenan a texto literal del enunciado. Si lo tienes, pégalo tal cual y lo guardo como enunciado original.\n\n¿Este esqueleto es el material de soporte y el video de ≤5 min cuenta un solo hilo (Situación → Hallazgo → Implicación → Decisión → Acción), o quieres que el video siga este mismo orden? Con unas 12 láminas salen unos 25 segundos por lámina.",
+  "proposals": [
+   {
+    "section": "objective",
+    "value": [
+     "Entender qué explicaciones podríamos defender ante CRO y CFO, qué sigue siendo una posibilidad y qué información permitiría elegir entre ellas; y proponer cómo medir para decidir: un funnel que el CRO pueda operar de forma recurrente y un registro de descuentos temporales que le permita al CFO separar el valor de la suscripción del precio pagado, sin confundirlo con contracción o expansión reales."
+    ],
+    "hugo_wording": "¿Qué solución analítica construirías para que el CRO opere el funnel de forma recurrente, y qué decisiones le permitiría tomar? · Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo?",
+    "basis": "inferido",
+    "why": "Tu esqueleto va más allá de explicar. Growth L7 y Revenue L2–L4 piden proponer la solución: funnel operable, mecanismo de descuentos y modelo de datos. Dejo intacta la primera mitad del objetivo importado y le agrego la parte de propuesta. Si prefieres que la propuesta viva solo en entregables, descártalo."
+   },
+   {
+    "section": "audience",
+    "value": [
+     "CEO — qué decide o necesita entender: sin precisar",
+     "CRO — cómo medir y operar el funnel de forma recurrente, y qué decisiones le habilita",
+     "CFO — cómo introducir descuentos temporales y registrarlos para separar el valor de la suscripción del precio pagado"
+    ],
+    "hugo_wording": "para que el CRO opere el funnel de forma recurrente, y qué decisiones le permitiría tomar · Preguntas CFO",
+    "basis": "inferido",
+    "why": "La audiencia importada solo nombra roles. Tu esqueleto ya dice qué necesita cada uno: Growth le habla al CRO y Revenue al CFO. No hay nada que diga qué decide el CEO, así que lo dejo abierto en vez de inventarlo."
+   },
+   {
+    "section": "deliverables",
+    "value": [
+     "Video ejecutivo ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción",
+     "Link a la demo + video ≤ 5 min del proceso con IA",
+     "Material de soporte · 1 Overview — observaciones generales y salud del negocio que introducen las secciones siguientes (p. ej. clientes 4,5× vs ingreso 2,8×; MRR por cliente activo −38%).",
+     "Material de soporte · 2 Growth — L1: las relaciones que comentó Hugo (por precisar). L2: entradas y actividad económica de clientes y segmentos; inversión de S&M por categoría (generación de demanda ToFu: Paid Media y publicidad no web · Team: Payroll Expenses y Travel · habilitación, ¿producto?: Software Tools y Freelance) y hasta dónde se puede relacionar con ventas cruzando fechas. L3: cómo definir y medir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL, estancamientos de semanas): Assisted / Self Service / Executive, con canales (incl. digital, WoM, clientes que no requirieron KAM), funnel propuesto, AAARRR, conversion rate y métricas clave. L4: dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets, mix; quizá una matriz de burbuja: industrias de bajo churn, ticket alto y poco volumen). L5: qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas. L6: hipótesis ToFu y BoFu (demanda, calidad, velocidad de atención, conversión post-SQL; p. ej. la capacidad comercial instalada no alcanza la demanda generada, la calidad de la máquina de leads bajó) y qué datos validan o descartan cada una. L7: solución analítica para que el CRO opere el funnel de forma recurrente y qué decisiones le permite tomar (técnica: pulir CRM, analítica digital · decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA).",
+     "Material de soporte · 3 Revenue — L1: qué data observable de pricing introductorio podemos sacar. L2: cómo debería Finora introducir descuentos temporales (mecanismo propuesto, implicaciones multidisciplinarias, preguntas del CFO contestadas con el modelo propuesto). L3: cómo separar el valor de la suscripción del precio efectivamente pagado: propuesta de modelo de datos (campos, tablas, definiciones). L4: cómo clasificar inicio y fin de un descuento para que no se confundan con contracción o expansión reales (Hugo: probablemente lo integra la misma propuesta de modelo de datos).",
+     "Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA"
+    ],
+    "hugo_wording": "el storytelling lo visualizo más o menos así: Sección 1 Overview · Sección 2 Growth · Sección 3 Revenue",
+    "basis": "hugo",
+    "why": "Tu esqueleto le da estructura al «Material de soporte», que antes era un ítem sin forma: lo reemplazo por tres ítems (Overview, Growth, Revenue). Supongo que va en el soporte y que el video de ≤5 min conserva su arco, porque con ~12 láminas no alcanza a recorrerlas una por una. L4 y L5 repetían «¿Qué métricas propondrías que hoy no existen?», así que la dejé solo en L5. Es un esqueleto provisional y no fija hallazgos."
+   },
+   {
+    "section": "context",
+    "value": [
+     "Caso 1 · CRO: más volumen arriba del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won, con entradas self-serve, entradas directas a SQL y leads estancados) sin que los clientes nuevos crezcan al mismo ritmo. Caso 2 · CFO: ¿el modelo cliente + mes + monto permite separar el comportamiento del cliente del precio y de los descuentos temporales que se van a introducir? El caso relata más entradas en primeras etapas y menor crecimiento relativo de clientes nuevos; también plantea introducir descuentos temporales. Observación de Hugo sobre los datos (por citar contra mart.monthly_metrics): Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×); el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil. Dice qué pasó, no por qué. Todavía no fijamos qué meses se comparan."
+    ],
+    "hugo_wording": "Finora crece mucho más en clientes (4,5×) que en ingreso (2,8×): el MRR por cliente activo cayó 38%, de COP 92,8 mil a COP 57,8 mil",
+    "basis": "hugo",
+    "why": "Agrego tu observación del Overview; los números cuadran entre sí (2,8/4,5 ≈ 0,62 → −38%). Cambio respecto a lo importado: quito «ni el signo del cambio económico», porque tu dato ya lo da (el ingreso por cliente baja). Lo que sigue abierto es qué meses se comparan."
+   },
+   {
+    "section": "constraints",
+    "value": [
+     "El reto original da cinco días; no sabemos cuánto queda. Esfuerzo relativo, no fechas. (brief v0.3 §01)",
+     "No vamos a llamar “causa” a algo que sólo muestra una asociación. (brief v0.3 §01)",
+     "No hay datos de funnel: lo que pasa entre New y Won (etapas, canales, tipo de recorrido, velocidad de atención, conversión post-SQL) se responde como propuesta de medición, no como diagnóstico. Lo observable desde el primer pago (altas, churn, ticket, industria, mix) y el cruce por fechas con el gasto de S&M sí se puede diagnosticar, como asociación. (ajuste sobre notas del proyecto)",
+     "Solución fuera de esta etapa: el esqueleto de láminas es storyline provisional; no construimos dashboards, métricas definitivas, modelo de datos ni deck final hasta que se decida. (ajuste sobre brief v0.3 §11)"
+    ],
+    "hugo_wording": "¿Hasta donde si podemos determinar y relacionar un incremento en ventas con la inversión en las diferentes categorías? (Cruzar con fechas)",
+    "basis": "inferido",
+    "why": "Cambio dos restricciones y dejo igual las otras dos. (3) «El Caso 1 se responde como propuesta, no como diagnóstico» choca con Growth L2 y L4, que sí diagnostican con pagos, industria y S&M. Propongo separar lo que se puede diagnosticar de lo que solo es propuesta. (4) Decía «ni deck hasta que se decida» y ya estás armando láminas. La reformulo para que el esqueleto cuente como storyline provisional. Si quieres mantener la original, descarta el cambio."
+   },
+   {
+    "section": "success_criteria",
+    "value": [
+     "Preguntas separadas sin contar lo mismo dos veces; hipótesis con una explicación alternativa; evidencia que ayude a distinguirlas; tareas que sepamos cuándo cerrar. (brief v0.3 §01)",
+     "Los casos del CFO se contestan con el modelo propuesto, sin ambigüedad: (a) la suscripción sube de 100 a 130 con un descuento de 30 y el cliente sigue pagando 100; (b) un cliente pasa de pagar 100 a 80: ¿contrajo 20 o recibió un descuento?; (c) cuando el descuento desaparece, ¿cuenta como expansión?",
+     "La solución para el CRO (Growth L7) dice qué decisiones le permite tomar cada pieza, no sólo qué muestra."
+    ],
+    "hugo_wording": "Hay que contestarlo con el modelo propuesto",
+    "basis": "hugo",
+    "why": "Dos frases tuyas ya funcionan como pruebas de éxito: los casos del CFO se contestan con el modelo propuesto, y la solución para el CRO vale por las decisiones que habilita. El criterio importado queda igual."
+   },
+   {
+    "section": "gaps",
+    "value": [
+     "El texto literal del enunciado de Alegra no está en el repositorio: este brief se reconstruyó desde las notas del proyecto (27-sep) y el brief v0.3. Pendiente adjuntar el enunciado original.",
+     "Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa (sin fijar).",
+     "Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece (sin confirmar).",
+     "Datos de funnel y CRM por lead o cliente (etapa y fechas, canal de adquisición, tipo de recorrido Assisted / Self Service / Executive, si requirió KAM): no están en el modelo. Growth L3, L6 y L7 dependen de ellos.",
+     "Precio de lista, plan y descuentos: el modelo sólo trae monto observado. El pricing introductorio (Revenue L1) sólo se puede aproximar con el primer pago (M0) y el run-rate temprano de mart.new_customers.",
+     "Unidad y moneda de raw.sm_spend: no documentadas. Condicionan el cruce de inversión con ventas (Growth L2) y cualquier CAC.",
+     "Moneda y escala del monto: Hugo lo expresa en COP (92,8 mil → 57,8 mil) y raw.transactions trae amount sin escala. Confirmar de dónde salen antes de ponerlo en una lámina.",
+     "Qué métricas mide Finora hoy. Hugo: «No es posible determinar las métricas actuales». Growth L5 se plantea como propuesta de medición.",
+     "Costos y margen por cliente: no están en el modelo. Las métricas que los necesiten (p. ej. LTV con margen) se pueden definir, pero no calcular."
+    ],
+    "hugo_wording": "No es posible determinar las métricas actuales",
+    "basis": "inferido",
+    "why": "Crucé las láminas con el modelo de datos y metí aquí lo que piden y el modelo no trae. El vacío de métricas actuales viene de ti; los otros nuevos los derivé yo. Los tres vacíos importados siguen igual."
+   }
+  ],
+  "message_is_source_text": false,
+  "question": "¿Este esqueleto es el material de soporte y el video de ≤5 min cuenta un solo hilo (Situación → Hallazgo → Implicación → Decisión → Acción), o quieres que el video siga este mismo orden?",
+  "language": {
+   "register": "conversacional y directo; español con términos de negocio en inglés",
+   "technical_level": "medio-alto: maneja métricas SaaS y de funnel sin necesidad de explicación",
+   "formality": "informal (tuteo)",
+   "preserved_terms": [
+    "storytelling",
+    "Overview",
+    "Growth",
+    "Revenue",
+    "lámina",
+    "funnel",
+    "leads",
+    "MRR",
+    "MRR por cliente activo",
+    "churn",
+    "self-serve",
+    "entrada directa a SQL",
+    "post-SQL",
+    "New",
+    "ToFu",
+    "BoFu",
+    "Paid Media",
+    "Assisted",
+    "Self Service",
+    "Executive",
+    "WoM",
+    "KAM",
+    "AAARRR",
+    "Conversion Rate",
+    "Métricas Clave",
+    "low tickets",
+    "mix",
+    "ARR",
+    "ARPU",
+    "CAC",
+    "LTV",
+    "UCM",
+    "CRM",
+    "Analítica Digital",
+    "Decision Making",
+    "Análisis Adhoc",
+    "pricing introductorio",
+    "descuentos temporales",
+    "contracción",
+    "expansión",
+    "Propuesta de Modelo de datos",
+    "monto observado",
+    "primer pagador observado",
+    "CEO",
+    "CRO",
+    "CFO"
+   ],
+   "introduced_terms": [
+    {
+     "term": "storyline provisional",
+     "plain": "el orden de la historia con el que trabajamos mientras tanto; no fija hallazgos"
+    },
+    {
+     "term": "M0",
+     "plain": "el primer mes pagado de cada cliente nuevo, como lo trae mart.new_customers"
+    },
+    {
+     "term": "run-rate temprano",
+     "plain": "el ritmo de pago de los primeros meses de un cliente nuevo, como lo calcula mart.new_customers"
+    }
+   ]
+  }
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 473953,
+  "input_tokens": 2,
+  "output_tokens": 55416,
+  "cache_read": 5875,
+  "cache_write": 4192,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.146872,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)"
+}

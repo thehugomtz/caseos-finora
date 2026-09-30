@@ -1,0 +1,52 @@
+slide:
+  id: S10
+  file: slides/10.html
+  claim_id: C-009
+  role_in_story: recommendation
+  kicker: "Growth · métricas comunes · propuesta"
+  headline: "Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta"
+  takeaway: "El ingreso recurrente se abre en cinco ramas sin duplicados; casi todo se mide hoy salvo eficiencia y las capas de lista y descuento."
+  question: "¿Qué otras métricas hay que proponer y cómo se mide cada una?"
+  relationship: "recurring revenue DECOMPOSES into result, movement, clients, retention and efficiency; each leaf lives once, with its status"
+  evidence_type: framework
+  composition: driver_tree (arriba → abajo) + status_markers
+  family: logic
+  alternatives_considered:
+    - id: lista con semáforo
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "no muestra que las ramas son MECE ni dónde se concentra lo rojo"
+    - id: árbol horizontal de 19 hojas
+      score: {fidelity: 3, focal: 2, evidence: 3, variety: 2, risk: -2}
+      rejected_because: "19 hojas en una columna quedan a 36 px: ilegible"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 3, risk: -1}
+  focal_point: efficiency_branch
+  visual_hierarchy:
+    1: rama Eficiencia en lima (donde falta el dato)
+    2: las cinco ramas y sus hojas con su estado
+    3: churn observado contra persistente (el dato que cambia la lectura)
+    4: clave del semáforo y regla MECE
+  objects:
+    - {id: root, kind: node, content: "Ingreso recurrente"}
+    - {id: branches, kind: node, content: "Resultado · Movimiento · Clientes · Retención por cohorte · Eficiencia"}
+    - {id: efficiency_branch, kind: node, content: "CAC · payback · LTV empírico de ingreso · LTV con margen y LTV:CAC · UCM"}
+  encodings:
+    status_filled: "verde: se calcula hoy con nombre honesto"
+    status_half: "amarillo: proxy con una regla por aprobar"
+    status_ring: "rojo: falta el dato"
+    accent: "la rama donde se concentra lo que falta"
+  annotations:
+    - {at: churn_persistente, text: "3,52% vs 0,98% en 2022 · 2,04% vs 0,96% en 2024"}
+    - {at: efficiency_branch, text: "Faltan unidad del gasto, canal, margen y costo de servir"}
+    - {at: bottom, text: "Regla MECE: hasta Won y el primer pago vive en el funnel; la cuenta que ya paga, aquí. Puerta, ruta, canal, industria y cohorte son cortes, no métricas"}
+  layout_intent:
+    grid: "raíz arriba cols 5–8; cinco ramas en columnas de 2–3 cols; nota abajo"
+    reading_path: "raíz → ramas → hojas; la rama lima al final a la derecha"
+    whitespace: "entre ramas"
+  text_budget: 125
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "semáforo de colores rojo/verde decorativo", "cinco cards", "lista de 19 viñetas"]
+  data:
+    source: "data/CFO-03.yaml, FIN-F-183.yaml, FIN-F-079.yaml"
+    values: "churn observado 3,52 / 2,24 / 2,04; persistente 0,98 / 1,09 / 0,96"
+  notes: "El monto pagado mezcla fecha de cobro y mes de servicio: churn, reactivación y expansión salen inflados (F-136). El churn observado 2024 no coincide entre tablas: 2,04% (ene–jul) y 1,9% (X-101). El ARPU de hoy es ARPA."
+  sources: [F-135, F-136, F-139, F-033, F-137, F-138, F-183, F-175, F-079, F-239, F-240]

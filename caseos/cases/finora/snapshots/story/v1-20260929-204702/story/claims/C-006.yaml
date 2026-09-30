@@ -1,0 +1,147 @@
+id: C-006
+type: claim
+key: funnel-conversion
+question: ¿Cómo se mide cada funnel, más allá de la conversión?
+headline: Proponemos medir cada funnel por volumen, conversión, velocidad, valor, calidad y estancamiento
+answer: 'Sale directo de las etapas de C-021. Notación: journey = cuenta × intento; cohorte = los journeys con New
+  en el mes; W = ventana fija desde New, que Finora calibra con su ciclo real. Toda tasa se lee por cohorte y solo
+  cuando la cohorte ya cumplió W. CAPA COMÚN, por puerta y canal (es la única que se compara entre funnels). Volumen:
+  entradas = journeys con New en el mes, por puerta y canal (p. ej., leads digitales = entradas con canal paid media
+  u orgánico); Won por puerta y ruta, con su mezcla = Won de la ruta ÷ Won de la puerta. Calidad al entrar: entradas
+  válidas = entradas menos duplicados, clientes actuales y ex-clientes (se marcan aparte) y spam; tasa de no-prospectos
+  = lo quitado ÷ entradas; mezcla de ajuste = entradas de ajuste alto ÷ entradas válidas, con criterios congelados
+  al crear el lead. Conversión: win rate de cohorte = journeys de la cohorte con Won dentro de W ÷ journeys de la
+  cohorte (p. ej., CR digital = ese cociente para las entradas digitales). Velocidad: tiempo de cierre = mediana
+  y P75 de los días de New a Won de los ganados, siempre por ruta y junto al win rate; Won → primer pago = mediana
+  del tiempo entre ambos y parte de los Won sin pago en el plazo acordado. Valor: MRR de entrada por Won = mediana
+  del MRR contratado y del primer pago; MRR nuevo = Won × MRR de entrada por Won. POR RUTA, sobre sus etapas literales
+  (se lee solo dentro de la ruta). Volumen por etapa = journeys que alcanzan o se saltan la etapa. Conversión por
+  etapa = de quienes alcanzaron una etapa, los que alcanzan la siguiente en N días ÷ quienes la alcanzaron. Tiempo
+  en etapa = mediana y P75 de los días entre entrar y salir. Estancamiento = abiertos en la etapa sin cambio ni
+  actividad por más de su umbral ÷ abiertos en la etapa. Calidad del handoff = lo que acepta el siguiente dueño
+  ÷ lo que recibe (p. ej., SQL aceptados por el AE ÷ SQL SDR). En Executive pesan el tiempo de cierre y el estancamiento
+  de SQL SDR a Proposal AE; en Self Service, Signup → Activated → Checkout Self, sin handoff; en Hybrid A, además,
+  el paso de producto a SDR; en Hybrid B, Demo AE → Checkout Self. LOOP REACTIVATE: entradas al loop; re-enganche
+  = los que vuelven a moverse de etapa ÷ los que entraron; tiempo a re-enganche; Won y MRR atribuidos al loop; stock
+  de estancados sin tocar. HOY no se calcula nada de esto antes del pago: solo existen, sin puerta ni ruta, el total
+  de primeros pagos observados y su monto (C-003). La retención y el costo por Won viven en las métricas comunes
+  (C-009).'
+role_in_story: recommendation
+evidence_ids:
+- F-223
+- F-224
+- F-225
+- F-226
+- F-227
+- F-141
+- F-158
+- F-155
+- F-212
+- F-144
+- F-213
+table_ids: []
+research_ids:
+- R-031
+- R-016
+- R-022
+- R-025
+- R-032
+- R-014
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-223 a F-227 y los demás findings citados están propuestos.'
+- 'Hoy no se calcula ninguna métrica antes del pago (F-223): es diseño.'
+- W, el umbral de estancamiento por etapa y el plazo Won → pago son parámetros a acordar con Finora, no estándares
+  de mercado (Q-064).
+- Won o primer pago como hito de adquisición sigue por acordar con el CRO.
+- La conversión de Hybrid refleja a quién eligen tocar SDR/AE, no lo que aporta la persona (H-050). Las tasas de
+  etapas intermedias no se comparan entre rutas (SQL contra activación).
+visual_intent: 'Converge: cada funnel lleva sus métricas por familia en su propio tramo, y todos desembocan en el
+  mismo nudo (Won y primer pago), el único lugar donde se comparan por puerta.'
+hugo_wording: «¿cada funnel? ¿cómo lo mides? no me refiero a solo medir la connversión, ¿que metricas hay en todo
+  eso? Ej. Digital podría tener digital leads y CR digital, algo asi, Executive ya sabes que tiens New, pero tambien
+  puedes tener métricas de tiempo de cierre»
+links:
+- F-223
+- F-224
+- F-225
+- F-226
+- F-227
+- F-141
+- F-158
+- F-155
+- F-212
+- F-144
+- F-213
+- R-031
+- R-016
+- R-022
+- R-025
+- R-032
+- R-014
+phase: story
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 7
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-227
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-213
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-227
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-213
+  accepted: []
+  pending:
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-227
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-213
+  - F-223
+  - F-224
+  - F-225
+  - F-226
+  - F-227
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-213
+  tables: []
+  unsupported_numbers: []
+  stale: []

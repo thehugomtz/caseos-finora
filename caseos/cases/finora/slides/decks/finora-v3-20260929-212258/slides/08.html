@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S08 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S08"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .q { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S08" data-composition="bubble_matrix" data-family="comparison" data-word-budget="100" data-page="9">
+  <header class="header">
+    <div class="kicker">Growth · dónde se concentra la pérdida</div>
+    <h1 class="headline">Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, 2024; churn persistente = churn que no vuelve a pagar en un trimestre (pp mensuales); ticket = mediana del primer pago de las altas 2024 · F-104, F-103, F-105, F-165</span><span class="page"></span></footer>
+  <aside class="notes">Salud combina el menor churn persistente (0,56 pp mensuales), el ticket de entrada mediano más alto de 2024 (COP 52,5 mil, empatado con Restaurantes) y poco volumen: 124 clientes activos en oct-24 frente a 459 en Restaurantes. Es además de las industrias con menor caída del MRR por cliente entre dic-22 y oct-24 (−14,4%) y aporta 11,7% del crecimiento del MRR. En 2024 el churn observado por industria va de 1,46 a 2,57 pp mensuales: un rango estrecho. Es una señal para validar con tamaño, canal y motivos de salida, no un segmento. Límites: F-104, F-099, F-103, F-105 y F-165 tienen confianza media; con pocos clientes por industria las medianas se mueven con pocas altas; Salud es la excepción del tramo 2022→2023 (su ticket baja recién en 2024); no se fabrica un segmento por clustering (H-044 sigue abierta).</aside>
+</main>
+<script>
+P.draw('S08', (s, P) => {
+  // F-104: [industria, churn persistente, ticket mediano 2024 (COP mil), activos oct-24]
+  const d = [['Restaurantes', 0.62, 52.5, 459], ['Servicios profesionales', 0.87, 31.5, 140], ['Tecnología', 0.91, 49.35, 206], ['Producción', 1.07, 39.9, 389], ['Retail', 1.33, 26.25, 360], ['Salud', 0.56, 52.5, 124]];
+  const c = s.chart({ x: 220, y: 400, w: 930, h: 470 });
+  const x = c.linear([0.5, 1.4], { axis: 'x' }), y = c.linear([20, 60]);
+  const r = (n) => 2.4 * Math.sqrt(n);   // area ∝ activos
+
+  // Target region: low persistent churn, high ticket.
+  s.rect(c.x, c.y, x(0.78) - c.x, y(45) - c.y, { fill: 'accent-soft', role: 'area' });
+  s.label(c.x + 12, c.y + 12, 'Bajo churn · ticket alto', { cls: 'q' });
+
+  c.gridY(y, [30, 40, 50]);
+  c.axisY(y, [20, 30, 40, 50, 60]);
+  s.line(c.x, c.b, c.r, c.b, { stroke: 'ink-4', w: 1.5 });
+  [0.6, 0.8, 1.0, 1.2, 1.4].forEach((v) => s.label(x(v), c.b + 12, String(v.toFixed(1)).replace('.', ','), { anchor: 'tc', cls: 'label-sm num' }));
+  s.label(c.r, c.b + 44, 'Churn persistente 2024, pp mensuales →', { anchor: 'tr', cls: 'label-sm' });
+  s.label(c.x - 60, c.y - 16, 'Ticket de entrada mediano 2024, COP mil', { anchor: 'bl', cls: 'label-sm' });
+
+  d.forEach(([n, ch, tk, a]) => {
+    const cx = x(ch), cy = y(tk), rr = r(a);
+    if (n === 'Salud') s.circle(cx, cy, rr, { fill: 'accent', stroke: 'ink', w: 1.5, id: 's08-salud', focal: true });
+    else {
+      s.circle(cx, cy, rr, { fill: 'ink-4', fillOpacity: 0.45, stroke: 'ink-3', w: 1.5 });
+      s.label(cx + rr + 10, cy, `${n} · ${a}`, { anchor: 'ml', cls: 'label-sm num' });
+    }
+  });
+
+  s.callout({ target: [x(0.56), y(52.5) - r(124)], at: [c.x + 24, 300], w: 700, anchor: 'tl',
+    text: '<b>Salud</b>: menor churn persistente (0,56), ticket mediano más alto (COP 52,5 mil, igual que Restaurantes) y 124 clientes contra 459' });
+
+  const X = P.grid.col(9) + 60;
+  s.label(X, 420, 'Tamaño del círculo = clientes activos en oct-24', { cls: 'label-sm', w: 460 });
+  s.label(X, 520, '<b>Señal para validar</b> con tamaño, canal y motivos de salida; no es un segmento.', { cls: 'annotation', w: 460 });
+  s.label(X, 650, 'Churn observado 2024 por industria: de 1,46 a 2,57, un rango estrecho.', { cls: 'annotation', w: 460 });
+});
+</script>
+</body>
+</html>

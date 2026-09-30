@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S06 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S06"] {
+  .st { font-size: 20px; line-height: 1.15; color: var(--ink-3); }
+  .st b { color: var(--ink); font-weight: 600; }
+  .grp { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cn { font-size: 20px; color: var(--ink-2); }
+  .acc { color: var(--accent-text); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S06" data-composition="stage_matrix (metro map)" data-family="comparison" data-word-budget="115" data-page="7">
+  <header class="header">
+    <div class="kicker">Growth · cómo definir el funnel · propuesta</div>
+    <h1 class="headline">Cada ruta usa las etapas del Executive que le aplican, por canal y con dueño</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de diseño (R-031); solo Executive · outbound SDR es la secuencia literal del brief · F-209, F-210, F-211, F-223, F-224, F-225, F-191, F-155</span><span class="page"></span></footer>
+  <aside class="notes">Por ruta y canal, en orden y con dueño. Executive outbound: New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won; el SDR es dueño hasta SQL SDR y el AE desde Demo AE. Executive inbound «hablar con ventas»: se salta Working SDR porque la cuenta levantó la mano. Referido o partner (tu WoM, por confirmar): New → Demo AE → Proposal AE → Won, solo con AE. Self Service (signup): New → Signup Self → Activated Self → Checkout Self → Won; dueño Growth/Producto, por confirmar; sin prueba ni registro antes del pago queda New → Checkout Self → Won. Hybrid A: pasa de Growth/Producto al SDR y al AE; la persona entra por una señal de uso, fit o intención; Engaged SDR y SQL SDR se pueden saltar; variante: la persona ayuda y la cuenta paga sola por Checkout Self. Hybrid B: pasa del SDR al AE y la cuenta cierra sola por Checkout Self; Demo AE se puede saltar. New y Won aplican a todas; Working SDR solo con prospección outbound; Proposal AE en Executive e Hybrid A (en Hybrid B la reemplaza Checkout Self); Self Service no usa etapas de SDR ni de AE. No afirmamos que Finora tenga criterios de etapa definidos; parte de los saltos puede ser registro del CRM (H-051). La frontera Executive inbound / Hybrid A depende de Q-063.</aside>
+</main>
+<script>
+P.draw('S06', (s, P) => {
+  // Stage columns in the order any route travels them (every route is monotonic left → right).
+  const cols = [['New', ''], ['Signup', 'Self'], ['Activated', 'Self'], ['Working', 'SDR'], ['Engaged', 'SDR'], ['SQL', 'SDR'], ['Demo', 'AE'], ['Proposal', 'AE'], ['Checkout', 'Self'], ['Won', '']];
+  const X = cols.map((_, i) => 648 + i * 123);
+  cols.forEach(([a, b], i) => s.label(X[i], 372, `<b>${a}</b>${b ? '<br>' + b : ''}`, { anchor: 'tc', cls: 'st', w: 120, align: 'center' }));
+  // Owner groups (who owns the stage).
+  [['Producto', 1, 2], ['SDR', 3, 5], ['AE', 6, 7], ['Producto', 8, 8]].forEach(([g, a, b]) => {
+    const l = X[a] - 54, r = X[b] + 54;
+    s.path(`M${l},${344} v8 H${r} v-8`, { stroke: 'ink-4', w: 1.5 });
+    s.label((l + r) / 2, 336, g, { anchor: 'bc', cls: 'grp' });
+  });
+  X.forEach((xx) => s.line(xx, 440, xx, 912, { stroke: 'ink-5', w: 1.5 }));
+
+  // 1 = uses the stage · 2 = can be skipped · 0 = does not apply.
+  const rows = [
+    ['Executive', 'outbound SDR', 482, [1, 0, 0, 1, 1, 1, 1, 1, 0, 1], true],
+    ['', 'inbound «hablar con ventas»', 537, [1, 0, 0, 0, 1, 1, 1, 1, 0, 1]],
+    ['', 'referido o partner', 592, [1, 0, 0, 0, 0, 0, 1, 1, 0, 1]],
+    ['Hybrid B', 'outbound SDR', 672, [1, 0, 0, 1, 1, 1, 2, 0, 1, 1]],
+    ['', 'inbound «hablar con ventas»', 727, [1, 0, 0, 0, 1, 1, 2, 0, 1, 1]],
+    ['Hybrid A', 'signup en producto', 807, [1, 1, 1, 0, 2, 2, 1, 1, 0, 1]],
+    ['Self Service', 'signup en producto', 882, [1, 1, 1, 0, 0, 0, 0, 0, 1, 1]],
+  ];
+  [630, 767, 845].forEach((yy) => s.line(112, yy, 1808, yy, { stroke: 'rule', w: 1 }));
+  rows.forEach(([route, canal, y, st, hot]) => {
+    const pts = st.map((v, i) => (v ? [X[i], y] : null)).filter(Boolean);
+    if (hot) s.polyline(pts, { stroke: 'accent', w: 20, id: 's06-hot', focal: true });
+    s.polyline(pts, { stroke: 'ink-3', w: 3 });
+    st.forEach((v, i) => {
+      if (v === 1) s.dot(X[i], y, { r: 9, fill: 'ink' });
+      if (v === 2) s.circle(X[i], y, 8, { fill: 'bg', stroke: 'ink-3', w: 2.5 });
+    });
+    if (route) s.label(112, y, route, { anchor: 'ml', cls: 'rn' });
+    s.label(290, y, canal + (hot ? ' · <span class="acc">tu secuencia literal</span>' : ''), { anchor: 'ml', cls: 'cn' });
+  });
+
+  // Key + open items.
+  s.dot(120, 950, { r: 8, fill: 'ink' }); s.label(136, 950, 'usa la etapa', { anchor: 'ml', cls: 'label-sm' });
+  s.circle(290, 950, 7, { fill: 'bg', stroke: 'ink-3', w: 2.5 }); s.label(306, 950, 'se puede saltar', { anchor: 'ml', cls: 'label-sm' });
+  s.label(648 - 20, 930, 'Reactivate es un loop sobre cualquier etapa abierta: vuelve a su etapa con su puerta y su ruta. Por confirmar: Demo y Proposal en el CRM, el canal referido o partner y el dueño de Self Service.', { cls: 'label-sm', w: 1180 });
+});
+</script>
+</body>
+</html>

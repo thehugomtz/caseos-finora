@@ -1,0 +1,104 @@
+id: T-032
+type: table
+table_key: FIN-F-077
+title: Las altas por mes pasan de 27,2 en 2022 (mar–dic) a 55,4 en 2024, mientras el ticket de entrada promedio
+  de e…
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - new_2022_pm
+  - Altas por mes, 2022 (mar–dic)
+  - 27,2
+- - new_2324_pm
+  - Altas por mes, ene-23 a oct-24
+  - 54,7
+- - plateau_slope
+  - Pendiente de las altas por mes desde ene-23 (cambio por mes)
+  - +0,47
+- - plateau_lo
+  - Límite inferior del intervalo de 95% de esa pendiente
+  - −0,40
+- - plateau_hi
+  - Límite superior del intervalo de 95% de esa pendiente
+  - +1,33
+units: {}
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+  Ticket de entrada (M0): MRR pagado por un cliente nuevo en su primer mes. Se reporta como promedio (MRR nuevo
+    ÷ altas), mediana y percentiles.
+message: Las altas por mes pasan de 27,2 en 2022 (mar–dic) a 55,4 en 2024, mientras el ticket de entrada promedio
+  de esas altas pasa de COP 128,7 mil a COP 50,8 mil y su mediana de COP 63,0 mil a COP 42,0 mil.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-09
+  - EC-ADQ-02
+  - E-004
+  - E-005
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-004
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo
+
+
+  -- E-005
+
+  SELECT substr(month, 1, 4) AS periodo, COUNT(*) AS altas, AVG(m0) AS valor, MEDIAN(m0) AS mediana, quantile_cont(m0,
+  0.25) AS p25, quantile_cont(m0, 0.75) AS p75, quantile_cont(m0, 0.9) AS p90 FROM (SELECT month, industry, vintage,
+  paid_mrr_cop::DOUBLE AS m0 FROM mart.customer_month WHERE new_customer = 1) WHERE month BETWEEN ''2022-03'' AND
+  ''2024-10'' GROUP BY ALL ORDER BY periodo'
+transformation: EC-ADQ-09 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-ADQ-02 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); E-004 · query_metric · Métrica del catálogo · Altas; E-005
+  · query_metric · Métrica del catálogo · Ticket de entrada (M0)
+filters:
+- periodo 2022-01–2024-10
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: year
+analysis_id: INV-20260929-103202-db67 · C-007
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2022'
+  - '2024'
+  formato: cop
+  series:
+  - nombre: Ticket de entrada (M0)
+    valores:
+    - 128694.73080882353
+    - 50841.90861010831
+  - nombre: mediana
+    valores:
+    - 63000.0
+    - 42000.0
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-077
+links:
+- F-077
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

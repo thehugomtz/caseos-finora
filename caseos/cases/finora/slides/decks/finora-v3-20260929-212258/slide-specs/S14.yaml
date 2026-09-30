@@ -1,0 +1,50 @@
+slide:
+  id: S14
+  file: slides/14.html
+  claim_id: C-023
+  role_in_story: recommendation
+  kicker: "Growth · hipótesis ToFu y BoFu · propuesta"
+  headline: "Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja"
+  takeaway: "La brecha se reparte en un orden fijo — validez, mezcla contra tasa, etapa, cobro — y cada hoja tiene su dato y su palanca del CRO."
+  question: "¿Qué podría explicar «más leads, pero no más ventas», ordenado sin que una causa aparezca en dos lugares?"
+  relationship: "the gap DECOMPOSES in a fixed order; each piece falls in exactly one leaf, which MAPS to one CRO lever"
+  evidence_type: framework
+  composition: issue_tree (izquierda → derecha) + lever_column
+  family: logic
+  alternatives_considered:
+    - id: lista de hipótesis H-001…H-008
+      score: {fidelity: 0, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "es lo que Hugo rechazó: sin orden, una causa cae en dos lugares"
+    - id: system_map causal
+      score: {fidelity: 1, focal: 1, evidence: 1, variety: 3, risk: -2}
+      rejected_because: "las flechas causales no son MECE ni aditivas"
+  chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 2, risk: -1}
+  focal_point: order_rule
+  visual_hierarchy:
+    1: la regla de orden (lima) sobre la raíz
+    2: primer corte Medición | Negocio y sus ramas
+    3: hojas
+    4: columna de palancas del CRO
+  objects:
+    - {id: root, kind: node, content: "Brecha: más New, no más ventas; ventas = Σ por puerta (entradas válidas × conversión por etapa en W)"}
+    - {id: measurement, kind: node, content: "Medición · validez: no-prospectos · desfase o cambio de definición · misma demanda por otra puerta"}
+    - {id: business, kind: node, content: "Negocio · mezcla · tasa antes del SQL · tasa después del SQL · cobro"}
+    - {id: levers, kind: text, content: "palanca del CRO por rama"}
+  encodings:
+    x_position: "nivel del árbol (orden de reparto)"
+    connectors: "elbow con espina compartida por nivel"
+    dashed_leaf: "hoy no se valida ni se descarta"
+    accent: "la regla que hace el árbol MECE"
+  annotations:
+    - {at: root, text: "Paso 0: fijar venta, ventana W igual en ambos periodos y New separado de Reactivate"}
+    - {at: bottom, text: "Hoy no se valida ni se descarta ninguna hoja de validez, mezcla o etapa; de cobro solo se ve el arranque"}
+  layout_intent:
+    grid: "raíz cols 1–2; nivel 1 col 3–4; nivel 2 cols 5–6; hojas cols 7–9; palancas cols 10–12"
+    reading_path: "raíz → corte → hoja → palanca"
+    whitespace: "entre ramas de medición y negocio"
+  text_budget: 135
+  must_show: [la relación de la intención visual]
+  avoid: ["lista de hipótesis", "tres cards", "tabla", "IDs internos en el canvas"]
+  data: {source: "propuesta (R-032, C-023); sin cifras", values: []}
+  notes: "Hojas = causas candidatas; no afirmamos que cambiaron metas, comisiones, precio o competencia. Reordena las ramas de D-001: si lo adoptas, hace falta una decisión nueva (X-150). H-007 no es hoja: es la regla que ubica la etapa. IDs de hipótesis por hoja: validez H-052, H-003/H-004/H-027/H-069, H-053; mezcla H-002/H-005; capacidad H-006; estancados H-055; SQL H-054; Demo/Proposal H-056/H-008; cobro H-057."
+  sources: [F-228, F-229, F-230, F-231, F-232, F-127, F-128, F-129, F-122, F-212]

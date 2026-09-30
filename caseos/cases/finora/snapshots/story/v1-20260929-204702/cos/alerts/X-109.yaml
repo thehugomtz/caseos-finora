@@ -1,0 +1,46 @@
+id: X-109
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-025
+target: H-024
+title: R-025 debilita H-024
+finding_text: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las r…'
+why: 'El salto va de 26 a 60 altas entre dic-22 y ene-23 (T-016). Para que viniera de IDs nuevos puestos a pagadores
+  viejos, tendrían que desaparecer unos 34 IDs cerca del cambio. En nov–dic-22 hay solo 7 salidas sin retorno, y
+  como mucho 2 coinciden en industria y monto exacto con altas de ene-23. Esa coincidencia es un test débil: en
+  2023, 175 de 650 altas coinciden así con algún churn reciente (T-100), así que esas 2 pueden ser azar. Queda un
+  hueco. Si el cambio de sistema de cobro fue en ene-23, las salidas que cuentan son las de quienes pagaron por
+  última vez en dic-22, y hay que confirmar que la ventana de R-025 las incluye. La identidad en sí no se puede
+  verificar (F-202).'
+options:
+- key: A
+  label: Dejarla como límite (F-202) y no invertir más
+  consequence: C-003 usa el salto de ene-23 como entrada nueva observada, con un caveat de identidad.
+- key: B
+  label: Antes de cerrarla, buscar un pico de salidas sin retorno con último pago en dic-22
+  consequence: Si no hay pico, se cae también la rama de «cambio de sistema de cobro», y H-024 se cierra con evidencia
+    propia. Es un chequeo barato, con pagos.
+- key: C
+  label: Pedir a Finora un identificador fiscal o de cuenta para cruzar pagadores (en Q-065)
+  consequence: Es la única forma de verificar identidad, pero depende de Finora.
+recommended: B
+recommended_why: Es el único hueco que deja R-025 y se resuelve con un chequeo. Además, el salto de ene-23 sostiene
+  C-003.
+detected_by: cos
+links:
+- R-025
+- H-024
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-be42
+created_at: '2026-09-29T16:36:54-06:00'
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 1

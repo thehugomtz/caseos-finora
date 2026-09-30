@@ -1,0 +1,53 @@
+id: X-142
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-031
+target: Q-063
+title: R-031 cambia el framing Q-063
+finding_text: 'Propongo cuatro rutas que se clasifican al final del recorrido, según los eventos: Executive (arranca
+  con persona y nunca pasa por Checkout Self), Self Service (nunca interviene una persona), Hybrid A (arranca en
+  el producto y después entra una persona) e Hybrid B (arranca con persona y pasa por Ch…'
+why: 'La regla de R-031 decide la ruta con tres preguntas: con qué arranca el recorrido (persona o producto), si
+  interviene una persona y si pasa por Checkout Self. Con eso, Q-063 deja de ser solo una pregunta de Hybrid: define
+  las cuatro rutas. Lo más delicado es el formulario. F-210 parece proponer que cuente como tramo sin persona (X-129).
+  Si es así y la regla se aplica como la resume R-031, el lead que llena el formulario y después trabaja un SDR
+  no cabe en ninguna ruta, porque no arranca con persona ni en el producto. Y ese lead es parte del funnel actual
+  SDR→AE, el que definiste como Executive en R-029. X-129 cubre qué cuenta como intervención; esto agrega qué cuenta
+  como arranque. Chequeo mínimo: ver si el detalle por puerta de R-031 ya ubica el formulario.'
+options:
+- key: A
+  label: El formulario es la puerta, no un tramo. «Arranca con persona» quiere decir que el primer tramo después
+    de entrar lo mueve un SDR/AE.
+  consequence: 'El funnel SDR→AE de formulario queda en Executive, como en tu definición de R-029, y Hybrid A se
+    reserva para quien arranca en el producto. La regla sigue siendo MECE y encaja con F-210. Queda un hueco: la
+    entrada de formulario que nadie atiende caería en Self Service.'
+- key: B
+  label: Leer «arranca en el producto» como «arranca sin persona», con el formulario incluido.
+  consequence: El lead de formulario que trabajan SDR/AE pasa a Hybrid A, y Executive queda para outbound y entradas
+    directas. Se parece al Hybrid de R-022 (la máquina de leads), pero cambia tu definición de Executive.
+- key: C
+  label: Dejar Q-063 abierta como parámetro a acordar con Finora y marcar en C-005 y C-021 que la ruta del formulario
+    está pendiente.
+  consequence: 'No te comprometes, pero la story presenta un mix MECE con un caso sin ubicar: el lead de formulario
+    que trabaja un SDR.'
+recommended: A
+recommended_why: Respeta tu definición de Executive, encaja con F-210 y no toca las comparaciones, que se hacen
+  por puerta (F-224). Conviene sumarle un estado «sin atender» para las entradas que piden persona y que nadie trabaja.
+  Si no, un problema de capacidad (H-006) se vería como mala conversión de Self Service. Igual hay que confirmarla
+  con Finora.
+detected_by: cos
+links:
+- R-031
+- Q-063
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-184141-cos-dca6
+created_at: '2026-09-29T18:55:24-06:00'
+updated_at: '2026-09-29T18:55:24-06:00'
+version: 1

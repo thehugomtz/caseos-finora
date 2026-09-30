@@ -1,0 +1,86 @@
+id: T-096
+type: table
+table_key: FIN-F-199
+title: De los 751 eventos de churn observado entre mar-22 y oct-24, 44% vuelve a pagar al mes siguiente bajo el
+  mism…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_back_1m
+  - Churns observados que vuelven a pagar al mes siguiente
+  - 44%
+- - churn_events
+  - Eventos de churn observado (mar-22 a oct-24)
+  - '751'
+units: {}
+definitions:
+  Reactivaciones: Clientes que vuelven a pagar después de al menos un mes en cero.
+message: De los 751 eventos de churn observado entre mar-22 y oct-24, 44% vuelve a pagar al mes siguiente bajo el
+  mismo identificador de cliente, y esos retornos se registran en el flujo de reactivaciones.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-02
+  - E-002
+  - E-007
+  tools:
+  - query_metric
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-002
+
+  SELECT month AS periodo, SUM(reactivated_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(reactivated_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo
+
+
+  -- E-007
+
+  SELECT SUM(new_customer) AS altas_total, SUM(reactivated_customer) AS reactivaciones_total, SUM(CASE WHEN new_customer
+  = 1 AND reactivated_customer = 1 THEN 1 ELSE 0 END) AS solapamiento_banderas, SUM(CASE WHEN new_customer = 1 AND
+  CAST(month AS VARCHAR) > CAST(first_positive_month AS VARCHAR) THEN 1 ELSE 0 END) AS altas_con_pago_previo, COUNT(DISTINCT
+  CASE WHEN new_customer = 1 THEN customer_id END) AS clientes_distintos_con_alta FROM mart.customer_month WHERE
+  month_index >= 2'
+transformation: EC-RET-02 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-002 · query_metric
+  · Métrica del catálogo · Reactivaciones; E-007 · run_sql · SQL ad hoc de solo lectura
+filters:
+- periodo 2022-03–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month
+analysis_id: INV-20260929-143800-2198 · C-017
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '9.3'
+  claim_fase1: C-RET-02
+  cubre:
+  - C-RET-02
+created_at: '2026-09-29T14:46:20-06:00'
+status: valid
+validation_errors: []
+finding: F-199
+links:
+- F-199
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

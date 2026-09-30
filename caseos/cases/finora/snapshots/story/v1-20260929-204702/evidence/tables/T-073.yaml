@@ -1,0 +1,162 @@
+id: T-073
+type: table
+table_key: FIN-F-171
+title: Entre mar-22 y sep-24, las subidas de monto de clientes activos que al mes siguiente vuelven exacto al nivel…
+question: 'Simulación ilustrativa con las cifras del enunciado del CFO: ¿cómo se leen los tres casos (paga 100 y
+  luego 80; lista de 100 a 130 con descuento de 30 y pago de 100; fin de ese descuento) y el caso mixto en un puente
+  de tres capas —MRR de lista, descuento y MRR neto—, frente a cómo los lee hoy el puente de monto pagado?'
+columns:
+- direccion
+- destino
+- eventos
+- pct_eventos
+- monto_cop
+- pct_monto
+rows:
+- - Bajada del monto
+  - Persiste en el nivel nuevo
+  - 848
+  - 74.7
+  - 55941264.0
+  - 64.1
+- - Bajada del monto
+  - Otro nivel
+  - 270
+  - 23.8
+  - 30908845.0
+  - 35.4
+- - Bajada del monto
+  - Vuelve al nivel previo
+  - 17
+  - 1.5
+  - 463047.0
+  - 0.5
+- - Subida del monto
+  - Otro nivel
+  - 506
+  - 44.1
+  - 21947700.0
+  - 58.2
+- - Subida del monto
+  - Vuelve al nivel previo
+  - 182
+  - 15.9
+  - 10646924.0
+  - 28.2
+- - Subida del monto
+  - Persiste en el nivel nuevo
+  - 460
+  - 40.1
+  - 5120214.0
+  - 13.6
+units:
+  direccion: texto
+  destino: texto
+  eventos: int
+  pct_eventos: num2
+  monto_cop: num2
+  pct_monto: num2
+definitions: {}
+message: Entre mar-22 y sep-24, las subidas de monto de clientes activos que al mes siguiente vuelven exacto al
+  nivel previo suman COP 10,6 millones en 182 eventos, mientras las que se mantienen en el nivel nuevo suman COP
+  5,1 millones en 460 eventos.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-007\nWITH b AS (\n  SELECT customer_id, month, paid_mrr_cop, previous_month_mrr, active_customer,\n
+  \        LEAD(paid_mrr_cop) OVER (PARTITION BY customer_id ORDER BY month) AS next_mrr\n  FROM mart.customer_month\n),
+  e AS (\n  SELECT CASE WHEN paid_mrr_cop > previous_month_mrr THEN 'Subida del monto' ELSE 'Bajada del monto' END
+  AS direccion,\n         CASE WHEN next_mrr = previous_month_mrr THEN 'Vuelve al nivel previo'\n              WHEN
+  next_mrr = paid_mrr_cop THEN 'Persiste en el nivel nuevo'\n              ELSE 'Otro nivel' END AS destino,\n         abs(paid_mrr_cop
+  - previous_month_mrr) AS delta\n  FROM b\n  WHERE active_customer = 1 AND previous_month_mrr > 0 AND paid_mrr_cop
+  <> previous_month_mrr\n    AND month >= '2022-03' AND month <= '2024-09' AND next_mrr IS NOT NULL\n)\nSELECT direccion,
+  destino,\n       count(*) AS eventos,\n       round(100.0 * count(*) / sum(count(*)) OVER (PARTITION BY direccion),
+  1) AS pct_eventos,\n       round(sum(delta)) AS monto_cop,\n       round(100.0 * sum(delta) / sum(sum(delta))
+  OVER (PARTITION BY direccion), 1) AS pct_monto\nFROM e GROUP BY 1,2 ORDER BY 1, 6 DESC"
+transformation: E-007 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-3f07 · C-004
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: direccion
+    nombre: direccion
+    formato: texto
+  - id: destino
+    nombre: destino
+    formato: texto
+  - id: eventos
+    nombre: eventos
+    formato: int
+  - id: pct_eventos
+    nombre: pct_eventos
+    formato: num2
+  - id: monto_cop
+    nombre: monto_cop
+    formato: num2
+  - id: pct_monto
+    nombre: pct_monto
+    formato: num2
+  filas:
+  - direccion: Bajada del monto
+    destino: Persiste en el nivel nuevo
+    eventos: 848
+    pct_eventos: 74.7
+    monto_cop: 55941264.0
+    pct_monto: 64.1
+  - direccion: Bajada del monto
+    destino: Otro nivel
+    eventos: 270
+    pct_eventos: 23.8
+    monto_cop: 30908845.0
+    pct_monto: 35.4
+  - direccion: Bajada del monto
+    destino: Vuelve al nivel previo
+    eventos: 17
+    pct_eventos: 1.5
+    monto_cop: 463047.0
+    pct_monto: 0.5
+  - direccion: Subida del monto
+    destino: Otro nivel
+    eventos: 506
+    pct_eventos: 44.1
+    monto_cop: 21947700.0
+    pct_monto: 58.2
+  - direccion: Subida del monto
+    destino: Vuelve al nivel previo
+    eventos: 182
+    pct_eventos: 15.9
+    monto_cop: 10646924.0
+    pct_monto: 28.2
+  - direccion: Subida del monto
+    destino: Persiste en el nivel nuevo
+    eventos: 460
+    pct_eventos: 40.1
+    monto_cop: 5120214.0
+    pct_monto: 13.6
+created_at: '2026-09-29T14:43:51-06:00'
+status: valid
+validation_errors: []
+finding: F-171
+links:
+- F-171
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:43:51-06:00'
+version: 1

@@ -1,0 +1,50 @@
+id: X-036
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-011
+target: Q-002
+title: R-011 cambia la historia Q-002
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'R-011 confirma con confianza alta que con cliente × mes × monto no se puede separar suscripción, tarifa ni
+  descuento. Además, el monto mezcla una cuarta cosa: el momento de cobro. La parte «cuánto se explica por lo que
+  el cliente contrata, por la tarifa o por descuentos» no tendrá cifra histórica con los datos actuales. Lo que
+  sí se sostiene: la escalera de R-011 es consistente con D-002 (entrantes, salientes y continuos, con suscripción
+  y descuento dentro de cada grupo).'
+options:
+- key: A
+  label: 'Responder Q-002 en dos capas: lo observado y la Propuesta de Modelo de datos'
+  consequence: 'El bloque Revenue dice qué cambió en el monto pagado (con el momento de cobro separado), qué no
+    se puede saber con estos datos y qué modelo lo haría visible. Versión ejecutiva: «Hoy vemos cuánto cambió lo
+    que pagan los clientes, no por qué; esto es lo que Finora tiene que registrar para saberlo». H-010, H-012 y
+    H-015 pasan a ser casos que el modelo debe separar. H-013 y H-014 quedan escritas como limitación (D-005: que
+    hoy no se puedan medir no las hace irrelevantes). Depende de D-007.'
+- key: B
+  label: Pedir a Finora datos de facturación/CRM antes de Synthesis y buscar la atribución histórica
+  consequence: Si el dato existe, habría una cifra por componente. Si no existe o tarda, el bloque Revenue queda
+    bloqueado.
+- key: C
+  label: Responder solo con la propuesta, sin el puente observado
+  consequence: 'Es más simple, pero se pierde la evidencia de por qué hace falta el modelo: el monto no distingue
+    los casos y el momento de cobro contamina las cifras.'
+recommended: A
+recommended_why: Es lo que el brief le pide al CFO (mecanismo, modelo de datos y clasificación) y no inventa una
+  atribución. El pedido de datos de B puede ir en paralelo sin bloquear. Conviene que R-021 (en curso) construya
+  sobre la escalera de R-011 en vez de armar otra.
+detected_by: cos
+links:
+- R-011
+- Q-002
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

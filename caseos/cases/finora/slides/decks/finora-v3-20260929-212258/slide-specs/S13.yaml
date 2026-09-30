@@ -1,0 +1,52 @@
+slide:
+  id: S13
+  file: slides/13.html
+  claim_id: C-011
+  role_in_story: evidence
+  kicker: "Growth · hipótesis ToFu y BoFu"
+  headline: "Primero se fija qué es venta; revisar la medición en pagos no cierra la brecha"
+  takeaway: "Paso 0: fijar venta y ventana. Las tres revisiones de medición del lado de pagos dejan la brecha en pie; lo de leads espera al CRM."
+  question: "¿Cuánto de «no más ventas» depende de cómo se cuenta y cuánto es negocio?"
+  relationship: "the premise PASSES THROUGH three payment-side checks and SURVIVES; the leads-side checks WAIT for the CRM; step 0 comes FIRST"
+  evidence_type: process
+  composition: filter_pipeline (premisa que cruza compuertas)
+  family: process
+  alternatives_considered:
+    - id: checklist
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "una lista de revisiones no muestra que la premisa sobrevive a cada una"
+    - id: waterfall de la brecha
+      score: {fidelity: 1, focal: 2, evidence: 1, variety: 1, risk: -1}
+      rejected_because: "no hay cifras que resten de la brecha: cada revisión deja el orden igual"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: step0
+  visual_hierarchy:
+    1: Paso 0 en lima (fijar venta y ventana)
+    2: la premisa atraviesa tres compuertas y sale «sigue en pie»
+    3: el resultado de cada revisión con su cifra
+    4: rama punteada del lado de leads (requiere CRM)
+  objects:
+    - {id: step0, kind: node, content: "Paso 0: qué es venta (Won o primer pago) y qué ventana; en pagos la premisa se sostiene en jul–oct 2024, no en mar–oct"}
+    - {id: gates, kind: node, content: "oct-24 incompleto · altas vs reactivaciones · recompras con otro ID"}
+    - {id: result, kind: node, content: "la brecha sigue en pie"}
+    - {id: leads_branch, kind: path, content: "no-prospectos, duplicados, cambios de definición → requiere el CRM"}
+  encodings:
+    solid_line: "revisión posible con los pagos"
+    dashed_line: "revisión que requiere datos que hoy no hay"
+    accent: "el paso que decide el CRO primero"
+  annotations:
+    - {at: gate1, text: "Sin oct-24: 56 por mes en 2024 vs 54 en 2023 (55 con octubre)"}
+    - {at: gate2, text: "1.476 clientes con alta, 468 reactivaciones, 0 meses marcados como ambos"}
+    - {at: gate3, text: "175 de 650 altas de 2023 coinciden con un churn reciente vs 196 en el placebo"}
+  layout_intent:
+    grid: "Paso 0 cols 1–3; compuertas cols 4–10; resultado cols 11–12; rama leads abajo"
+    reading_path: "izquierda → derecha por la línea de la premisa"
+    whitespace: "arriba de la línea"
+  text_budget: 110
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla", "checklist con viñetas"]
+  data:
+    source: "data/FIN-F-196.yaml, FIN-F-197.yaml, FIN-F-203.yaml, FIN-F-192.yaml"
+    values: "56 vs 54 (55); 1.476 / 468 / 0; 175 de 650 vs 196"
+  notes: "No se afirma que la medición quedó descartada: con los pagos solo se acotan las revisiones del lado de pagadores. Primer pago no es Won. La ventana jul–oct 2024 es corta y puede incluir compra adelantada (H-066, H-075)."
+  sources: [F-196, F-197, F-201, F-202, F-203, F-125, F-126, F-204, F-205, F-229, F-230, F-192]

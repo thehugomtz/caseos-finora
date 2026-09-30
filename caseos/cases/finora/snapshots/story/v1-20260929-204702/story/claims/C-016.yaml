@@ -1,0 +1,119 @@
+id: C-016
+type: claim
+key: monto-dos-lecturas
+question: 'Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece
+  el descuento: ¿se puede leer cada caso con el monto pagado?'
+headline: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas
+answer: 'Con cliente, mes y monto, pasar de 100 a 80 puede ser una suscripción más chica, un descuento o un cobro
+  que cambió de mes. Seguir en 100 con la suscripción en 130 no se distingue de «sin cambio», y el fin del descuento
+  se vería como expansión. En los datos pasa algo parecido: 25,3% del movimiento bruto sin altas vuelve exacto al
+  nivel previo al mes siguiente, 29% del MRR de expansión se revierte, 32% de los retornos tras meses sin pago liquida
+  exactamente los meses pendientes y hay 260 eventos de ajuste con cobro retroactivo exacto. El monto no trae lista,
+  descuento, crédito ni pausa.'
+role_in_story: evidence
+evidence_ids:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+- F-177
+table_ids:
+- T-058
+- T-061
+- T-028
+- T-074
+research_ids:
+- R-002
+- R-020
+- R-027
+- R-011
+framework_ids: []
+confidence: high
+limitations:
+- Pendiente de tu aceptación; F-130 tiene la fuente sin verificar.
+- Los casos del CFO son ejemplos del enunciado, no observaciones de Finora.
+- Es una prueba de observabilidad, no una lectura de lo que ocurrió.
+visual_intent: 'Una observación, varias lecturas: el mismo monto pagado se abre en lecturas distintas que hoy no
+  se pueden separar.'
+hugo_wording: Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
+links:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+- F-177
+- T-058
+- T-061
+- T-028
+- T-074
+- R-002
+- R-020
+- R-027
+- R-011
+phase: story
+review:
+  state: rejected
+  by: hugo
+  at: '2026-09-29T20:18:34-06:00'
+  note: Ya respondido más adelante, esto fue un retrabajo innecesario.
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T20:18:34-06:00'
+version: 7
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  accepted: []
+  pending:
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  tables:
+  - T-058
+  - T-061
+  - T-028
+  - T-074
+  - T-058
+  - T-061
+  - T-028
+  - T-074
+  unsupported_numbers:
+  - '100'
+  - '80'
+  - '100'
+  - '130'
+  - 32%
+  - '260'
+  stale: []

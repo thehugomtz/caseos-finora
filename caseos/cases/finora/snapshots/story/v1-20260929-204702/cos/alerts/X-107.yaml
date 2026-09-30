@@ -1,0 +1,42 @@
+id: X-107
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-025
+target: H-029
+title: R-025 debilita H-029
+finding_text: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las r…'
+why: El borde de octubre no explica la caída. Jul–sep da −18% (153 vs 187) contra −19% en jul–oct, y octubre sola
+  cae −22% (50 vs 64, cálculo mío). Queda solo el rezago Won→primer pago, que no se prueba sin fechas de Won (Q-065).
+  La forma de la caída también pesa en contra. Si el rezago se alarga una vez, los pagos se corren y dejan un hueco
+  temporal, no una caída sostenida de cuatro meses. Para eso, el rezago tendría que alargarse mes tras mes.
+options:
+- key: A
+  label: Reformularla como solo rezago Won→primer pago y esperar Q-065
+  consequence: Sigue abierta, pero no se puede investigar hasta que Finora conteste.
+- key: B
+  label: Reformularla y, antes, mirar con pagos el perfil mes a mes de jul–oct
+  consequence: Chequeo barato con data que ya tenemos. Si la caída es pareja, el rezago pierde peso sin esperar
+    el CRM; si se concentra en un mes, gana.
+- key: C
+  label: Mantener H-029 como está
+  consequence: Sigue contando como artefacto abierto un borde que R-025 ya descartó en pagos.
+recommended: B
+recommended_why: Cierra la parte ya descartada y le da a la otra una prueba que no depende de Finora.
+detected_by: cos
+links:
+- R-025
+- H-029
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-be42
+created_at: '2026-09-29T16:36:54-06:00'
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 1

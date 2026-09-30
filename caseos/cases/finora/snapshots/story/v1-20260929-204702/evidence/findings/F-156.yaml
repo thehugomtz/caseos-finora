@@ -1,0 +1,76 @@
+id: F-156
+type: finding
+headline: 'El conteo es MECE si se clasifica en dos pasos y se reconcilia con los puentes que ya cierran. Paso 1:
+  ¿la cuenta pagó antes? Si pagó, es Reactivate. Paso 2: si no pagó, recibe una sola motion de origen, asignada
+  al entrar.'
+evidence_text: La contabilidad de crecimiento separa Nuevos de Resucitados (SRC-AMP). En Finora, las reactivaciones
+  pesan 30,4% de las entradas a pago en 2022 feb–dic (37,9% sin feb-22), 17,7% en 2023 y 22,6% en 2024 ene–oct (DM-02,
+  DM-03). Contarlas como «nuevos» cambia la lectura (H-037). Los puentes de clientes y de MRR cierran con diferencia
+  0 en 33 meses (DM-09), así que la suma por motion más las reactivaciones tiene contra qué cuadrar. Asignar la
+  motion al entrar, y no según el camino que la cuenta terminó siguiendo, evita que un lead Hybrid no atendido que
+  paga por su cuenta pase a contar como Self Service y esconda el problema de capacidad (inferencia de diseño).
+confidence: medium
+limitations:
+- 'La motion de origen no existe hoy en los datos (DM-01). La regla depende de cómo enruta Finora y hay que versionarla.
+  2022 tiene efecto de borde: feb-22 está marcado como posible spillover.'
+kind: measurement
+claims:
+- claim: La contabilidad de crecimiento separa Nuevos (primera actividad en el mes), Resucitados (tuvieron churn
+    y vuelven) y Churned (activos el mes anterior, sin actividad en el actual).
+  source_id: SRC-AMP
+  source_type: company
+  confidence: high
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: supports
+  notes: Respalda clasificar Reactivación antes que motion (H-037).
+- claim: El modelo del caso no tiene ningún campo de motion o canal de entrada, lead, oportunidad, contacto comercial
+    ni estado de suscripción o de cobro. Solo tiene pagos mensuales por cliente, industria y gasto S&M por rubro,
+    con unidad no documentada.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Modelo consultado el 2026-09-29.
+  supports_or_contests: context
+  notes: 'Limita qué se puede calcular hoy: solo el lado derecho en agregado y el loop de Reactivate.'
+- claim: Las reactivaciones pesan 30,4% de las entradas a pago en 2022 feb–dic (166 de 546), 17,7% en 2023 (140
+    de 790) y 22,6% en 2024 ene–oct (162 de 716).
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: supports
+  notes: 'Entrada a pago = nuevas + reactivaciones. Va en línea con el rango que reporta R-016. Apoya H-037: el
+    peso no es estable.'
+- claim: Feb-22 tiene 108 altas y 0 reactivaciones. Sin ese mes, las reactivaciones pesan 37,9% de las entradas
+    a pago de mar–dic 2022 (166 de 438).
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–abr-22; consulta del 2026-09-29.
+  supports_or_contests: supports
+  notes: 'Cálculo derivado de DM-02 y DM-03: (380 − 108) = 272 nuevas; 166 ÷ (272 + 166). La cifra de 2022 depende
+    de cómo se trate el posible spillover de feb-22.'
+- claim: El puente de clientes (altas + reactivaciones − churn = Δ activos) y el de MRR (nuevo + expansión + reactivación
+    − contracción − churn = Δ monto pagado) cierran con diferencia 0 en los 33 meses de feb-22 a oct-24.
+  source_id: DM-09
+  source_type: data_model
+  confidence: high
+  freshness: Datos feb-22–oct-24; consulta del 2026-09-29.
+  supports_or_contests: supports
+  notes: 'Es la base MECE del lado derecho: la suma por motion más las reactivaciones tiene contra qué cuadrar.'
+unverified: false
+source_ref:
+  research: R-022
+links:
+- R-022
+- H-037
+- H-006
+- H-005
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:30:20-06:00'
+updated_at: '2026-09-29T14:30:20-06:00'
+version: 1

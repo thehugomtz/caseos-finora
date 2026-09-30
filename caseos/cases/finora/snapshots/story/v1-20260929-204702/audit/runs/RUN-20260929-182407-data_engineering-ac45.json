@@ -1,0 +1,3028 @@
+{
+ "run_id": "RUN-20260929-182407-data_engineering-ac45",
+ "agent": "data_engineering",
+ "role": "data_engineering",
+ "purpose": "R-034 · Data Engineering L2",
+ "started_at": "2026-09-29T19:01:14-06:00",
+ "duration_ms": 2227345,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/5aea6dcc65765cf6.md",
+ "system_prompt_hash": "5aea6dcc65765cf6",
+ "prompt": "# Investigación R-034\nPregunta: Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas: ¿cómo se registra un descuento según su origen —promoción digital o física, negociación comercial, retención o partner—, si es digital con su source (canal, campaña, código, landing), y con su tipo, duración, alcance, apilamiento y aprobador, sin confundirlo con cambios de suscripción?\nPregunta original de Hugo: Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas: ¿cómo se registra un descuento según su origen —promoción digital o física, negociación comercial, retención o partner—, si es digital con su source (canal, campaña, código, landing), y con su tipo, duración, alcance, apilamiento y aprobador, sin confundirlo con cambios de suscripción?\nNivel L2 · business research: varias fuentes buenas, compara enfoques, sintetiza qué aplica a este caso.\nEvidencia que la respondería: —\n\nCaso: Finora — Finora Business Analytics Case\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis…\nPregunta ejecutiva: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nDatos disponibles: Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación OK.; raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × mes); raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente); raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes); mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure, cohorte y cosecha (66.674 filas; grano cliente × mes); mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde customer_month; cuadran al centavo con la Fase 1 (34 filas; grano mes); mart.new_customers — Cada alta con su primer pago (M0), run-rate temprano, cohorte e industria (1.584 filas; grano alta)\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición…; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.\n\nElementos del caso a los que sirve esta investigación:\n- C-017 [claim] Proponemos que el descuento exista como objeto propio, con fecha de fin\n- C-019 [claim] La Propuesta de Modelo de datos separa el valor en una escalera con vigencias\n- C-020 [claim] Si la suscripción no cambia, inicio o fin de descuento va a «Descuento»\n- C-025 [claim] Con el modelo propuesto, cada caso del CFO se lee en su capa\n- D-002 [decision] CFO conserva tres grupos\n\n## Tarea RT-033 del plan de investigación (aprobada por Hugo)\nQué debe salir: Investigación y propuesta · láminas del guion: S3.3, S3.2\nRespuesta de arranque (hipótesis de trabajo del Framer: valídala, afínala o refútala con evidencia; no la des por buena): As-is: solo cliente-mes-monto; no hay lista, plan, descuento ni su origen. To-be, sobre la escalera de R-011: promotion (campaña con canal digital o físico, vigencia y reglas de elegibilidad), promo_code o enlace con source, medium, campaign y landing, y discount_grant ampliado (porcentaje o monto, duración en meses o hasta una fecha, alcance por ítem o suscripción, apilable o no, aprobador y motivo: promoción, negociación, retención o partner), ligado a la suscripción y al evento de cambio. La clasificación de C-020 no cambia; el origen permite ver qué canal o promoción trae clientes que se quedan.\nLo que Hugo ya dijo (N-053): “C-017 lo mismo quiero ver un modelo de datos y considera mas casuisticas, un descuento podría provenir de una promocion tanto digital como fisica y si es digital hay que considerar el source tambiem”\nPaso 1 · Proponer: As-is: lo que hay hoy y qué no responde (origen, source, lista, descuento).\nPaso 2 · Proponer: To-be: entidades y campos (promotion, promo_code y source, discount_grant ampliado, elegibilidad, aprobación), llaves y vigencias, ligadas a la escalera de R-011.\nPaso 3 · Proponer: Casuísticas: promoción digital con source, promoción física, descuento negociado, retención, partner, apilados, recurrente contra único, y cómo se clasifica cada una en el puente (C-020).\nPaso 4 · Proponer: Brecha as-is → to-be con la pregunta del CFO que habilita cada cambio.\n\nReglas: cita solo URLs que recuperaste en esta corrida; cada claim material referencia un `source_id` de tu lista de fuentes; si una afirmación no tiene fuente, no lleva cifras y va como inferencia. Los benchmarks son contexto, nunca evidencia sobre esta empresa. Termina con la síntesis para el caso (qué cambia para ESTE caso).\n\n## Modelo de datos del caso (solo lectura)\nTienes `consultar_modelo` (una SELECT sobre raw.*, staging.*, mart.*; máx. 200 filas) y `catalogo_modelo`. Úsalas en los pasos de datos: comprueba qué existe antes de proponer, y si un dato no está en el modelo, dilo. Cada cifra que saques del modelo va en `sources` con source_type \"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste (si citas el catálogo, note = catalogo_modelo()); el claim cita ese source_id. Una cita del modelo solo cuenta si la consulta corrió en esta corrida.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "research_question",
+   "case_question",
+   "why_it_matters",
+   "short_answer",
+   "findings",
+   "claims",
+   "sources",
+   "alternative_explanations",
+   "what_is_established",
+   "what_is_contested",
+   "what_remains_unknown",
+   "case_implication",
+   "changes_current_story",
+   "affected_hypotheses",
+   "affected_claims",
+   "suggested_action",
+   "new_questions",
+   "handoff_to_cos",
+   "confidence_buckets",
+   "specialist"
+  ],
+  "properties": {
+   "research_question": {
+    "type": "string"
+   },
+   "case_question": {
+    "type": "string"
+   },
+   "why_it_matters": {
+    "type": "string"
+   },
+   "short_answer": {
+    "type": "string"
+   },
+   "findings": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "headline",
+      "evidence",
+      "claim_indexes",
+      "confidence",
+      "limitation"
+     ],
+     "properties": {
+      "headline": {
+       "type": "string"
+      },
+      "evidence": {
+       "type": "string"
+      },
+      "claim_indexes": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "limitation": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "claim",
+      "source_id",
+      "source_type",
+      "confidence",
+      "freshness",
+      "supports_or_contests",
+      "notes"
+     ],
+     "properties": {
+      "claim": {
+       "type": "string"
+      },
+      "source_id": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string"
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "freshness": {
+       "type": "string"
+      },
+      "supports_or_contests": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "contests",
+        "context"
+       ]
+      },
+      "notes": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "sources": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "title",
+      "url",
+      "publisher",
+      "date",
+      "source_type",
+      "quality",
+      "note"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "title": {
+       "type": "string"
+      },
+      "url": {
+       "type": "string"
+      },
+      "publisher": {
+       "type": "string"
+      },
+      "date": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string",
+       "enum": [
+        "primary",
+        "official",
+        "regulatory",
+        "academic",
+        "industry",
+        "company",
+        "expert",
+        "journalism",
+        "community",
+        "marketing",
+        "internal",
+        "data_model"
+       ]
+      },
+      "quality": {
+       "type": "string",
+       "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ]
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "alternative_explanations": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_established": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_contested": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_remains_unknown": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "case_implication": {
+    "type": "string"
+   },
+   "changes_current_story": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "value",
+     "why"
+    ],
+    "properties": {
+     "value": {
+      "type": "string",
+      "enum": [
+       "yes",
+       "no",
+       "maybe"
+      ]
+     },
+     "why": {
+      "type": "string"
+     }
+    }
+   },
+   "affected_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "affected_claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "suggested_action": {
+    "type": "string"
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "handoff_to_cos": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "summary",
+     "recommended_next"
+    ],
+    "properties": {
+     "summary": {
+      "type": "string"
+     },
+     "recommended_next": {
+      "type": "string"
+     }
+    }
+   },
+   "confidence_buckets": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "high_confidence",
+     "plausible",
+     "contested",
+     "unknown"
+    ],
+    "properties": {
+     "high_confidence": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "plausible": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "contested": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "unknown": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "specialist": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "data_model"
+    ],
+    "properties": {
+     "data_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "conceptual_model",
+       "as_is",
+       "gap",
+       "entities",
+       "grain",
+       "fields",
+       "temporal_behavior",
+       "business_definitions",
+       "classification_logic",
+       "example_records",
+       "edge_cases",
+       "data_quality_rules",
+       "implementation_considerations"
+      ],
+      "properties": {
+       "conceptual_model": {
+        "type": "string"
+       },
+       "as_is": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "table",
+          "grain",
+          "fields",
+          "answers",
+          "cannot"
+         ],
+         "properties": {
+          "table": {
+           "type": "string"
+          },
+          "grain": {
+           "type": "string"
+          },
+          "fields": {
+           "type": "string"
+          },
+          "answers": {
+           "type": "string"
+          },
+          "cannot": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "gap": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "need",
+          "as_is",
+          "to_be",
+          "enables"
+         ],
+         "properties": {
+          "need": {
+           "type": "string"
+          },
+          "as_is": {
+           "type": "string"
+          },
+          "to_be": {
+           "type": "string"
+          },
+          "enables": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "entities": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "name",
+          "description",
+          "grain",
+          "primary_key"
+         ],
+         "properties": {
+          "name": {
+           "type": "string"
+          },
+          "description": {
+           "type": "string"
+          },
+          "grain": {
+           "type": "string"
+          },
+          "primary_key": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "grain": {
+        "type": "string"
+       },
+       "fields": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "entity",
+          "field",
+          "type",
+          "definition",
+          "example"
+         ],
+         "properties": {
+          "entity": {
+           "type": "string"
+          },
+          "field": {
+           "type": "string"
+          },
+          "type": {
+           "type": "string"
+          },
+          "definition": {
+           "type": "string"
+          },
+          "example": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "temporal_behavior": {
+        "type": "string"
+       },
+       "business_definitions": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "term",
+          "definition"
+         ],
+         "properties": {
+          "term": {
+           "type": "string"
+          },
+          "definition": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "classification_logic": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "case",
+          "rule"
+         ],
+         "properties": {
+          "case": {
+           "type": "string"
+          },
+          "rule": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "example_records": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "entity",
+          "columns",
+          "rows"
+         ],
+         "properties": {
+          "entity": {
+           "type": "string"
+          },
+          "columns": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "rows": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           }
+          }
+         }
+        }
+       },
+       "edge_cases": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "data_quality_rules": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "implementation_considerations": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "tools": [
+  "WebSearch",
+  "WebFetch"
+ ],
+ "skills": [
+  {
+   "id": "case-research-synthesis",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "2e17a5277f3b"
+  },
+  {
+   "id": "data-modeling",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "9260e3c616c5"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 34,
+ "status": "ok",
+ "error": null,
+ "data_model": "finora",
+ "output": {
+  "research_question": "Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas: ¿cómo se registra un descuento según su origen —promoción digital o física, negociación comercial, retención o partner—, si es digital con su source (canal, campaña, código, landing), y con su tipo, duración, alcance, apilamiento y aprobador, sin confundirlo con cambios de suscripción?",
+  "case_question": "RT-033 → C-017, C-019, C-020, C-025 y D-002: ¿qué modelo de precios y descuentos le proponemos a Finora para que cada descuento tenga origen, source, vigencia y aprobador, y para que el CFO lo lea en su capa sin confundirlo con cambios de suscripción? Destino: láminas S3.3 y S3.2.",
+  "why_it_matters": "Esto decide si en S3.2 y S3.3 podemos prometerle al CFO que cada peso de MRR que baja se explica en su capa (suscripción o descuento) y al CRO que va a poder ver qué canal o promoción trae clientes que se quedan. Si el origen y el source no se capturan desde el primer descuento, esa historia no se puede reconstruir después (inferencia: el histórico no guarda esos campos).",
+  "short_answer": "Con lo que hay hoy no se puede: el modelo del caso es solo cliente × mes × monto pagado, sin lista, plan, descuento, origen ni source, así que un descuento se vería igual que una contracción, un pago multi-mes o un mes sin cobro (confianza alta, verificado en el modelo). El to-be confirma y afina la hipótesis del Framer. La oferta (promotion), el artefacto que la distribuye (promo_code digital, físico o QR, con UTM y landing), el canje (evento ligado a la sesión), el descuento aplicado (discount_grant con un solo origen, tipo, duración, alcance, apilamiento y aprobador) y el monto descontado por línea de factura van en objetos separados, como en Stripe y Chargebee; además, el source se captura en la adquisición de todos los clientes, no solo en el descuento. La regla de C-020 se sostiene como convención declarada, porque ChartMogul, por defecto, manda el inicio de un descuento a contracción y su fin a expansión, y necesita una regla secuencial para los meses con doble cambio; la confianza en el diseño es media-alta porque cinco tratamientos son decisiones de Hugo y del CFO.",
+  "findings": [
+   {
+    "headline": "Hoy el modelo no puede separar un descuento de una contracción, un pago multi-mes o un mes sin cobro: solo hay cliente × mes × monto.",
+    "evidence": "El catálogo no tiene ningún campo de lista, plan, cantidad, descuento, promoción, código, UTM, partner, aprobador ni factura (DM-01). El grano es cliente × mes: 66.674 pares únicos, 1.961 clientes y 34 meses (DM-02). De 1.247 contracciones, 311 son exactamente a la mitad del mes anterior, 932 vienen justo después de una expansión, alta o reactivación y 332 justo después de un mes con firma de pago multi-mes (DM-07); además se concentran en razones redondas: 63 a un tercio y 27 a un cuarto (DM-04). De 751 churn observados, 330 vuelven a pagar en t+1 (87 con el mismo monto) (DM-05). Hay 512 filas con firma de pago multi-mes (DM-03).",
+    "claim_indexes": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     29
+    ],
+    "confidence": "high",
+    "limitation": "No dice si hubo descuentos en el histórico (el caso habla de introducirlos) ni cuál explicación domina: timing de pago, pausa, cambio real o un descuento futuro dejarían la misma huella."
+   },
+   {
+    "headline": "Los sistemas de billing separan tres cosas que el to-be también debe separar: la oferta, el código que la distribuye y el descuento aplicado con vigencia.",
+    "evidence": "Stripe distingue el cupón (lógica aplicada por back-end; su ejemplo es un 20% negociado por ventas), el código promocional (lo que ve el cliente; varios códigos por cupón; restricciones de cliente, primera compra, monto mínimo, vencimiento y cupo) y el objeto Discount (start, end, subscription, subscription_item, promotion_code) (W-01, W-02). La ventana de canje no es la vigencia: un cupón forever con fecha de vencimiento sigue aplicando a quien ya lo canjeó (W-01). Chargebee modela el tipo (monto fijo, porcentaje, unidades gratis), la duración (one_time, limited_period, forever), el alcance (factura o ítem) y un orden fijo de aplicación (W-08, W-15); Stripe acepta hasta 20 descuentos apilados y el orden cambia el monto (W-01). Kimball respalda las vigencias (SCD2) y la foto de cierre densa (W-16, W-17).",
+    "claim_indexes": [
+     6,
+     7,
+     8,
+     9,
+     10,
+     13,
+     14,
+     26,
+     27,
+     28
+    ],
+    "confidence": "high",
+    "limitation": "Son prácticas de proveedores (contexto, no benchmark ni evidencia sobre Finora); no sabemos qué sistema de billing usará Finora."
+   },
+   {
+    "headline": "El source no puede vivir solo en el descuento: hay que capturarlo en la adquisición de todos los clientes y guardar aparte el canal asignado al código.",
+    "evidence": "GA pide siempre utm_source, utm_medium y utm_campaign, distingue mayúsculas y marca (not set) cuando faltan; utm_campaign admite producto, slogan o código promocional y utm_id identifica la campaña (W-11). Para lo físico, la práctica es usar un código exclusivo por pieza, QR con UTM y vanity URLs para medios no escaneables, y aceptar que una parte no se atribuye (W-12). A los partners se les atribuye por un parámetro en el link de referido o por llaves de partner y de cliente en metadatos (W-14). Hoy el caso solo tiene gasto mensual por rubro: PaidMedia y PublicidadNoWeb tienen gasto en los 34 meses, sin llave a clientes (DM-06).",
+    "claim_indexes": [
+     4,
+     21,
+     22,
+     25
+    ],
+    "confidence": "medium",
+    "limitation": "La guía de offline viene de un blog de proveedor (calidad C); no sabemos cuánto de lo físico será atribuible en Finora. Que sin el source de todos los clientes no se pueda comparar promo contra no-promo es inferencia de diseño."
+   },
+   {
+    "headline": "Cómo pega un descuento en el MRR es una convención, no un hecho: C-020 se sostiene, pero se aparta del default del mercado y hay que declararla.",
+    "evidence": "ChartMogul reporta el MRR neto de descuentos y clasifica aplicar un descuento como contracción y su vencimiento como expansión (W-05, W-06); para un 100% usa downgrade por defecto, con opción de churn (W-07). Recurly deja incluir el descuento en el MRR (recomendado) o excluirlo (W-10). Stripe siempre resta los descuentos permanentes y deja configurar los recurrentes y los únicos (W-03). Chargebee mete los cupones únicos al MRR cuando aplican en la siguiente renovación, lo que puede parecer downgrade (W-09), y tiene el flag included_in_mrr para los únicos (W-08). En Stripe, actualizar un descuento no genera prorrateo: eso solo pasa con cambios de precio, cantidad, ítems o ciclo (W-01).",
+    "claim_indexes": [
+     11,
+     13,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20
+    ],
+    "confidence": "high",
+    "limitation": "No hay una respuesta correcta única: la elección es de Hugo y del CFO. Lo que sí es firme es que el modelo debe guardar las capas para poder recalcular con otra convención."
+   },
+   {
+    "headline": "Negociación, retención y partner necesitan registro propio, y hay dos trampas: el precio especial que esconde un descuento y el downgrade de retención.",
+    "evidence": "Stripe lista como formas alternativas de descuento un segundo precio más barato y las partidas negativas de factura (W-01). Si ventas negocia con un precio especial, la rebaja desaparece del descuento y su fin se lee como expansión. En Salesforce, las reglas de aprobación se disparan por condiciones (su ejemplo: un descuento de partner de 35%) y las cadenas ordenan a los aprobadores por paso (W-13). Las reglas de retención de Stripe segmentan por motivo, antigüedad y gasto, cada rama ofrece descuento o downgrade (no ambos) y el descuento de retención es de un solo uso por cliente (W-04). La atribución de partner usa llaves propias (W-14).",
+    "claim_indexes": [
+     12,
+     23,
+     24,
+     25
+    ],
+    "confidence": "medium",
+    "limitation": "No conocemos los umbrales, la política ni si Finora tendrá programa de partners. Que la comisión del partner no sea descuento es una propuesta de diseño (inferencia), no un dato."
+   }
+  ],
+  "claims": [
+   {
+    "claim": "El as-is tiene grano cliente × mes con un solo monto: 66.674 filas, que son 66.674 pares únicos cliente-mes, de 1.961 clientes en 34 meses (2022-01 a 2024-10); 33.703 filas en cero y ninguna negativa.",
+    "source_id": "DM-02",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda C-017 y C-019: no hay dónde registrar la lista ni el descuento. El monto es pagado observado, no MRR contratado."
+   },
+   {
+    "claim": "Ninguna tabla del modelo tiene precio de lista, plan, cantidad, descuento, promoción, código, UTM/source, partner, aprobador ni factura; raw.transactions solo trae ID, month y amount.",
+    "source_id": "DM-01",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Verificado sobre el catálogo; information_schema no se puede consultar en este entorno."
+   },
+   {
+    "claim": "Hay 1.247 contracciones observadas: 311 son exactamente a la mitad del mes anterior, 932 vienen justo después de una expansión, alta o reactivación y 332 justo después de un mes con firma de pago multi-mes.",
+    "source_id": "DM-07",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "El bucket «contracción» de hoy mezcla timing de pago con cambios reales. No permite afirmar que hubo descuentos en el histórico."
+   },
+   {
+    "claim": "De 751 churn observados, 330 vuelven a pagar en t+1, 87 con el mismo monto; 468 vuelven antes de oct-24.",
+    "source_id": "DM-05",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Hoy un mes sin cobro (pausa, pago atrasado o, a futuro, un descuento del 100%) se registra como churn + reactivación. Ojo: el catálogo describe returned_next_month como «con el mismo monto», pero da 330 frente a 87; se lee como «vuelve con cualquier monto»."
+   },
+   {
+    "claim": "El gasto S&M trae PaidMedia y PublicidadNoWeb separados, ambos con gasto en los 34 meses, pero solo a nivel mes, sin unidad documentada y sin llave a clientes, campañas o promociones.",
+    "source_id": "DM-06",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Leer PaidMedia como digital es inferencia por el nombre."
+   },
+   {
+    "claim": "512 filas cliente-mes tienen firma de pago multi-mes (monto = k × monto usual); 194 expansiones y 17 contracciones revierten al mes siguiente.",
+    "source_id": "DM-03",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Confirma que el monto observado mezcla timing de pago con valor recurrente (en la escalera de C-019, pagado ≠ contratado)."
+   },
+   {
+    "claim": "Stripe separa el cupón (lógica de descuento aplicada por back-end; su ejemplo es un 20% negociado por ventas), el código promocional (la cadena que ve el cliente, con varios códigos por cupón y restricciones por cliente, primera compra, monto mínimo, vencimiento y cupo) y el objeto Discount (la aplicación a un cliente, una suscripción o una factura).",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29; página sin fecha",
+    "supports_or_contests": "supports",
+    "notes": "Valida la estructura promotion → promo_code → discount_grant de la hipótesis del Framer."
+   },
+   {
+    "claim": "El objeto Discount de Stripe guarda start, end (solo si es repeating; nulo si es once o forever), subscription, subscription_item, invoice/invoice_item, promotion_code y source.",
+    "source_id": "W-02",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda C-017: el descuento como objeto propio, con fecha de fin y alcance."
+   },
+   {
+    "claim": "Stripe tiene tres duraciones: once (primera factura), repeating (duration_in_months) y forever. Un cupón de 4 meses sobre un plan anual cubre todo el año si la renovación cae en ese periodo, y un once desaparece de la suscripción al finalizar la factura.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "La duración efectiva se calcula por factura; para ver los descuentos únicos hace falta la capa de factura."
+   },
+   {
+    "claim": "La ventana de canje no es la vigencia del descuento: un cupón forever con fecha de vencimiento sigue aplicando para siempre a quien ya lo canjeó; los clientes nuevos no pueden usarlo después.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Por eso promotion.redeem_until ≠ discount_grant.valid_to_planned."
+   },
+   {
+    "claim": "Stripe permite hasta 20 descuentos apilados por suscripción, ítem o factura, y el orden cambia el resultado cuando se mezclan monto fijo y porcentaje.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Justifica los campos stackable, stack_group y application_order."
+   },
+   {
+    "claim": "En Stripe, actualizar descuentos no crea prorrateos ni facturas: solo los cambios de precio, cantidad, ítems o ciclo afectan lo facturable. Además, los precios y los códigos promocionales se aplican por separado.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respaldo técnico para C-020: el descuento y el cambio de suscripción son eventos distintos."
+   },
+   {
+    "claim": "Stripe lista como métodos alternativos de descuento el saldo negativo del cliente, las partidas negativas de factura y un segundo precio más barato; según Stripe, las partidas negativas dan más detalle de qué descuento se creó, cuándo y por qué.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "contests",
+    "notes": "Riesgo: un precio especial esconde el descuento dentro de lo contratado. De ahí la regla de «descuento implícito»."
+   },
+   {
+    "claim": "Chargebee modela el descuento con type (fixed_amount, percentage, offer_quantity), duration_type (one_time, forever, limited_period, con period y period_unit), apply_on (invoice_amount o specific_item_price) y un flag included_in_mrr que aplica solo a one_time.",
+    "source_id": "W-08",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "El flag muestra que meter o no un descuento único en el MRR es configuración, no un hecho."
+   },
+   {
+    "claim": "Chargebee aplica varios descuentos en un orden fijo (monto fijo por línea, porcentaje por línea, monto fijo de factura, porcentaje de factura); el cupón tiene max_redemptions y valid_till.",
+    "source_id": "W-15",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Referencia para application_order."
+   },
+   {
+    "claim": "Chargebee incluye los cupones únicos en el MRR cuando aplican en la siguiente renovación, lo que puede verse como downgrades.",
+    "source_id": "W-09",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "documentación 1.0, sin fecha; puede no reflejar la versión actual",
+    "supports_or_contests": "contests",
+    "notes": "Choca con la propuesta de dejar los descuentos únicos fuera del MRR."
+   },
+   {
+    "claim": "Stripe Billing siempre resta del MRR los descuentos permanentes y deja elegir si resta los recurrentes, los únicos o ambos.",
+    "source_id": "W-03",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "El tratamiento es configurable: es una convención."
+   },
+   {
+    "claim": "Recurly ofrece incluir el descuento en el MRR (opción recomendada) o excluirlo.",
+    "source_id": "W-10",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "documentación versionada v2.29, sin fecha",
+    "supports_or_contests": "context",
+    "notes": "Otra muestra de que es una convención."
+   },
+   {
+    "claim": "ChartMogul clasifica aplicar un descuento como contracción y su vencimiento como expansión.",
+    "source_id": "W-06",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "contests",
+    "notes": "El default de mercado es distinto de C-020 (línea propia «Descuento»)."
+   },
+   {
+    "claim": "ChartMogul reporta el MRR neto de descuentos y advierte que no restarlos puede distorsionar la salud del negocio, y que un cliente con descuento puede ser más difícil de renovar a precio completo.",
+    "source_id": "W-05",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "2025-01-20",
+    "supports_or_contests": "context",
+    "notes": "Es la postura de un proveedor; el riesgo de renovación es un argumento, no un dato de Finora."
+   },
+   {
+    "claim": "ChartMogul trata por defecto un descuento del 100% o el paso a un plan gratis como downgrade, y permite cambiarlo a churn.",
+    "source_id": "W-07",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "2022-06-24; puede haber cambiado",
+    "supports_or_contests": "contests",
+    "notes": "La propuesta para Finora es no tratarlo como churn ni como contracción, sino como «Descuento» con marca de mes sin cobro."
+   },
+   {
+    "claim": "En GA, utm_source, utm_medium y utm_campaign deben ir siempre; utm_id identifica la campaña o promoción, utm_campaign admite producto, slogan o código promocional y utm_content diferencia creativos. Los valores distinguen mayúsculas y los que faltan salen como (not set).",
+    "source_id": "W-11",
+    "source_type": "official",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Base de los campos de source asignado y observado."
+   },
+   {
+    "claim": "Para campañas físicas se recomienda QR con UTM, vanity URLs con redirección para medios no escaneables y códigos exclusivos por pieza, combinados con modelos de mezcla para lo que no se puede atribuir.",
+    "source_id": "W-12",
+    "source_type": "marketing",
+    "confidence": "medium",
+    "freshness": "2026-07-10",
+    "supports_or_contests": "supports",
+    "notes": "Blog de proveedor (calidad C); es coherente con la guía de GA."
+   },
+   {
+    "claim": "En Salesforce Advanced Approvals, las reglas de aprobación se disparan por condiciones como un descuento de partner de 35% y las cadenas ordenan a los aprobadores por paso; se registra aprobador, paso y estado.",
+    "source_id": "W-13",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Referencia para discount_approval. El 35% es el ejemplo de Salesforce, no un umbral para Finora."
+   },
+   {
+    "claim": "Las reglas de retención de Stripe segmentan por motivo de cancelación, antigüedad, gasto y metadatos; cada rama ofrece descuento o downgrade (no ambos) y el descuento de retención es de un solo uso por cliente.",
+    "source_id": "W-04",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Retención con downgrade = cambio de suscripción; retención con descuento = «Descuento»."
+   },
+   {
+    "claim": "PartnerStack atribuye clientes de Stripe a partners con un parámetro en el link de referido (gspk) y con customer_key y partner_key en los metadatos.",
+    "source_id": "W-14",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "documentación v1.0, consultada 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Base de partner_key en acquisition_touch."
+   },
+   {
+    "claim": "Kimball: el SCD tipo 2 agrega una fila nueva por cada cambio, con fecha efectiva, fecha de expiración e indicador de fila vigente.",
+    "source_id": "W-16",
+    "source_type": "expert",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda las vigencias de C-019."
+   },
+   {
+    "claim": "Kimball: una foto periódica tiene grano de periodo y es densa (hay fila aunque no haya actividad), a diferencia de la tabla de transacciones.",
+    "source_id": "W-17",
+    "source_type": "expert",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Base de subscription_month_snapshot."
+   },
+   {
+    "claim": "En Stripe, un cupón aplicado a una suscripción con fecha anterior empieza a contar su duración desde esa fecha anterior.",
+    "source_id": "W-01",
+    "source_type": "industry",
+    "confidence": "high",
+    "freshness": "consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Justifica guardar effective_at y recorded_at (modelo bitemporal)."
+   },
+   {
+    "claim": "Las contracciones se concentran en razones redondas frente al mes anterior: 311 a la mitad, 63 a un tercio, 27 a un cuarto y 20 a dos tercios.",
+    "source_id": "DM-04",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "corrida 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Cuando exista, un descuento de porcentaje fijo dejará la misma huella en cliente-mes-monto; por eso el as-is no puede separarlos. No implica que haya habido descuentos en el histórico."
+   }
+  ],
+  "sources": [
+   {
+    "id": "DM-01",
+    "title": "Catálogo del modelo: tablas, grano y columnas disponibles (as-is)",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "catalogo_modelo()"
+   },
+   {
+    "id": "DM-02",
+    "title": "Grano y cobertura de cliente × mes: filas, clientes, meses, pares únicos, ceros y negativos",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, COUNT(DISTINCT customer_id || '-' || month) AS pares_cliente_mes, SUM(CASE WHEN amount = 0 THEN 1 ELSE 0 END) AS filas_monto_cero, SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END) AS filas_monto_negativo, COUNT(DISTINCT amount) AS montos_distintos, MIN(month) AS primer_mes, MAX(month) AS ultimo_mes FROM staging.stg_customer_month"
+   },
+   {
+    "id": "DM-03",
+    "title": "Movimientos por tipo, reversión en t+1 y firma de pago multi-mes",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT movement_type, COUNT(*) AS filas, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_mes_siguiente, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_mismo_monto_t1, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS firma_pago_multimes FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC"
+   },
+   {
+    "id": "DM-04",
+    "title": "Razón monto actual / monto anterior en las contracciones (top 15)",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) AS ratio_actual_vs_anterior, COUNT(*) AS contracciones, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_t1 FROM mart.customer_month WHERE movement_type = 'contraction' GROUP BY 1 ORDER BY 2 DESC LIMIT 15"
+   },
+   {
+    "id": "DM-05",
+    "title": "Churn observado que vuelve a pagar en t+1 y con el mismo monto",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT COUNT(*) AS churn_obs, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1_mismo_monto, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS vuelve_antes_oct24 FROM mart.customer_month WHERE movement_type = 'churn'"
+   },
+   {
+    "id": "DM-06",
+    "title": "Rubros de gasto S&M y meses con gasto",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT rubro, COUNT(*) AS meses, SUM(CASE WHEN amount > 0 THEN 1 ELSE 0 END) AS meses_con_gasto FROM staging.stg_sm_spend GROUP BY rubro ORDER BY rubro"
+   },
+   {
+    "id": "DM-07",
+    "title": "Contracciones a la mitad y contracciones justo después de una subida o alta, o de una firma multi-mes",
+    "url": "",
+    "publisher": "CaseOS · modelo Finora (finora-eda)",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "WITH t AS (SELECT customer_id, month_index, movement_type, paid_mrr_cop, previous_month_mrr, LAG(movement_type) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_movement, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_signature FROM mart.customer_month) SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) = 0.5 AS ratio_mitad, COUNT(*) AS contracciones, SUM(CASE WHEN prev_movement IN ('expansion','new','reactivation') THEN 1 ELSE 0 END) AS tras_subida_o_alta, SUM(CASE WHEN prev_signature > 0 THEN 1 ELSE 0 END) AS tras_firma_pago_multimes FROM t WHERE movement_type = 'contraction' GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "W-01",
+    "title": "Cupones y códigos de promoción (Stripe Billing)",
+    "url": "https://docs.stripe.com/billing/subscriptions/coupons",
+    "publisher": "Stripe",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Documentación oficial del producto: cupón vs código vs descuento, duraciones, apilamiento, prorrateo, métodos alternativos y fechas anteriores."
+   },
+   {
+    "id": "W-02",
+    "title": "The Discount object (API reference)",
+    "url": "https://docs.stripe.com/api/discounts/object",
+    "publisher": "Stripe",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Campos start, end, subscription, subscription_item, promotion_code y source."
+   },
+   {
+    "id": "W-03",
+    "title": "Impact of discounts and coupons on Monthly Recurring Revenue (MRR) in Billing",
+    "url": "https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-mrr-in-billing",
+    "publisher": "Stripe Support",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Permanentes siempre restan; recurrentes y únicos, configurables."
+   },
+   {
+    "id": "W-04",
+    "title": "Retention rules",
+    "url": "https://docs.stripe.com/billing/retention/rules",
+    "publisher": "Stripe",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Condiciones, oferta de descuento o downgrade, un solo uso por cliente."
+   },
+   {
+    "id": "W-05",
+    "title": "Should discounts be included in MRR?",
+    "url": "https://chartmogul.com/blog/should-discounts-be-included-in-mrr/",
+    "publisher": "ChartMogul (Jordan van Everdingen)",
+    "date": "2025-01-20",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Postura de proveedor: MRR neto de descuentos y riesgo de renovación."
+   },
+   {
+    "id": "W-06",
+    "title": "Understanding MRR movements",
+    "url": "https://help.chartmogul.com/hc/en-us/articles/4416682609426",
+    "publisher": "ChartMogul Help Center",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Aplicar un descuento = contracción; vencimiento = expansión."
+   },
+   {
+    "id": "W-07",
+    "title": "Choose how to interpret discounted or free plan customers: churn or downgrade",
+    "url": "https://chartmogul.com/blog/choose-how-to-interpret-discounted-or-free-plan-customers-churn-or-downgrade/",
+    "publisher": "ChartMogul",
+    "date": "2022-06-24",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Un 100% es downgrade por defecto, con opción de churn; puede estar desactualizado."
+   },
+   {
+    "id": "W-08",
+    "title": "Discounts (API reference)",
+    "url": "https://apidocs.chargebee.com/docs/api/discounts",
+    "publisher": "Chargebee",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "type, duration_type, period, apply_on, item_price_id, included_in_mrr."
+   },
+   {
+    "id": "W-09",
+    "title": "MRR calculation in one-time coupons",
+    "url": "https://chargebee.com/docs/1.0/reports-and-analytics/articles-and-faq/mrr-calculation-in-onetime-coupons.html",
+    "publisher": "Chargebee",
+    "date": "sin fecha (documentación 1.0); consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Los cupones únicos entran al MRR cuando aplican en la siguiente renovación."
+   },
+   {
+    "id": "W-10",
+    "title": "Analytics settings (Recurly Subscriptions v2.29)",
+    "url": "https://docs.recurly.com/recurly-subscriptions/v2.29/docs/analytics-settings",
+    "publisher": "Recurly",
+    "date": "sin fecha (v2.29); consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Opciones para incluir (recomendado) o excluir el descuento del MRR."
+   },
+   {
+    "id": "W-11",
+    "title": "URL builders: Collect campaign data with custom URLs",
+    "url": "https://support.google.com/analytics/answer/10917952",
+    "publisher": "Google Analytics Help",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "official",
+    "quality": "A",
+    "note": "Parámetros UTM, obligatorios, sensibilidad a mayúsculas y (not set)."
+   },
+   {
+    "id": "W-12",
+    "title": "How to track offline marketing campaigns",
+    "url": "https://swetrix.com/blog/how-to-track-offline-marketing-campaigns",
+    "publisher": "Swetrix (Andrii Romasiun)",
+    "date": "2026-07-10",
+    "source_type": "marketing",
+    "quality": "C",
+    "note": "QR con UTM, vanity URLs y códigos exclusivos por pieza; blog de proveedor."
+   },
+   {
+    "id": "W-13",
+    "title": "Organize Approver Reviews with Approval Chains (Advanced Approvals for Admins)",
+    "url": "https://trailhead.salesforce.com/content/learn/modules/advanced-approvals-for-admins/organize-approver-reviews-with-approval-chains",
+    "publisher": "Salesforce Trailhead",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Reglas de aprobación por umbral y cadenas por paso."
+   },
+   {
+    "id": "W-14",
+    "title": "Stripe Webhook (PartnerStack docs)",
+    "url": "https://docs.partnerstack.com/v1.0/docs/stripe-webhook",
+    "publisher": "PartnerStack",
+    "date": "sin fecha (v1.0); consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Atribución por parámetro gspk y por customer_key y partner_key en metadatos."
+   },
+   {
+    "id": "W-15",
+    "title": "Coupons (API reference)",
+    "url": "https://apidocs.chargebee.com/docs/api/coupons",
+    "publisher": "Chargebee",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "industry",
+    "quality": "A",
+    "note": "Orden de aplicación, apply_on, duration_type, max_redemptions y valid_till."
+   },
+   {
+    "id": "W-16",
+    "title": "Type 2: Add New Row (Slowly Changing Dimension Techniques)",
+    "url": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/",
+    "publisher": "Kimball Group",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "expert",
+    "quality": "A",
+    "note": "Fecha efectiva, fecha de expiración e indicador de fila vigente."
+   },
+   {
+    "id": "W-17",
+    "title": "Periodic Snapshot Fact Tables",
+    "url": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/periodic-snapshot-fact-table/",
+    "publisher": "Kimball Group",
+    "date": "sin fecha; consultado 2026-09-29",
+    "source_type": "expert",
+    "quality": "A",
+    "note": "Grano de periodo, densa, distinta de la tabla de transacciones."
+   }
+  ],
+  "alternative_explanations": [
+   "Patrones del as-is: las 311 contracciones exactas a la mitad y las 932 que siguen a una subida o alta encajan con timing de pago (meses dobles que vuelven a lo normal), cargos únicos del primer mes, cambios reales de plan o cantidad o, cuando existan, descuentos. El dato no permite elegir y el caso no permite afirmar descuentos históricos.",
+   "Los 330 churn observados que vuelven a pagar en t+1 encajan con pago atrasado, pausa, mes sin cobro o cancelación con regreso; sin estado de suscripción no se pueden separar.",
+   "Diseño alternativo A: registrar la negociación como precio especial (Stripe lo lista como método alternativo). Es más simple, pero esconde el descuento dentro de lo contratado y su fin se lee como expansión.",
+   "Diseño alternativo B: registrar los descuentos solo como partidas negativas de factura. Stripe dice que dan más detalle de qué, cuándo y por qué, pero viven en la capa facturada: sin vigencia no hay MRR neto ni calendario de vencimientos sin reconstruirlos.",
+   "Diseño alternativo C: adoptar la convención de ChartMogul (inicio de descuento = contracción, fin = expansión). Se compara mejor con los reportes de las herramientas, pero mezcla descuento con cambio de suscripción, justo lo que Hugo pide evitar.",
+   "Diseño alternativo D: atribuir solo por código. Alcanza para las promos con código, pero deja ciegos a los clientes sin código e impide comparar promo contra no-promo."
+  ],
+  "what_is_established": [
+   "El as-is es cliente × mes × monto pagado observado (66.674 pares únicos) y no tiene campos de lista, plan, cantidad, descuento, origen, source, partner, aprobador ni factura (DM-01, DM-02).",
+   "Con el as-is no se distinguen descuento, contracción, pago multi-mes, pausa ni mes sin cobro: 1.247 contracciones y 751 churn observados hoy mezclan esas causas (DM-05, DM-07).",
+   "Los billing de referencia separan la oferta o regla (cupón), el artefacto que ve el cliente (código) y la aplicación (descuento con inicio y fin, a nivel de suscripción o ítem) (W-01, W-02, W-08).",
+   "Tipo (porcentaje o monto), duración (once, repeating o limited_period, forever), alcance (suscripción, ítem o factura) y apilamiento con orden son atributos estándar del descuento (W-01, W-08, W-15).",
+   "La ventana de canje de una promoción no es la vigencia del descuento aplicado (W-01).",
+   "En Stripe, actualizar un descuento no es un cambio de suscripción y no genera prorrateo (W-01).",
+   "Las UTM source, medium y campaign son obligatorias, distinguen mayúsculas y las que faltan salen como (not set) (W-11)."
+  ],
+  "what_is_contested": [
+   "Si el MRR titular va neto de descuentos recurrentes (ChartMogul; Recurly lo recomienda; Stripe lo hace con los permanentes) o a valor contratado.",
+   "Si el inicio o fin de un descuento va a una línea propia «Descuento» (C-020) o a contracción y expansión (default de ChartMogul).",
+   "Si los descuentos únicos entran al MRR: Chargebee los incluye cuando aplican a la siguiente renovación y Stripe lo deja configurable.",
+   "Si un 100% (mes gratis) es «Descuento» sin churn (propuesta), downgrade (default de ChartMogul) o churn (opción de ChartMogul).",
+   "Si New con promoción de entrada se valora a contratado con su línea «Descuento» o directamente a neto.",
+   "Si el margen de un partner revendedor se registra como descuento sobre la lista o como precio contratado mayorista."
+  ],
+  "what_remains_unknown": [
+   "Qué sistema de billing y CRM usará Finora para emitir descuentos y qué campos soporta de forma nativa.",
+   "Si Finora captura hoy UTMs y landing en el alta o en el CRM, para todos los clientes.",
+   "Qué política de descuentos, umbrales y cadena de aprobación tendrá Finora, y si habrá programa de partners.",
+   "Si hubo descuentos en el histórico: los datos no lo muestran y el caso habla de introducirlos.",
+   "Cómo encajan en las capas propuestas los tres grupos que conserva el CFO (D-002).",
+   "Qué parte de las promociones físicas será atribuible con códigos, QR o vanity URLs."
+  ],
+  "case_implication": "Para Finora, la propuesta deja de ser «agregar un campo de descuento» y pasa a ser un conjunto pequeño de objetos con vigencia alimentados por tres dueños: finanzas o RevOps (lista, suscripción, descuento), marketing (campaña, código, UTM) y ventas o CS (aprobación, retención, partner). El as-is sirve como línea base de lo que NO se puede afirmar: 1.247 contracciones y 751 churn observados que hoy mezclan timing de pago, pausas y cambios, sin ningún campo para separarlos. Con el to-be, S3.3 puede mostrar cada casuística en su capa (promo digital con source, promo física o QR, negociación, retención con descuento o con downgrade, partner, apilados, único contra recurrente, mes gratis) y S3.2 la brecha con la pregunta del CFO que habilita cada cambio. C-017, C-019 y C-025 salen reforzadas. C-020 se mantiene, pero hay que presentarla como convención elegida y no como estándar, con su regla secuencial para meses con doble cambio y sus tratamientos del 100% y de los únicos. Y el pedido de Hugo sobre el source (N-053) se resuelve mejor fuera del descuento: un toque de adquisición para todo cliente más el canal asignado al código. Sin eso no se puede ver qué canal o promoción trae clientes que se quedan frente a los que entran sin promo.",
+  "changes_current_story": {
+   "value": "maybe",
+   "why": "La dirección se mantiene: C-017, C-019 y C-025 salen reforzadas. Cambian dos cosas de cómo se cuenta. Primero, C-020 debe presentarse como convención elegida frente al default de ChartMogul, con reglas para doble cambio, únicos, 100% y retención con downgrade. Segundo, el source se mueve del descuento a la adquisición de todos los clientes. Hugo decide si eso toca el guion de S3.2 y S3.3."
+  },
+  "affected_hypotheses": [],
+  "affected_claims": [
+   {
+    "id": "C-017",
+    "effect": "supports",
+    "why": "Stripe y Chargebee modelan el descuento como objeto propio, con inicio y fin (o duración) y ligado a una suscripción o un ítem (W-01, W-02, W-08). La investigación lo amplía con origen exclusivo, source, alcance, apilamiento, aprobador y fin real frente a fin pactado."
+   },
+   {
+    "id": "C-019",
+    "effect": "supports",
+    "why": "El SCD2 y la foto periódica de Kimball respaldan la escalera con vigencias (W-16, W-17). Se agregan la fecha de registro (bitemporal, por los descuentos con fecha anterior, W-01) y la capa de aplicación por línea de factura, que es donde vive lo descontado real y los únicos."
+   },
+   {
+    "id": "C-020",
+    "effect": "changes_framing",
+    "why": "La regla se sostiene como convención, pero ChartMogul, por defecto, manda el inicio de un descuento a contracción y su fin a expansión (W-06), y Chargebee mete los únicos al MRR (W-09). Hay que presentarla como convención elegida y completarla con la regla secuencial para doble cambio, los únicos fuera del MRR, el 100% que no es churn y la retención con downgrade como contracción."
+   },
+   {
+    "id": "C-025",
+    "effect": "supports",
+    "why": "Con la foto de cierre (contratado, descuento recurrente, neto) y el origen en el grant, cada casuística cae en una capa. Se suman casos nuevos que también quedan en su capa: promo física o QR, retención, partner, apilados y único contra recurrente."
+   },
+   {
+    "id": "D-002",
+    "effect": "no_material_impact",
+    "why": "(Decisión) El origen del descuento entra como atributo de la línea «Descuento», no como grupo nuevo, así que no debería alterar los tres grupos del CFO. Hugo debe confirmarlo: el estado que recibí no dice qué contiene cada grupo."
+   }
+  ],
+  "suggested_action": "Llevar a Hugo, para S3.3 y S3.2, el to-be con la tabla de casuísticas y cinco decisiones explícitas para que él y el CFO las tomen: (1) MRR titular neto de descuentos recurrentes o a contratado; (2) descuentos únicos fuera del MRR; (3) el 100% no es churn; (4) regla secuencial, con New a contratado y su línea «Descuento»; (5) comisión y margen de partner fuera del descuento o dentro. En paralelo, pedir a Finora qué sistema de billing y CRM usará para emitir descuentos y si hoy captura UTMs y landing en el alta.",
+  "new_questions": [
+   "¿Qué convención de MRR titular adopta Finora ante el CFO: neta de descuentos recurrentes o a valor contratado? ¿Y quién firma la versión de esa política?",
+   "¿Qué sistema de billing y CRM usará Finora para emitir descuentos, y soporta de forma nativa origen, código, vigencia, alcance y aprobador, o hay que guardarlos en metadatos o tablas propias?",
+   "¿Finora captura hoy UTMs, landing y «¿cómo nos conociste?» en el formulario de alta o en el CRM, para todos los clientes y no solo para los que usan código?"
+  ],
+  "handoff_to_cos": {
+   "summary": "R-034/RT-033 lista. As-is verificado en el modelo: cliente × mes × monto, sin lista, descuento, origen ni source; 1.247 contracciones y 751 churn que hoy mezclan timing, pausas y cambios. To-be de 14 entidades con casuísticas y lógica de clasificación. C-017, C-019 y C-025 se refuerzan; C-020 se sostiene como convención declarada, con regla secuencial; el source pasa a la adquisición de todo cliente.",
+   "recommended_next": "Pasar a Hugo las cinco decisiones de convención (MRR titular, únicos, 100%, New con promo, margen de partner) antes de cerrar S3.3 (modelo y casuísticas) y S3.2 (brecha → pregunta del CFO). Pedir a Finora su sistema de billing y CRM y si captura UTMs en el alta."
+  },
+  "confidence_buckets": {
+   "high_confidence": [
+    "El as-is es cliente × mes × monto y no tiene campos de lista, plan, descuento, origen, source ni aprobador (DM-01, DM-02).",
+    "Con el as-is no se distinguen descuento, contracción, pago multi-mes, pausa ni mes sin cobro (DM-05, DM-07).",
+    "Oferta, código y descuento aplicado son objetos distintos en Stripe y Chargebee (W-01, W-02, W-08).",
+    "Las herramientas del mercado no coinciden en cómo el descuento pega en el MRR (W-03, W-06, W-09, W-10)."
+   ],
+   "plausible": [
+    "La regla secuencial (primero la suscripción con los términos del mes anterior, después el descuento) cierra el puente sin residuo y separa causas: inferencia de diseño, verificable con el test de identidad.",
+    "Capturar el source en la adquisición de todo cliente es condición para comparar promo contra no-promo (inferencia).",
+    "Un código por pieza, QR con UTM y vanity URLs permiten atribuir buena parte de lo físico (W-12, calidad C).",
+    "La comisión del partner es costo de S&M, no descuento (propuesta de diseño)."
+   ],
+   "contested": [
+    "MRR titular neto o a contratado.",
+    "Inicio y fin de descuento: línea propia (C-020) o contracción y expansión (ChartMogul).",
+    "Descuentos únicos dentro o fuera del MRR.",
+    "100%: «Descuento», downgrade o churn.",
+    "New con promo: a contratado con línea «Descuento» o a neto.",
+    "Margen de reventa del partner: descuento o precio contratado."
+   ],
+   "unknown": [
+    "Sistema de billing y CRM de Finora.",
+    "Si hoy se capturan UTMs y landing en el alta.",
+    "Política de descuentos, umbrales y existencia de programa de partners.",
+    "Si hubo descuentos en el histórico.",
+    "Qué contiene cada uno de los tres grupos de D-002.",
+    "Qué parte de lo físico será atribuible."
+   ]
+  },
+  "specialist": {
+   "data_model": {
+    "conceptual_model": "Principio: el monto pagado es el último peldaño, nunca el lugar donde se guarda el porqué. Cinco bloques:\n1) Lista y contrato (escalera de C-019/R-011): price_list_version (lista con vigencia) → subscription_item_version (plan × cantidad × precio acordado × frecuencia, con vigencia) ← subscription_change_event (lo único que mueve lo contratado).\n2) Descuento (C-017): discount_grant es el derecho aplicado a una suscripción o a un ítem, con tipo, valor, duración, vigencia pactada y real, alcance, apilamiento, motivo, aprobación y exactamente un origen: promoción (promotion → promo_code → promo_redemption), negociación (deal del CRM + discount_approval), retención (retention_case) o partner (partner).\n3) Atribución: campaign (ligada a su rubro de S&M) → promotion. promo_code guarda el canal ASIGNADO y el medio (digital, físico o híbrido-QR) con su UTM y landing. acquisition_touch guarda el source OBSERVADO (UTM, landing, referrer, partner_key) de todo cliente, tenga o no descuento. El canje apunta a la sesión donde ocurrió.\n4) Aplicación: discount_application registra cuánto descontó cada grant en cada línea de factura y en qué orden → facturado → cobrado.\n5) Medición: subscription_month_snapshot es la foto de cierre con lista, contratado, descuento recurrente, neto, descuento único, facturado y cobrado, más el puente: el movimiento de suscripción (New, Expansión, Contracción, Churn, Reactivación) y la línea «Descuento» con su origen.\nRelaciones: customer 1–n subscription 1–n subscription_item_version; subscription 1–n discount_grant (0..1 ítem); discount_grant n–1 exactamente un origen; campaign 1–n promotion 1–n promo_code 1–n promo_redemption 1–0..1 discount_grant; customer 1–n acquisition_touch; promo_redemption n–0..1 acquisition_touch; discount_grant 1–n discount_approval; discount_grant 1–n discount_application n–1 línea de factura; retention_case 1–0..1 discount_grant o 1–0..1 subscription_change_event (downgrade).\nRegla de oro: un descuento nunca modifica subscription_item_version y un cambio de suscripción nunca crea un discount_grant.",
+    "as_is": [
+     {
+      "table": "raw.transactions",
+      "grain": "fila del archivo · cliente × mes",
+      "fields": "ID, month (M/D/AAAA), amount (texto sin escala)",
+      "answers": "Cuánto pagó cada cliente cada mes (monto observado).",
+      "cannot": "Lista, plan, cantidad, valor contratado, descuento, origen, source, factura frente a pago, fecha dentro del mes."
+     },
+     {
+      "table": "staging.stg_customer_month",
+      "grain": "cliente × mes (66.674 pares únicos; 1.961 clientes; 34 meses, 2022-01 a 2024-10)",
+      "fields": "customer_id, month, amount, amount_cop (× 10.000)",
+      "answers": "Monto tipado y en COP; 33.703 filas en cero y 0 negativas.",
+      "cannot": "Saber si un cero es churn, pausa, mes gratis o pago atrasado, ni si un monto menor es contracción, descuento o timing."
+     },
+     {
+      "table": "mart.customer_month",
+      "grain": "cliente × mes",
+      "fields": "movement_type; banderas de alta, churn, reactivación, expansión y contracción; usual_amount_cop, amount_vs_usual_ratio, multi_month_payment_signature, reverts_next_month, returned_next_month",
+      "answers": "Movimientos sobre el monto pagado: 1.247 contracciones, 751 churn observados y 512 filas con firma de pago multi-mes.",
+      "cannot": "Separar descuento de contracción: 311 contracciones son exactamente a la mitad y 932 vienen justo después de una subida o alta; 330 de 751 churn vuelven a pagar en t+1. Todo encaja con timing, pausas, meses sin cobro o cambios reales, y no hay campo para decidir. Además, la definición de returned_next_month en el catálogo («con el mismo monto») no cuadra con sus conteos."
+     },
+     {
+      "table": "mart.new_customers",
+      "grain": "alta (primera aparición con pago)",
+      "fields": "customer_id, cohort_month, m0_cop, m1_cop, early_run_rate_cop, industry, vintage",
+      "answers": "Primer pago y run-rate temprano por cohorte e industria.",
+      "cannot": "Canal, campaña, código, landing o partner de la adquisición, ni si el cliente entró con promoción."
+     },
+     {
+      "table": "raw.industry / staging.stg_customers",
+      "grain": "cliente",
+      "fields": "customer_id, industry",
+      "answers": "Industria fija por cliente.",
+      "cannot": "Suscripción frente a cuenta de facturación; partner o revendedor."
+     },
+     {
+      "table": "raw.sm_spend / staging.stg_sm_spend / mart.sm_monthly",
+      "grain": "mes (× rubro)",
+      "fields": "PaidMedia, PublicidadNoWeb, Travel, Freelance, SoftwareTools, Team, PayrollExpenses (unidad no documentada)",
+      "answers": "Gasto mensual por rubro; PaidMedia y PublicidadNoWeb tienen gasto en los 34 meses.",
+      "cannot": "Ligar el gasto a una campaña, promoción, código o cliente, ni separar digital de físico más allá del nombre del rubro."
+     }
+    ],
+    "gap": [
+     {
+      "need": "Separar descuento de cambio de suscripción",
+      "as_is": "Un monto por cliente-mes; 1.247 contracciones sin causa.",
+      "to_be": "subscription_item_version + subscription_change_event (contratado) y discount_grant (descuento); foto de cierre con contratado, descuento recurrente y neto; regla secuencial.",
+      "enables": "CFO: ¿cuánto de la caída del MRR es descuento y cuánto es contracción real?"
+     },
+     {
+      "need": "Distinguir mes gratis, pausa y churn",
+      "as_is": "Un cero = churn observado; 330 de 751 vuelven en t+1.",
+      "to_be": "Estado de suscripción (pause, resume, cancel) + grant del 100% con no_charge_flag.",
+      "enables": "CFO: ¿el churn es cancelación o un mes sin cobro?"
+     },
+     {
+      "need": "Origen del descuento",
+      "as_is": "No existe.",
+      "to_be": "discount_grant.origin_type (promoción, negociación, retención, partner) con llave exclusiva a promotion, deal, retention_case o partner.",
+      "enables": "CFO: ¿cuánto revenue dejamos de capturar por descuentos y por qué origen?"
+     },
+     {
+      "need": "Source digital (canal, campaña, código, landing)",
+      "as_is": "Solo gasto mensual por rubro (PaidMedia), sin cliente.",
+      "to_be": "campaign con su rubro de S&M; promo_code con UTM asignada y landing; acquisition_touch con UTM observada para todo cliente; promo_redemption ligada a la sesión.",
+      "enables": "CRO y CFO: ¿qué canal, campaña o código trae clientes que se quedan, netos de descuento, y a qué costo?"
+     },
+     {
+      "need": "Promoción física",
+      "as_is": "Solo gasto mensual de PublicidadNoWeb.",
+      "to_be": "promo_code con medio físico o híbrido-QR, un código por pieza, evento o punto, QR con UTM y vanity URL.",
+      "enables": "¿Rinde la promoción física frente a la digital en retención y MRR neto?"
+     },
+     {
+      "need": "Duración y vencimientos",
+      "as_is": "No existe.",
+      "to_be": "duration_type, duration_months, valid_from, valid_to_planned, ended_at, end_reason.",
+      "enables": "CFO: ¿cuánto MRR vuelve solo por vencimiento de descuentos, cuándo, y cuántos clientes se van al vencer?"
+     },
+     {
+      "need": "Alcance y apilamiento",
+      "as_is": "No existe.",
+      "to_be": "scope, applies_to_price_ids, stackable, stack_group, application_order + discount_application por línea de factura.",
+      "enables": "¿Cuánto descuento total tiene cada cliente y qué parte explica cada origen?"
+     },
+     {
+      "need": "Aprobación y política",
+      "as_is": "No existe.",
+      "to_be": "discount_approval (paso, rol, persona, estado, fecha) + regla de política con umbral.",
+      "enables": "CFO: ¿quién aprobó qué, y se respeta la política de descuentos?"
+     },
+     {
+      "need": "Lista frente a contratado",
+      "as_is": "No hay precio de lista.",
+      "to_be": "price_list_version con vigencia + contracted_unit_price; alerta de descuento implícito.",
+      "enables": "¿Cobramos por debajo de la lista sin descuento registrado?"
+     },
+     {
+      "need": "Retención",
+      "as_is": "No existe.",
+      "to_be": "retention_case (motivo, oferta de descuento o downgrade, resultado).",
+      "enables": "¿Cuántas cancelaciones salvamos con descuento, cuánto cuestan y cuánto duran?"
+     },
+     {
+      "need": "Partner",
+      "as_is": "No existe.",
+      "to_be": "partner + partner_key en acquisition_touch + grant con origen partner; la comisión va fuera del MRR.",
+      "enables": "¿El canal partner trae MRR neto rentable después de descuento y comisión?"
+     },
+     {
+      "need": "Pagado frente a contratado (escalera de C-019)",
+      "as_is": "512 filas con firma de pago multi-mes dentro del monto.",
+      "to_be": "Capa de factura y cobro separada de la foto de MRR.",
+      "enables": "Separar el timing de pago de los movimientos de MRR."
+     }
+    ],
+    "entities": [
+     {
+      "name": "price_list_version",
+      "description": "Precio de lista por plan y frecuencia, con vigencia (SCD2).",
+      "grain": "precio × versión vigente",
+      "primary_key": "price_id + valid_from"
+     },
+     {
+      "name": "subscription_item_version",
+      "description": "Lo contratado: plan, cantidad, precio unitario acordado y frecuencia; no guarda descuentos.",
+      "grain": "ítem de suscripción × versión vigente",
+      "primary_key": "subscription_item_id + valid_from"
+     },
+     {
+      "name": "subscription_change_event",
+      "description": "Única fuente de cambios en lo contratado (alta, upgrade, downgrade, cantidad, pausa, cancelación, reactivación, repricing).",
+      "grain": "evento",
+      "primary_key": "change_event_id"
+     },
+     {
+      "name": "campaign",
+      "description": "Iniciativa de marketing con su valor canónico de UTM y su rubro de gasto S&M.",
+      "grain": "campaña",
+      "primary_key": "campaign_id"
+     },
+     {
+      "name": "promotion",
+      "description": "La oferta: plantilla de beneficio, elegibilidad, ventana y cupo de canje, apilamiento y dueño.",
+      "grain": "promoción (versión si cambian las condiciones)",
+      "primary_key": "promotion_id + version"
+     },
+     {
+      "name": "promo_code",
+      "description": "Artefacto de distribución: código, link o QR con medio (digital, físico o híbrido-QR), canal asignado, UTM y landing.",
+      "grain": "código (o lote de códigos por pieza)",
+      "primary_key": "promo_code_id"
+     },
+     {
+      "name": "acquisition_touch",
+      "description": "Source observado de todo cliente: UTM, landing, referrer, partner_key, autorreporte y método de captura.",
+      "grain": "toque × cliente (primer toque, último antes del alta, sesión del canje)",
+      "primary_key": "touch_id"
+     },
+     {
+      "name": "promo_redemption",
+      "description": "El canje como evento: quién, qué código, cuándo, por qué canal, en qué sesión y con qué resultado.",
+      "grain": "intento de canje",
+      "primary_key": "redemption_id"
+     },
+     {
+      "name": "discount_grant",
+      "description": "El descuento como objeto propio (C-017): origen exclusivo, tipo, valor, duración, vigencia pactada y real, alcance, apilamiento, motivo y aprobación.",
+      "grain": "un descuento aplicado a una suscripción o a un ítem, con vigencia; los cambios de términos cierran el grant y abren uno nuevo",
+      "primary_key": "discount_grant_id"
+     },
+     {
+      "name": "discount_approval",
+      "description": "Cada paso de la cadena de aprobación de un grant o de un deal.",
+      "grain": "grant × paso de aprobación",
+      "primary_key": "approval_id"
+     },
+     {
+      "name": "retention_case",
+      "description": "Intento de cancelación con motivo, oferta (descuento o downgrade) y resultado.",
+      "grain": "caso de cancelación",
+      "primary_key": "retention_case_id"
+     },
+     {
+      "name": "partner",
+      "description": "Partner con su tipo, su llave de atribución, quién factura y su modelo de comisión (fuera del MRR).",
+      "grain": "partner",
+      "primary_key": "partner_id"
+     },
+     {
+      "name": "discount_application",
+      "description": "Lo descontado real: monto de cada grant en cada línea de factura y su orden.",
+      "grain": "línea de factura × grant",
+      "primary_key": "invoice_line_id + discount_grant_id"
+     },
+     {
+      "name": "subscription_month_snapshot",
+      "description": "Foto de cierre densa con los peldaños de la escalera y el puente (movimiento de suscripción + línea «Descuento» con su origen).",
+      "grain": "suscripción × último día del mes",
+      "primary_key": "subscription_id + month"
+     }
+    ],
+    "grain": "As-is: una fila = cliente × mes calendario con un monto pagado observado (66.674 pares únicos). To-be: cuatro granos que no se mezclan. (a) Versión con vigencia: una fila = un estado de precio, ítem de suscripción o descuento entre valid_from y valid_to. (b) Evento: una fila = un cambio de suscripción, un canje, un paso de aprobación o un caso de retención, con fecha efectiva y fecha de registro. (c) Aplicación: una fila = línea de factura × descuento. (d) Foto de cierre: una fila = suscripción × último día del mes, de donde salen el MRR y el puente. Las preguntas de MRR se responden en (d), las de quién y cuándo en (b), las de qué estaba vigente en (a) y las de cuánto se descontó de verdad en (c).",
+    "fields": [
+     {
+      "entity": "price_list_version",
+      "field": "price_id",
+      "type": "string",
+      "definition": "Plan × frecuencia de cobro; llave natural del precio.",
+      "example": "PRC-PRO-M"
+     },
+     {
+      "entity": "price_list_version",
+      "field": "list_price_cop",
+      "type": "decimal",
+      "definition": "Precio de lista por periodo de cobro, antes de cualquier descuento.",
+      "example": "100000"
+     },
+     {
+      "entity": "price_list_version",
+      "field": "valid_from · valid_to · is_current",
+      "type": "date · date · bool",
+      "definition": "Vigencia tipo SCD2.",
+      "example": "2026-01-01 · null · true"
+     },
+     {
+      "entity": "subscription_item_version",
+      "field": "subscription_item_id · subscription_id",
+      "type": "string · FK",
+      "definition": "Ítem contratado y su suscripción (un cliente puede tener varias suscripciones).",
+      "example": "SI-101-1 · SUB-101"
+     },
+     {
+      "entity": "subscription_item_version",
+      "field": "quantity · contracted_unit_price_cop",
+      "type": "int · decimal",
+      "definition": "Cantidad y precio unitario acordado antes de descuentos; debe igualar la lista vigente salvo repricing documentado.",
+      "example": "5 · 100000"
+     },
+     {
+      "entity": "subscription_item_version",
+      "field": "billing_interval · contracted_mrr_cop",
+      "type": "enum(month, year) · decimal",
+      "definition": "Frecuencia de cobro y MRR contratado normalizado a mes.",
+      "example": "year · 500000"
+     },
+     {
+      "entity": "subscription_change_event",
+      "field": "event_type",
+      "type": "enum(new, upgrade, downgrade, qty_up, qty_down, plan_switch, pause, resume, cancel_request, cancel_effective, reactivate, list_repricing)",
+      "definition": "Única forma de mover lo contratado.",
+      "example": "qty_up"
+     },
+     {
+      "entity": "subscription_change_event",
+      "field": "effective_at · recorded_at · initiated_by",
+      "type": "timestamp · timestamp · enum(customer, sales, cs, system, retention_flow)",
+      "definition": "Cuándo rige, cuándo se registró y quién lo originó.",
+      "example": "2026-07-01 · 2026-07-03 · retention_flow"
+     },
+     {
+      "entity": "campaign",
+      "field": "campaign_id · utm_campaign_canonical · utm_id",
+      "type": "string",
+      "definition": "Campaña con su valor canónico de UTM en minúsculas.",
+      "example": "CMP-01 · bienvenida_2026q1 · CMP-01"
+     },
+     {
+      "entity": "campaign",
+      "field": "sm_rubro · channel_group",
+      "type": "enum(paid_media, publicidad_no_web, freelance, software_tools, team, payroll_expenses, travel) · enum(paid_digital, owned_digital, offline, partner, sales)",
+      "definition": "Liga la campaña al rubro de gasto que hoy solo existe por mes.",
+      "example": "paid_media · paid_digital"
+     },
+     {
+      "entity": "promotion",
+      "field": "promotion_id · campaign_id · objective",
+      "type": "string · FK · enum(adquisicion, expansion, winback, retencion)",
+      "definition": "La oferta y para qué existe.",
+      "example": "PRM-01 · CMP-01 · adquisicion"
+     },
+     {
+      "entity": "promotion",
+      "field": "benefit_type · benefit_value · duration_type · duration_months",
+      "type": "enum(percent, fixed_amount, free_units) · decimal · enum(once, repeating, until_date, forever) · int",
+      "definition": "Plantilla del beneficio que hereda cada grant.",
+      "example": "percent · 25 · repeating · 3"
+     },
+     {
+      "entity": "promotion",
+      "field": "eligibility_rule",
+      "type": "json",
+      "definition": "Quién puede usarla: primera compra, plan, segmento, monto mínimo.",
+      "example": "first_purchase_only; plan in (PRO)"
+     },
+     {
+      "entity": "promotion",
+      "field": "redeem_from · redeem_until · max_redemptions",
+      "type": "date · date · int",
+      "definition": "Ventana y cupo de canje; no es la vigencia del descuento.",
+      "example": "2026-03-01 · 2026-03-31 · 500"
+     },
+     {
+      "entity": "promotion",
+      "field": "stackable · stack_group · requires_code",
+      "type": "bool · string · bool",
+      "definition": "Si convive con otros descuentos, su grupo de exclusividad y si necesita código.",
+      "example": "false · entrada · true"
+     },
+     {
+      "entity": "promo_code",
+      "field": "code",
+      "type": "string (distingue mayúsculas; único entre códigos activos)",
+      "definition": "Lo que el cliente escribe o lo que va en el link o el QR.",
+      "example": "BIENVENIDA25"
+     },
+     {
+      "entity": "promo_code",
+      "field": "distribution_medium",
+      "type": "enum(digital, fisico, hibrido_qr)",
+      "definition": "Cómo llegó la oferta al cliente.",
+      "example": "hibrido_qr"
+     },
+     {
+      "entity": "promo_code",
+      "field": "assigned_channel",
+      "type": "enum(paid_search, paid_social, email, organico, evento, volante, impreso, radio, partner, ventas)",
+      "definition": "Canal para el que se creó el código (source asignado).",
+      "example": "evento"
+     },
+     {
+      "entity": "promo_code",
+      "field": "assigned_utm_source · assigned_utm_medium · assigned_utm_campaign · assigned_utm_content",
+      "type": "string (minúsculas)",
+      "definition": "UTM planeada del link o del QR; nula en códigos puramente físicos.",
+      "example": "feria_2026 · print · feria_2026 · qr_volante"
+     },
+     {
+      "entity": "promo_code",
+      "field": "landing_url · physical_placement",
+      "type": "string · string",
+      "definition": "Página de destino y ubicación física de la pieza (evento, punto, lote impreso).",
+      "example": "/feria · evento_2026_stand_12"
+     },
+     {
+      "entity": "promo_code",
+      "field": "partner_id · restricted_customer_id · expires_at · max_redemptions",
+      "type": "FK · FK · date · int",
+      "definition": "Código de partner, código de un solo cliente, vencimiento y cupo.",
+      "example": "null · null · 2026-03-31 · 200"
+     },
+     {
+      "entity": "acquisition_touch",
+      "field": "touch_id · customer_id · touch_role",
+      "type": "string · FK · enum(first_touch, last_touch_pre_signup, redemption_session)",
+      "definition": "Toque de adquisición de TODO cliente, con o sin descuento.",
+      "example": "AT-01 · CUS-101 · first_touch"
+     },
+     {
+      "entity": "acquisition_touch",
+      "field": "utm_source · utm_medium · utm_campaign · utm_content · utm_term · utm_id",
+      "type": "string",
+      "definition": "Source observado; si falta, queda (not set) y nunca se imputa.",
+      "example": "meta · paid_social · bienvenida_2026q1 · video_a · (not set) · CMP-01"
+     },
+     {
+      "entity": "acquisition_touch",
+      "field": "landing_url · referrer_domain · partner_key · self_reported_source · capture_method",
+      "type": "string · string · string · enum · enum(web_form, crm_manual, partner_link, sales_assisted)",
+      "definition": "Dónde aterrizó, de dónde venía, llave de partner, respuesta a «¿cómo nos conociste?» y cómo se capturó.",
+      "example": "/precios · l.facebook.com · null · redes · web_form"
+     },
+     {
+      "entity": "promo_redemption",
+      "field": "redemption_id · promo_code_id · promotion_id · customer_id · subscription_id · redeemed_at",
+      "type": "string · FK · FK · FK · FK · timestamp",
+      "definition": "El canje como evento.",
+      "example": "RD-02 · PC-03 · PRM-02 · CUS-102 · SUB-102 · 2026-03-10"
+     },
+     {
+      "entity": "promo_redemption",
+      "field": "redemption_channel · touch_id · status · reject_reason",
+      "type": "enum(web_checkout, portal, sales_assisted, in_person) · FK · enum(accepted, rejected) · string",
+      "definition": "Por dónde se canjeó, en qué sesión y si pasó.",
+      "example": "sales_assisted · null · accepted · null"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "discount_grant_id · subscription_id · subscription_item_id",
+      "type": "string · FK · FK (nulo = toda la suscripción)",
+      "definition": "El descuento como objeto propio y a qué se ata.",
+      "example": "DG-05 · SUB-105 · SI-105-2"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "scope · applies_to_price_ids",
+      "type": "enum(subscription, item, single_invoice) · array",
+      "definition": "Alcance y precios elegibles.",
+      "example": "item · [PRC-ADDON-M]"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "origin_type",
+      "type": "enum(promocion, negociacion, retencion, partner)",
+      "definition": "Quién da el descuento y por qué; exactamente un origen (MECE).",
+      "example": "partner"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "promotion_id · promo_code_id · redemption_id · deal_id · retention_case_id · partner_id",
+      "type": "FK nulas; solo se llenan las del origen",
+      "definition": "Trazabilidad al origen.",
+      "example": "null · null · null · null · null · PTN-03"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "benefit_type · benefit_value · currency",
+      "type": "enum(percent, fixed_amount, free_units) · decimal · string",
+      "definition": "Tipo y valor del descuento.",
+      "example": "percent · 15 · COP"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "duration_type · duration_months",
+      "type": "enum(once, repeating, until_date, forever) · int",
+      "definition": "Duración pactada.",
+      "example": "repeating · 12"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "valid_from · valid_to_planned · ended_at · end_reason",
+      "type": "date · date · date · enum(expired, removed, churn, replaced, ineligible)",
+      "definition": "Vigencia pactada frente a real, y por qué terminó.",
+      "example": "2026-02-01 · 2027-01-31 · null · null"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "is_recurring",
+      "type": "bool (derivado)",
+      "definition": "true si reduce el precio de 2 o más meses de servicio (normalizado); decide si entra al MRR neto. Es una convención propuesta.",
+      "example": "true"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "stackable · stack_group · application_order",
+      "type": "bool · string · int",
+      "definition": "Si se apila, con qué grupo es excluyente y en qué orden se aplica.",
+      "example": "false · entrada · 1"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "reason_code · approval_status · final_approver_id",
+      "type": "enum controlado · enum(not_required, pending, approved, rejected) · string",
+      "definition": "Motivo de negocio y aprobación final.",
+      "example": "referido · approved · USR-09"
+     },
+     {
+      "entity": "discount_grant",
+      "field": "supersedes_grant_id · recorded_at · created_by · mrr_policy_version",
+      "type": "FK · timestamp · string · string",
+      "definition": "Reemplazos, registro bitemporal, autor y convención de MRR con que se lee.",
+      "example": "null · 2026-01-28 · USR-15 · MRR-v1"
+     },
+     {
+      "entity": "discount_approval",
+      "field": "approval_id · discount_grant_id · policy_rule_id · threshold_triggered",
+      "type": "string · FK · string · string",
+      "definition": "Qué regla de política disparó la aprobación.",
+      "example": "APR-07 · DG-03 · POL-DESC-02 · percent > umbral"
+     },
+     {
+      "entity": "discount_approval",
+      "field": "step · approver_role · approver_id · status · decided_at",
+      "type": "int · string · string · enum(pending, approved, rejected) · timestamp",
+      "definition": "Cadena de aprobación paso a paso.",
+      "example": "1 · gerente comercial · USR-07 · approved · 2026-03-28"
+     },
+     {
+      "entity": "retention_case",
+      "field": "retention_case_id · subscription_id · requested_at · cancel_reason",
+      "type": "string · FK · timestamp · enum",
+      "definition": "Intento de cancelación y su motivo.",
+      "example": "RC-12 · SUB-104 · 2026-05-27 · muy_caro"
+     },
+     {
+      "entity": "retention_case",
+      "field": "offer_type · offer_ref · outcome · cancel_effective_at",
+      "type": "enum(discount, downgrade, none) · string · enum(accepted, declined, no_offer) · date",
+      "definition": "Qué se ofreció y qué pasó.",
+      "example": "discount · RR-02 · accepted · null"
+     },
+     {
+      "entity": "partner",
+      "field": "partner_id · partner_type · partner_key",
+      "type": "string · enum(referral, reseller, affiliate) · string",
+      "definition": "El partner y la llave con que se le atribuyen clientes.",
+      "example": "PTN-03 · referral · ptn03"
+     },
+     {
+      "entity": "partner",
+      "field": "billing_role · commission_model",
+      "type": "enum(finora_factura, partner_factura) · texto",
+      "definition": "Quién factura al cliente final; la comisión es costo de S&M, nunca descuento.",
+      "example": "finora_factura · comisión sobre el primer año (fuera del MRR)"
+     },
+     {
+      "entity": "discount_application",
+      "field": "invoice_line_id · discount_grant_id · period_start · period_end",
+      "type": "FK · FK · date · date",
+      "definition": "Qué grant aplicó en qué línea de factura y en qué periodo.",
+      "example": "INV-889-1 · DG-01 · 2026-03-01 · 2026-03-31"
+     },
+     {
+      "entity": "discount_application",
+      "field": "amount_discounted_cop · application_order",
+      "type": "decimal · int",
+      "definition": "Monto real descontado (el peldaño «descontado» de la escalera) y orden de aplicación.",
+      "example": "25000 · 1"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "subscription_id · month",
+      "type": "FK · AAAA-MM",
+      "definition": "Llave de la foto de cierre (densa: hay fila aunque no haya actividad).",
+      "example": "SUB-101 · 2026-03"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "list_mrr_cop · contracted_mrr_cop · recurring_discount_mrr_cop · net_mrr_cop",
+      "type": "decimal",
+      "definition": "Peldaños de la escalera al cierre; neto = contratado − descuento recurrente.",
+      "example": "100000 · 100000 · 25000 · 75000"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "one_time_discount_cop · invoiced_cop · collected_cop",
+      "type": "decimal",
+      "definition": "Descuento único del mes (fuera del MRR), facturado y cobrado.",
+      "example": "0 · 75000 · 75000"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "status · no_charge_flag",
+      "type": "enum(active, paused, cancelled) · bool",
+      "definition": "Estado de la suscripción y marca de mes sin cobro por un 100%.",
+      "example": "active · false"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "subscription_movement_type · subscription_movement_cop",
+      "type": "enum(new, expansion, contraction, churn, reactivation, flat) · decimal",
+      "definition": "Movimiento por cambio de suscripción (paso 1 de la regla secuencial).",
+      "example": "new · 100000"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "discount_movement_type · discount_movement_cop · discount_origin_type",
+      "type": "enum(inicio, fin, cambio, ninguno) · decimal · enum",
+      "definition": "Línea «Descuento» (paso 2) y su origen; con varios orígenes se abre por origen usando discount_application.",
+      "example": "inicio · -25000 · promocion"
+     },
+     {
+      "entity": "subscription_month_snapshot",
+      "field": "acquisition_source · acquisition_medium · acquisition_campaign",
+      "type": "string",
+      "definition": "Source del primer toque, heredado para cortes por cohorte.",
+      "example": "meta · paid_social · bienvenida_2026q1"
+     }
+    ],
+    "temporal_behavior": "• Registros con vigencia (SCD2 de Kimball: fila nueva por cada cambio, con fecha efectiva, fecha de expiración e indicador de vigente): price_list_version, subscription_item_version, discount_grant, promotion (ventana de canje), promo_code (expires_at) y reglas de política. Responden «¿qué estaba vigente el día X?».\n• En discount_grant se separan el fin pactado (valid_to_planned: repeating o hasta una fecha; nulo si es forever u once) y el fin real (ended_at + end_reason: vencido, removido, churn, reemplazado, inelegible). La diferencia responde «¿cuántos descuentos se cortaron antes de tiempo y por qué?».\n• Eventos (subscription_change_event, promo_redemption, discount_approval, retention_case, ciclo de vida del grant): responden «¿qué pasó, quién lo hizo y cuándo?». Llevan effective_at y recorded_at (bitemporal) porque un descuento puede aplicarse con fecha anterior; en Stripe, la duración cuenta desde esa fecha anterior.\n• Foto de cierre (subscription_month_snapshot, foto periódica densa): responde «¿cuánto MRR hay y por qué cambió?» comparando cierres consecutivos. Una foto cerrada no se reescribe en silencio: una corrección retroactiva genera una reexpresión registrada, con su versión.\n• Normalización mensual: los planes anuales y los descuentos sobre facturas anuales se llevan a equivalente mensual. La duración efectiva depende de la frecuencia (en Stripe, un cupón de 4 meses sobre un plan anual cubre el año), así que los periodos cubiertos se calculan a nivel de factura y no se copian del cupón.\n• Calendario de vencimientos: con valid_to_planned se proyecta cuánto MRR neto «vuelve» cada mes solo por fin de descuentos. Es una proyección, no un hecho.",
+    "business_definitions": [
+     {
+      "term": "Precio de lista",
+      "definition": "Precio de catálogo vigente para un plan y una frecuencia en una fecha; no depende del cliente."
+     },
+     {
+      "term": "MRR contratado",
+      "definition": "Precio acordado del ítem × cantidad, normalizado a mes, antes de descuentos. Solo cambia con un evento de suscripción."
+     },
+     {
+      "term": "Descuento recurrente",
+      "definition": "Descuento que reduce el precio de 2 o más meses de servicio (repeating o forever, normalizado). Resta en el MRR neto."
+     },
+     {
+      "term": "Descuento único",
+      "definition": "Descuento que afecta un solo mes de servicio o un cargo puntual (once en un plan mensual, o repeating de un periodo). No toca el MRR; vive en lo facturado. Es convención propuesta: Chargebee, por defecto, lo mete al MRR."
+     },
+     {
+      "term": "MRR neto",
+      "definition": "MRR contratado − descuentos recurrentes vigentes al cierre. Es la propuesta de titular para el CFO; la decisión está pendiente."
+     },
+     {
+      "term": "Facturado / Cobrado",
+      "definition": "Lo emitido en las facturas del periodo y lo que efectivamente se recibió. El monto pagado observado del as-is es lo más parecido a cobrado, sin confirmarlo."
+     },
+     {
+      "term": "Origen del descuento",
+      "definition": "Quién da el descuento y por qué: promoción, negociación comercial, retención o partner. Cada grant tiene exactamente uno (MECE)."
+     },
+     {
+      "term": "Medio de distribución",
+      "definition": "Cómo llegó una promoción o un código de partner: digital (link, email, ads), físico (volante, evento, punto, impreso) o híbrido-QR (pieza física que lleva a una URL con UTM)."
+     },
+     {
+      "term": "Source asignado",
+      "definition": "Canal para el que marketing creó el código (lo planeado)."
+     },
+     {
+      "term": "Source observado",
+      "definition": "UTM, landing y referrer capturados en la sesión del alta o del canje (lo que pasó). Puede diferir del asignado (fuga de código)."
+     },
+     {
+      "term": "Alcance",
+      "definition": "A qué aplica el descuento: toda la suscripción, un ítem o precio específico, o una sola factura."
+     },
+     {
+      "term": "Apilable / grupo de apilamiento",
+      "definition": "Si el grant puede convivir con otros; stack_group define la exclusividad y application_order el orden, porque monto fijo y porcentaje dan resultados distintos según el orden."
+     },
+     {
+      "term": "Aprobador",
+      "definition": "Persona y rol que autorizó el grant bajo una regla de política; «no requerida» si la promoción ya viene aprobada."
+     },
+     {
+      "term": "Descuento implícito",
+      "definition": "Precio contratado por debajo de la lista sin un grant que lo explique. Es un error de registro, no un descuento."
+     },
+     {
+      "term": "Mes sin cobro",
+      "definition": "Suscripción activa con un descuento del 100% en el periodo. No es pausa (estado de suscripción) ni churn."
+     },
+     {
+      "term": "Línea «Descuento» del puente (C-020)",
+      "definition": "Variación del MRR neto explicada por el inicio, el fin o el cambio de términos de un descuento, con la suscripción constante (paso 2 de la regla secuencial)."
+     }
+    ],
+    "classification_logic": [
+     {
+      "case": "Regla base: qué mira cada línea",
+      "rule": "New, Expansión, Contracción, Churn y Reactivación se definen sobre el MRR contratado y el estado de la suscripción entre cierres consecutivos, nunca sobre el monto pagado. La línea «Descuento» se define sobre cambios en los términos de los discount_grant. Test: por suscripción-mes, la suma de líneas = neto(t) − neto(t−1), con diferencia 0."
+     },
+     {
+      "case": "Suscripción y descuento cambian el mismo mes (regla secuencial, propuesta)",
+      "rule": "Paso 1: efecto suscripción = neto calculado con el contratado nuevo y los términos de descuento del mes anterior, menos el neto anterior. Paso 2: efecto descuento = neto real menos el resultado del paso 1. Una sola regla genera todos los casos: New entra a contratado con su «Descuento (inicio)» el mismo mes, Churn sale a neto y una expansión bajo un 25% de descuento aporta el 75% del aumento contratado."
+     },
+     {
+      "case": "Inicio o fin de un descuento con la suscripción igual (C-020)",
+      "rule": "«Descuento (inicio)» negativo o «Descuento (fin)» positivo, con su origen; nunca Expansión ni Contracción. Es convención declarada: ChartMogul, por defecto, lo manda a contracción y expansión."
+     },
+     {
+      "case": "Cambio de términos (p. ej., de 25% a 10%) o reemplazo",
+      "rule": "«Descuento (cambio)» por la diferencia. El grant viejo cierra con ended_at y end_reason = replaced; el nuevo lleva supersedes_grant_id."
+     },
+     {
+      "case": "Recurrente frente a único",
+      "rule": "is_recurring = true si el descuento reduce el precio de 2 o más meses de servicio normalizado, sin importar cómo se configuró en el billing. Un once sobre un plan anual cubre 12 meses y es recurrente para esos 12; un once sobre un plan mensual es único. Es convención propuesta."
+     },
+     {
+      "case": "Descuento único",
+      "rule": "Queda fuera del MRR y del puente; resta solo en lo facturado del periodo, vía discount_application. Es una decisión: Chargebee lo incluye por defecto cuando aplica en la siguiente renovación."
+     },
+     {
+      "case": "Mes gratis / descuento del 100%",
+      "rule": "Suscripción activa, contratado igual y neto 0 → «Descuento (inicio)» por el neto previo y no_charge_flag = 1. No es churn ni contracción; el cliente cuenta como activo sin cobro. Es una decisión: ChartMogul lo trata por defecto como downgrade y permite pasarlo a churn."
+     },
+     {
+      "case": "Pausa",
+      "rule": "Es un estado de suscripción (pause/resume), no un descuento. Si va en una línea propia o como churn en el puente es decisión del negocio; lo que no puede pasar es que se confunda con un 100%."
+     },
+     {
+      "case": "Retención: el cliente acepta el descuento",
+      "rule": "«Descuento (inicio)» con origen retención y retention_case_id; no hay churn. Si cancela al vencer, Churn a neto en el mes de la cancelación efectiva; el caso guarda outcome para medir cuántas salvadas duran."
+     },
+     {
+      "case": "Retención: el cliente acepta el downgrade",
+      "rule": "Contracción (subscription_change_event con initiated_by = retention_flow), no «Descuento», aunque venga del mismo flujo de retención."
+     },
+     {
+      "case": "Retención: el cliente rechaza la oferta",
+      "rule": "Churn en cancel_effective_at, a neto; retention_case.outcome = declined."
+     },
+     {
+      "case": "Negociación comercial",
+      "rule": "Precio contratado = lista vigente. La rebaja va en un grant con origen negociación, deal_id, reason_code y cadena de aprobación si supera el umbral. Si ventas carga un precio especial sin grant, se marca como descuento implícito y se corrige antes del cierre."
+     },
+     {
+      "case": "Partner",
+      "rule": "El descuento al cliente final es un grant con origen partner y partner_id. La comisión o fee al partner es costo de S&M, nunca un grant ni MRR. Si el partner revende y factura, hay que decidir si el margen se registra como lista + grant de partner (para ver el costo del canal) o como precio contratado mayorista."
+     },
+     {
+      "case": "Promoción digital con source",
+      "rule": "Mismo tratamiento en el puente que cualquier promoción; el source (canal, campaña, código, landing) es un atributo para cortes y no cambia la clasificación. Se guarda el asignado (promo_code) y el observado (acquisition_touch o sesión del canje)."
+     },
+     {
+      "case": "Promoción física (volante, evento, punto, impreso, QR)",
+      "rule": "Mismo tratamiento en el puente, con distribution_medium = físico o híbrido-QR. Un QR físico puede dejar un source observado digital (utm_medium = print), pero el origen sigue siendo físico."
+     },
+     {
+      "case": "Descuentos apilados",
+      "rule": "Cada grant aplica en su application_order y deja su monto real en discount_application; la línea «Descuento» se abre por origen con esos montos. Dos grants del mismo stack_group excluyente no pueden solaparse."
+     },
+     {
+      "case": "Repricing de lista",
+      "rule": "Si sube la lista y se aplica a clientes existentes, es Expansión (event_type = list_repricing), no «Descuento». Mantener a los clientes antiguos en su precio (grandfathering) se modela como no aplicarles el repricing, no como un grant nuevo (decisión)."
+     }
+    ],
+    "example_records": [
+     {
+      "entity": "promotion (ejemplo ilustrativo, no son datos de Finora)",
+      "columns": [
+       "promotion_id",
+       "campaign_id (rubro)",
+       "objetivo",
+       "beneficio",
+       "duración",
+       "elegibilidad",
+       "ventana de canje",
+       "apilable / grupo",
+       "requiere código"
+      ],
+      "rows": [
+       [
+        "PRM-01",
+        "CMP-01 (paid_media)",
+        "adquisición",
+        "25%",
+        "repeating 3 meses",
+        "solo primera compra",
+        "2026-03-01 a 2026-03-31",
+        "no / entrada",
+        "sí"
+       ],
+       [
+        "PRM-02",
+        "CMP-02 (publicidad_no_web)",
+        "adquisición",
+        "15%",
+        "repeating 2 meses",
+        "solo primera compra",
+        "2026-03-05 a 2026-03-12",
+        "no / entrada",
+        "sí"
+       ],
+       [
+        "PRM-03",
+        "CMP-03 (paid_media)",
+        "win-back",
+        "20%",
+        "repeating 3 meses",
+        "clientes con churn de 1 mes o más",
+        "abierta",
+        "no / entrada",
+        "no (automática)"
+       ]
+      ]
+     },
+     {
+      "entity": "promo_code (ejemplo ilustrativo)",
+      "columns": [
+       "promo_code_id",
+       "code",
+       "promotion_id",
+       "medio",
+       "canal asignado",
+       "utm_source",
+       "utm_medium",
+       "utm_campaign",
+       "utm_content",
+       "landing"
+      ],
+      "rows": [
+       [
+        "PC-01",
+        "BIENVENIDA25",
+        "PRM-01",
+        "digital",
+        "paid_social",
+        "meta",
+        "paid_social",
+        "bienvenida_2026q1",
+        "video_a",
+        "/precios"
+       ],
+       [
+        "PC-02",
+        "BIENVENIDA25MAIL",
+        "PRM-01",
+        "digital",
+        "email",
+        "newsletter",
+        "email",
+        "bienvenida_2026q1",
+        "cta_top",
+        "/precios"
+       ],
+       [
+        "PC-03",
+        "FERIA15",
+        "PRM-02",
+        "físico",
+        "evento",
+        "—",
+        "—",
+        "—",
+        "—",
+        "— (se canjea con ventas en el stand)"
+       ],
+       [
+        "PC-04",
+        "QR del volante",
+        "PRM-02",
+        "híbrido-QR",
+        "evento",
+        "feria_2026",
+        "print",
+        "feria_2026",
+        "qr_volante",
+        "/feria"
+       ]
+      ]
+     },
+     {
+      "entity": "discount_grant (ejemplo ilustrativo)",
+      "columns": [
+       "grant_id",
+       "subscription",
+       "origen",
+       "referencia de origen",
+       "tipo · valor",
+       "duración",
+       "valid_from",
+       "valid_to_planned",
+       "alcance",
+       "apilable",
+       "aprobación",
+       "motivo"
+      ],
+      "rows": [
+       [
+        "DG-01",
+        "SUB-101",
+        "promoción (digital)",
+        "PRM-01 · PC-01 · RD-01",
+        "porcentaje · 25%",
+        "repeating 3",
+        "2026-03-01",
+        "2026-05-31",
+        "suscripción",
+        "no",
+        "no requerida (política de PRM-01)",
+        "alta con código"
+       ],
+       [
+        "DG-02",
+        "SUB-102",
+        "promoción (física)",
+        "PRM-02 · PC-03 · RD-02",
+        "porcentaje · 15%",
+        "repeating 2",
+        "2026-03-10",
+        "2026-05-09",
+        "suscripción",
+        "no",
+        "no requerida",
+        "canje asistido en feria"
+       ],
+       [
+        "DG-03",
+        "SUB-103",
+        "negociación",
+        "DEAL-55",
+        "porcentaje · 10%",
+        "forever",
+        "2026-04-01",
+        "null",
+        "suscripción",
+        "sí (grupo contrato)",
+        "APR-07 · gerente comercial · paso 1",
+        "volumen"
+       ],
+       [
+        "DG-04",
+        "SUB-104",
+        "retención",
+        "RC-12",
+        "porcentaje · 30%",
+        "repeating 3",
+        "2026-06-01",
+        "2026-08-31",
+        "suscripción",
+        "no",
+        "regla de retención RR-02",
+        "motivo de cancelación: muy caro"
+       ],
+       [
+        "DG-05",
+        "SUB-105",
+        "partner",
+        "PTN-03",
+        "porcentaje · 15%",
+        "repeating 12",
+        "2026-02-01",
+        "2027-01-31",
+        "ítem PRC-ADDON-M",
+        "no",
+        "APR-09 · partnerships",
+        "referido por partner"
+       ],
+       [
+        "DG-06",
+        "SUB-106",
+        "negociación",
+        "DEAL-61",
+        "monto fijo · 100.000 COP",
+        "once",
+        "2026-05-01",
+        "null",
+        "una factura",
+        "sí",
+        "APR-11 · líder de ventas",
+        "cierre de trimestre"
+       ]
+      ]
+     },
+     {
+      "entity": "acquisition_touch (ejemplo ilustrativo)",
+      "columns": [
+       "touch_id",
+       "customer_id",
+       "rol",
+       "utm_source",
+       "utm_medium",
+       "utm_campaign",
+       "landing",
+       "partner_key",
+       "captura"
+      ],
+      "rows": [
+       [
+        "AT-01",
+        "CUS-101",
+        "first_touch",
+        "meta",
+        "paid_social",
+        "bienvenida_2026q1",
+        "/precios",
+        "—",
+        "formulario web"
+       ],
+       [
+        "AT-02",
+        "CUS-111",
+        "redemption_session",
+        "feria_2026",
+        "print",
+        "feria_2026",
+        "/feria",
+        "—",
+        "QR del volante"
+       ],
+       [
+        "AT-03",
+        "CUS-110",
+        "first_touch",
+        "(not set)",
+        "(not set)",
+        "(not set)",
+        "/",
+        "—",
+        "formulario sin UTM: no se imputa"
+       ],
+       [
+        "AT-04",
+        "CUS-105",
+        "first_touch",
+        "ptn03",
+        "referral",
+        "(not set)",
+        "/partners",
+        "ptn03",
+        "link de partner"
+       ]
+      ]
+     },
+     {
+      "entity": "subscription_month_snapshot + puente (ejemplo ilustrativo, COP)",
+      "columns": [
+       "subscription",
+       "mes",
+       "contratado",
+       "desc. recurrente",
+       "neto",
+       "línea(s) del puente",
+       "monto(s)",
+       "lectura"
+      ],
+      "rows": [
+       [
+        "SUB-101",
+        "2026-03",
+        "100.000",
+        "25.000",
+        "75.000",
+        "New | Descuento (inicio)",
+        "+100.000 | −25.000",
+        "promo digital meta/paid_social · BIENVENIDA25"
+       ],
+       [
+        "SUB-101",
+        "2026-06",
+        "100.000",
+        "0",
+        "100.000",
+        "Descuento (fin)",
+        "+25.000",
+        "vence DG-01; no es Expansión"
+       ],
+       [
+        "SUB-107",
+        "2026-07",
+        "150.000 (antes 100.000)",
+        "0 (antes 25.000)",
+        "150.000 (antes 75.000)",
+        "Expansión | Descuento (fin)",
+        "+37.500 | +37.500",
+        "regla secuencial: 50.000 × 75% con los términos de junio; el resto es fin de descuento"
+       ],
+       [
+        "SUB-104",
+        "2026-06",
+        "200.000",
+        "60.000",
+        "140.000",
+        "Descuento (inicio)",
+        "−60.000",
+        "retención RC-12 aceptó descuento: no es churn"
+       ],
+       [
+        "SUB-109",
+        "2026-06",
+        "120.000 (antes 200.000)",
+        "0",
+        "120.000",
+        "Contracción",
+        "−80.000",
+        "retención RC-13 aceptó downgrade: es cambio de suscripción"
+       ],
+       [
+        "SUB-108",
+        "2026-08",
+        "100.000",
+        "100.000",
+        "0",
+        "Descuento (inicio)",
+        "−100.000",
+        "mes gratis (100%): activo sin cobro, no es churn"
+       ],
+       [
+        "SUB-106",
+        "2026-05",
+        "300.000",
+        "0",
+        "300.000",
+        "sin línea (flat)",
+        "0",
+        "DG-06 es único: facturado 200.000, fuera del MRR"
+       ],
+       [
+        "SUB-103",
+        "2026-09",
+        "0 (antes 100.000)",
+        "0 (antes 10.000)",
+        "0 (antes 90.000)",
+        "Churn",
+        "−90.000",
+        "sale a neto; DG-03 cierra con end_reason = churn; sin línea Descuento"
+       ]
+      ]
+     }
+    ],
+    "edge_cases": [
+     "Código de volante publicado en un sitio de cupones: el canal asignado (evento) no coincide con el source observado (sitio de cupones). Se guardan ambos y se marca como fuga; no se sobreescribe.",
+     "Pieza física con QR: el origen es físico y el canje digital, con utm_medium = print → medio híbrido-QR.",
+     "Promoción automática sin código (win-back): promotion sin promo_code; el source sale de acquisition_touch.",
+     "Canje asistido por ventas: redemption_channel = sales_assisted; el source observado viene del CRM, no de la web.",
+     "Negociación cargada como precio especial (Stripe lo lista como método alternativo): esconde el descuento dentro de lo contratado y su fin parecería Expansión → alerta de descuento implícito.",
+     "Cupón de 4 meses sobre un plan anual: en Stripe cubre la factura anual completa si la renovación cae en el periodo → la duración efectiva se calcula por factura.",
+     "Un descuento once desaparece de la suscripción al finalizar la factura (Stripe): sin la capa de factura no se ve que existió.",
+     "Upgrade a un plan no elegible para la promo (applies_to): el descuento deja de aplicar y, con la regla secuencial, todo va a Expansión. Si se prefiere ver el fin en «Descuento», hay que evaluar la elegibilidad con el plan anterior (decisión).",
+     "Monto fijo y porcentaje apilados: el orden cambia el total (Stripe; Chargebee aplica línea fija → línea % → factura fija → factura %).",
+     "Mes gratis, pausa o pago atrasado: en el as-is los tres se ven como churn + reactivación (330 de 751 churn observados vuelven en t+1); en el to-be se separan por estado y por grant.",
+     "Vencimiento y cancelación en el mismo mes: la regla secuencial da Churn por el neto previo y nada a «Descuento». Si caen en meses distintos, primero va «Descuento (fin)» y después Churn.",
+     "Descuento con fecha retroactiva: recorded_at > valid_from; la foto ya cerrada se reexpresa con versión, no en silencio.",
+     "Descuento de retención de un solo uso: Stripe lo limita por cliente; si el cliente tiene varias suscripciones, la regla se valida a nivel cliente.",
+     "Partner revendedor que factura: identidad del cliente final frente a la cuenta de facturación; el MRR de Finora es el del contrato con el partner.",
+     "Nota crédito o compensación por falla de servicio: es un ajuste de facturado o cobrado, no un discount_grant (queda fuera de los cuatro orígenes).",
+     "UTMs con distinta capitalización (Meta y meta) son valores distintos en GA: normalizar antes de cortar.",
+     "Cliente sin UTM (tráfico directo, referido de boca en boca): (not set) explícito; la respuesta a «¿cómo nos conociste?» se guarda aparte y no reemplaza la UTM.",
+     "Promoción que cambia de condiciones a mitad de campaña: nueva versión de promotion; los grants ya otorgados conservan sus términos."
+    ],
+    "data_quality_rules": [
+     "discount_grant.origin_type no nulo y ∈ {promocion, negociacion, retencion, partner}; exactamente una llave de origen poblada según el tipo.",
+     "promocion ⇒ promotion_id no nulo; si promotion.requires_code, promo_code_id y redemption_id no nulos.",
+     "negociacion ⇒ deal_id no nulo; si el beneficio supera el umbral de la política vigente, cadena de aprobación completa con status = approved y decided_at ≤ valid_from.",
+     "retencion ⇒ retention_case_id no nulo y valid_from ≥ requested_at; como máximo un grant de retención por suscripción (o por cliente, según la política).",
+     "partner ⇒ partner_id no nulo; una comisión nunca se registra como grant.",
+     "duration_type = repeating ⇒ duration_months ≥ 1 y valid_to_planned consistente; forever ⇒ valid_to_planned nulo; once se cierra al facturarse; valid_to_planned ≥ valid_from; ended_at ≤ valid_to_planned salvo end_reason explícito.",
+     "Dos grants del mismo stack_group excluyente no se superponen en fechas para la misma suscripción o ítem.",
+     "Descuento total ≤ contratado (neto ≥ 0); neto = 0 con status activo ⇒ no_charge_flag = 1.",
+     "Identidad de la foto: neto = contratado − descuento recurrente; la suma de las líneas del puente = Δ neto por suscripción-mes (diferencia 0); Σ «Descuento» por origen = línea «Descuento» total.",
+     "Precio contratado < lista vigente sin grant activo ⇒ alerta de descuento implícito.",
+     "Un grant nunca modifica subscription_item_version y un subscription_change_event nunca crea un grant (la única relación es a través de retention_case).",
+     "UTMs en minúsculas y con vocabulario controlado para utm_medium; si faltan, (not set) explícito, nunca imputado; utm_source, utm_medium y utm_campaign obligatorios en todo link que emite marketing.",
+     "promo_code.code único entre códigos activos; un canje después de expires_at o por encima de max_redemptions ⇒ rejected con motivo.",
+     "Mientras convivan los dos modelos: Σ cobrado por cliente-mes del to-be = amount de raw.transactions × 10.000 (escala documentada en el catálogo).",
+     "Catálogo: la descripción de returned_next_month dice «con el mismo monto», pero da 330 frente a 87 de returned_same_amount_next_month; corregir la definición antes de usarla en láminas."
+    ],
+    "implementation_considerations": [
+     "Arrancar antes del primer descuento: ni el origen ni el source se pueden reconstruir hacia atrás (el caso habla de introducir descuentos). Primer corte mínimo: origin_type, benefit_type y benefit_value, duration_type, valid_from y valid_to_planned, scope, stackable, aprobador, promotion_id o promo_code_id y source del alta.",
+     "Dueños por bloque: billing (lista, suscripción, grant, factura) → Finanzas/RevOps; CRM (deal, aprobación, partner, retención) → Sales Ops/CS; marketing (campaign, promo_code, taxonomía UTM) → Marketing. Cada campo con dueño, tipo, valores permitidos y test.",
+     "Si el billing es tipo Stripe o Chargebee: promotion ≈ cupón, promo_code ≈ código promocional, discount_grant ≈ discount. Lo que esos sistemas no traen (origen, aprobador, motivo, source) va en metadatos con vocabulario controlado o en tablas propias. No asumimos qué sistema usa Finora.",
+     "Capturar UTMs y landing en el formulario de alta y guardarlos en el CRM (primer y último toque) para todo cliente; sin eso no hay comparación promo contra no-promo.",
+     "Códigos físicos: uno por pieza, evento o punto (o por lote), QR con UTM y vanity URL para medios no escaneables. Una parte de lo offline no se va a poder atribuir y habrá que leerla con el gasto agregado.",
+     "Ligar cada campaign a su rubro de S&M (paid_media, publicidad_no_web) para pasar de gasto mensual por rubro a costo por campaña.",
+     "Versionar la política de MRR (mrr_policy_version) y la regla de clasificación: el CFO ve qué convención se usó, y el modelo guarda las capas para recalcular con otra (p. ej., la de ChartMogul) sin tocar datos.",
+     "Mantener mart.customer_month (monto pagado observado) en paralelo como control de reconciliación durante la transición.",
+     "Tests tipo dbt: unique, not_null, accepted_values y relationships, más los tests de identidad del puente y de no superposición de grants.",
+     "Tracking y UTMs asociados a personas: revisar consentimiento con legal (esta investigación no cubre el detalle normativo)."
+    ]
+   }
+  }
+ },
+ "usage": {
+  "turns": 37,
+  "ms": 1171694,
+  "input_tokens": 18,
+  "output_tokens": 134254,
+  "cache_read": 318387,
+  "cache_write": 81177,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 3.6880243999999998,
+ "tool_trace": [
+  {
+   "id": "toolu_01AQwvFSvaXe92UrUjqKJcTv",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "input": {},
+   "t": 1058717,
+   "result_chars": 11121,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01HbhsgQmKfAi3YrDbJeX9p3",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Stripe coupons promotion codes discounts object API duration once repeating forever",
+    "mode": "standard"
+   },
+   "t": 1059449,
+   "result_chars": 2487,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01VWFSuMrSvSMqcGizRLHR1m",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Google Analytics UTM parameters utm_source utm_medium utm_campaign utm_content utm_term documentation",
+    "mode": "standard"
+   },
+   "t": 1060106,
+   "result_chars": 3041,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01C1pTft7SCmELbMH8HhHuQf",
+   "tool": "WebSearch",
+   "input": {
+    "query": "ChartMogul MRR discounts how coupons affect MRR calculation",
+    "mode": "standard"
+   },
+   "t": 1060813,
+   "result_chars": 2739,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01PSynsh1jGeFmtm9Y5YSToH",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": "{\"sql\": \"SELECT table_schema, table_name, column_name FROM information_schema.columns WHERE table_schema IN ('raw','staging','mart') AND (lower(column_name) LIKE '%disc%' OR lower(column_name) LIKE '%price%' OR lower(column_name) LIKE '%plan%' OR lower(column_name) LIKE '%promo%' OR lower(column_name) LIKE '%coupon%' OR lower(column_name) LIKE '%source%' OR lower(column_name) LIKE '%campaign%' OR lower(column_name) LIKE '%channel%' OR lower(column_name) LIKE '%subscription%' OR lower(column_name) LIKE '%list%' OR lower(column_name) LIKE '%partner%' OR lower(column_name) LIKE '%invoice%') ORDER…",
+   "t": 1086970,
+   "result_chars": 107,
+   "is_error": true
+  },
+  {
+   "id": "toolu_01HMht1TYjUiiv6DtUnNvzvm",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, COUNT(DISTINCT customer_id || '-' || month) AS pares_cliente_mes, SUM(CASE WHEN amount = 0 THEN 1 ELSE 0 END) AS filas_monto_cero, SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END) AS filas_monto_negativo, COUNT(DISTINCT amount) AS montos_distintos, MIN(month) AS primer_mes, MAX(month) AS ultimo_mes FROM staging.stg_customer_month"
+   },
+   "t": 1088931,
+   "result_chars": 320,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01EtSF7XwdsKU8WQu8Fi3SQe",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT movement_type, COUNT(*) AS filas, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_mes_siguiente, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_mismo_monto_t1, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS firma_pago_multimes FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC"
+   },
+   "t": 1090547,
+   "result_chars": 561,
+   "is_error": false
+  },
+  {
+   "id": "toolu_011GjSM7CGX5TGotPtmeVSZJ",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) AS ratio_actual_vs_anterior, COUNT(*) AS contracciones, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_t1 FROM mart.customer_month WHERE movement_type = 'contraction' GROUP BY 1 ORDER BY 2 DESC LIMIT 15"
+   },
+   "t": 1110048,
+   "result_chars": 381,
+   "is_error": false
+  },
+  {
+   "id": "toolu_013871EUhVqWyGArTfzkxtCn",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT COUNT(*) AS churn_obs, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1_mismo_monto, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS vuelve_antes_oct24 FROM mart.customer_month WHERE movement_type = 'churn'"
+   },
+   "t": 1111774,
+   "result_chars": 192,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01GDFj9ycJvvWbo35o51QjeU",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT rubro, COUNT(*) AS meses, SUM(CASE WHEN amount > 0 THEN 1 ELSE 0 END) AS meses_con_gasto FROM staging.stg_sm_spend GROUP BY rubro ORDER BY rubro"
+   },
+   "t": 1112538,
+   "result_chars": 321,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01VRMixaLZMqeAZuP42CxCri",
+   "tool": "WebFetch",
+   "input": "{\"url\": \"https://docs.stripe.com/billing/subscriptions/coupons\", \"prompt\": \"Extract precisely: (1) the difference between coupons, promotion codes and discounts; (2) coupon fields: percent_off vs amount_off, duration (once, repeating, forever, duration_in_months), applies_to products, max_redemptions, redeem_by; (3) promotion code restrictions (first_time_transaction, minimum_amount, customer, expires_at, max_redemptions); (4) whether multiple discounts can be stacked on a subscription or items and how (discounts array, item-level vs subscription-level); (5) how discounts end and what the disc…",
+   "t": 1114938,
+   "result_chars": 35360,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01TinrUBhCueSeT9NyCBTEen",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-mrr-in-billing",
+    "prompt": "How does Stripe Billing treat discounts and coupons in MRR? Distinguish forever, repeating and once coupons, and percent vs amount. Quote the key sentences exactly."
+   },
+   "t": 1115992,
+   "result_chars": 848,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01PW3CS7PshqVS4ETiGBRL2b",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://docs.stripe.com/api/discounts/object",
+    "prompt": "List every attribute of the Discount object with its description (e.g., id, customer, start, end, subscription, subscription_item, invoice, invoice_item, promotion_code, source/coupon, checkout_session). Quote the descriptions of start, end, subscription_item and promotion_code exactly."
+   },
+   "t": 1147656,
+   "result_chars": 3202,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01NCjexUDFisZa5ZhSNVy8wd",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://chartmogul.com/blog/should-discounts-be-included-in-mrr/",
+    "prompt": "What is ChartMogul's position on including discounts in MRR? Quote the key sentences about: temporary vs lifetime discounts, percent vs fixed amount, how discounts can misrepresent business health, and renewal risk of discounted customers. Include the author and publication date if shown."
+   },
+   "t": 1149309,
+   "result_chars": 1279,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01Ud5gyc4D99Hiftgns3L76A",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://chargebee.com/docs/1.0/reports-and-analytics/articles-and-faq/mrr-calculation-in-onetime-coupons.html",
+    "prompt": "How does Chargebee calculate MRR when a one-time coupon (or limited-period / forever coupon) is applied? Quote the key sentences exactly and note any configuration options."
+   },
+   "t": 1150606,
+   "result_chars": 1121,
+   "is_error": false
+  },
+  {
+   "id": "toolu_0125Y5ChpjWHzA8jpdPfXEve",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://docs.recurly.com/recurly-subscriptions/v2.29/docs/analytics-settings",
+    "prompt": "What settings does Recurly offer for how discounts/coupons are treated in MRR or subscription analytics? Quote the exact option names and descriptions."
+   },
+   "t": 1151758,
+   "result_chars": 556,
+   "is_error": false
+  },
+  {
+   "id": "toolu_015p73GLk99s7TgA6kgqtCsH",
+   "tool": "WebSearch",
+   "input": {
+    "query": "support.google.com analytics URL builders collect campaign data with custom URLs utm_source_platform utm_id",
+    "mode": "standard"
+   },
+   "t": 1152395,
+   "result_chars": 2625,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01KUyQ5ZrxFqAXTCSDUeuAo9",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://support.google.com/analytics/answer/10917952",
+    "prompt": "List every UTM / campaign parameter documented (utm_id, utm_source, utm_medium, utm_campaign, utm_source_platform, utm_term, utm_content, utm_creative_format, utm_marketing_tactic) with its exact description and example. Quote the recommendation about which parameters to always set and what happens if they are missing (\"(not set)\"). Also note anything about case sensitivity or consistency."
+   },
+   "t": 1163536,
+   "result_chars": 1646,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01AmsK5h3z1T3cXk4Ww9Mwid",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": "{\"sql\": \"WITH t AS (SELECT customer_id, month_index, movement_type, paid_mrr_cop, previous_month_mrr, LAG(movement_type) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_movement, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_signature FROM mart.customer_month) SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) = 0.5 AS ratio_mitad, COUNT(*) AS contracciones, SUM(CASE WHEN prev_movement IN ('expansion','new','reactivation') THEN 1 ELSE 0 END) AS tras_subida_o_alta, SUM(CASE WHEN prev_signature > 0 THEN 1 ELSE 0 END) AS tras_firma_pa…",
+   "t": 1166290,
+   "result_chars": 228,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01JSQ6pDSLVrMn8pMHmCFisk",
+   "tool": "WebSearch",
+   "input": {
+    "query": "offline marketing attribution QR code UTM parameters unique promo code print campaign tracking",
+    "mode": "standard"
+   },
+   "t": 1167042,
+   "result_chars": 3139,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01U3zACZMaBybi2tGym2b96W",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Salesforce CPQ Advanced Approvals discount approval rule threshold approver chain",
+    "mode": "standard"
+   },
+   "t": 1167742,
+   "result_chars": 2852,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01XFHNwvSSTXkxxQACmMP9B2",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Stripe customer portal cancellation retention coupon offer",
+    "mode": "standard"
+   },
+   "t": 1168149,
+   "result_chars": 2747,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01BUsLDEbo9k2uUYrrQqGMVa",
+   "tool": "WebSearch",
+   "input": {
+    "query": "ChartMogul help center discounts MRR movement expansion when discount expires",
+    "mode": "standard"
+   },
+   "t": 1194659,
+   "result_chars": 2188,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01AvfkM5beh4rDV6PPo6JWfV",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://docs.stripe.com/billing/retention/rules",
+    "prompt": "Summarize how Stripe retention rules work: what triggers them, targeting criteria (cancellation reason, tenure, LTV...), offer types (coupon percent/amount, duration), single-use restriction per customer/subscription, and what is recorded when an offer is accepted. Quote key sentences exactly."
+   },
+   "t": 1195407,
+   "result_chars": 6028,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01WNyu48GkaSPQ4fh7n9y3PJ",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Chargebee coupon apply_on invoice_amount each_specified_item duration_type limited_period one_time forever coupon codes",
+    "mode": "standard"
+   },
+   "t": 1196157,
+   "result_chars": 2376,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01843a5DNRR4ZPJf8vZegrLB",
+   "tool": "WebSearch",
+   "input": {
+    "query": "PartnerStack Stripe partner attribution coupon customer key referral discount",
+    "mode": "standard"
+   },
+   "t": 1196813,
+   "result_chars": 2443,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01GuTWNRx7HLw84GBcnMk64A",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://trailhead.salesforce.com/content/learn/modules/advanced-approvals-for-admins/organize-approver-reviews-with-approval-chains",
+    "prompt": "Explain approval rules and approval chains in Salesforce Advanced Approvals: how a discount threshold triggers approval, how chains sequence approvers, and what is recorded (approval records, approver, status). Quote key sentences exactly."
+   },
+   "t": 1198498,
+   "result_chars": 1424,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01S5CiyFpvVChcpVvW4a77d6",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://help.chartmogul.com/hc/en-us/articles/4416682609426",
+    "prompt": "Quote exactly what this article says about discounts: how a new discount, an expiring discount, and a 100% discount / free plan affect MRR movements (new business, expansion, contraction, churn, reactivation). Also list the MRR movement types and their definitions."
+   },
+   "t": 1213478,
+   "result_chars": 1233,
+   "is_error": false
+  },
+  {
+   "id": "toolu_0195YJ56iVpGUBbA5ojhNjeJ",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://chartmogul.com/blog/choose-how-to-interpret-discounted-or-free-plan-customers-churn-or-downgrade/",
+    "prompt": "What option does ChartMogul offer for interpreting customers who move to a 100% discount or free plan: churn or downgrade (contraction)? Quote the key sentences and the date."
+   },
+   "t": 1214730,
+   "result_chars": 878,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01CMSum6BftJRoXVTvYFT3Xj",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://apidocs.chargebee.com/docs/api/discounts",
+    "prompt": "List the attributes of the Chargebee Discount object with descriptions: type (fixed_amount/percentage), duration_type, period, period_unit, apply_on, item_price_id, included_in_mrr, created_at, applied_count, etc. Quote exactly the description of included_in_mrr if present, and of apply_on and duration_type."
+   },
+   "t": 1216182,
+   "result_chars": 1263,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01UZ4T9En5YEeEwKxPSLnEvw",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://docs.partnerstack.com/v1.0/docs/stripe-webhook",
+    "prompt": "How does PartnerStack attribute a Stripe customer to a partner? Quote the attribution methods (referral link cookie, coupon code, metadata partner_key/customer_key) exactly."
+   },
+   "t": 1217235,
+   "result_chars": 960,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01NPP6ZL5gXQqND876sH41Rq",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://swetrix.com/blog/how-to-track-offline-marketing-campaigns",
+    "prompt": "How does this article recommend tracking offline (print, billboard, events, direct mail) campaigns: QR codes with UTM parameters, unique promo codes per channel, vanity URLs? Quote the key recommendations exactly, and the publication date/author if shown."
+   },
+   "t": 1218620,
+   "result_chars": 1021,
+   "is_error": false
+  },
+  {
+   "id": "toolu_017255QKrakXU5JXQq3faEta",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://apidocs.chargebee.com/docs/api/coupons",
+    "prompt": "Quote exactly: (1) the order in which multiple coupons are applied (line-level fixed, line-level percentage, invoice-level fixed, invoice-level percentage); (2) apply_on values and meaning; (3) duration_type values; (4) any fields on coupon for max_redemptions, valid_till, and coupon codes / coupon sets (unique codes). Keep it concise."
+   },
+   "t": 1430753,
+   "result_chars": 1143,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01MgUcorgkK1YQ78j8nxWgGm",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/",
+    "prompt": "Quote exactly how Kimball defines Type 2 slowly changing dimensions: adding a new row, and the administrative columns (row effective date, row expiration date, current row indicator)."
+   },
+   "t": 1432049,
+   "result_chars": 844,
+   "is_error": false
+  },
+  {
+   "id": "toolu_018NvE4aerjuZj7mmXeTAkg7",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/periodic-snapshot-fact-table/",
+    "prompt": "Quote exactly how Kimball defines a periodic snapshot fact table (grain, one row per period, dense) and how it differs from a transaction fact table."
+   },
+   "t": 1433189,
+   "result_chars": 1091,
+   "is_error": false
+  }
+ ],
+ "seen_urls": [
+  "https://api-static-site.au.chargebee.com/docs/api/coupons",
+  "https://api-static-site.au.chargebee.com/docs/api/discounts",
+  "https://api-static-site.chargebee.com/docs/api/coupons",
+  "https://api-static-site.chargebee.com/docs/api/discounts",
+  "https://api.stripe.com/v1/checkout/sessions",
+  "https://api.stripe.com/v1/coupons",
+  "https://api.stripe.com/v1/coupons/free-period",
+  "https://api.stripe.com/v1/promotion_codes",
+  "https://api.stripe.com/v1/subscriptions",
+  "https://apidocs.au.chargebee.com/docs/api/discounts",
+  "https://apidocs.chargebee.com/docs/api/coupons",
+  "https://apidocs.chargebee.com/docs/api/discounts",
+  "https://apidocs.eu.chargebee.com/docs/api/coupons",
+  "https://apidocs.eu.chargebee.com/docs/api/discounts",
+  "https://apidocs.eu.chargebee.com/docs/api/v2/pcv-1/coupons",
+  "https://b.stripecdn.com/docs-statics-srv/assets/promo_code_checkout.c07ef6d4f0b1b3f9a8a7e4bbba83d56f.png",
+  "https://blog.linkbreakers.com/article/offline-to-online-attribution-measure-print-marketing",
+  "https://bunny.com/glossary/approval-workflow/",
+  "https://chargebee.com/docs/1.0/reports-and-analytics/articles-and-faq/mrr-calculation-in-onetime-coupons.html",
+  "https://chartmogul.com/blog/?p=22269",
+  "https://chartmogul.com/blog/choose-how-to-interpret-discounted-or-free-plan-customers-churn-or-downgrade/",
+  "https://chartmogul.com/blog/should-discounts-be-included-in-mrr/",
+  "https://chartmogul.com/blog/wp-json/wp/v2/posts/14528",
+  "https://chartmogul.com/blog/wp-json/wp/v2/posts/22269",
+  "https://dashboard.stripe.com/billing/retention/rules",
+  "https://dashboard.stripe.com/products",
+  "https://dashboard.stripe.com/settings/previews",
+  "https://dashboard.stripe.com/test/coupons/create",
+  "https://dashboard.stripe.com/test/products?active=true",
+  "https://dashboard.stripe.com/test/subscriptions?status=active",
+  "https://dealhub.io/glossary/discount-limits/",
+  "https://dev.to/manojgohel/stripe-coupons-promotional-codes-and-discounts-along-with-examples-3hhf",
+  "https://docs.leakypaywall.com/article/431-retention-and-cancel-survey",
+  "https://docs.partnero.com/api-reference/coupons/overview",
+  "https://docs.partnero.com/guides/tracking/coupon-tracking.md",
+  "https://docs.partnero.com/integrations/stripe",
+  "https://docs.partnero.com/integrations/stripe.md",
+  "https://docs.partnerstack.com/v1.0/docs/stripe-webhook",
+  "https://docs.recurly.com/recurly-subscriptions/v2.29/docs/analytics-settings",
+  "https://docs.stripe.com/accounts-v2/use-accounts-as-customers.md",
+  "https://docs.stripe.com/api-v2-overview.md#sdk-and-api-versioning",
+  "https://docs.stripe.com/api.md#coupons",
+  "https://docs.stripe.com/api.md#create_subscription",
+  "https://docs.stripe.com/api.md#customer_object-balance",
+  "https://docs.stripe.com/api.md#promotion_codes",
+  "https://docs.stripe.com/api.md#update_subscription",
+  "https://docs.stripe.com/api/.md#discounts",
+  "https://docs.stripe.com/api/checkout/sessions/create.md#create_checkout_session-allow_promotion_codes",
+  "https://docs.stripe.com/api/checkout/sessions/create.md#create_checkout_session-discounts",
+  "https://docs.stripe.com/api/coupons/create.md",
+  "https://docs.stripe.com/api/coupons/delete.md",
+  "https://docs.stripe.com/api/customers.md",
+  "https://docs.stripe.com/api/discounts.md",
+  "https://docs.stripe.com/api/discounts/object",
+  "https://docs.stripe.com/api/discounts/object.md",
+  "https://docs.stripe.com/api/discounts/object.md?query=source",
+  "https://docs.stripe.com/api/invoiceitems/object.md",
+  "https://docs.stripe.com/api/promotion_codes.md",
+  "https://docs.stripe.com/api/promotion_codes/list.md",
+  "https://docs.stripe.com/api/promotion_codes/list.md#list_promotion_code-code",
+  "https://docs.stripe.com/api/subscription_items/object.md",
+  "https://docs.stripe.com/api/subscription_schedules/object.md",
+  "https://docs.stripe.com/api/subscriptions/object.md",
+  "https://docs.stripe.com/billing/invoices/subscription.md",
+  "https://docs.stripe.com/billing/invoices/subscription.md#adding-draft-invoice-items",
+  "https://docs.stripe.com/billing/retention/rules",
+  "https://docs.stripe.com/billing/subscriptions/backdating.md",
+  "https://docs.stripe.com/billing/subscriptions/backdating.md#backdating-discounts",
+  "https://docs.stripe.com/billing/subscriptions/change.md",
+  "https://docs.stripe.com/billing/subscriptions/coupons",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#coupons",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#create-a-coupon",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#deactivate",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#discount-subscriptions",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#promo-code-config",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#promotion-codes",
+  "https://docs.stripe.com/billing/subscriptions/coupons.md#redemption-limits",
+  "https://docs.stripe.com/billing/subscriptions/deferred-payment.md",
+  "https://docs.stripe.com/billing/subscriptions/discounts",
+  "https://docs.stripe.com/billing/subscriptions/prorations.md",
+  "https://docs.stripe.com/changelog/basil/2025-03-31/restrict-coupon-duration",
+  "https://docs.stripe.com/checkout/custom-checkout/apply-coupons",
+  "https://docs.stripe.com/cli/docs",
+  "https://docs.stripe.com/cli/install",
+  "https://docs.stripe.com/customer-management/cancellation-page",
+  "https://docs.stripe.com/customer-management/cancellation-page.md#cancellation-deflection",
+  "https://docs.stripe.com/customer-management/configure-portal",
+  "https://docs.stripe.com/customer-management/configure-portal.md#switch-plan",
+  "https://docs.stripe.com/docs/api/discounts",
+  "https://docs.stripe.com/payments/checkout/discounts",
+  "https://docs.stripe.com/payments/checkout/discounts.md",
+  "https://docs.stripe.com/payments/checkout/discounts?ui=hosted",
+  "https://docs.stripe.com/products-prices/how-products-and-prices-work.md#multiple-currencies",
+  "https://docs.stripe.com/products-prices/manage-prices.md#create-price",
+  "https://docs.stripe.com/skills.md",
+  "https://edge-docs.stripe.com/customer-management/cancellation-page",
+  "https://edge-docs.stripe.com/customer-management/configure-portal",
+  "https://example.com/success",
+  "https://flexprice.io/glossary/contraction-mrr",
+  "https://flexprice.io/glossary/mrr-movements",
+  "https://help.baremetrics.com/en/articles/15363069-cancellation-insights-retention-offers",
+  "https://help.chartmogul.com/article/163-net-mrr-retention",
+  "https://help.chartmogul.com/hc/en-us/articles/201244842",
+  "https://help.chartmogul.com/hc/en-us/articles/4416682609426",
+  "https://help.partnero.com/article/377-how-to-auto-apply-promotion-codes-at-checkout",
+  "https://marketful.com/?p=37555",
+  "https://marketful.com/utm-parameters",
+  "https://mtu.edu/umc/services/websites/advertising/utm",
+  "https://partnero.com/integrations/stripe",
+  "https://qrcodesunlimited.com/academy/qr-codes-for-tracking-offline-campaign-effectiveness",
+  "https://resources.depaul.edu/sharepoint/best-practices/Documents/UTM",
+  "https://s.ee/5b6T",
+  "https://s.ee/blog/how-to-track-offline-marketing-campaigns-qr-codes-short-links/",
+  "https://shopify.com/blog/utm-parameters",
+  "https://stripe.com/nl-be/docs/customer-management",
+  "https://stripe.partners/directory/partnero",
+  "https://support.google.com/analytics/answer/1033867?hl=en",
+  "https://support.google.com/analytics/answer/1033867?hl=en-GB",
+  "https://support.google.com/analytics/answer/10917952",
+  "https://support.google.com/analytics/answer/10917952?hl=bn",
+  "https://support.google.com/analytics/answer/10917952?hl=en%2F",
+  "https://support.google.com/analytics/answer/10917952?hl=en&utm",
+  "https://support.google.com/analytics/answer/10917952?hl=en-419",
+  "https://support.google.com/analytics/answer/10917952?hl=en-uk",
+  "https://support.google.com/analytics/answer/10917952?hl=fa",
+  "https://support.google.com/analytics/answer/55578?hl=en",
+  "https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-%28mrr%29-in-billing",
+  "https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-(mrr",
+  "https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-mrr-in-billing",
+  "https://swetrix.com/blog/how-to-track-offline-marketing-campaigns",
+  "https://trailhead.salesforce.com/content/learn/modules/advanced-approvals-for-admins/organize-approver-reviews-with-approval-chains",
+  "https://trailhead.salesforce.com/content/learn/modules/advanced-approvals-for-sales-reps-and-approval-managers/manage-approval-submissions-and-responses",
+  "https://trailhead.salesforce.com/ko/content/learn/modules/advanced-approvals-for-admins/organize-approver-reviews-with-approval-chains",
+  "https://trailhead.salesforce.com/trailblazer-community/feed/0D54S00000A87NzSAJ",
+  "https://trailhead.salesforce.com/trailblazer-community/feed/0D54S00000BrtBPSAZ",
+  "https://trailhead.salesforce.com/trailblazer-community/feed/0D54S00000BsEUbSAN",
+  "https://www.accutics.com/blog/how-to-use-dynamic-qr-codes-for-offline-to-online-attribution",
+  "https://www.cometly.com/post/offline-marketing-attribution-methods",
+  "https://www.cometly.com/post/offline-marketing-attribution-methods-bec8e",
+  "https://www.ionos.ca/digitalguide/online-marketing/web-analytics/utm-parameters-explained",
+  "https://www.ionos.ca/digitalguide/online-marketing/web-analytics/utm-parameters-explained.md",
+  "https://www.ionos.co.uk/digitalguide/online-marketing/web-analytics/utm-parameters-explained.md",
+  "https://www.ionos.com/digitalguide/online-marketing/web-analytics/utm-parameters-explained.md",
+  "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/periodic-snapshot-fact-table/",
+  "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/",
+  "https://www.limio.com/guides/integrating-stripe-billing-for-a-self-service-portal",
+  "https://www.partnero.com/partnero-for-stripe",
+  "https://www.qrstuff.com/feeds/blog/qr-code-deep-linking-offline-marketing-campaigns",
+  "https://www.rapidevelopers.com/md/stripe-guide/how-to-apply-discounts-in-stripe-checkout",
+  "https://www.salesbricks.com/blog/quote-approval"
+ ],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": [
+  "catalogo_modelo()",
+  "SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, COUNT(DISTINCT customer_id || '-' || month) AS pares_cliente_mes, SUM(CASE WHEN amount = 0 THEN 1 ELSE 0 END) AS filas_monto_cero, SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END) AS filas_monto_negativo, COUNT(DISTINCT amount) AS montos_distintos, MIN(month) AS primer_mes, MAX(month) AS ultimo_mes FROM staging.stg_customer_month",
+  "SELECT movement_type, COUNT(*) AS filas, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_mes_siguiente, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_mismo_monto_t1, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS firma_pago_multimes FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC",
+  "SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) AS ratio_actual_vs_anterior, COUNT(*) AS contracciones, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS revierte_t1 FROM mart.customer_month WHERE movement_type = 'contraction' GROUP BY 1 ORDER BY 2 DESC LIMIT 15",
+  "SELECT COUNT(*) AS churn_obs, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1, SUM(CASE WHEN returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS vuelve_t1_mismo_monto, SUM(CASE WHEN months_to_return IS NOT NULL THEN 1 ELSE 0 END) AS vuelve_antes_oct24 FROM mart.customer_month WHERE movement_type = 'churn'",
+  "SELECT rubro, COUNT(*) AS meses, SUM(CASE WHEN amount > 0 THEN 1 ELSE 0 END) AS meses_con_gasto FROM staging.stg_sm_spend GROUP BY rubro ORDER BY rubro",
+  "WITH t AS (SELECT customer_id, month_index, movement_type, paid_mrr_cop, previous_month_mrr, LAG(movement_type) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_movement, LAG(multi_month_payment_signature) OVER (PARTITION BY customer_id ORDER BY month_index) AS prev_signature FROM mart.customer_month) SELECT ROUND(paid_mrr_cop / previous_month_mrr, 2) = 0.5 AS ratio_mitad, COUNT(*) AS contracciones, SUM(CASE WHEN prev_movement IN ('expansion','new','reactivation') THEN 1 ELSE 0 END) AS tras_subida_o_alta, SUM(CASE WHEN prev_signature > 0 THEN 1 ELSE 0 END) AS tras_firma_pago_multimes FROM t WHERE movement_type = 'contraction' GROUP BY 1 ORDER BY 1"
+ ]
+}

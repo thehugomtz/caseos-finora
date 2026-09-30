@@ -1,0 +1,74 @@
+id: F-104
+type: finding
+headline: 'Salud combina el menor churn persistente (0,56 puntos porcentuales mensuales), el mayor ticket de entrada
+  mediano de 2024 (COP 52,5 mil, igualado con Restaurantes) y el menor volumen: 124 clientes activos en oct-24 frente
+  a 459 en Restaurantes.'
+epistemic_state: Direccional
+confidence: medium
+kind: analytics
+visual:
+  tipo: dispersion
+  puntos:
+  - etiqueta: Salud
+    x: 0.005600000000000001
+    y: 52500.0
+    tam: 124.0
+  - etiqueta: Restaurantes
+    x: 0.0062
+    y: 52500.0
+    tam: 459.0
+  - etiqueta: Servicios profesionales
+    x: 0.0087
+    y: 31500.0
+    tam: 140.0
+  - etiqueta: Tecnología
+    x: 0.0091
+    y: 49350.0
+    tam: 206.0
+  - etiqueta: Producción
+    x: 0.010700000000000001
+    y: 39900.0
+    tam: 389.0
+  - etiqueta: Retail
+    x: 0.013300000000000001
+    y: 26250.0
+    tam: 360.0
+  ejes:
+    x:
+      columna: churn_persistente_pct
+      nombre: Churn persistente mensual (puntos porcentuales)
+      formato: pct2
+    y:
+      columna: ticket_mediano_2024
+      nombre: Ticket de entrada mediano 2024
+      formato: cop
+    tamano:
+      columna: activos_oct24
+      nombre: Clientes activos oct-24
+      formato: int
+  etiqueta: industry
+visual_title: 'Salud combina el menor churn persistente (0,56 puntos porcentuales mensuales), el mayor ticket de
+  entrada mediano de 2024 (COP 52,5 mil, igualado con Restaurantes) y el menor volumen: 124 clientes activos en
+  oct-24 frente a 459 en Restaurantes.'
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103203-505c
+  claim: C-025
+  evidence:
+  - E-011
+  - E-012
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-048
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:39:07-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 3

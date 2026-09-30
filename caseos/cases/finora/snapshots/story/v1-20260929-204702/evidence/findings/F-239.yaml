@@ -1,0 +1,76 @@
+id: F-239
+type: finding
+headline: 'Incluso después del pago, el as-is no separa estados que C-009 necesita: cancelación vs mora, prepago
+  vs expansión, y plan vs precio vs descuento.'
+evidence_text: De 751 churn observados, 330 vuelven a pagar en t+1 (87 con el mismo monto) y 33 caen en oct-24,
+  sin t+1 que mirar. Hay 512 cliente-mes (325 clientes) con firma de pago multimes, y 211 de 2.541 expansiones/contracciones
+  se revierten en t+1. El monto toma 1.627 valores distintos y no hay columnas de plan, precio ni cantidad. Como
+  referencia, Stripe calcula el MRR sumando suscripciones active y past_due normalizadas al mes, y solo cuenta churn
+  cuando la suscripción queda canceled o unpaid. Los campos que lo hacen posible son status, canceled_at/ended_at,
+  los ítems con precio, intervalo y cantidad, y los descuentos.
+confidence: high
+limitations:
+- Los conteos son exactos. Con estos datos no se puede saber qué explica cada caso (mora, desfase de cobro, prepago
+  o pago de atrasos).
+kind: data_engineering
+claims:
+- claim: De los 751 churn observados, 330 vuelven a pagar al mes siguiente (87 con el mismo monto previo) y 33 caen
+    en oct-24, sin mes siguiente observable.
+  source_id: DM-14
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Verificado con self-join; coincide con returned_next_month (DM-11). Con estos datos no se sabe si son mora,
+    desfase de cobro o cancelación con regreso.
+- claim: 512 cliente-mes (325 clientes) tienen firma de pago multimes (k × monto usual), y 211 de 2.541 expansiones/contracciones
+    se revierten al mes siguiente.
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: La firma es una heurística del mart. Sin periodo de factura no se distingue un prepago de un pago de atrasos.
+- claim: 'El monto observado toma 1.627 valores distintos (395 montos usuales) y no hay columnas de plan, precio
+    ni cantidad: no se puede descomponer en precio × cantidad − descuento.'
+  source_id: DM-13
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: El conteo es exacto. Que no se pueda descomponer es estructural (faltan columnas, DM-01); el porqué de
+    tantos valores es desconocido.
+- claim: Stripe calcula el MRR como la suma normalizada al mes de las suscripciones active y past_due (un plan anual
+    cuenta 1/12); una suscripción canceled o unpaid cuenta como churn.
+  source_id: W-06
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es referencia de definición, no recomendación. En ese marco, una mora no es churn hasta que la suscripción
+    se cancela o queda impaga.
+- claim: La suscripción de Stripe tiene los estados incomplete, incomplete_expired, trialing, active, past_due,
+    canceled, unpaid y paused; guarda start_date, cancel_at, canceled_at, ended_at, el motivo de cancelación, los
+    descuentos y los ítems con precio (e intervalo) y cantidad.
+  source_id: W-08
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Campos mínimos de subscription y subscription_item_version.
+unverified: false
+source_ref:
+  research: R-033
+links:
+- R-033
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:19:55-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

@@ -1,0 +1,61 @@
+id: F-228
+type: finding
+headline: El árbol queda MECE si la brecha se reparte en orden por identidad —validez del lead → puerta (motion)
+  → mezcla vs tasa → etapa → cobro—, así cada pedazo de caída cae en una sola hoja.
+evidence_text: 'Un árbol de hipótesis pone en cada hoja una respuesta falsable con la evidencia que la prueba o
+  la descarta, y exige probar cada par de ramas por doble conteo y preguntar qué falta (W-01). Mezcla y tasa deben
+  mirarse por separado, porque una tasa agregada puede moverse al revés que las de cada segmento cuando cambia la
+  mezcla (W-02). Forrester planea en un mismo marco las oportunidades de negocio nuevo y las de clientes existentes
+  como tipos distintos (W-03); eso respalda sacar a los clientes actuales de New. La asignación en orden es un diseño
+  propio (inferencia): shift-share para separar mezcla y tasa, y descomposición por etapas (ln de la conversión
+  = suma de ln de cada paso) para ubicar la tasa.'
+confidence: high
+limitations:
+- El término cruzado del shift-share necesita una regla fija acordada antes de ver datos; la calidad no observada
+  al entrar cae en las ramas de tasa; la resta entre el SQL del SDR y el SQL directo supone tendencias paralelas.
+kind: measurement
+claims:
+- claim: Un árbol de hipótesis parte de un árbol MECE y en cada hoja declara una respuesta falsable con la evidencia
+    que la probaría o la descartaría; hay que probar cada par de ramas por doble conteo, preguntar qué falta y parar
+    a 2–3 niveles, cuando la hoja se puede medir directamente.
+  source_id: W-01
+  source_type: expert
+  confidence: medium
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Método para la forma de C-023: valida, descarta y dato mínimo por hoja.'
+- claim: Una tendencia presente en varios subgrupos puede invertirse o desaparecer al combinarlos (paradoja de Simpson);
+    hay que mirar ambos niveles y decidir cuál responde la decisión.
+  source_id: W-02
+  source_type: industry
+  confidence: high
+  freshness: Sin fecha; fenómeno estadístico establecido
+  supports_or_contests: supports
+  notes: Fundamenta separar mezcla al entrar (H-005) de caída dentro de la banda (Ramas 3 y 4).
+- claim: El B2B Revenue Waterfall de Forrester (2021), sucesor del Demand Unit Waterfall, planea y mide en un mismo
+    marco las oportunidades de negocio nuevo y las de clientes existentes (renovación, cross-sell, upsell).
+  source_id: W-03
+  source_type: industry
+  confidence: medium
+  freshness: '2021-05-04'
+  supports_or_contests: supports
+  notes: Respalda no mezclar la demanda de clientes actuales con New (H-052). También es una alternativa de marco.
+unverified: false
+source_ref:
+  research: R-032
+links:
+- R-032
+- H-052
+- H-053
+- H-005
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T18:42:02-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

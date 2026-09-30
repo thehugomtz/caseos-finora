@@ -1,0 +1,70 @@
+id: F-144
+type: finding
+headline: 'Para medir el lado izquierdo hay que instrumentar en origen: fechas por etapa en el CRM, puerta y canal
+  por cuenta, y gasto por canal. Aun así, la atribución reparte crédito, no prueba causa.'
+evidence_text: El gasto S&M viene en 7 rubros, con unidad no documentada y sin canal, campaña ni puerta. Los CRM
+  estándar ya calculan la fecha de entrada y salida y el tiempo en cada etapa (HubSpot, planes Pro/Enterprise),
+  pero no definen qué pasa con las etapas saltadas. En experimentos a gran escala, los métodos observacionales a
+  menudo no reproducen el efecto de los experimentos aleatorios (Gordon et al., 2019).
+confidence: high
+limitations:
+- Con unas 55 altas por mes, los experimentos por puerta tendrían poco poder estadístico. Habrá que aceptar lecturas
+  direccionales o hacer pruebas por períodos o regiones. Además, no se sabe si Finora usa HubSpot.
+kind: measurement
+claims:
+- claim: El gasto S&M viene en 7 rubros (PaidMedia, PublicidadNoWeb, Team, PayrollExpenses, Travel, SoftwareTools,
+    Freelance), que se pueden agrupar en Generación de Demanda, capacidad comercial (Team) y Habilitación. La unidad
+    no está documentada y no hay desglose por canal, campaña ni puerta. En la unidad del archivo, el total es ≈33,0
+    en 2022, ≈25,1 en 2023 y ≈19,8 en ene–oct 2024.
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: Mientras Finanzas no etiquete el gasto en origen, el CAC por puerta o canal solo se puede estimar con reglas
+    de asignación, que son supuestos.
+- claim: HubSpot trae etapas de ciclo de vida por defecto (Subscriber, Lead, MQL, SQL, Opportunity, Customer, Evangelist,
+    Other), y sus actualizaciones automáticas «will only move the stage forward».
+  source_id: EXT-11
+  source_type: company
+  confidence: high
+  freshness: Vigente; consultado el 2026-09-29
+  supports_or_contests: context
+  notes: Si Finora usa HubSpot, la base de etapas ya existe. Los saltos de etapa hay que resolverlos en la definición
+    de las métricas.
+- claim: HubSpot calcula por etapa la fecha de entrada y de salida, el último tiempo y el tiempo acumulado en la
+    etapa (planes Professional/Enterprise), y los completa retroactivamente. La documentación no dice qué pasa con
+    las etapas saltadas.
+  source_id: EXT-12
+  source_type: company
+  confidence: high
+  freshness: Vigente; consultado el 2026-09-29
+  supports_or_contests: context
+  notes: Los tiempos por etapa ya existen en CRMs estándar. La regla para etapas saltadas la debe definir Finora.
+- claim: 'Gordon et al. (Marketing Science, 2019): «The observational methods often fail to produce the same effects
+    as the randomized experiments, even after conditioning on extensive demographic and behavioral variables».'
+  source_id: EXT-15
+  source_type: academic
+  confidence: high
+  freshness: '2019'
+  supports_or_contests: supports
+  notes: La atribución por canal reparte crédito; no prueba que el canal cause las altas.
+unverified: false
+source_ref:
+  research: R-016
+links:
+- R-016
+- H-003
+- Q-001
+- Q-003
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:02:42-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

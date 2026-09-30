@@ -233,7 +233,7 @@ def storyline_md(store: CaseStore, pkg: dict, tables: dict, title: str, brief: d
 
 
 # ------------------------------------------------------------------------------------------ run (existing skills via SDK)
-def submit_run(store: CaseStore, deck_id: str) -> dict:
+def submit_run(store: CaseStore, deck_id: str, *, via: str = "") -> dict:
     d = next((x for x in decks(store) if x["id"] == deck_id), None)
     if not d:
         raise StoreError("Deck no encontrado.")
@@ -243,7 +243,8 @@ def submit_run(store: CaseStore, deck_id: str) -> dict:
     job = jobs.submit(store.id, "storyteller", f"Visual Storyteller · {d['slug']}", {"deck_id": deck_id}, agent="visual_storyteller")
     d.update({"status": "running", "job_id": job.id, "started_at": now_iso(), "error": None})
     _upsert_deck(store, d)
-    store.log("hugo", "handoff", [deck_id], f"Hugo envió el Story Package al Visual Storyteller ({d['slug']})", material=True)
+    store.log("hugo", "handoff", [deck_id], f"Hugo envió el Story Package al Visual Storyteller ({d['slug']})" + (f" · {via}" if via else ""),
+              material=True)
     return {"job_id": job.id}
 
 
@@ -372,13 +373,25 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
         system_prompt={"type": "preset", "preset": "claude_code", "append": append},
         model=config.model_for("storyteller"), effort=config.EFFORT.get("storyteller", config.DEFAULT_EFFORT),
         max_turns=300, max_budget_usd=config.BUDGET_USD.get("storyteller"), cwd=str(config.ROOT),
-        add_dirs=[str(deck)], can_use_tool=_guard(deck, on_deny), agents=agents)
+        add_dirs=[str(deck)], can_use_tool=_guard(deck, on_deny), agents=agents,
+        # it reads rendered slides back (screenshots, whole HTML): one message passed the SDK's 1 MB default (29-sep, 21:51)
+        max_buffer_size=64 * 1024 * 1024)
     started = now_ms()
     trace, final, usage, cost = [], "", {}, None
 
+    # a run that was cut (a technical error, a restart) resumes from the deck folder instead of starting over
+    specs = sorted((deck / "slide-specs").glob("*.yaml")) if (deck / "slide-specs").is_dir() else []
+    built = sorted((deck / "slides").glob("*.html")) if (deck / "slides").is_dir() else []
+    resume = ((deck / "storyline.md").exists() and specs)
+    ask = f"Construye el deck ejecutivo de CaseOS en {deck} siguiendo la skill executive-visual-storyteller y el handoff."
+    if resume:
+        ask += (f" Esta carpeta trae el trabajo de una corrida anterior que se cortó por un error técnico, no por calidad: "
+                f"storyline.md, visual-direction.md, {len(specs)} specs de lámina y {len(built)} láminas en slides/. Retoma desde ahí: "
+                "conserva lo hecho salvo que la crítica visual pida cambiarlo y termina el render, la crítica y el deck final. "
+                "Revisa los renders de a una lámina a la vez.")
+
     async def prompt_stream():
-        yield {"type": "user", "message": {"role": "user", "content":
-               f"Construye el deck ejecutivo de CaseOS en {deck} siguiendo la skill executive-visual-storyteller y el handoff."}}
+        yield {"type": "user", "message": {"role": "user", "content": ask}}
     try:
         async for m in query(prompt=prompt_stream(), options=opts):
             if isinstance(m, SystemMessage) and getattr(m, "subtype", "") == "init":

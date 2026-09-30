@@ -1,0 +1,68 @@
+id: F-150
+type: finding
+headline: Ninguna de las herramientas revisadas separa el efecto de un descuento del de un cambio de suscripción.
+  Usadas tal cual, el fin de un descuento aparecería como expansión y el caso 100→130 con −30 aparecería como «sin
+  cambio».
+evidence_text: ChartMogul clasifica aplicar un descuento como Contracción y su vencimiento como Expansión, y un
+  cambio de suscripción que no mueve el MRR como Neutral (SRC-02). Chargebee incluye los descuentos recurrentes
+  dentro de su Downgrade MRR, sin categoría propia (SRC-07). El puente de Stripe tiene líneas de nuevo, reactivación,
+  expansión, contracción, churn y tipo de cambio (FX), pero no de descuento (SRC-04). Es exactamente la ambigüedad
+  que plantea Q-025. El precedente de FX muestra que un efecto que no es comportamiento del cliente sí se puede
+  aislar en su propia línea.
+confidence: high
+limitations:
+- Revisé tres proveedores y su comportamiento por defecto a septiembre de 2026; otras herramientas o configuraciones
+  podrían ser distintas. Nada de esto describe los datos de Finora.
+kind: external
+claims:
+- claim: ChartMogul clasifica la aplicación de un descuento como Contracción y su vencimiento como Expansión, en
+    las mismas categorías que un downgrade o un upgrade. No tiene un tipo de movimiento propio para descuentos.
+  source_id: SRC-02
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Confirma que el fin de un descuento se reporta como expansión (caso 3 de Q-025).
+- claim: En ChartMogul, un cambio de suscripción que no mueve el MRR (por ejemplo, sube la cantidad sin impacto
+    en el MRR) se clasifica como Neutral. Por definición, el caso 100→130 con −30 no aparecería como expansión.
+  source_id: SRC-02
+  source_type: company
+  confidence: medium
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: La definición es textual; aplicarla al caso 1 de Q-025 es inferencia nuestra.
+- claim: El puente de crecimiento de MRR de Stripe tiene líneas de nuevo, reactivación, expansión, contracción,
+    churn y ajuste por tipo de cambio (FX), pero ninguna de descuento.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Stripe sí aísla FX como efecto que no es comportamiento del cliente. Que el descuento se pueda aislar igual
+    es inferencia nuestra.
+- claim: Chargebee calcula su Downgrade MRR como la caída de MRR por cambios de suscripción y considera ahí los
+    descuentos recurrentes, sin categoría propia. Su Expansion MRR junta upgrades, paso de gratis a pago y reactivaciones.
+  source_id: SRC-07
+  source_type: company
+  confidence: medium
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'Otra taxonomía distinta: aquí la reactivación va dentro de la expansión. La mención a descuentos en la
+    documentación es breve.'
+unverified: false
+source_ref:
+  research: R-021
+links:
+- R-021
+- H-015
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: business_research
+created_at: '2026-09-29T11:15:51-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

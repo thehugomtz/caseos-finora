@@ -1,0 +1,1658 @@
+{
+ "run_id": "RUN-20260929-103202-measurement-1988",
+ "agent": "measurement",
+ "role": "measurement",
+ "purpose": "R-014 · Measurement L2",
+ "started_at": "2026-09-29T10:45:59-06:00",
+ "duration_ms": 836463,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/95c24cce8e58742a.md",
+ "system_prompt_hash": "95c24cce8e58742a",
+ "prompt": "# Investigación R-014\nPregunta: ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad de la máquina de leads (H-005)? Por ejemplo, carga por SDR/AE y tiempo a primer contacto por grupo de entrada, frente a señales de ajuste al entrar.\nPregunta original de Hugo: ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad de la máquina de leads (H-005)? Por ejemplo, carga por SDR/AE y tiempo a primer contacto por grupo de entrada, frente a señales de ajuste al entrar.\nNivel L2 · business research: varias fuentes buenas, compara enfoques, sintetiza qué aplica a este caso.\nEvidencia que la respondería: —\n\nCaso: Finora — Finora Business Analytics Case\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis…\nPregunta ejecutiva: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nDatos disponibles: Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación OK.; raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × mes); raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente); raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes); mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure, cohorte y cosecha (66.674 filas; grano cliente × mes); mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde customer_month; cuadran al centavo con la Fase 1 (34 filas; grano mes); mart.new_customers — Cada alta con su primer pago (M0), run-rate temprano, cohorte e industria (1.584 filas; grano alta)\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición…; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.\n\nElementos del caso a los que sirve esta investigación:\n- H-005 (HC3q) [hypothesis] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo. · se debilita si: Se debilita si las señales al entrar, medidas con el mismo criterio, no empeoraron. La opinión posterior de Sales no basta.\n- H-006 (HC3s) [hypothesis] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad. · se debilita si: Se debilita si la carga por SDR/AE no subió cuando creció New, si los tiempos a primer contacto no empeoraron o si la compra cae igual en las entradas atendida…\n- Q-016 (W6) [question] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?\n- Q-021 (U06) [question] U06 · Demanda, calidad, atención y post-SQL\n- Q-023 (U12) [question] U12 · ¿Validar implica experimentos?\n\nReglas: cita solo URLs que recuperaste en esta corrida; cada claim material referencia un `source_id` de tu lista de fuentes; si una afirmación no tiene fuente, no lleva cifras y va como inferencia. Los benchmarks son contexto, nunca evidencia sobre esta empresa. Termina con la síntesis para el caso (qué cambia para ESTE caso).\n\n## Modelo de datos del caso (solo lectura)\nTienes `consultar_modelo` (una SELECT sobre raw.*, staging.*, mart.*; máx. 200 filas) y `catalogo_modelo`. Úsalas en los pasos de datos: comprueba qué existe antes de proponer, y si un dato no está en el modelo, dilo. Cada cifra que saques del modelo va en `sources` con source_type \"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste; el claim cita ese source_id. Una cita del modelo solo cuenta si la consulta corrió en esta corrida.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "research_question",
+   "case_question",
+   "why_it_matters",
+   "short_answer",
+   "findings",
+   "claims",
+   "sources",
+   "alternative_explanations",
+   "what_is_established",
+   "what_is_contested",
+   "what_remains_unknown",
+   "case_implication",
+   "changes_current_story",
+   "affected_hypotheses",
+   "affected_claims",
+   "suggested_action",
+   "new_questions",
+   "handoff_to_cos",
+   "confidence_buckets",
+   "specialist"
+  ],
+  "properties": {
+   "research_question": {
+    "type": "string"
+   },
+   "case_question": {
+    "type": "string"
+   },
+   "why_it_matters": {
+    "type": "string"
+   },
+   "short_answer": {
+    "type": "string"
+   },
+   "findings": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "headline",
+      "evidence",
+      "claim_indexes",
+      "confidence",
+      "limitation"
+     ],
+     "properties": {
+      "headline": {
+       "type": "string"
+      },
+      "evidence": {
+       "type": "string"
+      },
+      "claim_indexes": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "limitation": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "claim",
+      "source_id",
+      "source_type",
+      "confidence",
+      "freshness",
+      "supports_or_contests",
+      "notes"
+     ],
+     "properties": {
+      "claim": {
+       "type": "string"
+      },
+      "source_id": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string"
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "freshness": {
+       "type": "string"
+      },
+      "supports_or_contests": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "contests",
+        "context"
+       ]
+      },
+      "notes": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "sources": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "title",
+      "url",
+      "publisher",
+      "date",
+      "source_type",
+      "quality",
+      "note"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "title": {
+       "type": "string"
+      },
+      "url": {
+       "type": "string"
+      },
+      "publisher": {
+       "type": "string"
+      },
+      "date": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string",
+       "enum": [
+        "primary",
+        "official",
+        "regulatory",
+        "academic",
+        "industry",
+        "company",
+        "expert",
+        "journalism",
+        "community",
+        "marketing",
+        "internal",
+        "data_model"
+       ]
+      },
+      "quality": {
+       "type": "string",
+       "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ]
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "alternative_explanations": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_established": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_contested": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_remains_unknown": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "case_implication": {
+    "type": "string"
+   },
+   "changes_current_story": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "value",
+     "why"
+    ],
+    "properties": {
+     "value": {
+      "type": "string",
+      "enum": [
+       "yes",
+       "no",
+       "maybe"
+      ]
+     },
+     "why": {
+      "type": "string"
+     }
+    }
+   },
+   "affected_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "affected_claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "suggested_action": {
+    "type": "string"
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "handoff_to_cos": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "summary",
+     "recommended_next"
+    ],
+    "properties": {
+     "summary": {
+      "type": "string"
+     },
+     "recommended_next": {
+      "type": "string"
+     }
+    }
+   },
+   "confidence_buckets": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "high_confidence",
+     "plausible",
+     "contested",
+     "unknown"
+    ],
+    "properties": {
+     "high_confidence": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "plausible": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "contested": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "unknown": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "specialist": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "measurement"
+    ],
+    "properties": {
+     "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "problem_interpretation",
+       "measurement_objective",
+       "recommended_framework",
+       "alternative_frameworks",
+       "metric_definitions",
+       "required_events",
+       "required_dimensions",
+       "decision_enabled",
+       "limitations",
+       "implementation_implications"
+      ],
+      "properties": {
+       "problem_interpretation": {
+        "type": "string"
+       },
+       "measurement_objective": {
+        "type": "string"
+       },
+       "recommended_framework": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "name",
+         "structure",
+         "why"
+        ],
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "structure": {
+          "type": "string"
+         },
+         "why": {
+          "type": "string"
+         }
+        }
+       },
+       "alternative_frameworks": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "name",
+          "when_better",
+          "tradeoff"
+         ],
+         "properties": {
+          "name": {
+           "type": "string"
+          },
+          "when_better": {
+           "type": "string"
+          },
+          "tradeoff": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "metric_definitions": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "metric",
+          "definition",
+          "formula",
+          "grain",
+          "milestone",
+          "notes"
+         ],
+         "properties": {
+          "metric": {
+           "type": "string"
+          },
+          "definition": {
+           "type": "string"
+          },
+          "formula": {
+           "type": "string"
+          },
+          "grain": {
+           "type": "string"
+          },
+          "milestone": {
+           "type": "string"
+          },
+          "notes": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "required_events": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event",
+          "trigger",
+          "properties"
+         ],
+         "properties": {
+          "event": {
+           "type": "string"
+          },
+          "trigger": {
+           "type": "string"
+          },
+          "properties": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          }
+         }
+        }
+       },
+       "required_dimensions": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "dimension",
+          "why"
+         ],
+         "properties": {
+          "dimension": {
+           "type": "string"
+          },
+          "why": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "decision_enabled": {
+        "type": "string"
+       },
+       "limitations": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "implementation_implications": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "tools": [
+  "WebSearch",
+  "WebFetch"
+ ],
+ "skills": [
+  {
+   "id": "case-research-synthesis",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "2e17a5277f3b"
+  },
+  {
+   "id": "measurement-strategy",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "02c076192332"
+  },
+  {
+   "id": "deep-business-research",
+   "mode": "dynamic",
+   "why": "pedido explícito",
+   "source": "CaseOS adaptation of shawnpetros/claude-skills deep-research (MIT)",
+   "kind": "custom",
+   "digest": "873dec726c85"
+  },
+  {
+   "id": "commercial-skills",
+   "mode": "dynamic",
+   "why": "pedido explícito",
+   "source": "alirezarezvani/claude-skills · commercial/skills/commercial-skills",
+   "kind": "vendor",
+   "digest": "58983bd3e32e"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 34,
+ "status": "ok",
+ "error": null,
+ "data_model": "finora",
+ "output": {
+  "research_question": "¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad de la máquina de leads (H-005)? Por ejemplo, carga por SDR/AE y tiempo a primer contacto por grupo de entrada, frente a señales de ajuste al entrar.",
+  "case_question": "Q-016 (evidencia mínima para distinguir las explicaciones del CRO), aplicada al par H-005 vs. H-006. Alimenta Q-021 (demanda, calidad, atención y post-SQL) y Q-023 (¿validar implica experimentos?).",
+  "why_it_matters": "Decide si la respuesta al CRO es invertir en capacidad comercial (Team, reparto de leads, SLA) o corregir la máquina de leads (Inversión en Marketing, Generación de Demanda, criterios ToFu). También define qué se puede defender hoy ante el CRO y el CFO: con los datos actuales, ninguna de las dos.",
+  "short_answer": "No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al entrar, primer contacto humano y compra en ventana fija) y un roster semanal de SDR/AE que distinga ramp; la comparación, por grupo de entrada entre periodo base y periodo de caída, es: si empeora la mezcla de ajuste apunta a H-005, y si suben la carga y la espera y la caída se concentra en entradas lentas o sin trabajar, con Self Service estable, apunta a H-006 (confianza media: es un diseño apoyado en un método publicado, no un resultado).",
+  "findings": [
+   {
+    "headline": "Con el modelo actual no se puede separar H-005 de H-006: faltan las entradas, los reps y los tiempos de contacto.",
+    "evidence": "El catálogo solo tiene pagos cliente × mes, industria y gasto S&M por rubro. Lo único parecido a capacidad es el gasto de Team, PayrollExpenses y Travel, en una unidad que no está documentada. Team sube de 0,24 a 0,453 entre ene-22 y oct-24, y PayrollExpenses es negativo en 5 meses, así que no mide personas (FTE) ni carga.",
+    "claim_indexes": [
+     0,
+     1
+    ],
+    "confidence": "high",
+    "limitation": "Finora puede tener CRM y roster fuera del modelo del caso; no lo sabemos."
+   },
+   {
+    "headline": "El dato mínimo son dos tablas: entradas con el ajuste congelado al entrar y el primer contacto humano, y un roster semanal de SDR/AE con su ramp.",
+    "evidence": "Tabla de entradas: entry_id, created_at, grupo de entrada, canal, 2 a 4 campos de ajuste capturados al entrar, owner, primer intento humano, SQL y compra enlazada a customer_id. Roster: rep, rol, fecha de alta, fecha de baja y grupo que atiende. El ajuste tiene que salir de campos anteriores al primer contacto, porque cuándo y cómo un rep sigue un lead depende a la vez de la calidad que percibe y del volumen (Sabnis et al., 2013). Las características observables del lead sirven como aproximación a los motivos de compra, pero cada empresa necesita su propia regla (Monat, 2011). La capacidad se cuenta en personas ya productivas: el benchmark de ramp de SDR es de 3,0 meses (Bridge Group), solo como contexto.",
+    "claim_indexes": [
+     7,
+     9,
+     14
+    ],
+    "confidence": "medium",
+    "limitation": "Es diseño, no resultado. Depende de que los campos de ajuste se hayan capturado igual durante todo el periodo."
+   },
+   {
+    "headline": "La comparación que separa es mezcla vs. tasa por grupo de entrada: la mezcla de ajuste habla de H-005; la tasa dentro de cada banda, si cae sobre todo en entradas lentas y en semanas de alta carga, habla de H-006.",
+    "evidence": "La descomposición de Kitagawa parte el cambio de conversión en dos: efecto mezcla (Σ r̄_b·Δp_b) y efecto tasa (Σ p̄_b·Δr_b). Es equivalente a Oaxaca-Blinder cuando el resultado es sí/no y las variables son categorías. Huella esperada de H-006: la espera crece poco hasta cierta carga y luego se dispara (ρ/(1−ρ), Kingman), y en la teoría de dotación de demanda entrante el abandono es un tema central (Gans et al., 2003). Por eso se busca un codo en el P90 del tiempo a primer contacto y más entradas sin trabajar. Bastan tres lecturas por grupo: mezcla de bandas; carga más P90 de espera; y conversión, dentro de cada banda, de las entradas atendidas dentro del SLA. Si esta última cae, H-006 se debilita, como dice su propia condición.",
+    "claim_indexes": [
+     8,
+     12,
+     13,
+     6
+    ],
+    "confidence": "medium",
+    "limitation": "Si las bandas son gruesas, la calidad que no se ve dentro de cada banda aparece como 'efecto tasa'. Además, los reps atienden primero lo que parece mejor, y eso mezcla velocidad con calidad."
+   },
+   {
+    "headline": "Self Service funciona como grupo de control, y los experimentos naturales van antes que un experimento aleatorio (Q-023).",
+    "evidence": "Self Service no pasa por SDR/AE: si su conversión dentro de banda cae igual que la de Assisted, la capacidad no lo explica. Las cifras de velocidad de respuesta que hay son correlacionales y vienen de un vendor (8 veces más conversión en los primeros cinco minutos). Como los reps priorizan lo que parece mejor, 'lo que se atiende rápido convierte más' no prueba capacidad. Antes de aleatorizar se pueden usar esperas que no dependen de la calidad: entradas que llegan fuera de horario o en fin de semana, el reparto automático de leads por turnos (round robin) y las ausencias de reps. Un experimento aleatorio de atención rápida solo si la lectura queda ambigua y la decisión es cara.",
+    "claim_indexes": [
+     7,
+     11,
+     2
+    ],
+    "confidence": "medium",
+    "limitation": "Supone que la calidad no cambió distinto según el canal. Con 30 a 84 altas al mes, cada combinación de grupo, banda y velocidad tendrá pocos casos."
+   },
+   {
+    "headline": "Lo que el modelo sí dice sobre los compradores no permite elegir entre H-005 y H-006.",
+    "evidence": "Entre las altas limpias, la mezcla por industria se movió de forma moderada (Retail 18,0% → 26,0% → 24,0%; ninguna industria aparece ni desaparece). La mediana del primer pago observado bajó de 63.000 a 36.750 COP entre 2022 y 2023, y bajó dentro de 5 de 6 industrias. El % de altas con pago en M3 no empeoró (90,1%, 95,8%, 95,2%). Todas son señales posteriores a la compra: no ven a quien no compró, y la caída del primer pago admite otras lecturas.",
+    "claim_indexes": [
+     3,
+     4,
+     5
+    ],
+    "confidence": "high",
+    "limitation": "La industria puede no ser la señal de ajuste que usa Finora. El primer pago observado no es una adquisición confirmada. 2024 está incompleto."
+   }
+  ],
+  "claims": [
+   {
+    "claim": "El modelo del caso no tiene entradas ni leads, grupo de entrada, canal, SDR/AE, asignaciones ni tiempos de contacto; solo pagos cliente × mes, industria y gasto S&M mensual por rubro.",
+    "source_id": "SRC-D1",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Catálogo consultado el 2026-09-29; datos de ene-22 a oct-24",
+    "supports_or_contests": "context",
+    "notes": "Por eso ninguna prueba de H-005 o H-006 se puede correr hoy."
+   },
+   {
+    "claim": "Lo único parecido a capacidad es el gasto de Team, PayrollExpenses y Travel, en una unidad que no está documentada. Team pasa de 0,24 (ene-22) a 0,453 (oct-24) y PayrollExpenses es negativo en 5 meses (nov-23, dic-23, feb-24, mar-24, jul-24).",
+    "source_id": "SRC-D2",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos de ene-22 a oct-24",
+    "supports_or_contests": "context",
+    "notes": "No mide personas (FTE) ni ramp. Que suba el gasto de Team ni apoya ni debilita H-006."
+   },
+   {
+    "claim": "Las altas mensuales observadas van de 17 a 38 entre mar y dic de 2022, y de 30 a 84 en 2023–2024.",
+    "source_id": "SRC-D2",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos de ene-22 a oct-24",
+    "supports_or_contests": "context",
+    "notes": "Es volumen de compradores, no de entradas. Limita cuántos casos habrá por combinación en cualquier descomposición."
+   },
+   {
+    "claim": "Altas por año: 380 en 2022 (272 limpias; 108 de feb-22 marcadas como posible arrastre), 650 en 2023 y 554 entre ene y oct de 2024. Mediana del primer pago observado: 63.000, 36.750 y 42.000 COP.",
+    "source_id": "SRC-D3",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos de ene-22 a oct-24",
+    "supports_or_contests": "context",
+    "notes": "El primer pago observado es la primera aparición, no una adquisición confirmada. 2024 tiene 10 meses."
+   },
+   {
+    "claim": "Entre las altas limpias, la mezcla por industria cambió de forma moderada (Retail 18,0% → 26,0% → 24,0%; Producción 25,7% → 23,8% → 20,4%; Restaurantes 28,7% → 25,2% → 27,6%). La mediana del primer pago cayó de 2022 a 2023 dentro de 5 de 6 industrias; Salud se mantuvo en 63.000.",
+    "source_id": "SRC-D4",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos de mar-22 a oct-24 (altas limpias)",
+    "supports_or_contests": "context",
+    "notes": "Son solo compradores. La industria es el único atributo al entrar que hay en el modelo y no necesariamente la señal de ajuste de Finora. No permite elegir entre H-005 y H-006."
+   },
+   {
+    "claim": "El % de altas limpias con pago en M3 no empeoró: 90,1% (2022, mar–dic, n=272), 95,8% (2023, n=650) y 95,2% (2024, ene–jul, n=399).",
+    "source_id": "SRC-D5",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Cohortes hasta jul-24 (M3 observable)",
+    "supports_or_contests": "context",
+    "notes": "Son solo compradores. Un cliente que paga varios meses juntos puede aparecer con 0 en M3. No ve a quien no compró."
+   },
+   {
+    "claim": "El 70% de los leads generados por marketing no son perseguidos por los reps, y esto puede deberse a que el tiempo del rep tiene otras demandas.",
+    "source_id": "SRC-01",
+    "source_type": "academic",
+    "confidence": "high",
+    "freshness": "2013 (más de 18 meses; describe un mecanismo estable, no un dato de mercado)",
+    "supports_or_contests": "context",
+    "notes": "461 reps en cuatro empresas. Hace plausible el mecanismo de H-006 en general; no es evidencia sobre Finora."
+   },
+   {
+    "claim": "En ese estudio, que un rep siga un lead depende de la calidad de precalificación, del volumen de leads de marketing y del seguimiento gerencial, con efectos que cambian según la experiencia y el desempeño del rep.",
+    "source_id": "SRC-01",
+    "source_type": "academic",
+    "confidence": "high",
+    "freshness": "2013",
+    "supports_or_contests": "context",
+    "notes": "Inferencia para el caso: los descartes y el 'mal fit' que registra Sales dependen a la vez de la calidad y de la carga, así que no sirven como medida de ajuste al entrar."
+   },
+   {
+    "claim": "La descomposición de Kitagawa separa la diferencia entre dos tasas en efecto de tasas específicas y efecto de composición, y equivale a Oaxaca-Blinder cuando el resultado es binario y las covariables son categóricas.",
+    "source_id": "SRC-02",
+    "source_type": "academic",
+    "confidence": "high",
+    "freshness": "2025-05",
+    "supports_or_contests": "context",
+    "notes": "Es el método para separar 'cambió qué entra' (mezcla) de 'cambió qué pasa después de entrar' (tasa)."
+   },
+   {
+    "claim": "Las características observables de un lead al entrar sirven como aproximación a los motivos de compra y permiten estimar su probabilidad de conversión. Los criterios varían por empresa y el modelo no se validó en campo.",
+    "source_id": "SRC-08",
+    "source_type": "academic",
+    "confidence": "medium",
+    "freshness": "2011 (antiguo; marco conceptual)",
+    "supports_or_contests": "context",
+    "notes": "Implica que Finora necesita su propia regla de ajuste, validada en el periodo base."
+   },
+   {
+    "claim": "La mayoría de las empresas no responde lo bastante rápido a los leads online.",
+    "source_id": "SRC-03",
+    "source_type": "academic",
+    "confidence": "medium",
+    "freshness": "2011 (antiguo)",
+    "supports_or_contests": "context",
+    "notes": "Solo se recuperó el resumen. Las cifras del artículo no se verificaron en la fuente primaria y no se usan."
+   },
+   {
+    "claim": "Un vendor reporta, sobre 5,7 millones de leads inbound en más de 400 empresas, una conversión 8 veces mayor cuando se responde en los primeros cinco minutos, y que el 57,1% de los primeros intentos de llamada ocurre después de más de una semana.",
+    "source_id": "SRC-04",
+    "source_type": "marketing",
+    "confidence": "low",
+    "freshness": "2021 (más de 18 meses; vendor)",
+    "supports_or_contests": "context",
+    "notes": "Contenido de vendor, sin método. Es una correlación: puede reflejar que los reps atienden primero los mejores leads (inferencia)."
+   },
+   {
+    "claim": "Según la fórmula de Kingman, la espera media en una cola crece con ρ/(1−ρ) y se dispara cuando la utilización se acerca a 1.",
+    "source_id": "SRC-05",
+    "source_type": "community",
+    "confidence": "medium",
+    "freshness": "Resultado de 1961; página consultada el 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Los reps no son una cola pura porque priorizan; por eso el codo es una huella esperada de H-006, no una ley."
+   },
+   {
+    "claim": "La teoría de dotación de centros de llamadas trata como temas centrales la espera en tráfico pesado (Erlang C), la dotación de seguridad de raíz cuadrada y el abandono (Erlang A).",
+    "source_id": "SRC-06",
+    "source_type": "academic",
+    "confidence": "medium",
+    "freshness": "2003 (teoría estable)",
+    "supports_or_contests": "context",
+    "notes": "Solo se recuperó la estructura del documento. Análogo para el caso: un lead que se enfría equivale a un abandono."
+   },
+   {
+    "claim": "The Bridge Group reporta un ramp promedio de SDR de 3,0 meses y una razón de 1 SDR por cada 2,4 AEs, en una encuesta online a 351 empresas B2B (2024–2025).",
+    "source_id": "SRC-07",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "2025-02 (vigente)",
+    "supports_or_contests": "context",
+    "notes": "Benchmark de B2B, principalmente de EE. UU. No es evidencia sobre Finora; solo justifica contar capacidad en personas ya productivas y no en headcount."
+   }
+  ],
+  "sources": [
+   {
+    "id": "SRC-D1",
+    "title": "¿Qué tablas y columnas tiene el modelo del caso? (¿existen datos de entradas, reps y contacto?)",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora (finora-eda)",
+    "date": "2026-09-29 (datos ene-22 a oct-24)",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "catalogo_modelo() — herramienta de catálogo, sin SQL. Lista raw.transactions, raw.industry, raw.sm_spend, staging.* y mart.*; no hay tablas de leads, reps, asignaciones ni actividades."
+   },
+   {
+    "id": "SRC-D2",
+    "title": "Altas mensuales y gasto S&M por rubro (Team, PayrollExpenses, Travel), ene-22 a oct-24",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora (finora-eda)",
+    "date": "2026-09-29 (datos ene-22 a oct-24)",
+    "source_type": "data_model",
+    "quality": "B",
+    "note": "SELECT month, window_flag, new_customers, new_mrr_cop, median_new_customer_mrr_cop, demand_gen_spend, sales_capacity_spend, team, payroll_expenses, travel, enablement_spend, total_sm_spend, team_share_of_total_sm, new_customers_per_demand_gen_unit FROM mart.monthly_metrics_phase1 ORDER BY month — el gasto está en una unidad no documentada."
+   },
+   {
+    "id": "SRC-D3",
+    "title": "Altas por año y mediana del primer pago observado",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora (finora-eda)",
+    "date": "2026-09-29 (datos ene-22 a oct-24)",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, COUNT(DISTINCT industry) AS industrias, ROUND(AVG(m0_cop),0) AS m0_promedio, MEDIAN(m0_cop) AS m0_mediana, ROUND(AVG(early_run_rate_cop),0) AS run_rate_temprano_prom FROM mart.new_customers GROUP BY year ORDER BY year"
+   },
+   {
+    "id": "SRC-D4",
+    "title": "Mezcla por industria de las altas limpias y mediana del primer pago por industria y año",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora (finora-eda)",
+    "date": "2026-09-29 (datos mar-22 a oct-24)",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT year, industry, COUNT(*) AS altas, ROUND(100.0*COUNT(*)/SUM(COUNT(*)) OVER (PARTITION BY year),1) AS pct_del_anio, MEDIAN(m0_cop) AS m0_mediana FROM mart.new_customers WHERE clean GROUP BY year, industry ORDER BY year, altas DESC"
+   },
+   {
+    "id": "SRC-D5",
+    "title": "% de altas limpias con pago en M3 por año de cohorte (cohortes hasta jul-24)",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora (finora-eda)",
+    "date": "2026-09-29 (datos mar-22 a oct-24)",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "WITH nc AS (SELECT customer_id, year, cohort_month, m0_cop FROM mart.new_customers WHERE clean AND cohort_month <= '2024-07'), m3 AS (SELECT cm.customer_id, cm.active_customer FROM mart.customer_month cm WHERE cm.tenure_month = 3) SELECT nc.year, COUNT(*) AS altas_con_m3_observable, MEDIAN(nc.m0_cop) AS m0_mediana, ROUND(100.0*AVG(COALESCE(m3.active_customer,0)),1) AS pct_activos_en_m3 FROM nc LEFT JOIN m3 ON nc.customer_id = m3.customer_id GROUP BY nc.year ORDER BY nc.year"
+   },
+   {
+    "id": "SRC-01",
+    "title": "The Sales Lead Black Hole: On Sales Reps' Follow-Up of Marketing Leads (Sabnis, Chatterjee, Grewal, Lilien)",
+    "url": "https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/",
+    "publisher": "Journal of Marketing 77(1):52–67 (vía Penn State Research Portal)",
+    "date": "2013-01",
+    "source_type": "academic",
+    "quality": "A",
+    "note": "Resumen recuperado: 70% de leads de marketing no perseguidos; marco motivación-oportunidad-habilidad; 461 reps en cuatro empresas. El seguimiento depende de la precalificación, del volumen y del seguimiento gerencial."
+   },
+   {
+    "id": "SRC-02",
+    "title": "Oaxaca-Blinder meets Kitagawa: What is the link? (Oaxaca & Sierminska)",
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0321874",
+    "publisher": "PLOS One",
+    "date": "2025-05-13",
+    "source_type": "academic",
+    "quality": "A",
+    "note": "Define la descomposición en efecto composición y efecto tasa, y su equivalencia con Oaxaca-Blinder para resultado binario y covariables categóricas."
+   },
+   {
+    "id": "SRC-03",
+    "title": "The Short Life of Online Sales Leads (Oldroyd, McElheran, Elkington)",
+    "url": "https://scholarsarchive.byu.edu/facpub/9711/",
+    "publisher": "Harvard Business Review 89(3):28 (vía BYU ScholarsArchive)",
+    "date": "2011-03",
+    "source_type": "academic",
+    "quality": "B",
+    "note": "Solo se recuperó el resumen ('most companies are not responding nearly fast enough'). Las cifras del artículo no se verificaron y no se usan."
+   },
+   {
+    "id": "SRC-04",
+    "title": "Response Time Matters (Lead Response Management research)",
+    "url": "https://www.insidesales.com/response-time-matters/",
+    "publisher": "InsideSales",
+    "date": "2021",
+    "source_type": "marketing",
+    "quality": "D",
+    "note": "Contenido de vendor: 55 millones de actividades, 5,7 millones de leads inbound, más de 400 empresas; conversión 8 veces mayor en los primeros cinco minutos; 57,1% de los primeros intentos después de una semana. Correlacional, sin método publicado."
+   },
+   {
+    "id": "SRC-05",
+    "title": "Kingman's formula",
+    "url": "https://en.wikipedia.org/wiki/Kingman%27s_formula",
+    "publisher": "Wikipedia (resume a Kingman, 1961)",
+    "date": "Consultado el 2026-09-29",
+    "source_type": "community",
+    "quality": "C",
+    "note": "E(W_q) ≈ ρ/(1−ρ) × ((c_a²+c_s²)/2) × τ; la espera crece sin límite cuando la utilización se acerca a 1."
+   },
+   {
+    "id": "SRC-06",
+    "title": "Telephone Call Centers: Tutorial, Review, and Research Prospects (Gans, Koole, Mandelbaum)",
+    "url": "https://columbia.edu/~ww2040/tutorial.pdf",
+    "publisher": "Manufacturing & Service Operations Management 5(2):79–141 (INFORMS)",
+    "date": "2003",
+    "source_type": "academic",
+    "quality": "A",
+    "note": "Recuperación parcial (estructura del documento): tráfico pesado en Erlang C, dotación de seguridad de raíz cuadrada, abandono (Erlang A), jerarquía de planificación de capacidad."
+   },
+   {
+    "id": "SRC-07",
+    "title": "SDR Models, Motions & Metrics: 2025 Research Report",
+    "url": "https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group",
+    "publisher": "The Bridge Group",
+    "date": "2025-02-06",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Encuesta online a 351 empresas B2B (2024–2025): ramp de SDR de 3,0 meses; 1 SDR por cada 2,4 AEs. Benchmark: solo contexto."
+   },
+   {
+    "id": "SRC-08",
+    "title": "Industrial sales lead conversion modeling (Monat)",
+    "url": "https://www.emerald.com/insight/content/doi/10.1108/02634501111117610/full/html",
+    "publisher": "Marketing Intelligence & Planning 29(2):178–194 (Emerald)",
+    "date": "2011",
+    "source_type": "academic",
+    "quality": "A",
+    "note": "Resumen estructurado: 16 características observables del lead como aproximación a 8 motivos de compra. Limitación: los criterios varían por empresa y no hubo validación de campo."
+   }
+  ],
+  "alternative_explanations": [
+   "Caída post-SQL: los AEs cierran menos por precio, competencia o producto, sin cambios en el ajuste ni en la velocidad (rama de Q-021).",
+   "Cambio de mezcla entre grupos de entrada (más Self Service o más Digital frente a KAM): la tasa mezclada cae aunque ningún recorrido empeore.",
+   "Error de medición: cambió la definición de lead, el formulario, la regla de calificación o el reparto de leads, o se cuentan correos automáticos como contacto.",
+   "Los reps priorizan bajo carga: atienden primero lo que parece mejor y marcan como 'mal fit' lo que no alcanzan, así que la opinión de Sales mezcla H-005 y H-006.",
+   "Interacción: más volumen de bajo ajuste consume capacidad y demora también a las buenas entradas (H-005 alimenta a H-006).",
+   "Capacidad en el papel sin capacidad real: el gasto de Team crece, pero con reps en ramp o rotación la capacidad efectiva no sube (variante de H-006).",
+   "Cambio de mercado o estacionalidad que baja la intención en todos los grupos a la vez."
+  ],
+  "what_is_established": [
+   "El modelo del caso no tiene entradas, grupo de entrada, reps ni tiempos de contacto: con él no se puede probar ni descartar H-005 ni H-006.",
+   "El gasto de Team/Payroll/Travel no mide capacidad: su unidad no está documentada y PayrollExpenses es negativo en 5 meses.",
+   "En B2B, buena parte de los leads de marketing no se persigue, y que un rep los siga depende a la vez de la calidad percibida y del volumen (Sabnis et al., 2013).",
+   "Separar mezcla de tasa es un método publicado y verificable (Kitagawa / Oaxaca-Blinder)."
+  ],
+  "what_is_contested": [
+   "Cuánto causa la velocidad de respuesta: las cifras grandes (8 veces más en cinco minutos) vienen de vendors y son correlaciones que pueden inflarse porque los reps atienden primero los mejores leads. En esta corrida no encontramos evidencia experimental que controle la calidad del lead.",
+   "Qué significa la caída del primer pago observado dentro de cada industria: cuentas más chicas (compatible con H-005), otros planes o la entrada vía Self Service. El modelo no lo resuelve."
+  ],
+  "what_remains_unknown": [
+   "Si Finora tiene CRM y roster con fecha de creación, primer contacto, campos de ajuste y fechas de alta y baja de reps, y desde cuándo.",
+   "Si en el periodo cambió la definición de lead, el formulario, la regla de calificación o el reparto de leads.",
+   "Qué significa 'New' en H-006 (entradas o clientes nuevos) y qué meses son 'la caída'.",
+   "Si Self Service existía como recorrido sin SDR/AE en ambos periodos."
+  ],
+  "case_implication": "Para Growth, lo que se puede defender hoy ante el CRO y el CFO no es H-005 ni H-006, sino la prueba que las separa y el dato que falta. Es un hueco del WoW: no se mide la carga por persona productiva ni el tiempo a primer contacto por grupo de entrada, y el ajuste no se congela al entrar, así que la discusión calidad vs. capacidad queda en opinión. La pieza natural es una lámina con una matriz 2×2 (mezcla de ajuste × carga y espera) y un bloque en la Propuesta de Modelo de datos con dos tablas nuevas, entradas y roster. Esas tablas se enlazan por customer_id con el mart actual para medir resultados comunes a todos los grupos: altas, primer pago observado y M3. También ordena Q-021 en cuatro ramas medibles: demanda (volumen), calidad (mezcla), atención (carga y espera) y post-SQL. Y responde Q-023: validar no exige un experimento como primer paso.",
+  "changes_current_story": {
+   "value": "maybe",
+   "why": "No cambia los hechos: con los datos del caso ninguna de las dos hipótesis gana ni pierde. Sí puede cambiar cómo se presentan en Growth: pasan de 'explicaciones del CRO' a 'hipótesis con una prueba definida y datos pedidos', y se suma una pieza a la Propuesta de Modelo de datos. Hugo decide si entra como lámina."
+  },
+  "affected_hypotheses": [
+   {
+    "id": "H-005",
+    "effect": "requires_research",
+    "why": "No se puede evaluar con el modelo: no hay entradas ni señales de ajuste al entrar, y la única señal disponible (industria de los compradores) no ve a quien no compró. La investigación vuelve medible su condición de debilitamiento: mezcla de bandas de ajuste congeladas al entrar, con la misma regla y por grupo de entrada. Si el efecto mezcla de la descomposición es cercano a cero, H-005 se debilita."
+   },
+   {
+    "id": "H-006",
+    "effect": "requires_research",
+    "why": "No se puede evaluar con el modelo: no hay headcount, carga ni tiempos de contacto, y el gasto de Team/Payroll no cuenta personas (unidad no documentada, 5 meses negativos). Queda medible con la carga por persona productiva, el P90 del tiempo a primer contacto y el % de entradas sin trabajar por grupo de entrada. Se debilita si, dentro de la misma banda, la conversión de las entradas atendidas dentro del SLA también cae, o si Self Service cae igual que Assisted."
+   }
+  ],
+  "affected_claims": [],
+  "suggested_action": "Proponer a Hugo una lámina de Growth, 'Capacidad vs. calidad: qué dato las separa', con la matriz 2×2 y la solicitud mínima de datos (tabla de entradas más roster). Pasar a Data Engineering el esbozo de mart.entry_cohort (grano: entrada) y mart.capacity_week (grano: semana × rol × grupo) para la Propuesta de Modelo de datos. No proponer un experimento hasta ver la lectura con los datos observados.",
+  "new_questions": [
+   "¿Finora registra en su CRM la fecha de creación y el primer contacto humano de cada entrada, con su grupo de entrada, desde antes del periodo de caída?",
+   "¿Cuántos SDR, AE y KAM activos tuvo Finora por mes entre 2022 y 2024, con fechas de alta y baja y el grupo de entrada que atendía cada uno?",
+   "¿Qué campos de ajuste se capturan al entrar (formulario o enriquecimiento) y cambió en el periodo la regla de calificación, el formulario o el reparto de leads?"
+  ],
+  "handoff_to_cos": {
+   "summary": "R-014 queda respondida como diseño. El modelo no permite separar H-005 de H-006: faltan entradas, reps y tiempos de contacto, y el gasto de Team no mide capacidad. Dato mínimo: tabla de entradas con el ajuste congelado al entrar y el primer contacto humano, más un roster semanal de SDR/AE con su ramp. Comparación: mezcla vs. tasa por grupo de entrada, con Self Service como control y experimentos naturales antes que uno aleatorio (Q-023).",
+   "recommended_next": "Llevar a Hugo tres propuestas: (1) una lámina de Growth con la matriz 2×2 y la solicitud de datos; (2) enviar a Finora las tres preguntas nuevas; (3) pasar a Data Engineering el esbozo de mart.entry_cohort y mart.capacity_week. Hugo decide si entra al storyline y si Q-023 se cierra con 'experimentos naturales primero'."
+  },
+  "confidence_buckets": {
+   "high_confidence": [
+    "El modelo del caso no contiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto (catálogo).",
+    "El gasto de Team, PayrollExpenses y Travel no mide capacidad (unidad no documentada; 5 meses con PayrollExpenses negativo).",
+    "Muchas empresas responden tarde o no persiguen los leads de marketing (Sabnis et al., 2013; Oldroyd et al., 2011).",
+    "La descomposición mezcla vs. tasa es una identidad publicada (Kitagawa; Oaxaca-Blinder)."
+   ],
+   "plausible": [
+    "La opinión posterior de Sales no separa H-005 de H-006, porque el seguimiento depende a la vez de la calidad y del volumen (Sabnis, 2013, más inferencia).",
+    "La huella de H-006 es un codo: la espera crece poco hasta cierta carga y luego se dispara (Kingman; Gans et al.).",
+    "Self Service sirve como control de capacidad si existió como recorrido sin SDR/AE en ambos periodos (inferencia).",
+    "Las señales observables al entrar sirven para medir el ajuste, con una regla propia de Finora validada en el periodo base (Monat, 2011)."
+   ],
+   "contested": [
+    "Cuánto causa la velocidad de respuesta en la conversión: el 8 veces de un vendor es correlacional y puede estar inflado porque los reps atienden primero los mejores leads.",
+    "Qué significa la caída del primer pago observado dentro de cada industria: cuentas más chicas, otros planes o Self Service."
+   ],
+   "unknown": [
+    "Si Finora tiene CRM y roster con los campos necesarios, y desde cuándo.",
+    "Si cambiaron la definición de lead, el formulario, la regla de calificación o el reparto de leads.",
+    "Qué significa 'New' en H-006 y qué meses son la caída.",
+    "Evidencia experimental publicada sobre velocidad de respuesta que controle la calidad del lead (no encontrada en esta corrida)."
+   ]
+  },
+  "specialist": {
+   "measurement": {
+    "problem_interpretation": "H-005 y H-006 predicen el mismo síntoma agregado, menos compras por entrada, pero dejan huellas distintas. H-005 cambia la mezcla de lo que entra: peor ajuste al entrar, medido antes de que Sales toque la entrada. H-006 cambia lo que pasa después de entrar: más carga por persona, más espera y más entradas sin trabajar, y la caída se concentra en las entradas que esperaron. Hay dos trampas. (1) Una tasa de conversión mezclada entre Self Service, Assisted y Executive no describe a ningún grupo y puede caer solo porque cambió el peso de cada uno. (2) El juicio posterior de Sales (descartes, 'mal fit') no sirve para separar, porque el seguimiento de los reps depende a la vez de la calidad percibida y del volumen. Unidad: la entrada, no el cliente (sign-up en Self Service, lead o solicitud en Assisted, cuenta u oportunidad registrada en Executive/KAM). Grano: un evento por entrada, agregado a mes de entrada × grupo de entrada × banda de ajuste; la capacidad, a semana × rol. Hito de inicio: entrada creada. Nada de esto existe hoy en el modelo del caso.",
+    "measurement_objective": "Atribuir el cambio de conversión de entrada a compra (periodo base vs. periodo de caída), por grupo de entrada, a tres fuentes separables: la composición del ajuste al entrar (H-005); una caída de la tasa dentro de cada banda concentrada en entradas lentas o sin trabajar y en semanas de alta carga (H-006); o una caída post-SQL u otra causa (ni H-005 ni H-006). Todo con el mínimo de datos nuevos.",
+    "recommended_framework": {
+     "name": "Mezcla vs. tasa por grupo de entrada, con capa de capacidad (ajuste al entrar × velocidad × carga)",
+     "structure": "1) Cohortes de entradas por mes y grupo de entrada (Self Service / Assisted / Executive), cada grupo con su unidad. 2) Banda de ajuste A/B/C calculada al crear la entrada con una regla fija y versionada; antes de usarla, validar que las bandas separan la conversión en el periodo base. 3) Capa de capacidad semanal: personas productivas (FTE ramped), carga por persona, P90 del tiempo a primer contacto humano y % de entradas sin trabajar. 4) Volumen, tasa y valor por separado: entradas; conversión a compra en ventana fija (compra = primer pago enlazado a customer_id) y cierre post-SQL; primer pago observado y M3. 5) Descomposición de Kitagawa por grupo: Δconversión = efecto mezcla (Σ r̄_b·Δp_b) + efecto tasa (Σ p̄_b·Δr_b). 6) Abrir el efecto tasa por tramo de velocidad (dentro del SLA / fuera / sin contacto) y por tercil de carga al llegar. 7) Control: Self Service no pasa por SDR/AE; comparar su cambio dentro de cada banda con el de Assisted (diferencia en diferencias). 8) Si la priorización de los reps deja dudas: experimentos naturales (llegadas fuera de horario, reparto de leads por turnos, ausencias de reps) antes que un experimento aleatorio. Matriz 2×2: si la mezcla empeora y la velocidad está estable → H-005; si la mezcla está estable, suben la carga y la espera y la caída se concentra en entradas lentas → H-006; si pasan ambas cosas → ambas, probablemente interactuando; si no pasa ninguna → post-SQL, mezcla entre grupos o cambios de definición.",
+     "why": "Responde la pregunta con solo dos tablas nuevas (entradas y roster) y es legible para el CRO y el CFO. No fuerza un funnel lineal: cada grupo tiene su recorrido y todos terminan en compra y primer pago. Además separa por construcción lo que cambia al entrar (mezcla) de lo que cambia después (tasa), que es justo la línea entre H-005 y H-006. Da a Q-021 sus cuatro ramas medibles: demanda, calidad, atención y post-SQL. La descomposición es una identidad publicada (Kitagawa, equivalente a Oaxaca-Blinder)."
+    },
+    "alternative_frameworks": [
+     {
+      "name": "Modelo a nivel entrada (regresión logística u Oaxaca-Blinder con covariables continuas)",
+      "when_better": "Cuando hay volumen suficiente, varias señales de ajuste continuas y la carga de cada rep medida al momento de llegar la entrada; permite controlar varias cosas a la vez.",
+      "tradeoff": "Es menos transparente para el CRO y el CFO. La velocidad depende de la priorización de los reps, y con pocos casos por combinación (30 a 84 altas al mes observadas en 2023–2024) el modelo puede dar una falsa precisión."
+     },
+     {
+      "name": "Prueba aleatoria de capacidad (atención rápida garantizada o capacidad extra)",
+      "when_better": "Cuando la lectura con datos observados queda ambigua por la priorización de los reps y la decisión es cara (contratar SDR/AE). Da el efecto causal del mecanismo de H-006.",
+      "tradeoff": "Cuesta capacidad extra, tarda semanas más la ventana de compra, genera fricción operativa y solo prueba capacidad: no mide si cambió la mezcla de ajuste."
+     }
+    ],
+    "metric_definitions": [
+     {
+      "metric": "Entradas por grupo y banda (volumen)",
+      "definition": "Entradas nuevas creadas en el periodo, por grupo de entrada y banda de ajuste al entrar. La unidad cambia por grupo: sign-up en Self Service, lead o solicitud en Assisted, cuenta u oportunidad registrada en Executive/KAM.",
+      "formula": "COUNT(DISTINCT entry_id) con created_at dentro del periodo",
+      "grain": "mes de entrada × grupo de entrada × banda de ajuste (semana para la capa de capacidad)",
+      "milestone": "entrada creada (created_at)",
+      "notes": "No sumar grupos sin decir qué se cuenta. Es la rama 'Demanda' de Q-021."
+     },
+     {
+      "metric": "Capacidad instalada en FTE ramped",
+      "definition": "Personas equivalentes ya productivas: SDRs, AEs y KAMs activos en la semana, descontando ramp y ausencias, por rol y grupo de entrada que atienden.",
+      "formula": "Σ_rep (días hábiles disponibles ÷ días hábiles de la semana) × factor_ramp(antigüedad); factor_ramp va de 0 a 1 según la curva que defina Finora",
+      "grain": "semana × rol × grupo de entrada",
+      "milestone": "fecha de ingreso del rep",
+      "notes": "No usar el gasto de Team/Payroll: unidad no documentada y meses negativos. El ramp de 3,0 meses del benchmark de Bridge Group es contexto, no un parámetro de Finora."
+     },
+     {
+      "metric": "Carga por FTE ramped",
+      "definition": "Entradas asignadas en la semana por cada persona productiva del equipo que las atiende, y cola abierta al cierre de la semana (asignadas sin primer contacto) por persona productiva.",
+      "formula": "entradas_asignadas_semana ÷ FTE_ramped; cola_abierta_al_cierre ÷ FTE_ramped",
+      "grain": "semana × rol × grupo de entrada (y rep × semana para el experimento natural)",
+      "milestone": "entrada asignada (assigned_at)",
+      "notes": "Es la condición de H-006: ¿subió cuando crecieron las entradas? No aplica a Self Service."
+     },
+     {
+      "metric": "Tiempo a primer contacto humano",
+      "definition": "Horas hábiles entre la creación de la entrada y el primer intento humano registrado (llamada, correo o mensaje manual), sin contar automatizaciones.",
+      "formula": "first_touch_at − created_at en horas hábiles; reportar mediana, P90 y % dentro del SLA de Finora (o de la mediana del periodo base si no hay SLA)",
+      "grain": "entrada; se agrega a semana × grupo × banda",
+      "milestone": "entrada creada",
+      "notes": "El P90 muestra lo que más esperó; con H-006 se espera un codo frente a la carga (Kingman). En Executive/KAM, usar el tiempo a la primera reunión."
+     },
+     {
+      "metric": "% de entradas sin trabajar",
+      "definition": "Entradas sin ningún intento humano al cerrar la ventana de atención.",
+      "formula": "entradas sin first_touch_at a los N días ÷ entradas de la cohorte (N es un parámetro, p. ej. 7)",
+      "grain": "semana de entrada × grupo × banda",
+      "milestone": "entrada creada",
+      "notes": "Mide los leads que nadie persigue (Sabnis et al., 2013). Si sube con la carga y también en las bandas altas, apoya H-006."
+     },
+     {
+      "metric": "Mezcla de ajuste al entrar",
+      "definition": "Participación de cada banda de ajuste (A/B/C) en las entradas, según una regla fija y versionada que solo usa datos disponibles al crear la entrada y que se congela en ese momento.",
+      "formula": "entradas_banda_b ÷ entradas_totales, por grupo de entrada",
+      "grain": "mes de entrada × grupo de entrada",
+      "milestone": "entrada creada",
+      "notes": "Antes, validar que las bandas separan la conversión en el periodo base. Nunca usar el descarte ni la razón de pérdida de Sales como señal de ajuste. Es la rama 'Calidad' de Q-021."
+     },
+     {
+      "metric": "Conversión a compra en ventana fija, por combinación",
+      "definition": "Entradas de la cohorte que llegan a su primer pago dentro de W días desde la creación, por grupo × banda × tramo de velocidad.",
+      "formula": "entradas con primer pago (customer_id enlazado) ≤ W días ÷ entradas de la cohorte; W, p. ej., el P80 del tiempo de entrada a compra en el periodo base",
+      "grain": "mes de entrada × grupo × banda × tramo de velocidad (dentro del SLA / fuera / sin contacto)",
+      "milestone": "entrada creada",
+      "notes": "La ventana fija evita castigar a las cohortes recientes. Lectura clave: la conversión de las entradas atendidas dentro del SLA, dentro de cada banda; si cae, H-006 se debilita."
+     },
+     {
+      "metric": "Descomposición mezcla vs. tasa (Kitagawa)",
+      "definition": "Parte del cambio de conversión entre el periodo base y el de caída que explica la mezcla de bandas, y parte que explica la tasa dentro de cada banda.",
+      "formula": "Δc = Σ_b r̄_b·(p_b,2 − p_b,1) [mezcla] + Σ_b p̄_b·(r_b,2 − r_b,1) [tasa]; p = participación de la banda, r = conversión en la banda, barra = promedio de los dos periodos",
+      "grain": "grupo de entrada × par de periodos",
+      "milestone": "entrada creada",
+      "notes": "Mezcla grande → H-005. Tasa grande concentrada en entradas lentas o de alta carga → H-006. Tasa grande pareja en todas las velocidades → calidad que no se ve en las bandas, o problema post-SQL."
+     },
+     {
+      "metric": "Brecha Assisted vs. Self Service (diferencia en diferencias)",
+      "definition": "Cuánto más cayó la conversión en Assisted que en Self Service, dentro de la misma banda de ajuste.",
+      "formula": "[c(Assisted, caída) − c(Assisted, base)] − [c(Self Service, caída) − c(Self Service, base)], por banda",
+      "grain": "banda × par de periodos",
+      "milestone": "entrada creada",
+      "notes": "Self Service no pasa por SDR/AE: si la brecha es cercana a 0, la capacidad no explica la caída. Supuesto: la calidad no cambió distinto por canal."
+     },
+     {
+      "metric": "Cierre post-SQL",
+      "definition": "SQLs de la cohorte que llegan a su primer pago dentro de una ventana fija, por grupo de entrada y banda.",
+      "formula": "SQLs con primer pago ≤ W días desde sql_at ÷ SQLs de la cohorte",
+      "grain": "mes de SQL × grupo × banda",
+      "milestone": "SQL creado",
+      "notes": "Es la tercera rama (Q-021): si la caída vive aquí y no antes, ni H-005 ni H-006 son la explicación principal."
+     },
+     {
+      "metric": "Resultados económicos comunes por grupo de entrada",
+      "definition": "Altas, primer pago observado (M0) y % con pago en M3, por grupo de entrada, enlazando las entradas con el customer_id del mart actual.",
+      "formula": "COUNT(altas); MEDIAN(m0_cop); altas con pago en M3 ÷ altas con M3 observable",
+      "grain": "mes de cohorte × grupo de entrada",
+      "milestone": "primer pago observado",
+      "notes": "Es el resultado común a todos los recorridos: volumen, valor y permanencia. Hoy existe sin grupo de entrada; con el grupo se vuelve comparable."
+     }
+    ],
+    "required_events": [
+     {
+      "event": "entrada_creada",
+      "trigger": "Envío de formulario, sign-up en Self Service o registro de cuenta u oportunidad por un KAM",
+      "properties": [
+       "entry_id",
+       "account_id",
+       "created_at (timestamp con zona horaria)",
+       "grupo_de_entrada (Self Service / Assisted / Executive)",
+       "canal_de_adquisición (Digital / KAM / otro) y fuente o campaña",
+       "tipo_de_solicitud (demo, contacto, contenido, sign-up)"
+      ]
+     },
+     {
+      "event": "ajuste_al_entrar_calculado",
+      "trigger": "Al crear la entrada, antes de cualquier contacto",
+      "properties": [
+       "entry_id",
+       "campos usados (industria, tamaño, rol, caso de uso declarado)",
+       "banda_de_ajuste (A/B/C)",
+       "versión_de_regla",
+       "scored_at"
+      ]
+     },
+     {
+      "event": "entrada_asignada",
+      "trigger": "El sistema de reparto asigna un responsable",
+      "properties": [
+       "entry_id",
+       "owner_id",
+       "rol (SDR / AE / KAM)",
+       "assigned_at",
+       "regla_de_ruteo (turnos, territorio, cuenta)"
+      ]
+     },
+     {
+      "event": "primer_intento_humano",
+      "trigger": "Primera llamada, correo o mensaje manual registrado",
+      "properties": [
+       "entry_id",
+       "rep_id",
+       "canal (llamada / correo / WhatsApp)",
+       "touched_at",
+       "es_automatizado (se excluye si es sí)"
+      ]
+     },
+     {
+      "event": "entrada_descartada",
+      "trigger": "El rep descalifica o cierra la entrada",
+      "properties": [
+       "entry_id",
+       "rep_id",
+       "razón",
+       "disqualified_at",
+       "carga del rep ese día (derivada)"
+      ]
+     },
+     {
+      "event": "sql_creado",
+      "trigger": "La entrada pasa a oportunidad calificada",
+      "properties": [
+       "entry_id",
+       "opportunity_id",
+       "sql_at",
+       "owner_id (AE)"
+      ]
+     },
+     {
+      "event": "compra_cerrada_y_primer_pago",
+      "trigger": "Cierre ganado y primer pago observado",
+      "properties": [
+       "entry_id",
+       "opportunity_id",
+       "customer_id (enlace al mart)",
+       "won_at",
+       "mes del primer pago"
+      ]
+     },
+     {
+      "event": "snapshot_capacidad_rep",
+      "trigger": "Semanal",
+      "properties": [
+       "rep_id",
+       "rol",
+       "semana",
+       "activo",
+       "fecha_de_ingreso",
+       "fecha_de_salida",
+       "días disponibles (vacaciones y ausencias)",
+       "grupo de entrada que atiende"
+      ]
+     },
+     {
+      "event": "cambio_de_definición",
+      "trigger": "Cambia el formulario, la regla de calificación, el SLA o el reparto de leads",
+      "properties": [
+       "tipo de cambio",
+       "fecha efectiva",
+       "descripción",
+       "versión anterior y nueva"
+      ]
+     }
+    ],
+    "required_dimensions": [
+     {
+      "dimension": "Grupo de entrada (Self Service / Assisted / Executive)",
+      "why": "Son recorridos distintos: evita la tasa mezclada y permite usar Self Service como control de capacidad."
+     },
+     {
+      "dimension": "Canal de adquisición (Digital / KAM / otros) y fuente o campaña",
+      "why": "Un cambio de calidad puede darse en un canal (p. ej., por cambios en Inversión en Marketing o Generación de Demanda) y no en otro."
+     },
+     {
+      "dimension": "Banda de ajuste al entrar (A/B/C, con versión de regla)",
+      "why": "Separa la mezcla (H-005) de la tasa (H-006)."
+     },
+     {
+      "dimension": "Tramo de velocidad (dentro del SLA / fuera del SLA / sin contacto)",
+      "why": "Dice si la caída de la tasa se concentra en lo que esperó."
+     },
+     {
+      "dimension": "Tercil de carga al llegar",
+      "why": "Si H-006 es cierta, a más carga, peor conversión dentro de la misma banda."
+     },
+     {
+      "dimension": "Momento de llegada (horario hábil / fuera de horario / fin de semana)",
+      "why": "Genera espera que no depende de la calidad: sirve como experimento natural frente a la priorización de los reps."
+     },
+     {
+      "dimension": "Rol y estado de ramp del rep (SDR / AE / KAM; en ramp / productivo)",
+      "why": "Mide la capacidad efectiva, no solo la que figura en el papel."
+     },
+     {
+      "dimension": "Periodo (base / caída) y cohorte de entrada (mes)",
+      "why": "Es la comparación que pide la pregunta, con ventanas fijas."
+     },
+     {
+      "dimension": "Industria",
+      "why": "Es el único atributo de ajuste disponible hoy y enlaza con el mart actual."
+     }
+    ],
+    "decision_enabled": "Si Finora debe invertir en capacidad comercial (contratar o reasignar SDR/AE, cambiar el reparto de leads o el SLA, desviar entradas a Self Service), corregir la máquina de leads (Inversión en Marketing, Generación de Demanda, criterios ToFu) o ambas cosas, y en qué grupo de entrada. Y qué se le puede decir hoy al CRO y al CFO: que ninguna de las dos hipótesis se puede defender aún con los datos del caso.",
+    "limitations": [
+     "Requiere datos que no están en el modelo; hasta tenerlos, H-005 y H-006 siguen abiertas.",
+     "La banda de ajuste solo sirve si sus campos se capturaron igual en todo el periodo y si separa la conversión en el periodo base. Si cambió el formulario, hay que volver a puntuar con la misma regla o limitarse a los campos estables.",
+     "Priorización de los reps: atienden primero lo que parece mejor. Las bandas reducen este sesgo, pero no lo eliminan, porque el rep ve más que los campos.",
+     "La calidad que no se ve dentro de una banda aparece como 'efecto tasa'; por eso se abre por tramo de velocidad.",
+     "Pocos casos por combinación: con 30 a 84 altas mensuales en 2023–2024, conviene agregar por trimestre y reportar intervalos.",
+     "Censura: las cohortes recientes necesitan una ventana fija. El primer pago observado no confirma una adquisición.",
+     "El enlace entre entrada y customer_id puede ser imperfecto.",
+     "Observado no es causal: los experimentos naturales ayudan, pero solo una prueba aleatoria demuestra causa."
+    ],
+    "implementation_implications": [
+     "Data Engineering: nuevas fuentes raw (CRM de entradas y oportunidades, registro de actividades, roster de RR. HH., historial de reparto de leads y de formularios) y dos marts propuestos: mart.entry_cohort (grano: entrada) y mart.capacity_week (grano: semana × rol × grupo).",
+     "Congelar la banda de ajuste al crear la entrada y versionar la regla; no recalcular el pasado con datos posteriores al contacto.",
+     "Excluir las automatizaciones del primer contacto y medir en horas hábiles.",
+     "Definir con Finora un SLA por grupo de entrada, o usar la mediana del periodo base como umbral.",
+     "Enlazar las entradas con customer_id para usar el mart actual en los resultados comunes (altas, primer pago observado, M3).",
+     "Mantener el gasto de Team como costo (eficiencia), no como medida de capacidad.",
+     "Registrar los cambios de definición (formulario, regla, reparto de leads, SLA) como eventos, para detectar errores de medición.",
+     "Petición mínima si Finora no tiene todo: entradas mensuales por grupo y banda, roster mensual con altas y bajas, y una muestra de entradas por periodo con fecha de creación y primer contacto."
+    ]
+   }
+  }
+ },
+ "usage": {
+  "turns": 29,
+  "ms": 834035,
+  "input_tokens": 30,
+  "output_tokens": 88053,
+  "cache_read": 515458,
+  "cache_write": 81328,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 2.8572026,
+ "tool_trace": [
+  {
+   "id": "toolu_01GFqiimPKqtGLAuf74b2D88",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "input": {},
+   "t": 5549,
+   "result_chars": 11121,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01UkMThWBEbj8MiYDPiCA5dq",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT month, window_flag, new_customers, new_mrr_cop, median_new_customer_mrr_cop, demand_gen_spend, sales_capacity_spend, team, payroll_expenses, travel, enablement_spend, total_sm_spend, team_share_of_total_sm, new_customers_per_demand_gen_unit FROM mart.monthly_metrics_phase1 ORDER BY month"
+   },
+   "t": 40099,
+   "result_chars": 4425,
+   "is_error": false
+  },
+  {
+   "id": "toolu_018qXXCDUh1bBKaMc96GX8pb",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, COUNT(DISTINCT industry) AS industrias, ROUND(AVG(m0_cop),0) AS m0_promedio, MEDIAN(m0_cop) AS m0_mediana, ROUND(AVG(early_run_rate_cop),0) AS run_rate_temprano_prom FROM mart.new_customers GROUP BY year ORDER BY year"
+   },
+   "t": 51123,
+   "result_chars": 350,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01PTw9fbMSJT1YKKwCfwn3n8",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT year, industry, COUNT(*) AS altas, ROUND(100.0*COUNT(*)/SUM(COUNT(*)) OVER (PARTITION BY year),1) AS pct_del_anio, MEDIAN(m0_cop) AS m0_mediana FROM mart.new_customers WHERE clean GROUP BY year, industry ORDER BY year, altas DESC"
+   },
+   "t": 54011,
+   "result_chars": 950,
+   "is_error": false
+  },
+  {
+   "id": "toolu_017NC4z757DmV8gscJdgpX3r",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "WITH nc AS (SELECT customer_id, year, cohort_month, m0_cop FROM mart.new_customers WHERE clean AND cohort_month <= '2024-07'), m3 AS (SELECT cm.customer_id, cm.active_customer FROM mart.customer_month cm WHERE cm.tenure_month = 3) SELECT nc.year, COUNT(*) AS altas_con_m3_observable, MEDIAN(nc.m0_cop) AS m0_mediana, ROUND(100.0*AVG(COALESCE(m3.active_customer,0)),1) AS pct_activos_en_m3 FROM nc LEFT JOIN m3 ON nc.customer_id = m3.customer_id GROUP BY nc.year ORDER BY nc.year"
+   },
+   "t": 62126,
+   "result_chars": 252,
+   "is_error": false
+  },
+  {
+   "id": "toolu_019oJ14YLRHFjVM4AqfFTH8e",
+   "tool": "WebSearch",
+   "input": {
+    "query": "\"The Short Life of Online Sales Leads\" Harvard Business Review Oldroyd McElheran Elkington"
+   },
+   "t": 78951,
+   "result_chars": 2775,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01XYJsutVtabCjhuzd97vZqf",
+   "tool": "WebSearch",
+   "input": {
+    "query": "lead response time conversion field study salesperson workload capacity academic paper"
+   },
+   "t": 78962,
+   "result_chars": 3070,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01HmKKpwnQMD8p6ECpaywPh8",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Kitagawa decomposition difference between two rates composition effect rate effect"
+   },
+   "t": 79317,
+   "result_chars": 3235,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01U3ayAH389s3QVLLb7wW8jX",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://hbr.org/2011/03/the-short-life-of-online-sales-leads",
+    "prompt": "Summarize the study design (data, sample size, how response time was measured, what outcome 'qualify' means), the key findings with exact numbers, and any caveats the authors state about causality or confounding (e.g., whether faster responses may go to better leads). Also note any mention of sales capacity/workload or lead routing."
+   },
+   "t": 97381,
+   "result_chars": 872,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01QL5AxQNKULAyUbRDnxfsds",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0321874",
+    "prompt": "Explain the Kitagawa decomposition as defined in this article: the formula that splits the difference between two crude rates into a composition (mix) effect and a rate effect, how weights are chosen (e.g., averages of the two groups), and the link to Oaxaca-Blinder. Give publication date, authors and journal."
+   },
+   "t": 98976,
+   "result_chars": 1579,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01276AmB72LzNroCwSnUW4SG",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Gans Koole Mandelbaum \"Telephone call centers: tutorial, review, and research prospects\" abandonment staffing"
+   },
+   "t": 99527,
+   "result_chars": 2688,
+   "is_error": false
+  },
+  {
+   "id": "toolu_013HaYgXHBQLqUYFvtR9RSLJ",
+   "tool": "WebSearch",
+   "input": {
+    "query": "speed to lead causal effect response time confounded lead quality natural experiment sales leads study"
+   },
+   "t": 100044,
+   "result_chars": 3193,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01FFFpkAKkouThFzDF3aMM7S",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Sabnis Chatterjee Grewal Lilien \"The Sales Lead Black Hole\" Journal of Marketing follow-up marketing leads"
+   },
+   "t": 116389,
+   "result_chars": 2672,
+   "is_error": false
+  },
+  {
+   "id": "toolu_018myxQkQXkR8EeR8oripSTZ",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf",
+    "prompt": "Extract: study design (data sources, number of companies/leads, how response time and qualification were measured), key numeric findings, and any statement about causality/confounding, lead quality, staffing or workload. Quote exact numbers and phrases."
+   },
+   "t": 117893,
+   "result_chars": 1022,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01Lp9cZi4LcFaxPrQvrBiVMq",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://columbia.edu/~ww2040/tutorial.pdf",
+    "prompt": "Find statements about (1) how waiting time / delay behaves as agent utilization (occupancy) approaches 100% — nonlinear growth; (2) customer abandonment when waits grow, and why abandonment must be measured/modeled; (3) the tradeoff between staffing level, service level and utilization (e.g., square-root staffing, Erlang C/A). Quote short exact phrases and give page/section if possible."
+   },
+   "t": 119983,
+   "result_chars": 1907,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01DsLgprzy6VbNmWMkqLiBUk",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.semanticscholar.org/paper/The-Sales-Lead-Black-Hole:-On-Sales-Reps'-Follow-Up-Sabnis-Chatterjee/fad352d2ee4193c01fe237eca4f54887124fd724",
+    "prompt": "Give the full abstract verbatim if available: what share of marketing leads reps don't pursue, the framework (motivation-opportunity-ability), the data (field survey/study), and which factors drive follow-up (e.g., workload, pipeline of self-generated leads, perceived lead quality, trust in marketing). Publication year and journal."
+   },
+   "t": 142262,
+   "result_chars": 344,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01DaqBiRmAHUCcNayVuAr4PW",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://scholarsarchive.byu.edu/facpub/9711/",
+    "prompt": "Give the abstract verbatim and publication details. Include the study design and numbers (companies audited, leads analyzed, response time findings) if present."
+   },
+   "t": 143358,
+   "result_chars": 865,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01XAMP34RFdt3rWRiTKcBLK5",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://en.wikipedia.org/wiki/Kingman%27s_formula",
+    "prompt": "State Kingman's formula for the mean waiting time in a G/G/1 queue, how it depends on utilization rho (rho/(1-rho)), and the interpretation that waiting time grows without bound as utilization approaches 1. Include original reference (Kingman 1961)."
+   },
+   "t": 144843,
+   "result_chars": 1065,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01NYJjbyax5fsfCx44nLtAqj",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/",
+    "prompt": "Give the abstract verbatim and publication details (journal, volume, pages, year). Note which factors drive reps' follow-up of marketing leads (workload/competing demands, self-generated leads, perceived quality, etc.) and the data used."
+   },
+   "t": 153275,
+   "result_chars": 1412,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01EhWifFhZAF3hYBUQAujhM3",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.hbs.edu/faculty/Pages/item.aspx?num=39955",
+    "prompt": "Give the abstract/summary verbatim and any study details: number of companies audited, number of leads analyzed, response-time findings (e.g., within an hour vs later), and how 'qualified' was defined."
+   },
+   "t": 154369,
+   "result_chars": 215,
+   "is_error": false
+  },
+  {
+   "id": "toolu_019T2dbyLSw896cCkHvNiUyU",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.researchgate.net/profile/Kristina-Mcelheran/publication/298137032_The_short_life_of_online_sales_leads/links/5771477608ae0b3a3b7d5d49/The-short-life-of-online-sales-leads.pdf",
+    "prompt": "Extract study design (companies audited, leads analyzed, how response time and qualification measured) and the key numeric findings (share responding within 1 hour, average response time, 7x / 60x comparisons). Quote exact phrases. Note any caveat about causality or staffing."
+   },
+   "t": 170291,
+   "result_chars": 215,
+   "is_error": false
+  },
+  {
+   "id": "toolu_015kSnTCtGQjmv7mwWEJexdH",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Bridge Group SDR metrics report ramp time months sales development benchmark"
+   },
+   "t": 170720,
+   "result_chars": 2725,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01QJgvdhDRHkL7yhjJ9HAaCx",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group",
+    "prompt": "What does this report say about SDR ramp time (months), tenure, and any capacity-related metrics (activities per day, meetings per month, SDR:AE ratio)? Give sample size, date and methodology if stated. Quote exact numbers."
+   },
+   "t": 179823,
+   "result_chars": 848,
+   "is_error": false
+  },
+  {
+   "id": "toolu_012y9tYyb3Ky82TzPxhx29cv",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.insidesales.com/response-time-matters/",
+    "prompt": "Summarize the Lead Response Management Study cited here: who conducted it (e.g., Oldroyd / MIT), data, and exact findings on contact and qualification odds by response time (5 vs 30 minutes, etc.). Note date and whether it's vendor content. Any caveat about causality."
+   },
+   "t": 181161,
+   "result_chars": 943,
+   "is_error": false
+  },
+  {
+   "id": "toolu_018YgqYrCxdye7u1kh2Ckw35",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Monat \"Industrial sales lead conversion modeling\" Marketing Intelligence & Planning lead attributes predict conversion"
+   },
+   "t": 474080,
+   "result_chars": 3141,
+   "is_error": false
+  },
+  {
+   "id": "toolu_016YDwCqCBTUw8P9FQpuovxt",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.emerald.com/insight/content/doi/10.1108/02634501111117610/full/html",
+    "prompt": "Give the structured abstract (purpose, design, findings, limitations, originality) verbatim if possible, plus year, volume, pages. Which observable lead characteristics predict conversion to booking? Any statement that managers rarely validate these assumptions?"
+   },
+   "t": 482893,
+   "result_chars": 1511,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01E7h5cRHKA76KN4Ar6SaGGs",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://link.springer.com/article/10.1007/s10799-023-00388-w",
+    "prompt": "Give the abstract, authors, year, journal and method (systematic literature review? how many studies?). What does it say about lead scoring models' impact on sales performance and about data used at lead entry (explicit/implicit, firmographic, behavioral)? Any limitations noted about evidence quality?"
+   },
+   "t": 484563,
+   "result_chars": 1069,
+   "is_error": false
+  }
+ ],
+ "seen_urls": [
+  "https://ainora.lt/blog/lead-response-time-statistics-every-study-2026",
+  "https://albatalent.io/tools/sdr-benchmarks-2026",
+  "https://arxiv.org/pdf/2112.02691",
+  "https://blog.bridgegroupinc.com/sales-development-metrics",
+  "https://blossomstreetventures.medium.com/saas-sdr-metrics-and-benchmarking-5a9810e3a49e",
+  "https://columbia.edu/~ww2040/tutorial.pdf",
+  "https://commissionsblog.blitzrocks.com/sales-lead-black-hole",
+  "https://dialfyne.com/sdr-statistics",
+  "https://doi.org/10.1108/02634501111117610",
+  "https://en.wikipedia.org/wiki/Kingman%27s_formula",
+  "https://en.wikipedia.org/wiki/Kitagawa%E2%80%93Oaxaca%E2%80%93Blinder_decomposition",
+  "https://experts.illinois.edu/en/publications/a-flexible-approach-for-the-decomposition-of-rate-differences/",
+  "https://faculty.stevens.edu/gsabnis/",
+  "https://getgangly.com/blog/sales-ramp-time-benchmark",
+  "https://hbr.org/2011/03/the-short-life-of-online-sales-leads",
+  "https://hbsp.harvard.edu/product/F1103B-PDF-ENG",
+  "https://idp.springer.com/authorize?response_type=cookie&client_id=springerlink&redirect_uri=https%3A%2F%2Flink.springer.com%2Farticle%2F10.1007%2Fs10799-023-00388-w",
+  "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/11068912",
+  "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0321874",
+  "https://journals.sagepub.com/doi/10.1509/jm.10.0047",
+  "https://link.springer.com/article/10.1007/s10799-023-00388-w",
+  "https://link.springer.com/article/10.2307/2060493",
+  "https://metricgate.com/docs/kitagawa-decomposition/",
+  "https://onlinelibrary.wiley.com/doi/full/10.1111/gean.70033",
+  "https://ouci.dntb.gov.ua/en/works/4wd0qLdl/",
+  "https://outsales.ai/blog/lead-response-time-statistics",
+  "https://pubmed.ncbi.nlm.nih.gov/2583328/",
+  "https://pubsonline.informs.org/doi/10.1287/msom.5.2.79.16071",
+  "https://pubsonline.informs.org/doi/pdf/10.1287/msom.5.2.79.16071",
+  "https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/",
+  "https://repository.upenn.edu/items/8a024562-a5af-4f52-9927-925afe98ac0f",
+  "https://research.amanote.com/publication/t4881HMBKQvf0Bhi0y4K/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-leads",
+  "https://research.vu.nl/en/publications/telephone-call-centers-tutorial-review-and-research-prospects/",
+  "https://resources.rework.com/libraries/lead-management/lead-response-time",
+  "https://scholarsarchive.byu.edu/facpub/9711/",
+  "https://scholarx.skku.edu/handle/2021.sw.skku/70679",
+  "https://scispace.com/pdf/a-general-method-of-decomposing-a-difference-between-two-2njkmi5ywy.pdf",
+  "https://store.hbr.org/product/the-short-life-of-online-sales-leads/F1103B",
+  "https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf",
+  "https://voiso.com/articles/lead-response-time-metrics/",
+  "https://web.stevens.edu/facultyprofile/?id=1758",
+  "https://www.academia.edu/1294908/Commissioned_paper_Telephone_call_centers_Tutorial_review_and_research_prospects",
+  "https://www.amplemarket.com/blog/how-to-win-deals-faster-speed-to-lead-statistics-you-need-to-know",
+  "https://www.aurorainbox.com/en/2026/03/04/response-time-sales-impact/",
+  "https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group",
+  "https://www.callpage.io/blog/posts/speed-to-lead",
+  "https://www.convoso.com/blog/what-is-speed-to-lead/",
+  "https://www.copy.ai/blog/inbound-lead-response-time",
+  "https://www.deepdyve.com/lp/emerald-publishing/industrial-sales-lead-conversion-modeling-BbFBWO7vv0",
+  "https://www.digitalapplied.com/blog/speed-to-lead-response-time-benchmarks-2026-data-playbook",
+  "https://www.econbiz.de/Record/industrial-sales-lead-conversion-modeling-monat-jamie/10008928086",
+  "https://www.emerald.com/insight/content/doi/10.1108/02634501111117610/full/html",
+  "https://www.forentrepreneurs.com/bridge-group-sales-development/",
+  "https://www.hbs.edu/faculty/Pages/item.aspx?num=39955",
+  "https://www.insidesales.com/response-time-matters/",
+  "https://www.kixie.com/sales-blog/speed-to-lead-response-time-statistics-that-drive-conversions/",
+  "https://www.leadangel.com/blog/operations/lead-response-time/",
+  "https://www.leadangel.com/blog/operations/speed-to-lead-statistics/",
+  "https://www.leadriver.io/blog/sdr-to-ae-ratio-benchmarks",
+  "https://www.leandata.com/blog/speed-to-lead-speed-is-the-key-to-lead-conversion/",
+  "https://www.michigan.gov/-/media/Project/Websites/mdhhs/Folder3/Folder11/Folder2/Folder111/Folder1/Folder211/20181210PTB_Kitagawa.pdf?rev=0059fdadbb154613bb99cb36099d9293",
+  "https://www.prnewswire.com/news-releases/how-to-escape-from-the-sales-lead-black-hole-188665631.html",
+  "https://www.proquest.com/scholarly-journals/industrial-sales-lead-conversion-modeling/docview/859629346/se-2",
+  "https://www.quotapath.com/blog/study-overview-bridging-the-gap-to-understanding-your-sdrs/",
+  "https://www.researchgate.net/profile/Kristina-Mcelheran/publication/298137032_The_short_life_of_online_sales_leads/links/5771477608ae0b3a3b7d5d49/The-short-life-of-online-sales-leads.pdf",
+  "https://www.researchgate.net/publication/20573543_A_Flexible_Approach_to_the_Decomposition_of_Rate_Differences",
+  "https://www.researchgate.net/publication/227448046_Telephone_Call_Centers_Tutorial_Review_and_Research_Prospects",
+  "https://www.researchgate.net/publication/228431692_The_Sales_Lead_Black_Hole_On_Sales_Follow-Up_of_Marketing_Leads",
+  "https://www.researchgate.net/publication/238599088_Industrial_sales_lead_conversion_modeling",
+  "https://www.researchgate.net/publication/298137032_The_short_life_of_online_sales_leads",
+  "https://www.scribd.com/document/583464438/02634501111117610",
+  "https://www.semanticscholar.org/paper/Industrial-sales-lead-conversion-modeling-Monat/536ee6b4bff6a8d9f78ca5166105c18b1608bf49",
+  "https://www.semanticscholar.org/paper/Telephone-Call-Centers:-Tutorial,-Review,-and-Gans-Koole/86c885a90ce1276262ab81745570da41ace0a9ff",
+  "https://www.semanticscholar.org/paper/The-Sales-Lead-Black-Hole:-On-Sales-Reps",
+  "https://www.slideshare.net/slideshow/pyraleads/61430778",
+  "https://www.workato.com/the-connector/lead-response-time-study/",
+  "https://www.workato.com/the-connector/speed-to-lead/"
+ ],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": [
+  "SELECT month, window_flag, new_customers, new_mrr_cop, median_new_customer_mrr_cop, demand_gen_spend, sales_capacity_spend, team, payroll_expenses, travel, enablement_spend, total_sm_spend, team_share_of_total_sm, new_customers_per_demand_gen_unit FROM mart.monthly_metrics_phase1 ORDER BY month",
+  "SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, COUNT(DISTINCT industry) AS industrias, ROUND(AVG(m0_cop),0) AS m0_promedio, MEDIAN(m0_cop) AS m0_mediana, ROUND(AVG(early_run_rate_cop),0) AS run_rate_temprano_prom FROM mart.new_customers GROUP BY year ORDER BY year",
+  "SELECT year, industry, COUNT(*) AS altas, ROUND(100.0*COUNT(*)/SUM(COUNT(*)) OVER (PARTITION BY year),1) AS pct_del_anio, MEDIAN(m0_cop) AS m0_mediana FROM mart.new_customers WHERE clean GROUP BY year, industry ORDER BY year, altas DESC",
+  "WITH nc AS (SELECT customer_id, year, cohort_month, m0_cop FROM mart.new_customers WHERE clean AND cohort_month <= '2024-07'), m3 AS (SELECT cm.customer_id, cm.active_customer FROM mart.customer_month cm WHERE cm.tenure_month = 3) SELECT nc.year, COUNT(*) AS altas_con_m3_observable, MEDIAN(nc.m0_cop) AS m0_mediana, ROUND(100.0*AVG(COALESCE(m3.active_customer,0)),1) AS pct_activos_en_m3 FROM nc LEFT JOIN m3 ON nc.customer_id = m3.customer_id GROUP BY nc.year ORDER BY nc.year"
+ ]
+}

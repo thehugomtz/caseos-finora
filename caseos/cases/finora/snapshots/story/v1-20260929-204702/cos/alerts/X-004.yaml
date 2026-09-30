@@ -1,0 +1,46 @@
+id: X-004
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-013
+target: framing
+title: R-013 cambia el framing
+finding_text: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+why: 'La lista «No afirmar todavía» cuida el lado de los pagos (MRR, adquisición, alta), pero no dice nada del gasto.
+  R-015 y R-018 (que incluye CAC) están en curso y van a leer ese gasto. R-013 fija límites que hoy no están escritos.
+  Además, F-069 y F-070 ya hablan de «gasto por alta», que choca con dos límites existentes: «alta» como etiqueta
+  contractual y «primera aparición ≠ adquisición». Propongo tres líneas en el formato del framing: (1) Que el gasto
+  de S&M esté en COP o se compare con el estado de resultados: el archivo no trae moneda ni escala, así que se habla
+  de unidades reportadas (u). (2) Que el gasto sobre primeras apariciones sea CAC: falta la moneda y el hito de
+  adquisición sigue por acordar, así que se habla de gasto por primer pagador observado. (3) Que Team o Habilitación
+  midan lo mismo antes y después de jun-23: Team es un 12% fijo del total hasta may-23 y Freelance se apaga en jun-23.
+  La línea (3) además evita que Team se use como proxy de la capacidad comercial de H-006 (R-014 está en curso).'
+options:
+- key: A
+  label: Sumar las tres líneas y reescribir F-069 y F-070 sin «alta» (gasto por primer pagador observado, en u)
+  consequence: 'R-015, R-018 y la story las heredan: ninguna cifra de gasto sale en COP ni como CAC. El framing,
+    que ya está en needs_review, suma tres líneas.'
+- key: B
+  label: Dejarlas como limitaciones dentro de R-013 (F-063–F-070), sin tocar el framing
+  consequence: El framing no se mueve, pero cada research en curso tiene que volver a descubrirlas. El riesgo concreto
+    es un CAC en COP en R-018 que después haya que deshacer.
+- key: C
+  label: Sumar solo (1) y (2), y dejar el corte de jun-23 como limitación de Q-018 y H-022
+  consequence: La lista queda más corta, pero la story podría comparar Team o Habilitación entre tramos sin aviso.
+recommended: A
+recommended_why: Son límites de lectura, no hallazgos, así que van donde todos los agentes miran. Como el framing
+  ya está abierto a revisión, sumarlas cuesta poco.
+detected_by: cos
+links:
+- R-013
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103618-cos-07f6
+created_at: '2026-09-29T11:11:30-06:00'
+updated_at: '2026-09-29T11:11:30-06:00'
+version: 1

@@ -1,0 +1,118 @@
+id: F-234
+type: finding
+headline: 'Los sistemas de billing separan tres cosas que el to-be también debe separar: la oferta, el código que
+  la distribuye y el descuento aplicado con vigencia.'
+evidence_text: 'Stripe distingue el cupón (lógica aplicada por back-end; su ejemplo es un 20% negociado por ventas),
+  el código promocional (lo que ve el cliente; varios códigos por cupón; restricciones de cliente, primera compra,
+  monto mínimo, vencimiento y cupo) y el objeto Discount (start, end, subscription, subscription_item, promotion_code)
+  (W-01, W-02). La ventana de canje no es la vigencia: un cupón forever con fecha de vencimiento sigue aplicando
+  a quien ya lo canjeó (W-01). Chargebee modela el tipo (monto fijo, porcentaje, unidades gratis), la duración (one_time,
+  limited_period, forever), el alcance (factura o ítem) y un orden fijo de aplicación (W-08, W-15); Stripe acepta
+  hasta 20 descuentos apilados y el orden cambia el monto (W-01). Kimball respalda las vigencias (SCD2) y la foto
+  de cierre densa (W-16, W-17).'
+confidence: high
+limitations:
+- Son prácticas de proveedores (contexto, no benchmark ni evidencia sobre Finora); no sabemos qué sistema de billing
+  usará Finora.
+kind: data_engineering
+claims:
+- claim: Stripe separa el cupón (lógica de descuento aplicada por back-end; su ejemplo es un 20% negociado por ventas),
+    el código promocional (la cadena que ve el cliente, con varios códigos por cupón y restricciones por cliente,
+    primera compra, monto mínimo, vencimiento y cupo) y el objeto Discount (la aplicación a un cliente, una suscripción
+    o una factura).
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29; página sin fecha
+  supports_or_contests: supports
+  notes: Valida la estructura promotion → promo_code → discount_grant de la hipótesis del Framer.
+- claim: El objeto Discount de Stripe guarda start, end (solo si es repeating; nulo si es once o forever), subscription,
+    subscription_item, invoice/invoice_item, promotion_code y source.
+  source_id: W-02
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Respalda C-017: el descuento como objeto propio, con fecha de fin y alcance.'
+- claim: 'Stripe tiene tres duraciones: once (primera factura), repeating (duration_in_months) y forever. Un cupón
+    de 4 meses sobre un plan anual cubre todo el año si la renovación cae en ese periodo, y un once desaparece de
+    la suscripción al finalizar la factura.'
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: La duración efectiva se calcula por factura; para ver los descuentos únicos hace falta la capa de factura.
+- claim: 'La ventana de canje no es la vigencia del descuento: un cupón forever con fecha de vencimiento sigue aplicando
+    para siempre a quien ya lo canjeó; los clientes nuevos no pueden usarlo después.'
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Por eso promotion.redeem_until ≠ discount_grant.valid_to_planned.
+- claim: Stripe permite hasta 20 descuentos apilados por suscripción, ítem o factura, y el orden cambia el resultado
+    cuando se mezclan monto fijo y porcentaje.
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Justifica los campos stackable, stack_group y application_order.
+- claim: Chargebee modela el descuento con type (fixed_amount, percentage, offer_quantity), duration_type (one_time,
+    forever, limited_period, con period y period_unit), apply_on (invoice_amount o specific_item_price) y un flag
+    included_in_mrr que aplica solo a one_time.
+  source_id: W-08
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: El flag muestra que meter o no un descuento único en el MRR es configuración, no un hecho.
+- claim: Chargebee aplica varios descuentos en un orden fijo (monto fijo por línea, porcentaje por línea, monto
+    fijo de factura, porcentaje de factura); el cupón tiene max_redemptions y valid_till.
+  source_id: W-15
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Referencia para application_order.
+- claim: 'Kimball: el SCD tipo 2 agrega una fila nueva por cada cambio, con fecha efectiva, fecha de expiración
+    e indicador de fila vigente.'
+  source_id: W-16
+  source_type: expert
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda las vigencias de C-019.
+- claim: 'Kimball: una foto periódica tiene grano de periodo y es densa (hay fila aunque no haya actividad), a diferencia
+    de la tabla de transacciones.'
+  source_id: W-17
+  source_type: expert
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Base de subscription_month_snapshot.
+- claim: En Stripe, un cupón aplicado a una suscripción con fecha anterior empieza a contar su duración desde esa
+    fecha anterior.
+  source_id: W-01
+  source_type: industry
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Justifica guardar effective_at y recorded_at (modelo bitemporal).
+unverified: false
+source_ref:
+  research: R-034
+links:
+- R-034
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:01:14-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

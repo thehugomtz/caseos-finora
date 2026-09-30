@@ -1,0 +1,100 @@
+table_id: FIN-F-094
+caseos_id: T-038
+title: Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes…
+columns:
+- industry
+- arpa_dic22
+- arpa_oct24
+- arpa_var_pct
+- activos_dic22
+- activos_oct24
+- mrr_dic22_millones
+- mrr_oct24_millones
+- aporte_crecimiento_mrr_pct
+rows:
+- - Servicios profesionales
+  - 86036.0
+  - 45956.0
+  - -46.6
+  - 54.0
+  - 140.0
+  - 4.65
+  - 6.43
+  - 5.2
+- - Restaurantes
+  - 125387.0
+  - 68234.0
+  - -45.6
+  - 196.0
+  - 459.0
+  - 24.58
+  - 31.32
+  - 19.5
+- - Retail
+  - 60929.0
+  - 34654.0
+  - -43.1
+  - 115.0
+  - 360.0
+  - 7.01
+  - 12.48
+  - 15.8
+- - Producción
+  - 72595.0
+  - 58963.0
+  - -18.8
+  - 169.0
+  - 389.0
+  - 12.27
+  - 22.94
+  - 30.8
+- - Tecnología
+  - 87841.0
+  - 74192.0
+  - -15.5
+  - 107.0
+  - 206.0
+  - 9.4
+  - 15.28
+  - 17.0
+- - Salud
+  - 80639.0
+  - 69020.0
+  - -14.4
+  - 56.0
+  - 124.0
+  - 4.52
+  - 8.56
+  - 11.7
+units:
+  industry: texto
+  arpa_dic22: num2
+  arpa_oct24: num2
+  arpa_var_pct: num2
+  activos_dic22: num2
+  activos_oct24: num2
+  mrr_dic22_millones: num2
+  mrr_oct24_millones: num2
+  aporte_crecimiento_mrr_pct: num2
+definitions: {}
+message: Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes
+  y −43,1% en Retail, frente a −18,8% en Producción, −15,5% en Tecnología y −14,4% en Salud.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-012
+  - EC-MON-05
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: scatter
+analysis_reference: INV-20260929-103203-505c · C-007
+period: {}
+grain: según evidencia

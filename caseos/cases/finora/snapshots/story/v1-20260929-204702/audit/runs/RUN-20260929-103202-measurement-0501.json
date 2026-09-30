@@ -1,0 +1,2053 @@
+{
+ "run_id": "RUN-20260929-103202-measurement-0501",
+ "agent": "measurement",
+ "role": "measurement",
+ "purpose": "R-010 · Measurement L2",
+ "started_at": "2026-09-29T10:47:15-06:00",
+ "duration_ms": 912938,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/8aca361eb5408ec8.md",
+ "system_prompt_hash": "8aca361eb5408ec8",
+ "prompt": "# Investigación R-010\nPregunta: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o descartaría cada una (entradas únicas con fecha, señales iniciales, recorrido, atención, vínculo con pago)?\nPregunta original de Hugo: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o descartaría cada una (entradas únicas con fecha, señales iniciales, recorrido, atención, vínculo con pago)?\nNivel L2 · business research: varias fuentes buenas, compara enfoques, sintetiza qué aplica a este caso.\nEvidencia que la respondería: —\n\nCaso: Finora — Finora Business Analytics Case\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis…\nPregunta ejecutiva: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nDatos disponibles: Modelo de datos: Finora · modelo analítico (finora-eda · Business Exploration Workspace) — Raw 3 · Staging 3 · Mart · procesado 7; 7/7 checks de reconciliación OK.; raw.transactions — Pagos mensuales por cliente tal cual llegaron: ID, month (M/D/AAAA) y amount sin escala (66.674 filas; grano fila del archivo · cliente × mes); raw.industry — Industria de cada cliente («Cliente N» → industria), tal cual llegó (1.962 filas; grano fila del archivo · cliente); raw.sm_spend — Gasto mensual de Sales & Marketing por rubro, en texto con «$» (unidad no documentada) (34 filas; grano fila del archivo · mes); mart.customer_month — Panel analítico: monto observado, MRR pagado, banderas (alta, churn observado, reactivación, expansión, contracción), movimientos, tenure, cohorte y cosecha (66.674 filas; grano cliente × mes); mart.monthly_metrics — Las métricas mensuales recalculadas en SQL desde customer_month; cuadran al centavo con la Fase 1 (34 filas; grano mes); mart.new_customers — Cada alta con su primer pago (M0), run-rate temprano, cohorte e industria (1.584 filas; grano alta)\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición…; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.\n\nElementos del caso a los que sirve esta investigación:\n- Q-001 (CRO) [question] ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-004 (C1) [question] ¿Realmente aumentó igual la entrada total?\n- Q-005 (C2) [question] ¿Cambió la gente que entra o el tiempo que ha tenido para comprar?\n- Q-006 (C3) [question] ¿Personas similares están comprando menos o comprando más tarde?\n- Q-016 (W6) [question] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?\n- Q-021 (U06) [question] U06 · Demanda, calidad, atención y post-SQL\n- Q-023 (U12) [question] U12 · ¿Validar implica experimentos?\n- H-001 (HC1) [hypothesis] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía. · se debilita si: Si el total crece menos, corregimos la magnitud de la premisa. Si crece como esperaba el CRO, dejamos de usar falta de demanda total como explicación de la men…\n- H-002 (HC2a) [hypothesis] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo. · se debilita si: Si la mezcla nueva con el comportamiento habitual de cada grupo explica la diferencia, esa lectura gana fuerza. Si queda una diferencia dentro de grupos, pasam…\n- H-003 (HC2b) [hypothesis] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar. · se debilita si: Si al igualar tiempo y perfil desaparece la diferencia, la juventud del grupo es una explicación compatible. Si no desaparece, «sólo necesitan más tiempo» deja…\n- H-004 (HC3ab) [hypothesis] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable. · se debilita si: Si se recupera, pierde fuerza la explicación de una caída persistente en ese periodo. Si no se recupera, el retraso pierde fuerza como explicación suficiente;…\n- H-005 (HC3q) [hypothesis] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo. · se debilita si: Se debilita si las señales al entrar, medidas con el mismo criterio, no empeoraron. La opinión posterior de Sales no basta.\n- H-006 (HC3s) [hypothesis] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad. · se debilita si: Se debilita si la carga por SDR/AE no subió cuando creció New, si los tiempos a primer contacto no empeoraron o si la compra cae igual en las entradas atendida…\n- H-007 (HC3p) [hypothesis] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido. · se debilita si: Si el tramo posterior está estable, esa ubicación pierde fuerza. Si cae, sabemos dónde mirar, no necesariamente por qué ocurre.\n- H-008 (HC3o) [hypothesis] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · se debilita si: Si no hay señales que lo sostengan, no dedicar tiempo a investigar el mercado en general. Si aparecen, precisar una pregunta externa concreta.\n\nReglas: cita solo URLs que recuperaste en esta corrida; cada claim material referencia un `source_id` de tu lista de fuentes; si una afirmación no tiene fuente, no lleva cifras y va como inferencia. Los benchmarks son contexto, nunca evidencia sobre esta empresa. Termina con la síntesis para el caso (qué cambia para ESTE caso).\n\n## Modelo de datos del caso (solo lectura)\nTienes `consultar_modelo` (una SELECT sobre raw.*, staging.*, mart.*; máx. 200 filas) y `catalogo_modelo`. Úsalas en los pasos de datos: comprueba qué existe antes de proponer, y si un dato no está en el modelo, dilo. Cada cifra que saques del modelo va en `sources` con source_type \"data_model\", url vacío, title = qué responde y note = el SQL exacto que corriste; el claim cita ese source_id. Una cita del modelo solo cuenta si la consulta corrió en esta corrida.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "research_question",
+   "case_question",
+   "why_it_matters",
+   "short_answer",
+   "findings",
+   "claims",
+   "sources",
+   "alternative_explanations",
+   "what_is_established",
+   "what_is_contested",
+   "what_remains_unknown",
+   "case_implication",
+   "changes_current_story",
+   "affected_hypotheses",
+   "affected_claims",
+   "suggested_action",
+   "new_questions",
+   "handoff_to_cos",
+   "confidence_buckets",
+   "specialist"
+  ],
+  "properties": {
+   "research_question": {
+    "type": "string"
+   },
+   "case_question": {
+    "type": "string"
+   },
+   "why_it_matters": {
+    "type": "string"
+   },
+   "short_answer": {
+    "type": "string"
+   },
+   "findings": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "headline",
+      "evidence",
+      "claim_indexes",
+      "confidence",
+      "limitation"
+     ],
+     "properties": {
+      "headline": {
+       "type": "string"
+      },
+      "evidence": {
+       "type": "string"
+      },
+      "claim_indexes": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "limitation": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "claim",
+      "source_id",
+      "source_type",
+      "confidence",
+      "freshness",
+      "supports_or_contests",
+      "notes"
+     ],
+     "properties": {
+      "claim": {
+       "type": "string"
+      },
+      "source_id": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string"
+      },
+      "confidence": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "freshness": {
+       "type": "string"
+      },
+      "supports_or_contests": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "contests",
+        "context"
+       ]
+      },
+      "notes": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "sources": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "title",
+      "url",
+      "publisher",
+      "date",
+      "source_type",
+      "quality",
+      "note"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "title": {
+       "type": "string"
+      },
+      "url": {
+       "type": "string"
+      },
+      "publisher": {
+       "type": "string"
+      },
+      "date": {
+       "type": "string"
+      },
+      "source_type": {
+       "type": "string",
+       "enum": [
+        "primary",
+        "official",
+        "regulatory",
+        "academic",
+        "industry",
+        "company",
+        "expert",
+        "journalism",
+        "community",
+        "marketing",
+        "internal",
+        "data_model"
+       ]
+      },
+      "quality": {
+       "type": "string",
+       "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ]
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "alternative_explanations": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_established": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_is_contested": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "what_remains_unknown": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "case_implication": {
+    "type": "string"
+   },
+   "changes_current_story": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "value",
+     "why"
+    ],
+    "properties": {
+     "value": {
+      "type": "string",
+      "enum": [
+       "yes",
+       "no",
+       "maybe"
+      ]
+     },
+     "why": {
+      "type": "string"
+     }
+    }
+   },
+   "affected_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "affected_claims": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "id",
+      "effect",
+      "why"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "suggested_action": {
+    "type": "string"
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "handoff_to_cos": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "summary",
+     "recommended_next"
+    ],
+    "properties": {
+     "summary": {
+      "type": "string"
+     },
+     "recommended_next": {
+      "type": "string"
+     }
+    }
+   },
+   "confidence_buckets": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "high_confidence",
+     "plausible",
+     "contested",
+     "unknown"
+    ],
+    "properties": {
+     "high_confidence": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "plausible": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "contested": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "unknown": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "specialist": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "measurement"
+    ],
+    "properties": {
+     "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "problem_interpretation",
+       "measurement_objective",
+       "recommended_framework",
+       "alternative_frameworks",
+       "metric_definitions",
+       "required_events",
+       "required_dimensions",
+       "decision_enabled",
+       "limitations",
+       "implementation_implications"
+      ],
+      "properties": {
+       "problem_interpretation": {
+        "type": "string"
+       },
+       "measurement_objective": {
+        "type": "string"
+       },
+       "recommended_framework": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "name",
+         "structure",
+         "why"
+        ],
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "structure": {
+          "type": "string"
+         },
+         "why": {
+          "type": "string"
+         }
+        }
+       },
+       "alternative_frameworks": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "name",
+          "when_better",
+          "tradeoff"
+         ],
+         "properties": {
+          "name": {
+           "type": "string"
+          },
+          "when_better": {
+           "type": "string"
+          },
+          "tradeoff": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "metric_definitions": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "metric",
+          "definition",
+          "formula",
+          "grain",
+          "milestone",
+          "notes"
+         ],
+         "properties": {
+          "metric": {
+           "type": "string"
+          },
+          "definition": {
+           "type": "string"
+          },
+          "formula": {
+           "type": "string"
+          },
+          "grain": {
+           "type": "string"
+          },
+          "milestone": {
+           "type": "string"
+          },
+          "notes": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "required_events": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event",
+          "trigger",
+          "properties"
+         ],
+         "properties": {
+          "event": {
+           "type": "string"
+          },
+          "trigger": {
+           "type": "string"
+          },
+          "properties": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          }
+         }
+        }
+       },
+       "required_dimensions": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "dimension",
+          "why"
+         ],
+         "properties": {
+          "dimension": {
+           "type": "string"
+          },
+          "why": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "decision_enabled": {
+        "type": "string"
+       },
+       "limitations": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "implementation_implications": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "tools": [
+  "WebSearch",
+  "WebFetch"
+ ],
+ "skills": [
+  {
+   "id": "case-research-synthesis",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "2e17a5277f3b"
+  },
+  {
+   "id": "measurement-strategy",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "02c076192332"
+  },
+  {
+   "id": "cro-advisor",
+   "mode": "dynamic",
+   "why": "1 disparador(es) en la pregunta",
+   "source": "alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor",
+   "kind": "vendor",
+   "digest": "cd712605d907"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 34,
+ "status": "ok",
+ "error": null,
+ "data_model": "finora",
+ "output": {
+  "research_question": "¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o descartaría cada una (entradas únicas con fecha, señales iniciales, recorrido, atención, vínculo con pago)?",
+  "case_question": "Q-001 (¿por qué llega más gente y los clientes nuevos no crecen igual?) y Q-016 (qué evidencia mínima distingue las explicaciones del CRO). También sirve a Q-004, Q-005, Q-006, Q-021 y Q-023, sobre las hipótesis H-001 a H-008.",
+  "why_it_matters": "Define qué se le pide a Finora y en qué orden. Así el CRO no le atribuye a «calidad de leads» o a «faltan SDRs» algo que en realidad es un problema de conteo, de mezcla o de tiempo. Cambia la lámina de Growth y la Propuesta de Modelo de datos.",
+  "short_answer": "Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede validar ni descartar ninguna: el modelo no tiene entradas ni un vínculo lead→pago, y además la premisa de ventas depende de la ventana (altas pagadas +7% en mar–oct 2024 frente a 2023, pero −19% en jul–oct). El pedido mínimo va en dos entregas. Con entradas únicas con fecha más el vínculo con pago se descartan los artefactos (4 de 8 hipótesis); solo si queda una brecha dentro de los segmentos se piden señales al entrar, atención y recorrido. Tengo confianza alta en que hoy no alcanza y media en el diseño propuesto.",
+  "findings": [
+   {
+    "headline": "La premisa «no más ventas» depende de la ventana: con los pagos se sostiene en jul–oct 2024, pero no en mar–oct.",
+    "evidence": "Altas pagadas (primer pago observado) de 2023 a 2024. En mar–oct: 433→465 (+7%), con MRR pagado del primer mes de 19,5→24,6 MM COP (+26%). En jul–oct: 251→203 (−19%) y 10,7→9,1 MM COP (−15%); el monto por alta se mantuvo (≈42,6k→≈44,8k COP). Por trimestre, 2024-Q2 fue el máximo (219) y 2024-Q3 bajó a 153 (2023-Q3 había sido 187). Por semestre: 63,0 altas/mes en 2023-S2, 58,5 en 2024-S1 y 50,8 en 2024-S2 (jul–oct).",
+    "claim_indexes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "confidence": "high",
+    "limitation": "El primer pago observado no es necesariamente la adquisición confirmada. Sin entradas no hay tasa: esto describe solo el volumen y el valor de las altas, no la conversión."
+   },
+   {
+    "headline": "Con el modelo actual no se puede validar ni descartar ninguna de H-001 a H-008. El gasto sube mientras las altas bajan, pero eso no dice nada de los leads.",
+    "evidence": "El catálogo no tiene tablas de entradas, etapas, actividades comerciales, roster de SDR/AE ni vínculo CRM→pago. En jul–oct 2024 frente a 2023, el gasto subió: Generación de Demanda +46%, capacidad comercial +27%, Team +8% y total S&M +38% (la unidad no está documentada). La industria solo existe para quienes pagan, y esa mezcla casi no cambió.",
+    "claim_indexes": [
+     0,
+     5,
+     6
+    ],
+    "confidence": "high",
+    "limitation": "Gasto no es volumen de leads ni FTE. La mezcla de quienes compran no es la mezcla de quienes entran."
+   },
+   {
+    "headline": "Dos tipos de dato bastan para distinguir 4 de las 8 hipótesis (H-001, H-002, H-003, H-004): las entradas únicas con fecha (con canal, motion y segmento) y el vínculo con pago. Son justamente las que convertirían «más leads» en un artefacto.",
+    "evidence": "El método ya está establecido. Se agrupa por periodo de entrada con una ventana de conversión fija (EXT-03). Las entradas que aún no compran se tratan como censuradas, con curvas Kaplan-Meier (EXT-05). La mezcla se separa del desempeño manteniendo fijos los pesos de los grupos (EXT-04). Deduplicar y separar a los clientes existentes evita inflar la entrada (EXT-10). Un experimento aleatorizado externo muestra que la conversión inmediata y la diferida pueden ir en direcciones distintas (EXT-08), por eso conviene medir ambas.",
+    "claim_indexes": [
+     11,
+     12,
+     13,
+     16,
+     18
+    ],
+    "confidence": "medium",
+    "limitation": "Depende de que Finora tenga la fecha de entrada y un ID que se pueda unir con los pagos. Con unas 50 altas al mes, las celdas quedan chicas y obligan a trabajar por trimestre."
+   },
+   {
+    "headline": "H-005, H-006 y H-007 necesitan datos que suelen estar en un CRM, pero no siempre con su historia. La evidencia externa hace plausible H-006, pero no la prueba para Finora.",
+    "evidence": "El resumen de HBR dice que la mayoría de las empresas es «far too slow» para dar seguimiento a los leads (EXT-01). InsideSales reporta conversión 8 veces mayor en los primeros cinco minutos y que el 57,1% de los primeros intentos de llamada llega después de una semana (EXT-02; estudio de un proveedor, observacional). Forrester y el modelo Bowtie proponen medir por oportunidad o buying group, y por volumen, conversión y tiempo en cada etapa (EXT-07, EXT-06).",
+    "claim_indexes": [
+     9,
+     10,
+     14,
+     15
+    ],
+    "confidence": "medium",
+    "limitation": "Es evidencia observacional: las mejores entradas suelen atenderse antes. Para hablar de causa hace falta un experimento o un experimento natural (Q-023)."
+   },
+   {
+    "headline": "Para H-008 no alcanzan las razones de pérdida del CRM. Además hay una señal lateral que amerita una pregunta concreta sobre precio o condiciones en 2024.",
+    "evidence": "Clozd afirma que las razones que da el vendedor rara vez coinciden con las del comprador (sin metodología publicada). En jul–oct 2024, los clientes con expansión pasaron de 138 a 363 (de ≈3,3% a ≈5,6% de los activos por mes) y el MRR de expansión de 3,5 a 7,1 MM COP. El aumento mediano fue ≈8–9%, frente a ≈4–5% en ago–oct 2023. En jul–sep 2024, 220 de 243 expansiones no son picos de un mes ni pagos de varios meses juntos. Las reactivaciones se mantuvieron planas (60→57). El primer pago de los clientes nuevos no muestra un escalón en 2024-S2.",
+    "claim_indexes": [
+     4,
+     7,
+     8,
+     17
+    ],
+    "confidence": "low",
+    "limitation": "Es monto pagado observado, no precio de lista. Octubre 2024 no se puede verificar como pico. La señal también es compatible con upsell o con que parte de la demanda nueva venga de clientes existentes; no prueba un cambio de precio."
+   }
+  ],
+  "claims": [
+   {
+    "claim": "El modelo no contiene entradas/leads, etapas, actividades comerciales, roster de SDR/AE ni un vínculo CRM→pago. Solo tiene pagos (cliente × mes), la industria de los clientes y el gasto S&M mensual.",
+    "source_id": "DM-01",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Modelo con datos hasta 2024-10; consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Por eso ninguna de H-001 a H-008 se puede probar hoy con el modelo."
+   },
+   {
+    "claim": "Altas pagadas (primer pago observado) por mes: 54,2 de promedio en 2023 y 55,4 en ene–oct 2024 (meses limpios). Por semestre: 63,0 en 2023-S2, 58,5 en 2024-S1 y 50,8 en 2024-S2 (jul–oct).",
+    "source_id": "DM-02",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2022-03 a 2024-10",
+    "supports_or_contests": "supports",
+    "notes": "Apoya la premisa de ventas planas o en baja desde 2023-S2. El promedio anual compara ventanas distintas (2023 incluye nov–dic). El detalle por semestre sale de DM-03."
+   },
+   {
+    "claim": "Mismo tramo mar–oct: 433 altas en 2023 y 465 en 2024 (+7%). El MRR pagado del primer mes fue de 19,5 y 24,6 MM COP (+26%).",
+    "source_id": "DM-04",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2022-03 a 2024-10",
+    "supports_or_contests": "contests",
+    "notes": "En esta ventana la premisa «no más ventas» no se sostiene, ni en volumen ni en valor."
+   },
+   {
+    "claim": "Jul–oct: 251 altas en 2023 y 203 en 2024 (−19%). El MRR pagado del primer mes fue de 10,7 y 9,1 MM COP (−15%); el monto por alta se mantuvo (≈42,6k y ≈44,8k COP).",
+    "source_id": "DM-05",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2023-07 a 2024-10",
+    "supports_or_contests": "supports",
+    "notes": "En la ventana más reciente cae el volumen de altas, no el valor por alta. El monto por alta es aritmética sobre los totales redondeados."
+   },
+   {
+    "claim": "Por trimestre de alta: 2023-Q3 tuvo 187 altas, 2024-Q2 219 (el máximo) y 2024-Q3 153. La mediana del primer pago fue 35,3k COP en 2023-Q3, 46,2k en 2024-Q2, 37,8k en 2024-Q3 y 34,1k en oct-24.",
+    "source_id": "DM-11",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2023-01 a 2024-10",
+    "supports_or_contests": "supports",
+    "notes": "Hay una caída reciente del volumen. No se ve un escalón en el primer pago de los nuevos en 2024-S2 que sugiera un aumento de precio para ellos (es monto observado, no precio de lista)."
+   },
+   {
+    "claim": "Gasto jul–oct 2024 frente a 2023, en promedio mensual: Generación de Demanda 0,746→1,092 (+46%), capacidad comercial 0,569→0,72 (+27%), Team 0,418→0,45 (+8%) y total S&M 1,364→1,888 (+38%).",
+    "source_id": "DM-05",
+    "source_type": "data_model",
+    "confidence": "medium",
+    "freshness": "Datos 2023-07 a 2024-10",
+    "supports_or_contests": "context",
+    "notes": "La unidad no está documentada: solo vale la comparación relativa. Es compatible con «más inversión en ToFu sin más altas», pero no mide leads ni FTE."
+   },
+   {
+    "claim": "La mezcla por industria de las altas de mar–oct casi no cambió entre 2023 y 2024: Restaurantes 108→121, Retail 120→115, Producción 97→94, Tecnología 42→52, Servicios profesionales 42→47 y Salud 24→36.",
+    "source_id": "DM-06",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2022-03 a 2024-10",
+    "supports_or_contests": "context",
+    "notes": "Es la mezcla de quienes pagan, no de quienes entran. No sirve para probar H-002."
+   },
+   {
+    "claim": "Jul–oct 2023 frente a 2024: las reactivaciones pasaron de 60 a 57, los clientes con expansión de 138 a 363 y el MRR de expansión de 3,5 a 7,1 MM COP.",
+    "source_id": "DM-08",
+    "source_type": "data_model",
+    "confidence": "high",
+    "freshness": "Datos 2023-07 a 2024-10",
+    "supports_or_contests": "context",
+    "notes": "Con los clientes activos de DM-12 (4.191 vs 6.491 cliente-mes), la expansión sube de ≈3,3% a ≈5,6% por mes. Las compras de clientes existentes aparecen como expansión, no como alta."
+   },
+   {
+    "claim": "En jul–sep 2024, 220 de 243 expansiones no son picos de un mes ni pagos de varios meses juntos. El aumento mediano sobre el mes previo fue ≈8–9% en jul–oct 2024, frente a ≈4–5% en ago–oct 2023.",
+    "source_id": "DM-10",
+    "source_type": "data_model",
+    "confidence": "medium",
+    "freshness": "Datos 2023-07 a 2024-10",
+    "supports_or_contests": "context",
+    "notes": "Octubre 2024 no se puede verificar como pico porque no hay mes siguiente. El patrón de muchos aumentos pequeños es compatible con un ajuste de precio o condiciones, o con upsell; no está probado. El total por año sale de DM-09."
+   },
+   {
+    "claim": "Resumen de HBR (Oldroyd, McElheran y Elkington, 2011): «Companies spend billions of dollars on internet-generated sales leads, but most are far too slow to follow up on them.»",
+    "source_id": "EXT-01",
+    "source_type": "expert",
+    "confidence": "medium",
+    "freshness": "2011",
+    "supports_or_contests": "context",
+    "notes": "Solo se recuperó el resumen: las cifras del artículo no se usan porque no se pudo leer el texto completo. Hace plausible el mecanismo de H-006; no es evidencia sobre Finora."
+   },
+   {
+    "claim": "InsideSales (2021; 55 millones de actividades, 5,7 millones de leads inbound, más de 400 empresas): «Conversion rates are 8x greater in the first five minutes». Solo el 0,1% de los leads inbound se atiende en 5 minutos y el 57,1% de los primeros intentos de llamada ocurre después de más de una semana.",
+    "source_id": "EXT-02",
+    "source_type": "marketing",
+    "confidence": "low",
+    "freshness": "2021",
+    "supports_or_contests": "context",
+    "notes": "Estudio de un proveedor, observacional y sin metodología publicada. Es contexto para H-006; no prueba causa."
+   },
+   {
+    "claim": "Para ver la tendencia de conversión hay que agrupar por el periodo en que se entra al funnel («group users based on the period in which they enter the funnel») y usar una ventana de conversión fija. Sin esa ventana, las cohortes viejas parecen mejores solo porque tuvieron más tiempo.",
+    "source_id": "EXT-03",
+    "source_type": "expert",
+    "confidence": "medium",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda el método para H-003/H-004 y descarta usar «altas del mes ÷ leads del mes»."
+   },
+   {
+    "claim": "Censura a la derecha: «we don't know when the event happened, but only that it happened after the end of the study». Calcular medianas sin tomar en cuenta la censura «is not a good idea»; Kaplan-Meier sí la incorpora.",
+    "source_id": "EXT-05",
+    "source_type": "academic",
+    "confidence": "high",
+    "freshness": "Libro online; consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda tratar como censuradas, y no como perdidas, a las entradas recientes que aún no compran (H-003)."
+   },
+   {
+    "claim": "Mecanismo de Simpson: «The relative sizes of the groups changed between periods, and the groups have very different baseline conversion rates». La práctica recomendada es mantener constantes los pesos de los subgrupos («hold the subgroup weights constant»).",
+    "source_id": "EXT-04",
+    "source_type": "expert",
+    "confidence": "medium",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "supports",
+    "notes": "Respalda el ajuste por mezcla para H-002."
+   },
+   {
+    "claim": "El Bowtie conecta volumen, conversión y velocidad en cada etapa, de adquisición a expansión: «the classic funnel stops where recurring revenue actually begins».",
+    "source_id": "EXT-06",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Es un framework alternativo, útil si se quiere unir Growth con Revenue."
+   },
+   {
+    "claim": "Forrester: «Most B2B organizations recognize the limitations of lead-centric demand processes». Propone contar «opportunities with connected buying groups».",
+    "source_id": "EXT-07",
+    "source_type": "industry",
+    "confidence": "medium",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Relevante para la unidad de conteo en Executive/KAM (H-001)."
+   },
+   {
+    "claim": "Experimento aleatorizado con 680.588 usuarios en 190 países (prueba gratuita de 3 vs 7 días). No hubo efecto significativo en la conversión inmediata, pero la conversión diferida subió 42,36% y la suscripción total 20,92%.",
+    "source_id": "EXT-08",
+    "source_type": "academic",
+    "confidence": "high",
+    "freshness": "Datos 2022–2024; fecha de publicación no verificada",
+    "supports_or_contests": "context",
+    "notes": "Es un contexto B2C freemium, no Finora. Muestra que la conversión inmediata y la diferida pueden ir en direcciones distintas (H-004) y que un experimento puede separarlas (Q-023)."
+   },
+   {
+    "claim": "Clozd: al comparar razones de pérdida del CRM con entrevistas a compradores, «reps were wrong about the real reason for the outcome 85% of the time».",
+    "source_id": "EXT-09",
+    "source_type": "marketing",
+    "confidence": "low",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Proveedor de win/loss; la cifra no tiene metodología publicada. Solo apoya que la razón que registra Sales no basta (H-005, H-008)."
+   },
+   {
+    "claim": "Los duplicados y un mal matching lead→cuenta hacen que «Pipeline reports double-count the opportunity» y que «Wrong rep gets the lead».",
+    "source_id": "EXT-10",
+    "source_type": "industry",
+    "confidence": "low",
+    "freshness": "Sin fecha visible; consultado 2026-09-29",
+    "supports_or_contests": "context",
+    "notes": "Respalda contar entradas únicas y separar a los clientes existentes (H-001), y cuidar el routing (H-006)."
+   }
+  ],
+  "sources": [
+   {
+    "id": "DM-01",
+    "title": "Qué tablas y columnas existen en el modelo (no hay leads, etapas, atención ni vínculo CRM→pago)",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "catalogo_modelo() — llamada al catálogo del modelo; no es SQL."
+   },
+   {
+    "id": "DM-02",
+    "title": "Altas pagadas por año y promedio mensual (meses limpios)",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(SUM(demand_gen_spend),0) AS demand_gen_spend, ROUND(SUM(sales_capacity_spend),0) AS sales_capacity_spend, ROUND(SUM(enablement_spend),0) AS enablement_spend, ROUND(SUM(total_sm_spend),0) AS total_sm_spend FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean' GROUP BY substr(month,1,4) ORDER BY year"
+   },
+   {
+    "id": "DM-03",
+    "title": "Altas por mes y gasto promedio por semestre",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(month,1,4) || CASE WHEN CAST(substr(month,6,2) AS INTEGER) <= 6 THEN '-S1' ELSE '-S2' END AS half, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(AVG(demand_gen_spend),4) AS avg_demand_gen, ROUND(AVG(paid_media),4) AS avg_paid_media, ROUND(AVG(publicidad_no_web),4) AS avg_pub_no_web, ROUND(AVG(sales_capacity_spend),4) AS avg_sales_capacity, ROUND(AVG(team),4) AS avg_team, ROUND(AVG(payroll_expenses),4) AS avg_payroll, ROUND(AVG(travel),4) AS avg_travel, ROUND(AVG(enablement_spend),4) AS avg_enablement, ROUND(AVG(total_sm_spend),4) AS avg_total_sm FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean' GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "DM-04",
+    "title": "Altas y MRR pagado del primer mes, mismo tramo mar–oct 2022/2023/2024",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop, ROUND(SUM(new_mrr_cop)/SUM(new_customers)/1e3,0) AS new_mrr_per_new_k_cop, ROUND(AVG(median_new_customer_mrr_cop)/1e3,0) AS avg_monthly_median_new_mrr_k_cop, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity, ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(total_sm_spend)/SUM(new_customers),4) AS sm_per_new FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 3 AND 10 GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "DM-05",
+    "title": "Altas, MRR pagado del primer mes y gasto, jul–oct 2023 vs 2024",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers_jul_oct, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop_jul_oct, ROUND(AVG(demand_gen_spend),3) AS avg_demand_gen, ROUND(AVG(sales_capacity_spend),3) AS avg_sales_capacity, ROUND(AVG(team),3) AS avg_team, ROUND(AVG(total_sm_spend),3) AS avg_total_sm FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "DM-06",
+    "title": "Mezcla por industria de las altas, mar–oct de cada año",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT industry, SUM(CASE WHEN cohort_month BETWEEN '2022-03' AND '2022-10' THEN 1 ELSE 0 END) AS altas_2022_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2023-03' AND '2023-10' THEN 1 ELSE 0 END) AS altas_2023_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2024-03' AND '2024-10' THEN 1 ELSE 0 END) AS altas_2024_mar_oct FROM mart.new_customers GROUP BY industry ORDER BY altas_2024_mar_oct DESC"
+   },
+   {
+    "id": "DM-08",
+    "title": "Reactivaciones y expansiones, jul–oct 2023 vs 2024",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers, SUM(reactivated_customers) AS reactivated_customers, SUM(expanded_customers) AS expanded_customers, ROUND(SUM(reactivation_mrr_cop)/1e6,1) AS reactivation_mrr_mm_cop, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "DM-09",
+    "title": "Expansiones de jul–oct: cuántas son picos de un mes o pagos de varios meses juntos",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT year, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS multi_month_signature, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop, ROUND(SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN expansion_mrr_cop ELSE 0 END)/1e6,1) AS expansion_mrr_neither_mm_cop FROM mart.customer_month WHERE expanded_customer = 1 AND CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND year IN (2023, 2024) GROUP BY year ORDER BY year"
+   },
+   {
+    "id": "DM-10",
+    "title": "Expansiones por mes desde jul-23: marcas de artefacto y aumento mediano",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT month, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month IS NULL THEN 1 ELSE 0 END) AS reverts_unknown, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(MEDIAN(amount_vs_usual_ratio),3) AS median_ratio_vs_usual, ROUND(MEDIAN(mrr_change / NULLIF(previous_month_mrr,0)),3) AS median_pct_increase FROM mart.customer_month WHERE expanded_customer = 1 AND month >= '2023-07' GROUP BY month ORDER BY month"
+   },
+   {
+    "id": "DM-11",
+    "title": "Altas y primer pago (M0) por trimestre de alta, 2023–2024",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT substr(cohort_month,1,4) || '-Q' || CAST(FLOOR((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3) AS INTEGER) AS cohort_quarter, COUNT(*) AS altas, ROUND(MEDIAN(m0_cop)/1e3,1) AS median_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.25)/1e3,1) AS p25_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.75)/1e3,1) AS p75_m0_k_cop FROM mart.new_customers WHERE clean = true AND cohort_month >= '2023-01' GROUP BY 1 ORDER BY 1"
+   },
+   {
+    "id": "DM-12",
+    "title": "Serie mensual de altas, clientes activos y gasto (para calcular la tasa de expansión por activo)",
+    "url": "",
+    "publisher": "CaseOS · modelo de datos Finora",
+    "date": "2026-09-29",
+    "source_type": "data_model",
+    "quality": "A",
+    "note": "SELECT month, new_customers, active_customers, ROUND(demand_gen_spend,0) AS demand_gen, ROUND(paid_media,0) AS paid_media, ROUND(publicidad_no_web,0) AS publicidad_no_web, ROUND(sales_capacity_spend,0) AS sales_capacity, ROUND(team,0) AS team, ROUND(payroll_expenses,0) AS payroll, ROUND(enablement_spend,0) AS enablement, ROUND(total_sm_spend,0) AS total_sm, window_flag FROM mart.monthly_metrics_phase1 ORDER BY month"
+   },
+   {
+    "id": "EXT-01",
+    "title": "The Short Life of Online Sales Leads (resumen)",
+    "url": "https://store.hbr.org/product/the-short-life-of-online-sales-leads/F1103B",
+    "publisher": "Harvard Business Review",
+    "date": "2011-03",
+    "source_type": "expert",
+    "quality": "B",
+    "note": "Solo se recuperó el resumen; el artículo completo tiene paywall. No se usan las cifras que aparecían en los snippets de búsqueda."
+   },
+   {
+    "id": "EXT-02",
+    "title": "Response Time Matters (Lead Response Research 2021)",
+    "url": "https://www.insidesales.com/response-time-matters/",
+    "publisher": "InsideSales",
+    "date": "2021",
+    "source_type": "marketing",
+    "quality": "C",
+    "note": "Estudio de un proveedor que promueve su producto. Es observacional y no publica metodología."
+   },
+   {
+    "id": "EXT-03",
+    "title": "An in-depth guide to conversion rate analysis for B2B SaaS",
+    "url": "https://austinyang.co/conversion-rate-analysis-guide-b2b-saas/",
+    "publisher": "Austin Yang",
+    "date": "sin fecha visible",
+    "source_type": "expert",
+    "quality": "C",
+    "note": "Blog de un practicante. Cubre cohortes por periodo de entrada, ventana de conversión y Simpson."
+   },
+   {
+    "id": "EXT-04",
+    "title": "Understanding Simpson's Paradox",
+    "url": "https://timdietrich.me/blog/simpsons-paradox/",
+    "publisher": "Tim Dietrich",
+    "date": "sin fecha visible",
+    "source_type": "expert",
+    "quality": "C",
+    "note": "Explica el mecanismo de mezcla y recomienda mantener fijos los pesos de los subgrupos."
+   },
+   {
+    "id": "EXT-05",
+    "title": "Survival analysis and censored data (Modern Statistics with R)",
+    "url": "https://modernstatisticswithr.com/survivalchapter.html",
+    "publisher": "Modern Statistics with R",
+    "date": "sin fecha visible",
+    "source_type": "academic",
+    "quality": "B",
+    "note": "Libro de texto abierto. Define la censura a la derecha y el uso de Kaplan-Meier."
+   },
+   {
+    "id": "EXT-06",
+    "title": "The Bowtie Standard",
+    "url": "https://winningbydesign.com/resources/research/bowtie-standard/",
+    "publisher": "Winning by Design",
+    "date": "sin fecha visible",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Framework de consultora: volumen, conversión y velocidad por etapa, de adquisición a expansión."
+   },
+   {
+    "id": "EXT-07",
+    "title": "Put The Forrester B2B Revenue Waterfall Into Practice",
+    "url": "https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/",
+    "publisher": "Forrester",
+    "date": "sin fecha visible",
+    "source_type": "industry",
+    "quality": "B",
+    "note": "Página de la guía: pasar de contar leads a contar oportunidades y buying groups. No trae métricas detalladas."
+   },
+   {
+    "id": "EXT-08",
+    "title": "Longer or shorter? A large-scale randomized field experiment on the impact of free trial duration on sustainable user conversion in the Freemium model",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217587/",
+    "publisher": "PubMed Central",
+    "date": "datos 2022–2024; publicación no verificada",
+    "source_type": "academic",
+    "quality": "A",
+    "note": "Experimento aleatorizado en un contexto B2C freemium. Se usa solo como contexto metodológico."
+   },
+   {
+    "id": "EXT-09",
+    "title": "Win-loss analysis: what's the best source of win-loss data",
+    "url": "https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data",
+    "publisher": "Clozd",
+    "date": "sin fecha visible",
+    "source_type": "marketing",
+    "quality": "D",
+    "note": "Proveedor de win/loss. La cifra del 85% no tiene metodología publicada."
+   },
+   {
+    "id": "EXT-10",
+    "title": "Lead-to-Account Matching: Dedup and Strategy Guide",
+    "url": "https://therevopsreport.com/insights/lead-to-account-matching/",
+    "publisher": "The RevOps Report",
+    "date": "sin fecha visible",
+    "source_type": "industry",
+    "quality": "C",
+    "note": "Explica cómo los duplicados y el mal matching inflan el pipeline y desvían el routing. La cifra de leads mal asignados no tiene fuente y no se usa."
+   }
+  ],
+  "alternative_explanations": [
+   "Rezago entre ganar y el primer pago: si la facturación o el onboarding empezaron a arrancar más tarde, las ventas cerradas aparecen después como altas pagadas, y el primer pago cae aunque los cierres no caigan. No tiene ID en el caso; propongo registrarla como hipótesis nueva.",
+   "«Más leads» inflado por duplicados, reingresos o clientes activos que entran como leads: habría más registros, no más compradores posibles. Es un sub-mecanismo de H-001.",
+   "Parte de la demanda nueva viene de clientes existentes o de ex-clientes, y su compra aparece como expansión o reactivación, no como alta. Es compatible con que en jul–oct 2024 las expansiones subieran (138→363) mientras las altas bajaban, pero no está probado.",
+   "Cambió la definición de lead/MQL, el formulario o las reglas de scoring entre periodos, y entonces la tendencia de «leads» no es comparable.",
+   "Creció más el Self Service o un canal Digital que compra a menor tasa: sería mezcla por motion (H-002), no deterioro.",
+   "Efecto de la ventana o la estacionalidad: la comparación de altas cambia de signo entre mar–oct (+7%) y jul–oct (−19%)."
+  ],
+  "what_is_established": [
+   "El modelo actual no tiene entradas/leads, etapas, atención, roster ni vínculo lead→pago, así que hoy no se puede validar ni descartar ninguna de H-001 a H-008 (DM-01).",
+   "Altas pagadas (primer pago observado) de 2023 a 2024: +7% en mar–oct (433→465) y −19% en jul–oct (251→203). El monto por alta no cayó (DM-04, DM-05).",
+   "En jul–oct 2024 frente a 2023 subió el gasto en Generación de Demanda (+46%) y en capacidad comercial (+27%), en una unidad no documentada (DM-05).",
+   "Método: medir la conversión por cohorte de fecha de entrada con ventana fija, tratar como censuradas a las entradas que aún no compran y separar la mezcla con pesos constantes (EXT-03, EXT-05, EXT-04)."
+  ],
+  "what_is_contested": [
+   "Si «no más ventas» es cierto: depende de la ventana y de la unidad (altas frente a MRR pagado del primer mes).",
+   "Si la velocidad de respuesta causa la conversión o si las mejores entradas simplemente se atienden antes: la evidencia externa es observacional y en parte de proveedores (EXT-01, EXT-02).",
+   "Si las razones de pérdida del CRM describen la causa real (EXT-09, sin metodología).",
+   "Cuál es la unidad de conteo correcta en Executive/KAM: lead individual u oportunidad/cuenta (EXT-07)."
+  ],
+  "what_remains_unknown": [
+   "Cuántas entradas únicas hubo por mes y tipo (New y otras), y si el CRO cuenta entradas únicas o registros.",
+   "Qué periodos compara el CRO cuando dice «más leads, no más ventas».",
+   "Si existe un ID que una el CRM con el customer_id de los pagos, y cuánto tarda el primer pago después de ganar.",
+   "Si el CRM guarda el historial de etapas y la hora del primer contacto, o solo el estado actual.",
+   "Cuántos SDR/AE hubo por mes (FTE y ramp).",
+   "Si hubo en 2024 cambios de precio, plan o condiciones, y en qué fecha."
+  ],
+  "case_implication": "Para Finora, la respuesta a Q-001 y Q-016 todavía no puede ser una explicación; tiene que ser un plan de descarte con un pedido de datos mínimo. Las ocho hipótesis se ordenan en dos capas. Primero van los artefactos: conteo (H-001), tiempo (H-003/H-004) y mezcla (H-002). Se resuelven solo con entradas únicas con fecha (con canal, motion y segmento) más el vínculo con pago. Después, solo si queda una brecha dentro de los segmentos, van las causas en ToFu (H-005) y en BoFu (H-006, H-007, H-008), que piden señales al entrar, atención y recorrido. Antes de explicar nada conviene fijar con el CRO la ventana y la unidad de «ventas»: con los pagos, la premisa se sostiene en jul–oct 2024 pero no en mar–oct. Sobre Q-023: descartar artefactos no requiere experimentos. Hablar de causa en H-006 o H-008 sí requiere un experimento o un experimento natural. En el deck, la lámina de Growth pasaría a ser una tabla de hipótesis × dato mínimo × qué la valida o descarta. La Propuesta de Modelo de datos sumaría una tabla de entradas, una de hitos, el roster y un puente CRM↔pagos.",
+  "changes_current_story": {
+   "value": "maybe",
+   "why": "No cambia que con los pagos no se puede hablar de conversión. Sí cambia el encuadre en dos puntos: la premisa de ventas depende de la ventana (+7% frente a −19%), y la respuesta a Q-001/Q-016 pasa a ser un árbol de descarte con un pedido de datos en dos entregas, no una explicación. Hugo decide si la lámina de Growth adopta ese encuadre."
+  },
+  "affected_hypotheses": [
+   {
+    "id": "H-001",
+    "effect": "requires_research",
+    "why": "ToFu/premisa. Dato mínimo: todas las entradas únicas con fecha y tipo (no solo New), deduplicadas y separando a los clientes activos. Se valida si el total crece menos que New; se descarta si crece igual. El modelo no tiene entradas, y del lado ventas la premisa ya depende de la ventana."
+   },
+   {
+    "id": "H-002",
+    "effect": "requires_research",
+    "why": "ToFu/mezcla. Dato mínimo: canal, motion y segmento al entrar, más el vínculo con pago. Se valida si las compras esperadas (pesos actuales × tasas históricas por segmento a N días) explican la caída; se descarta si queda una brecha dentro de los segmentos. El modelo solo ve la mezcla de quienes compran, que casi no cambió."
+   },
+   {
+    "id": "H-003",
+    "effect": "requires_research",
+    "why": "Tiempo. Dato mínimo: fecha de entrada y fecha de primer pago. Se valida si, comparando a igual edad (90/180 días, curvas Kaplan-Meier), la diferencia desaparece; se descarta si persiste. Hoy es imposible porque no hay fecha de entrada."
+   },
+   {
+    "id": "H-004",
+    "effect": "requires_research",
+    "why": "Tiempo largo. Mismo dato que H-003, con un seguimiento de al menos 180 días: gana HC3a si las curvas convergen y HC3b si la brecha persiste. Si Finora entrega datos hasta hoy, las cohortes de 2024 ya se pueden evaluar. Hay que medir la conversión inmediata y la diferida, porque pueden ir en direcciones distintas (EXT-08)."
+   },
+   {
+    "id": "H-005",
+    "effect": "requires_research",
+    "why": "ToFu/calidad. Dato mínimo: señales al entrar (fit e intención) con reglas congeladas, más el vínculo con pago. Se valida si cae la proporción de grado alto mientras la tasa por grado se mantiene; se descarta si las señales no empeoraron. La calificación posterior de Sales no sirve como medida."
+   },
+   {
+    "id": "H-006",
+    "effect": "requires_research",
+    "why": "Atención y capacidad. Dato mínimo: asignación y primer contacto con timestamps, más el roster de SDR/AE por semana. Se valida si subió la carga por rep, empeoró el tiempo al primer contacto y la caída se concentra en las entradas atendidas tarde, a igual calidad. Afuera, la respuesta lenta es común y se asocia a menos contacto (observacional). Adentro, el gasto de capacidad comercial subió 27%, pero gasto no es FTE."
+   },
+   {
+    "id": "H-007",
+    "effect": "requires_research",
+    "why": "BoFu. Dato mínimo: historial de etapas con fechas, no solo la etapa actual. Se valida si las tasas a igual edad están estables hasta SQL y caen después; se descarta si el tramo posterior está estable. Indica dónde mirar, no por qué pasa."
+   },
+   {
+    "id": "H-008",
+    "effect": "requires_research",
+    "why": "BoFu/oferta. Dato mínimo: un registro fechado de cambios de precio, plan o condiciones, la etapa de pérdida y el win/loss contado por el comprador (no solo la razón del CRM). Hay una señal que precisar: en jul–oct 2024 las expansiones pasaron de 138 a 363, con un aumento mediano de ≈8–9%, sin escalón en el primer pago de los nuevos. Pregunta concreta: ¿hubo un ajuste de precio o condiciones en 2024?"
+   }
+  ],
+  "affected_claims": [],
+  "suggested_action": "Proponer a Hugo que apruebe el árbol de descarte y un pedido de datos en dos entregas. La Entrega 1 sería un extracto de todas las entradas desde 2023-01 hasta la fecha más reciente disponible, con: ID único, fecha, tipo de entrada, Canal de adquisición, motion, industria y tamaño, marca de cliente activo o ex-cliente, fecha de ganado y customer_id de pagos. La Entrega 2 se pediría solo si queda brecha dentro de los segmentos: historial de etapas, asignación y primer contacto, roster de SDR/AE y registro de cambios de oferta. Antes de pedir datos, preguntar al CRO qué periodos compara.",
+  "new_questions": [
+   "¿Qué periodos compara el CRO cuando dice «más leads, no más ventas», y cuenta entradas únicas o registros?",
+   "¿Existe un ID que una el CRM con el customer_id de los pagos, y cuántos días pasan en promedio entre ganar y el primer pago?",
+   "¿Hubo en 2024 algún ajuste de precio, plan o condiciones (para clientes nuevos o existentes), y en qué fecha?"
+  ],
+  "handoff_to_cos": {
+   "summary": "R-010 mapea H-001 a H-008 a los cinco tipos de dato que pidió Hugo. Ninguna hipótesis se puede probar con el modelo actual. La premisa de ventas depende de la ventana: altas pagadas +7% en mar–oct y −19% en jul–oct 2024 frente a 2023. Con entradas únicas con fecha más el vínculo con pago se distinguen 4 de las 8 hipótesis (los artefactos).",
+   "recommended_next": "Llevar a Hugo tres decisiones: (1) aprobar el árbol de descarte y el pedido de la Entrega 1; (2) decidir si se registra como hipótesis nueva el rezago entre ganar y el primer pago; (3) pedir a Data Engineering la Propuesta de Modelo de datos: tabla de entradas, tabla de hitos, roster y puente CRM↔pagos, clasificando el pago enlazado como alta, reactivación o expansión."
+  },
+  "confidence_buckets": {
+   "high_confidence": [
+    "Hoy el modelo no permite validar ni descartar ninguna de H-001 a H-008.",
+    "Altas pagadas: +7% en mar–oct y −19% en jul–oct 2024 frente a 2023; el valor por alta no cayó.",
+    "La tasa por periodo (altas del mes ÷ leads del mes) mezcla poblaciones distintas; hay que medir por cohorte de entrada con ventana fija."
+   ],
+   "plausible": [
+    "H-006 como mecanismo: la respuesta lenta es frecuente y se asocia a menos contacto (evidencia externa observacional).",
+    "Parte de «más leads» puede ser duplicados, reingresos o clientes existentes, cuya compra aparece como expansión o reactivación.",
+    "Si la entrada creció hace poco, parte de la brecha puede ser censura (H-003)."
+   ],
+   "contested": [
+    "Que «no más ventas» sea cierto: depende de la ventana.",
+    "Que la velocidad de respuesta cause la conversión.",
+    "Que las razones de pérdida del CRM describan la causa real.",
+    "La unidad de conteo en Executive/KAM: lead frente a oportunidad o cuenta."
+   ],
+   "unknown": [
+    "Cuántas entradas únicas hubo por mes y tipo, y qué periodo compara el CRO.",
+    "Si existe un ID que una el CRM con los pagos, y el rezago entre ganar y el primer pago.",
+    "Si el CRM guarda el historial de etapas y la hora del primer contacto.",
+    "Cuántos SDR/AE hubo por mes.",
+    "Si hubo cambios de precio, plan o condiciones en 2024."
+   ]
+  },
+  "specialist": {
+   "measurement": {
+    "problem_interpretation": "«Más leads, pero no más ventas» junta dos series que hoy no se pueden unir: las entradas, que no existen en el modelo, y las altas pagadas, que sí existen como primer pago observado. Por eso la pregunta útil no es «¿cuál es la tasa de conversión?» sino «¿qué dato mínimo descarta cada explicación, y en qué orden?». Tres explicaciones son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad (H-006, entre ToFu y BoFu), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Además, Self Service, Assisted y Executive/KAM no recorren el mismo camino, así que una tasa lead→venta mezclada no describe a ninguno.",
+    "measurement_objective": "Que el CRO y el CFO puedan decidir dónde poner el siguiente peso, con el mínimo dato posible: Inversión en Marketing y Generación de Demanda por canal, Team (SDR/AE), proceso post-SQL y Habilitación, u oferta. O decidir que toca esperar porque es rezago. El dato mínimo son cohortes de entradas únicas con fecha, enlazadas al pago y separadas por motion.",
+    "recommended_framework": {
+     "name": "Cohortes de entrada por motion + árbol de descarte (primero artefactos, después causas)",
+     "structure": "UNIDAD: entrada única (empresa; la persona queda como detalle), deduplicada y con su relación previa: prospecto nuevo, ex-cliente o cliente activo.\nHITO DE INICIO: fecha de entrada.\nGRANO: entrada × hito. Se agrega por mes o trimestre de entrada × motion (Self Service, Assisted, Executive/KAM) × Canal de adquisición × segmento.\nHITOS: entrada → primer contacto → calificada (SQL o equivalente) → oportunidad → ganada → primer pago → pago del mes 2. Cada motion usa los suyos; no se fuerza la secuencia.\nQUÉ SE MIDE: el alcance de cada hito a edad fija (90/180 días) y el tiempo entre hitos (mediana y curva Kaplan-Meier). Los resultados comunes a todos los motions son el pago a N días y el MRR temprano.\n\nÁRBOL DE DESCARTE:\n1) Premisa (Q-004) · H-001, ToFu/conteo. Dato: todas las entradas únicas con fecha y tipo, no solo New. Se valida si el total crece menos que New; se descarta si crece igual. En este paso también se fijan la ventana y la unidad de «ventas».\n2) Tiempo (Q-005/Q-006) · H-003 y H-004. Dato: fecha de entrada y fecha de primer pago. H-003 se valida si la brecha desaparece al comparar a igual edad. En H-004 gana HC3a si las curvas convergen a 180 días, y HC3b si no.\n3) Mezcla (Q-005) · H-002, ToFu. Dato: segmento, canal y motion al entrar, más el vínculo con pago. Se valida si las compras esperadas con tasas históricas por segmento explican la caída; se descarta si queda brecha dentro de los segmentos.\n4) Causas (Q-006/Q-021), solo si queda brecha:\n- H-005, calidad al entrar: señales con reglas congeladas.\n- H-006, atención: carga por SDR/AE y tiempo al primer contacto, comparando a igual calidad.\n- H-007, recorrido: tasas condicionales post-SQL con historial de etapas.\n- H-008, oferta: registro fechado de cambios y win/loss contado por el comprador.\n\nLos pasos 1 a 3 usan solo dos tipos de dato (entradas únicas con fecha + vínculo con pago) y distinguen 4 de las 8 hipótesis.",
+     "why": "Descarta primero lo más barato y lo que más engaña (conteo, tiempo, mezcla) con solo dos tipos de dato. Recién después pide atención, recorrido y win/loss, que cuestan más y muchas veces no tienen historia. Las cohortes por fecha de entrada con ventana fija evitan que las cohortes recientes parezcan peores solo por haber tenido menos tiempo (EXT-03, EXT-05). La mezcla con pesos constantes separa la composición del desempeño (EXT-04). Y medir por motion evita una tasa mezclada entre Self Service, Assisted y Executive/KAM."
+    },
+    "alternative_frameworks": [
+     {
+      "name": "Forrester B2B Revenue Waterfall (oportunidades y buying groups)",
+      "when_better": "Cuando en Executive/KAM compra un grupo de varias personas por empresa y hoy cada contacto cuenta como lead. Ahí la unidad correcta es la oportunidad o la cuenta, y contar leads infla la entrada.",
+      "tradeoff": "Pierde la señal individual al entrar que necesita H-005. Exige conocer los roles del buying group y tener datos por cuenta, así que es más pesado de implementar."
+     },
+     {
+      "name": "Bowtie (Winning by Design): volumen, conversión y tiempo por etapa, de adquisición a expansión",
+      "when_better": "Cuando Hugo quiere un solo estándar que conecte Growth con Revenue (retención y expansión) en el mismo deck.",
+      "tradeoff": "Tiene más etapas de las que esta pregunta necesita, y obliga a renombrar etapas y acordar definiciones antes de medir."
+     }
+    ],
+    "metric_definitions": [
+     {
+      "metric": "Entradas únicas",
+      "definition": "Empresas (o cuentas en Self Service) distintas cuya primera entrada en la ventana cae en el mes. Los reingresos dentro de la ventana de deduplicación no suman. Se separan prospectos nuevos, ex-clientes y clientes activos.",
+      "formula": "COUNT(DISTINCT entity_id) con first_entry_date en el mes, por entry_type y relación previa",
+      "grain": "Entrada; se reporta por mes × tipo de entrada (New/otras) × motion × canal",
+      "milestone": "Fecha de entrada",
+      "notes": "H-001. La ventana de deduplicación (por ejemplo, 90 días) es una propuesta a acordar con Finora. Sin deduplicar, «más leads» puede significar más registros, no más compradores posibles."
+     },
+     {
+      "metric": "Mezcla de entradas",
+      "definition": "Participación de cada segmento en las entradas únicas del periodo.",
+      "formula": "entradas_segmento / entradas_total",
+      "grain": "Mes o trimestre de entrada × segmento (canal, motion, industria, tamaño, grado)",
+      "milestone": "Fecha de entrada",
+      "notes": "H-002 y H-005. Hoy la industria solo existe para quienes pagan."
+     },
+     {
+      "metric": "Pago a N días por cohorte",
+      "definition": "Proporción de las entradas de una cohorte que hacen su primer pago dentro de N días desde la entrada. Solo se calcula para cohortes con al menos N días observados.",
+      "formula": "# entradas de la cohorte c con (first_payment_date − entry_date) ≤ N / # entradas de c; N = 90 y 180",
+      "grain": "Cohorte (mes o trimestre de entrada) × motion × segmento",
+      "milestone": "Entrada → primer pago",
+      "notes": "Reemplaza a «altas del mes ÷ leads del mes», que mezcla poblaciones distintas. El pago de un ex-cliente es reactivación y el de un cliente activo es expansión: se reportan aparte."
+     },
+     {
+      "metric": "Tiempo a primer pago (Kaplan-Meier)",
+      "definition": "Días desde la entrada hasta el primer pago. Las entradas que aún no compran se tratan como censuradas, no como perdidas.",
+      "formula": "Curva 1 − S(t) de Kaplan-Meier por cohorte; mediana de días y % que compró a 30/90/180 días",
+      "grain": "Entrada; una curva por cohorte × motion",
+      "milestone": "Entrada",
+      "notes": "H-003 y H-004: se comparan cohortes a igual edad. Gana HC3a si las curvas convergen y HC3b si no."
+     },
+     {
+      "metric": "Brecha dentro de segmentos (ajuste por mezcla)",
+      "definition": "Diferencia entre las compras observadas y las que habría si cada segmento convirtiera a su tasa del periodo base, con las entradas del periodo actual.",
+      "formula": "observadas_t − Σ_s (entradas_t,s × tasa_N_base,s)",
+      "grain": "Periodo × segmento",
+      "milestone": "Entrada",
+      "notes": "H-002: si la brecha es cercana a cero, la mezcla explica la caída; si no, se pasa a H-005 a H-008. Si las celdas quedan chicas, usar trimestres."
+     },
+     {
+      "metric": "Calidad al entrar",
+      "definition": "Proporción de entradas con grado alto según reglas de fit (industria, tamaño, rol) e intención (tipo de solicitud), congeladas y aplicadas igual a todos los periodos. También el pago a N días por grado.",
+      "formula": "entradas_grado_alto / entradas; pago a N días por grado",
+      "grain": "Entrada; mes de entrada × grado × canal",
+      "milestone": "Fecha de entrada (foto del día de entrada)",
+      "notes": "H-005. No usar la calificación posterior de Sales ni reglas que hayan cambiado en el tiempo."
+     },
+     {
+      "metric": "Carga por SDR/AE",
+      "definition": "Entradas asignadas por FTE activo del rol en la semana, más la cola abierta sin primer contacto.",
+      "formula": "entradas_asignadas_semana / FTE_activos_rol_semana",
+      "grain": "Semana × rol (× rep)",
+      "milestone": "Asignación",
+      "notes": "H-006. Requiere el roster con fechas de alta, baja y ramp. El gasto en Team no equivale a FTE."
+     },
+     {
+      "metric": "Tiempo a primer contacto",
+      "definition": "Horas hábiles entre la asignación (o la entrada) y el primer contacto real. Incluye % contactado en ≤1 h y en ≤24 h, % sin contacto a 7 días, y pago a N días por banda de tiempo dentro del mismo grado de calidad.",
+      "formula": "first_touch_at − assigned_at; distribución por banda",
+      "grain": "Entrada; semana × rol × banda",
+      "milestone": "Entrada / asignación",
+      "notes": "H-006. Es observacional: las mejores entradas suelen atenderse antes. Para hablar de causa hace falta un test de routing/SLA o un experimento natural."
+     },
+     {
+      "metric": "Alcance y tiempo por hito, por motion",
+      "definition": "Proporción de la cohorte que alcanza cada hito dentro de N días, mediana de días entre hitos y estancamiento (sin avance en 4 u 8 semanas).",
+      "formula": "# de la cohorte con hito_k en ≤ N días / # de la cohorte; mediana(t_k − t_k−1); # sin cambio de etapa en 4/8 semanas / # en la etapa",
+      "grain": "Cohorte × motion × hito",
+      "milestone": "Entrada",
+      "notes": "No se fuerza la secuencia: en Self Service se puede ir de la entrada al pago, y en Executive/KAM se puede entrar directo a SQL."
+     },
+     {
+      "metric": "Cierre post-SQL a N días",
+      "definition": "Proporción de SQL (por fecha de SQL) que se ganan dentro de N días, más las pérdidas por etapa.",
+      "formula": "# ganadas en ≤ N días desde SQL / # SQL de la cohorte",
+      "grain": "Cohorte de SQL × motion",
+      "milestone": "SQL",
+      "notes": "H-007. Comparar solo entradas con un avance previo comparable. Dice dónde mirar, no por qué."
+     },
+     {
+      "metric": "Rezago ganado → primer pago y tasa de vínculo",
+      "definition": "Días entre ganar y el primer pago, % de ganadas con pago en ≤60 días y % de primeros pagos que enlazan con una entrada.",
+      "formula": "first_payment_month − won_date; # ganadas con pago en ≤60 días / # ganadas; # altas con entry_id / # altas",
+      "grain": "Ganada / cliente; mes",
+      "milestone": "Ganada",
+      "notes": "Si el rezago creció, las ventas medidas por primer pago caen aunque no caigan los cierres. El caso aún no confirma que el primer pago sea la adquisición."
+     },
+     {
+      "metric": "Valor temprano por alta",
+      "definition": "Mediana del primer pago (M0) y run-rate temprano, por cohorte y motion.",
+      "formula": "MEDIAN(m0_cop); MEDIAN(early_run_rate_cop)",
+      "grain": "Alta; cohorte × motion",
+      "milestone": "Primer pago",
+      "notes": "Ya existe por mes de primer pago en mart.new_customers. Separa valor de volumen: en jul–oct 2024 cayó el volumen de altas, no el valor por alta."
+     }
+    ],
+    "required_events": [
+     {
+      "event": "entry_created",
+      "trigger": "Se crea un lead, un registro o una solicitud (formulario, KAM, evento, Self Service)",
+      "properties": [
+       "entry_id",
+       "person_id",
+       "company_id",
+       "created_at",
+       "entry_type (New/otras, según Finora)",
+       "canal_adquisicion (Digital, KAM…)",
+       "campaign",
+       "motion (Self Service/Assisted/Executive)",
+       "form_type / intención",
+       "industria",
+       "tamaño",
+       "es_cliente_activo",
+       "es_ex_cliente",
+       "dedup_key",
+       "es_reingreso"
+      ]
+     },
+     {
+      "event": "entry_scored",
+      "trigger": "Se asigna un puntaje o grado a la entrada",
+      "properties": [
+       "entry_id",
+       "score_version",
+       "atributos_fit",
+       "atributos_intencion",
+       "grade",
+       "scored_at"
+      ]
+     },
+     {
+      "event": "entry_assigned",
+      "trigger": "El routing asigna la entrada a un SDR o AE",
+      "properties": [
+       "entry_id",
+       "owner_id",
+       "owner_role",
+       "assigned_at",
+       "routing_rule"
+      ]
+     },
+     {
+      "event": "sales_activity_logged",
+      "trigger": "Se registra una llamada, un email o una reunión",
+      "properties": [
+       "entry_id / opportunity_id",
+       "owner_id",
+       "activity_type",
+       "timestamp",
+       "connected (sí/no)"
+      ]
+     },
+     {
+      "event": "stage_changed",
+      "trigger": "Cambia la etapa de una entrada u oportunidad",
+      "properties": [
+       "entry_id / opportunity_id",
+       "from_stage",
+       "to_stage",
+       "changed_at",
+       "owner_id",
+       "motion"
+      ]
+     },
+     {
+      "event": "opportunity_closed",
+      "trigger": "La oportunidad se gana o se pierde",
+      "properties": [
+       "opportunity_id",
+       "outcome",
+       "closed_at",
+       "lost_stage",
+       "lost_reason (vendedor)",
+       "competitor",
+       "plan",
+       "MRR contratado / precio ofrecido"
+      ]
+     },
+     {
+      "event": "self_service_signup / checkout_completed",
+      "trigger": "Registro y pago en autoservicio",
+      "properties": [
+       "account_id",
+       "signup_at",
+       "plan",
+       "checkout_at"
+      ]
+     },
+     {
+      "event": "customer_id_linked",
+      "trigger": "Se crea el cliente de facturación",
+      "properties": [
+       "crm_account_id",
+       "customer_id (ID de transactions)",
+       "linked_at",
+       "contract_start",
+       "billing_start"
+      ]
+     },
+     {
+      "event": "payment_recorded",
+      "trigger": "Ya existe (transactions)",
+      "properties": [
+       "customer_id",
+       "month",
+       "amount"
+      ]
+     },
+     {
+      "event": "rep_roster_changed",
+      "trigger": "Alta, baja o cambio de rol de un SDR/AE",
+      "properties": [
+       "rep_id",
+       "role",
+       "start_date",
+       "end_date",
+       "fte",
+       "ramp_end_date"
+      ]
+     },
+     {
+      "event": "offer_change_logged",
+      "trigger": "Cambio de precio, plan, condiciones o producto",
+      "properties": [
+       "change_date",
+       "type",
+       "planes / segmentos afectados",
+       "descripcion"
+      ]
+     },
+     {
+      "event": "win_loss_interview",
+      "trigger": "Entrevista al comprador después de la decisión",
+      "properties": [
+       "opportunity_id",
+       "interview_date",
+       "razon_principal (comprador)",
+       "alternativa_elegida"
+      ]
+     }
+    ],
+    "required_dimensions": [
+     {
+      "dimension": "Mes o trimestre de entrada (cohorte)",
+      "why": "Es la base de toda comparación a igual edad."
+     },
+     {
+      "dimension": "Edad desde la entrada (días)",
+      "why": "Permite comparar cohortes con la misma oportunidad de comprar (H-003/H-004)."
+     },
+     {
+      "dimension": "Motion (Self Service, Assisted, Executive/KAM)",
+      "why": "Son recorridos distintos; separarlos evita una tasa mezclada que no describe a nadie."
+     },
+     {
+      "dimension": "Canal de adquisición y tipo de entrada (New/otras; Digital, KAM…)",
+      "why": "Necesario para H-001 y H-002."
+     },
+     {
+      "dimension": "Segmento al entrar (industria, tamaño)",
+      "why": "Necesario para H-002; hoy la industria solo existe para quienes pagan."
+     },
+     {
+      "dimension": "Grado de calidad al entrar (reglas congeladas)",
+      "why": "Necesario para H-005."
+     },
+     {
+      "dimension": "Relación previa (prospecto nuevo / ex-cliente / cliente activo)",
+      "why": "Permite enlazar con el movimiento correcto del pago: alta, reactivación o expansión."
+     },
+     {
+      "dimension": "Owner, rol (SDR/AE) y antigüedad del rep",
+      "why": "Necesario para H-006: medir carga y ramp."
+     },
+     {
+      "dimension": "Banda de tiempo al primer contacto",
+      "why": "Necesario para H-006."
+     },
+     {
+      "dimension": "Etapa alcanzada y etapa de pérdida",
+      "why": "Necesario para H-007 y H-008."
+     }
+    ],
+    "decision_enabled": "Dónde poner el siguiente peso, según lo que resulte:\n(a) Corregir la premisa y dejar de hablar de falta de demanda, si las entradas únicas no crecieron (H-001).\n(b) Esperar y volver a medir, si es rezago (H-003/H-004).\n(c) Reasignar la Inversión en Marketing entre canales o segmentos, si es mezcla (H-002).\n(d) Cambiar los criterios de entrada o el targeting de Generación de Demanda, si es calidad (H-005).\n(e) Sumar capacidad en Team o cambiar routing y SLA, si es atención (H-006).\n(f) Intervenir el proceso post-SQL y la Habilitación, si cae el tramo posterior (H-007).\n(g) Abrir una pregunta concreta de precio o producto, si aparece (H-008).",
+    "limitations": [
+     "Hoy no se puede validar ni descartar ninguna de H-001 a H-008: faltan las entradas, sus fechas, las señales, el recorrido, la atención y el vínculo lead→pago.",
+     "Del lado ventas, el modelo solo ve el primer pago observado. El caso aún no confirma que sea la adquisición ni que el monto sea MRR contratado.",
+     "La industria solo existe para quienes pagan: cualquier análisis de mezcla con el modelo describe a los compradores, no a las entradas.",
+     "El gasto S&M tiene una unidad no documentada: solo sirven comparaciones relativas, y gasto no es volumen de leads ni capacidad.",
+     "La evidencia externa sobre velocidad de respuesta es observacional y en parte de proveedores: da plausibilidad, no causa para Finora.",
+     "Con unas 50 altas al mes, cruzar motion × segmento × mes deja celdas chicas: conviene trabajar por trimestre.",
+     "Si cambió la definición de lead/MQL o el scoring entre periodos, las tendencias solo son comparables si se recalculan con reglas congeladas.",
+     "La atribución asigna crédito, no prueba causa: H-006 y H-008 necesitan un experimento o un experimento natural."
+    ],
+    "implementation_implications": [
+     "Entrega 1 (barata, descarta artefactos): un extracto del CRM y de la herramienta de Self Service con todas las entradas desde 2023-01 hasta la fecha más reciente disponible. Debe traer ID único, fecha, tipo de entrada, Canal de adquisición, motion, industria y tamaño, marca de cliente activo o ex-cliente, fecha de ganado y el customer_id de pagos cuando compró.",
+     "Si el extracto y los pagos llegan hasta hoy, las cohortes de 2024 ya tienen seguimiento largo y la censura (H-003/H-004) deja de ser un problema para ellas. Hay que pedir también los pagos posteriores a oct-24.",
+     "Entrega 2 (solo si queda brecha dentro de los segmentos): historial de etapas con fechas (no solo la etapa actual), asignación y primera actividad con timestamps, roster de SDR/AE por semana y registro fechado de cambios de precio, plan o condiciones.",
+     "Para Data Engineering (Propuesta de Modelo de datos): una tabla de entradas (grano entrada), una de hitos (entrada × hito), una de actividades, el roster y un puente crm_account_id ↔ customer_id. El pago enlazado se clasifica como alta, reactivación o expansión con las banderas que ya existen en mart.customer_month.",
+     "Congelar una versión de las reglas de calidad y recalcularla hacia atrás; no usar la calificación posterior de Sales.",
+     "Si H-006 sigue en pie: diseñar un test de routing o SLA (unidad: la entrada; aleatorizar la prioridad o el SLA en una fracción; métrica: pago a 90 días; guardarraíl: tiempo al primer contacto del resto) o aprovechar un experimento natural, como las entradas fuera de horario o las ausencias.",
+     "Para H-008: una ronda corta de entrevistas win/loss con compradores, hecha por alguien sin interés en el deal, más el registro fechado de cambios de oferta."
+    ]
+   }
+  }
+ },
+ "usage": {
+  "turns": 46,
+  "ms": 910161,
+  "input_tokens": 40,
+  "output_tokens": 97488,
+  "cache_read": 892558,
+  "cache_write": 88120,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 3.3567056,
+ "tool_trace": [
+  {
+   "id": "toolu_0138qG3tizL3TKvpDY3RTMnM",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "input": {},
+   "t": 5467,
+   "result_chars": 11121,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01YEfzCVLMN5h9kxuSXrhe7N",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(SUM(demand_gen_spend),0) AS demand_gen_spend, ROUND(SUM(sales_capacity_spend),0) AS sales_capacity_spend, ROUND(SUM(enablement_spend),0) AS enablement_spend, ROUND(SUM(total_sm_spend),0) AS total_sm_spend FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean' GROUP BY substr(month,1,4) ORDER BY year"
+   },
+   "t": 15841,
+   "result_chars": 397,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01LKKSUkMYE1eVDMQGZPhRFi",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT month, new_customers, active_customers, ROUND(demand_gen_spend,0) AS demand_gen, ROUND(paid_media,0) AS paid_media, ROUND(publicidad_no_web,0) AS publicidad_no_web, ROUND(sales_capacity_spend,0) AS sales_capacity, ROUND(team,0) AS team, ROUND(payroll_expenses,0) AS payroll, ROUND(enablement_spend,0) AS enablement, ROUND(total_sm_spend,0) AS total_sm, window_flag FROM mart.monthly_metrics_phase1 ORDER BY month"
+   },
+   "t": 17453,
+   "result_chars": 2954,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01KrC8irfczQgwgn57K15sev",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": "{\"sql\": \"SELECT substr(month,1,4) || CASE WHEN CAST(substr(month,6,2) AS INTEGER) <= 6 THEN '-S1' ELSE '-S2' END AS half, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(AVG(demand_gen_spend),4) AS avg_demand_gen, ROUND(AVG(paid_media),4) AS avg_paid_media, ROUND(AVG(publicidad_no_web),4) AS avg_pub_no_web, ROUND(AVG(sales_capacity_spend),4) AS avg_sales_capacity, ROUND(AVG(team),4) AS avg_team, ROUND(AVG(payroll_expenses),4) AS avg_payroll, ROUND(AVG(travel),4) AS avg_travel, ROUND(AVG(enablement_spend),4) AS avg_enablement, ROU…",
+   "t": 27218,
+   "result_chars": 932,
+   "is_error": false
+  },
+  {
+   "id": "toolu_015QzpFqkW1E448nULv6FDHG",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT Month, PaidMedia, Travel, PublicidadNoWeb, Freelance, SoftwareTools, Team, PayrollExpenses FROM raw.sm_spend LIMIT 6"
+   },
+   "t": 27899,
+   "result_chars": 808,
+   "is_error": false
+  },
+  {
+   "id": "toolu_0125i2QLmM7U99uFfL1UA3Pr",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": "{\"sql\": \"SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop, ROUND(SUM(new_mrr_cop)/SUM(new_customers)/1e3,0) AS new_mrr_per_new_k_cop, ROUND(AVG(median_new_customer_mrr_cop)/1e3,0) AS avg_monthly_median_new_mrr_k_cop, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity, ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(total_sm_spend)/SUM(new_customers),4) AS sm_per_new FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 3 AND 1…",
+   "t": 38636,
+   "result_chars": 494,
+   "is_error": false
+  },
+  {
+   "id": "toolu_014Vx9RCBpq6sLRoGrT4GW3a",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT year, COUNT(*) AS altas, ROUND(AVG(m0_cop)/1e3,0) AS avg_m0_k_cop, ROUND(AVG(early_run_rate_cop)/1e3,0) AS avg_early_rr_k_cop, SUM(CASE WHEN early_months_observed >= 3 THEN 1 ELSE 0 END) AS with_3m_observed, MIN(early_months_observed) AS min_obs, MAX(early_months_observed) AS max_obs FROM mart.new_customers WHERE clean = 1 OR clean = 'clean' OR clean = 'true' GROUP BY year ORDER BY year"
+   },
+   "t": 40474,
+   "result_chars": 86,
+   "is_error": true
+  },
+  {
+   "id": "toolu_01P3ZEkkVMW4jEDRjxVJpuxG",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT year, clean, COUNT(*) AS altas, ROUND(AVG(m0_cop)/1e3,0) AS avg_m0_k_cop, ROUND(MEDIAN(m0_cop)/1e3,0) AS median_m0_k_cop, ROUND(MEDIAN(early_run_rate_cop)/1e3,0) AS median_early_rr_k_cop, MIN(early_months_observed) AS min_obs, MAX(early_months_observed) AS max_obs FROM mart.new_customers GROUP BY year, clean ORDER BY year, clean"
+   },
+   "t": 46888,
+   "result_chars": 389,
+   "is_error": false
+  },
+  {
+   "id": "toolu_014S8GeLudCV3w7nTetrJD5x",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT industry, SUM(CASE WHEN cohort_month BETWEEN '2022-03' AND '2022-10' THEN 1 ELSE 0 END) AS altas_2022_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2023-03' AND '2023-10' THEN 1 ELSE 0 END) AS altas_2023_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2024-03' AND '2024-10' THEN 1 ELSE 0 END) AS altas_2024_mar_oct FROM mart.new_customers GROUP BY industry ORDER BY altas_2024_mar_oct DESC"
+   },
+   "t": 48645,
+   "result_chars": 366,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01HLHWpnNvFirrPMeZscHCjH",
+   "tool": "WebSearch",
+   "input": {
+    "query": "HBR \"The Short Life of Online Sales Leads\" response time qualify lead"
+   },
+   "t": 63537,
+   "result_chars": 2884,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01EFVqdMymdS4gkMC6Z4VwJB",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Forrester B2B Revenue Waterfall opportunity-centric buying group demand waterfall"
+   },
+   "t": 63556,
+   "result_chars": 3534,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01XcY6ot6wyKB8bTxNw18WGi",
+   "tool": "WebSearch",
+   "input": {
+    "query": "cohort-based funnel conversion vs period-based conversion rate time lag leads to customers SaaS"
+   },
+   "t": 63560,
+   "result_chars": 2989,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01KAEgweGKzB1C3xPgzLbv73",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Simpson's paradox conversion rate channel mix shift marketing example"
+   },
+   "t": 63687,
+   "result_chars": 3232,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01PeZhUcAJ17yjheG5X5pfuY",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://hbr.org/2011/03/the-short-life-of-online-sales-leads",
+    "prompt": "Extract the study's methodology (sample, how leads were submitted, what was measured), the main quantitative findings about response time and lead qualification/contact (exact numbers and comparison bases), average response time, share of firms that never responded, and any caveat about whether this is causal or correlational. Also any recommendation about organizational causes (e.g., marketing vs sales handoff)."
+   },
+   "t": 81719,
+   "result_chars": 742,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01C5hxeTY7aSzAo7CBoq2oCy",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/",
+    "prompt": "Summarize the B2B Revenue Waterfall: its stages, what unit it counts (leads vs opportunities vs buying groups), why Forrester moved away from lead-centric waterfalls, and any guidance about metrics (conversion, velocity) or about separating marketing and sales stages. Quote key phrases exactly."
+   },
+   "t": 83325,
+   "result_chars": 1281,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01F2UA3vryXjicLdtTWSRwmL",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://medium.com/falkon-blog/cohort-based-funnels-and-why-you-need-them-745bb447c89c",
+    "prompt": "Explain the argument for cohort-based funnels vs snapshot funnels in B2B marketing and sales: why snapshot conversion rates are misleading, how cohorts should be defined (by creation date?), how time-to-convert / velocity is measured, and any limitations. Quote key sentences exactly."
+   },
+   "t": 84925,
+   "result_chars": 215,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01Ldo2CPbbAomgVwQ7XPxUXF",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://medium.com/@hancock.steven.m/simpsons-paradox-in-saas-63393d9128e3",
+    "prompt": "Summarize the Simpson's paradox example in SaaS: which metric, which segments, how the aggregate trend reversed within segments due to mix shift, and the recommended practice. Quote key sentences exactly."
+   },
+   "t": 86216,
+   "result_chars": 215,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01KzTfDPcrgiu6A3L5T8Etbq",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf",
+    "prompt": "Extract the study's methodology (sample size, how leads were submitted, what was measured), the main quantitative findings on response time vs contact and qualification (exact numbers and comparison bases), average response time, share of firms that never responded, and any caveat or discussion on causes (organizational, handoff between marketing and sales). Quote exact sentences."
+   },
+   "t": 94665,
+   "result_chars": 1444,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01W4izqLq2LqADwX7hrFDZiT",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://austinyang.co/conversion-rate-analysis-guide-b2b-saas/",
+    "prompt": "Extract the guidance on how to measure conversion rates in B2B SaaS: cohort-based vs period-based, how to handle time lag / conversion windows, segmentation by source/channel, lead quality, and any caution on blended rates. Quote key sentences exactly."
+   },
+   "t": 95775,
+   "result_chars": 1469,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01E7hGCmzTTgzbmdnfSXN4m7",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://count.co/metric/funnel-conversion-analysis",
+    "prompt": "Extract what this page says about cohort-based vs calendar-period conversion rates, measurement lag, and how sales cycles spanning periods distort snapshot conversion rates. Quote exact sentences."
+   },
+   "t": 96842,
+   "result_chars": 1311,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01PVJ1sHsdFix5MCLgJR1hhD",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://timdietrich.me/blog/simpsons-paradox/",
+    "prompt": "Summarize the Simpson's paradox explanation: the mechanism (mix shift between groups with different baseline rates), any conversion-rate or business example, and the recommended practice (e.g., always segment, mix-adjust). Quote exact sentences."
+   },
+   "t": 98021,
+   "result_chars": 1237,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01XHcrw8pwa7Yw8ktHaBgZqW",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.researchgate.net/publication/298137032_The_short_life_of_online_sales_leads",
+    "prompt": "Extract the abstract and any study details: sample size, method (test leads submitted to firms), main findings on response time within one hour vs later, contact/qualification likelihood, average response time. Quote exactly."
+   },
+   "t": 112655,
+   "result_chars": 215,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01N9SsgXfBSDn2wrmeEtpJA3",
+   "tool": "WebSearch",
+   "input": {
+    "query": "Winning by Design bowtie model recurring revenue stages conversion rates time"
+   },
+   "t": 112670,
+   "result_chars": 2971,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01TrWCoiekLUHHshBY5JX13K",
+   "tool": "WebSearch",
+   "input": {
+    "query": "lead response time field experiment randomized conversion causal effect sales follow-up study"
+   },
+   "t": 113098,
+   "result_chars": 3033,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01Nxmv6xDsiRxMkR1Yj8M2bJ",
+   "tool": "WebSearch",
+   "input": {
+    "query": "survival analysis time to conversion right censoring leads recent cohorts not enough time to convert Kaplan-Meier marketing"
+   },
+   "t": 113584,
+   "result_chars": 3500,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01UCmF7fpucb8BBoSt6uPXkc",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://store.hbr.org/product/the-short-life-of-online-sales-leads/F1103B",
+    "prompt": "Extract the product summary/abstract of this HBR article: authors, date, sample, method, and key findings (response within one hour, 24 hours, average response time, likelihood of qualifying/contacting). Quote exactly."
+   },
+   "t": 128104,
+   "result_chars": 660,
+   "is_error": false
+  },
+  {
+   "id": "toolu_0188rR8UQbGgmPBqjE4K35qs",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://winningbydesign.com/resources/research/bowtie-standard/",
+    "prompt": "Summarize the Bowtie Standard: stages (VM1..), the metric types (volume, conversion rate, time, etc.), how it treats recurring revenue beyond acquisition, and any data model / measurement guidance (e.g., measuring conversion and time between stages, cohorts). Quote key phrases exactly."
+   },
+   "t": 129350,
+   "result_chars": 1390,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01RmUA36WAjfspCLFm4Kbwqk",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.insidesales.com/response-time-matters/",
+    "prompt": "Extract the study scope (number of activities, leads, companies, year), methodology, and key findings on lead response time, number of attempts, and conversion/contact. Note whether it's causal or observational and who sponsored it. Quote exactly."
+   },
+   "t": 130750,
+   "result_chars": 1049,
+   "is_error": false
+  },
+  {
+   "id": "toolu_0149DzbhuSosPThXTWHvUK6V",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.stats.ox.ac.uk/~mlunn/lecturenotes1.pdf",
+    "prompt": "Extract the definition of right censoring and why ignoring censored observations biases estimates of time-to-event; quote the exact definitions."
+   },
+   "t": 131701,
+   "result_chars": 967,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01G8y7nfbioSMYyowukxtiBw",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://modernstatisticswithr.com/survivalchapter.html",
+    "prompt": "Extract the definition of right-censored data and the explanation of why simply ignoring censored observations or treating them as non-events biases estimates; also what the Kaplan-Meier estimator does. Quote exact sentences."
+   },
+   "t": 154537,
+   "result_chars": 990,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01WKRNTQghuQExwxnb8L6HqA",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://arxiv.org/pdf/2606.04387",
+    "prompt": "Does this paper report a randomized field experiment (A/B test) in sales operations on lead conversion? Extract the design (unit of randomization, duration, region), primary metric, and result (relative uplift), plus any statement about why offline metrics are insufficient. Quote exact sentences."
+   },
+   "t": 155923,
+   "result_chars": 1653,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01EDaPzcvggKh3HKY3sSs3F5",
+   "tool": "WebSearch",
+   "input": {
+    "query": "win-loss analysis buyer interviews vs CRM loss reasons differ sales reps \"price\" reason accuracy"
+   },
+   "t": 156571,
+   "result_chars": 3076,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01KzNorShre7xtTYysVZM4rn",
+   "tool": "WebSearch",
+   "input": {
+    "query": "lead scoring fit versus intent engagement at entry measure lead quality consistently definition change MQL trend"
+   },
+   "t": 157247,
+   "result_chars": 3198,
+   "is_error": false
+  },
+  {
+   "id": "toolu_015SqGR5oWSj4tc5mnHckucx",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data",
+    "prompt": "Extract the claims about how often seller-reported (CRM) loss reasons match buyer-reported reasons, the source/sample of that data, and the recommended data source for win-loss. Quote exact numbers and sentences."
+   },
+   "t": 176089,
+   "result_chars": 1233,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01HkwZdXTwch1Myn5cTTKrjs",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12217587/",
+    "prompt": "Extract the experimental design (unit of randomization, sample size, duration, treatment arms), primary outcome, and key finding about short-term vs sustainable/long-term conversion. Quote exact sentences about why short-term conversion can mislead."
+   },
+   "t": 177387,
+   "result_chars": 790,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01JZ9riA1PzCLNZFYj9BYKGW",
+   "tool": "WebSearch",
+   "input": {
+    "query": "duplicate leads inflate lead volume count unique people accounts lead-to-account matching form fills"
+   },
+   "t": 177923,
+   "result_chars": 2985,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01AKcxZf3dsoUNkKKQhMpjth",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217587/",
+    "prompt": "Extract the experimental design (unit of randomization, sample size, duration, treatment arms), primary outcome, and key finding about short-term vs sustainable/long-term conversion. Quote exact sentences about why short-term conversion can mislead."
+   },
+   "t": 188873,
+   "result_chars": 1572,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01JrMkC1MhirnwFfvufUUaAz",
+   "tool": "WebFetch",
+   "input": {
+    "url": "https://therevopsreport.com/insights/lead-to-account-matching/",
+    "prompt": "Extract exact sentences about how duplicate leads and lead-to-account matching issues inflate lead volume, distort conversion rates, and affect routing. Quote exactly."
+   },
+   "t": 189468,
+   "result_chars": 1009,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01Hb4qqAjBRNDSoRvfaS8Epx",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers_jul_oct, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop_jul_oct, ROUND(AVG(demand_gen_spend),3) AS avg_demand_gen, ROUND(AVG(sales_capacity_spend),3) AS avg_sales_capacity, ROUND(AVG(team),3) AS avg_team, ROUND(AVG(total_sm_spend),3) AS avg_total_sm FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1"
+   },
+   "t": 208057,
+   "result_chars": 334,
+   "is_error": false
+  },
+  {
+   "id": "toolu_011ssJRbpfiJ9K6Q32xoujAQ",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers, SUM(reactivated_customers) AS reactivated_customers, SUM(expanded_customers) AS expanded_customers, ROUND(SUM(reactivation_mrr_cop)/1e6,1) AS reactivation_mrr_mm_cop, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1"
+   },
+   "t": 440419,
+   "result_chars": 310,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01VfchFBPxp6PzH8q5uFaqhZ",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": "{\"sql\": \"SELECT year, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS multi_month_signature, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop, ROUND(SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN expansion_mrr_cop ELSE 0 END)/1e6,1) AS expansion_mrr_neither_mm_cop FROM mar…",
+   "t": 453888,
+   "result_chars": 316,
+   "is_error": false
+  },
+  {
+   "id": "toolu_011HKpEtEBrgfRmLyqNoUZYn",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT month, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month IS NULL THEN 1 ELSE 0 END) AS reverts_unknown, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(MEDIAN(amount_vs_usual_ratio),3) AS median_ratio_vs_usual, ROUND(MEDIAN(mrr_change / NULLIF(previous_month_mrr,0)),3) AS median_pct_increase FROM mart.customer_month WHERE expanded_customer = 1 AND month >= '2023-07' GROUP BY month ORDER BY month"
+   },
+   "t": 459249,
+   "result_chars": 843,
+   "is_error": false
+  },
+  {
+   "id": "toolu_012SAAtBX4AcuWVLdDsg6Azn",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT substr(cohort_month,1,4) || '-Q' || CAST((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3 AS VARCHAR) AS cohort_quarter, COUNT(*) AS altas, ROUND(MEDIAN(m0_cop)/1e3,1) AS median_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.25)/1e3,1) AS p25_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.75)/1e3,1) AS p75_m0_k_cop, ROUND(MEDIAN(m1_cop)/1e3,1) AS median_m1_k_cop FROM mart.new_customers WHERE clean = true AND cohort_month >= '2023-01' GROUP BY 1 ORDER BY 1"
+   },
+   "t": 472197,
+   "result_chars": 1396,
+   "is_error": false
+  },
+  {
+   "id": "toolu_01AYgiMshabBjVb2EztM8xBX",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "input": {
+    "sql": "SELECT substr(cohort_month,1,4) || '-Q' || CAST(FLOOR((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3) AS INTEGER) AS cohort_quarter, COUNT(*) AS altas, ROUND(MEDIAN(m0_cop)/1e3,1) AS median_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.25)/1e3,1) AS p25_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.75)/1e3,1) AS p75_m0_k_cop FROM mart.new_customers WHERE clean = true AND cohort_month >= '2023-01' GROUP BY 1 ORDER BY 1"
+   },
+   "t": 486383,
+   "result_chars": 482,
+   "is_error": false
+  }
+ ],
+ "seen_urls": [
+  "https://ainora.lt/blog/lead-response-time-5-minutes-study-2026",
+  "https://ainora.lt/blog/lead-response-time-statistics-every-study-2026",
+  "https://alltomate.com/blogs/duplicate-leads-in-crm/",
+  "https://artemisgtm.ai/resources/lead-scoring/",
+  "https://arxiv.org/pdf/2209.07749",
+  "https://arxiv.org/pdf/2606.04387",
+  "https://austinyang.co/conversion-rate-analysis-guide-b2b-saas/",
+  "https://axcient.com/blog/demand-waterfall-8-ways-to-optimize-your-sales-cycle/",
+  "https://blog.clickpointsoftware.com/the-7-metrics-that-predict-whether-a-lead-seller-will-survive-the-year",
+  "https://blog.insycle.com/duplicates-lead-account-matching-lead-routing-impact",
+  "https://blog.revpartners.io/en/revops-articles/bowtie-funnel",
+  "https://blog.sendspark.com/win-loss-analysis-b2b-sales",
+  "https://campus.datacamp.com/courses/machine-learning-for-marketing-analytics-in-r/modeling-time-to-reorder-with-survival-analysis?ex=5",
+  "https://caseyresponse.com/blog/lead-response-time-statistics",
+  "https://conversion-uplift.co.uk/glossary-of-conversion-marketing/simpsons-paradox/",
+  "https://count.co/metric/funnel-conversion-analysis",
+  "https://cxl.com/blog/using-cohort-analysis-for-conversion-optimization/",
+  "https://dartef.com/blog/statistics-marketing-1/",
+  "https://databox.com/playbook-data-driven-revenue-growth",
+  "https://digitaldiconsultants.com/improving-mql-quality-hubspot-engagement-scoring-icp-fit-model/",
+  "https://distributionengine.com/blog/article/what-is-lead-scoring",
+  "https://experienceleague.adobe.com/en/docs/marketo/using/product-docs/target-account-management/target/named-accounts/lead-to-account-matching",
+  "https://experienceleaguecommunities.adobe.com/adobe-marketo-engage-27/the-unintended-consequences-of-duplicates-in-marketo-161118",
+  "https://federicopresicci.com/blog/sales/win-loss-analysis/",
+  "https://hbr.org/2011/03/the-short-life-of-online-sales-leads",
+  "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/9071553",
+  "https://mcpanalytics.ai/articles/kaplan-meier-estimator-practical-guide-for-data-driven-decisions",
+  "https://medium.com/@SushmitadDhar/the-hidden-trap-in-your-business-dashboard-why-aggregated-numbers-lie-49eb655356c1",
+  "https://medium.com/@hancock.steven.m/simpsons-paradox-in-saas-63393d9128e3",
+  "https://medium.com/@megpfloyd/3-steps-to-operationalize-forresters-revenue-waterfall-a3dcb855cf0b",
+  "https://medium.com/analytics-vidhya/its-all-about-the-mix-simpson-s-paradox-e4e2c0f7f97",
+  "https://medium.com/falkon-blog/cohort-based-funnels-and-why-you-need-them-745bb447c89c",
+  "https://modernstatisticswithr.com/survivalchapter.html",
+  "https://motarme.com/how-much-time-do-you-have-to-respond-to-sales-leads/",
+  "https://nick-koenig.medium.com/simpsons-paradox-yep-it-matters-faa42e7b989b",
+  "https://octavius.ai/speed-to-lead/lead-response-time/",
+  "https://onlinelibrary.wiley.com/doi/10.1155/2021/9307475",
+  "https://orbitforms.ai/blog/duplicate-lead-prevention-in-forms",
+  "https://orm-tech.com/glossary/conversion-rate-formula/",
+  "https://pipeline.zoominfo.com/marketing/lead-qualification-marketing",
+  "https://pipeline.zoominfo.com/sales/lead-conversion-rate",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217587/",
+  "https://resources.rework.com/libraries/lead-management/lead-response-time",
+  "https://saleslabx.com/resources/auto-replies-and-the-short-life-of-online-sales-leads/",
+  "https://stats.libretexts.org/Bookshelves/Applied_Statistics/Mikes_Biostatistics_Book_(Dohm",
+  "https://stats24.org/en/lessons/simpsons-paradox/",
+  "https://store.hbr.org/product/the-short-life-of-online-sales-leads/F1103B",
+  "https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf",
+  "https://therevopsreport.com/insights/lead-to-account-matching/",
+  "https://thirdside.com/what-is-win-loss-analysis/",
+  "https://timdietrich.me/blog/simpsons-paradox/",
+  "https://vasco.app/blog/the-bowtie-model",
+  "https://winningbydesign.com/resources/research/bowtie-standard/",
+  "https://winningbydesign.com/wp-content/uploads/2026/02/The-Bowtie-A-Proposed-Standard.pdf",
+  "https://www.adjust.com/blog/demystifying-cohorts-3-tracking-custom-user-journeys-with-event-kpis/",
+  "https://www.ainformat.com/detail/2815",
+  "https://www.bol-agency.com/blog/from-mql-to-revenue-rethinking-the-role-of-lead-scoring-in-b2b-funnels",
+  "https://www.causalityengine.ai/glossary/simpsons-paradox",
+  "https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data",
+  "https://www.clozd.com/guides/win-loss-analysis",
+  "https://www.convios.com/en/methods/bowtie-funnel",
+  "https://www.datalane.com/post/lead-to-account-matching",
+  "https://www.driveresearch.com/market-research-company-blog/win-loss-analysis/",
+  "https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics",
+  "https://www.eleken.co/blog-posts/saas-conversion-rates",
+  "https://www.emilyzabor.com/survival-analysis-in-r.html",
+  "https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/",
+  "https://www.forrester.com/blogs/demand-program-plays-get-and-move-buying-group-members-through-the-waterfall",
+  "https://www.forrester.com/blogs/putting-forresters-b2b-revenue-waterfall-into-action-six-tips-for-laser-focused-targeting/",
+  "https://www.forrester.com/report/how-demand-programs-and-the-b2b-revenue-waterfall-work-together/RES175947",
+  "https://www.forrester.com/report/understanding-how-demand-programs-and-the-b2b-revenue-waterfall-work-together/RES175947",
+  "https://www.forrester.com/resources/b2b-marketing-planning/revenue-waterfall-guide",
+  "https://www.getdalton.com/blogs/simpsons-paradox-ab-testing",
+  "https://www.hyperke.com/blog/effective-mql-scoring",
+  "https://www.insidesales.com/response-time-matters/",
+  "https://www.kixie.com/sales-blog/speed-to-lead-response-time-statistics-that-drive-conversions/",
+  "https://www.koji.so/docs/win-loss-analysis",
+  "https://www.leadangel.com/blog/operations/lead-deduplication/",
+  "https://www.leads-technologies.com/en/blogs/marketo-lead-scoring-model-design/",
+  "https://www.leandata.com/blog/salesforce-lead-to-account-matching-the-easy-way/",
+  "https://www.leandata.com/blog/your-cheat-sheet-for-b2b-revenue-waterfall-transformation/",
+  "https://www.marketingprofs.com/articles/2023/49013/bow-tie-recurring-revenue-model",
+  "https://www.metrichq.org/marketing/marketing-qualified-leads/",
+  "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12217587/",
+  "https://www.oliv.ai/blog/winning-by-design-training",
+  "https://www.researchgate.net/publication/271377569_Kaplan-Meier_survival_analysis_Types_of_censored_observations",
+  "https://www.researchgate.net/publication/298137032_The_short_life_of_online_sales_leads",
+  "https://www.revenue.io/inside-sales-glossary/what-is-lead-response-time",
+  "https://www.stats.ox.ac.uk/~mlunn/lecturenotes1.pdf",
+  "https://www.teamgate.com/blog/lead-response-time-study-speed-impacts-revenue/",
+  "https://www.tekstack.com/2022/04/08/b2b-revenue-waterfall/",
+  "https://www.unifyr.com/atlas/lead-scoring/",
+  "https://www.withdaydream.com/library/insights/average-conversion-rate",
+  "https://ziellab.com/post/win-loss-analysis-b2b-saas-guide"
+ ],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": [
+  "SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(SUM(demand_gen_spend),0) AS demand_gen_spend, ROUND(SUM(sales_capacity_spend),0) AS sales_capacity_spend, ROUND(SUM(enablement_spend),0) AS enablement_spend, ROUND(SUM(total_sm_spend),0) AS total_sm_spend FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean' GROUP BY substr(month,1,4) ORDER BY year",
+  "SELECT month, new_customers, active_customers, ROUND(demand_gen_spend,0) AS demand_gen, ROUND(paid_media,0) AS paid_media, ROUND(publicidad_no_web,0) AS publicidad_no_web, ROUND(sales_capacity_spend,0) AS sales_capacity, ROUND(team,0) AS team, ROUND(payroll_expenses,0) AS payroll, ROUND(enablement_spend,0) AS enablement, ROUND(total_sm_spend,0) AS total_sm, window_flag FROM mart.monthly_metrics_phase1 ORDER BY month",
+  "SELECT substr(month,1,4) || CASE WHEN CAST(substr(month,6,2) AS INTEGER) <= 6 THEN '-S1' ELSE '-S2' END AS half, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month, ROUND(AVG(demand_gen_spend),4) AS avg_demand_gen, ROUND(AVG(paid_media),4) AS avg_paid_media, ROUND(AVG(publicidad_no_web),4) AS avg_pub_no_web, ROUND(AVG(sales_capacity_spend),4) AS avg_sales_capacity, ROUND(AVG(team),4) AS avg_team, ROUND(AVG(payroll_expenses),4) AS avg_payroll, ROUND(AVG(travel),4) AS avg_travel, ROUND(AVG(enablement_spend),4) AS avg_enablement, ROUND(AVG(total_sm_spend),4) AS avg_total_sm FROM mart.monthly_metrics_phase1 WHERE window_flag = 'clean' GROUP BY 1 ORDER BY 1",
+  "SELECT Month, PaidMedia, Travel, PublicidadNoWeb, Freelance, SoftwareTools, Team, PayrollExpenses FROM raw.sm_spend LIMIT 6",
+  "SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop, ROUND(SUM(new_mrr_cop)/SUM(new_customers)/1e3,0) AS new_mrr_per_new_k_cop, ROUND(AVG(median_new_customer_mrr_cop)/1e3,0) AS avg_monthly_median_new_mrr_k_cop, ROUND(SUM(demand_gen_spend),3) AS demand_gen, ROUND(SUM(sales_capacity_spend),3) AS sales_capacity, ROUND(SUM(total_sm_spend),3) AS total_sm, ROUND(SUM(total_sm_spend)/SUM(new_customers),4) AS sm_per_new FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 3 AND 10 GROUP BY 1 ORDER BY 1",
+  "SELECT year, clean, COUNT(*) AS altas, ROUND(AVG(m0_cop)/1e3,0) AS avg_m0_k_cop, ROUND(MEDIAN(m0_cop)/1e3,0) AS median_m0_k_cop, ROUND(MEDIAN(early_run_rate_cop)/1e3,0) AS median_early_rr_k_cop, MIN(early_months_observed) AS min_obs, MAX(early_months_observed) AS max_obs FROM mart.new_customers GROUP BY year, clean ORDER BY year, clean",
+  "SELECT industry, SUM(CASE WHEN cohort_month BETWEEN '2022-03' AND '2022-10' THEN 1 ELSE 0 END) AS altas_2022_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2023-03' AND '2023-10' THEN 1 ELSE 0 END) AS altas_2023_mar_oct, SUM(CASE WHEN cohort_month BETWEEN '2024-03' AND '2024-10' THEN 1 ELSE 0 END) AS altas_2024_mar_oct FROM mart.new_customers GROUP BY industry ORDER BY altas_2024_mar_oct DESC",
+  "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers_jul_oct, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop_jul_oct, ROUND(AVG(demand_gen_spend),3) AS avg_demand_gen, ROUND(AVG(sales_capacity_spend),3) AS avg_sales_capacity, ROUND(AVG(team),3) AS avg_team, ROUND(AVG(total_sm_spend),3) AS avg_total_sm FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1",
+  "SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers, SUM(reactivated_customers) AS reactivated_customers, SUM(expanded_customers) AS expanded_customers, ROUND(SUM(reactivation_mrr_cop)/1e6,1) AS reactivation_mrr_mm_cop, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop FROM mart.monthly_metrics_phase1 WHERE CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND substr(month,1,4) IN ('2023','2024') GROUP BY 1 ORDER BY 1",
+  "SELECT year, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month, SUM(CASE WHEN multi_month_payment_signature > 0 THEN 1 ELSE 0 END) AS multi_month_signature, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(SUM(expansion_mrr_cop)/1e6,1) AS expansion_mrr_mm_cop, ROUND(SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN expansion_mrr_cop ELSE 0 END)/1e6,1) AS expansion_mrr_neither_mm_cop FROM mart.customer_month WHERE expanded_customer = 1 AND CAST(substr(month,6,2) AS INTEGER) BETWEEN 7 AND 10 AND year IN (2023, 2024) GROUP BY year ORDER BY year",
+  "SELECT month, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month IS NULL THEN 1 ELSE 0 END) AS reverts_unknown, SUM(CASE WHEN COALESCE(reverts_next_month,0) = 0 AND COALESCE(multi_month_payment_signature,0) = 0 THEN 1 ELSE 0 END) AS neither, ROUND(MEDIAN(amount_vs_usual_ratio),3) AS median_ratio_vs_usual, ROUND(MEDIAN(mrr_change / NULLIF(previous_month_mrr,0)),3) AS median_pct_increase FROM mart.customer_month WHERE expanded_customer = 1 AND month >= '2023-07' GROUP BY month ORDER BY month",
+  "SELECT substr(cohort_month,1,4) || '-Q' || CAST((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3 AS VARCHAR) AS cohort_quarter, COUNT(*) AS altas, ROUND(MEDIAN(m0_cop)/1e3,1) AS median_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.25)/1e3,1) AS p25_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.75)/1e3,1) AS p75_m0_k_cop, ROUND(MEDIAN(m1_cop)/1e3,1) AS median_m1_k_cop FROM mart.new_customers WHERE clean = true AND cohort_month >= '2023-01' GROUP BY 1 ORDER BY 1",
+  "SELECT substr(cohort_month,1,4) || '-Q' || CAST(FLOOR((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3) AS INTEGER) AS cohort_quarter, COUNT(*) AS altas, ROUND(MEDIAN(m0_cop)/1e3,1) AS median_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.25)/1e3,1) AS p25_m0_k_cop, ROUND(QUANTILE_CONT(m0_cop,0.75)/1e3,1) AS p75_m0_k_cop FROM mart.new_customers WHERE clean = true AND cohort_month >= '2023-01' GROUP BY 1 ORDER BY 1"
+ ]
+}

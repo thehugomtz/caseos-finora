@@ -1,0 +1,1217 @@
+id: R-030
+type: research
+research_question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22
+  a oct-24, (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada,
+  sin escala en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic;
+  sin juntar las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad,
+  habilitación) por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta
+  may-23; (3) dispersión mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación;
+  (4) barras por ventana (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada
+  gráfica con su tabla y su lectura sin atribuir ventas al gasto.'
+case_question: C-004
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 1
+    analytics: 2
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - C-004
+    suggested:
+    - Q-048
+    - Q-045
+    - Q-041
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-004
+- F-214
+- F-215
+- F-216
+- F-217
+- F-218
+- F-219
+- F-220
+- F-221
+- F-222
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T18:03:21-06:00'
+updated_at: '2026-09-29T18:19:59-06:00'
+version: 7
+job_id: JOB-20260929-180321-45d5
+error: null
+started_at: '2026-09-29T18:03:21-06:00'
+requested_via: 'vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)'
+workspace_run_started: INV-20260929-180321-0787
+why_it_matters: ''
+short_answer: Gasto de S&M y altas se mueven en direcciones opuestas. Entre 2023 ene-may y 2023 jun-dic el S&M por
+  mes pasó de 3,01 a 1,44 en unidad reportada, mientras las altas por mes pasaron de 45,2 a 60,6. Por ventana, el
+  S&M por alta va de 0,11 a 0,04. En niveles mensuales la asociación es negativa (−0,57 en el mismo mes). Es una
+  señal direccional, no una atribución
+headline: Gasto de S&M y altas se mueven en direcciones opuestas
+what_is_established:
+- 'En los tramos de 2023 las series apuntan en sentidos contrarios: el S&M por mes cae de 3,01 a 1,44 y las altas
+  por mes suben de 45,2 a 60,6. Los meses extremos son consistentes con ese patrón: el mes de mayor gasto, oct-22,
+  registra 32 altas, y el mes de más altas, jun-24, tiene un gasto de 2,00.'
+- La generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad comercial de 26% a 38% y la
+  habilitación de 10% a 4%. La participación de Team se observa en 12% hasta may-23 y luego en 38% en ago-23 y 23%
+  en oct-24, consistente con un tramo de participación fija seguido de variación.
+- 'En niveles mensuales el S&M total se asocia negativamente con las altas: −0,57 en el mismo mes sobre 32 meses
+  y −0,55 con un mes de rezago sobre 31 meses. Con rezago, oct-22 (3,75) precede a 19 altas y ago-23 (1,10) precede
+  a 56 altas.'
+- Las altas por mes van de 27,2 en 2022 mar-dic a 55,4 en 2024 ene-oct, y el S&M por alta va de 0,11 a 0,04 en unidad
+  reportada, con su valor menor en 2023 jun-dic (0,02). El indicador por ventana se mueve a la baja mientras el
+  volumen de altas sube.
+- Faltan las etapas del funnel con sus fechas, la fuente del lead y la unidad documentada del gasto. Con lo disponible,
+  la relación entre S&M y primeros pagadores solo puede describirse como coincidencia temporal entre series.
+what_is_contested: []
+what_remains_unknown:
+- 'No puede atribuirse el movimiento de las altas al gasto de S&M: faltan etapas del funnel con fechas, fuente del
+  lead y unidad documentada del gasto.'
+- Las participaciones por categoría y la serie de Team no permiten distinguir gasto observado de reparto porcentual,
+  porque el archivo parece construido de arriba hacia abajo.
+- Las correlaciones mensuales describen coincidencia en niveles y no miden efecto, al no haber funnel, atribución,
+  precios ni descuentos.
+alternative_explanations: []
+case_implication: Si se documenta la unidad y el método de construcción del archivo de S&M, podría revisarse si
+  las categorías son gasto ejecutado o un reparto del total. Si el S&M por alta se adopta como métrica de seguimiento,
+  convendría reportarlo por ventana junto con las altas por mes para no leerlo aislado.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Qué documento interno define la unidad y el método de construcción del archivo de S&M, para saber si las categorías
+  son gasto observado o un reparto porcentual del total?
+- ¿Cómo se comportan las altas por mes y el gasto por alta si se separan las altas por industria de entrada?
+- ¿El escalón de altas de inicios de 2023 coincide con un cambio en el ticket de entrada de las mismas altas, medido
+  por banda de precio?
+- ¿Qué parte de las altas de cada ventana sigue pagando al M3 y al M6, comparando ventanas de gasto alto y de gasto
+  bajo?
+handoff_to_cos:
+  summary: Gasto de S&M y altas se mueven en direcciones opuestas
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-180321-0787
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: Entre 2023 ene-may y 2023 jun-dic el S&M por mes pasó de 3,01 a 1,44 en unidad reportada, mientras las
+    altas por mes pasaron de 45,2 a 60,6.
+  spec:
+    tipo: linea
+    x:
+    - 2022-01
+    - 2022-02
+    - 2022-03
+    - 2022-04
+    - 2022-05
+    - 2022-06
+    - 2022-07
+    - 2022-08
+    - 2022-09
+    - 2022-10
+    - 2022-11
+    - 2022-12
+    - 2023-01
+    - 2023-02
+    - 2023-03
+    - 2023-04
+    - 2023-05
+    - 2023-06
+    - 2023-07
+    - 2023-08
+    - 2023-09
+    - 2023-10
+    - 2023-11
+    - 2023-12
+    - 2024-01
+    - 2024-02
+    - 2024-03
+    - 2024-04
+    - 2024-05
+    - 2024-06
+    - 2024-07
+    - 2024-08
+    - 2024-09
+    - 2024-10
+    series:
+    - nombre: sm_total_u
+      valores:
+      - 2.0
+      - 2.3
+      - 2.3
+      - 2.351
+      - 2.7
+      - 2.351
+      - 2.2
+      - 3.251
+      - 3.5
+      - 3.752
+      - 3.0
+      - 3.251
+      - 3.251
+      - 2.5
+      - 2.9
+      - 2.951
+      - 3.451
+      - 1.8
+      - 1.751
+      - 1.1
+      - 1.252
+      - 1.351
+      - 1.3
+      - 1.5
+      - 1.851
+      - 2.0
+      - 1.751
+      - 2.251
+      - 2.351
+      - 2.0
+      - 1.8
+      - 1.9
+      - 1.851
+      - 2.0
+    - nombre: team_participacion
+      valores:
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.2289
+      - 0.237
+      - 0.3782
+      - 0.3347
+      - 0.3131
+      - 0.3323
+      - 0.2953
+      - 0.2388
+      - 0.2215
+      - 0.2467
+      - 0.1964
+      - 0.1893
+      - 0.2235
+      - 0.2489
+      - 0.2363
+      - 0.2426
+      - 0.2265
+    - nombre: altas_mismo_mes
+      valores:
+      - 0
+      - 108
+      - 30
+      - 19
+      - 38
+      - 33
+      - 32
+      - 26
+      - 17
+      - 32
+      - 19
+      - 26
+      - 60
+      - 30
+      - 38
+      - 51
+      - 47
+      - 46
+      - 65
+      - 66
+      - 56
+      - 64
+      - 72
+      - 55
+      - 57
+      - 32
+      - 43
+      - 69
+      - 66
+      - 84
+      - 48
+      - 56
+      - 49
+      - 50
+    formato: num2
+  claim: C-002
+- id: V-02
+  title: La participación de Team en el S&M total se observa en 12% en cada uno de los 17 meses hasta may-23, y
+    después sube a 38% en ago-23 y 23% en oct-24.
+  spec:
+    tipo: linea
+    x:
+    - 2022-01
+    - 2022-02
+    - 2022-03
+    - 2022-04
+    - 2022-05
+    - 2022-06
+    - 2022-07
+    - 2022-08
+    - 2022-09
+    - 2022-10
+    - 2022-11
+    - 2022-12
+    - 2023-01
+    - 2023-02
+    - 2023-03
+    - 2023-04
+    - 2023-05
+    - 2023-06
+    - 2023-07
+    - 2023-08
+    - 2023-09
+    - 2023-10
+    - 2023-11
+    - 2023-12
+    - 2024-01
+    - 2024-02
+    - 2024-03
+    - 2024-04
+    - 2024-05
+    - 2024-06
+    - 2024-07
+    - 2024-08
+    - 2024-09
+    - 2024-10
+    series:
+    - nombre: sm_total_u
+      valores:
+      - 2.0
+      - 2.3
+      - 2.3
+      - 2.351
+      - 2.7
+      - 2.351
+      - 2.2
+      - 3.251
+      - 3.5
+      - 3.752
+      - 3.0
+      - 3.251
+      - 3.251
+      - 2.5
+      - 2.9
+      - 2.951
+      - 3.451
+      - 1.8
+      - 1.751
+      - 1.1
+      - 1.252
+      - 1.351
+      - 1.3
+      - 1.5
+      - 1.851
+      - 2.0
+      - 1.751
+      - 2.251
+      - 2.351
+      - 2.0
+      - 1.8
+      - 1.9
+      - 1.851
+      - 2.0
+    - nombre: team_participacion
+      valores:
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.1199
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.12
+      - 0.2289
+      - 0.237
+      - 0.3782
+      - 0.3347
+      - 0.3131
+      - 0.3323
+      - 0.2953
+      - 0.2388
+      - 0.2215
+      - 0.2467
+      - 0.1964
+      - 0.1893
+      - 0.2235
+      - 0.2489
+      - 0.2363
+      - 0.2426
+      - 0.2265
+    - nombre: altas_mismo_mes
+      valores:
+      - 0
+      - 108
+      - 30
+      - 19
+      - 38
+      - 33
+      - 32
+      - 26
+      - 17
+      - 32
+      - 19
+      - 26
+      - 60
+      - 30
+      - 38
+      - 51
+      - 47
+      - 46
+      - 65
+      - 66
+      - 56
+      - 64
+      - 72
+      - 55
+      - 57
+      - 32
+      - 43
+      - 69
+      - 66
+      - 84
+      - 48
+      - 56
+      - 49
+      - 50
+    formato: num2
+  claim: C-003
+- id: V-03
+  title: En el mes de mayor S&M del periodo, oct-22, el gasto fue 3,75 y las altas 32; en el mes de más altas, jun-24,
+    las altas fueron 84 con un gasto de 2,00.
+  spec:
+    tipo: barras
+    x:
+    - oct-22
+    - jun-24
+    formato: num2
+    series:
+    - nombre: sm total u
+      valores:
+      - 3.752
+      - 2.0
+  claim: C-010
+- id: V-04
+  title: En el mes de mayor S&M del periodo, oct-22, el gasto fue 3,75 y las altas 32; en el mes de más altas, jun-24,
+    las altas fueron 84 con un gasto de 2,00.
+  spec:
+    tipo: linea
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
+    formato: int
+  claim: C-010
+- id: V-05
+  title: En el mes de mayor S&M del periodo, oct-22, el gasto fue 3,75 y las altas 32; en el mes de más altas, jun-24,
+    las altas fueron 84 con un gasto de 2,00.
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: 2022-01
+      x: 2.0
+      y: 0.0
+      tam: 0.12
+    - etiqueta: 2022-02
+      x: 2.3
+      y: 108.0
+      tam: 0.12
+    - etiqueta: 2022-03
+      x: 2.3
+      y: 30.0
+      tam: 0.12
+    - etiqueta: 2022-04
+      x: 2.351
+      y: 19.0
+      tam: 0.1199
+    - etiqueta: 2022-05
+      x: 2.7
+      y: 38.0
+      tam: 0.12
+    - etiqueta: 2022-06
+      x: 2.351
+      y: 33.0
+      tam: 0.1199
+    - etiqueta: 2022-07
+      x: 2.2
+      y: 32.0
+      tam: 0.12
+    - etiqueta: 2022-08
+      x: 3.251
+      y: 26.0
+      tam: 0.12
+    - etiqueta: 2022-09
+      x: 3.5
+      y: 17.0
+      tam: 0.12
+    - etiqueta: 2022-10
+      x: 3.752
+      y: 32.0
+      tam: 0.1199
+    - etiqueta: 2022-11
+      x: 3.0
+      y: 19.0
+      tam: 0.12
+    - etiqueta: 2022-12
+      x: 3.251
+      y: 26.0
+      tam: 0.12
+    - etiqueta: 2023-01
+      x: 3.251
+      y: 60.0
+      tam: 0.12
+    - etiqueta: 2023-02
+      x: 2.5
+      y: 30.0
+      tam: 0.12
+    - etiqueta: 2023-03
+      x: 2.9
+      y: 38.0
+      tam: 0.12
+    - etiqueta: 2023-04
+      x: 2.951
+      y: 51.0
+      tam: 0.12
+    - etiqueta: 2023-05
+      x: 3.451
+      y: 47.0
+      tam: 0.12
+    - etiqueta: 2023-06
+      x: 1.8
+      y: 46.0
+      tam: 0.2289
+    - etiqueta: 2023-07
+      x: 1.751
+      y: 65.0
+      tam: 0.237
+    - etiqueta: 2023-08
+      x: 1.1
+      y: 66.0
+      tam: 0.3782
+    - etiqueta: 2023-09
+      x: 1.252
+      y: 56.0
+      tam: 0.3347
+    - etiqueta: 2023-10
+      x: 1.351
+      y: 64.0
+      tam: 0.3131
+    - etiqueta: 2023-11
+      x: 1.3
+      y: 72.0
+      tam: 0.3323
+    - etiqueta: 2023-12
+      x: 1.5
+      y: 55.0
+      tam: 0.2953
+    - etiqueta: 2024-01
+      x: 1.851
+      y: 57.0
+      tam: 0.2388
+    - etiqueta: 2024-02
+      x: 2.0
+      y: 32.0
+      tam: 0.2215
+    - etiqueta: 2024-03
+      x: 1.751
+      y: 43.0
+      tam: 0.2467
+    - etiqueta: 2024-04
+      x: 2.251
+      y: 69.0
+      tam: 0.1964
+    - etiqueta: 2024-05
+      x: 2.351
+      y: 66.0
+      tam: 0.1893
+    - etiqueta: 2024-06
+      x: 2.0
+      y: 84.0
+      tam: 0.2235
+    - etiqueta: 2024-07
+      x: 1.8
+      y: 48.0
+      tam: 0.2489
+    - etiqueta: 2024-08
+      x: 1.9
+      y: 56.0
+      tam: 0.2363
+    - etiqueta: 2024-09
+      x: 1.851
+      y: 49.0
+      tam: 0.2426
+    - etiqueta: 2024-10
+      x: 2.0
+      y: 50.0
+      tam: 0.2265
+    ejes:
+      x:
+        columna: sm_total_u
+        nombre: S&M total del mes (unidad reportada)
+        formato: num2
+      y:
+        columna: altas_mismo_mes
+        nombre: Altas del mismo mes
+        formato: int
+      tamano:
+        columna: team_participacion
+        nombre: team participacion
+        formato: num2
+    etiqueta: mes
+  claim: C-010
+- id: V-06
+  title: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad
+    comercial de 26% a 38% y la habilitación de 10% a 4%.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: periodo
+      nombre: periodo
+      formato: texto
+    - id: demanda_u
+      nombre: demanda_u
+      formato: num2
+    - id: capacidad_u
+      nombre: capacidad_u
+      formato: num2
+    - id: habilitacion_u
+      nombre: habilitacion_u
+      formato: num2
+    - id: part_demanda
+      nombre: part_demanda
+      formato: num2
+    - id: part_capacidad
+      nombre: part_capacidad
+      formato: num2
+    - id: part_habilitacion
+      nombre: part_habilitacion
+      formato: num2
+    - id: part_team
+      nombre: part_team
+      formato: num2
+    filas:
+    - periodo: 2022 S1
+      demanda_u: 8.94
+      capacidad_u: 3.61
+      habilitacion_u: 1.45
+      part_demanda: 0.6384
+      part_capacidad: 0.258
+      part_habilitacion: 0.1036
+      part_team: 0.12
+    - periodo: 2022 S2
+      demanda_u: 10.83
+      capacidad_u: 5.84
+      habilitacion_u: 2.29
+      part_demanda: 0.5713
+      part_capacidad: 0.308
+      part_habilitacion: 0.1207
+      part_team: 0.12
+    - periodo: 2023 ene-may
+      demanda_u: 8.64
+      capacidad_u: 5.09
+      habilitacion_u: 1.32
+      part_demanda: 0.5741
+      part_capacidad: 0.3379
+      part_habilitacion: 0.088
+      part_team: 0.12
+    - periodo: 2023 jun-dic
+      demanda_u: 5.75
+      capacidad_u: 3.82
+      habilitacion_u: 0.48
+      part_demanda: 0.5718
+      part_capacidad: 0.3803
+      part_habilitacion: 0.0478
+      part_team: 0.2944
+    - periodo: 2024 S1
+      demanda_u: 7.66
+      capacidad_u: 4.0
+      habilitacion_u: 0.55
+      part_demanda: 0.6273
+      part_capacidad: 0.3276
+      part_habilitacion: 0.0451
+      part_team: 0.2172
+    - periodo: 2024 jul-oct
+      demanda_u: 4.37
+      capacidad_u: 2.88
+      habilitacion_u: 0.3
+      part_demanda: 0.5783
+      part_capacidad: 0.3817
+      part_habilitacion: 0.04
+      part_team: 0.2382
+  claim: C-004
+- id: V-07
+  title: Por ventana, las altas por mes van de 27,2 en 2022 mar-dic a 55,4 en 2024 ene-oct, y el S&M por alta va
+    de 0,11 a 0,04 en unidad reportada, con su valor menor en 2023 jun-dic (0,02).
+  spec:
+    tipo: tabla
+    columnas:
+    - id: ventana
+      nombre: ventana
+      formato: texto
+    - id: meses
+      nombre: meses
+      formato: int
+    - id: altas_por_mes
+      nombre: altas_por_mes
+      formato: num2
+    - id: sm_por_mes_u
+      nombre: sm_por_mes_u
+      formato: num2
+    - id: sm_por_alta_u
+      nombre: sm_por_alta_u
+      formato: num2
+    filas:
+    - ventana: 2022 mar-dic
+      meses: 10
+      altas_por_mes: 27.2
+      sm_por_mes_u: 2.866
+      sm_por_alta_u: 0.1054
+    - ventana: 2023 ene-may
+      meses: 5
+      altas_por_mes: 45.2
+      sm_por_mes_u: 3.011
+      sm_por_alta_u: 0.0666
+    - ventana: 2023 jun-dic
+      meses: 7
+      altas_por_mes: 60.6
+      sm_por_mes_u: 1.436
+      sm_por_alta_u: 0.0237
+    - ventana: 2024 ene-oct
+      meses: 10
+      altas_por_mes: 55.4
+      sm_por_mes_u: 1.976
+      sm_por_alta_u: 0.0357
+  claim: C-008
+- id: V-08
+  title: 'En niveles mensuales, el S&M total se asocia negativamente con las altas: −0,57 en el mismo mes sobre
+    32 meses y −0,55 con un mes de rezago sobre 31 meses.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: especificacion
+      nombre: especificacion
+      formato: texto
+    - id: n_meses
+      nombre: n_meses
+      formato: int
+    - id: r_pearson
+      nombre: r_pearson
+      formato: num2
+    filas:
+    - especificacion: rezago_0
+      n_meses: 32
+      r_pearson: -0.568
+    - especificacion: rezago_1
+      n_meses: 31
+      r_pearson: -0.549
+  claim: C-005
+- id: V-09
+  title: Con un mes de rezago, el mes de mayor S&M (oct-22, 3,75) precede a 19 altas, mientras el mes de menor S&M
+    (ago-23, 1,10) precede a 56 altas.
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: 2022-02
+      x: 2.3
+      y: 30.0
+    - etiqueta: 2022-03
+      x: 2.3
+      y: 19.0
+    - etiqueta: 2022-04
+      x: 2.351
+      y: 38.0
+    - etiqueta: 2022-05
+      x: 2.7
+      y: 33.0
+    - etiqueta: 2022-06
+      x: 2.351
+      y: 32.0
+    - etiqueta: 2022-07
+      x: 2.2
+      y: 26.0
+    - etiqueta: 2022-08
+      x: 3.251
+      y: 17.0
+    - etiqueta: 2022-09
+      x: 3.5
+      y: 32.0
+    - etiqueta: 2022-10
+      x: 3.752
+      y: 19.0
+    - etiqueta: 2022-11
+      x: 3.0
+      y: 26.0
+    - etiqueta: 2022-12
+      x: 3.251
+      y: 60.0
+    - etiqueta: 2023-01
+      x: 3.251
+      y: 30.0
+    - etiqueta: 2023-02
+      x: 2.5
+      y: 38.0
+    - etiqueta: 2023-03
+      x: 2.9
+      y: 51.0
+    - etiqueta: 2023-04
+      x: 2.951
+      y: 47.0
+    - etiqueta: 2023-05
+      x: 3.451
+      y: 46.0
+    - etiqueta: 2023-06
+      x: 1.8
+      y: 65.0
+    - etiqueta: 2023-07
+      x: 1.751
+      y: 66.0
+    - etiqueta: 2023-08
+      x: 1.1
+      y: 56.0
+    - etiqueta: 2023-09
+      x: 1.252
+      y: 64.0
+    - etiqueta: 2023-10
+      x: 1.351
+      y: 72.0
+    - etiqueta: 2023-11
+      x: 1.3
+      y: 55.0
+    - etiqueta: 2023-12
+      x: 1.5
+      y: 57.0
+    - etiqueta: 2024-01
+      x: 1.851
+      y: 32.0
+    - etiqueta: 2024-02
+      x: 2.0
+      y: 43.0
+    - etiqueta: 2024-03
+      x: 1.751
+      y: 69.0
+    - etiqueta: 2024-04
+      x: 2.251
+      y: 66.0
+    - etiqueta: 2024-05
+      x: 2.351
+      y: 84.0
+    - etiqueta: 2024-06
+      x: 2.0
+      y: 48.0
+    - etiqueta: 2024-07
+      x: 1.8
+      y: 56.0
+    - etiqueta: 2024-08
+      x: 1.9
+      y: 49.0
+    - etiqueta: 2024-09
+      x: 1.851
+      y: 50.0
+    ejes:
+      x:
+        columna: sm_total_u
+        nombre: S&M total del mes (unidad reportada)
+        formato: num2
+      y:
+        columna: altas_mes_siguiente
+        nombre: Altas del mes siguiente
+        formato: int
+    etiqueta: mes
+  claim: C-011
+- id: V-10
+  title: En la composición del S&M, la generación de demanda va de 64% en 2022 S1 a 58% en 2024 jul-oct, la capacidad
+    comercial de 26% a 38% y la habilitación de 10% a 4%.
+  spec:
+    tipo: linea
+    x:
+    - 2022-01
+    - 2022-02
+    - 2022-03
+    - 2022-04
+    - 2022-05
+    - 2022-06
+    - 2022-07
+    - 2022-08
+    - 2022-09
+    - 2022-10
+    - 2022-11
+    - 2022-12
+    - 2023-01
+    - 2023-02
+    - 2023-03
+    - 2023-04
+    - 2023-05
+    - 2023-06
+    - 2023-07
+    - 2023-08
+    - 2023-09
+    - 2023-10
+    - 2023-11
+    - 2023-12
+    - 2024-01
+    - 2024-02
+    - 2024-03
+    - 2024-04
+    - 2024-05
+    - 2024-06
+    - 2024-07
+    - 2024-08
+    - 2024-09
+    - 2024-10
+    series:
+    - nombre: paid_media
+      valores:
+      - 1.04
+      - 1.081
+      - 1.081
+      - 1.222
+      - 1.35
+      - 1.058
+      - 0.88
+      - 1.3
+      - 1.505
+      - 1.463
+      - 1.5
+      - 1.3
+      - 1.365
+      - 1.05
+      - 1.305
+      - 1.387
+      - 1.38
+      - 0.828
+      - 0.683
+      - 0.4
+      - 0.513
+      - 0.554
+      - 0.598
+      - 0.675
+      - 0.703
+      - 1.02
+      - 0.875
+      - 1.035
+      - 1.105
+      - 0.98
+      - 0.9
+      - 0.874
+      - 0.74
+      - 0.78
+    - nombre: publicidad_no_web
+      valores:
+      - 0.34
+      - 0.391
+      - 0.276
+      - 0.4
+      - 0.324
+      - 0.376
+      - 0.308
+      - 0.553
+      - 0.63
+      - 0.45
+      - 0.42
+      - 0.52
+      - 0.585
+      - 0.425
+      - 0.377
+      - 0.354
+      - 0.414
+      - 0.252
+      - 0.28
+      - 0.176
+      - 0.163
+      - 0.216
+      - 0.156
+      - 0.255
+      - 0.333
+      - 0.3
+      - 0.298
+      - 0.293
+      - 0.353
+      - 0.36
+      - 0.288
+      - 0.266
+      - 0.259
+      - 0.26
+    - nombre: team
+      valores:
+      - 0.24
+      - 0.276
+      - 0.276
+      - 0.282
+      - 0.324
+      - 0.282
+      - 0.264
+      - 0.39
+      - 0.42
+      - 0.45
+      - 0.36
+      - 0.39
+      - 0.39
+      - 0.3
+      - 0.348
+      - 0.354
+      - 0.414
+      - 0.412
+      - 0.415
+      - 0.416
+      - 0.419
+      - 0.423
+      - 0.432
+      - 0.443
+      - 0.442
+      - 0.443
+      - 0.432
+      - 0.442
+      - 0.445
+      - 0.447
+      - 0.448
+      - 0.449
+      - 0.449
+      - 0.453
+    formato: num2
+  claim: C-004
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-180321-0787
+  path: investigations/runs/INV-20260929-180321-0787.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T18:09:10-06:00'
+findings:
+- F-214
+- F-215
+- F-216
+- F-217
+- F-218
+- F-219
+- F-220
+- F-221
+- F-222
+run_ids:
+- INV-20260929-180321-0787
+usage:
+  INV-20260929-180321-0787:
+    cost_usd: 1.6901155
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: "R-030 respalda C-004 en lo que importa: el gasto de S&M y los primeros pagadores no se mueven juntos,
+    y cruzar fechas no atribuye ventas (F-222).\n\n**Qué trae de nuevo.** En buena parte es una réplica con gráficas
+    de R-015: F-216≈F-109, F-218≈F-115/F-116, F-219≈F-118, F-221≈F-108 y F-222≈F-119. Lo nuevo es:\n- el rezago
+    de un mes (F-219, F-220);\n- la composición del gasto por ventana (F-217).\n\n**El riesgo está en el titular:**\n-
+    **El corte de jun-23.** La comparación principal (S&M de 3,01 a 1,44 u contra primeros pagadores de 45,2 a 60,6
+    por mes, F-214) parte justo en may/jun-23. Es el mes en que el archivo deja de repartir Team como un 12% fijo
+    (F-218).\n- **Ago-23.** El −68% de F-215 termina en ago-23, el mes que H-023 sospecha contable.\n- **Dentro
+    de cada tramo.** Hice la cuenta con cifras de R-030. Dentro de cada tramo no aparece «menos gasto, más altas»:\n
+    \ - antes del corte, el S&M queda casi plano mientras los primeros pagadores suben;\n  - después, el S&M sube
+    y los primeros pagadores bajan.\n\n**Qué propongo:**\n1. Contar la lámina como «no se mueven juntos en ningún
+    tramo».\n2. Pedir una corrida corta por tramo, con y sin PayrollExpenses negativo y con jul–oct 2024 aparte.\n3.
+    Registrar una rival de H-025: el corte en cómo se arma el archivo.\n\n**Dos sugerencias más:**\n- Al revisar
+    findings, aceptar uno de cada par replicado para no contar dos veces la misma evidencia.\n- Cuando resuelvas
+    X-004/X-005, el corte de jun-23 es candidato al «No afirmar todavía»."
+  run_id: RUN-20260929-180911-cos-f1c8
+  at: '2026-09-29T18:19:59-06:00'
+  impacts:
+  - target: C-004
+    effect: changes_story
+    why: 'R-030 respalda el claim en lo esencial: en ninguna ventana el S&M acompaña a los primeros pagadores, y
+      R-030 mismo dice que no hay atribución (F-222). Propongo que esto sea el contenido de X-133, no una alerta
+      aparte. Lo que cambia es qué va en la lámina.
+
+
+      1) **El corte de jun-23.** El titular (S&M de 3,01 a 1,44 u y primeros pagadores de 45,2 a 60,6 por mes, F-214)
+      compara ene-may con jun-dic 2023. Ese corte es justo donde el archivo deja de repartir Team como un 12% fijo
+      (F-218, F-115, T-008). C-004 ya cita F-066 y F-115. Lo que no veo explícito es que su comparación principal
+      (F-107, y ahora F-214) cruza ese corte.
+
+
+      2) **El −68% de F-215.** Va de may-23, el último mes del tramo repartido, a ago-23, el mes que H-023 sospecha
+      contable. Además:
+
+      - F-215 llama «pico» a may-23 (3,45), pero el máximo del periodo es oct-22 (3,75, F-216).
+
+      - Pone un movimiento de tres meses del gasto al lado de promedios de 10 y 22 meses de primeros pagadores.
+
+      - F-220 y el mínimo de 0,02 de F-221 dependen del mismo ago-23.
+
+
+      3) **La −0,57 de F-219.** Mezcla dos tramos con niveles distintos y puede salir casi entera del salto entre
+      ellos. T-024 (F-118) ya trae la asociación en cambios mes a mes; R-030 no la reporta.
+
+
+      4) **Cálculo mío.** Uso cifras redondeadas de R-030 y T-014, y supongo que S&M por alta = gasto total ÷ altas
+      de la ventana.
+
+      - Antes del corte, el S&M por mes queda casi plano: ≈2,9–3,0 u en 2022 mar-dic y 3,01 en 2023 ene-may. Mientras
+      tanto, los primeros pagadores suben de 27,2 a 45,2.
+
+      - Después del corte, el S&M sube (1,44 → ≈2,0–2,2 en 2024 ene-oct) y los primeros pagadores bajan de 60,6
+      a 55,4.
+
+
+      Lo robusto es «no se mueven juntos en ningún tramo». «Cuando baja el gasto suben las altas» depende del corte.
+      Esto no prueba que la oposición sea falsa: solo que hoy no se puede separar del cambio en el archivo.'
+  - target: H-023
+    effect: requires_research
+    why: 'R-030 usa ago-23 (1,10 u) como valle (F-215) y como extremo con rezago (F-220). De ese mes dependen también
+      el mínimo de S&M por alta de 0,02 (F-221) y el 38% de Team (F-218).
+
+
+      Si ago-23 es uno de los 5 meses con PayrollExpenses negativo (R-014, X-015), el total se achica y la participación
+      de Team sube sola. R-030 no separa Payroll ni el fin de Freelance, así que no prueba ni descarta H-023.
+
+
+      Lo que cambia es el peso: ahora ese mes entraría a la lámina de C-004. X-015 ya pidió revisar el Payroll negativo
+      en el S&M de R-015; aquí se aterriza en un mes y una lámina concretos.'
+  - target: H-025
+    effect: opens_new_hypothesis
+    why: 'R-030 afina la coincidencia que H-025 quiere explicar: entre ene-may y jun-dic 2023, los primeros pagadores
+      pasan de 45,2 a 60,6 por mes y el S&M de 3,01 a 1,44 u (F-214).
+
+
+      Pero en ese mismo corte el archivo cambia de forma: Team deja de ser un 12% fijo (F-218, F-115). R-030 reconoce
+      que antes de jun-23 no se distingue el gasto observado de un reparto porcentual.
+
+
+      Eso abre una rival igual de compatible con los datos: la caída del S&M es en parte un cambio en cómo se arma
+      el archivo y no tiene relación con los primeros pagadores. Pagos y gasto no separan las dos (F-222). Las separa
+      la documentación del archivo o una bitácora de cambios comerciales con fecha (X-110, X-118).'
+  - target: H-022
+    effect: supports
+    why: 'R-030 lo muestra con el S&M total: sentidos distintos entre ventanas (F-214, F-221) y asociación negativa
+      en niveles (F-219, T-106). En su versión descriptiva, el cálculo por tramo (ver C-004) lo deja más firme:
+      en ningún tramo el gasto acompaña a los primeros pagadores.
+
+
+      Siguen abiertas las condiciones de X-003 (solo forma y fechas, sin montos comparables) y de X-015 (Payroll
+      negativo). Si el recálculo sin Payroll negativo mueve los niveles, lo que hay que volver a mirar es la dirección
+      por tramo, no la hipótesis.'
+  - target: C-010
+    effect: supports
+    why: 'F-221 reproduce el cociente de C-010 (0,11 → 0,04 u; T-014 lo da como 0,105 → 0,036), y F-222 refuerza
+      que no es CAC. Tres cuidados para la lámina:
+
+      1) La comparación 2022 vs 2024 también cruza el corte de jun-23. El −66% vale como cociente en u, no como
+      gasto comparable.
+
+      2) El mínimo de 0,02 en 2023 jun-dic cae en el tramo de ago-23 (H-023) y no debería ir arriba.
+
+      3) Habilitación sale 10% en 2022 S1 (F-217) y 12% en 2022 (T-012). Son ventanas distintas, pero en dos láminas
+      seguidas parecen contradicción.'
+  - target: H-006
+    effect: no_material_impact
+    why: F-217 muestra que la «capacidad comercial» pasa de 26% a 38% del S&M. Pero es participación de gasto, no
+      número de SDR/AE ni tiempos de atención. Además, antes de jun-23, según el propio R-030, no se distingue de
+      un reparto porcentual. F-207 y X-014 ya cierran ese atajo. No suma ni resta a H-006.

@@ -1,0 +1,360 @@
+{
+ "run_id": "RUN-20260928-235300-briefer-76c3",
+ "agent": "briefer",
+ "role": "briefer",
+ "purpose": "Turno de briefing",
+ "started_at": "2026-09-29T00:01:59-06:00",
+ "duration_ms": 538596,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/055b16e44ac4f2ec.md",
+ "system_prompt_hash": "055b16e44ac4f2ec",
+ "prompt": "## Brief actual (lo aprobado es lo que leen los demás agentes)\n- title (Nombre del caso) [importado]: Business Analytics: del dato a la decisión\n- objective (Objetivo, requerido) [importado]: Entender qué explicaciones podríamos defender ante CRO y CFO, qué sigue siendo una posibilidad y qué información permitiría elegir entre ellas.\n- audience (Audiencia, requerido) [importado]: CEO; CRO; CFO\n- context (Contexto) [importado]: Caso 1 · CRO: más volumen arriba del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won, con entradas self-serve, entradas directas a SQL y leads estancados) sin que los clientes nuevos crezcan al mismo ritmo. Caso 2 · CFO: ¿el modelo cliente + mes + monto permite separar el comportamiento del cliente del precio y de los descuentos temporales que se van a introducir? El caso relata más entradas en primeras etapas y menor crecimiento relativo de clientes nuevos; también plantea introducir descuentos temporales. Todavía no fijamos el periodo ni el signo del cambio económico.\n- deliverables (Entregables, requerido) [importado]: Video ejecutivo ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción; Link a la demo + video ≤ 5 min del proceso con IA; Material de soporte; Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA\n- constraints (Restricciones) [importado]: El reto original da cinco días; no sabemos cuánto queda. Esfuerzo relativo, no fechas. (brief v0.3 §01); No vamos a llamar “causa” a algo que sólo muestra una asociación. (brief v0.3 §01); No hay datos de funnel: el Caso 1 se responde como propuesta de medición, no como diagnóstico. (notas del proyecto); Solución fuera de esta etapa: sin dashboards, métricas definitivas, modelo de datos ni deck hasta que se decida. (brief v0.3 §11)\n- success_criteria (Criterios de éxito) [importado]: Preguntas separadas sin contar lo mismo dos veces; hipótesis con una explicación alternativa; evidencia que ayude a distinguirlas; tareas que sepamos cuándo cerrar. (brief v0.3 §01)\n- data_available (Datos disponibles) [importado]: Transactions.csv — cliente · mes · monto (COP); Industry.csv — industria del cliente; S&M_spend.csv — gasto mensual por rubro (unidad sin documentar); Workspace de exploración (finora-eda) con el análisis de la Fase 1, 39 hallazgos canónicos verificados en código y respuestas W0–W5\n- stakeholders (Stakeholders y fuentes de contexto) [vacío]: —\n- timeline (Tiempos) [vacío]: —\n- gaps (Vacíos de información) [importado]: El texto literal del enunciado de Alegra no está en el repositorio: este brief se reconstruyó desde las notas del proyecto (27-sep) y el brief v0.3. Pendiente adjuntar el enunciado original.; Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa (sin fijar).; Si el monto representa suscripción recurrente, facturación o cobro; y a qué periodo pertenece (sin confirmar).\n- brief_text (Enunciado original) [vacío]: —\n\n## Modelo de datos del caso\nNinguno elegido todavía. Disponibles para que Hugo elija en la vista: Finora · modelo analítico.\n\n## Conversación reciente\n(primer turno)\n\n## Mensaje de Hugo\nFinora crece mucho más en clientes que en ingreso. Los clientes crecieron 4.5x, el ingreso / MRR pagado 2.8x y el MRR por cliente activo cayó 38%, pasando de alrededor de COP 92.8 mil a COP 57.8 mil. Aquí quiero mostrar algunas conclusiones generales basadas en datos, no ir demasiado profundo, más bien enfocarlo a la salud del modelo, qué está pasando en términos generales y qué señales vale la pena tener en mente antes de entrar a Growth y Revenue. Para Growth, Finora plantea algo como “estamos generando más leads, pero no estamos vendiendo más”. El volumen en las primeras etapas creció, especialmente en New, pero los clientes nuevos no crecen al mismo ritmo. Finora opera con un modelo híbrido. Algunos usuarios llegan directamente al producto, se registran, lo usan, pagan y nunca necesariamente hablan con ventas. Otros entran al proceso comercial por campañas, referidos, partners o prospección. El funnel comercial actualmente se ve aproximadamente así: New → Working → Engaged → SQL → Demo → Proposal → Won. Los SDRs trabajan principalmente las primeras etapas y después normalmente entra un Account Executive. Pero no todos los clientes recorren el mismo camino: algunos son self-service, algunos entran directamente a SQL, algunos pueden quedarse semanas estancados en alguna etapa y existen distintos canales o motions de adquisición. La pregunta es cómo definir y medir el funnel si no todos los clientes lo recorren igual. Ideas iniciales: Self Service, Digital, clientes que no requirieron un KAM, tal vez pensar en AAARRR y Conversion Rate; WoM, Word of Mouth; Executive, algún canal de adquisición y su funnel propuesto con métricas clave; Assisted, otro canal de adquisición, su funnel propuesto y métricas clave. Todavía habría que aterrizar bien qué canales o motions tienen sentido y cómo debería verse cada funnel. En data disponible para Growth tenemos entradas y actividad económica de clientes, clientes, actividad, segmentos, primeras apariciones, montos y comportamiento posterior, además de inversión en Marketing. La pregunta es hasta dónde sí podemos determinar o relacionar un incremento en ventas con la inversión en distintas categorías, tal vez cruzando fechas. Ideas de categorías: generación de demanda / ToFu con Paid Media y Publicidad no web; capacidad o equipo comercial con Team, Payroll Expenses y Travel; habilitación o producto, tal vez Software Tools y Freelance. No sé todavía hasta dónde se pueda concluir algo con esto ni qué tan válido sea relacionarlo. Hay algunas cosas interesantes que podrían servir para entender la salud del modelo y para Growth: crecimiento fuerte en clientes, cambios en ticket de entrada, comportamiento distinto por cohortes o primeras apariciones, churn observado, retornos, movimiento de montos y posibles cambios en mix. Aquí no quiero hacer un análisis gigantesco, más bien usar lo suficiente para complementar las propuestas. Otra pregunta es dónde y en qué segmentos se concentra la pérdida de crecimiento. Ideas iniciales para revisar: actividad por industria, segmentos de churn, low tickets y mix. Tal vez aquí podría funcionar algún tipo de matriz o combinación de métricas, por ejemplo industrias con bajo churn, ticket alto y poco volumen, industrias con mucho volumen pero peor ticket, etc. Tal vez una matriz o bubble chart pueda ayudar a entender qué funciona y dónde hay oportunidad. Otra observación o duda para Growth: ¿con estos datos se podría decir que efectivamente hay algo que apunta a captura de cosechas de menor ticket o menor calidad? Por ejemplo usando ticket de entrada, comportamiento posterior, churn, persistencia y maybe mix. No quiero asumirlo; es una pregunta que valdría la pena probar. Particularmente me interesa si las cohortes nuevas están entrando con menor ticket y quizá si también muestran peor comportamiento de churn o retención. Si ambas cosas suceden, podría apuntar a una cosecha de menor calidad, pero hay que ver qué permite realmente la data. Sobre métricas que hoy no existen, no conocemos completamente qué métricas actuales tiene Finora, pero típicamente pensaría en abordar frameworks o métricas de Growth como MRR, ARR, ARPU, CAC, LTV, Churn y UCM, y definir cuáles realmente hacen sentido para este modelo. No se trata necesariamente de meter todas; hay que ver qué decisiones quiere tomar el CRO, qué tipo de funnel o motion estamos proponiendo, cuáles deberían ser métricas recurrentes y cuáles deberían ser métricas diagnósticas. En hipótesis Growth, la pregunta del case habla de demanda, calidad, velocidad de atención y conversión post-SQL. Ideas iniciales que traigo: en ToFu, la calidad de la máquina de leads bajó. Puede haber más volumen, pero quizá menor calidad. Esto podría conectar con ticket de entrada, industrias, comportamiento posterior, churn, retención y mix, pero necesitamos definir qué dato permitiría realmente validar esto. En BoFu o capacidad comercial, la capacidad comercial instalada no alcanza la demanda generada. Es posible que sí exista más demanda, pero SDRs, AEs, tiempos de atención, backlog y capacidad no estén creciendo al mismo ritmo. Entonces se genera más arriba pero no necesariamente se procesa igual abajo. Otra posibilidad es que la conversión post-SQL haya empeorado. La idea sería construir un set de hipótesis y para cada una decir qué dato necesito, qué métrica miraría, qué señal la apoyaría y qué señal la debilitaría. Sobre la solución analítica para el CRO, la pregunta es qué solución analítica construirías para que el CRO opere el funnel recurrentemente y qué decisiones le permitiría tomar. Ideas iniciales: por lo que se puede observar posiblemente existe un problema en cómo está instrumentado o medido el proceso. Pensaría en pulir CRM, implementar Analítica Digital, conectar mejor comportamiento de producto con proceso comercial, definir los distintos funnels o motions y mejorar tracking. Del lado de decision making o seguimiento, dashboards automatizados, métricas de acuerdo con los distintos funnels, análisis ad hoc y agentes de inteligencia artificial, incluso una solución como la que ya estoy utilizando para explorar datos. La solución no tendría que ser solamente “un dashboard”; puede ser un sistema de monitoreo, exploración y análisis. Para Revenue / CFO, la pregunta principal es “¿por qué cambió nuestro MRR?”. Ahora Finora quiere introducir descuentos temporales y el problema es que el modelo actual podría confundir comportamiento del cliente con decisiones comerciales. Finora cobra suscripciones mensuales. El valor puede cambiar dependiendo de uso y características de cada cliente. Hoy existe un histórico básicamente con cliente + mes + monto pagado. Los cambios entre meses se utilizan para clasificar crecimiento, contracción, churn y reactivación. Ahora se quieren introducir descuentos temporales. Entonces aparecen las preguntas del CFO: si un cliente pagaba 100 y ahora paga 80, ¿qué ocurrió?, ¿contrajo 20 o recibió un descuento de 20? Con cliente + mes + monto pagado probablemente ambos casos se ven igual. ¿Qué pasa si la suscripción creció de 100 a 130, pero el cliente tiene 30 de descuento y sigue pagando 100? El monto observado diría que no hubo cambio, pero puede existir crecimiento en la suscripción. Después desaparece el descuento y pasa de 100 pagado a 130 pagado, ¿eso debería contar como expansión? Probablemente ahí está el problema conceptual que el nuevo modelo tiene que evitar. La pregunta general sería: Finora quiere introducir descuentos temporales, ¿cómo debería hacerlo? Necesitamos pensar en el mecanismo propuesto, cómo debería funcionar conceptualmente el descuento, cómo responde el modelo a los casos anteriores y qué implicaciones multidisciplinarias tiene. No es solamente Analytics; puede afectar revenue, pricing, billing, data, reporting y comercial. Todavía hay que desarrollar esto. En modelo de datos CFO, la pregunta es cómo separar el valor de la suscripción del precio efectivamente pagado y qué campos, tablas o definiciones agregar. Aquí habría que proponer un modelo de datos. La idea central es poder distinguir conceptualmente valor de la suscripción, monto efectivamente pagado y descuento, y probablemente lo necesario para saber cuándo empieza y termina el descuento. También habría que definir cómo clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión reales. En general, no quiero hacer una mega investigación de datos. Usar datos donde realmente ayudan. El caso se reparte aproximadamente en una parte de análisis para entender qué se observa hoy, bastante definición de frameworks, propuestas, diseño de medición, diseño de modelo de datos y después storytelling. Para Growth: entender el problema, proponer cómo medir un modelo híbrido, usar algo de data para complementar, proponer hipótesis, decir qué datos faltan y diseñar una solución analítica recurrente. Para CFO: entender qué permite observar hoy el amount, explicar por qué descuentos rompen esa lectura, proponer mecanismo, proponer modelo de datos y definir clasificación correcta. Y el Overview sólo debería poner en contexto la salud general del negocio y algunas señales antes de entrar a esos dos bloques.\n\nDevuelve el BrieferTurn: propuestas solo de secciones que cambian; listas completas; base en cada una; una pregunta como máximo; si el mensaje es el enunciado pegado, message_is_source_text = true.",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "reply",
+   "proposals",
+   "message_is_source_text",
+   "question",
+   "language"
+  ],
+  "properties": {
+   "reply": {
+    "type": "string"
+   },
+   "proposals": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "section",
+      "value",
+      "hugo_wording",
+      "basis",
+      "why"
+     ],
+     "properties": {
+      "section": {
+       "type": "string",
+       "enum": [
+        "title",
+        "objective",
+        "audience",
+        "context",
+        "deliverables",
+        "constraints",
+        "success_criteria",
+        "data_available",
+        "stakeholders",
+        "timeline",
+        "gaps",
+        "brief_text"
+       ]
+      },
+      "value": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "hugo_wording": {
+       "type": "string"
+      },
+      "basis": {
+       "type": "string",
+       "enum": [
+        "hugo",
+        "enunciado",
+        "inferido"
+       ]
+      },
+      "why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "message_is_source_text": {
+    "type": "boolean"
+   },
+   "question": {
+    "type": "string"
+   },
+   "language": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "register",
+     "technical_level",
+     "formality",
+     "preserved_terms",
+     "introduced_terms"
+    ],
+    "properties": {
+     "register": {
+      "type": "string"
+     },
+     "technical_level": {
+      "type": "string"
+     },
+     "formality": {
+      "type": "string"
+     },
+     "preserved_terms": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "introduced_terms": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "term",
+        "plain"
+       ],
+       "properties": {
+        "term": {
+         "type": "string"
+        },
+        "plain": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "clarification-protocol",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS adaptation (no upstream skill with this name in alirezarezvani/claude-skills)",
+   "kind": "custom",
+   "digest": "0394648c4f9b"
+  },
+  {
+   "id": "brief-builder",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS",
+   "kind": "custom",
+   "digest": "256a052cfe2a"
+  },
+  {
+   "id": "business-case-partner",
+   "mode": "dynamic",
+   "why": "2 disparador(es) en la pregunta",
+   "source": "Hugo (~/.codex/skills/business-case-partner)",
+   "kind": "vendor",
+   "digest": "d310b71c0a76"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "reply": "Organicé tu mensaje en tres bloques: Overview (salud del modelo), Growth / CRO y Revenue / CFO. Te dejo propuestas para objetivo, audiencia, contexto, entregables, restricciones, criterios de éxito, tiempos, stakeholders y gaps.\n\nQué cambia respecto a lo importado:\n- Objetivo: antes era “qué explicaciones podemos defender”. Ahora es medir, proponer y diseñar, usando data solo donde ayuda. Lo de separar lo defendible de lo posible se mantiene dentro de las hipótesis de Growth.\n- Contexto: agregué tus cifras (clientes 4.5x, ingreso / MRR pagado 2.8x, MRR por cliente activo −38%). Con eso ya sabemos hacia dónde se movió cada cosa: el ingreso sube y el MRR por cliente baja. Falta el periodo; lo puse en gaps.\n- Entregables: los cuatro formatos se quedan igual. Agregué el contenido de cada bloque en el orden en que lo contaste.\n\nSupuestos que tomé (corrígeme si no van):\n- La restricción “sin dashboards ni modelo de datos hasta que se decida” la tomo como regla de fase: todavía no se construyen, pero sí son parte del caso.\n- Al CEO lo dejé como audiencia del Overview. No dijiste qué decide.\n- No metí al brief las hipótesis (ToFu, capacidad comercial, post-SQL), AAARRR, la matriz / bubble chart ni las categorías de Marketing. Son material de trabajo y van mejor en el log de hipótesis e ideas. Lo de cosechas de menor ticket sí quedó como restricción: no se asume, se prueba.\n\nNo toqué data_available. Si eliges “Finora · modelo analítico” en la vista, se llena desde ahí.\n\nSi apruebas estas propuestas, quedan cubiertos objetivo, audiencia y entregables.",
+  "proposals": [
+   {
+    "section": "objective",
+    "value": [
+     "Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilidad y qué dato permitiría elegir) y qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones tomar con ella; (3) Revenue / CFO — cómo introducir descuentos temporales sin que el MRR confunda comportamiento del cliente con decisiones comerciales: mecanismo, modelo de datos y clasificación correcta de los movimientos."
+    ],
+    "hugo_wording": "“La pregunta es cómo definir y medir el funnel si no todos los clientes lo recorren igual” · “el modelo actual podría confundir comportamiento del cliente con decisiones comerciales” · “Usar datos donde realmente ayudan”",
+    "basis": "hugo",
+    "why": "Reencuadre. Lo importado ponía el objetivo en ‘qué explicaciones podemos defender ante CRO y CFO’. Tu mensaje lo mueve a medir, proponer y diseñar (funnel híbrido, solución recurrente, mecanismo de descuento, modelo de datos), con la data como complemento. Separar lo que la data sostiene de lo que es posibilidad se conserva, pero dentro de las hipótesis de Growth."
+   },
+   {
+    "section": "audience",
+    "value": [
+     "CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido",
+     "CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos",
+     "CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación"
+    ],
+    "hugo_wording": "“qué solución analítica construirías para que el CRO opere el funnel recurrentemente y qué decisiones le permitiría tomar” · “Para Revenue / CFO, la pregunta principal es ‘¿por qué cambió nuestro MRR?’”",
+    "basis": "hugo",
+    "why": "Agrego qué resuelve cada uno. Lo de CRO y CFO sale de tus palabras. El CEO se queda porque ya estaba aprobado; ligarlo al Overview lo inferí yo, tú no lo dijiste."
+   },
+   {
+    "section": "context",
+    "value": [
+     "Finora cobra suscripciones mensuales y opera con un modelo híbrido: algunos usuarios llegan directo al producto, se registran, lo usan y pagan sin necesariamente hablar con ventas; otros entran al proceso comercial por campañas, referidos, partners o prospección. Overview: Finora crece mucho más en clientes que en ingreso — clientes 4.5x, ingreso / MRR pagado 2.8x y MRR por cliente activo −38% (de ~COP 92.8 mil a ~COP 57.8 mil); el periodo de estas cifras sigue sin fijar. Growth / CRO: Finora plantea algo como “estamos generando más leads, pero no estamos vendiendo más”; el volumen en primeras etapas creció, sobre todo en New, pero los clientes nuevos no crecen al mismo ritmo. Funnel aproximado: New → Working → Engaged → SQL → Demo → Proposal → Won; los SDRs trabajan sobre todo las primeras etapas y después normalmente entra un Account Executive. No todos lo recorren igual: hay self-service, entradas directas a SQL, leads estancados semanas en alguna etapa y distintos canales o motions. La pregunta del caso toca demanda, calidad, velocidad de atención y conversión post-SQL. Revenue / CFO: la pregunta principal es “¿por qué cambió nuestro MRR?”. El valor de la suscripción puede cambiar según uso y características del cliente; hoy el histórico es cliente + mes + monto pagado y los cambios entre meses se clasifican como crecimiento, contracción, churn o reactivación. Con descuentos temporales ese modelo puede confundir comportamiento del cliente con decisiones comerciales (precio, descuentos): 100 → 80, ¿contrajo 20 o recibió 20 de descuento?; si la suscripción sube de 100 a 130 con 30 de descuento, sigue pagando 100 y el monto observado no muestra el crecimiento; cuando termina el descuento pasa de 100 a 130 pagado, ¿cuenta como expansión?"
+    ],
+    "hugo_wording": "“Finora crece mucho más en clientes que en ingreso” · “estamos generando más leads, pero no estamos vendiendo más” · “¿contrajo 20 o recibió un descuento de 20?”",
+    "basis": "hugo",
+    "why": "Cambio ‘Caso 1 / Caso 2’ por tus bloques (Overview, Growth / CRO, Revenue / CFO). Sumo el modelo híbrido, el paso SDR → AE, lo que toca la pregunta de Growth y los ejemplos 100 → 80 y 100 → 130. Quito ‘ni el signo del cambio económico’ porque tus cifras ya lo dan; el periodo sigue sin fijar. Mantengo ‘precio’ del texto aprobado junto a descuentos. Las tres cifras cuadran entre sí (2.8 / 4.5 ≈ 0.62, o sea −38%), lo que sugiere que ‘clientes’ son clientes activos."
+   },
+   {
+    "section": "deliverables",
+    "value": [
+     "Video ejecutivo ≤ 5 min para CEO, CRO y CFO: Situación → Hallazgo → Implicación → Decisión → Acción",
+     "Link a la demo + video ≤ 5 min del proceso con IA",
+     "Material de soporte",
+     "Nota corta: prioridades, supuestos, información faltante, cambios al modelo, cómo se usó y validó la IA",
+     "Bloque Overview: poner en contexto la salud general del negocio con conclusiones generales basadas en datos y algunas señales a tener en mente (p. ej. ticket de entrada, cohortes, churn observado, retornos, movimiento de montos, mix) antes de entrar a Growth y Revenue",
+     "Bloque Growth / CRO: entender el problema; proponer cómo medir un modelo híbrido (motions o canales por aterrizar, un funnel propuesto para cada uno con métricas clave, y cuáles métricas son recurrentes y cuáles diagnósticas); usar algo de data para complementar (p. ej. dónde y en qué segmentos se concentra la pérdida de crecimiento, si las cohortes nuevas entran con menor ticket y peor retención); set de hipótesis con dato necesario, métrica, señal que la apoya y señal que la debilita; datos que faltan; solución analítica recurrente para que el CRO opere el funnel (instrumentación y seguimiento; puede ser un sistema de monitoreo, exploración y análisis, no solo un dashboard) y qué decisiones le permite tomar",
+     "Bloque Revenue / CFO: qué permite observar hoy el amount; por qué los descuentos temporales rompen esa lectura; mecanismo de descuento propuesto y cómo responde a los casos 100 → 80, suscripción 130 con 30 de descuento y fin del descuento; implicaciones más allá de Analytics (revenue, pricing, billing, data, reporting, comercial); modelo de datos que separe valor de la suscripción, monto pagado y descuento, con inicio y fin; clasificación del inicio y fin de un descuento para que no se confundan con contracción o expansión reales"
+    ],
+    "hugo_wording": "“Para Growth: entender el problema, proponer cómo medir un modelo híbrido, usar algo de data para complementar, proponer hipótesis, decir qué datos faltan y diseñar una solución analítica recurrente. Para CFO: entender qué permite observar hoy el amount, explicar por qué descuentos rompen esa lectura, proponer mecanismo, proponer modelo de datos y definir clasificación correcta.”",
+    "basis": "hugo",
+    "why": "Los cuatro formatos importados se quedan tal cual. Agrego el contenido de cada bloque en el orden en que lo contaste. Dejo ‘motions o canales’ abierto porque dijiste que todavía hay que aterrizarlos."
+   },
+   {
+    "section": "constraints",
+    "value": [
+     "El reto original da cinco días; no sabemos cuánto queda. Esfuerzo relativo, no fechas. (brief v0.3 §01)",
+     "No vamos a llamar “causa” a algo que sólo muestra una asociación. (brief v0.3 §01)",
+     "No hay datos de funnel: el Caso 1 (Growth / CRO) se responde como propuesta de medición, no como diagnóstico. (notas del proyecto)",
+     "Solución fuera de esta etapa: sin dashboards, métricas definitivas, modelo de datos ni deck hasta que se decida. (brief v0.3 §11)",
+     "Sin mega investigación de datos: usar data solo donde realmente ayuda a complementar las propuestas; el Overview se queda en conclusiones generales, sin ir profundo.",
+     "Métricas: no meter todas (MRR, ARR, ARPU, CAC, LTV, churn, UCM); solo las que hagan sentido para las decisiones del CRO y los funnels o motions propuestos.",
+     "La captura de cosechas de menor ticket o menor calidad no se asume: es una pregunta a probar con lo que la data permita."
+    ],
+    "hugo_wording": "“no quiero hacer una mega investigación de datos. Usar datos donde realmente ayudan” · “No se trata necesariamente de meter todas” · “No quiero asumirlo; es una pregunta que valdría la pena probar”",
+    "basis": "hugo",
+    "why": "Mantengo las cuatro importadas; a la 3 solo le agrego ‘Growth / CRO’ para que cuadre con los nombres nuevos. Sumo tres tuyas. Ojo con la 4: parece chocar con los entregables nuevos (modelo de datos, solución analítica). La tomo como regla de fase (todavía no se construye nada, hasta que decidas), no como algo que queda fuera del caso. Si la quieres distinta, edítala."
+   },
+   {
+    "section": "success_criteria",
+    "value": [
+     "Preguntas separadas sin contar lo mismo dos veces; hipótesis con una explicación alternativa; evidencia que ayude a distinguirlas; tareas que sepamos cuándo cerrar. (brief v0.3 §01)",
+     "Cada hipótesis de Growth dice qué dato necesita, qué métrica mira, qué señal la apoyaría y qué señal la debilitaría.",
+     "Cada métrica propuesta se justifica por una decisión y queda marcada como recurrente o diagnóstica.",
+     "La solución del CRO dice qué decisiones le permite tomar y cómo se usa de forma recurrente.",
+     "El modelo del CFO clasifica sin ambigüedad los tres casos: 100 → 80 (¿contracción o descuento?), suscripción 130 con 30 de descuento pagando 100, y fin del descuento de 100 a 130 pagado (¿expansión o no?)."
+    ],
+    "hugo_wording": "“para cada una decir qué dato necesito, qué métrica miraría, qué señal la apoyaría y qué señal la debilitaría”",
+    "basis": "hugo",
+    "why": "Mantengo el criterio importado. Agrego los que salen de tu mensaje: el formato de cada hipótesis, métricas amarradas a una decisión y marcadas como recurrentes o diagnósticas, y tus tres casos como prueba de que el modelo del CFO funciona."
+   },
+   {
+    "section": "timeline",
+    "value": [
+     "Sin fechas: esfuerzo relativo. Reparto aproximado: una parte de análisis para entender qué se observa hoy → bastante definición de frameworks, propuestas, diseño de medición y diseño de modelo de datos → storytelling."
+    ],
+    "hugo_wording": "“una parte de análisis para entender qué se observa hoy, bastante definición de frameworks, propuestas, diseño de medición, diseño de modelo de datos y después storytelling”",
+    "basis": "hugo",
+    "why": "Estaba vacío. No hay fechas (restricción 1), pero tu reparto del esfuerzo es lo más parecido a un plan, así que lo dejo aquí."
+   },
+   {
+    "section": "stakeholders",
+    "value": [
+     "SDRs — trabajan principalmente las primeras etapas del funnel",
+     "Account Executives — normalmente entran después de los SDRs",
+     "KAM — acompañamiento que algunos clientes (self-service / digital) no requieren",
+     "Áreas que tocan los descuentos temporales: revenue, pricing, billing, data, reporting y comercial"
+    ],
+    "hugo_wording": "“No es solamente Analytics; puede afectar revenue, pricing, billing, data, reporting y comercial”",
+    "basis": "hugo",
+    "why": "Estaba vacío. Son los roles y áreas que mencionaste; CEO, CRO y CFO ya están en audiencia."
+   },
+   {
+    "section": "gaps",
+    "value": [
+     "El texto literal del enunciado de Alegra no está en el repositorio: este brief se reconstruyó desde las notas del proyecto (27-sep), el brief v0.3 y la descripción de Hugo (28-sep). Pendiente adjuntar el enunciado original.",
+     "Qué entiende el CRO por adquirir un cliente: cerrar una venta, primer pago o suscripción activa (sin fijar).",
+     "Qué representa exactamente el monto: se describe como “monto pagado” (cliente + mes + monto pagado), pero falta confirmar si es cobro, facturación o valor de la suscripción del mes, y a qué periodo pertenece.",
+     "Periodo de referencia de las cifras del Overview (clientes 4.5x, ingreso / MRR pagado 2.8x, MRR por cliente activo −38%).",
+     "Qué canales o motions de adquisición existen realmente y si algún dato permite saber por cuál entró cada cliente: los datos disponibles no traen canal.",
+     "Datos de funnel y de capacidad comercial (etapa por lead, tiempo en etapa, capacidad de SDRs y AEs, tiempos de atención, backlog) no están en los datos disponibles; sin ellos, capacidad comercial y conversión post-SQL no se pueden probar directamente. El gasto en Team / Payroll Expenses / Travel sería, a lo mucho, un proxy en dinero.",
+     "Qué métricas usa hoy Finora y qué decisiones quiere tomar el CRO con el funnel.",
+     "Hasta dónde es válido relacionar la inversión en Marketing por categoría con clientes nuevos o ingreso cruzando fechas; la unidad del gasto sigue sin documentar.",
+     "Los datos disponibles no traen margen ni costo por cliente: pesa si se proponen LTV o UCM.",
+     "Qué tiene ya definido Finora sobre los descuentos temporales, o si el mecanismo se propone desde cero."
+    ],
+    "hugo_wording": "“no conocemos completamente qué métricas actuales tiene Finora” · “Todavía habría que aterrizar bien qué canales o motions tienen sentido” · “No sé todavía hasta dónde se pueda concluir algo con esto ni qué tan válido sea relacionarlo”",
+    "basis": "hugo",
+    "why": "Mantengo las tres importadas: a la del enunciado le sumo tu descripción como fuente y en la del monto uso tu ‘monto pagado’. Agrego lo que dijiste que no sabemos (motions, métricas actuales, si vale cruzar Marketing con ventas, descuentos). También lo que mencionas pero los datos disponibles no traen: canal, funnel, capacidad y margen; ese cruce contra la lista de datos lo hice yo. El periodo de las cifras del Overview lo agregué yo: no lo mencionaste."
+   }
+  ],
+  "message_is_source_text": false,
+  "question": "En tu lista de motions se mezclan dos ejes: cuánto acompañamiento comercial necesita el cliente (Self Service, Assisted, Executive) y por dónde llega (WoM, campañas, partners, prospección). Si los ponemos al mismo nivel, un referido que compra solo cae en dos funnels y contamos lo mismo dos veces. ¿Armamos los funnels por motion y dejamos el canal como etiqueta de cada cliente, o prefieres armarlos por canal?",
+  "language": {
+   "register": "conversacional, directo; español con términos de negocio en inglés",
+   "technical_level": "alto en negocio y analytics (métricas SaaS, funnel, modelo de datos); adaptativo",
+   "formality": "informal, tuteo",
+   "preserved_terms": [
+    "leads",
+    "funnel",
+    "MRR",
+    "MRR pagado",
+    "churn",
+    "self-serve",
+    "Self Service",
+    "SQL directo",
+    "post-SQL",
+    "New",
+    "primer pagador observado",
+    "monto observado",
+    "MECE",
+    "impacto × capacidad",
+    "CRO",
+    "CFO",
+    "Overview",
+    "Growth",
+    "Revenue",
+    "ToFu",
+    "BoFu",
+    "SDRs",
+    "Account Executive",
+    "KAM",
+    "motions",
+    "Assisted",
+    "Executive",
+    "WoM",
+    "AAARRR",
+    "Conversion Rate",
+    "ARR",
+    "ARPU",
+    "CAC",
+    "LTV",
+    "UCM",
+    "ticket de entrada",
+    "cohortes",
+    "cosechas",
+    "mix",
+    "bubble chart",
+    "amount",
+    "monto pagado",
+    "billing",
+    "pricing",
+    "reporting"
+   ],
+   "introduced_terms": [
+    {
+     "term": "regla de fase",
+     "plain": "todavía no se construye, pero sí es parte del caso"
+    },
+    {
+     "term": "proxy",
+     "plain": "dato indirecto que usamos en lugar del que no tenemos"
+    }
+   ]
+  }
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 536247,
+  "input_tokens": 2,
+  "output_tokens": 63205,
+  "cache_read": 959,
+  "cache_write": 10393,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.3521198,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)"
+}

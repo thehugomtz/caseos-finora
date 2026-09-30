@@ -1,0 +1,240 @@
+id: finora
+name: Finora
+title: 'Business Analytics: del dato a la decisión'
+client: Alegra · reto técnico
+objective: Entender qué explicaciones podríamos defender ante CRO y CFO, qué sigue siendo una posibilidad y qué
+  información permitiría elegir entre ellas.
+audience:
+- CEO
+- CRO
+- CFO
+created_at: '2026-09-28T22:22:23-06:00'
+created_by: import
+language:
+  primary: es
+  tone: direct, conversational
+  technical_level: adaptive
+  preserve_user_vocabulary: true
+  avoid_unnecessary_jargon: true
+  structured_language: es
+  observed:
+    register: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas
+      en inglés.
+    technical_level: 'Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS.'
+    formality: Tú, informal, sin rodeos.
+    preserved_terms:
+    - Análisis Ad hoc
+    - Mecanismo Propuesto
+    - Implicaciones Multidisciplinarias
+    - research
+    - data
+    - funnel
+    - self-serve
+    - estancamientos
+    - churn
+    - reactivación
+    - negocio subyacente
+    - revenue que dejamos de capturar
+    - MRR
+    - pricing
+    - MECE
+    - Hybrid
+    - Reactivate
+    - New
+    - Working
+    - Engaged
+    - SQL
+    - Demo
+    - Proposal
+    - Won
+    - SDR
+    - Account Executive
+    - casuística
+    - canales
+    - estancados
+    - bowtie
+    - puertas
+    - nudo
+    - ToFu
+    - BoFu
+    - leads
+    - Self Service
+    - artefactos de medición
+    - causas potenciales
+    - rebotar
+    - Decision Making
+    notes:
+    - Perfil inicial derivado del brief v0.3 (sección «Lo tuyo») y de las notas del proyecto.
+    introduced_terms:
+    - term: regla de fase
+      plain: todavía no se construye, pero sí es parte del caso
+      at: '2026-09-29T00:01:59-06:00'
+    - term: proxy
+      plain: dato indirecto que usamos en lugar del que no tenemos
+      at: '2026-09-29T00:01:59-06:00'
+    - term: storyline provisional
+      plain: el orden de la historia con el que trabajamos mientras tanto; no fija hallazgos
+      at: '2026-09-29T00:09:41-06:00'
+    - term: M0
+      plain: el primer mes pagado de cada cliente nuevo, como lo trae mart.new_customers
+      at: '2026-09-29T00:09:41-06:00'
+    - term: run-rate temprano
+      plain: el ritmo de pago de los primeros meses de un cliente nuevo, como lo calcula mart.new_customers
+      at: '2026-09-29T00:09:41-06:00'
+    - term: ARPU observado
+      plain: monto pagado promedio por cliente activo, calculado con los pagos; no es precio de lista ni MRR contratado
+      at: '2026-09-29T00:26:18-06:00'
+    - term: primeros pagadores observados
+      plain: clientes cuyo primer pago aparece en los datos; no son leads ni necesariamente clientes recién ganados
+      at: '2026-09-29T00:26:18-06:00'
+    - term: puente en capas
+      plain: el cambio del MRR de un mes separado en lo que hizo el cliente, los cambios de tarifa y los descuentos,
+        y que suma exactamente a lo cobrado
+      at: '2026-09-29T10:04:07-06:00'
+    - term: MRR antes de descuento vs MRR cobrado
+      plain: lo que vale la suscripción contratada vs lo que efectivamente se cobra ese mes
+      at: '2026-09-29T10:04:07-06:00'
+    - term: ruta
+      plain: 'cómo llegó al nudo según quién lo movió: Self Service (nadie de ventas), Executive (siempre una persona)
+        o Hybrid (a ratos solo, a ratos una persona)'
+      at: '2026-09-29T14:14:10-06:00'
+    - term: tramo
+      plain: 'el paso de una etapa a la siguiente: es «con persona» si lo movió un contacto registrado de SDR/AE,
+        y «sin persona» si el cliente avanzó por su cuenta en el producto'
+      at: '2026-09-29T14:14:10-06:00'
+    - term: MoFu
+      plain: 'la parte del medio del funnel: cómo se trabaja el lead entre que entra (New) y llega a SQL'
+      at: '2026-09-29T14:27:26-06:00'
+    - term: win rate
+      plain: de las propuestas que se hacen, cuántas se ganan
+      at: '2026-09-29T14:27:26-06:00'
+workspace:
+  type: finora-eda
+  path: /Users/hugomartinez/GitHub/Claude Prueba/finora-eda
+  label: Finora · Business Exploration Workspace
+phases:
+  briefing:
+    status: ready
+    ready_count: 1
+    history:
+    - at: '2026-09-28T22:22:23-06:00'
+      from: not_started
+      to: in_progress
+      by: import
+      note: caso creado
+    - at: '2026-09-28T22:22:27-06:00'
+      from: in_progress
+      to: review
+      by: import
+      note: brief importado; pendiente de Mark Ready
+    - at: '2026-09-29T00:13:54-06:00'
+      from: review
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/briefing/v1-20260929-001353
+    ready_at: '2026-09-29T00:13:54-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/briefing/v1-20260929-001353
+    approved_artifact: brief/approved/brief.v1.md
+    decision: D-013
+  framing:
+    status: ready
+    ready_count: 2
+    history:
+    - at: '2026-09-28T22:22:27-06:00'
+      from: not_started
+      to: review
+      by: import
+      note: framing v0.3 importado; pendiente de Mark Ready
+    - at: '2026-09-29T09:49:56-06:00'
+      from: review
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/framing/v1-20260929-094956
+    - at: '2026-09-29T10:04:07-06:00'
+      from: ready
+      to: needs_review
+      by: framer
+      note: el framing cambió después de aprobarse
+    - at: '2026-09-29T20:32:52-06:00'
+      from: needs_review
+      to: ready
+      by: hugo
+      note: ''
+      version: 2
+      snapshot: snapshots/framing/v2-20260929-203252
+    ready_at: '2026-09-29T20:32:52-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/framing/v2-20260929-203252
+    approved_artifact: framing/approved/current.v2.md
+    decision: D-019
+  research:
+    status: ready
+    ready_count: 1
+    history:
+    - at: '2026-09-28T22:22:27-06:00'
+      from: not_started
+      to: in_progress
+      by: import
+      note: W0–W5 respondidas en el workspace antes de CaseOS; W6/W7 bloqueadas
+    - at: '2026-09-29T20:33:10-06:00'
+      from: in_progress
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/research/v1-20260929-203309
+    ready_at: '2026-09-29T20:33:10-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/research/v1-20260929-203309
+    approved_artifact: research/approved/research.v1.yaml
+    decision: D-020
+  synthesis:
+    status: ready
+    ready_count: 1
+    history:
+    - at: '2026-09-29T11:11:30-06:00'
+      from: not_started
+      to: in_progress
+      by: cos
+      note: trabajo iniciado
+    - at: '2026-09-29T20:45:34-06:00'
+      from: in_progress
+      to: ready
+      by: hugo
+      note: ''
+      version: 1
+      snapshot: snapshots/synthesis/v1-20260929-204534
+    ready_at: '2026-09-29T20:45:34-06:00'
+    ready_by: hugo
+    note: ''
+    snapshot: snapshots/synthesis/v1-20260929-204534
+    approved_artifact: cos/approved/synthesis.v1.yaml
+    decision: D-024
+  story:
+    status: in_progress
+    ready_count: 0
+    history:
+    - at: '2026-09-29T11:54:07-06:00'
+      from: not_started
+      to: in_progress
+      by: cos
+      note: trabajo iniciado
+  slides:
+    status: not_started
+    ready_count: 0
+    history: []
+updated_at: '2026-09-29T20:45:34-06:00'
+data_model:
+  id: finora
+  label: Finora · modelo analítico
+  source: finora-eda · Business Exploration Workspace
+  bound_at: '2026-09-28T23:55:00-06:00'
+  bound_by: hugo

@@ -1,0 +1,53 @@
+id: X-018
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-010
+target: R-003
+title: R-010 requiere más investigación R-003
+finding_text: 'Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002)
+  y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad
+  (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede v…'
+why: 'Hay una posible tensión sobre el ticket de entrada:
+
+  - R-010 dice que el monto por alta no cayó de 2023 a 2024 (DM-04, DM-05).
+
+  - R-003 dice que la mediana del primer pago bajó entre periodos comparables.
+
+  - R-009 asigna a la composición de entrada el 108% de la caída del monto observado por cliente activo.
+
+
+  Puede ser compatible: otros periodos, o promedio vs mediana (el ticket pudo bajar antes y quedarse quieto en 2024).
+  Con lo que veo no lo puedo confirmar. Si ambas frases llegan a la story sin su ventana, el bloque CRO y el de
+  Overview/CFO se contradicen frente al CEO.'
+options:
+- key: A
+  label: Chequeo chico antes de aceptar
+  consequence: Alinear periodo, ventana y estadístico de R-010 (DM-04/05) con R-003 y T-004 (ticket por año). Si
+    calzan, cada frase sale con su ventana; si no, se registra la contradicción.
+- key: B
+  label: Aceptar ambas con la ventana explícita
+  consequence: No hay trabajo extra. Pero si T-004 muestra el ticket de 2024 por debajo del de 2023, la contradicción
+    aparece tarde, con findings ya aceptados.
+- key: C
+  label: Sacar la frase de R-010
+  consequence: El argumento CRO de R-010 no la necesita, así que se evita el choque. Se pierde un dato que sirve
+    en Overview.
+recommended: A
+recommended_why: 'Es barato (T-004 ya existe) y evita el peor escenario para la story: dos bloques del mismo deck
+  diciendo cosas opuestas sobre el ticket de entrada.'
+detected_by: cos
+links:
+- R-010
+- R-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104715-cos-fbed
+created_at: '2026-09-29T11:27:18-06:00'
+updated_at: '2026-09-29T11:27:18-06:00'
+version: 1

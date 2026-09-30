@@ -1,0 +1,33 @@
+table_id: FIN-F-114
+caseos_id: T-020
+title: Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - industries_ticket_fell_22_24
+  - Industrias donde bajó el ticket de entrada promedio, 2022 a 2024 (de 6)
+  - '6'
+- - industries_median_fell_22_24
+  - Industrias donde bajó la mediana del ticket de entrada, 2022 a 2024 (de 6)
+  - '6'
+units: {}
+definitions: {}
+message: Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-05
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+preferred_visual: table
+analysis_reference: INV-20260929-103202-2167 · C-012
+period: {}
+grain: según evidencia

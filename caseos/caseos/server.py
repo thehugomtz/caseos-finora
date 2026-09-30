@@ -707,9 +707,13 @@ def slides_handoff(cid: str, body: HandoffBody):
     return out
 
 
+class RunBody(BaseModel):
+    via: str = ""
+
+
 @app.post("/api/cases/{cid}/slides/{deck_id}/run")
-def slides_run(cid: str, deck_id: str):
-    return storyteller.submit_run(S(cid), deck_id)
+def slides_run(cid: str, deck_id: str, body: RunBody | None = None):
+    return storyteller.submit_run(S(cid), deck_id, via=(body.via if body else ""))
 
 
 @app.post("/api/cases/{cid}/slides/{deck_id}/import")

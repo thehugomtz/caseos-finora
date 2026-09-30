@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S03 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S03"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .val { font-size: 30px; font-weight: 600; color: var(--ink); }
+  .val.hot { color: var(--accent-text); }
+  .big { font-family: var(--font-display); font-size: 96px; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S03" data-composition="diverging_small_multiples + within_industry_bar" data-family="evidence" data-word-budget="100" data-page="4">
+  <header class="header">
+    <div class="kicker">Growth · lo que sí vemos</div>
+    <h1 class="headline">Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; primeros pagadores observados (no es Won ni suscripción activa); cohortes de ventana limpia · F-192, F-110, F-160, F-113, F-164, F-114</span><span class="page"></span></footer>
+  <aside class="notes">Los primeros pagadores observados pasan de 27,2 por mes en 2022 (mar–dic) a 54,7 desde ene-23: un escalón sin tendencia distinguible después (pendiente +0,47 por mes, intervalo −0,40 a +1,33). Entre 2022 y 2024 suben +104% por mes, mientras el valor inicial que incorporan sube +6% (run-rate temprano) o +17% (monto habitual). Con ticket estabilizado, la mediana del segundo pago baja de COP 52,5 mil en 2022 a COP 36,8 mil en 2023 y COP 38,9 mil en 2024. El efecto dentro de cada industria explica 91% del cambio 2022→2023 y 96% del cambio 2022→2024. Límites: F-160 a F-163 tienen confianza media; primer pago observado no es adquisición (X-052); el escalón de 2023 puede ser en parte registro (H-024) o un cambio operativo (H-025, H-068); el ticket estabilizado sigue siendo monto pagado; la industria es la única segmentación disponible.</aside>
+</main>
+<script>
+P.draw('S03', (s, P) => {
+  const yrs = ['2022', '2023', '2024'];
+  // Panel A · cols 1–4: primeros pagadores por mes (F-192).
+  const A = s.chart({ x: 150, y: 420, w: 500, h: 360 });
+  const ax = A.band(yrs, { padding: 0.42 }), ay = A.linear([0, 60]);
+  s.label(150, 318, 'Primeros pagadores por mes', { cls: 'label' });
+  s.label(150, 348, '2022: mar–dic · 2024: ene–oct', { cls: 'label-sm' });
+  A.bars([['2022', 27], ['2023', 54], ['2024', 55]], { key: (d) => d[0], value: (d) => d[1], x: ax, y: ay, tone: 'ink-3', label: (d) => d[1], labelCls: 'val num' });
+  A.axisX(ax, { cls: 'label-sm' });
+  s.label(150, 850, 'Escalón a inicios de 2023 (26 en dic-22 → 60 en ene-23), sin tendencia después', { cls: 'annotation', w: 500 });
+
+  // Panel B · cols 5–8: ticket estabilizado (F-160, mediana del segundo pago).
+  const B = s.chart({ x: 790, y: 420, w: 500, h: 360 });
+  const bx = B.band(yrs, { padding: 0.42 }), by = B.linear([0, 60]);
+  s.label(790, 318, 'Ticket estabilizado', { cls: 'label' });
+  s.label(790, 348, 'Mediana del segundo pago, COP mil', { cls: 'label-sm' });
+  const tk = [['2022', 52.5, '52,5'], ['2023', 36.75, '36,8'], ['2024', 38.85, '38,9']];
+  B.bars(tk, { key: (d) => d[0], value: (d) => d[1], x: bx, y: by, tone: (d) => (d[0] === '2022' ? 'ink-4' : 'accent'), focal: (d) => d[0] === '2023' });
+  tk.forEach((d) => s.label(bx.center(d[0]), by(d[1]) - 10, d[2], { anchor: 'bc', cls: `val num${d[0] === '2022' ? '' : ' hot'}` }));
+  B.axisX(bx, { cls: 'label-sm' });
+  s.label(790, 850, 'El valor inicial incorporado por mes sube +6% a +17%, contra +104% de primeros pagadores (2022→2024)', { cls: 'annotation', w: 500 });
+
+  // Separators.
+  [720, 1360].forEach((xx) => s.line(xx, 318, xx, 930, { stroke: 'rule', w: 1.5 }));
+
+  // Panel C · cols 10–12: en las 6 industrias (F-114, F-164).
+  const X = P.grid.col(10);
+  s.label(X, 318, '6 de 6', { cls: 'big' });
+  s.label(X, 432, 'industrias bajan su ticket de entrada, 2022→2024', { cls: 'label', w: 400 });
+  s.label(X, 560, 'Cambio del ticket de entrada 2022→2024', { cls: 'label-sm', w: 400 });
+  s.rect(X, 598, 400 * 0.96, 30, { fill: 'ink', role: 'bar' });
+  s.rect(X + 400 * 0.96 + 3, 598, 400 * 0.04 - 3, 30, { fill: 'ink-4', role: 'bar' });
+  s.label(X, 642, '<b>96%</b> dentro de cada industria', { cls: 'label-sm' });
+  s.label(X + 400, 642, '<b>4%</b> mezcla', { anchor: 'tr', cls: 'label-sm' });
+});
+</script>
+</body>
+</html>

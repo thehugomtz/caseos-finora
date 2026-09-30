@@ -1,0 +1,100 @@
+id: T-100
+type: table
+table_key: FIN-F-203
+title: En 2023, 175 de 650 altas coinciden en monto exacto e industria con el último pago de un churn reciente,
+  fren…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- anio
+- altas
+- altas_match_reciente
+- altas_match_placebo
+rows:
+- - 2022
+  - 272
+  - 76
+  - 68
+- - 2023
+  - 650
+  - 175
+  - 196
+- - 2024
+  - 554
+  - 120
+  - 6
+units:
+  anio: int
+  altas: int
+  altas_match_reciente: int
+  altas_match_placebo: int
+definitions: {}
+message: En 2023, 175 de 650 altas coinciden en monto exacto e industria con el último pago de un churn reciente,
+  frente a 196 altas bajo un emparejamiento placebo con churns muy posteriores; en 2022 (mar–dic) las cifras son
+  76 de 272 contra 68.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-009
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-009
+
+  WITH ch AS (SELECT customer_id, industry, month_index AS mi, previous_month_mrr AS amt FROM mart.customer_month
+  WHERE churned_customer = 1 AND previous_month_mrr > 0), al AS (SELECT customer_id, industry, month_index AS mi,
+  paid_mrr_cop AS amt, year AS anio FROM mart.customer_month WHERE new_customer = 1 AND month_index >= 2 AND paid_mrr_cop
+  > 0) SELECT anio, COUNT(*) AS altas, COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM ch WHERE ch.industry = al.industry
+  AND ch.customer_id <> al.customer_id AND ch.amt = al.amt AND ch.mi >= al.mi - 3 AND ch.mi <= al.mi)) AS altas_match_reciente,
+  COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM ch WHERE ch.industry = al.industry AND ch.customer_id <> al.customer_id
+  AND ch.amt = al.amt AND ch.mi >= al.mi + 9 AND ch.mi <= al.mi + 12)) AS altas_match_placebo FROM al GROUP BY anio
+  ORDER BY anio'
+transformation: E-009 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-2198 · C-014
+limitations:
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2023'
+  - '2022'
+  formato: int
+  series:
+  - nombre: altas match reciente
+    valores:
+    - 175.0
+    - 76.0
+  - nombre: altas
+    valores:
+    - 650.0
+    - 272.0
+  - nombre: altas match placebo
+    valores:
+    - 196.0
+    - 68.0
+created_at: '2026-09-29T14:46:22-06:00'
+status: valid
+validation_errors: []
+finding: F-203
+links:
+- F-203
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

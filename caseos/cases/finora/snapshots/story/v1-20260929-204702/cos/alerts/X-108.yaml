@@ -1,0 +1,43 @@
+id: X-108
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-025
+target: H-037
+title: R-025 debilita H-037
+finding_text: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las r…'
+why: Contar o no las reactivaciones cambia el tamaño, pero no el signo. En jul–oct la caída pasa de −19% a −16%
+  (260 vs 311), y el peso de las reactivaciones sube de 19,3% a 21,9%. En ene–jun el crecimiento pasa de +29% a
+  +38%. Como explicación de la caída, H-037 aporta como mucho unos 3 puntos, y en el semestre anterior empuja hacia
+  el otro lado. La pregunta de definición (cómo cuenta el CRO «clientes nuevos») sigue en pie, pero ya no cambia
+  la lectura.
+options:
+- key: A
+  label: Dejar de tratarla como explicación y volverla una regla de método
+  consequence: Se reportan primeros pagadores con y sin reactivaciones, y se cierra un artefacto más del paso 1
+    de C-011.
+- key: B
+  label: Mantenerla abierta hasta saber cómo cuenta el CRO «clientes nuevos»
+  consequence: Sigue abierto un artefacto que da el mismo signo con cualquier definición.
+- key: C
+  label: Fusionarla con H-058
+  consequence: Queda una hipótesis menos, pero se mezcla una definición (H-037) con un mecanismo (H-058).
+recommended: A
+recommended_why: Con cualquier definición la caída se sostiene. Lo único útil que queda es mostrar las dos cifras.
+detected_by: cos
+links:
+- R-025
+- H-037
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-be42
+created_at: '2026-09-29T16:36:54-06:00'
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 1

@@ -160,6 +160,9 @@ class AgentSDKLLM:
             system_prompt=spec.system, model=model, effort=config.EFFORT.get(spec.role, config.DEFAULT_EFFORT),
             max_turns=spec.max_turns, cwd=str(config.RUNTIME_DIR), verbatim_prompts=True,
             max_budget_usd=spec.budget_usd or config.BUDGET_USD.get(spec.role),
+            # the Visual Storyteller reads rendered slides back (screenshots, whole HTML decks): one message can pass the SDK's
+            # 1 MB default and the run dies with CLIJSONDecodeError (29-sep, 21:51, 28 min into the deck)
+            max_buffer_size=64 * 1024 * 1024,
             output_format={"type": "json_schema", "schema": spec.schema} if spec.schema else None)
         trace: list[dict] = []
         seen: list[str] = []

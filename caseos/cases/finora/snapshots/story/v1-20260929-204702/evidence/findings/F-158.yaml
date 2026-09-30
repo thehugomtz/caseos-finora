@@ -1,0 +1,59 @@
+id: F-158
+type: finding
+headline: Las tasas se miden por cohorte con una ventana fija por motion, y los resultados comunes por cohorte de
+  primer pago a M3/M6/M12. Así se separa un retraso (HC3a) de una brecha persistente (HC3b), y un cambio de mezcla
+  no parece un cambio de desempeño.
+evidence_text: Medir la conversión por cohorte con ventana fija es lo que permite comparar periodos, y las cohortes
+  jóvenes se marcan como incompletas (SRC-RC). El win rate definido por periodo (ganados del periodo ÷ oportunidades
+  del periodo) mezcla cohortes (SRC-SF). Un cambio de mezcla entre grupos puede mover el agregado sin que cambie
+  ningún grupo (SRC-OPT).
+confidence: high
+limitations:
+- Las ventanas W de cada motion están por calibrar con datos de CRM que no tenemos. Una ventana fija corta las conversiones
+  tardías, así que para H-004 hay que mirar más de una ventana.
+kind: measurement
+claims:
+- claim: Limitar a cada cohorte a una ventana fija de conversión es lo que permite comparar periodos. Las cohortes
+    jóvenes se marcan como incompletas mientras su ventana no cierra.
+  source_id: SRC-RC
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: Es la regla de método para las tasas del lado izquierdo y las retenciones del lado derecho.
+- claim: Una tendencia que se observa dentro de cada grupo puede desaparecer o invertirse al agregar los grupos
+    (paradoja de Simpson). La recomendación es analizar por subgrupos relevantes.
+  source_id: SRC-OPT
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: supports
+  notes: El concepto estadístico es estándar, pero la fuente es un glosario de proveedor.
+- claim: Salesforce define sales velocity = (oportunidades × valor promedio × win rate) ÷ duración del ciclo, con
+    win rate = ganados ÷ oportunidades del periodo.
+  source_id: SRC-SF
+  source_type: company
+  confidence: high
+  freshness: Sin fecha visible; consultada el 2026-09-29.
+  supports_or_contests: context
+  notes: Mezcla volumen, valor, tasa y tiempo en un solo número y usa tasa de periodo, no de cohorte. Sirve como
+    vista derivada, no como KPI para comparar motions.
+unverified: false
+source_ref:
+  research: R-022
+links:
+- R-022
+- H-037
+- H-006
+- H-005
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:30:20-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

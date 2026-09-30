@@ -1,0 +1,51 @@
+id: X-050
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-016
+target: H-003
+title: R-016 requiere más investigación H-003
+finding_text: 'No midan un funnel único: midan un bowtie por puertas. Self Service, Assisted y Executive tienen
+  cada una sus propios hitos a la izquierda, y todas comparten el mismo nudo (primer pago) y el mismo lado derecho
+  (retención, expansión, NRR). Reactivación va aparte como otro tipo de entrada, y AAARRR s…'
+why: 'R-016 no la sostiene ni la debilita: define su test y confirma que hoy no se puede correr. F-141 dice que
+  la tasa de período castiga a las entradas recientes, y cuando el volumen crece ese es justo el mecanismo de H-003.
+  El test es la conversión por cohorte de entrada con ventana W, solo en cohortes que ya la cumplieron. Para correrlo
+  faltan las entradas con fecha (F-142) y el tiempo a pago por puerta, que es lo que fija W. Un límite útil: H-003
+  solo explica la brecha de las entradas más recientes que el tiempo típico a pago. Si la gente empezó a llegar
+  hace más tiempo que eso y los nuevos siguen sin acompañar, H-003 no alcanza sola. No sabemos cómo calcula hoy
+  el CRO su comparación.'
+options:
+- key: A
+  label: Dejarla abierta como «no evaluable con los datos del caso» y llevar su test a la lista de Q-016.
+  consequence: Es correcto y no sobreafirma, pero la rama «compra según tiempo» de D-001 queda sin señal en la respuesta.
+- key: B
+  label: 'Hacer A y, además, ponerla primera en el orden de descarte ante el CRO. Pedir a Finora tres datos baratos:
+    cómo calcula hoy la comparación (por período o por cohorte), desde cuándo llega más gente y cuánto tarda cada
+    puerta en llegar al primer pago.'
+  consequence: Si ya mide por cohorte madura, o si la gente empezó a llegar hace más que el tiempo a pago, H-003
+    sale rápido y el foco pasa a H-001, H-002 y las causas. Si mide por período y los tiempos son largos, lo primero
+    que se le recomienda al CRO es cambiar la métrica, antes de buscar causas.
+- key: C
+  label: 'Evaluarla junto con H-004 con un solo diseño: curvas de pago acumulado por cohorte y puerta, a varias
+    ventanas.'
+  consequence: Una sola petición de datos cubre toda la rama de tiempo de D-001, pero es más difícil de explicar
+    al CRO.
+recommended: B
+recommended_why: 'Es el descarte más barato de la rama «compra según tiempo» de D-001 y sigue D-005 (importancia
+  × capacidad): tres preguntas a Finora dicen si H-003 importa antes de pedir un CRM completo.'
+detected_by: cos
+links:
+- R-016
+- H-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110242-cos-2ab0
+created_at: '2026-09-29T11:38:42-06:00'
+updated_at: '2026-09-29T11:38:42-06:00'
+version: 1

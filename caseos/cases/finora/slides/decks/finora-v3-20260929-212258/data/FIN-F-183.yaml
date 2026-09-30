@@ -1,0 +1,47 @@
+table_id: FIN-F-183
+caseos_id: T-085
+title: El churn observado bajó entre 2022 y 2024 mientras el churn que no vuelve a pagar en el trimestre siguiente
+  s…
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_obs_2022
+  - Churn observado mensual de logos, 2022 (mar–dic)
+  - 3,52%
+- - churn_obs_2023
+  - Churn observado mensual de logos, 2023
+  - 2,24%
+- - churn_obs_2024
+  - Churn observado mensual de logos, 2024 (ene–jul)
+  - 2,04%
+- - churn_dur3_2022
+  - Churn mensual que no vuelve a pagar en 3 meses, 2022
+  - 0,98%
+- - churn_dur3_2023
+  - Churn mensual que no vuelve a pagar en 3 meses, 2023
+  - 1,09%
+- - churn_dur3_2024
+  - Churn mensual que no vuelve a pagar en 3 meses, 2024 (ene–jul)
+  - 0,96%
+units: {}
+definitions: {}
+message: 'El churn observado bajó entre 2022 y 2024 mientras el churn que no vuelve a pagar en el trimestre siguiente
+  se mantuvo: pasó de 3,52% a 2,04% el observado y de 0,98% a 0,96% el que no vuelve.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-03
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: bar
+analysis_reference: INV-20260929-143800-c4dd · C-009
+period: {}
+grain: según evidencia

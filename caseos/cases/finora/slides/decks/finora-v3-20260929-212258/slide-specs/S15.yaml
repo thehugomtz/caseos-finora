@@ -1,0 +1,48 @@
+slide:
+  id: S15
+  file: slides/15.html
+  claim_id: C-012
+  role_in_story: recommendation
+  kicker: "Growth · hipótesis ToFu y BoFu · propuesta"
+  headline: "Calidad y capacidad se separan con mezcla contra tasa, dentro de cada puerta"
+  takeaway: "Cada hipótesis deja una firma distinta: calidad mueve la mezcla con la velocidad quieta; capacidad mueve carga y espera con la mezcla quieta."
+  question: "¿Cómo se sabe si falta capacidad comercial o si bajó la calidad de la máquina de leads?"
+  relationship: "two hypotheses leave DIFFERENT SIGNATURES across the same three indicators (base period → drop period)"
+  evidence_type: comparison
+  composition: signature_small_multiples (2 hipótesis × 3 indicadores, pendientes esquemáticas)
+  family: comparison
+  alternatives_considered:
+    - id: tabla de firmas con flechas
+      score: {fidelity: 2, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "flechas en celdas son una tabla; la pendiente dibujada se lee de un vistazo"
+    - id: decision_tree
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "S14 y S23 ya son árboles; aquí el punto es comparar dos patrones"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: 0}
+  focal_point: signatures
+  visual_hierarchy:
+    1: las pendientes que se mueven (lima) en cada hipótesis
+    2: las pendientes quietas (gris)
+    3: si pasan ambas: interacción
+    4: dato mínimo y límite de lo observado
+  objects:
+    - {id: signatures, kind: path, content: "2 columnas × 3 filas de pendientes base → caída"}
+    - {id: both, kind: text, content: "si pasan ambas, apunta a las dos a la vez"}
+    - {id: data_min, kind: text, content: "dato mínimo"}
+  encodings:
+    slope: "dirección del indicador entre el periodo base y el de la caída (esquema, sin datos)"
+    accent: "el indicador que discrimina"
+    gray: "indicador estable"
+  annotations:
+    - {at: data_min, text: "Dato mínimo: entradas con su banda de ajuste congelada y su primer contacto humano; roster semanal de SDR/AE con su ramp"}
+    - {at: bottom, text: "Con datos observados es asociación: probar la palanca requiere experimentos naturales o un piloto"}
+  layout_intent:
+    grid: "etiquetas de indicador cols 1–3; calidad cols 4–6; capacidad cols 7–9; notas cols 10–12"
+    reading_path: "columna a columna, comparar fila por fila"
+    whitespace: "celdas amplias"
+  text_budget: 100
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla con flechas", "cifras inventadas"]
+  data: {source: "propuesta (C-012); esquema ilustrativo sin cifras", values: []}
+  notes: "Hoy no se puede separar H-005 (calidad) de H-006 (capacidad): faltan entradas, reps y tiempos de contacto (F-120). No usamos Self Service como grupo de control (X-012). La capacidad también puede estar en el AE (X-153). Ambas a la vez = H-028. El gasto de Team no mide capacidad."
+  sources: [F-121, F-122, F-124, F-120, F-159, F-231, F-232]

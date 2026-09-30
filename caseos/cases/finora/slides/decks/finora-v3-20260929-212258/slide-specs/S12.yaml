@@ -1,0 +1,51 @@
+slide:
+  id: S12
+  file: slides/12.html
+  claim_id: C-010
+  role_in_story: limitation
+  kicker: "Growth · métricas"
+  headline: "Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC"
+  takeaway: "El único cociente calculable cambia según qué rubros se cuenten y le faltan unidad, canal e hito: queda en rojo como proxy."
+  question: "¿Podemos calcular el CAC hoy?"
+  relationship: "the proxy ratio DEPENDS on definitions; each missing piece BREAKS the identity with CAC"
+  evidence_type: number
+  composition: formula_anatomy (hoy vs CAC, término a término) + sensitivity_slope
+  family: economics
+  alternatives_considered:
+    - id: hero_metric −66%
+      score: {fidelity: 1, focal: 3, evidence: 1, variety: 2, risk: 0}
+      rejected_because: "celebraría una eficiencia que el dato no permite leer"
+    - id: barras por año
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "muestra el nivel, no lo frágil del cociente"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 3, risk: 0}
+  focal_point: not_cac_chip
+  visual_hierarchy:
+    1: «no es CAC» (lima) entre las dos fórmulas
+    2: fórmula de hoy contra la del CAC, con lo que falta en cada término
+    3: sensibilidad: con y sin Habilitación
+    4: 0,105 u → 0,036 u
+  objects:
+    - {id: today_formula, kind: text, content: "S&M total (u) ÷ primeros pagadores observados"}
+    - {id: cac_formula, kind: text, content: "gasto de S&M en COP, por canal ÷ nuevas cuentas (Won), por canal"}
+    - {id: not_cac_chip, kind: marker, content: "no es CAC"}
+    - {id: slope, kind: path, content: "con Habilitación 0,11 → 0,04 · sin 0,09 → 0,03"}
+  encodings:
+    solid: "lo que existe hoy"
+    dashed: "lo que haría falta (no existe)"
+    accent: "la conclusión «no es CAC»"
+  annotations:
+    - {at: slope, text: "El nivel depende de si Habilitación es comercial: pesa 12% en 2022, 7% en 2023 y 4% en 2024"}
+    - {at: today_formula, text: "0,105 u en 2022 → 0,036 u en 2024 (−66%): no se lee como eficiencia comercial"}
+  layout_intent:
+    grid: "fórmulas cols 1–7; pendiente cols 9–12"
+    reading_path: "fórmula de hoy → no es CAC → fórmula objetivo → sensibilidad"
+    whitespace: "debajo de las fórmulas"
+  text_budget: 85
+  must_show: [la relación de la intención visual]
+  avoid: ["CAC en COP", "tres cards", "tabla", "celebrar el −66%"]
+  data:
+    source: "data/FIN-F-081.yaml, FIN-F-069.yaml, FIN-F-070.yaml"
+    values: "con Habilitación 0,1054 / 0,0386 / 0,0357; sin 0,093 / 0,0358 / 0,0341; peso 11,7% / 7,2% / 4,3%"
+  notes: "El −66% puede venir de cómo se arma el archivo (X-005, H-070). No hay CAC por canal ni por ruta. En las métricas comunes queda como proxy, en rojo."
+  sources: [F-081, F-108, F-069, F-070, F-022, F-137]

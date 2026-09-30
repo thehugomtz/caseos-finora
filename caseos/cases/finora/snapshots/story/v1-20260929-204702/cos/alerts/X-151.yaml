@@ -1,0 +1,45 @@
+id: X-151
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-032
+target: H-007
+title: R-032 cambia el framing H-007
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: R-032 dice que H-007 no es una causa sino la regla que ubica la caída. Encaja con su redacción («el deterioro
+  aparece después de un punto del recorrido»). Pero H-007 es la «conversión post-SQL» que el caso trae como una
+  de sus cuatro causas y que D-003 nombra. Si sigue como causa, compite con H-054, el avance del AE y H-056 por
+  la misma brecha.
+options:
+- key: A
+  label: Convertir H-007 en la regla del árbol (método) y sacarla de las hipótesis. «Post-SQL» queda como nombre
+    de la rama 4.
+  consequence: Árbol más limpio, pero se pierde un enunciado que se puede probar y la matriz pierde esa fila.
+- key: B
+  label: 'Mantenerla como hipótesis, pero de lugar: «con entradas comparables, parte de la brecha es tasa (ramas
+    3–5), no entrada». Se descarta si, con entradas comparables, las tasas no cayeron.'
+  consequence: Queda la bisagra que más le sirve al CRO (¿es lo que entra o lo que el equipo hace con eso?). No
+    compite con H-054 ni con H-056, porque no dice por qué.
+- key: C
+  label: Dejarla como causa «conversión post-SQL».
+  consequence: Respeta la lista original, pero el árbol deja de ser MECE.
+recommended: B
+recommended_why: 'Conserva una pregunta que se puede probar y que parte el caso en dos (máquina de leads vs equipo).
+  Va en línea con R-032: ubica, no explica.'
+detected_by: cos
+links:
+- R-032
+- H-007
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

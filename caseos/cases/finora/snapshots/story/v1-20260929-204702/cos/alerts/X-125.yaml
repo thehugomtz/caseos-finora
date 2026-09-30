@@ -1,0 +1,67 @@
+id: X-125
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-024
+target: H-024
+title: R-024 debilita H-024
+finding_text: 'Los artefactos quedan acotados: el estancamiento de altas sigue siendo señal contrastable'
+why: 'Con pagos no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202).
+
+
+  La única prueba disponible no encuentra más coincidencias que las esperables por azar en 2023. De 650 altas, 175
+  coinciden en monto exacto e industria con el último pago de un churn reciente. La comparación de control da 196:
+  cruza con churns posteriores, así que mide lo que coincide por azar. En 2022 hay un exceso chico: 76 contra 68
+  (F-203).
+
+
+  Pesa poco por tres razones:
+
+  - Solo da una dirección y es sensible a montos extremos.
+
+  - Es anual, y H-024 habla de un solo mes, ene-23.
+
+  - La vía «cambio de sistema de cobro» puede no dejar un churn previo en el panel.
+
+
+  Ojo: «0 altas con un pago anterior» (F-197) solo comprueba la clasificación bajo el mismo ID; no dice nada de
+  H-024.
+
+
+  Contexto: ene-23 (60, T-016) queda por encima del promedio de ene–may-23, que lo incluye (45,2, T-013). Entonces
+  feb–may-23 promedian menos: ≈41,5, cuenta directa mía. Parece un pico de un mes. Eso es lo que dejaría un evento
+  de registro, pero también una campaña o un efecto de enero.'
+options:
+- key: A
+  label: Mantener H-024 abierta con una nota
+  consequence: C-003 sigue usando el escalón como dato observado, con F-202 escrito como límite. H-024 no se cierra
+    ni se prioriza.
+- key: B
+  label: Revisar el salto mes a mes con el mismo panel
+  consequence: 'Tres cortes: salidas observadas de dic-22 y ene-23 contra los meses vecinos (con un cambio de ID,
+    los IDs viejos dejan de pagar justo ahí); coincidencias contra la comparación de control solo para las altas
+    de ene-23; y ene-24 contra feb–may-24. Dice si el pico de ene-23 parece de registro o de calendario. No verifica
+    el ID (F-202), pero lo acota.'
+- key: C
+  label: Dar H-024 por no soportada
+  consequence: Simplifica Growth, pero toma como descarte una prueba anual que solo da una dirección. Ausencia de
+    evidencia ≠ evidencia de ausencia.
+recommended: B
+recommended_why: Es lo más barato que apunta al mes exacto de H-024, con data que ya existe. Mientras corre, A sirve
+  como redacción. Si Q-051 queda en 2023→2024, pierde peso para el CRO, pero sigue importando para el +104% de C-003
+  (T-019).
+detected_by: cos
+links:
+- R-024
+- H-024
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162147-cos-c496
+created_at: '2026-09-29T16:45:29-06:00'
+updated_at: '2026-09-29T16:45:29-06:00'
+version: 1

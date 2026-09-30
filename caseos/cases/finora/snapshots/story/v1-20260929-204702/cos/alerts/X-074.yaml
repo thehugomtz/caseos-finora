@@ -1,0 +1,44 @@
+id: X-074
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-021
+target: framing
+title: R-021 cambia el framing
+finding_text: 'Se puede, con una condición: el descuento tiene que existir en los datos como objeto propio (tipo,
+  monto, inicio, fin, motivo, Canal y aprobador), separado de la cantidad contratada y del precio de lista. Además,
+  el puente de MRR necesita líneas propias de «descuento nuevo/aumentado» y «descuento r…'
+why: R-021 trae dos límites que la lista «No afirmar todavía» no cubre. Primero, los efectos comerciales del descuento
+  (clientes de menor valor, churn al vencer) vienen de evidencia B2C y de un estudio de proveedor, con confianza
+  media-baja. Puestos al lado de la caída del ticket de entrada (R-020, T-042), es fácil que la historia termine
+  insinuando que a Finora ya le pasó. Segundo, no sabemos si el monto de raw.transactions es lo facturado o lo cobrado,
+  ni si un mes en cero genera fila. Eso toca el propio nombre «monto pagado observado» y la lectura del churn y
+  la reactivación observados.
+options:
+- key: A
+  label: Agregar dos líneas a «No afirmar todavía», en la misma edición que X-004
+  consequence: 'Líneas propuestas: «Que los descuentos atraen clientes de menor valor o causan churn al vencer en
+    Finora: la evidencia es externa (B2C y un proveedor)» y «Que el monto de raw.transactions sea lo cobrado: puede
+    ser lo facturado, y no sabemos si un mes en cero genera fila». El nombre «monto pagado observado» se mantiene,
+    con esa aclaración. X-004 ya propone tocar la misma lista, así que sale todo en una sola edición.'
+- key: B
+  label: Dejar los límites como caveats dentro de F-153 y F-154
+  consequence: Hay menos cambios al framing, pero el límite depende de que cada finding se use en la historia junto
+    con su caveat.
+recommended: A
+recommended_why: Cuesta una edición que ya está en cola por X-004 y evita el salto de benchmark externo a Finora,
+  que es el error más fácil de cometer con F-154.
+detected_by: cos
+links:
+- R-021
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-111551-cos-c920
+created_at: '2026-09-29T11:56:40-06:00'
+updated_at: '2026-09-29T11:56:40-06:00'
+version: 1

@@ -1,0 +1,65 @@
+id: F-235
+type: finding
+headline: 'El source no puede vivir solo en el descuento: hay que capturarlo en la adquisición de todos los clientes
+  y guardar aparte el canal asignado al código.'
+evidence_text: 'GA pide siempre utm_source, utm_medium y utm_campaign, distingue mayúsculas y marca (not set) cuando
+  faltan; utm_campaign admite producto, slogan o código promocional y utm_id identifica la campaña (W-11). Para
+  lo físico, la práctica es usar un código exclusivo por pieza, QR con UTM y vanity URLs para medios no escaneables,
+  y aceptar que una parte no se atribuye (W-12). A los partners se les atribuye por un parámetro en el link de referido
+  o por llaves de partner y de cliente en metadatos (W-14). Hoy el caso solo tiene gasto mensual por rubro: PaidMedia
+  y PublicidadNoWeb tienen gasto en los 34 meses, sin llave a clientes (DM-06).'
+confidence: medium
+limitations:
+- La guía de offline viene de un blog de proveedor (calidad C); no sabemos cuánto de lo físico será atribuible en
+  Finora. Que sin el source de todos los clientes no se pueda comparar promo contra no-promo es inferencia de diseño.
+kind: data_engineering
+claims:
+- claim: El gasto S&M trae PaidMedia y PublicidadNoWeb separados, ambos con gasto en los 34 meses, pero solo a nivel
+    mes, sin unidad documentada y sin llave a clientes, campañas o promociones.
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Leer PaidMedia como digital es inferencia por el nombre.
+- claim: En GA, utm_source, utm_medium y utm_campaign deben ir siempre; utm_id identifica la campaña o promoción,
+    utm_campaign admite producto, slogan o código promocional y utm_content diferencia creativos. Los valores distinguen
+    mayúsculas y los que faltan salen como (not set).
+  source_id: W-11
+  source_type: official
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Base de los campos de source asignado y observado.
+- claim: Para campañas físicas se recomienda QR con UTM, vanity URLs con redirección para medios no escaneables
+    y códigos exclusivos por pieza, combinados con modelos de mezcla para lo que no se puede atribuir.
+  source_id: W-12
+  source_type: marketing
+  confidence: medium
+  freshness: '2026-07-10'
+  supports_or_contests: supports
+  notes: Blog de proveedor (calidad C); es coherente con la guía de GA.
+- claim: PartnerStack atribuye clientes de Stripe a partners con un parámetro en el link de referido (gspk) y con
+    customer_key y partner_key en los metadatos.
+  source_id: W-14
+  source_type: industry
+  confidence: medium
+  freshness: documentación v1.0, consultada 2026-09-29
+  supports_or_contests: supports
+  notes: Base de partner_key en acquisition_touch.
+unverified: false
+source_ref:
+  research: R-034
+links:
+- R-034
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:01:14-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

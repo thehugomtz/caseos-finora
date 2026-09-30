@@ -1,0 +1,47 @@
+id: X-053
+type: alert
+kind: research_needed
+status: open
+severity: high
+effect: requires_research
+source: R-016
+target: T-004
+title: R-016 requiere más investigación T-004
+finding_text: 'No midan un funnel único: midan un bowtie por puertas. Self Service, Assisted y Executive tienen
+  cada una sus propios hitos a la izquierda, y todas comparten el mismo nudo (primer pago) y el mismo lado derecho
+  (retención, expansión, NRR). Reactivación va aparte como otro tipo de entrada, y AAARRR s…'
+why: F-143 dice que el primer pago (M0) no sirve como valor de entrada. R-003 trabaja explícitamente con el primer
+  pago. T-004 y T-018 lo llaman «ticket de entrada» (mediana de COP 63,0 mil en 2022, 36,8 mil en 2023 y 42,0 mil
+  en 2024), y T-019 habla de «valor inicial incorporado». Si esas tablas usan M0, la cifra vale como «primer pago
+  observado», no como el valor con el que entra el cliente. En el estado del caso no veo qué mes usan. R-006 (a
+  igual edad, el aporte sigue siendo menor) sugiere que la dirección podría sostenerse más allá de M0. Pero no está
+  verificado para estas cifras, que son candidatas para Overview y Revenue.
+options:
+- key: A
+  label: Verificar qué mes usan T-004, T-018 y T-019. Si es M0, recalcular con el primer mes completo y dejar M0
+    como «primer pago observado».
+  consequence: Es un chequeo barato. Si la caída se mantiene, la línea de Overview y Revenue queda más firme; si
+    no, evitamos llevar una cifra mal nombrada ante el CEO y el CFO.
+- key: B
+  label: Renombrarlas a «primer pago observado» sin recalcular y apoyar la lectura de valor en R-006 y R-009.
+  consequence: Es rápido y fiel al dato, pero se pierde una cifra de ticket que usa el bloque CRO.
+- key: C
+  label: Dejarlas como están hasta decidir sobre F-143.
+  consequence: No hay trabajo ahora, pero si aceptas F-143 las tres tablas pasan a revisión y el choque aparece
+    tarde.
+recommended: A
+recommended_why: Es la forma más barata de aclarar un posible choque entre dos resultados propuestos antes de que
+  alguna cifra llegue a la story. El choque queda registrado; no lo resuelvo yo.
+detected_by: cos
+links:
+- R-016
+- T-004
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110242-cos-2ab0
+created_at: '2026-09-29T11:38:42-06:00'
+updated_at: '2026-09-29T11:38:42-06:00'
+version: 1

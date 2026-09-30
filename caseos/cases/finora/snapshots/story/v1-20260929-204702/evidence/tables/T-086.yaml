@@ -1,0 +1,94 @@
+id: T-086
+type: table
+table_key: FIN-F-184
+title: La contracción observada no muestra la firma de momento de cobro
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- clase
+- eventos
+- mrr_cop
+- share_pct
+rows:
+- - A. Al mes siguiente regresa al nivel previo a la baja
+  - 225
+  - -3452877.0
+  - 4.0
+- - B. Al mes siguiente sube, sin llegar al nivel previo
+  - 56
+  - -6219184.0
+  - 7.1
+- - C. Al mes siguiente sigue igual o mas abajo
+  - 854
+  - -77641095.0
+  - 88.9
+units:
+  clase: texto
+  eventos: int
+  mrr_cop: num2
+  share_pct: num2
+definitions: {}
+message: 'La contracción observada no muestra la firma de momento de cobro: la parte que regresa al nivel previo
+  a la baja al mes siguiente explica 4,0% del MRR de contracción, mientras la parte que al mes siguiente sigue igual
+  o más abajo explica 88,9%.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-009
+  - E-007
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-009\nWITH b AS (\n  SELECT customer_id, month, month_index, paid_mrr_cop, previous_month_mrr, contracted_customer,
+  contraction_mrr_cop,\n    LEAD(paid_mrr_cop) OVER (PARTITION BY customer_id ORDER BY month_index) AS next_amt\n
+  \ FROM mart.customer_month\n), c AS (\n  SELECT contraction_mrr_cop AS mrr,\n    CASE\n      WHEN next_amt >=
+  0.95*previous_month_mrr THEN 'A. Al mes siguiente regresa al nivel previo a la baja'\n      WHEN next_amt > paid_mrr_cop
+  THEN 'B. Al mes siguiente sube, sin llegar al nivel previo'\n      ELSE 'C. Al mes siguiente sigue igual o mas
+  abajo' END AS clase\n  FROM b WHERE contracted_customer=1 AND month >= '2022-03' AND month <= '2024-09' AND previous_month_mrr
+  > 0\n)\nSELECT clase, COUNT(*) AS eventos, ROUND(SUM(mrr)) AS mrr_cop,\n  ROUND(100.0*SUM(mrr)/SUM(SUM(mrr)) OVER
+  (),1) AS share_pct\nFROM c GROUP BY clase ORDER BY clase\n\n-- E-007\nWITH c AS (\n  SELECT contraction_mrr_cop
+  AS mrr,\n         CASE\n           WHEN reverts_next_month = 1 THEN 'A. Vuelve exacto al nivel previo al mes siguiente'\n
+  \          ELSE 'B. La baja persiste al mes siguiente'\n         END AS clase\n  FROM mart.customer_month\n  WHERE
+  contracted_customer = 1\n    AND month >= '2022-03' AND month <= '2024-10'\n)\nSELECT clase,\n       COUNT(*)
+  AS eventos,\n       ROUND(SUM(mrr)) AS mrr_contraccion_cop,\n       ROUND(100.0 * SUM(mrr) / SUM(SUM(mrr)) OVER
+  (), 1) AS share_pct\nFROM c GROUP BY clase ORDER BY clase"
+transformation: E-009 · run_sql · SQL ad hoc de solo lectura; E-007 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-c4dd · C-003
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - A. Al mes siguiente regresa al nivel previo a la baja
+  - C. Al mes siguiente sigue igual o mas abajo
+  formato: num1
+  series:
+  - nombre: pct
+    valores:
+    - 4.0
+    - 88.9
+created_at: '2026-09-29T14:45:39-06:00'
+status: valid
+validation_errors: []
+finding: F-184
+links:
+- F-184
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

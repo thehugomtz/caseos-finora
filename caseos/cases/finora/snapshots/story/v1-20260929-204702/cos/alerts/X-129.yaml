@@ -1,0 +1,49 @@
+id: X-129
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-029
+target: Q-063
+title: R-029 cambia el framing Q-063
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: 'F-210 propone una respuesta para Q-063: solo cuenta como intervención la interacción de ida y vuelta con SDR/AE,
+  y el formulario de «hablar con ventas» es la entrada (puerta), no un tramo sin persona. La segunda mitad cambia
+  la pregunta, porque el formulario sale del eje ruta y pasa al eje puerta. En la práctica, un lead que entra por
+  formulario y que SDR/AE trabajan de punta a punta es Executive, no Hybrid A. Hybrid A queda para las cuentas que
+  avanzaron solas algún tramo antes de que interviniera una persona. Para operarlo, el CRM tiene que registrar el
+  resultado de las actividades (llamada conectada o solo intento, correo respondido), y R-029 no sabe si lo registra.
+  Es una definición para acordar con el CRO de Finora, igual que Q-064.'
+options:
+- key: A
+  label: Adoptar F-210, condicionada a lo que registre el CRM
+  consequence: Intervención = ida y vuelta con SDR/AE; formulario = puerta. Así Hybrid mide intervención real. Si
+    el CRM no registra el resultado de las actividades, queda como definición objetivo y se marca como pendiente
+    en la lámina.
+- key: B
+  label: Contar cualquier contacto registrado de SDR/AE
+  consequence: Se mide con cualquier registro de actividad, pero Hybrid se infla con intentos y secuencias sin respuesta,
+    y la ruta deja de decir si hubo conversación.
+- key: C
+  label: Dejar Q-063 abierta y llevar las dos opciones a Finora
+  consequence: Es honesto, pero la regla de rutas de C-005 queda incompleta en la historia.
+recommended: A
+recommended_why: 'Es la lectura más fiel a N-037: «intervino una persona» se entiende como conversación, no como
+  intento. El formulario como puerta evita además que todo lead inbound termine como Hybrid A, y la dependencia
+  del CRM queda a la vista.'
+detected_by: cos
+links:
+- R-029
+- Q-063
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

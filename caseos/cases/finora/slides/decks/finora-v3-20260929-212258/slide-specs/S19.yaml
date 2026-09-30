@@ -1,0 +1,52 @@
+slide:
+  id: S19
+  file: slides/19.html
+  claim_id: C-024
+  role_in_story: diagnosis
+  kicker: "Revenue · pricing introductorio observable"
+  headline: "Con cliente, mes y monto se ve qué cambió, no por qué"
+  takeaway: "Parte de cada línea del puente es calendario de cobro que se deshace al mes siguiente; la contracción casi no; el porqué no se ve."
+  question: "¿Qué se puede leer del monto pagado y qué no?"
+  relationship: "part of each bridge line UNDOES itself next month (billing timing); reactivation and churn concentrate it, contraction does not"
+  evidence_type: parts
+  composition: stacked_decomposition (barras 100% por línea del puente: firma de cobro vs resto)
+  family: economics
+  alternatives_considered:
+    - id: waterfall del puente
+      score: {fidelity: 1, focal: 1, evidence: 1, variety: 1, risk: -1}
+      rejected_because: "data/ no trae los montos del puente por línea; y no mostraría la parte que se revierte"
+    - id: cuatro hero numbers
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 1, risk: 0}
+      rejected_because: "KPI tiles sin relación: el punto es comparar líneas contra el mismo 100%"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 3, variety: 2, risk: 0}
+  focal_point: timing_segments
+  visual_hierarchy:
+    1: segmentos lima de firma de cobro en churn, reactivación y expansión
+    2: contracción: 4,0% vuelve, 88,9% sigue igual o más abajo
+    3: 25,3% del movimiento bruto sin altas vuelve exacto
+    4: lo que no se ve (suscripción, tarifa, descuento o cobro)
+  objects:
+    - {id: churn_bar, kind: bar, content: "Churn observado: 44% vuelve a pagar al mes siguiente"}
+    - {id: react_bar, kind: bar, content: "Reactivación: 42,6% cubre el hueco + el mes · 11,5% vuelve al monto usual · 45,9% no encaja"}
+    - {id: exp_bar, kind: bar, content: "Expansión: 29% se revierte al mes siguiente"}
+    - {id: contr_bar, kind: bar, content: "Contracción: 4,0% vuelve al nivel previo · 88,9% sigue igual o más abajo"}
+  encodings:
+    bar_length: "100% de cada línea del puente"
+    accent: "parte con firma de momento de cobro"
+    ink: "parte que se sostiene (señal)"
+    ink5: "resto sin firma asignada"
+  annotations:
+    - {at: top, text: "25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente"}
+    - {at: right, text: "Lo que no se ve: si cambió la suscripción, la tarifa, un descuento o solo el cobro"}
+  layout_intent:
+    grid: "barras cols 1–9; nota cols 10–12"
+    reading_path: "barra por barra; la contracción cierra el contraste"
+    whitespace: "a la derecha de las barras"
+  text_budget: 85
+  must_show: [la relación de la intención visual]
+  avoid: ["tres cards", "tabla", "KPI tiles", "calcular restos"]
+  data:
+    source: "data/FIN-F-174.yaml, FIN-F-180.yaml, FIN-F-172.yaml, FIN-F-184.yaml, FIN-F-185.yaml"
+    values: "44% · 42,6/11,5/45,9% · 29% · 4,0/88,9% · 25,3%"
+  notes: "F-131 salió del claim: su lectura de la contracción choca con F-184 (X-100); aquí se usa F-184 y la tensión queda abierta. El reparto exacto de un pago entre meses no se mide (F-186). Etiquetas del puente = monto pagado, no altas ni bajas contractuales."
+  sources: [F-172, F-174, F-180, F-182, F-184, F-185, F-135, F-136, F-186, F-213]

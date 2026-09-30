@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T20:45:34-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-29T21:53:14-06:00 · motivo: Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258) · vía Claude: reintento tras arreglar el búfer del SDK que co…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -13,7 +13,7 @@ Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) O
 CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación
 
 ## Current Phase
-**Story**
+**Slides**
 
 | Fase | Estado | Ready |
 |---|---|---|
@@ -21,11 +21,11 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 02 Framing | ready | v2 · 2026-09-29T20:32 |
 | 03 Research | ready | v1 · 2026-09-29T20:33 |
 | 04 Synthesis | ready | v1 · 2026-09-29T20:45 |
-| 05 Story | in_progress | — |
-| 06 Slides | not_started | — |
+| 05 Story | ready | v1 · 2026-09-29T20:47 |
+| 06 Slides | in_progress | — |
 
 ## Current Status
-32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 17 decisiones activas · 158 alertas abiertas.
+32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 18 decisiones activas · 158 alertas abiertas.
 
 COS: R-033 cierra, junto con R-034, el diseño as-is/to-be del modelo de datos. El as-is del caso es solo de después del pago (confianza alta) y el to-be sale de patrones de afuera (confianza media); falta saber qué sistemas tiene Finora y qué es un «Cliente N». La research está prácticamente cerrada (R-007 y R-008 siguen bloqueadas por falta de data) y el cuello de botella ahora es la revisión: hay 0 findings aceptados de 242 propuestos, así que ningún claim está listo para el story, y sigue pendiente D-018, que decide si las propuestas de modelo y tablero entran a la historia.
 
@@ -57,6 +57,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-025** Story marcada Ready (v1) · 2026-09-29 → Ready
 - **D-024** Synthesis marcada Ready (v1) · 2026-09-29 → Ready
 - **D-023** Delegación a Claude (3): aceptar la historia con su evidencia · 2026-09-29 → «Pero tu dale accept a todo lo de la story»
 - **D-022** R-013 requiere más investigación H-022: Sin impacto material · 2026-09-29 → Sin impacto material
@@ -66,8 +67,7 @@ v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 - **D-017** Delegación a Claude (2): que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y el storytelling lo mues… · 2026-09-29 → «Voy a comer pero ahí checa con el chief y las herramientas…
 - **D-016** Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling · 2026-09-29 → «Vale, voy a desayunar ahorita que acabes lo corres, creo q…
 - **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
-- **D-013** Briefing marcada Ready (v1) · 2026-09-29 → Ready
-- … y 7 más
+- … y 8 más
 
 _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
@@ -178,6 +178,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - Framing v2: `framing/approved/current.v2.md`
 - Research v1: `research/approved/research.v1.yaml`
 - Synthesis v1: `cos/approved/synthesis.v1.yaml`
+- Story v1: `story/approved/current.v1.md`
 - **A-001** Brief de trabajo v0.3 (fuente de verdad) (`brief/sources/alegra_brief_de_trabajo.html`)
 - **A-002** Business Exploration Workspace (Finora) (`/ws/finora/`)
 - **A-003** Propuesta de arquitectura v1.2 del workspace agentic (`finora-eda/docs/propuesta_arquitectura_v1.md`)
@@ -196,16 +197,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-29 21:53 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258) · vía Claude: reintento tras arreglar el búfer del SDK que cortó la corrida de las 21:23; retoma la carpeta
+- 2026-09-29 21:23 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258)
+- 2026-09-29 21:23 · Story Package v3 preparado para el Visual Storyteller (finora-v3-20260929-212258)
+- 2026-09-29 21:23 · Slides: not_started → in_progress (trabajo iniciado)
+- 2026-09-29 20:47 · Story marcada Ready (v1)
+- 2026-09-29 20:47 · Hugo decidió: Story marcada Ready (v1)
 - 2026-09-29 20:45 · Synthesis marcada Ready (v1)
 - 2026-09-29 20:45 · Hugo decidió: Synthesis marcada Ready (v1)
 - 2026-09-29 20:45 · Hugo aceptó T-080 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
 - 2026-09-29 20:45 · Hugo aceptó F-178 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó F-177 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó C-020 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó C-019 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó F-168 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó F-133 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó F-130 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

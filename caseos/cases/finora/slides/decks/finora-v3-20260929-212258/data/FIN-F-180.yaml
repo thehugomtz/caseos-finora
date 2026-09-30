@@ -1,0 +1,51 @@
+table_id: FIN-F-180
+caseos_id: T-082
+title: Del MRR de reactivación de la ventana limpia, la parte que regresa al monto usual explica 11,5% y la parte
+  qu…
+columns:
+- clase
+- eventos
+- mrr_cop
+- share_pct
+rows:
+- - A. Regresa al monto usual
+  - 126
+  - 9930536.0
+  - 11.5
+- - B. Monto cubre los meses del hueco mas el corriente
+  - 163
+  - 36889570.0
+  - 42.6
+- - C. Otro monto
+  - 179
+  - 39683321.0
+  - 45.9
+units:
+  clase: texto
+  eventos: int
+  mrr_cop: num2
+  share_pct: num2
+definitions: {}
+message: Del MRR de reactivación de la ventana limpia, la parte que regresa al monto usual explica 11,5% y la parte
+  que llega con un monto que cubre los meses del hueco más el corriente explica 42,6%; el resto, 45,9%, no encaja
+  en esas firmas de momento de cobro.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-011
+  - EC-DAT-08
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: table
+analysis_reference: INV-20260929-143800-c4dd · C-004
+period: {}
+grain: según evidencia

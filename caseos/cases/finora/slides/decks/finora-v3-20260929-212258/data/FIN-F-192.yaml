@@ -1,0 +1,44 @@
+table_id: FIN-F-192
+caseos_id: T-089
+title: Las altas por mes pasan de 27 en 2022 (mar–dic) a 54 en 2023 y 55 en 2024 (ene–oct).
+columns:
+- Periodo
+- Altas
+- Altas por mes
+rows:
+- - '2022'
+  - 272.0
+  - 27.2
+- - '2023'
+  - 650.0
+  - 54.166666666666664
+- - '2024'
+  - 554.0
+  - 55.4
+units:
+  Altas: int
+  Altas por mes: int
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: Las altas por mes pasan de 27 en 2022 (mar–dic) a 54 en 2023 y 55 en 2024 (ene–oct).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-003
+  - E-001
+  - EC-ADQ-09
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: annotated_line
+analysis_reference: INV-20260929-143800-2198 · C-001
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: year, month

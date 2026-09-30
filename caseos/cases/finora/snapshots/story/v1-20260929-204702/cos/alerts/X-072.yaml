@@ -1,0 +1,50 @@
+id: X-072
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-021
+target: Q-026
+title: R-021 cambia el framing Q-026
+finding_text: 'Se puede, con una condición: el descuento tiene que existir en los datos como objeto propio (tipo,
+  monto, inicio, fin, motivo, Canal y aprobador), separado de la cantidad contratada y del precio de lista. Además,
+  el puente de MRR necesita líneas propias de «descuento nuevo/aumentado» y «descuento r…'
+why: 'Según R-021, las capas de lista y de descuento contestan Q-026 de aquí en adelante; el pasado, no. Pero Q-026
+  junta dos cosas distintas. Una es cuánto descuento se da, y eso se ve en la capa de descuento. La otra es cuánto
+  revenue deja de capturar Finora, y eso es un contrafactual: supone que, sin descuento, esos mismos clientes habrían
+  entrado y pagado el precio de lista. F-154 dice justamente que el descuento cambia quién entra (evidencia externa,
+  confianza media-baja). Por eso la capa de descuento puede exagerar o quedarse corta frente a lo que realmente
+  se pierde. Y el «revenue» cambia según la vista: MRR neto, revenue reconocido o caja (F-153).'
+options:
+- key: A
+  label: Partir Q-026 en dos, con tus palabras
+  consequence: 'Parte medible, de aquí en adelante: «¿Qué pasa con el negocio subyacente y cuánto descuento estamos
+    dando, a quién y por qué Canal?». Parte causal: «¿Cuánto revenue deja de capturar Finora por dar descuentos?»,
+    que solo se contesta marcando cohortes y midiendo contra un grupo de control, como propone F-154. Versión ejecutiva:
+    «cuánto descuento damos» y «qué nos deja el descuento frente a no darlo». Nada se presenta como pérdida sin
+    contrafactual.'
+- key: B
+  label: Mantener Q-026 y medirla como lista − neto, con un caveat
+  consequence: Es más simple y está en el idioma del CFO, pero la cifra se va a leer como pérdida real aunque el
+    caveat diga que no lo es.
+- key: C
+  label: Dejarla como está hasta revisar F-153 y F-154
+  consequence: No se decide nada hoy. El riesgo es que el guion use «revenue que deja de capturar» como si ya se
+    pudiera medir.
+recommended: A
+recommended_why: 'Separa lo observado de lo causal sin cambiar tu vocabulario (negocio subyacente, revenue que deja
+  de capturar) y usa lo que la propia R-021 propone: marcar cohortes y medir contra un grupo de control.'
+detected_by: cos
+links:
+- R-021
+- Q-026
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-111551-cos-c920
+created_at: '2026-09-29T11:56:40-06:00'
+updated_at: '2026-09-29T11:56:40-06:00'
+version: 1

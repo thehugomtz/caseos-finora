@@ -1,0 +1,48 @@
+slide:
+  id: S11
+  file: slides/11.html
+  claim_id: C-022
+  role_in_story: recommendation
+  kicker: "Growth · métricas · propuesta"
+  headline: "Cada métrica vive en un solo lugar del catálogo, con dueño, fuente y foro"
+  takeaway: "El catálogo no suma métricas: gobierna las del funnel y las comunes, cada una una vez, conectada a su fuente y a su foro."
+  question: "¿Cómo se evita que una métrica aparezca en dos lugares o con dos fórmulas?"
+  relationship: "the catalog is the HUB: funnel and common metrics flow IN once; each entry CONNECTS to its source and its forum"
+  evidence_type: structure
+  composition: hub_and_spoke (registro del catálogo al centro)
+  family: relationships
+  alternatives_considered:
+    - id: tabla de catálogo
+      score: {fidelity: 1, focal: 1, evidence: 2, variety: 0, risk: 0}
+      rejected_because: "el catálogo completo va al anexo; aquí se decide la regla, no el contenido"
+    - id: capas (datos → catálogo → foros)
+      score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: 0}
+      rejected_because: "S17 ya usa capas de operación; aquí el punto es la unicidad del registro"
+  chosen_score: {fidelity: 3, focal: 3, evidence: 2, variety: 3, risk: -1}
+  focal_point: record
+  visual_hierarchy:
+    1: el registro del catálogo con la regla «un nombre · una fórmula · un lugar» en lima
+    2: entradas (métricas del funnel y comunes) y salidas (fuente, foro)
+    3: cortes que no son métricas
+    4: controles de cada mes
+  objects:
+    - {id: record, kind: node, content: "nombre · fórmula versionada · grano · dueño · semáforo de hoy · evento o tabla que falta · foro"}
+    - {id: inputs, kind: node, content: "métricas del funnel · métricas comunes"}
+    - {id: outputs, kind: node, content: "fuente en el modelo to-be · foro que decide"}
+  encodings:
+    arrows: "de dónde viene y a dónde va cada métrica"
+    mono: "campos del registro"
+    accent: "la regla de unicidad"
+  annotations:
+    - {at: cuts, text: "Cortes, no métricas: puerta · ruta · canal · industria · cohorte"}
+    - {at: controls, text: "Controles de cada mes: entradas por puerta = total; primeros pagos por ruta + no cruzados = primeros pagos del mes; los puentes cierran"}
+  layout_intent:
+    grid: "entradas cols 1–3; registro cols 5–8; salidas cols 10–12; banda inferior cols 1–12"
+    reading_path: "izquierda → registro → derecha; abajo reglas"
+    whitespace: "alrededor del registro"
+  text_budget: 105
+  must_show: [la relación de la intención visual]
+  avoid: ["tabla", "tres cards", "lista de métricas repetida de S09/S10"]
+  data: {source: "propuesta (C-022); sin cifras", values: []}
+  notes: "Los dueños de cada métrica se definen con Finora. Construirlo choca con D-007 tal como está redactada; D-018 lo decides tú."
+  sources: [F-155, F-158, F-159, F-213, F-135, F-139, F-148, F-224]

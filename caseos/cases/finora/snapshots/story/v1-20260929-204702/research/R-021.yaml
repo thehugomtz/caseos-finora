@@ -1,0 +1,754 @@
+id: R-021
+type: research
+research_question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió
+  nuestro MRR?»? Mecanismo propuesto, implicaciones multidisciplinarias y las preguntas del CFO contestadas con
+  el modelo.
+case_question: 'Q-002 (CFO: por qué cambió el ingreso recurrente y cuánto se explica por contratación, tarifa o
+  descuento) · Q-025 (los tres casos donde el pago observado no alcanza) · Q-026 (negocio subyacente y revenue que
+  no se captura por descuentos) · H-015 (HF3c: el descuento cambió el pago o compensó un cambio de suscripción).'
+specialty: business
+intensity: L2
+route:
+  specialty: business
+  intensity: L2
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  - id: pricing-strategist
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  - id: saas-metrics-coach
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-002
+    - Q-025
+    - Q-026
+    - H-015
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-002
+- Q-025
+- Q-026
+- H-015
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T11:56:40-06:00'
+version: 6
+job_id: JOB-20260929-103203-664b
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-021
+slides:
+- S3.2
+task_why: 'Es la decisión de Revenue: el mecanismo define si el CFO puede seguir respondiendo por qué cambió el
+  MRR cuando existan descuentos, y cuánto revenue deja de capturar.'
+task:
+  work: propuesta
+  draft_answer: 'Mi arranque: el descuento entra como un objeto propio (monto o %, inicio, fin, motivo como adquisición,
+    retención o campaña, y quién lo aprobó), aplicado sobre una suscripción que conserva su valor. Así cada ejemplo
+    del CFO tiene una sola lectura: 100→80 es contracción si bajó la suscripción y descuento si la suscripción sigue
+    en 100; en 100→130 con −30 se ve la expansión aunque el pago siga en 100, y cuando termina el descuento el salto
+    es «fin de descuento», no expansión. Hacia adelante, el revenue que se deja de capturar por decisiones comerciales
+    se vuelve medible como la suma de descuentos vigentes. El mecanismo toca a Finanzas (cómo reporta el MRR), Ventas
+    (quién puede dar cuánto y por cuánto tiempo), Producto/Billing (que se pueda cobrar así) y Datos (el modelo
+    de S3.3). No sabemos qué tiene ya definido Finora sobre descuentos, así que asumo que se diseña desde cero.'
+  hugo_said:
+  - text: Finora quiere introducir descuentos temporales, ¿cómo debería de hacerlo? Mecanismo Propuesto / Implicaciones
+      Multidisciplinarias
+    ref: N-028
+  - text: ¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? /
+      Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? / ¿Y cuando desaparezca el
+      descuento, eso cuenta como expansión?
+    ref: Q-025
+  - text: Quiero saber qué está pasando con el negocio subyacente y cuánto revenue estamos dejando de capturar por
+      decisiones comerciales
+    ref: Q-026
+  steps:
+  - kind: research
+    what: 'Prácticas de descuentos temporales en SaaS de suscripción mensual: tipos (entrada, retención, campaña),
+      profundidad y duración, elegibilidad, aprobación, qué pasa al terminar y el riesgo de churn en ese momento.
+      También cómo se reporta el MRR con descuentos (valor antes y después de descuento). Lo contable queda como
+      pregunta para Finanzas de Finora.'
+    where: []
+  - kind: proposal
+    what: 'Mecanismo: el descuento como objeto propio y sus reglas (quién puede darlo, cuánto, por cuánto tiempo,
+      quién aprueba, cómo se comunica y cómo termina), con parámetros por acordar con Finora, no presentados como
+      estándar de mercado.'
+    where: []
+  - kind: proposal
+    what: Implicaciones por área (Finanzas, Ventas/CRO, Producto/Billing, CS, Datos), y las tres preguntas del CFO
+      más el revenue no capturado, contestadas con el mecanismo y la clasificación de RT-002.
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: Define si el bloque Revenue puede prometerle al CFO un puente de MRR que separe el negocio subyacente
+  de las decisiones comerciales una vez que empiecen los descuentos, y qué Propuesta de Modelo de datos llevamos
+  al deck. Sin este diseño, el fin de un descuento se va a leer como expansión y un descuento nuevo como contracción,
+  y Q-002 y Q-026 se quedan sin respuesta.
+short_answer: 'Se puede, con una condición: el descuento tiene que existir en los datos como objeto propio (tipo,
+  monto, inicio, fin, motivo, Canal y aprobador), separado de la cantidad contratada y del precio de lista. Además,
+  el puente de MRR necesita líneas propias de «descuento nuevo/aumentado» y «descuento reducido/terminado», porque
+  las herramientas revisadas (ChartMogul, Chargebee, Stripe) lo mezclan con expansión/contracción o lo excluyen
+  según cómo se configuren. Con tres capas (MRR de lista, descuento y MRR neto) más el monto pagado observado que
+  Finora ya tiene, el modelo contesta Q-002, los tres casos de Q-025 y Q-026 de aquí en adelante; el histórico sigue
+  sin poder descomponerse. Confianza: alta en el mecanismo de medición (documentación primaria de las herramientas),
+  media en lo contable (depende del tipo de contrato de Finora, que no conocemos) y media-baja en los efectos comerciales
+  (evidencia B2C y un estudio de proveedor).'
+claims:
+- claim: ChartMogul clasifica la aplicación de un descuento como Contracción y su vencimiento como Expansión, en
+    las mismas categorías que un downgrade o un upgrade. No tiene un tipo de movimiento propio para descuentos.
+  source_id: SRC-02
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Confirma que el fin de un descuento se reporta como expansión (caso 3 de Q-025).
+- claim: En ChartMogul, un cambio de suscripción que no mueve el MRR (por ejemplo, sube la cantidad sin impacto
+    en el MRR) se clasifica como Neutral. Por definición, el caso 100→130 con −30 no aparecería como expansión.
+  source_id: SRC-02
+  source_type: company
+  confidence: medium
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: La definición es textual; aplicarla al caso 1 de Q-025 es inferencia nuestra.
+- claim: ChartMogul reporta el MRR solo neto de descuentos (un cliente con 20% de descuento de por vida cuenta 400
+    y no 500). Cuando una suscripción con descuento renueva a precio completo, lo registra como expansión.
+  source_id: SRC-01
+  source_type: company
+  confidence: high
+  freshness: '2025-01-20'
+  supports_or_contests: context
+  notes: Postura de un proveedor que defiende el neto como medida honesta; no ofrece vista en lista.
+- claim: 'Stripe siempre resta del MRR los descuentos recurrentes permanentes. Restar los descuentos recurrentes
+    temporales y los de una sola vez es configurable: uno, otro o ambos.'
+  source_id: SRC-03
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Muestra que tratar los descuentos temporales en el MRR es una elección de definición.
+- claim: Stripe describe restar los descuentos del MRR como el enfoque más conservador, porque refleja mejor el
+    valor presente de esos clientes.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Argumento a favor del neto como vista principal; no descarta tener también la vista en lista.
+- claim: El puente de crecimiento de MRR de Stripe tiene líneas de nuevo, reactivación, expansión, contracción,
+    churn y ajuste por tipo de cambio (FX), pero ninguna de descuento.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Stripe sí aísla FX como efecto que no es comportamiento del cliente. Que el descuento se pueda aislar igual
+    es inferencia nuestra.
+- claim: Si el MRR se calcula neto de descuentos, Stripe considera en churn a un suscriptor con un cupón del 100%
+    y lo vuelve a contar como activo cuando se quita el cupón.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Riesgo directo para las banderas de churn observado y reactivación de mart.customer_month si Finora da
+    meses gratis.
+- claim: En Stripe, el MRR excluye impuestos, planes gratis y productos que se cobran por uso, e incluye suscripciones
+    con pago pendiente (past_due). Las canceladas o marcadas como impagas (unpaid) cuentan como churn.
+  source_id: SRC-04
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'El MRR no es lo cobrado: la mora mueve el pago sin mover la suscripción. Por eso conviene conservar el
+    monto pagado observado como capa aparte.'
+- claim: Baremetrics resta del MRR todos los cupones y descuentos sin importar su duración, y lo contrasta con el
+    criterio de Stripe de no contar los descuentos temporales.
+  source_id: SRC-06
+  source_type: company
+  confidence: medium
+  freshness: 2024-05-31 (actualizado el 2026-04-23)
+  supports_or_contests: context
+  notes: Su descripción de Stripe corresponde al comportamiento por defecto; la documentación actual de Stripe lo
+    hace configurable (SRC-03).
+- claim: Chargebee calcula su Downgrade MRR como la caída de MRR por cambios de suscripción y considera ahí los
+    descuentos recurrentes, sin categoría propia. Su Expansion MRR junta upgrades, paso de gratis a pago y reactivaciones.
+  source_id: SRC-07
+  source_type: company
+  confidence: medium
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'Otra taxonomía distinta: aquí la reactivación va dentro de la expansión. La mención a descuentos en la
+    documentación es breve.'
+- claim: 'En Stripe, un descuento tiene tipo (porcentaje o monto fijo), alcance (a qué productos aplica) y duración:
+    una vez (por defecto, solo la primera factura), varios meses (repeating, con duration_in_months) o para siempre
+    (forever). Un cupón de una sola vez desaparece de la suscripción cuando se emite la factura, aunque la factura
+    conserva el descuento.'
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Implica leer los descuentos desde las líneas de factura, guardando el historial, y no desde el estado actual
+    de la suscripción.
+- claim: Stripe ofrece alternativas al cupón (saldo negativo del cliente, partidas negativas en la factura o un
+    segundo precio más barato) y señala que las partidas negativas dan más detalle de qué descuento se creó, cuándo
+    y por qué.
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: 'Inferencia nuestra: con un segundo precio más barato se pierde la distinción entre tarifa y descuento.'
+- claim: En Stripe, cambiar solo el descuento no genera prorrateo y se aplica en la siguiente factura. Si se combina
+    con un cambio de cantidad en la misma actualización, el prorrateo refleja las dos cosas a la vez.
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: supports
+  notes: Por eso el caso 1 de Q-025 llegaría como un solo monto; hay que registrarlo como dos eventos.
+- claim: Stripe distingue los cupones que decide la empresa (por ejemplo, un descuento negociado por ventas) de
+    los códigos promocionales que ingresa el cliente (campañas, solo para primeras compras, con límite de canjes
+    y fecha de vencimiento).
+  source_id: SRC-05
+  source_type: company
+  confidence: high
+  freshness: Documentación vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Se corresponde con Assisted/KAM frente a Self Service/Digital.
+- claim: Según la guía de PwC para SaaS bajo IFRS 15, si el cliente puede terminar con preaviso, el contrato se
+    trata como mes a mes. Solo el plazo no cancelable entra en la asignación del precio, y si el precio baja durante
+    el plazo declarado hay que evaluar si esos descuentos futuros le dan al cliente un derecho material.
+  source_id: SRC-08
+  source_type: expert
+  confidence: high
+  freshness: Guía vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: No es una opinión sobre Finora; depende de cómo sean sus contratos.
+- claim: La misma guía (Q4.9) indica que si un aumento programado de la tarifa es solo un mecanismo de pago diferido,
+    el ingreso se reconoce de forma lineal durante el contrato; si el aumento sigue a la inflación o al mercado,
+    no.
+  source_id: SRC-09
+  source_type: expert
+  confidence: medium
+  freshness: Guía vigente, consultada el 2026-09-29 (sin fecha)
+  supports_or_contests: context
+  notes: Aplicarlo a descuentos temporales en contratos a plazo fijo es una analogía que hay que validar con el
+    auditor.
+- claim: 'Lewis (2006), con datos de un periódico y de un supermercado online, encontró que cuanto más profundo
+    es el descuento de adquisición, menores son la recompra y el valor del cliente: con un descuento de 35%, los
+    clientes valían cerca de la mitad a largo plazo.'
+  source_id: SRC-11
+  source_type: academic
+  confidence: medium
+  freshness: '2006'
+  supports_or_contests: context
+  notes: Contexto B2C. El resumen salió de los resultados de búsqueda porque la página del editor devolvió error
+    403. Es un benchmark, no evidencia sobre Finora.
+- claim: Foubert, Datta y van Heerde (2015), con datos de un proveedor europeo de TV digital, estimaron que el valor
+    de vida de los clientes captados con prueba gratis es 59% menor que el de los clientes regulares, aunque responden
+    más a la comunicación de marketing y al uso.
+  source_id: SRC-10
+  source_type: academic
+  confidence: high
+  freshness: '2015'
+  supports_or_contests: context
+  notes: Contexto B2C; el estudio controla la selección de clientes. Es el análogo más cercano a dar meses al 100%.
+    No es una cifra esperada para Finora.
+- claim: Un estudio de Paddle/ProfitWell comparó 33 empresas que descuentan de forma agresiva con 55 que casi no
+    descuentan, y reportó un LTV hasta 32,41% menor en el primer grupo.
+  source_id: SRC-12
+  source_type: marketing
+  confidence: low
+  freshness: '2022-07-20'
+  supports_or_contests: context
+  notes: Estudio observacional de un proveedor, sin controles ni pruebas de significancia documentadas; no permite
+    atribuir causa.
+- claim: La cascada de precio de bolsillo (pocket price waterfall) de McKinsey muestra cuánto ingreso conserva realmente
+    una empresa en cada transacción después de descuentos y concesiones.
+  source_id: SRC-13
+  source_type: expert
+  confidence: medium
+  freshness: '2003-04-11'
+  supports_or_contests: context
+  notes: Marco conceptual para Q-026 (lista → neto → cobrado); no aporta una cifra aplicable a Finora.
+- claim: En el análisis precio-volumen-mix de FTI, el efecto precio es el cambio de precio por el volumen del periodo
+    anterior y el efecto volumen es el cambio de volumen por el precio actual (menos el mix). Recomienda calcularlo
+    al nivel más detallado posible (SKU).
+  source_id: SRC-14
+  source_type: industry
+  confidence: high
+  freshness: '2024-05-03'
+  supports_or_contests: context
+  notes: Aplicado a Finora por cliente × línea, la descomposición cuadra sin residuo (es aritmética).
+- claim: Gieng (2026) plantea que el churn al vencer una tarifa introductoria suele coincidir con el fin del proyecto
+    que motivó la compra, y propone diferencias en diferencias, regresión con interacción y Shapley para separar
+    ambos efectos. Lo ilustra con una simulación.
+  source_id: SRC-15
+  source_type: community
+  confidence: low
+  freshness: '2026-05-08'
+  supports_or_contests: context
+  notes: 'Es una simulación: muestra qué se puede distinguir, no qué pasó. Vale como advertencia de método.'
+sources:
+- id: SRC-01
+  title: Should discounts be included in MRR?
+  url: https://chartmogul.com/blog/should-discounts-be-included-in-mrr/
+  publisher: ChartMogul
+  date: '2025-01-20'
+  source_type: company
+  quality: B
+  note: Blog del proveedor; describe su propio criterio (solo MRR neto). Opinión con interés comercial.
+  verified: true
+- id: SRC-02
+  title: Understanding MRR movements
+  url: https://help.chartmogul.com/article/163-understanding-mrr-movements
+  publisher: ChartMogul Help Center
+  date: sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: Fuente primaria de su taxonomía de movimientos (Nuevo, Expansión, Contracción, Churn, Reactivación, Neutral).
+  verified: true
+- id: SRC-03
+  title: Impact of discounts and coupons on Monthly Recurring Revenue (MRR) in Billing
+  url: https://support.stripe.com/questions/impact-of-discounts-and-coupons-on-monthly-recurring-revenue-(mrr)-in-billing
+  publisher: Stripe Support
+  date: sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: Fuente primaria sobre cómo trata Stripe los descuentos en el MRR.
+  verified: true
+- id: SRC-04
+  title: 'Analytics (Stripe Billing): definiciones de MRR, crecimiento de MRR y churn'
+  url: https://docs.stripe.com/billing/subscriptions/analytics
+  publisher: Stripe Docs
+  date: sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: 'Definiciones primarias: MRR, puente de crecimiento, opciones de descuento, cupón del 100% y past_due.'
+  verified: true
+- id: SRC-05
+  title: Cupones y códigos de promoción
+  url: https://docs.stripe.com/billing/subscriptions/discounts
+  publisher: Stripe Docs
+  date: sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: A
+  note: 'Cómo se modela un descuento en facturación: tipo, duración, alcance, cupón vs código, alternativas y prorrateos.'
+  verified: true
+- id: SRC-06
+  title: Why Your MRR Differs Between Baremetrics and Stripe
+  url: https://baremetrics.com/blog/different-mrr-data
+  publisher: Baremetrics
+  date: 2024-05-31 (actualizado 2026-04-23)
+  source_type: company
+  quality: B
+  note: Proveedor comparándose con Stripe; su descripción de Stripe no refleja las opciones configurables actuales.
+  verified: true
+- id: SRC-07
+  title: Expansion & Contraction MRR
+  url: https://www.chargebee.com/docs/billing/2.0/reports-and-analytics/expansion-and-contraction-metrics
+  publisher: Chargebee Docs
+  date: sin fecha (consultado 2026-09-29)
+  source_type: company
+  quality: B
+  note: Documentación del producto; la mención a los descuentos es breve.
+  verified: true
+- id: SRC-08
+  title: '1 Contract term and modifications — Revenue recognition: an IFRS 15 guide for software and SaaS'
+  url: https://viewpoint.pwc.com/dt/gx/en/pwc/industry/industry_INT/industry_INT/software/revenue-recognition-an-ifrs-15-guide/1-contract-term-and-modifications.html
+  publisher: PwC Viewpoint
+  date: sin fecha (consultado 2026-09-29)
+  source_type: expert
+  quality: A
+  note: 'Q1.2 y Q1.3: plazo contractual con opción de terminar, derecho material y modificaciones.'
+  verified: true
+- id: SRC-09
+  title: '4 Recognising revenue — Revenue recognition: an IFRS 15 guide for software and SaaS'
+  url: https://viewpoint.pwc.com/dt/gx/en/pwc/industry/industry_INT/industry_INT/software/revenue-recognition-an-ifrs-15-guide/4-recognising-revenue.html
+  publisher: PwC Viewpoint
+  date: sin fecha (consultado 2026-09-29)
+  source_type: expert
+  quality: A
+  note: 'Q4.9: aumentos programados de tarifa y reconocimiento lineal.'
+  verified: true
+- id: SRC-10
+  title: 'The challenge of retaining customers acquired with free trials (Journal of Marketing Research 52(2): 217-234)'
+  url: https://cris.maastrichtuniversity.nl/en/publications/the-challenge-of-retaining-customers-acquired-with-free-trials/
+  publisher: Maastricht University (registro de la publicación)
+  date: '2015'
+  source_type: academic
+  quality: A
+  note: Estudio B2C (TV digital europea) que controla la selección de clientes. Benchmark, no evidencia sobre Finora.
+  verified: true
+- id: SRC-11
+  title: Customer Acquisition Promotions and Customer Asset Value (Journal of Marketing Research 43(2))
+  url: https://journals.sagepub.com/doi/10.1509/jmkr.43.2.195
+  publisher: SAGE / Journal of Marketing Research
+  date: '2006'
+  source_type: academic
+  quality: B
+  note: La página del editor devolvió 403; el resumen se obtuvo de los resultados de búsqueda de esta corrida. B2C
+    (periódico y supermercado online).
+  verified: true
+- id: SRC-12
+  title: Data shows SaaS discounting lowers SaaS LTV by over 30%
+  url: https://www.paddle.com/blog/saas-discounting-strategy
+  publisher: Paddle (ProfitWell)
+  date: '2022-07-20'
+  source_type: marketing
+  quality: C
+  note: Estudio de proveedor, observacional y con metodología poco documentada.
+  verified: true
+- id: SRC-13
+  title: The Power Of Pricing (McKinsey Quarterly 2003, No. 1)
+  url: https://www.forbes.com/2003/04/11/0411mckinsey.html
+  publisher: Forbes / McKinsey Quarterly
+  date: '2003-04-11'
+  source_type: expert
+  quality: B
+  note: Marco de la cascada de precio de bolsillo (pocket price waterfall); solo se usa como concepto.
+  verified: true
+- id: SRC-14
+  title: A Quantifiable Approach To Price Volume Mix Analysis
+  url: https://www.fticonsulting.com/insights/white-papers/quantifiable-approach-price-volume-mix-analysis
+  publisher: FTI Consulting
+  date: '2024-05-03'
+  source_type: industry
+  quality: B
+  note: Define la convención de efectos precio, volumen y mix.
+  verified: true
+- id: SRC-15
+  title: 'When Customers Churn at Renewal: Was It the Price or the Project?'
+  url: https://towardsdatascience.com/when-customers-churn-at-renewal-was-it-the-price-or-the-project/
+  publisher: Towards Data Science (William Gieng)
+  date: '2026-05-08'
+  source_type: community
+  quality: C
+  note: Artículo de método con simulación; útil como advertencia sobre otras causas del churn, no como evidencia.
+  verified: true
+alternative_explanations:
+- Un cambio en el monto pagado puede venir de mora, cobranza atrasada, créditos, reembolsos, prorrateos o impuestos,
+  y no de un descuento ni de un cambio de suscripción. Por ejemplo, Stripe cuenta las suscripciones con pago pendiente
+  en el MRR y excluye los impuestos.
+- Una baja del pago puede ser contracción real (menos cantidad o un plan menor) y no un descuento; una subida puede
+  ser el fin de un descuento y no una expansión.
+- Un mes sin pago puede ser un mes con descuento del 100%, con el cliente activo, y no un churn seguido de reactivación.
+- Si un descuento temporal se monta como plan o precio «promo» más barato, se leerá como cambio de tarifa o contracción
+  y no como descuento.
+- Que los clientes captados con descuento retengan peor puede reflejar qué tipo de cliente responde a los descuentos
+  (selección) y no un efecto del descuento en sí; Lewis lo atribuye a la incertidumbre del cliente.
+- El churn al vencer un descuento puede coincidir con el fin del proyecto o de la necesidad que motivó la compra,
+  y no deberse solo al salto de precio.
+what_is_established:
+- 'Las herramientas revisadas (ChartMogul, Chargebee, Stripe) no tienen un movimiento de MRR propio para descuentos:
+  lo mezclan con expansión o contracción, o lo excluyen según cómo se configuren.'
+- 'Cómo se tratan los descuentos temporales en el MRR no está estandarizado entre proveedores: Stripe permite elegir,
+  mientras que ChartMogul y Baremetrics reportan neto.'
+- Los sistemas de facturación pueden registrar el descuento como objeto con tipo, valor, alcance y duración, así
+  que es factible capturar su inicio, fin y motivo.
+- Con el MRR neto, un descuento del 100% genera churn y reactivación artificiales; Stripe lo documenta.
+- Con los datos actuales (solo monto pagado observado), Finora no puede separar contratación, tarifa y descuento
+  en su histórico, y H-015 no se puede evaluar hacia atrás.
+- Según la guía de PwC, el plazo del contrato (mes a mes o plazo fijo) y la naturaleza de los cambios de precio
+  programados determinan si el ingreso se reconoce de forma lineal, lo que puede separar el revenue reconocido del
+  MRR.
+what_is_contested:
+- 'Si el MRR «oficial» debe ser neto o de lista cuando hay descuentos temporales: Stripe lo deja configurable; ChartMogul
+  y Baremetrics reportan neto.'
+- 'Cuánto valor le quita el descuento a un cliente SaaS y si es causa o selección: el estudio de Paddle (sin controles)
+  frente a estudios académicos B2C que sí controlan la selección.'
+- Si el churn al vencer un descuento se debe al precio o a otros eventos del cliente.
+- Si un descuento temporal en un contrato a plazo fijo se reconoce de forma lineal (analogía con los aumentos programados,
+  pendiente de validar).
+what_remains_unknown:
+- 'Tipo y plazo de los contratos de Finora: mensuales o anuales, cancelables o no.'
+- Si el monto de raw.transactions es lo facturado o lo cobrado, y si un mes con monto 0 genera fila.
+- Si Finora tiene plan, cantidad y precio de lista en algún sistema. Sin eso, ni siquiera sin descuentos se puede
+  separar cantidad de tarifa (Q-002).
+- 'Qué descuentos quiere introducir Finora: motivo, profundidad, duración, Canal (Digital/Self Service o Assisted/KAM)
+  y quién los aprueba.'
+- El efecto real de los descuentos en la retención y el valor de los clientes de Finora.
+case_implication: 'Para ESTE caso: hoy Finora solo tiene el monto pagado observado por cliente × mes, sin plan,
+  cantidad, precio de lista ni descuento. Por eso no puede separar contratación, tarifa y descuento (ni siquiera
+  cantidad de tarifa), H-015 no se puede evaluar en el histórico y ninguna herramienta estándar lo resolvería por
+  defecto. Propuesta, para que Hugo decida si entra al bloque Revenue:
+
+  (1) Reglas de juego comerciales. Todo descuento temporal es un objeto propio con fecha de fin, nunca un plan o
+  precio «promo» (se leería como cambio de tarifa o como contracción). Un descuento sin fecha de fin es una decisión
+  de precio y se trata como tarifa. Los meses al 100% se marcan como «activo con descuento total» para no fabricar
+  churn más reactivación. Si la cantidad y el descuento cambian a la vez, se registran como dos eventos. Cada descuento
+  lleva motivo (adquisición, retención, incentivo de expansión, prepago), Canal (Digital/Self Service o Assisted/KAM),
+  campaña o código, y aprobador.
+
+  (2) Propuesta de Modelo de datos. Extender mart.customer_month con cantidad o plan, precio de lista, MRR de lista,
+  descuento del mes y MRR neto, sin perder el monto pagado observado. Crear una tabla de descuentos (cliente, línea,
+  tipo, valor, inicio, fin, motivo, Canal, código, aprobador). Crear una tabla de movimientos con Nuevo, Expansión,
+  Contracción, Churn, Reactivación, Cambio de tarifa, Descuento nuevo o aumentado, Descuento reducido o terminado,
+  y Diferencia entre facturado y pagado. Usar la convención precio-volumen por cliente × línea: tarifa = cambio
+  del precio de lista × cantidad anterior; contratación = cambio de cantidad × precio de lista nuevo; descuento
+  = cambio del descuento, con signo contrario. Así cuadra sin residuo. Sumar checks nuevos (lista − descuento =
+  neto; la suma de movimientos = cambio del neto; neto conciliado con lo pagado) y marcar un corte de serie explícito:
+  el histórico sigue siendo pago observado sin descomponer.
+
+  (3) Tres vistas para el CFO: MRR neto (gestión), revenue reconocido (puede ser lineal si el contrato es a plazo
+  fijo) y caja.
+
+  Preguntas del CFO que contesta el modelo:
+
+  - «¿Por qué cambió el MRR?» → un puente con las líneas de descuento separadas.
+
+  - «¿Cuánto por contratación, cuánto por tarifa y cuánto por descuento?» (Q-002) → las mismas líneas, agrupadas
+  en esos tres bloques.
+
+  - Q-025, caso 100→130 con −30 → Expansión +30 y Descuento nuevo −30 (el pago observado diría «sin cambio»).
+
+  - Q-025, caso 100→80 → Contracción −20 si baja la lista, o Descuento −20 si la lista se mantiene (y vuelve al
+  vencer si el cliente sigue).
+
+  - Q-025, caso 80→100 → Expansión +20 si sube la lista, o Fin de descuento +20 (recuperación de precio, no demanda
+  nueva).
+
+  - Q-026 → el MRR de lista y la retención de ingreso medida en lista muestran el negocio subyacente; el descuento
+  vigente (lista − neto), por motivo, Canal y aprobador, muestra el revenue que no se captura.
+
+  - «¿Cuánto MRR vuelve y cuándo?» → un calendario de vencimientos de descuentos, sin asumir que todo vuelve.
+
+  - «¿Los descuentos compran clientes que se quedan?» → cohortes marcadas y grupo de control.
+
+  Implicaciones por área:
+
+  - Finanzas elige la definición de MRR (neto, lista o ambas) y valida lo contable con el auditor.
+
+  - Growth/Marketing marca las cohortes y el Canal de adquisición con descuento, y calcula el CAC payback y el LTV
+  con precio neto y con el churn posterior al vencimiento.
+
+  - Ventas/KAM (Assisted) necesita una política de aprobación con motivo; Self Service/Digital, códigos con límite
+  de canjes y vencimiento.
+
+  - Customer Success gestiona los vencimientos.
+
+  - Data/BI implementa las tablas y los checks.
+
+  - En el Overview para el CEO conviene mostrar lista y neto, para no sobreestimar ni subestimar la salud del negocio.'
+changes_current_story:
+  value: maybe
+  why: 'No cambia el diagnóstico del histórico: sigue siendo monto pagado observado y H-015 no se puede evaluar.
+    Sí suma al bloque Revenue una pieza que quizá no esté en la historia: la Propuesta de Modelo de datos con capa
+    de descuento y movimientos ampliados. También abre dos decisiones que hoy no tenemos: la definición de MRR (neto,
+    lista o ambas) y la vista contable según el tipo de contrato. Hugo decide si entra como lámina o como apéndice.'
+affected_hypotheses:
+- id: H-015
+  effect: changes_framing
+  why: 'La evidencia externa confirma su propia condición de debilitamiento: sin datos de descuento no se puede
+    elegir una explicación por la forma del pago, y ni ChartMogul, ni Chargebee, ni Stripe separan el descuento
+    del cambio de suscripción por defecto. No se puede evaluar en el histórico, y tampoco se puede afirmar que hubo
+    descuentos. Pasa de ser una hipótesis sobre el pasado a un requisito de diseño que se vuelve verificable hacia
+    adelante si se captura la capa de descuento.'
+affected_claims: []
+suggested_action: 'Proponer a Hugo una lámina en Revenue, «Cómo introducir descuentos sin perder el porqué del MRR»,
+  con tres partes: (a) los tres casos de Q-025 vistos con el pago observado y con el modelo de tres capas; (b) el
+  esquema de datos (capas de lista, descuento, neto y pagado; tabla de descuentos; movimientos ampliados; regla
+  del 100%); (c) las preguntas del CFO que se vuelven contestables. En paralelo, llevarle al CFO de Finora tres
+  preguntas de datos (tipo de contrato, qué campos guarda el sistema de facturación, y si el monto es facturado
+  o cobrado) y la decisión de definición entre neto y lista. No usar las cifras de Lewis, Datta o Paddle como expectativa
+  para Finora; si se citan, que sea como contexto y con su limitación. Tampoco proponer profundidad ni duración
+  de los descuentos: eso lo decide Finora.'
+new_questions:
+- ¿Los contratos de Finora son mensuales cancelables o a plazo fijo, y el monto de raw.transactions es lo facturado
+  o lo cobrado?
+- ¿El sistema de facturación de Finora guarda plan, cantidad, precio de lista y descuentos como líneas separadas,
+  con fecha de inicio, fecha de fin y motivo?
+- ¿Para qué usaría Finora los descuentos temporales (adquisición, retención, incentivo de expansión o prepago) y
+  en qué Canal (Digital/Self Service o Assisted/KAM)?
+handoff_to_cos:
+  summary: 'R-021: el porqué del MRR sobrevive a los descuentos solo si cada descuento se registra como objeto propio
+    y el puente tiene líneas de descuento separadas; ChartMogul, Chargebee y Stripe no lo hacen por defecto. Hay
+    una propuesta de tres capas (lista, descuento, neto) más el pago observado que contesta Q-002, Q-025 y Q-026
+    hacia adelante; H-015 sigue sin poder evaluarse en el histórico. La parte contable y los efectos comerciales
+    dependen de datos que no tenemos (tipo de contrato) o de evidencia B2C.'
+  recommended_next: Que Hugo decida si la Propuesta de Modelo de datos con capa de descuento entra como lámina en
+    Revenue y si se envían al CFO las tres preguntas de datos. Si lo aprueba, pedir un borrador del esquema (tablas,
+    movimientos, checks) sin tocar el histórico.
+confidence_buckets:
+  high_confidence:
+  - ChartMogul clasifica aplicar un descuento como contracción y su vencimiento como expansión; Chargebee mete los
+    descuentos recurrentes en su Downgrade MRR; el puente de Stripe no tiene línea de descuento.
+  - 'No hay un estándar: Stripe deja elegir si resta los descuentos temporales (los permanentes siempre los resta),
+    ChartMogul solo reporta neto y Baremetrics resta todos.'
+  - Los sistemas de facturación modelan el descuento con tipo, valor y duración (una vez, N meses o para siempre),
+    así que capturar inicio y fin es factible.
+  - Con el MRR neto, un descuento del 100% puede aparecer como churn más reactivación.
+  - Con solo el monto pagado observado, Finora no puede separar contratación, tarifa y descuento en su histórico.
+  - La convención precio-volumen aplicada por cliente × línea cuadra sin residuo, por pura aritmética.
+  plausible:
+  - En contratos a plazo fijo, un descuento temporal podría reconocerse de forma lineal y separar el revenue reconocido
+    del MRR neto (analogía con PwC Q4.9).
+  - 'Los clientes captados con descuento podrían retener peor al vencer el descuento (evidencia B2C: Lewis 2006;
+    Foubert, Datta y van Heerde 2015).'
+  - Mostrar lista y neto a la vez en el Overview evitaría sobreestimar o subestimar la salud del negocio.
+  contested:
+  - Si el MRR debe reportarse neto o en lista cuando hay descuentos temporales (las herramientas no coinciden).
+  - 'Cuánto reduce el descuento el LTV en SaaS (Paddle: cerca de 32%, con metodología débil) y si es causa o selección.'
+  - Si el churn al vencer un descuento se debe al precio o a otros eventos del cliente (Gieng, con simulación).
+  unknown:
+  - Tipo y plazo de los contratos de Finora.
+  - Si raw.transactions es facturado o cobrado, y si un mes con monto 0 genera fila.
+  - Si Finora tiene plan, cantidad y precio de lista en algún sistema.
+  - Qué descuentos planea Finora (motivo, profundidad, duración, Canal, aprobador).
+  - El efecto real de los descuentos en la retención de Finora.
+completed_at: '2026-09-29T11:15:51-06:00'
+findings:
+- F-150
+- F-151
+- F-152
+- F-153
+- F-154
+run_ids:
+- RUN-20260929-103203-business_research-1312
+usage:
+  RUN-20260929-103203-business_research-1312:
+    cost_usd: 2.8880196000000007
+    turns: 42
+    ms: 849802
+    input_tokens: 32
+    output_tokens: 73331
+    cache_read: 833823
+    cache_write: 83843
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: commercial-skills
+  mode: dynamic
+  why: 1 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · commercial/skills/commercial-skills
+  kind: vendor
+  digest: 58983bd3e32e
+- id: pricing-strategist
+  mode: dynamic
+  why: 1 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · commercial/skills/pricing-strategist
+  kind: vendor
+  digest: 0dcefcdeb60a
+- id: saas-metrics-coach
+  mode: dynamic
+  why: 1 disparador(es) en la pregunta
+  source: alirezarezvani/claude-skills · finance/skills/saas-metrics-coach
+  kind: vendor
+  digest: bc6fcf0302ee
+validation:
+  unverified_sources: []
+  bare_claims: []
+  seen_urls: 198
+  ok: true
+cos_assessment:
+  summary: 'R-021 le da mecanismo a la parte de propuesta del bloque CFO. El descuento tiene que existir como objeto
+    propio con vigencias, separado de la cantidad y del precio de lista, y el puente necesita dos líneas propias
+    de descuento. La razón: ChartMogul, Chargebee y Stripe, usadas tal cual, lo mezclan con expansión o contracción,
+    o lo dejan fuera. Con eso, Q-025, Q-026 y Q-002 se contestan de aquí en adelante. El histórico sigue sin poder
+    descomponerse, así que no cambia nada de lo que podemos afirmar del pasado. Lo que importa: 1) las ramas de
+    descuento del árbol CFO (H-010, H-012 y H-015) no se pueden evaluar dentro del caso; 2) Q-002 queda en dos tiempos
+    y depende de que Finora tenga plan, cantidad y precio de lista; 3) Q-026 mezcla el descuento otorgado con el
+    revenue perdido, y esto último es un contrafactual; 4) R-021 es una Propuesta de Modelo de datos y D-007 sigue
+    activa. Todo se apoya en F-150 a F-154, que siguen propuestos.'
+  run_id: RUN-20260929-111551-cos-c920
+  at: '2026-09-29T11:56:40-06:00'
+  impacts:
+  - target: H-015
+    effect: changes_framing
+    why: 'R-021 confirma que el histórico no se puede descomponer. H-015 solo se vuelve medible si el descuento
+      existe como objeto propio (inicio, fin, motivo, Canal, aprobador) y el puente tiene líneas de «descuento nuevo/aumentado»
+      y «descuento reducido/terminado». H-015 está escrita como explicación de lo que ya pasó. Pero el framing pide
+      no afirmar que hubo descuentos en el histórico, y R-011 y T-061 ya mostraron que cliente × mes × monto no
+      los separa. Dentro del caso no se puede ni soportar ni descartar. Lo mismo pasa con las otras ramas de descuento
+      del árbol CFO: H-010 (al entrar) y H-012 (al salir). A favor: los tres grupos de D-002, cada uno con su parte
+      de suscripción y de descuento, sirven de estructura para ese puente.'
+  - target: Q-002
+    effect: changes_story
+    why: 'R-021 dice que Q-002 se contesta de aquí en adelante con tres capas (MRR de lista, descuento y MRR neto)
+      más el monto pagado observado; el histórico no. Además pone una condición que pesa más que el descuento: si
+      Finora no tiene plan, cantidad y precio de lista en algún sistema, ni siquiera sin descuentos se puede separar
+      lo que el cliente contrata de la tarifa (H-013 vs H-014). Las tres capas separan el descuento de la lista,
+      pero la lista sigue mezclando cantidad y tarifa. El CFO también tiene que definir qué capa llama MRR (F-151)
+      y, según el tipo de contrato, si mira MRR neto, revenue reconocido o caja (F-153). Para el pasado, la respuesta
+      a Q-002 no puede ser «tanto por contrato, tanto por tarifa, tanto por descuento».'
+  - target: Q-025
+    effect: supports
+    why: R-021 da el mecanismo que separa los tres casos de aquí en adelante. 100→130 con −30 se lee como expansión
+      de lista de +30 y descuento nuevo de −30, con el neto sin cambio. 100→80 se lee como contracción de lista
+      (la lista queda en 80) o como descuento nuevo de −20 (la lista sigue en 100). El fin de un descuento cae en
+      «descuento reducido/terminado», no en expansión. Coincide con R-011 (hoy los tres casos dan el mismo monto)
+      y agrega que las herramientas estándar, usadas tal cual, no lo resuelven (F-150). La confianza en el mecanismo
+      es alta porque viene de documentación primaria. No aplica al histórico.
+  - target: Q-026
+    effect: changes_framing
+    why: 'Según R-021, las capas de lista y de descuento contestan Q-026 de aquí en adelante; el pasado, no. Pero
+      Q-026 junta dos cosas distintas. Una es cuánto descuento se da, y eso se ve en la capa de descuento. La otra
+      es cuánto revenue deja de capturar Finora, y eso es un contrafactual: supone que, sin descuento, esos mismos
+      clientes habrían entrado y pagado el precio de lista. F-154 dice justamente que el descuento cambia quién
+      entra (evidencia externa, confianza media-baja). Por eso la capa de descuento puede exagerar o quedarse corta
+      frente a lo que realmente se pierde. Y el «revenue» cambia según la vista: MRR neto, revenue reconocido o
+      caja (F-153).'
+  - target: H-016
+    effect: supports
+    why: 'R-021 refuerza H-016 con documentación externa: ni las herramientas estándar, usadas tal cual, separan
+      estas situaciones. 100→130 con −30 se ve «sin cambio» y el fin de un descuento se ve como expansión (F-150).
+      En MRR neto, un descuento del 100% se ve como churn y reactivación (Stripe lo documenta). Se suma a lo que
+      R-002 mostró con los pagos.'
+  - target: Q-003
+    effect: supports
+    why: 'R-021 pide registrar en cada descuento el Canal (Digital/Self Service o Assisted/KAM) y quién lo aprueba,
+      y F-154 pide marcar las cohortes con descuento. Eso une de forma concreta cómo se consigue al cliente con
+      qué mueve el MRR, que es lo que pregunta el CEO, y encaja con el ID común que propone R-019. Solo aplica de
+      aquí en adelante: no dice cómo se conectan hoy.'
+  - target: D-007
+    effect: changes_framing
+    why: 'R-021 es, en la práctica, una Propuesta de Modelo de datos (objeto descuento, tres capas y líneas nuevas
+      en el puente). Mientras tanto, D-007 sigue activa: «Solución fuera de esta etapa → sin dashboards, métricas
+      definitivas, modelo de datos ni deck». El brief sí le pide al bloque CFO «mecanismo, modelo de datos y clasificación»,
+      y D-015, que metería en el plan lo que el caso pide proponer, sigue sin confirmar. Si R-021 (y también R-011,
+      R-016, R-018 y R-019) entran así a la historia, pasan por encima de D-007 sin que lo hayas decidido.'
+  - target: framing
+    effect: changes_framing
+    why: R-021 trae dos límites que la lista «No afirmar todavía» no cubre. Primero, los efectos comerciales del
+      descuento (clientes de menor valor, churn al vencer) vienen de evidencia B2C y de un estudio de proveedor,
+      con confianza media-baja. Puestos al lado de la caída del ticket de entrada (R-020, T-042), es fácil que la
+      historia termine insinuando que a Finora ya le pasó. Segundo, no sabemos si el monto de raw.transactions es
+      lo facturado o lo cobrado, ni si un mes en cero genera fila. Eso toca el propio nombre «monto pagado observado»
+      y la lectura del churn y la reactivación observados.

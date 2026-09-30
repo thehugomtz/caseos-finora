@@ -1,0 +1,48 @@
+id: X-010
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-014
+target: H-005
+title: R-014 requiere más investigación H-005
+finding_text: 'No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE
+  ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo
+  son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al…'
+why: 'R-014 confirma (confianza alta) que el modelo no tiene entradas ni señales de ajuste al entrar, así que H-005
+  no se puede probar ni descartar. La prueba sería comparar la mezcla de ajuste por grupo de entrada entre el periodo
+  base y el de caída. F-124 cierra el atajo de usar a los compradores: ni el primer pago menor (R-003) ni el menor
+  aporte posterior (R-006) permiten elegir entre H-005 y H-006. Hay dos cosas que pueden ensuciar esa prueba. Primero,
+  F-121 deja fuera la compra en ventana fija que R-014 sí pide; sin ella se cuela H-003 (las entradas recientes
+  tienen menos tiempo para comprar). Segundo, R-014 no sabe si cambió la definición de lead, el formulario, la calificación
+  o el reparto; si cambió, la mezcla empeora por cómo se cuenta y no porque la máquina de leads genere peor.'
+options:
+- key: A
+  label: Completar el dato mínimo antes de aceptar F-121
+  consequence: Se recupera la compra en ventana fija y se añade la pregunta sobre cambios de definición, formulario,
+    calificación o reparto. Así la prueba de mezcla no confunde H-003 ni un cambio de medición con peor calidad.
+    El pedido de datos crece dos líneas.
+- key: B
+  label: Aceptar F-121 como está
+  consequence: Más simple. Los dos riesgos quedan como limitación escrita y el pedido de datos que vería el CRO
+    queda incompleto.
+- key: C
+  label: Abrir aparte la hipótesis de cambio de definición
+  consequence: Más trabajo. Tiene sentido si el enunciado sugiere un cambio así, y conecta con H-001 ('no creció
+    tanto como parecía').
+recommended: A
+recommended_why: Es solo redacción, sale del propio R-014 y protege la única prueba que hay para H-005.
+detected_by: cos
+links:
+- R-014
+- H-005
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104559-cos-afa0
+created_at: '2026-09-29T11:22:25-06:00'
+updated_at: '2026-09-29T11:22:25-06:00'
+version: 1

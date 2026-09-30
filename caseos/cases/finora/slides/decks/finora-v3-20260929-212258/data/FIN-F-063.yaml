@@ -1,0 +1,38 @@
+table_id: FIN-F-063
+caseos_id: T-005
+title: El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - sm_peak
+  - S&M total en su pico, may-23 (unidad reportada, sin escala en COP)
+  - 3,45 u
+- - sm_trough
+  - S&M total en su valle, ago-23 (unidad reportada)
+  - 1,10 u
+- - sm_drop
+  - Caída del S&M total de pico a valle
+  - −68%
+units: {}
+definitions: {}
+message: 'El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala: el S&M
+  total va de 1,10 u en su valle de ago-23 a 3,45 u en su pico de may-23, magnitudes que no se pueden leer como
+  COP.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-INV-01
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: table
+analysis_reference: INV-20260929-103202-c958 · C-001
+period: {}
+grain: según evidencia

@@ -1,0 +1,43 @@
+id: X-059
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-017
+target: H-019
+title: R-017 debilita H-019
+finding_text: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+why: 'Por industria no hay un subconjunto que explique el cambio. El MRR por cliente bajó en las 6 (F-096), aunque
+  con intensidad desigual: de −46,6% en Servicios profesionales a −14,4% en Salud (F-094). El aporte al crecimiento
+  se reparte (F-095) y el 97% del cambio del ticket de entrada ocurre dentro de cada industria (F-100). Esto refuerza
+  el «No soportada» que ya venía de R-005. Pero si «grupos» incluye cosechas, la composición por cosechas explica
+  84% (F-097) y H-019 pasaría a soportada. La respuesta depende de qué entendemos por grupo, y hoy eso no está definido.'
+options:
+- key: A
+  label: Cerrar H-019 como no soportada por industria y llevar lo de cosechas a H-021 / Q-015
+  consequence: 'Cada eje queda en su lugar: industria en Q-014, cosechas en H-021. La story dice «no es sectorial,
+    aunque pega más en Servicios profesionales, Restaurantes y Retail». El 84% no se cuenta dos veces.'
+- key: B
+  label: Ampliar «grupos» en H-019 a cosecha y banda de ticket de entrada
+  consequence: 'H-019 pasaría a soportada con el 84%, pero se solapa con H-021: la misma evidencia sostendría dos
+    hipótesis.'
+- key: C
+  label: Dejarla abierta hasta tener segmentación más allá de la industria (tamaño, plan, canal)
+  consequence: 'Queda abierta sin fecha: según F-106, esos datos no están en el caso.'
+recommended: A
+recommended_why: Es lo que la evidencia sostiene hoy por industria (R-005 y R-017 apuntan en el mismo sentido) y
+  evita contar dos veces el 84%. La intensidad desigual cabe en la redacción sin inflar la hipótesis.
+detected_by: cos
+links:
+- R-017
+- H-019
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-5c65
+created_at: '2026-09-29T11:52:09-06:00'
+updated_at: '2026-09-29T11:52:09-06:00'
+version: 1

@@ -1,0 +1,57 @@
+id: X-160
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-033
+target: framing
+title: R-033 cambia el framing
+finding_text: 'Hoy hay tres fuentes y todas son de después del pago: pagos por cliente × mes (1.961 clientes × 34
+  meses, todos con al menos un pago), industria por cliente y gasto S&M por rubro × mes. Responden el stock y el
+  puente de monto pagado, los cortes por industria y por cohorte de primer pago y la eficie…'
+why: 'R-033 separa dos as-is que el story hoy mezcla. Uno es lo que trae el caso: tres archivos, todos de después
+  del pago. El otro es lo que tiene Finora, y ese no lo conocemos: no sabemos qué sistemas usa ni desde cuándo guarda
+  historial. El caso hasta supone que hay un CRM (H-051 y H-069 hablan de cómo registra leads y oportunidades).
+
+
+  Entonces «hoy no se mide nada antes del pago» solo vale para los archivos del caso, no necesariamente para Finora:
+  ausencia de evidencia ≠ evidencia de ausencia. Lo mismo aplica a cualquier «hueco en su WoW» que salga solo de
+  los archivos.
+
+
+  R-033 tampoco puede decir qué es un «Cliente N» (empresa, entidad de facturación o sede). De eso dependen los
+  conteos del Overview: el 4,5× de C-001, las altas de C-003, el churn y la reactivación. X-058 fija cómo se leen
+  las palabras del Overview en el panel; esto va un paso antes: qué hay detrás de cada ID. Ninguno de los dos riesgos
+  está en «No afirmar todavía».'
+options:
+- key: A
+  label: Dos líneas en «No afirmar todavía» y semáforo «en los datos del caso»
+  consequence: 'Se agregan dos líneas: «Que Finora no mida algo: solo sabemos que no está en los datos del caso»
+    y «Que un Cliente N sea una empresa: hablamos de cliente del panel». El semáforo de C-009 y la columna «si existe
+    hoy» de C-022 pasan a decir «en los datos del caso». Cuesta poco y cuida el titular de C-001 y el bloque de
+    propuestas frente al CRO y el CFO.'
+- key: B
+  label: Solo la línea de «datos del caso» y el semáforo
+  consequence: Cubre el riesgo más probable (que el CRO sí tenga parte de esto en su CRM), pero el 4,5× de C-001
+    se sigue leyendo como empresas sin que lo sepamos.
+- key: C
+  label: Esperar el inventario de Finora antes de tocar el framing
+  consequence: Se evita reescribir dos veces, pero mientras tanto el story dice «hoy no se mide» y nada impide leer
+    Cliente N como empresa.
+recommended: A
+recommended_why: 'Es barata y cubre los dos riesgos: el más probable (que Finora sí tenga parte de esto) y el de
+  más impacto (que el 4,5× no sean empresas). Si Finora confirma que un Cliente N es una empresa, esa línea se quita
+  sin tocar lo demás.'
+detected_by: cos
+links:
+- R-033
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-191956-cos-c056
+created_at: '2026-09-29T19:30:13-06:00'
+updated_at: '2026-09-29T19:30:13-06:00'
+version: 1
