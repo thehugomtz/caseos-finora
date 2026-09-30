@@ -248,3 +248,7 @@ Package. Encontrado y corregido:
   registra antes → después en `edits.jsonl` y en la bitácora del caso, rearma `presentation.html` al instante (0,1 s) y
   regenera la miniatura en segundo plano (Chrome, ~50 s); el PDF se regenera con un botón (~45 s). Probado en una copia
   del deck v5: 14 de 26 textos de la lámina 18 son editables (los 12 restantes son valores de la gráfica).
+- **Puntero láser al presentar (30-sep, pedido de Hugo):** en `deck.js` del html-slide-renderer (skill de Hugo; cada deck
+  lleva su copia), el cursor se vuelve un punto rojo con brillo que deja una estela que se desvanece (~0,85 s); con el
+  botón presionado la estela dura ~2,6 s para subrayar o encerrar, sin seleccionar texto. Encendido al presentar, apagado
+  en la vista general (G); la tecla L lo apaga o prende. Aplicado al deck v5 (presentación rearmada) y a los decks futuros.
