@@ -1,0 +1,37 @@
+id: X-122
+type: alert
+kind: story_review
+status: open
+severity: medium
+effect: requires_research
+source: R-029
+target: C-005
+title: 'R-029 toca C-005: revisar el claim'
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: La nueva evidencia comparte linaje (misma hipótesis o finding) con este claim de la story.
+options:
+- key: A
+  label: Revisar el claim con la nueva evidencia
+  consequence: El claim queda needs_review hasta que lo confirmes.
+- key: B
+  label: Pedir al COS que evalúe el efecto
+  consequence: Clasificación supports / weakens / contradicts con opciones.
+- key: C
+  label: Sin impacto material
+  consequence: Se registra la decisión y se cierra la alerta.
+recommended: B
+recommended_why: La relación existe por linaje; su efecto necesita lectura.
+detected_by: lineage
+links:
+- R-029
+- C-005
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T16:38:56-06:00'
+version: 1

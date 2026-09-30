@@ -1,0 +1,52 @@
+{
+ "id": "JOB-20260929-190141-0ba2",
+ "case_id": "finora",
+ "kind": "cos_impact",
+ "title": "COS evalúa el impacto de R-034",
+ "params": {
+  "source_id": "R-034",
+  "reason": "Reintento vía Claude: el reinicio del servidor para darle 40 min a R-033 cortó esta evaluación"
+ },
+ "agent": "cos",
+ "status": "succeeded",
+ "created_at": "2026-09-29T19:01:41-06:00",
+ "started_at": "2026-09-29T19:01:41-06:00",
+ "finished_at": "2026-09-29T19:11:18-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T19:01:41-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T19:01:41-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-190141-cos-9348",
+   "agent": "cos",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T19:01:43-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T19:11:18-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "created": [
+   "H-073",
+   "H-074",
+   "Q-096",
+   "Q-097",
+   "Q-098"
+  ],
+  "summary": "R-034 confirma, con confianza alta, que el as-is (cliente × mes × monto) no distingue un descuento de una contracción, un pago multi-mes, una pausa o un mes sin cobro. También trae el to-be del bloque CFO: oferta, código, canje, descuento aplicado y monto por línea de factura como objetos separados, igual que en Stripe y Chargebee, con el source capturado en el alta de todos los clientes. Sostiene C-017, C-019, C-013, C-024, C-018, H-016 y H-048; en el caso de H-048, como diseño y no con datos. Lo que cambia la historia está en C-020 y C-025. La línea «Descuento» es una convención que se aparta del default de ChartMogul y no tiene regla para el mes con doble cambio. Además, «cada caso se lee en su capa» depende de esa convención, de dos trampas de registro (precio especial y downgrade de retención) y de cinco tratamientos que decides tú con el CFO. Estas evaluaciones dan contenido a las alertas genéricas de linaje X-146 a X-149. Todo sigue siendo research propuesta: nada cuenta para la story hasta que revises F-233 a F-237."
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

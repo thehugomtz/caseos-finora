@@ -1,0 +1,513 @@
+id: R-028
+type: research
+research_question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento
+  de cobro? Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación,
+  y un pago que cubre varios meses se reparte.'
+case_question: H-031, H-033, H-034, H-039, H-040, C-009, C-016
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 2
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - H-031
+    - H-033
+    - H-034
+    - H-039
+    - H-040
+    - C-009
+    - C-016
+    suggested:
+    - Q-039
+    - H-057
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- H-031
+- H-033
+- H-034
+- H-039
+- H-040
+- C-009
+- C-016
+- F-179
+- F-180
+- F-181
+- F-182
+- F-183
+- F-184
+- F-185
+- F-186
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T14:38:00-06:00'
+updated_at: '2026-09-29T15:08:18-06:00'
+version: 7
+job_id: JOB-20260929-143800-8989
+error: null
+shaping_task: RT-028
+slides:
+- S3.1
+task_why: 'Lo pidió el COS en su revisión de cobertura de las 8 preguntas (D-017), acción 8 (opcional): refuerza
+  Q5 y le da tabla a X-037.'
+task:
+  work: datos
+  draft_answer: 'De arranque: R-011 encontró que más de la mitad del COP de «contracción» cae el mes siguiente a
+    un primer pago o a una reactivación (X-037), pero esa cifra no tiene tabla. Si el puente normalizado confirma
+    que una parte grande es cobro, el argumento para el CFO se refuerza: aun sin descuentos, el puente de monto
+    pagado ya confunde cobro con contracción.'
+  hugo_said: []
+  steps:
+  - kind: data
+    what: 'Reglas de normalización por cliente-mes: hueco de un mes con regreso al monto usual = brecha de cobro;
+      pago de varios meses = repartir con el monto usual; mes alto seguido del monto usual = efecto de cobro.'
+    where:
+    - mart.customer_month
+    - raw.transactions
+    - mart.churn_events
+  - kind: data
+    what: Puente anual antes y después de normalizar, reconciliado contra T-003 (el stock de punta a punta no cambia),
+      y la tabla de la cifra de X-037.
+    where:
+    - mart.monthly_metrics
+    - mart.customer_month
+  - kind: proposal
+    what: 'Para la lámina de Q5 («se puede / con cuidado / no se puede»): cuánto del puente es cobro y qué se lee
+      con confianza.'
+    where: []
+requested_via: vía Claude (delegado por Hugo en el chat, 29-sep 14:05, D-017)
+started_at: '2026-09-29T14:38:00-06:00'
+workspace_run_started: INV-20260929-143800-c4dd
+why_it_matters: ''
+short_answer: La reactivación concentra firmas de momento de cobro; la contracción no. En la reactivación, la parte
+  que regresa al monto usual explica 11,5% y la que cubre los meses del hueco más el corriente explica 42,6%; por
+  semestre, la parte que viene de un hueco de un mes va de 36,5% a 92,9%. En la contracción, la parte que regresa
+  al nivel previo al mes siguiente explica 4,0% y la que sigue igual o más abajo explica 88,9%
+headline: La reactivación concentra firmas de momento de cobro; la contracción no
+what_is_established:
+- En la ventana limpia la reactivación aporta COP 86,5 millones de entradas y la contracción −COP 89,5 millones
+  de salidas, frente a un cambio neto de COP 62 millones. Reprocesar estos componentes cambia la lectura del puente.
+- La señal indica que el regreso al monto usual explica 11,5% del MRR de reactivación y el pago que cubre los meses
+  del hueco más el corriente explica 42,6%; 45,9% no encaja en esas firmas. Coincide con que 44% de los churns observados
+  vuelve a pagar al mes siguiente y 32% de los retornos liquida exactamente los meses pendientes.
+- El churn observado pasó de 3,52% a 2,04% mientras el que no vuelve a pagar en el trimestre siguiente pasó de 0,98%
+  a 0,96%. La diferencia entre ambas definiciones es consistente con pausas y atrasos contados como baja.
+- 'La señal apunta a que la parte de la contracción que regresa al nivel previo al mes siguiente explica 4,0%, mientras
+  la que sigue igual o más abajo explica 88,9%. La reversión de calendario aparece en otras partes del puente: 25,3%
+  del movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo y 29% del MRR de expansión se revierte
+  al mes siguiente.'
+- Faltan la definición del campo de monto, el estado de la suscripción y el periodo devengado por pago. Sin esos
+  campos, repartir un pago multimes es una convención contable y no una medición.
+what_is_contested: []
+what_remains_unknown:
+- 'El puente normalizado exacto que pide repartir un pago entre los meses que cubre no es medible: faltan definición
+  del campo de monto, estado de suscripción y periodo devengado por pago.'
+- La reversión de calendario existe en el puente pero fuera de la contracción, con 25,3% del movimiento bruto del
+  monto pagado sin altas y 29% del MRR de expansión; no puede extrapolarse a la contracción.
+alternative_explanations: []
+case_implication: Si el comité acepta las firmas de momento de cobro, convendría reportar la reactivación separando
+  el regreso al monto usual y el pago que cubre los meses del hueco más el corriente del 45,9% que no encaja en
+  esas firmas. Si la contracción se lee como deterioro persistente, podría priorizarse su análisis por cuenta antes
+  que el ajuste de calendario, dado que la parte que regresa al nivel previo explica 4,0%.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Cómo queda el puente de MRR completo si los huecos cortos se tratan como continuidad de pago y los montos con
+  firma de liquidación de atrasos se reparten entre los meses cubiertos?
+- ¿Qué queda de la caída del MRR por cliente activo si la contracción persistente se separa de la que se reversa
+  al mes siguiente?
+- ¿Las interrupciones cortas se concentran en ciertas industrias, cosechas o meses del calendario, de modo que apunten
+  a un ciclo de facturación y no a comportamiento de clientes?
+- ¿Cuál es el churn y la reactivación si la baja se define solo cuando el cliente no vuelve a pagar en el trimestre
+  siguiente, aplicado mes a mes a todo el periodo?
+handoff_to_cos:
+  summary: La reactivación concentra firmas de momento de cobro; la contracción no
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-143800-c4dd
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: 'La reactivación se concentra en interrupciones de un solo mes de pago: por semestre de la ventana limpia,
+    la parte del MRR de reactivación que viene de un hueco de un mes va de 36,5% a 92,9%.'
+  spec:
+    tipo: linea
+    x:
+    - 2022 S1
+    - 2022 S2
+    - 2023 S1
+    - 2023 S2
+    - 2024 S1
+    - 2024 S2
+    series:
+    - nombre: mrr_reactivacion_cop
+      valores:
+      - 14354631.0
+      - 27280975.0
+      - 11528157.0
+      - 11664787.0
+      - 13118938.0
+      - 8555938.0
+    - nombre: share_hueco_un_mes_pct
+      valores:
+      - 92.9
+      - 36.5
+      - 74.8
+      - 50.1
+      - 57.6
+      - 52.6
+    formato: num2
+  claim: C-012
+- id: V-02
+  title: En la ventana limpia (mar-22 a oct-24) la reactivación aporta COP 86,5 millones de entradas de MRR y la
+    contracción −COP 89,5 millones de salidas, frente a un movimiento bruto de MRR de COP 404 millones y un cambio
+    neto de COP 62 millones en el periodo.
+  spec:
+    tipo: kpi
+    valor: 86503427.01
+    formato: cop
+    etiqueta: MRR de reactivación · total
+  claim: C-001
+- id: V-03
+  title: Del MRR de reactivación de la ventana limpia, la parte que regresa al monto usual explica 11,5% y la parte
+    que llega con un monto que cubre los meses del hueco más el corriente explica 42,6%; el resto, 45,9%, no encaja
+    en esas firmas de momento de cobro.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: clase
+      nombre: clase
+      formato: texto
+    - id: eventos
+      nombre: eventos
+      formato: int
+    - id: mrr_cop
+      nombre: mrr_cop
+      formato: num2
+    - id: share_pct
+      nombre: share_pct
+      formato: num2
+    filas:
+    - clase: A. Regresa al monto usual
+      eventos: 126
+      mrr_cop: 9930536.0
+      share_pct: 11.5
+    - clase: B. Monto cubre los meses del hueco mas el corriente
+      eventos: 163
+      mrr_cop: 36889570.0
+      share_pct: 42.6
+    - clase: C. Otro monto
+      eventos: 179
+      mrr_cop: 39683321.0
+      share_pct: 45.9
+  claim: C-004
+- id: V-04
+  title: 'La contracción observada no muestra la firma de momento de cobro: la parte que regresa al nivel previo
+    a la baja al mes siguiente explica 4,0% del MRR de contracción, mientras la parte que al mes siguiente sigue
+    igual o más abajo explica 88,9%.'
+  spec:
+    tipo: barras
+    x:
+    - A. Al mes siguiente regresa al nivel previo a la baja
+    - C. Al mes siguiente sigue igual o mas abajo
+    formato: num1
+    series:
+    - nombre: pct
+      valores:
+      - 4.0
+      - 88.9
+  claim: C-003
+- id: V-06
+  title: 'El churn observado bajó entre 2022 y 2024 mientras el churn que no vuelve a pagar en el trimestre siguiente
+    se mantuvo: pasó de 3,52% a 2,04% el observado y de 0,98% a 0,96% el que no vuelve.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-009
+- id: V-07
+  title: 'Hay reversión de calendario en el puente, pero fuera de la contracción: 25,3%% del movimiento bruto del
+    monto pagado sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte
+    al mes siguiente.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-010
+- id: V-08
+  title: 'El puente normalizado exacto que pide repartir un pago entre los meses que cubre no es medible con los
+    datos disponibles: no hay definición del campo de monto ni estado de la suscripción ni periodo devengado por
+    pago, de modo que el reparto solo puede acotarse con firmas de reversión y de liquidación de atrasos.'
+  spec:
+    tipo: datos
+    filas:
+    - dato: Monto pagado por cliente y mes (amount)
+      estado: Disponible
+      campos: ''
+    - dato: Industria del cliente
+      estado: Disponible
+      campos: ''
+    - dato: Gasto de S&M por mes y rubro
+      estado: Disponible, sin unidad documentada
+      campos: ''
+    - dato: Definición de amount (facturado, cobrado o contratado)
+      estado: No existe
+      campos: amount_definition
+    - dato: Estado de la suscripción (activa, pausada, cancelada)
+      estado: No existe
+      campos: subscription_status
+    - dato: Créditos y concesiones no recurrentes
+      estado: No existe
+      campos: credits
+  claim: C-011
+- id: V-09
+  title: 'Hay reversión de calendario en el puente, pero fuera de la contracción: 25,3% del movimiento bruto del
+    monto pagado sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte
+    al mes siguiente.'
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-013
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-143800-c4dd
+  path: investigations/runs/INV-20260929-143800-c4dd.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T14:45:40-06:00'
+findings:
+- F-179
+- F-180
+- F-181
+- F-182
+- F-183
+- F-184
+- F-185
+- F-186
+run_ids:
+- INV-20260929-143800-c4dd
+usage:
+  INV-20260929-143800-c4dd:
+    cost_usd: 1.705827
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-028 confirma lo esperado en la reactivación. En la contracción, su titular va más lejos que su prueba.
+
+
+    **Reactivación.** El 54,1% de su MRR tiene firma de momento de cobro: 11,5% vuelve al monto usual y 42,6% liquida
+    el hueco. Esto sostiene H-031 en esa mitad y también H-034.
+
+
+    **Churn.** La baja del churn observado (3,52% → 2,04%) está casi toda en interrupciones temporales, porque el
+    churn que no vuelve casi no se movió (0,98% → 0,96%). Ojo con presentarla como mejor retención en el Overview.
+
+
+    **Contracción.** El «no es momento de cobro» sale de mirar solo si el monto se repone al mes siguiente. Con
+    esa prueba no se ve la bajada al monto usual después de un pago inflado o de una liquidación, que es justo el
+    mecanismo de H-033. R-011 ya había visto que 57,6% del COP de contracción cae el mes siguiente a un primer pago
+    o a una reactivación. Recomiendo hacer un corte chico con los mismos pagos antes de aceptar F-184 con esa redacción.
+
+
+    **Otros dos puntos:**
+
+    - El 44% de H-039 puede estar mal etiquetado.
+
+    - Hay dos cifras de churn observado 2024: 1,9% en T-034 y 2,04% en T-085 y T-077. Hay que conciliarlas antes
+    de la story.'
+  run_id: RUN-20260929-144540-cos-37bd
+  at: '2026-09-29T15:08:18-06:00'
+  impacts:
+  - target: H-033
+    effect: requires_research
+    why: 'R-028 titula que la contracción no es momento de cobro. Pero su prueba solo mira si al mes siguiente el
+      monto vuelve al nivel previo (4,0%) o se queda igual o más abajo (88,9%, F-184). Con eso no se ve el mecanismo
+      central de H-033: si el mes previo fue un primer pago inflado o una reactivación que liquidó el hueco, el
+      cliente baja a su monto usual y ahí se queda, así que cae dentro del 88,9%.
+
+
+      En un puente mes contra mes como T-003, pasa esto: una reactivación que liquida el hueco (42,6% del MRR de
+      reactivación, F-180) y después sigue con su monto usual deja al mes siguiente una contracción que no se revierte.
+
+
+      Por eso R-028 y R-011 chocan en el titular pero miden cosas distintas. R-011 vio que 57,6% del COP de contracción
+      cae el mes siguiente a un primer pago o a una reactivación (X-037). Ninguna de las dos resuelve H-033. Lo
+      único que R-028 debilita es la parte de pagos parciales que se reponen al mes siguiente. Si F-184 se acepta
+      con su redacción actual, choca con lo que asumen X-043 y X-046.'
+  - target: T-034
+    effect: contradicts
+    why: 'Hay dos cifras para el mismo churn observado de 2024: 1,9% en T-034 (F-079) y 2,04% en T-085 (F-183, R-028)
+      y en T-077 (F-175, R-027). Para 2022 coinciden (3,5% y 3,52%).
+
+
+      La diferencia puede venir de la ventana: el churn que no vuelve necesita un trimestre de seguimiento, y eso
+      recorta los meses de 2024. También puede venir de la forma de promediar. Desde el estado no lo puedo ver.
+
+
+      T-034 está en C-009 y F-079 está en C-007: si no se fija una sola cifra, el CFO ve dos números para lo mismo.
+      Dejo la contradicción registrada sin resolverla.'
+  - target: C-009
+    effect: changes_story
+    why: 'R-028 le pone cifras de Finora al semáforo de C-009 en los movimientos del MRR:
+
+      - Reactivación (COP 86,5 millones) y contracción (−COP 89,5 millones) pesan cada una más que el cambio neto
+      del periodo (COP 62 millones, F-179).
+
+      - En la reactivación, 54,1% del MRR tiene firma de momento de cobro (F-180).
+
+      - El churn observado 2024 (2,04%) es más del doble del que no vuelve (0,96%, F-183).
+
+      - La contracción casi no se revierte (F-184), pero sin separar achicamiento de vuelta al monto usual tras
+      un pago inflado (ver H-033).
+
+      - El puente normalizado no se mide hoy: falta saber qué es el campo de monto, el estado de suscripción y el
+      periodo que cubre cada pago (F-186).
+
+
+      Además, T-034, que C-009 cita, choca con T-085 en el churn 2024 (ver T-034). Esto completa X-088, que solo
+      marcaba linaje.'
+  - target: H-039
+    effect: requires_research
+    why: 'R-028 repite el 44% (F-182) como «vuelve a pagar al mes siguiente», sin decir con qué monto. H-039 lo
+      usa como «vuelve con el mismo monto» (DM-4), y la definición de DM-4 no está en el estado.
+
+
+      En MRR, volver al monto usual pesa 11,5% de la reactivación y liquidar el hueco pesa 42,6% (F-180). Es decir,
+      al volver domina la liquidación (H-034), no el mismo monto. Parte de esa diferencia es mecánica, porque el
+      pago que liquida es más grande; falta verlo en conteo. Si el 44% mezcla ambos casos, la premisa de H-039 exagera
+      el tamaño de su fenómeno.
+
+
+      Sobre el mecanismo, R-028 no separa un desfase con la suscripción vigente de una pausa o de una baja con regreso
+      al mismo precio. F-183 dice «consistente con pausas y atrasos» y F-186 confirma que no hay estado de suscripción.'
+  - target: H-031
+    effect: supports
+    why: 'La mitad de reactivación queda sostenida:
+
+      - 54,1% del MRR de reactivación tiene firma de momento de cobro (F-180).
+
+      - Los huecos de un mes pesan entre 36,5% y 92,9% según el semestre (F-181).
+
+      - 44% de los churns observados vuelve a pagar al mes siguiente y 32% de los regresos liquida exacto lo pendiente
+      (F-182).
+
+
+      La mitad de contracción no queda establecida: la prueba de F-184 solo mira si el monto se repone al mes siguiente,
+      y eso no mide lo que quitaría repartir los pagos que cubren varios meses (ver H-033).
+
+
+      Y «desaparece» no se puede medir exacto: para repartir los pagos hace falta la definición del monto, el estado
+      de suscripción y el periodo de cada pago (F-186). Solo se puede poner un rango.'
+  - target: H-034
+    effect: supports
+    why: 'Aparece la firma que H-034 predice:
+
+      - 42,6% del MRR de reactivación llega con un monto que cubre los meses del hueco más el corriente (F-180).
+
+      - 32% de los regresos después de meses sin pago liquida exacto lo pendiente (F-182).
+
+      - El churn observado queda muy por encima del que no vuelve (F-183).
+
+
+      Es una firma, no una verificación: sin estado de suscripción ni periodo por pago (F-186), «atraso» es la lectura
+      compatible, no una etiqueta contractual (lo cubre «No afirmar todavía»). Y H-034 se queda corta: el mes siguiente
+      a la liquidación, el puente también registra una contracción (ver H-033).'
+  - target: H-040
+    effect: supports
+    why: 'R-028 encuentra reversión de calendario donde H-040 la pone:
+
+      - 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente, y 29% del MRR de expansión
+      se revierte (F-185).
+
+      - Entre los meses sin pago seguidos de regreso, 32% liquida exacto lo pendiente (F-182).
+
+
+      Dos límites. Primero, el 25,3% es la misma medición que F-090, no una confirmación independiente. Segundo,
+      R-028 no muestra que las subidas de un mes sean pagos dobles o parciales, ni puede descartar pausas (F-183).
+      Así que el «no pausas» de H-040 sigue sin poder probarse con estos datos.'
+  - target: C-016
+    effect: supports
+    why: 'R-028 suma otro caso de «misma observación, lecturas distintas»: un mes en cero seguido de un regreso
+      es compatible con atraso, pausa o baja y regreso (F-182, F-183). Y el reparto exacto no se puede hacer sin
+      la definición del monto, el estado de suscripción y el periodo por pago (F-186).
+
+
+      Para casi toda la contracción, F-184 descarta solo una lectura del «paga 100 y luego 80»: la baja temporal
+      que se repone. Siguen abiertas las que le importan al CFO (suscripción, tarifa y descuento) y la vuelta al
+      monto usual después de un pago inflado, porque todas se sostienen en el tiempo. Esto completa X-089, que solo
+      marcaba linaje.'
+  - target: H-059
+    effect: supports
+    why: 'F-181 va en la línea de la parte observable de H-059 (regresos después de un solo mes en cero). Pero medido
+      en MRR y por semestre, ese peso va de 36,5% a 92,9%: en al menos un semestre no es mayoría. El 70,5% de F-157
+      va en la misma línea, así que «la mayoría» depende de la base (conteo o MRR) y del periodo.
+
+
+      La parte de «sin intervención comercial» no se ve en los pagos: que no haya rastro de un toque no prueba que
+      no lo hubo. La implicación para el framing ya está en X-080.'

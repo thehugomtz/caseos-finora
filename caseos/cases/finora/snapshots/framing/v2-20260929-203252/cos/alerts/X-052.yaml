@@ -1,0 +1,46 @@
+id: X-052
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-016
+target: framing
+title: R-016 cambia el framing
+finding_text: 'No midan un funnel único: midan un bowtie por puertas. Self Service, Assisted y Executive tienen
+  cada una sus propios hitos a la izquierda, y todas comparten el mismo nudo (primer pago) y el mismo lado derecho
+  (retención, expansión, NRR). Reactivación va aparte como otro tipo de entrada, y AAARRR s…'
+why: 'El framing dejó abierto el hito de adquisición del CRO («Won, primer pago o suscripción activa siguen por
+  acordar»). R-016 (F-140) propone el primer pago como nudo común. El razonamiento: si Self Service es compra sin
+  intervención humana, no pasa por un Won comercial, y el primer pago es el único hito que comparten las tres puertas.
+  Adoptar el bowtie tal cual es, en la práctica, cerrar ese punto, y eso te toca a ti. En los datos de hoy ese nudo
+  sigue siendo «primera aparición observada», no una adquisición confirmada.'
+options:
+- key: A
+  label: Adoptar el primer pago como nudo en la propuesta. Won queda como hito del lado izquierdo en Assisted y
+    Executive. En los datos actuales se sigue diciendo «primera aparición observada».
+  consequence: Cierra el punto abierto en la propuesta y define «cliente nuevo» igual para Growth, Q-003 y R-019.
+    Los números de hoy conservan su caveat.
+- key: B
+  label: Dejar el hito abierto y presentar el bowtie con el nudo «por definir con Finora», mostrando qué cambia
+    con Won, primer pago o suscripción activa.
+  consequence: Es más prudente, pero el CRO no se lleva una definición operable y Q-003 queda sin punto de unión.
+- key: C
+  label: Usar la suscripción activa como nudo.
+  consequence: Está más cerca de lo que el CFO llama ingreso recurrente. Pero hoy no hay vigencias para medirla
+    (R-011) y chocaría con el «no afirmar» sobre etiquetas contractuales sin vigencia verificada.
+recommended: A
+recommended_why: 'Es el único hito que comparten las tres puertas y el único que ya se ve en los datos (como primera
+  aparición). Respeta los «no afirmar»: la etiqueta de adquisición se queda en la propuesta, no en el histórico.'
+detected_by: cos
+links:
+- R-016
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110242-cos-2ab0
+created_at: '2026-09-29T11:38:42-06:00'
+updated_at: '2026-09-29T11:38:42-06:00'
+version: 1

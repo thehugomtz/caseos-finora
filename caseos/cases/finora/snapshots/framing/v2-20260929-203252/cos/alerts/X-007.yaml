@@ -1,0 +1,48 @@
+id: X-007
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-015
+target: Q-022
+title: R-015 cambia la historia Q-022
+finding_text: Altas y gasto de S&M no se mueven en el mismo sentido
+why: 'R-015 le da a Q-022 su pista más concreta. Entre 2022 y 2024, las primeras apariciones de pago por mes suben
+  +104% y el valor inicial que traen sube +6% (run-rate temprano) o +17% (monto habitual) (F-113). El ticket de
+  entrada mediano pasa de COP 63,0 mil a 42,0 mil (F-112). En los pagos, lo que no crece al ritmo del volumen es
+  el valor, no el número. Eso cambia cómo se cuenta Growth. Si el CRO mide «ventas» como un conteo, la diferencia
+  con los pagos viene del hito, del periodo o del registro (Q-001, Q-020). Si mide valor, los pagos coinciden con
+  su «no más ventas». Respeta D-004: es una observación de pagos, no una respuesta sobre leads ni conversión.'
+options:
+- key: A
+  label: Usar F-113 como la pista, con límites escritos
+  consequence: 'Growth dice «más primeras apariciones de pago, casi el mismo valor inicial». No dice nada sobre
+    leads ni conversión ni llama a la primera aparición el hito del CRO. Versión ejecutiva: «Desde 2022, los primeros
+    pagos por mes se duplicaron; el valor que traen creció entre 6% y 17%». Se pregunta a Finora cómo mide el CRO
+    «ventas» y para qué periodo.'
+- key: B
+  label: Responder Q-022 de forma estricta
+  consequence: La respuesta es «la data actual no da pistas sobre el funnel» y F-113 pasa a Overview o Revenue.
+    Es más conservador, pero Growth se queda sin ninguna lectura de datos.
+- key: C
+  label: Esperar la definición de «ventas»
+  consequence: F-113 no se usa hasta que Finora defina la métrica y el hito del CRO. Evita mezclar definiciones,
+    pero Growth queda frenado por una respuesta externa.
+recommended: A
+recommended_why: Es la única pista que no necesita funnel ni leads, coincide con R-003, R-006 y R-009 y cabe en
+  el framing si los límites viajan con ella. Depende de que aceptes F-113 y de confirmar que el «monto habitual»
+  de las entradas de 2024 cubre un periodo comparable. Si no, queda solo el +6%.
+detected_by: cos
+links:
+- R-015
+- Q-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103957-cos-6a2b
+created_at: '2026-09-29T11:19:36-06:00'
+updated_at: '2026-09-29T11:19:36-06:00'
+version: 1

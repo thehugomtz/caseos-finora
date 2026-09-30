@@ -1,0 +1,466 @@
+{
+ "id": "JOB-20260929-143800-f853",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Analytics · ¿Cuál es el ticket de entrada estabilizado —el segundo pago…",
+ "params": {
+  "research_id": "R-026"
+ },
+ "agent": "analytics",
+ "status": "succeeded",
+ "created_at": "2026-09-29T14:38:00-06:00",
+ "started_at": "2026-09-29T14:38:00-06:00",
+ "finished_at": "2026-09-29T14:43:17-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T14:38:00-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T14:38:00-06:00",
+   "kind": "workspace",
+   "summary": "Investigación en vivo INV-20260929-143800-15c0 en el Business Exploration Workspace"
+  },
+  {
+   "t": "2026-09-29T14:38:01-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · inicio"
+  },
+  {
+   "t": "2026-09-29T14:38:02-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · sesion"
+  },
+  {
+   "t": "2026-09-29T14:38:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · nota"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · upsert_hypotheses {'encuadre': {'pregunta_analitica': '¿El ticket de entrada estabilizado (segundo pago / monto usual…"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · encuadre"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipotesis"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · search_evidence {'ids': ['C-ADQ-01', 'C-ADQ-02', 'C-ADQ-03', 'C-ADQ-05', 'C-ADQ-07']}"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:38-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · query_metric {'metric_id': 'entry_ticket', 'grano': 'year', 'cortes': ['industry'], 'periodo': {'desde': '2022-0…"
+  },
+  {
+   "t": "2026-09-29T14:38:38-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:38-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:38-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_analysis {'analysis_id': 'ticket_distribution'}"
+  },
+  {
+   "t": "2026-09-29T14:38:38-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:40-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': \"SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_sche…"
+  },
+  {
+   "t": "2026-09-29T14:38:40-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql falló (el investigador lo corrige): Tabla no permitida 'information_schema.columns'. Usa: mart.churn_events, mart.customer_month, mart.monthly_metrics, mart.new_customers, mar…"
+  },
+  {
+   "t": "2026-09-29T14:38:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': 'SELECT * FROM mart.new_customers LIMIT 5', 'proposito': 'Ver columnas disponibles de mart.…"
+  },
+  {
+   "t": "2026-09-29T14:38:44-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:38:45-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': 'SELECT * FROM mart.customer_month LIMIT 5', 'proposito': 'Ver columnas disponibles de mart…"
+  },
+  {
+   "t": "2026-09-29T14:38:45-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': 'SELECT year,\\n  count(*) AS altas,\\n  round(median(m0_cop),0) AS m0_mediana,\\n  round(avg(…"
+  },
+  {
+   "t": "2026-09-29T14:39:03-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:04-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_sql {'sql': 'SELECT industry, year,\\n  count(*) AS altas,\\n  round(median(m0_cop),0) AS m0_mediana,\\n…"
+  },
+  {
+   "t": "2026-09-29T14:39:04-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:06-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_analysis {'analysis_id': 'mix_within_decomposition', 'params': {'base': '2022', 'comparacion': '2023', 'vari…"
+  },
+  {
+   "t": "2026-09-29T14:39:06-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · run_analysis {'analysis_id': 'mix_within_decomposition', 'params': {'base': '2022', 'comparacion': '2024', 'vari…"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · search_evidence {'ids': ['C-DAT-02', 'C-DAT-07', 'C-DAT-08', 'C-ADQ-04']}"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · evidencia"
+  },
+  {
+   "t": "2026-09-29T14:39:55-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'En cohortes de ventana limpia, la mediana del segundo pago (M1) de las altas es {m1_…"
+  },
+  {
+   "t": "2026-09-29T14:39:55-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · validacion"
+  },
+  {
+   "t": "2026-09-29T14:39:55-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-001 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:39:55-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:01-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'La caída del ticket de entrada entre las cohortes 2022 y 2023 se observa también con…"
+  },
+  {
+   "t": "2026-09-29T14:40:01-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-002 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:01-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:05-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'El ticket estabilizado no continúa bajando después de 2023: la mediana del segundo p…"
+  },
+  {
+   "t": "2026-09-29T14:40:05-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-003 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:05-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'La mediana del monto usual temprano de las altas es menor en 2024 que en 2022 en las…"
+  },
+  {
+   "t": "2026-09-29T14:40:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · claim_rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:16-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim falló (el investigador lo corrige): C-004 rechazada:\n- cifras escritas con letras: ['seis']. Liga la cifra a una evidencia (p. ej. '{n} de {total} industrias')."
+  },
+  {
+   "t": "2026-09-29T14:40:21-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Salud es la excepción en el tramo 2022→2023: su mediana del monto usual temprano es…"
+  },
+  {
+   "t": "2026-09-29T14:40:21-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-005 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:21-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Medido con el monto usual temprano, el efecto dentro de las industrias explica {d23}…"
+  },
+  {
+   "t": "2026-09-29T14:40:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · claim_rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:29-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim falló (el investigador lo corrige): C-006 rechazada:\n- cifras escritas a mano en la plantilla: ['90']. Toda cifra debe ser una variable ligada."
+  },
+  {
+   "t": "2026-09-29T14:40:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'La mediana del monto usual temprano de las altas es menor en 2024 que en 2022 en Pro…"
+  },
+  {
+   "t": "2026-09-29T14:40:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-007 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:42-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:47-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'Medido con el monto usual temprano, el efecto dentro de las industrias explica {d23}…"
+  },
+  {
+   "t": "2026-09-29T14:40:47-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-008 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:47-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:54-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'En la cohorte 2022 el primer pago promedio ({m0p22}) supera al pago promedio del seg…"
+  },
+  {
+   "t": "2026-09-29T14:40:54-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-009 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:54-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:40:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_claim {'plantilla': 'No es posible separar cuánto del menor ticket estabilizado por cohorte e industria c…"
+  },
+  {
+   "t": "2026-09-29T14:40:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · afirmación C-010 rechazada"
+  },
+  {
+   "t": "2026-09-29T14:40:58-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:41:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-007', 'intencion': 'comparacion', 'evidence_id': 'E-006', 'principal': True, 'ejes'…"
+  },
+  {
+   "t": "2026-09-29T14:41:08-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual falló (el investigador lo corrige): La evidencia E-006 (sql) no admite la intención 'comparacion'. Usa 'detalle' o elige otra evidencia."
+  },
+  {
+   "t": "2026-09-29T14:41:09-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-001', 'intencion': 'detalle', 'evidence_id': 'E-005'}"
+  },
+  {
+   "t": "2026-09-29T14:41:09-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T14:41:10-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-008', 'intencion': 'descomposicion', 'evidence_id': 'E-008'}"
+  },
+  {
+   "t": "2026-09-29T14:41:10-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T14:41:11-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-002', 'intencion': 'comparacion', 'evidence_id': 'E-002'}"
+  },
+  {
+   "t": "2026-09-29T14:41:11-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T14:41:13-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · propose_visual {'claim_id': 'C-007', 'intencion': 'detalle', 'evidence_id': 'E-006', 'principal': True}"
+  },
+  {
+   "t": "2026-09-29T14:41:13-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · visual"
+  },
+  {
+   "t": "2026-09-29T14:41:15-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · nota"
+  },
+  {
+   "t": "2026-09-29T14:41:35-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · hipótesis actualizadas"
+  },
+  {
+   "t": "2026-09-29T14:41:35-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · composicion"
+  },
+  {
+   "t": "2026-09-29T14:43:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · composición (intento 1)"
+  },
+  {
+   "t": "2026-09-29T14:43:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · publicada"
+  },
+  {
+   "t": "2026-09-29T14:43:07-06:00",
+   "kind": "workspace",
+   "summary": "Workspace · final"
+  },
+  {
+   "t": "2026-09-29T14:43:17-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-026",
+  "findings": [
+   "F-160",
+   "F-161",
+   "F-162",
+   "F-163",
+   "F-164",
+   "F-165",
+   "F-166",
+   "F-167"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

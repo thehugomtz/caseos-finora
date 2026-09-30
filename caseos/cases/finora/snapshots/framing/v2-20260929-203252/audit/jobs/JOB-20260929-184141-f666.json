@@ -1,0 +1,55 @@
+{
+ "id": "JOB-20260929-184141-f666",
+ "case_id": "finora",
+ "kind": "cos_impact",
+ "title": "COS evalúa el impacto de R-031",
+ "params": {
+  "source_id": "R-031",
+  "reason": "research completado"
+ },
+ "agent": "cos",
+ "status": "succeeded",
+ "created_at": "2026-09-29T18:41:41-06:00",
+ "started_at": "2026-09-29T18:41:41-06:00",
+ "finished_at": "2026-09-29T18:55:24-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T18:41:41-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T18:42:02-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-184141-cos-dca6",
+   "agent": "cos",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T18:42:03-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T18:55:24-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "created": [
+   "X-142",
+   "X-143",
+   "X-144",
+   "X-145",
+   "H-072",
+   "Q-093",
+   "Q-094",
+   "Q-095"
+  ],
+  "summary": "R-031 no trae data nueva de Finora. Trae dos cosas: un diseño con confianza media y un diagnóstico de datos con confianza alta. El diseño son cuatro rutas que se clasifican al final del recorrido según los eventos (Executive, Self Service, Hybrid A y Hybrid B), el loop de Reactivate y 33 métricas. El diagnóstico dice que antes del primer pago todo está en rojo y que solo 4 métricas comunes se pueden calcular, con cuidado y sin abrir por puerta ni por ruta. Refuerza C-006 (se compara por puerta, no por ruta: F-224), C-021 y C-009. Hay cuatro puntos materiales. (1) La regla de rutas depende de Q-063 más de lo que parecía: según cómo cuente el formulario, el lead que trabaja un SDR queda en Executive, pasa a Hybrid A o no cabe en ninguna ruta. (2) C-005 tiene que nombrar Hybrid A y B, separar ruta de puerta y escribir sus dos condiciones: que exista Checkout Self y la respuesta a Q-063. (3) C-022 se apoya en R-022, donde Hybrid es la máquina de leads, así que la story usaría «Hybrid» con dos significados. (4) De los 330 churns que vuelven al mes siguiente, solo 87 lo hacen con el mismo monto. Eso achica H-039 y responde la duda de X-102."
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

@@ -1,0 +1,153 @@
+id: T-066
+type: table
+table_key: FIN-F-164
+title: Medido con el monto usual temprano, el efecto dentro de las industrias explica 91% del cambio del ticket
+  de e…
+question: ¿Cuál es el ticket de entrada estabilizado —el segundo pago o el monto usual, no el primer pago— por año
+  de alta y por industria, en cohortes de ventana limpia? ¿Se sostiene la caída 2022→2023 de T-018 y el «menor ticket»
+  de C-007?
+columns:
+- Industria
+- Altas 2022
+- Altas 2023
+- '% 2022'
+- '% 2023'
+- Ticket 2022
+- Ticket 2023
+- Contribución del mix
+- Contribución dentro
+rows:
+- - Restaurantes
+  - 78
+  - 164
+  - 0.2867647058823529
+  - 0.2523076923076923
+  - 117465.0346153846
+  - 50857.992713414635
+  - -2899.954418798204
+  - -17953.008907219886
+- - Retail
+  - 49
+  - 169
+  - 0.1801470588235294
+  - 0.26
+  - 61716.74142857143
+  - 30020.30644970414
+  - 3662.7365439635028
+  - -6975.546315569839
+- - Producción
+  - 70
+  - 155
+  - 0.25735294117647056
+  - 0.23846153846153847
+  - 53075.289
+  - 51194.72806451613
+  - -984.9034417293075
+  - -466.20467082725054
+- - Tecnología
+  - 37
+  - 64
+  - 0.13602941176470587
+  - 0.09846153846153846
+  - 145779.95675675676
+  - 57392.34375
+  - -3816.3756220754467
+  - -10363.047681091972
+- - Servicios profesionales
+  - 17
+  - 61
+  - 0.0625
+  - 0.09384615384615384
+  - 69454.41176470589
+  - 27983.450163934427
+  - 1527.1511052277278
+  - -3241.9126712910775
+- - Salud
+  - 21
+  - 37
+  - 0.07720588235294118
+  - 0.05692307692307692
+  - 62550.0
+  - 67025.17783783784
+  - -1314.074060312462
+  - 300.12547298214497
+units:
+  Altas 2022: int
+  Altas 2023: int
+  '% 2022': pct
+  '% 2023': pct
+  Ticket 2022: cop
+  Ticket 2023: cop
+  Contribución del mix: cop
+  Contribución dentro: cop
+definitions: {}
+message: Medido con el monto usual temprano, el efecto dentro de las industrias explica 91% del cambio del ticket
+  de entrada 2022→2023 y 96% del cambio 2022→2024, frente a 9% y 4% del mix de industrias; el límite inferior del
+  intervalo bootstrap del efecto dentro es 84% y 90%.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  - E-008
+  - EC-ADQ-04
+  tools:
+  - run_analysis
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-007
+
+  run_analysis(''mix_within_decomposition'', {"base": "2022", "comparacion": "2023", "variante": "early_run_rate"})
+
+
+  -- E-008
+
+  run_analysis(''mix_within_decomposition'', {"base": "2022", "comparacion": "2024", "variante": "early_run_rate"})'
+transformation: E-007 · run_analysis · Shapley (punto medio) de un promedio ponderado + bootstrap 2.000; E-008 ·
+  run_analysis · Shapley (punto medio) de un promedio ponderado + bootstrap 2.000; EC-ADQ-04 · search_evidence ·
+  Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-15c0 · C-008
+limitations:
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: waterfall
+visual_artifact:
+  tipo: cascada
+  formato: cop
+  pasos:
+  - etiqueta: '2022'
+    valor: 87462.48772058824
+    tipo: total
+  - etiqueta: 'Mix de
+
+      industrias'
+    corta: Mix
+    valor: -1513.3733705536463
+    tipo: delta
+  - etiqueta: 'Dentro de las
+
+      industrias'
+    corta: Dentro
+    valor: -40501.68990960137
+    tipo: delta
+  - etiqueta: '2024'
+    valor: 45447.424440433206
+    tipo: total
+created_at: '2026-09-29T14:43:13-06:00'
+status: valid
+validation_errors: []
+finding: F-164
+links:
+- F-164
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:43:13-06:00'
+version: 1

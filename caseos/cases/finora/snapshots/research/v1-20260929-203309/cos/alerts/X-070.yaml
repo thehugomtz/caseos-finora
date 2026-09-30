@@ -1,0 +1,51 @@
+id: X-070
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-021
+target: H-015
+title: R-021 cambia el framing H-015
+finding_text: 'Se puede, con una condición: el descuento tiene que existir en los datos como objeto propio (tipo,
+  monto, inicio, fin, motivo, Canal y aprobador), separado de la cantidad contratada y del precio de lista. Además,
+  el puente de MRR necesita líneas propias de «descuento nuevo/aumentado» y «descuento r…'
+why: 'R-021 confirma que el histórico no se puede descomponer. H-015 solo se vuelve medible si el descuento existe
+  como objeto propio (inicio, fin, motivo, Canal, aprobador) y el puente tiene líneas de «descuento nuevo/aumentado»
+  y «descuento reducido/terminado». H-015 está escrita como explicación de lo que ya pasó. Pero el framing pide
+  no afirmar que hubo descuentos en el histórico, y R-011 y T-061 ya mostraron que cliente × mes × monto no los
+  separa. Dentro del caso no se puede ni soportar ni descartar. Lo mismo pasa con las otras ramas de descuento del
+  árbol CFO: H-010 (al entrar) y H-012 (al salir). A favor: los tres grupos de D-002, cada uno con su parte de suscripción
+  y de descuento, sirven de estructura para ese puente.'
+options:
+- key: A
+  label: Reformular H-015, H-010 y H-012 como requisitos del modelo
+  consequence: 'Versión propuesta para H-015: «El puente tiene que mostrar cuándo un descuento empieza, aumenta,
+    se reduce o termina, separado de un cambio de suscripción». Las tres salen de la explicación del cambio histórico.
+    D-002 se conserva como estructura del puente, y en la historia el pasado queda como limitación explícita, sin
+    afirmar nada sobre descuentos.'
+- key: B
+  label: Dejarlas abiertas como no evaluables
+  consequence: El árbol no cambia y se listan los datos que faltan, como en R-008. La historia tendría que mostrar
+    tres ramas sin respuesta, y el CFO podría leerlas como explicaciones posibles de lo que ya pasó.
+- key: C
+  label: Esperar a saber si Finora registra descuentos, créditos o precio de lista
+  consequence: Si ese registro existe con fechas, H-015 se vuelve evaluable en el histórico; si no, volvemos a A.
+    Depende de una respuesta que quizá no se pueda conseguir dentro del caso.
+recommended: A
+recommended_why: 'Respeta el framing y D-004 (no fingir respuestas sin datos) sin tirar trabajo: el árbol que aprobaste
+  en D-002 pasa a ser el esqueleto del puente propuesto. La duda de C no se pierde: queda como pregunta abierta
+  para Finora.'
+detected_by: cos
+links:
+- R-021
+- H-015
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-111551-cos-c920
+created_at: '2026-09-29T11:56:40-06:00'
+updated_at: '2026-09-29T11:56:40-06:00'
+version: 1

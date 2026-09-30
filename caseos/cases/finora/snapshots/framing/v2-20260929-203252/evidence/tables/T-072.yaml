@@ -1,0 +1,62 @@
+id: T-072
+type: table
+table_key: FIN-F-170
+title: Los movimientos brutos de MRR del periodo, COP 404 millones, equivalen a 6,5× el cambio neto, COP 62 millones.
+question: 'Simulación ilustrativa con las cifras del enunciado del CFO: ¿cómo se leen los tres casos (paga 100 y
+  luego 80; lista de 100 a 130 con descuento de 30 y pago de 100; fin de ese descuento) y el caso mixto en un puente
+  de tres capas —MRR de lista, descuento y MRR neto—, frente a cómo los lee hoy el puente de monto pagado?'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - gross_movement
+  - Movimiento bruto de MRR del periodo (entradas más salidas)
+  - COP 404 millones
+- - net_movement
+  - Cambio neto de MRR del periodo
+  - COP 62 millones
+- - gross_net_ratio
+  - Movimiento bruto / cambio neto (veces)
+  - 6,5×
+units: {}
+definitions: {}
+message: Los movimientos brutos de MRR del periodo, COP 404 millones, equivalen a 6,5× el cambio neto, COP 62 millones.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RES-04
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-RES-04 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-3f07 · C-003
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '9.1'
+  claim_fase1: C-RES-04
+  cubre:
+  - C-RES-04
+created_at: '2026-09-29T14:43:50-06:00'
+status: valid
+validation_errors: []
+finding: F-170
+links:
+- F-170
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:43:50-06:00'
+version: 1

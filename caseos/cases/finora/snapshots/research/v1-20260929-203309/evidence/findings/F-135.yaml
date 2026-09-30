@@ -1,0 +1,71 @@
+id: F-135
+type: finding
+headline: 'En verde (se puede calcular hoy, con nombre honesto): MRR pagado observado y su puente, clientes activos,
+  ARPA por cliente, churn observado, NRR/GRR de la base y métricas de cohorte.'
+evidence_text: 'El panel está completo: 1.961 clientes × 34 meses (ene-22 a oct-24), con 33.703 filas en cero explícitas
+  y ninguna negativa. El mart ya calcula el puente de MRR (altas, expansión, reactivación, contracción y churn),
+  que cuadra con la Fase 1 y usa la misma taxonomía de movimientos que ChartMogul. Una métrica de cohorte que ya
+  se puede calcular es el ingreso observado acumulado por alta a 12 meses: 706.688 COP en la cosecha 2022 y 496.402
+  COP en la de 2023 (altas hasta oct-23).'
+confidence: high
+limitations:
+- Todo es monto pagado observado, no MRR contratado. Las cohortes recientes están censuradas a la derecha y la base
+  de ene-22 no tiene fecha de adquisición.
+kind: measurement
+claims:
+- claim: 'El panel cubre 1.961 clientes × 34 meses (ene-22 a oct-24), con 33.703 filas en cero explícitas y ninguna
+    negativa: el estado de pago de cada cliente se puede observar mes a mes.'
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Sin montos negativos no hay notas crédito ni reembolsos visibles.
+- claim: 'El mart ya calcula el MRR pagado y su puente de movimientos: en ene-22 había 35,0 millones de COP y 377
+    clientes activos; en oct-24, 97,0 millones de COP y 1.678.'
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Según el catálogo, cuadra al centavo con la Fase 1. Es monto pagado observado, no MRR contratado.
+- claim: El ingreso observado acumulado por alta en sus primeros 12 meses es de 706.688 COP en la cosecha 2022 (272
+    altas) y de 496.402 COP en la cosecha 2023 con alta hasta oct-23 (523 altas). En M12 siguen pagando el 87,1%
+    y el 89,1%, respectivamente.
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Es un LTV empírico de ingreso a 12 meses, no un LTV con margen. «Paga en M12» subestima la retención cuando
+    hay huecos de cobro.
+- claim: 1.476 clientes están en cohortes limpias (desde mar-22), 377 son base previa (ya activos en ene-22) y 108
+    son altas de feb-22 con sospecha de arrastre.
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Define el alcance comparable para el ARPA de entrada, la retención y el S&M por alta (Q-010).
+- claim: ChartMogul clasifica los movimientos de MRR en new business, expansión, contracción, churn, reactivación
+    y neutral.
+  source_id: EXT-02
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: supports
+  notes: El puente del mart sigue esta misma lógica.
+unverified: false
+source_ref:
+  research: R-018
+links:
+- R-018
+- H-017
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:01:40-06:00'
+updated_at: '2026-09-29T11:01:40-06:00'
+version: 1

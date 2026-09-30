@@ -1,0 +1,42 @@
+id: X-015
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-014
+target: H-022
+title: R-014 requiere más investigación H-022
+finding_text: 'No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE
+  ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo
+  son dos tablas: entradas (creación, grupo de entrada, señales de ajuste congeladas al…'
+why: R-014 establece que PayrollExpenses es negativo en 5 meses. Si el S&M total que usan R-015 (S&M total por alta
+  −66%) y T-012 (gasto por alta de 0,11 a 0,04) incluye Team/Payroll, y esos meses caen en las ventanas comparadas,
+  las cifras que hoy sostienen H-022 pueden moverse. En el estado no veo si R-015 o T-007 ya lo tratan.
+options:
+- key: A
+  label: Chequeo chico
+  consequence: Confirmar si el S&M total de R-015 y T-012 incluye PayrollExpenses y en qué meses es negativo. Si
+    esos meses caen en las ventanas, mostrar la cifra con y sin Team. Así la cifra queda defendible o se corrige
+    antes de que la revises.
+- key: B
+  label: Limitación escrita
+  consequence: No cuesta trabajo, pero el riesgo sigue dentro de la cifra que llegaría a la story.
+- key: C
+  label: Sacar Team de todo el S&M por alta
+  consequence: Evita el problema, pero cambia la definición de S&M total sin saber si hacía falta.
+recommended: A
+recommended_why: Es el chequeo más chico que dice si hay problema; si R-015 ya lo trató, se cierra sin cambios.
+detected_by: cos
+links:
+- R-014
+- H-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104559-cos-afa0
+created_at: '2026-09-29T11:22:25-06:00'
+updated_at: '2026-09-29T11:22:25-06:00'
+version: 1

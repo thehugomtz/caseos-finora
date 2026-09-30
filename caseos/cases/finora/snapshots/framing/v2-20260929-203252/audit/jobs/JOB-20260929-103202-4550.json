@@ -1,0 +1,315 @@
+{
+ "id": "JOB-20260929-103202-4550",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, per…",
+ "params": {
+  "research_id": "R-010"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:02-06:00",
+ "started_at": "2026-09-29T10:32:02-06:00",
+ "finished_at": "2026-09-29T10:47:15-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-103202-measurement-0501",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:32:04-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:32:07-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T10:32:18-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(AVG(new_customers),1) AS avg_new_per_month,"
+  },
+  {
+   "t": "2026-09-29T10:32:19-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, new_customers, active_customers, ROUND(demand_gen_spend,0) AS demand_gen, ROUND(paid_media,0) AS paid_media, ROUND(publicidad_"
+  },
+  {
+   "t": "2026-09-29T10:32:29-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) || CASE WHEN CAST(substr(month,6,2) AS INTEGER) <= 6 THEN '-S1' ELSE '-S2' END AS half, COUNT(*) AS months, SUM(new"
+  },
+  {
+   "t": "2026-09-29T10:32:30-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT Month, PaidMedia, Travel, PublicidadNoWeb, Freelance, SoftwareTools, Team, PayrollExpenses FROM raw.sm_spend LIMIT 6"
+  },
+  {
+   "t": "2026-09-29T10:32:41-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, COUNT(*) AS months, SUM(new_customers) AS new_customers, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop, "
+  },
+  {
+   "t": "2026-09-29T10:32:42-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS altas, ROUND(AVG(m0_cop)/1e3,0) AS avg_m0_k_cop, ROUND(AVG(early_run_rate_cop)/1e3,0) AS avg_early_rr_k_cop, SUM(CA"
+  },
+  {
+   "t": "2026-09-29T10:32:49-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, clean, COUNT(*) AS altas, ROUND(AVG(m0_cop)/1e3,0) AS avg_m0_k_cop, ROUND(MEDIAN(m0_cop)/1e3,0) AS median_m0_k_cop, ROUND(MEDIA"
+  },
+  {
+   "t": "2026-09-29T10:32:51-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT industry, SUM(CASE WHEN cohort_month BETWEEN '2022-03' AND '2022-10' THEN 1 ELSE 0 END) AS altas_2022_mar_oct, SUM(CASE WHEN cohort_m"
+  },
+  {
+   "t": "2026-09-29T10:33:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HBR \"The Short Life of Online Sales Leads\" response time qualify lead”"
+  },
+  {
+   "t": "2026-09-29T10:33:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall opportunity-centric buying group demand waterfall”"
+  },
+  {
+   "t": "2026-09-29T10:33:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “cohort-based funnel conversion vs period-based conversion rate time lag leads to customers SaaS”"
+  },
+  {
+   "t": "2026-09-29T10:33:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Simpson's paradox conversion rate channel mix shift marketing example”"
+  },
+  {
+   "t": "2026-09-29T10:33:24-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://hbr.org/2011/03/the-short-life-of-online-sales-leads"
+  },
+  {
+   "t": "2026-09-29T10:33:25-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/"
+  },
+  {
+   "t": "2026-09-29T10:33:27-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://medium.com/falkon-blog/cohort-based-funnels-and-why-you-need-them-745bb447c89c"
+  },
+  {
+   "t": "2026-09-29T10:33:28-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://medium.com/@hancock.steven.m/simpsons-paradox-in-saas-63393d9128e3"
+  },
+  {
+   "t": "2026-09-29T10:33:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf"
+  },
+  {
+   "t": "2026-09-29T10:33:38-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://austinyang.co/conversion-rate-analysis-guide-b2b-saas/"
+  },
+  {
+   "t": "2026-09-29T10:33:39-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://count.co/metric/funnel-conversion-analysis"
+  },
+  {
+   "t": "2026-09-29T10:33:40-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://timdietrich.me/blog/simpsons-paradox/"
+  },
+  {
+   "t": "2026-09-29T10:33:55-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.researchgate.net/publication/298137032_The_short_life_of_online_sales_leads"
+  },
+  {
+   "t": "2026-09-29T10:33:55-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model recurring revenue stages conversion rates time”"
+  },
+  {
+   "t": "2026-09-29T10:33:55-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “lead response time field experiment randomized conversion causal effect sales follow-up study”"
+  },
+  {
+   "t": "2026-09-29T10:33:56-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “survival analysis time to conversion right censoring leads recent cohorts not enough time to convert Kaplan-Meier marketing”"
+  },
+  {
+   "t": "2026-09-29T10:34:10-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://store.hbr.org/product/the-short-life-of-online-sales-leads/F1103B"
+  },
+  {
+   "t": "2026-09-29T10:34:11-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-29T10:34:13-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.insidesales.com/response-time-matters/"
+  },
+  {
+   "t": "2026-09-29T10:34:14-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.stats.ox.ac.uk/~mlunn/lecturenotes1.pdf"
+  },
+  {
+   "t": "2026-09-29T10:34:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://modernstatisticswithr.com/survivalchapter.html"
+  },
+  {
+   "t": "2026-09-29T10:34:38-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://arxiv.org/pdf/2606.04387"
+  },
+  {
+   "t": "2026-09-29T10:34:39-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “win-loss analysis buyer interviews vs CRM loss reasons differ sales reps \"price\" reason accuracy”"
+  },
+  {
+   "t": "2026-09-29T10:34:39-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “lead scoring fit versus intent engagement at entry measure lead quality consistently definition change MQL trend”"
+  },
+  {
+   "t": "2026-09-29T10:34:58-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data"
+  },
+  {
+   "t": "2026-09-29T10:34:59-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12217587/"
+  },
+  {
+   "t": "2026-09-29T10:35:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “duplicate leads inflate lead volume count unique people accounts lead-to-account matching form fills”"
+  },
+  {
+   "t": "2026-09-29T10:35:11-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pmc.ncbi.nlm.nih.gov/articles/PMC12217587/"
+  },
+  {
+   "t": "2026-09-29T10:35:11-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://therevopsreport.com/insights/lead-to-account-matching/"
+  },
+  {
+   "t": "2026-09-29T10:35:30-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers_jul_oct, ROUND(SUM(new_mrr_cop)/1e6,1) AS new_mrr_mm_cop_jul_oct, ROUN"
+  },
+  {
+   "t": "2026-09-29T10:39:22-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS year, SUM(new_customers) AS new_customers, SUM(reactivated_customers) AS reactivated_customers, SUM(expanded_cus"
+  },
+  {
+   "t": "2026-09-29T10:39:36-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month, SUM(CASE WHEN multi_"
+  },
+  {
+   "t": "2026-09-29T10:39:41-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, COUNT(*) AS expansion_rows, SUM(CASE WHEN reverts_next_month IS NULL THEN 1 ELSE 0 END) AS reverts_unknown, SUM(CASE WHEN COAL"
+  },
+  {
+   "t": "2026-09-29T10:39:54-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(cohort_month,1,4) || '-Q' || CAST((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3 AS VARCHAR) AS cohort_quarter, COUNT(*) AS a"
+  },
+  {
+   "t": "2026-09-29T10:40:08-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(cohort_month,1,4) || '-Q' || CAST(FLOOR((CAST(substr(cohort_month,6,2) AS INTEGER)+2)/3) AS INTEGER) AS cohort_quarter, COUNT("
+  },
+  {
+   "t": "2026-09-29T10:47:15-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-010",
+  "findings": [
+   "F-125",
+   "F-126",
+   "F-127",
+   "F-128",
+   "F-129"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

@@ -1,0 +1,62 @@
+id: X-103
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-023
+target: H-037
+title: R-023 debilita H-037
+finding_text: 'Sí se puede tener un mix MECE de cuatro funnels, con cuatro condiciones: 1) la unidad es la cuenta,
+  no la persona; 2) la puerta se asigna al entrar, con información previa al contacto, y queda fija; 3) una regla
+  de prioridad decide en este orden: Reactivate, Executive, Hybrid, Self Service y «sin c…'
+why: 'R-023 confirma la premisa: la definición de Reactivate es lo que más mueve las cifras (F-189). Pero debilita
+  a H-037 como explicación del estancamiento de 2024:
+
+  - De 2023 a 2024 el peso de las reactivaciones sube con las dos definiciones: de 17,7% a 22,6% con un mes, y de
+  8,1% a 8,6% con 2 o más meses. Contarlas como «nuevos» suavizaría el estancamiento de 2024 (R-024), no lo crearía.
+
+  - Con 2 o más meses, el peso casi no se mueve en ningún año.
+
+
+  Solo podría restar crecimiento de 2022 a 2023, y ahí la cifra es frágil:
+
+  - Según H-058, el 30,4% de 2022 incluye feb-22, un mes en que el panel no puede registrar reactivaciones.
+
+  - Con T-097 (mar–dic) sale ~39%, que cuadra con el 38% de R-016.
+
+
+  Queda viva una variante que R-023 no ve: regresos con otro ID contados como altas (H-024, T-100). No se sabe si
+  «Cliente N» es la cuenta.'
+options:
+- key: A
+  label: Reformularla como riesgo de definición
+  consequence: H-037 deja de explicar el estancamiento de 2023 a 2024 y pasa a la lámina de definiciones del nudo,
+    con las cifras de R-023 por año, las dos definiciones y una sola ventana para 2022. Sigue viva la variante de
+    regresos con otro ID. La story deja de citar dos rangos distintos (18–38% y 18–30%).
+- key: B
+  label: Mantenerla y preguntar cómo cuenta el CRO
+  consequence: 'Se agrega una pregunta: ¿el CRO cuenta «clientes nuevos» desde el CRM o desde el primer pago, y
+    los regresos pasan por la máquina de leads? No se pierde nada, pero sigue sin prueba y depende de un dato que
+    el caso no trae.'
+- key: C
+  label: Retirarla y dejar Reactivate solo en C-005
+  consequence: La historia queda más simple, pero se pierde el caso en que el conteo del CRO mezcle regresos, que
+    sí podría restar crecimiento de 2022 a 2023.
+recommended: A
+recommended_why: Separa lo que R-023 sí muestra (la definición mueve mucho las cifras) de lo que no sostiene (que
+  explique el estancamiento de 2024). Además corrige la cifra antes de que llegue a una lámina. Se puede revisar
+  si Finora dice que el CRO cuenta los regresos como nuevos.
+detected_by: cos
+links:
+- R-023
+- H-037
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-7294
+created_at: '2026-09-29T16:32:58-06:00'
+updated_at: '2026-09-29T16:32:58-06:00'
+version: 1

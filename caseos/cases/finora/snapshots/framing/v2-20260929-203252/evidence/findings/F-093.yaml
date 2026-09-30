@@ -1,0 +1,57 @@
+id: F-093
+type: finding
+headline: 'No es posible separar en los pagos un precio de lista, un descuento introductorio, un crédito o una pausa
+  de suscripción: el dato disponible es el monto observado por cliente y mes, sin catálogo de precios ni definición
+  documentada de lo que ese monto representa.'
+epistemic_state: No evaluable
+confidence: medium
+kind: analytics
+visual:
+  tipo: datos
+  filas:
+  - dato: Monto pagado por cliente y mes (amount)
+    estado: Disponible
+    campos: ''
+  - dato: Industria del cliente
+    estado: Disponible
+    campos: ''
+  - dato: Gasto de S&M por mes y rubro
+    estado: Disponible, sin unidad documentada
+    campos: ''
+  - dato: Precios de lista, planes y empaquetamiento
+    estado: No existe
+    campos: list_mrr, plan_id
+  - dato: Descuentos recurrentes y temporales, con su vencimiento
+    estado: No existe
+    campos: recurring_discount, temporary_discount, temporary_discount_end
+  - dato: Créditos y concesiones no recurrentes
+    estado: No existe
+    campos: credits
+  - dato: Estado de la suscripción (activa, pausada, cancelada)
+    estado: No existe
+    campos: subscription_status
+  - dato: Definición de amount (facturado, cobrado o contratado)
+    estado: No existe
+    campos: amount_definition
+visual_title: 'No es posible separar en los pagos un precio de lista, un descuento introductorio, un crédito o una
+  pausa de suscripción: el dato disponible es el monto observado por cliente y mes, sin catálogo de precios ni definición
+  documentada de lo que ese monto representa.'
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-103203-30ce
+  claim: C-015
+  evidence:
+  - EC-DAT-06
+  - EC-DAT-08
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-061
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+created_at: '2026-09-29T10:37:39-06:00'
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 2

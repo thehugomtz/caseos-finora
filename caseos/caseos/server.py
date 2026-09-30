@@ -551,6 +551,16 @@ def cos_ask(cid: str, body: Ask):
     return cos.submit_ask(S(cid), body.question, context_id=body.context_id)
 
 
+class DismissBody(BaseModel):
+    ids: list[str] = []                # empty = every open alert
+    note: str = ""
+
+
+@app.post("/api/cases/{cid}/cos/alerts/dismiss")
+def cos_dismiss(cid: str, body: DismissBody):
+    return cos.dismiss_alerts(S(cid), ids=body.ids or None, rationale=body.note)
+
+
 @app.get("/api/cases/{cid}/cos/conversation")
 def cos_conv(cid: str):
     return {"conversation": cos.conversation(S(cid))}
@@ -638,6 +648,18 @@ class PackageBody(BaseModel):
 @app.post("/api/cases/{cid}/story/package")
 def story_package(cid: str, body: PackageBody):
     return story.submit_package(S(cid), instructions=body.instructions, draft=body.draft, via=body.via)
+
+
+class AcceptStoryBody(BaseModel):
+    claim_ids: list[str] = []          # empty = every claim of the package
+    note: str = ""
+
+
+@app.post("/api/cases/{cid}/story/accept")
+def story_accept(cid: str, body: AcceptStoryBody):
+    s = S(cid)
+    ids = body.claim_ids or [c["claim_id"] for c in (s.read_data("story/package.yaml") or {}).get("claims") or []]
+    return story.accept_with_evidence(s, ids, note=body.note)
 
 
 @app.post("/api/cases/{cid}/story/validate")

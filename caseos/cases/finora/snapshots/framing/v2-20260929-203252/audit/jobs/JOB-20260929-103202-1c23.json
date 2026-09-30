@@ -1,0 +1,213 @@
+{
+ "id": "JOB-20260929-103202-1c23",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué dato mínimo y qué comparación separarían una capacidad…",
+ "params": {
+  "research_id": "R-014"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:02-06:00",
+ "started_at": "2026-09-29T10:32:02-06:00",
+ "finished_at": "2026-09-29T10:45:59-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:32:02-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-103202-measurement-1988",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:32:04-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:32:08-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T10:32:42-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, window_flag, new_customers, new_mrr_cop, median_new_customer_mrr_cop, demand_gen_spend, sales_capacity_spend, team, payroll_ex"
+  },
+  {
+   "t": "2026-09-29T10:32:54-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, COUNT(DISTINCT industry) AS industrias, ROUND(AVG(m0_"
+  },
+  {
+   "t": "2026-09-29T10:32:56-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, industry, COUNT(*) AS altas, ROUND(100.0*COUNT(*)/SUM(COUNT(*)) OVER (PARTITION BY year),1) AS pct_del_anio, MEDIAN(m0_cop) AS "
+  },
+  {
+   "t": "2026-09-29T10:33:05-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH nc AS (SELECT customer_id, year, cohort_month, m0_cop FROM mart.new_customers WHERE clean AND cohort_month <= '2024-07'), m3 AS (SELECT"
+  },
+  {
+   "t": "2026-09-29T10:33:21-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “\"The Short Life of Online Sales Leads\" Harvard Business Review Oldroyd McElheran Elkington”"
+  },
+  {
+   "t": "2026-09-29T10:33:21-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “lead response time conversion field study salesperson workload capacity academic paper”"
+  },
+  {
+   "t": "2026-09-29T10:33:22-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kitagawa decomposition difference between two rates composition effect rate effect”"
+  },
+  {
+   "t": "2026-09-29T10:33:40-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://hbr.org/2011/03/the-short-life-of-online-sales-leads"
+  },
+  {
+   "t": "2026-09-29T10:33:41-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0321874"
+  },
+  {
+   "t": "2026-09-29T10:33:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Gans Koole Mandelbaum \"Telephone call centers: tutorial, review, and research prospects\" abandonment staffing”"
+  },
+  {
+   "t": "2026-09-29T10:33:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “speed to lead causal effect response time confounded lead quality natural experiment sales leads study”"
+  },
+  {
+   "t": "2026-09-29T10:33:59-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Sabnis Chatterjee Grewal Lilien \"The Sales Lead Black Hole\" Journal of Marketing follow-up marketing leads”"
+  },
+  {
+   "t": "2026-09-29T10:34:00-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://thedenmangroupselling.wordpress.com/wp-content/uploads/2011/03/the-short-life-of-online-sales-leads-harvard-business-review.pdf"
+  },
+  {
+   "t": "2026-09-29T10:34:02-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://columbia.edu/~ww2040/tutorial.pdf"
+  },
+  {
+   "t": "2026-09-29T10:34:25-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.semanticscholar.org/paper/The-Sales-Lead-Black-Hole:-On-Sales-Reps'-Follow-Up-Sabnis-Chatterjee/fad352d2ee4193c01fe237eca4f54887124fd724"
+  },
+  {
+   "t": "2026-09-29T10:34:26-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://scholarsarchive.byu.edu/facpub/9711/"
+  },
+  {
+   "t": "2026-09-29T10:34:27-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://en.wikipedia.org/wiki/Kingman%27s_formula"
+  },
+  {
+   "t": "2026-09-29T10:34:36-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/"
+  },
+  {
+   "t": "2026-09-29T10:34:37-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.hbs.edu/faculty/Pages/item.aspx?num=39955"
+  },
+  {
+   "t": "2026-09-29T10:34:53-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.researchgate.net/profile/Kristina-Mcelheran/publication/298137032_The_short_life_of_online_sales_leads/links/5771477608ae0b3a3b7d5d49/The-short-life-of-online-sales-leads.pdf"
+  },
+  {
+   "t": "2026-09-29T10:34:53-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Bridge Group SDR metrics report ramp time months sales development benchmark”"
+  },
+  {
+   "t": "2026-09-29T10:35:02-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.bridgegroupinc.com/research/2025-sdr-models-metrics-report-the-bridge-group"
+  },
+  {
+   "t": "2026-09-29T10:35:04-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.insidesales.com/response-time-matters/"
+  },
+  {
+   "t": "2026-09-29T10:39:56-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Monat \"Industrial sales lead conversion modeling\" Marketing Intelligence & Planning lead attributes predict conversion”"
+  },
+  {
+   "t": "2026-09-29T10:40:05-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.emerald.com/insight/content/doi/10.1108/02634501111117610/full/html"
+  },
+  {
+   "t": "2026-09-29T10:40:07-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://link.springer.com/article/10.1007/s10799-023-00388-w"
+  },
+  {
+   "t": "2026-09-29T10:45:59-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-014",
+  "findings": [
+   "F-120",
+   "F-121",
+   "F-122",
+   "F-123",
+   "F-124"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

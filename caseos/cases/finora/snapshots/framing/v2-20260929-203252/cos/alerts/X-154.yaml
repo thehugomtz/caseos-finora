@@ -1,0 +1,41 @@
+id: X-154
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-032
+target: H-054
+title: R-032 cambia el framing H-054
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: 'R-032 define H-054 como el exceso de caída después del SQL en los SQL que genera el SDR frente a otros orígenes.
+  Lo común a todos va al avance del AE y a H-056. X-118 ya pedía SQL→Won por origen. Lo nuevo es la regla del exceso
+  y lo que exige: si casi todos los SQL vienen del SDR, no hay contra qué comparar y H-054 no se separa de la parte
+  común. También deja claro que el árbol ubica dónde se ve la caída, no dónde nace (H-054 nace antes del traspaso).'
+options:
+- key: A
+  label: 'Adoptar el exceso por origen como prueba de H-054, con una condición previa: que exista un origen de SQL
+    no-SDR comparable en ambos periodos (por ejemplo, la entrada directa a SQL de R-029). Si no existe, se escribe
+    «no separable», no «descartada». La bitácora de metas de X-118 sigue sirviendo para fechar el cambio.'
+  consequence: Prueba precisa y sin doble conteo con H-056, pero depende de un dato que hoy no sabemos si existe.
+- key: B
+  label: Mantener solo la prueba de X-118 (meta del SDR con fecha y SQL→Won por origen), sin la regla del exceso.
+  consequence: Más simple, pero H-054 y H-056 pueden reclamar la misma caída.
+recommended: A
+recommended_why: Evita que H-054 se coma la parte común. Y la condición previa evita concluir «no es H-054» solo
+  porque falta el grupo de comparación.
+detected_by: cos
+links:
+- R-032
+- H-054
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

@@ -1,0 +1,48 @@
+id: X-060
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-017
+target: framing
+title: R-017 cambia el framing
+finding_text: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+why: 'La cifra de composición depende de desde cuándo se mide. R-009 asigna 108% a la composición de entrada. Su
+  descomposición (F-075) va de ene-22 a oct-24 (−COP 35,0 mil), la misma ventana con la que R-012 reproduce las
+  cifras del Overview (−38%, 4,5×, 2,8×). R-017 asigna 84% entre dic-22 y oct-24 (F-097: −COP 31,7 mil, −35%). Con
+  la base cambia también el matiz: R-009 dice «no en la base previa» y R-017 dice «la cosecha 2022 también baja».
+  No se contradicen del todo porque hablan de grupos distintos, pero en láminas seguidas parecen mensajes opuestos
+  y el CFO vería dos cifras para el mismo claim. La dirección, que la composición es lo que más pesa, se sostiene
+  en las dos bases.'
+options:
+- key: A
+  label: Usar ene-22→oct-24 para todo el bloque (la ventana del Overview)
+  consequence: Cuadra con el −38%, 4,5× y 2,8× sin reexpresarlos. Pero el titular sería 108% y habría que explicar
+    por qué pasa de 100%. Además, con base ene-22 las primeras apariciones de inicios de 2022 pueden contar como
+    entrada aunque sean clientes que ya existían.
+- key: B
+  label: Usar dic-22→oct-24 para todo el bloque de cosechas
+  consequence: Separa la cosecha 2022 de las altas 2023–2024, pero obliga a reexpresar el Overview (−35% en vez
+    de −38%) o a convivir con dos cambios distintos del mismo indicador.
+- key: C
+  label: Poner en el titular solo lo que se sostiene con ambas bases («la mayor parte de la caída viene de la composición
+    por cosechas») y dejar cada base con su cifra en una nota
+  consequence: El Overview conserva el −38% y el mensaje no depende de la base. Cuesta una nota metodológica, y
+    el matiz de la cosecha 2022 sigue pendiente de H-021.
+recommended: C
+recommended_why: El mensaje resiste el cambio de base, pero la cifra no, así que el titular debería decir solo lo
+  que resiste. Evita reexpresar el Overview (B) y evita poner un 108% difícil de leer en una lámina para el CEO
+  (A).
+detected_by: cos
+links:
+- R-017
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-5c65
+created_at: '2026-09-29T11:52:09-06:00'
+updated_at: '2026-09-29T11:52:09-06:00'
+version: 1

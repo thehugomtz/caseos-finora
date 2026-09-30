@@ -1,0 +1,161 @@
+id: T-008
+type: table
+table_key: FIN-F-066
+title: El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo
+question: ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance
+  va en Habilitación comercial o en producto?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - team_fixed_months
+  - Meses en que Team es exactamente 12% del S&M total
+  - '17'
+- - team_fixed_until
+  - Último mes con Team fijo en 12%
+  - may-23
+units: {}
+definitions: {}
+message: 'El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo: Team equivale a 12%
+  del S&M total en 17 meses hasta may-23, y desde jun-23 su participación se mueve entre 19% y 38% con 17 valores
+  distintos en 17 meses.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-01
+  - E-003
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-003\nWITH r AS (\n  SELECT month, total_sm_spend AS tot, 'team' AS rubro, team AS v FROM mart.sm_monthly\n
+  \ UNION ALL SELECT month, total_sm_spend, 'paid_media', paid_media FROM mart.sm_monthly\n  UNION ALL SELECT month,
+  total_sm_spend, 'travel', travel FROM mart.sm_monthly\n  UNION ALL SELECT month, total_sm_spend, 'software_tools',
+  software_tools FROM mart.sm_monthly\n  UNION ALL SELECT month, total_sm_spend, 'freelance', freelance FROM mart.sm_monthly\n),
+  s AS (\n  SELECT rubro, month, v/NULLIF(tot,0) AS share,\n         CASE WHEN month <= '2023-05' THEN 'hasta_may23'
+  ELSE 'desde_jun23' END AS tramo\n  FROM r\n)\nSELECT rubro, tramo, COUNT(*) AS meses,\n  ROUND(MIN(share),4) AS
+  share_min,\n  ROUND(MAX(share),4) AS share_max,\n  COUNT(DISTINCT ROUND(share,4)) AS valores_distintos_de_share,\n
+  \ SUM(CASE WHEN ABS(share*200 - ROUND(share*200)) < 0.0005 THEN 1 ELSE 0 END) AS meses_share_multiplo_de_medio_punto\nFROM
+  s GROUP BY rubro, tramo ORDER BY rubro, tramo DESC"
+transformation: EC-DAT-01 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-003 · run_sql
+  · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-c958 · C-005
+limitations:
+- 'CV-SM-ASIGNACION: El archivo de S&M parece construido de arriba hacia abajo'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: rubro
+    nombre: rubro
+    formato: texto
+  - id: tramo
+    nombre: tramo
+    formato: texto
+  - id: meses
+    nombre: meses
+    formato: int
+  - id: share_min
+    nombre: share_min
+    formato: num2
+  - id: share_max
+    nombre: share_max
+    formato: num2
+  - id: valores_distintos_de_share
+    nombre: valores_distintos_de_share
+    formato: int
+  - id: meses_share_multiplo_de_medio_punto
+    nombre: meses_share_multiplo_de_medio_punto
+    formato: num2
+  filas:
+  - rubro: freelance
+    tramo: hasta_may23
+    meses: 17
+    share_min: 0.0
+    share_max: 0.0901
+    valores_distintos_de_share: 10
+    meses_share_multiplo_de_medio_punto: 10.0
+  - rubro: freelance
+    tramo: desde_jun23
+    meses: 17
+    share_min: 0.0
+    share_max: 0.04
+    valores_distintos_de_share: 2
+    meses_share_multiplo_de_medio_punto: 17.0
+  - rubro: paid_media
+    tramo: hasta_may23
+    meses: 17
+    share_min: 0.3899
+    share_max: 0.52
+    valores_distintos_de_share: 11
+    meses_share_multiplo_de_medio_punto: 9.0
+  - rubro: paid_media
+    tramo: desde_jun23
+    meses: 17
+    share_min: 0.3636
+    share_max: 0.51
+    valores_distintos_de_share: 15
+    meses_share_multiplo_de_medio_punto: 8.0
+  - rubro: software_tools
+    tramo: hasta_may23
+    meses: 17
+    share_min: 0.03
+    share_max: 0.06
+    valores_distintos_de_share: 6
+    meses_share_multiplo_de_medio_punto: 9.0
+  - rubro: software_tools
+    tramo: desde_jun23
+    meses: 17
+    share_min: 0.03
+    share_max: 0.06
+    valores_distintos_de_share: 7
+    meses_share_multiplo_de_medio_punto: 9.0
+  - rubro: team
+    tramo: hasta_may23
+    meses: 17
+    share_min: 0.1199
+    share_max: 0.12
+    valores_distintos_de_share: 2
+    meses_share_multiplo_de_medio_punto: 9.0
+  - rubro: team
+    tramo: desde_jun23
+    meses: 17
+    share_min: 0.1893
+    share_max: 0.3782
+    valores_distintos_de_share: 17
+    meses_share_multiplo_de_medio_punto: 0.0
+  - rubro: travel
+    tramo: hasta_may23
+    meses: 17
+    share_min: 0.06
+    share_max: 0.0701
+    valores_distintos_de_share: 3
+    meses_share_multiplo_de_medio_punto: 9.0
+  - rubro: travel
+    tramo: desde_jun23
+    meses: 17
+    share_min: 0.0599
+    share_max: 0.0702
+    valores_distintos_de_share: 4
+    meses_share_multiplo_de_medio_punto: 9.0
+created_at: '2026-09-29T10:37:12-06:00'
+status: valid
+validation_errors: []
+finding: F-066
+links:
+- F-066
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+updated_at: '2026-09-29T10:37:12-06:00'
+version: 1

@@ -1,0 +1,55 @@
+{
+ "id": "JOB-20260929-162146-aa05",
+ "case_id": "finora",
+ "kind": "cos_impact",
+ "title": "COS evalúa el impacto de R-024",
+ "params": {
+  "source_id": "R-024",
+  "reason": "Reintento vía Claude (D-017): el límite de sesión de la suscripción cortó la evaluación a las 14:58"
+ },
+ "agent": "cos",
+ "status": "succeeded",
+ "created_at": "2026-09-29T16:21:46-06:00",
+ "started_at": "2026-09-29T16:21:46-06:00",
+ "finished_at": "2026-09-29T16:45:29-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T16:21:46-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T16:32:58-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-162147-cos-c496",
+   "agent": "cos",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T16:32:59-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T16:45:29-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "created": [
+   "X-123",
+   "X-124",
+   "X-125",
+   "X-126",
+   "H-068",
+   "Q-084",
+   "Q-085",
+   "Q-086"
+  ],
+  "summary": "R-024 corre el Paso 1 de C-011 con los pagos. Lo que deja firme: la meseta de primeros pagadores observados 2023→2024 (54 → 55 por mes; 56 sin octubre) no la produce el último mes ni la forma de contar las reactivaciones. Además, desde ene-23 no se distingue una tendencia.\n\nLo que no cubre:\n1. Los artefactos del lado de la entrada (H-001, H-002, H-003, H-052), porque sin leads no se pueden probar.\n2. La reaparición de un cliente con otro ID, que no se puede verificar (F-202).\n3. El tramo del −19% de jul–oct 2024, porque compara promedios anuales y no los mismos meses. Por eso Q-036 queda contestada solo a medias.\n\nEfectos:\n- Debilita H-029 (la parte de «octubre incompleto») y H-037 (en la ventana 2023→2024).\n- Debilita H-024, pero solo como indicio, sin descartarla.\n- Sostiene Q-051 (lectura 2023→2024), H-058 y C-003.\n- Cambia cómo se cuenta C-011. Esto llena X-091, que solo marcaba el vínculo; no abro una alerta nueva.\n\nF-192 a F-203 siguen propuestos: nada de esto entra a la historia hasta que Hugo los revise.\n\nOrden sugerido:\n1. Q-051: Hugo fija el periodo y el hito del CRO (o se los pregunta). Eso decide si H-024 y H-037 pesan.\n2. Q-036: pedir el corte comparando los mismos meses.\n3. H-024: revisar mes a mes el salto de ene-23, solo si el periodo incluye 2022 o si C-003 usa el +104%."
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

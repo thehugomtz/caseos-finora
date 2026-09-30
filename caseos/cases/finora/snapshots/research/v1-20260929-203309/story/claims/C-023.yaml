@@ -1,0 +1,130 @@
+id: C-023
+type: claim
+key: hipotesis-matriz
+question: ¿Qué podría explicar «más leads, pero no más ventas», ordenado sin que una causa aparezca en dos lugares?
+headline: 'Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja'
+answer: 'Paso 0, antes del árbol: fijar qué es venta (Won o primer pago), una ventana W igual para el periodo base
+  y el del aumento, cohortes por fecha de creación y New separado de Reactivate. Identidad: ventas = Σ por puerta
+  de las entradas válidas × la conversión de cada etapa dentro de W. La brecha se reparte en este orden, cada nivel
+  con su regla de corte, y cada pedazo cae en una sola hoja. MEDICIÓN · Validez, ¿el aumento de New es demanda nueva
+  que puede comprar? Hojas: no-prospectos, si sube la parte de duplicados, clientes actuales, ex-clientes o spam
+  (H-052); desfase o cambio de definición, si la ventana es más corta que el ciclo o cambió qué se registra como
+  New (H-003, H-004, H-027, H-069); misma demanda por otra puerta, si compradores que antes entraban solos por producto
+  ahora pasan por Ventas (H-053). NEGOCIO · Mezcla, con entradas válidas, ¿cambió quién entra o cuánto convierte
+  cada grupo? Efecto mezcla = Σ cambio de mezcla × tasa base; efecto tasa = Σ mezcla nueva × cambio de tasa; el
+  término cruzado se asigna con una regla fija. Hoja: entra peor mezcla (H-002, H-005), medida con señales congeladas
+  al crear el lead. Antes del SQL, si es tasa: capacidad, si el tiempo a primer toque sube con la carga por SDR/AE
+  (H-006); estancados sin seguimiento, si crece la bolsa de estancados y los retomados sí compran (H-054 no, H-055).
+  Después del SQL: SQL menos maduros por la meta del SDR, si la aceptación del AE y la caída posterior empeoran
+  solo en los SQL del SDR frente a otros orígenes (H-054); decisión en Demo o Proposal por precio, plan, competidor
+  o funcionalidad, con motivos validados con compradores (H-056, H-008). Cobro: el Won no llega a pagar o se cae
+  en el arranque (H-057). H-007 no es hoja: es la regla que ubica la etapa antes o después del SQL. PALANCA DEL
+  CRO: validez → definición de lead válido, deduplicación y ruteo · mezcla → scoring y mezcla de fuentes con el
+  CMO · antes del SQL → capacidad, SLA y cadencias de seguimiento · después del SQL → criterio de SQL y comisiones,
+  o pricing y respuesta a la competencia con CFO y CPO · cobro → handoff a cobro y onboarding. Hoy no se valida
+  ni se descarta ninguna hoja de validez, mezcla o etapa; de cobro solo se ve el arranque.'
+role_in_story: recommendation
+evidence_ids:
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-127
+- F-128
+- F-129
+- F-122
+- F-212
+table_ids: []
+research_ids:
+- R-032
+- R-025
+- R-010
+- R-014
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-228 a F-232 y los demás findings citados están propuestos.'
+- Reordena las tres ramas de D-001 (cantidad, mezcla, compra según tiempo). Si lo adoptas, hace falta una decisión
+  nueva que referencie D-001 (X-150); no se sobrescribe en silencio.
+- 'Las hojas son causas candidatas: no afirmamos que en Finora cambiaron metas, comisiones, precio o competencia.
+  La caída post-SQL no se atribuye al AE.'
+- 'Comparar SQL directos contra SQL del SDR no es un experimento: vienen de orígenes distintos; solo sirve ver cómo
+  cambia cada grupo en el tiempo, y aun así es asociación.'
+- Si aparecen a la vez las firmas de mezcla y de capacidad, se reportan como interacción (H-028), no como hoja nueva.
+visual_intent: 'Descomposición: la brecha se parte en orden (validez → puerta → mezcla contra tasa → etapa → cobro);
+  cada pedazo cae en una sola hoja con su dato y su palanca, con la medición separada del negocio.'
+hugo_wording: «lo mismo en C-023mucho artefacto pero no hay nada MECE, me confunde»
+links:
+- F-228
+- F-229
+- F-230
+- F-231
+- F-232
+- F-127
+- F-128
+- F-129
+- F-122
+- F-212
+- R-032
+- R-025
+- R-010
+- R-014
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-127
+  - F-128
+  - F-129
+  - F-122
+  - F-212
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-127
+  - F-128
+  - F-129
+  - F-122
+  - F-212
+  accepted: []
+  pending:
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-127
+  - F-128
+  - F-129
+  - F-122
+  - F-212
+  - F-228
+  - F-229
+  - F-230
+  - F-231
+  - F-232
+  - F-127
+  - F-128
+  - F-129
+  - F-122
+  - F-212
+  tables: []
+  unsupported_numbers: []
+  stale: []

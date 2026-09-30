@@ -1,0 +1,316 @@
+{
+ "run_id": "RUN-20260929-110140-cos-d716",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-018",
+ "started_at": "2026-09-29T11:32:01-06:00",
+ "duration_ms": 1821367,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-018\nTipo: research · revisión: proposed\nTexto: Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado» y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acumulado por cohorte. El ARR solo se puede dar como run-rate anualizado. El CAC existe solo como «S&M por alta en unidades reportadas», porque la unidad del gasto no está documentada; el CAC en COP y por motion o canal, el payback, el LTV con margen, el LTV:CAC y el UCM necesitan datos nuevos: unidad del S&M, margen o costo de servir, facturación con periodo de servicio, y motion y canal por cliente. Confianza alta en esta clasificación y media en los proxies (MRR normalizado y churn con gracia),…\nRespuesta corta: Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado» y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acumulado por cohorte. El ARR solo se puede dar como run-rate anualizado. El CAC existe solo como «S&M por alta en unidades reportadas», porque la unidad del gasto no está documentada; el CAC en COP y por motion o canal, el payback, el LTV con margen, el LTV:CAC y el UCM necesitan datos nuevos: unidad del S&M, margen o costo de servir, facturación con periodo de servicio, y motion y canal por cliente. Confianza alta en esta clasificación y media en los proxies (MRR normalizado y churn con gracia), que dependen de reglas que tienes que aprobar tú.\nEstablecido: El panel cliente × mes está completo (1.961 × 34 meses, ene-22–oct-24), con ceros explícitos y sin montos negativos. | El puente de MRR pagado (altas, expansión, reactivación, contracción y churn) ya se calcula en el mart y cuadra con la Fase 1. | La unidad es el cliente (cuenta): el modelo no tiene usuarios o licencias, plan, intervalo de facturación, periodo de servicio, motion, canal, margen ni costo de servir. | El gasto S&M no tiene unidad documentada: hoy no hay CAC en COP.\nNo podemos concluir: Unidad y moneda del archivo de S&M. | Margen bruto y costos variables por cliente (necesarios para LTV con margen y UCM). | Plan, precio de lista, intervalo de facturación y licencias por cliente. | Motion (Self Service, Assisted, Executive) y canal (Digital, KAM) de cada cliente.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- H-017 (HG) [hypothesis] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- Q-003 (CEO) [question] ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n- Q-010 (W0) [question] ¿Qué podemos nombrar y comparar válidamente?\nMotivo de Hugo: research completado\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [completed · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc… → Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad (H-00…\n- R-011 [completed · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent… → Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias (tar…\n- R-012 [running · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [completed · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d… → No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son d…\n- R-015 [completed · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem… → Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y…\n- R-016 [running · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se…\n- R-017 [running · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti…\n- R-018 [completed · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los… → Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado» y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn (el…\n- R-019 [running · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?…\n- R-020 [running · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-135 [proposed] En verde (se puede calcular hoy, con nombre honesto): MRR pagado observado y su puente, clientes activos, ARPA por cliente, churn observado, NRR/GRR de la base y métricas de cohorte.\n- F-136 [proposed] El monto pagado mezcla fecha de cobro con mes de servicio: los atrasos y los pagos multimes inflan el churn, la reactivación y la expansión observados. Antes de llamarlos churn o MRR hace falta una regla de normalización y una ventana de gracia.\n- F-137 [proposed] El CAC solo existe como «S&M por alta en unidades reportadas»: sin la unidad del gasto no hay CAC en COP, ni payback, ni LTV:CAC, y sin motion o canal no hay CAC por Self Service/Assisted/Executive ni por Digital/KAM.\n- F-138 [proposed] El LTV con margen y el UCM están en rojo (necesitan margen bruto o costo de servir). Lo que se puede defender hoy es un «LTV empírico de ingreso» a horizonte fijo por cohorte.\n- F-139 [proposed] El «ARPU» de hoy es en realidad ARPA (por cliente, no por usuario), y su caída total mezcla cohortes: hay que reportarlo por cohorte y medir el ARPA de entrada con un monto estabilizado (M1 o monto usual), no con el primer pago.\n\n## Findings propuestos sin revisar: 139 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n- T-005 `FIN-F-063` [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala\n- T-006 `FIN-F-064` [proposed] Ningún rubro del archivo de S&M tiene meses ausentes\n- T-007 `FIN-F-065` [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero…\n- T-008 `FIN-F-066` [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo\n- T-009 `FIN-F-067` [proposed] La serie de Habilitación cambia de composición dentro del panel\n- T-010 `FIN-F-068` [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a ga…\n- T-011 `FIN-F-069` [proposed] El peso de Habilitación en el S&M total no es estable\n- T-012 `FIN-F-070` [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…\n- T-013 `FIN-F-107` [proposed] En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación de…\n- T-014 `FIN-F-108` [proposed] El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45 u…\n- T-015 `FIN-F-109` [proposed] El mes de mayor S&M total de la ventana limpia es oct-22, con 3,75 u y 32 altas; el mes con más altas es jun-…\n- T-016 `FIN-F-110` [proposed] Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…\n- T-017 `FIN-F-111` [proposed] Las altas anuales de primeros pagadores son mayores en 2023 que en 2022 mar-dic en Retail (de 49 a 169), Serv…\n- T-018 `FIN-F-112` [proposed] El ticket de entrada mediano es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el prome…\n- T-019 `FIN-F-113` [proposed] Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% me…\n- T-020 `FIN-F-114` [proposed] Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.\n- T-021 `FIN-F-115` [proposed] Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23.\n- T-022 `FIN-F-116` [proposed] La participación de Team en el S&M total es 12% en 2022 mar-dic, 30% en 2023 jun-dic y 23% en 2024 ene-oct, y…\n- T-023 `FIN-F-117` [proposed] El gasto de habilitación por mes pasa de 0,34 u en 2022 mar-dic a 0,07 u en 2023 jun-dic y 0,09 u en 2024 ene…\n- T-024 `FIN-F-118` [proposed] La correlación en niveles entre el S&M total y las altas del mismo mes es −0,57; en cambios mes a mes el mayo…\n- T-025 `FIN-F-119` [proposed] El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados no es eval…\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-018 no cambia el diagnóstico: lo baja a métricas. Hoy se pueden mostrar con su nombre real: MRR pagado observado y su puente, clientes activos, ARPA por cliente (no ARPU), churn observado y métricas de cohorte. El ARR solo sale como run-rate anualizado. El CAC solo existe como «S&M por alta en unidades reportadas». No se pueden calcular sin datos nuevos: CAC en COP y por motion o canal, payback, LTV con margen, LTV:CAC y UCM.\n\nLo que te toca decidir:\n1. **H-017** pierde fuerza con un mecanismo concreto: el monto mezcla la fecha de cobro con el mes de servicio. R-018 te pide aprobar la ventana de gracia y la regla para los pagos que cubren varios meses.\n2. **Nombre de la métrica:** «MRR pagado observado» choca con el framing, que dice «monto pagado observado».\n3. **Q-003:** se cuenta con la conexión observada, no con CAC ni LTV.\n4. **Dos chequeos pequeños** antes de la story: el puente (H-020) y el ticket de entrada, que hoy se mide con el primer pago (T-004).\n\nQ-010 queda respondida a nivel de métricas. Orden sugerido: H-017 → framing → T-004 → H-020 → Q-003.",
+  "impacts": [
+   {
+    "target": "H-017",
+    "effect": "weakens",
+    "why": "Hallazgo: el panel está completo (1.961 clientes × 34 meses, ceros explícitos, sin negativos) y el puente cuadra en total. Pero el monto mezcla la fecha de cobro con el mes de servicio, y el modelo no tiene periodo de servicio ni intervalo de facturación. Por qué importa: no cambia el veredicto del agente (No soportada), lo precisa. Lo que no aguanta son dos cosas: los movimientos mes a mes, porque los atrasos y los pagos que cubren varios meses inflan el churn, la reactivación y la expansión (F-136); y el primer pago como monto de entrada (F-139). Los sustitutos que propone R-018 (MRR normalizado, churn con gracia) tienen confianza media y dependen de reglas que solo tú puedes aprobar.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Aprobar la regla y mostrar lo observado y el sustituto lado a lado",
+      "consequence": "Fijas cuántos meses sin pago se toleran antes de contar una salida y cómo se reparte un pago que cubre varios meses. Lo observado no se toca; el sustituto va al lado, marcado como tal. También cambian clientes activos (T-001), ARPA, churn y NRR/GRR de la propuesta de métricas. Es un supuesto que no se puede verificar sin el periodo de servicio."
+     },
+     {
+      "key": "B",
+      "label": "Quedarse solo con lo observado",
+      "consequence": "No se agregan supuestos. El churn, la reactivación y la expansión se ven inflados, y la brecha entre churn observado y persistente (T-002) va como limitación. El CFO recibe un «¿por qué cambió?» mezclado con el efecto de las fechas de cobro."
+     },
+     {
+      "key": "C",
+      "label": "Pedir facturación con periodo de servicio antes de fijar reglas",
+      "consequence": "Resuelve la causa de fondo, pero depende de Finora y del tiempo. Mientras tanto, Revenue se queda en lo observado."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "No borra nada: lo observado sigue siendo el hecho y el sustituto es una lectura etiquetada. T-002 ya separa churn observado y persistente, así que la regla formaliza algo que ya existe y desbloquea H-020 y el churn de la propuesta de métricas. El pedido de C puede ir en paralelo."
+   },
+   {
+    "target": "framing",
+    "effect": "changes_framing",
+    "why": "Hallazgo: R-018 propone el nombre «MRR pagado observado», usa «S&M por alta» y deja fuera CAC en COP, payback, LTV con margen, LTV:CAC y UCM. Por qué importa: el framing dice que se habla de «monto pagado observado» mientras la recurrencia no se confirme, y R-001 no la confirmó. Además reserva «alta» como etiqueta contractual y no pone límites a CAC, LTV, ARPU ni ARR, así que el borrador de storytelling (D-016) podría usarlos sin control. R-004, R-005 y R-009 ya hablan de «MRR», o sea que los nombres ya están mezclados. Framing está en needs_review: buen momento para ajustarlo.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "«MRR pagado observado» solo en la propuesta de métricas, más nuevos límites",
+      "consequence": "En el diagnóstico sigue «monto pagado observado». En la propuesta de métricas se permite «MRR pagado observado», siempre con el calificativo, y «S&M por alta» pasa a «S&M por primer pagador observado (u)». Se añade a «No afirmar todavía»: CAC en COP o por motion/canal, payback, LTV con margen, LTV:CAC, UCM, ARPU (en realidad es ARPA por cliente) y cualquier ARR que no sea run-rate. El CFO lee su vocabulario sin que se afirme recurrencia."
+     },
+     {
+      "key": "B",
+      "label": "«Monto pagado observado» en todo el caso, más nuevos límites",
+      "consequence": "Máxima coherencia con R-001. Pero hay que renombrar lo que ya dice «MRR» y traducir el término en cada lámina que responde «¿por qué cambió nuestro MRR?»."
+     },
+     {
+      "key": "C",
+      "label": "No tocar el framing",
+      "consequence": "Los límites quedan como advertencias dentro de F-135–F-139. Menos trabajo hoy, pero con riesgo de que CAC, LTV o ARPU entren al storytelling y de que los nombres sigan mezclados."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Protege la regla de R-001 donde importa (el diagnóstico), le da al CFO y al CEO su vocabulario en la propuesta sin afirmar recurrencia contractual, y cierra la puerta a CAC/LTV antes de que avance el borrador de story."
+   },
+   {
+    "target": "Q-003",
+    "effect": "changes_story",
+    "why": "Hallazgo: hoy no se pueden calcular CAC en COP, CAC por Self Service/Assisted/Executive o por Digital/KAM, payback, LTV con margen, LTV:CAC ni UCM. Faltan la unidad del S&M, el margen o costo de servir, y el motion y canal de cada cliente. Por qué importa: son justo las métricas que conectarían cómo conseguimos clientes con qué mueve el ingreso recurrente. Lo que sí hay es una conexión observada, en paralelo: más primeros pagadores con un primer pago menor (R-003), menor aporte por cohorte a igual edad (R-006), una caída del monto por cliente concentrada en quién entra (R-009) y un S&M por alta que baja −66% en unidades reportadas entre 2022 y 2024 (R-015, T-014). Es asociación, no efecto (T-025).",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Conexión observada más propuesta de medición",
+      "consequence": "El Overview cuenta la conexión con lo que ya se puede calcular: puente, ARPA por cohorte e ingreso acumulado por cohorte (el «LTV empírico de ingreso» de F-138). El S&M por alta aparece solo como tendencia en unidades reportadas, sin dividirlo contra montos en COP. CAC, payback, LTV:CAC y UCM van como propuesta, y los campos que faltan se suman a la Propuesta de Modelo de datos (R-011). El CEO ve el hueco explícito; no hay cifra de eficiencia comercial en COP."
+     },
+     {
+      "key": "B",
+      "label": "Indicador de eficiencia indexado",
+      "consequence": "Compara el ingreso acumulado por cohorte con el S&M por alta, ambos indexados. Le da al CEO una señal de dirección, pero se lee fácil como LTV:CAC y depende de que el S&M sea comparable en el tiempo, algo que T-008 pone en duda para el primer tramo. Confianza baja."
+     },
+     {
+      "key": "C",
+      "label": "Pedir los datos y esperar",
+      "consequence": "Pedir a Finora la unidad y moneda del S&M, el margen o costo de servir, y el motion y canal de cada cliente antes de armar el bloque del CEO. Si llegan, Q-003 se responde con CAC, LTV y payback; si no, el Overview queda sin conexión."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es lo único que se sostiene con la evidencia actual y respeta que asociación no es efecto. El pedido de C puede salir en paralelo sin frenar el Overview. B arriesga que una comparación frágil se lea como LTV:CAC."
+   },
+   {
+    "target": "H-020",
+    "effect": "requires_research",
+    "why": "Hallazgo: los atrasos y los pagos que cubren varios meses inflan el churn, la reactivación y la expansión observados (F-136). Por qué importa: H-020 (Direccional) se apoya en el puente de R-004 y T-003, donde el cambio se concentra en la entrada de nuevos pagadores. Pero en ese mismo puente la reactivación (COP 86,5 millones) y la contracción (−COP 89,5 millones) pesan casi lo mismo que la entrada de nuevos pagadores (COP 94,3 millones). El total cuadra; lo que no sabemos es cuánto de esos componentes es solo efecto de las fechas de cobro.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Recalcular el puente con la regla de H-017",
+      "consequence": "Recalcular T-003 con la ventana de gracia y el reparto de los pagos que cubren varios meses, al lado del puente observado. Dice si «el cambio se concentra en la entrada» se sostiene y cuánto bajan la reactivación y la contracción. Depende de que apruebes la regla en H-017."
+     },
+     {
+      "key": "B",
+      "label": "Puente neto por grupo",
+      "consequence": "Mostrar solo el neto de entrantes, salientes y continuos (la estructura de D-002) hasta tener la regla. Quita las idas y vueltas de un mes sin agregar supuestos, pero pierde el detalle de expansión frente a contracción."
+     },
+     {
+      "key": "C",
+      "label": "Dejar T-003 tal cual con una advertencia",
+      "consequence": "Rápido, pero el CFO puede leer la reactivación y la contracción como comportamiento real de clientes."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es el chequeo más pequeño que dice si el hallazgo central de R-004 se sostiene, y reutiliza la regla que igual necesitas para el churn. Si en H-017 eliges quedarte en lo observado, aquí la opción es B."
+   },
+   {
+    "target": "T-004",
+    "effect": "requires_research",
+    "why": "Hallazgo: F-139 dice que el ARPA de entrada se mide con un monto estabilizado (M1 o monto usual), no con el primer pago. Por qué importa: el ticket de entrada de T-004 y T-018 (COP 63,0 mil en 2022, 36,8 mil en 2023 y 42,0 mil en 2024) se mide con el primer pago, como lo describe R-003. El valor inicial de T-019 también, si usa la misma base. Si el primer pago no representa el monto usual (por ejemplo, un mes parcial), parte de esa caída podría ser de medición. R-006 y R-009 apuntan en la misma dirección con medidas que no son solo el primer pago: la dirección podría sostenerse, pero la magnitud no la sabemos.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Recalcular con M1 y monto usual, y renombrar mientras tanto",
+      "consequence": "Poner lado a lado primer pago, M1 y monto usual por año de entrada; hasta tenerlo, llamarlo «primer pago observado». Confirma o corrige que «entran con un ticket menor», pieza central de Growth y de los entrantes del CFO. Se hace con el panel actual."
+     },
+     {
+      "key": "B",
+      "label": "Solo renombrar",
+      "consequence": "Poner «primer pago observado» en T-004, T-018 y T-019, sin recalcular. Es honesto y no cuesta trabajo, pero el mensaje sobre quién entra queda más débil."
+     },
+     {
+      "key": "C",
+      "label": "Mantener «ticket de entrada» con una advertencia",
+      "consequence": "Rápido, pero si el primer pago está sesgado, el mensaje central de R-003 queda expuesto frente al CRO y al CFO."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es el chequeo más barato del caso: no depende de ninguna regla ni de datos nuevos, y protege una de las cifras que más se van a ver en Growth y Revenue."
+   },
+   {
+    "target": "Q-010",
+    "effect": "supports",
+    "why": "R-018 lleva la respuesta de R-001 del monto a las métricas. Hoy se pueden nombrar: MRR pagado observado y su puente, clientes activos, ARPA por cliente (no ARPU), churn observado, NRR/GRR de la base, retención e ingreso acumulado por cohorte, ARR solo como run-rate anualizado y CAC solo como S&M por alta en unidades reportadas. Quedan fuera CAC en COP, payback, LTV con margen, LTV:CAC y UCM. Los sustitutos dependen de la regla de H-017, y el choque de nombres va en la alerta de framing.",
+    "severity": "low",
+    "options": [],
+    "recommended": "",
+    "recommended_why": "Sin alerta propia: no pide una decisión aparte."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "Una parte relevante de la reactivación y la contracción del puente observado (T-003) desaparece al aplicar una ventana de gracia y repartir los pagos que cubren varios meses.",
+    "falsifier": "Con la regla que apruebes en H-017, la reactivación y la contracción de T-003 quedan en niveles parecidos a los observados."
+   },
+   {
+    "statement": "El primer pago de los nuevos pagadores queda por debajo de su monto usual, y esa brecha es mayor en las cohortes 2023–2024 que en 2022. Si es así, parte de la caída del ticket de entrada (T-018) es de medición.",
+    "falsifier": "Medido con M1 o con el monto usual, el ticket de entrada cae entre 2022 y 2023–2024 en una proporción parecida a la del primer pago."
+   }
+  ],
+  "new_questions": [
+   "Si apruebas la regla de H-017: ¿cuántos meses sin pago se toleran antes de contar una salida, y cómo se reparte un pago que cubre varios meses?",
+   "D-007 (activa) deja fuera las métricas definitivas y el modelo de datos. ¿Aplicaba solo a Framing? Si ya no aplica, ¿confirmas D-015 para que R-018, R-011, R-019 y R-021 entren al caso como propuestas trazables?",
+   "¿Pedimos ya a Finora la unidad y moneda del S&M, el margen o costo de servir, la facturación con periodo de servicio y el motion y canal de cada cliente? ¿O esos campos se quedan solo en la Propuesta de Modelo de datos?"
+  ],
+  "status_note": "Research en curso y Framing en needs_review. R-018 deja clasificado qué métricas se pueden mostrar hoy y con qué nombre; para usarlas faltan tres decisiones tuyas: la regla de gracia y de pagos que cubren varios meses (H-017), el nombre «MRR pagado observado» frente a «monto pagado observado» (framing) y cómo contar Q-003 sin CAC ni LTV. Siguen corriendo R-012, R-016, R-017, R-019, R-020 y R-021; no hay findings aceptados y F-135–F-139 esperan tu revisión."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 574626,
+  "input_tokens": 2,
+  "output_tokens": 65519,
+  "cache_read": 3781,
+  "cache_write": 9468,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.3950702,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

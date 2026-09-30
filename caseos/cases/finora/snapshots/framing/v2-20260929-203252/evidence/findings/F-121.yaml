@@ -1,0 +1,58 @@
+id: F-121
+type: finding
+headline: 'El dato mínimo son dos tablas: entradas con el ajuste congelado al entrar y el primer contacto humano,
+  y un roster semanal de SDR/AE con su ramp.'
+evidence_text: 'Tabla de entradas: entry_id, created_at, grupo de entrada, canal, 2 a 4 campos de ajuste capturados
+  al entrar, owner, primer intento humano, SQL y compra enlazada a customer_id. Roster: rep, rol, fecha de alta,
+  fecha de baja y grupo que atiende. El ajuste tiene que salir de campos anteriores al primer contacto, porque cuándo
+  y cómo un rep sigue un lead depende a la vez de la calidad que percibe y del volumen (Sabnis et al., 2013). Las
+  características observables del lead sirven como aproximación a los motivos de compra, pero cada empresa necesita
+  su propia regla (Monat, 2011). La capacidad se cuenta en personas ya productivas: el benchmark de ramp de SDR
+  es de 3,0 meses (Bridge Group), solo como contexto.'
+confidence: medium
+limitations:
+- Es diseño, no resultado. Depende de que los campos de ajuste se hayan capturado igual durante todo el periodo.
+kind: measurement
+claims:
+- claim: En ese estudio, que un rep siga un lead depende de la calidad de precalificación, del volumen de leads
+    de marketing y del seguimiento gerencial, con efectos que cambian según la experiencia y el desempeño del rep.
+  source_id: SRC-01
+  source_type: academic
+  confidence: high
+  freshness: '2013'
+  supports_or_contests: context
+  notes: 'Inferencia para el caso: los descartes y el ''mal fit'' que registra Sales dependen a la vez de la calidad
+    y de la carga, así que no sirven como medida de ajuste al entrar.'
+- claim: Las características observables de un lead al entrar sirven como aproximación a los motivos de compra y
+    permiten estimar su probabilidad de conversión. Los criterios varían por empresa y el modelo no se validó en
+    campo.
+  source_id: SRC-08
+  source_type: academic
+  confidence: medium
+  freshness: 2011 (antiguo; marco conceptual)
+  supports_or_contests: context
+  notes: Implica que Finora necesita su propia regla de ajuste, validada en el periodo base.
+- claim: The Bridge Group reporta un ramp promedio de SDR de 3,0 meses y una razón de 1 SDR por cada 2,4 AEs, en
+    una encuesta online a 351 empresas B2B (2024–2025).
+  source_id: SRC-07
+  source_type: industry
+  confidence: medium
+  freshness: 2025-02 (vigente)
+  supports_or_contests: context
+  notes: Benchmark de B2B, principalmente de EE. UU. No es evidencia sobre Finora; solo justifica contar capacidad
+    en personas ya productivas y no en headcount.
+unverified: false
+source_ref:
+  research: R-014
+links:
+- R-014
+- H-005
+- H-006
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:45:59-06:00'
+updated_at: '2026-09-29T10:45:59-06:00'
+version: 1

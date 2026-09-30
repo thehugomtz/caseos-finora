@@ -1,0 +1,46 @@
+id: X-143
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-031
+target: Q-064
+title: R-031 requiere más investigación Q-064
+finding_text: 'Propongo cuatro rutas que se clasifican al final del recorrido, según los eventos: Executive (arranca
+  con persona y nunca pasa por Checkout Self), Self Service (nunca interviene una persona), Hybrid A (arranca en
+  el producto y después entra una persona) e Hybrid B (arranca con persona y pasa por Ch…'
+why: 'R-031 no responde Q-064, pero confirma su marco y le pone condiciones (F-225). El umbral se calibra por etapa
+  y se acuerda con Finora. Para calibrarlo hacen falta la fecha de entrada y de salida por etapa y la fecha de última
+  actividad de cada lead, y hoy no sabemos si el CRM guarda esa historia con fecha (Q-065). R-031 también deja pendiente
+  otro parámetro del mismo tipo: W, que depende de cuánto dura el ciclo de cierre. Con la caducidad del episodio
+  que trajo R-029 (X-130), ya son tres parámetros sueltos. De ellos dependen las 5 métricas del loop de Reactivate
+  y el estancamiento de cada ruta.'
+options:
+- key: A
+  label: 'Juntar Q-064, W y la caducidad del episodio (X-130) en una sola lista de parámetros a acordar con Finora,
+    precedida por el dato que los habilita: la historia de etapas y actividades con fecha (Q-065).'
+  consequence: 'Es una sola conversación con Finora y en el orden correcto: primero si hay historia con fecha, después
+    los umbrales. En la story aparecen como tres pendientes, cada uno con su dato.'
+- key: B
+  label: Dejar Q-064 como está y abrir aparte las preguntas de W y de la caducidad.
+  consequence: Hay más detalle por pregunta, pero quedan tres preguntas sueltas que dependen del mismo dato.
+- key: C
+  label: No tocar nada hasta que Finora diga qué CRM usa.
+  consequence: No hay trabajo ahora, pero el loop de Reactivate queda en la story sin fecha de desbloqueo.
+recommended: A
+recommended_why: Los tres parámetros salen del mismo dato y se acuerdan en la misma conversación con Finora. Juntarlos
+  deja claro qué va primero.
+detected_by: cos
+links:
+- R-031
+- Q-064
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-184141-cos-dca6
+created_at: '2026-09-29T18:55:24-06:00'
+updated_at: '2026-09-29T18:55:24-06:00'
+version: 1

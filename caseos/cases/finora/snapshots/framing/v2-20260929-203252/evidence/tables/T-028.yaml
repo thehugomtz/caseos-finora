@@ -1,0 +1,71 @@
+id: T-028
+type: table
+table_key: FIN-F-073
+title: Parte del movimiento del monto pagado corresponde a movimientos que se deshacen
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - rt_gross
+  - Movimiento bruto total del monto pagado sin altas, mar-22 a sep-24 (no es lo revertido)
+  - COP 282,8 millones
+- - rt_share
+  - Parte de ese movimiento bruto que vuelve exacto al nivel previo al mes siguiente
+  - 25,3%
+units: {}
+definitions: {}
+message: 'Parte del movimiento del monto pagado corresponde a movimientos que se deshacen: 25,3% del movimiento
+  bruto sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte al mes siguiente,
+  lo que es consistente con que amount registre cobro y no importe contractual.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-06
+  - EC-DAT-03
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-DAT-06 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-DAT-03 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-db67 · C-013
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: stacked_bar
+visual_artifact:
+  tipo: barras
+  apiladas: true
+  x:
+  - Movimiento bruto sin altas, mar-22 a sep-24
+  formato: pct
+  series:
+  - nombre: Vuelve exacto al nivel previo al mes siguiente
+    valores:
+    - 0.2529696008219224
+  - nombre: Resto del movimiento
+    valores:
+    - 0.7470303991780776
+  claim_fase1: C-DAT-06
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-073
+links:
+- F-073
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

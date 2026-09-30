@@ -229,3 +229,9 @@ Package. Encontrado y corregido:
   su source). Los esquemas de Measurement y Data Engineering ganaron `stage_map`, funnel/familia/«¿hoy?» por métrica,
   `as_is` y `gap`; Story los muestra plegados bajo cada propuesta. R-033 se cortó a los 25 min: los especialistas de
   diseño tienen 40 min.
+- **Cerrar Synthesis y Story (29-sep, noche, pedido de Hugo):** ignorar 158 alertas una por una no era viable y el
+  cajón seguía mostrando «abierta» una alerta ya resuelta; aceptar un claim no cambiaba su estado porque en el borrador
+  el estado depende de la evidencia, y un claim rechazado (C-016) seguía en el paquete bloqueando Ready con sus cifras.
+  Ahora: «Ignorar todas» en el COS (una sola decisión de Hugo, needs_review vuelve a su estado), «Aceptar con su
+  evidencia» por claim y para toda la historia (nunca toca lo rechazado), un claim rechazado sale del paquete al
+  momento, y el cajón se actualiza al resolver.

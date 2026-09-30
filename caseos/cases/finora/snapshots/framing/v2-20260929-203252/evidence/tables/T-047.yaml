@@ -1,0 +1,124 @@
+id: T-047
+type: table
+table_key: FIN-F-103
+title: En 2024 el churn observado por industria va de 1,46 en Restaurantes a 2,57 en Tecnología, y medido solo por
+  c…
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- industry
+- churn_persistente_pct
+- churn_observado_pct
+- ticket_mediano_2024
+- activos_oct24
+- mrr_oct24_millones
+rows:
+- - Salud
+  - 0.56
+  - 1.67
+  - 52500.0
+  - 124.0
+  - 8.56
+- - Restaurantes
+  - 0.62
+  - 1.46
+  - 52500.0
+  - 459.0
+  - 31.32
+- - Servicios profesionales
+  - 0.87
+  - 1.62
+  - 31500.0
+  - 140.0
+  - 6.43
+- - Tecnología
+  - 0.91
+  - 2.57
+  - 49350.0
+  - 206.0
+  - 15.28
+- - Producción
+  - 1.07
+  - 2.01
+  - 39900.0
+  - 389.0
+  - 22.94
+- - Retail
+  - 1.33
+  - 2.51
+  - 26250.0
+  - 360.0
+  - 12.48
+units:
+  industry: texto
+  churn_persistente_pct: num2
+  churn_observado_pct: num2
+  ticket_mediano_2024: num2
+  activos_oct24: num2
+  mrr_oct24_millones: num2
+definitions: {}
+message: En 2024 el churn observado por industria va de 1,46 en Restaurantes a 2,57 en Tecnología, y medido solo
+  por churns que no vuelven a pagar en un trimestre va de 0,56 en Salud a 1,33 en Retail (puntos porcentuales mensuales).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-011
+  - EC-RET-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-011\nWITH act AS (\n  SELECT industry, AVG(activos) AS activos_prom\n  FROM (SELECT industry, month,
+  SUM(active_customer) AS activos\n        FROM mart.customer_month\n        WHERE active_customer = 1 AND month
+  BETWEEN '2024-01' AND '2024-07'\n        GROUP BY 1, 2) t\n  GROUP BY 1\n), ch AS (\n  SELECT industry,\n         COUNT(*)
+  AS churns,\n         SUM(CASE WHEN months_to_return IS NULL OR months_to_return > 3 THEN 1 ELSE 0 END) AS churns_persistentes\n
+  \ FROM mart.churn_events\n  WHERE month BETWEEN '2024-01' AND '2024-07'\n  GROUP BY 1\n), tick AS (\n  SELECT
+  industry, MEDIAN(paid_mrr_cop) AS ticket_mediano_2024\n  FROM mart.customer_month\n  WHERE new_customer = 1 AND
+  month BETWEEN '2024-01' AND '2024-10'\n  GROUP BY 1\n), fin AS (\n  SELECT industry, SUM(active_customer) AS activos_oct24,
+  SUM(paid_mrr_cop) AS mrr_oct24\n  FROM mart.customer_month\n  WHERE month = '2024-10' AND active_customer = 1\n
+  \ GROUP BY 1\n)\nSELECT f.industry,\n       ROUND(100.0 * c.churns_persistentes / (7 * a.activos_prom), 2) AS
+  churn_persistente_pct,\n       ROUND(100.0 * c.churns / (7 * a.activos_prom), 2) AS churn_observado_pct,\n       ROUND(t.ticket_mediano_2024,
+  0) AS ticket_mediano_2024,\n       f.activos_oct24,\n       ROUND(f.mrr_oct24 / 1000000.0, 2) AS mrr_oct24_millones\nFROM
+  fin f\nJOIN act a ON a.industry = f.industry\nJOIN ch c ON c.industry = f.industry\nJOIN tick t ON t.industry
+  = f.industry\nORDER BY churn_persistente_pct"
+transformation: E-011 · run_sql · SQL ad hoc de solo lectura; EC-RET-02 · search_evidence · Afirmación canónica
+  verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-023
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - churn observado pct · Restaurantes
+  - churn observado pct · Tecnología
+  - churn persistente pct · Salud
+  - churn persistente pct · Retail
+  formato: num2
+  series:
+  - nombre: ''
+    valores:
+    - 1.46
+    - 2.57
+    - 0.56
+    - 1.33
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-103
+links:
+- F-103
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 1

@@ -1,0 +1,763 @@
+id: R-006
+type: research
+research_question: ¿Cambió la economía posterior de los nuevos pagadores?
+case_question: ¿Cambió la economía posterior de los nuevos pagadores?
+specialty: analytics
+intensity: analytics
+status: completed
+alias: W5
+why_it_matters: Decide si hace falta matizar el argumento de adquisición con la economía de los pagadores.
+short_answer: 'Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta
+  parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de
+  las cohortes 2022, y el primer pago mediano de las altas baja antes de cualquier trayectoria posterior. Medido
+  contra su propio primer pago, el nivel a M6 se mantiene en un rango estrecho entre cohortes.'
+headline: 'Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada'
+answer_states:
+- Hecho observado
+- Direccional
+findings:
+- F-018
+- F-053
+- F-054
+- F-033
+what_is_established:
+- A la misma edad desde el alta, el aporte por cliente de las cohortes recientes se observa por debajo del de las
+  cohortes anteriores, con seguimiento común.
+- Como señal, medida contra su propio primer pago la trayectoria posterior a M6 se mantiene en un rango estrecho
+  entre cohortes, lo que sitúa la diferencia en el punto de partida.
+- La salida de cuentas con monto usual mayor se asocia con la baja del monto por pagador de una cohorte al avanzar
+  la edad.
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede separar si el menor aporte posterior corresponde a precio de lista, descuentos, créditos o cancelaciones
+  contractuales: el panel solo registra el monto pagado por cliente y mes.'
+- La continuidad de pago observada no separa cancelación de pausa o atraso, por lo que no sostiene una lectura de
+  retención contractual.
+- El seguimiento común deja celdas ausentes en las cohortes más recientes, y a M12 la cohorte 2024 S1 no tiene celda.
+- Parte del movimiento del monto pagado es consistente con reversiones y liquidación de meses pendientes, lo que
+  impide leer el alza entre M6 y M12 como cambio económico.
+cannot_claim:
+- La calidad de los leads a partir de lo que pasa después del pago.
+- Retención contractual a partir de la continuidad de pago.
+alternative_explanations: []
+case_implication: A la misma edad desde el alta, el aporte por cliente de las cohortes recientes se observa por
+  debajo del de las cohortes anteriores, con seguimiento común.
+changes_current_story: maybe
+affected_hypotheses:
+- id: H-021
+  alias: HO4
+  question: ¿Las cohortes de primeros pagadores más recientes aportan menos monto por pagador activo a la misma
+    edad desde el primer pago que las cohortes anteriores, con seguimiento común?
+  state: Soportada
+  effect: fortalecida
+  reading: A la misma edad desde el alta, el MRR por cliente original de las cohortes 2023 se observa por debajo
+    del de las cohortes 2022, en línea con el monto por pagador activo a M6.
+- id: H-021
+  alias: HO4
+  question: ¿La brecha entre cohortes a igual edad persiste al avanzar la edad, en lugar de cerrarse con la maduración?
+  state: Direccional
+  effect: señal direccional
+  reading: Como señal, la diferencia de mediana del monto por pagador entre la cohorte 2022 mar-dic y la cohorte
+    2023 S2 no se cierra al avanzar la edad, aunque el seguimiento común deja celdas ausentes.
+- id: H-021
+  alias: HO4
+  question: ¿La continuidad de pago a la misma edad desde el primer pago difiere entre cohortes?
+  state: No soportada
+  effect: debilitada
+  reading: A M12 la continuidad de pago se acerca entre las cohortes 2022 mar-dic y 2023 S1, y el churn observado
+    no separa cancelación de pausa o atraso.
+- id: null
+  alias: rival
+  question: ¿La diferencia entre cohortes se concentra en el nivel de entrada (M0), de modo que la trayectoria posterior
+    relativa a su propio primer pago es equivalente entre cohortes?
+  state: Direccional
+  effect: señal direccional
+  reading: El primer pago mediano de las altas baja en las cohortes recientes y, medida contra su propio primer
+    pago, la mediana a M6 se mantiene en un rango estrecho, aunque con el promedio la señal difiere entre cohortes.
+- id: null
+  alias: rival
+  question: ¿Las diferencias observadas de aporte posterior son atribuibles a artefactos de medición del monto pagado
+    (reversiones, pagos dobles, liquidación de meses pendientes) más que a un cambio económico?
+  state: Direccional
+  effect: señal direccional
+  reading: Como señal, el alza del monto promedio por pagador de la cohorte 2022 mar-dic entre M6 y M12 es consistente
+    con movimientos que vuelven al nivel previo y con retornos que liquidan meses pendientes.
+- id: null
+  alias: ''
+  question: ¿Qué parte de la economía posterior de los nuevos pagadores depende de datos que no existen en el panel?
+  state: No evaluable
+  effect: no evaluable
+  reading: Sin precios, descuentos, créditos, estado de suscripción ni definición documentada del monto, la lectura
+    económica del aporte posterior queda fuera de lo que permite el panel.
+affected_claims: []
+suggested_action: La lectura económica del aporte posterior quedó no evaluable con el panel actual, así que conviene
+  definir la evidencia mínima antes de ampliar comparaciones.
+next_question: W6
+new_questions:
+- ¿La brecha de monto por pagador a igual edad se mantiene al excluir los meses con firma de cobro acumulado o de
+  reversión?
+- ¿Cómo cambia la comparación a igual edad si el punto de partida de cada cohorte es el run-rate de los primeros
+  meses en lugar del primer pago?
+- ¿La diferencia de aporte posterior entre cohortes se concentra en alguna industria o es común a las observadas?
+- ¿Qué registro (estado de suscripción, precio vigente, concesiones) permitiría distinguir una caída de precio de
+  una pausa de pago, y separar continuidad de pago de retención contractual?
+handoff_to_cos:
+  summary: 'Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada'
+  recommended_next: ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO?
+visuals:
+- id: V-01
+  title: 'Quienes dejan de pagar tenían un monto usual mayor que los activos del mes previo en promedio en 2022,
+    2023 y 2024 (1,7×, 1,6×, 1,4×), mientras la razón de medianas no muestra esa diferencia (1,0×, 1,0×, 1,1×):
+    la salida de cuentas grandes reduce el monto por pagador de una cohorte al avanzar la edad.'
+  spec:
+    tipo: puntos
+    filas:
+    - 2022 · medias
+    - 2022 · medianas
+    - 2023 · medias
+    - 2023 · medianas
+    - 2024 · medias
+    - 2024 · medianas
+    - total · medias
+    - total · medianas
+    formato: num2
+    referencia: 1.0
+    series:
+    - nombre: IC 90% inferior
+      valores:
+      - 1.2634790795200008
+      - 0.87876
+      - 1.178530933374979
+      - 0.7761115001327191
+      - 1.095458963426737
+      - 0.9654208351271151
+      - 1.3104627355800427
+      - 0.966042846185038
+    - nombre: Razón
+      valores:
+      - 1.696338280232295
+      - 1.0
+      - 1.5770772720964885
+      - 0.9695267189897904
+      - 1.373072530255609
+      - 1.1112046013740944
+      - 1.5490242541706507
+      - 1.0409724208594457
+    - nombre: IC 90% superior
+      valores:
+      - 2.224080525675505
+      - 1.124964583333333
+      - 2.034690726227998
+      - 1.1631226077499652
+      - 1.7079014682480618
+      - 1.2624007474082342
+      - 1.7983999176874217
+      - 1.153745014943061
+  claim: C-013
+- id: V-02
+  title: 'A M6 desde el primer pago siguen pagando 246 de 272 clientes de la cohorte 2022 mar-dic, 259 de 272 de
+    la cohorte 2023 S1 y 356 de 378 de la cohorte 2023 S2: la continuidad de pago a igual edad no es menor en las
+    cohortes recientes.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: cohorte
+      nombre: cohorte
+      formato: texto
+    - id: edad
+      nombre: edad
+      formato: int
+    - id: n_observables
+      nombre: n_observables
+      formato: int
+    - id: pagadores
+      nombre: pagadores
+      formato: num2
+    - id: pct_pagando
+      nombre: pct_pagando
+      formato: num2
+    - id: monto_prom_pagador
+      nombre: monto_prom_pagador
+      formato: num2
+    - id: monto_med_pagador
+      nombre: monto_med_pagador
+      formato: num2
+    - id: m0_prom_set
+      nombre: m0_prom_set
+      formato: num2
+    - id: m0_med_set
+      nombre: m0_med_set
+      formato: num2
+    - id: pct_ingreso_vs_m0
+      nombre: pct_ingreso_vs_m0
+      formato: num2
+    - id: idx_prom_vs_m0
+      nombre: idx_prom_vs_m0
+      formato: num2
+    - id: idx_med_vs_m0
+      nombre: idx_med_vs_m0
+      formato: num2
+    filas:
+    - cohorte: 2022 mar-dic
+      edad: 0
+      n_observables: 272
+      pagadores: 272.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 128695.0
+      monto_med_pagador: 63000.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2022 mar-dic
+      edad: 3
+      n_observables: 272
+      pagadores: 245.0
+      pct_pagando: 90.1
+      monto_prom_pagador: 56975.0
+      monto_med_pagador: 56700.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 39.9
+      idx_prom_vs_m0: 0.443
+      idx_med_vs_m0: 0.9
+    - cohorte: 2022 mar-dic
+      edad: 6
+      n_observables: 272
+      pagadores: 246.0
+      pct_pagando: 90.4
+      monto_prom_pagador: 58243.0
+      monto_med_pagador: 52500.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 40.9
+      idx_prom_vs_m0: 0.453
+      idx_med_vs_m0: 0.833
+    - cohorte: 2022 mar-dic
+      edad: 12
+      n_observables: 272
+      pagadores: 237.0
+      pct_pagando: 87.1
+      monto_prom_pagador: 75771.0
+      monto_med_pagador: 60900.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 51.3
+      idx_prom_vs_m0: 0.589
+      idx_med_vs_m0: 0.967
+    - cohorte: 2023 S1
+      edad: 0
+      n_observables: 272
+      pagadores: 272.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 51764.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 3
+      n_observables: 272
+      pagadores: 259.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 44625.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 82.1
+      idx_prom_vs_m0: 0.862
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 6
+      n_observables: 272
+      pagadores: 259.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 46126.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 84.9
+      idx_prom_vs_m0: 0.891
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 12
+      n_observables: 272
+      pagadores: 238.0
+      pct_pagando: 87.5
+      monto_prom_pagador: 46666.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 78.9
+      idx_prom_vs_m0: 0.902
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S2
+      edad: 0
+      n_observables: 378
+      pagadores: 378.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 45197.0
+      monto_med_pagador: 34650.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S2
+      edad: 3
+      n_observables: 378
+      pagadores: 364.0
+      pct_pagando: 96.3
+      monto_prom_pagador: 39948.0
+      monto_med_pagador: 33600.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 85.1
+      idx_prom_vs_m0: 0.884
+      idx_med_vs_m0: 0.97
+    - cohorte: 2023 S2
+      edad: 6
+      n_observables: 378
+      pagadores: 356.0
+      pct_pagando: 94.2
+      monto_prom_pagador: 40067.0
+      monto_med_pagador: 33705.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 83.5
+      idx_prom_vs_m0: 0.887
+      idx_med_vs_m0: 0.973
+    - cohorte: 2023 S2
+      edad: 12
+      n_observables: 251
+      pagadores: 228.0
+      pct_pagando: 90.8
+      monto_prom_pagador: 40838.0
+      monto_med_pagador: 33705.0
+      m0_prom_set: 42794.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 86.7
+      idx_prom_vs_m0: 0.954
+      idx_med_vs_m0: 0.973
+    - cohorte: 2024 S1
+      edad: 0
+      n_observables: 351
+      pagadores: 351.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 54452.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 54452.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2024 S1
+      edad: 3
+      n_observables: 351
+      pagadores: 334.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 43574.0
+      monto_med_pagador: 38850.0
+      m0_prom_set: 54452.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 76.1
+      idx_prom_vs_m0: 0.8
+      idx_med_vs_m0: 0.925
+    - cohorte: 2024 S1
+      edad: 6
+      n_observables: 201
+      pagadores: 186.0
+      pct_pagando: 92.5
+      monto_prom_pagador: 41529.0
+      monto_med_pagador: 41475.0
+      m0_prom_set: 52230.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 73.6
+      idx_prom_vs_m0: 0.795
+      idx_med_vs_m0: 0.988
+  claim: C-006
+- id: V-03
+  title: 'A la misma edad desde el primer pago, el monto por pagador activo de las cohortes recientes se observa
+    por debajo del de la cohorte 2022 mar-dic: en M6, COP 58,2 mil en la cohorte 2022 mar-dic frente a COP 46,1
+    mil en 2023 S1, COP 40,1 mil en 2023 S2 y COP 41,5 mil en 2024 S1.'
+  spec:
+    tipo: barras
+    x:
+    - monto prom pagador
+    - monto prom pagador
+    - monto prom pagador
+    - monto prom pagador
+    formato: cop
+    series:
+    - nombre: ''
+      valores:
+      - 58243.0
+      - 46126.0
+      - 40067.0
+      - 41529.0
+  claim: C-001
+- id: V-04
+  title: 'El primer pago mediano de las altas baja de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil
+    en 2024, con 272 altas en 2022 frente a 554 en 2024: el punto de partida de las cohortes recientes es menor
+    antes de cualquier trayectoria posterior.'
+  spec:
+    tipo: linea
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    series:
+    - nombre: Ticket de entrada (M0)
+      valores:
+      - 128694.73080882353
+      - 47944.68807692307
+      - 50841.90861010831
+    formato: cop
+  claim: C-012
+- id: V-05
+  title: 'Medida contra su propio primer pago, la mediana del monto por pagador a M6 se mantiene en un rango estrecho
+    entre cohortes: 0,83 en 2022 mar-dic, 1,00 en 2023 S1, 0,97 en 2023 S2 y 0,99 en 2024 S1, mientras el primer
+    pago mediano de esas cohortes pasa de COP 63,0 mil a COP 42,0 mil.'
+  spec:
+    tipo: tabla
+    columnas:
+    - id: cohorte
+      nombre: cohorte
+      formato: texto
+    - id: edad
+      nombre: edad
+      formato: int
+    - id: n_observables
+      nombre: n_observables
+      formato: int
+    - id: pagadores
+      nombre: pagadores
+      formato: num2
+    - id: pct_pagando
+      nombre: pct_pagando
+      formato: num2
+    - id: monto_prom_pagador
+      nombre: monto_prom_pagador
+      formato: num2
+    - id: monto_med_pagador
+      nombre: monto_med_pagador
+      formato: num2
+    - id: m0_prom_set
+      nombre: m0_prom_set
+      formato: num2
+    - id: m0_med_set
+      nombre: m0_med_set
+      formato: num2
+    - id: pct_ingreso_vs_m0
+      nombre: pct_ingreso_vs_m0
+      formato: num2
+    - id: idx_prom_vs_m0
+      nombre: idx_prom_vs_m0
+      formato: num2
+    - id: idx_med_vs_m0
+      nombre: idx_med_vs_m0
+      formato: num2
+    filas:
+    - cohorte: 2022 mar-dic
+      edad: 0
+      n_observables: 272
+      pagadores: 272.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 128695.0
+      monto_med_pagador: 63000.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2022 mar-dic
+      edad: 3
+      n_observables: 272
+      pagadores: 245.0
+      pct_pagando: 90.1
+      monto_prom_pagador: 56975.0
+      monto_med_pagador: 56700.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 39.9
+      idx_prom_vs_m0: 0.443
+      idx_med_vs_m0: 0.9
+    - cohorte: 2022 mar-dic
+      edad: 6
+      n_observables: 272
+      pagadores: 246.0
+      pct_pagando: 90.4
+      monto_prom_pagador: 58243.0
+      monto_med_pagador: 52500.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 40.9
+      idx_prom_vs_m0: 0.453
+      idx_med_vs_m0: 0.833
+    - cohorte: 2022 mar-dic
+      edad: 12
+      n_observables: 272
+      pagadores: 237.0
+      pct_pagando: 87.1
+      monto_prom_pagador: 75771.0
+      monto_med_pagador: 60900.0
+      m0_prom_set: 128695.0
+      m0_med_set: 63000.0
+      pct_ingreso_vs_m0: 51.3
+      idx_prom_vs_m0: 0.589
+      idx_med_vs_m0: 0.967
+    - cohorte: 2023 S1
+      edad: 0
+      n_observables: 272
+      pagadores: 272.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 51764.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 3
+      n_observables: 272
+      pagadores: 259.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 44625.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 82.1
+      idx_prom_vs_m0: 0.862
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 6
+      n_observables: 272
+      pagadores: 259.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 46126.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 84.9
+      idx_prom_vs_m0: 0.891
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S1
+      edad: 12
+      n_observables: 272
+      pagadores: 238.0
+      pct_pagando: 87.5
+      monto_prom_pagador: 46666.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 51764.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 78.9
+      idx_prom_vs_m0: 0.902
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S2
+      edad: 0
+      n_observables: 378
+      pagadores: 378.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 45197.0
+      monto_med_pagador: 34650.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2023 S2
+      edad: 3
+      n_observables: 378
+      pagadores: 364.0
+      pct_pagando: 96.3
+      monto_prom_pagador: 39948.0
+      monto_med_pagador: 33600.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 85.1
+      idx_prom_vs_m0: 0.884
+      idx_med_vs_m0: 0.97
+    - cohorte: 2023 S2
+      edad: 6
+      n_observables: 378
+      pagadores: 356.0
+      pct_pagando: 94.2
+      monto_prom_pagador: 40067.0
+      monto_med_pagador: 33705.0
+      m0_prom_set: 45197.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 83.5
+      idx_prom_vs_m0: 0.887
+      idx_med_vs_m0: 0.973
+    - cohorte: 2023 S2
+      edad: 12
+      n_observables: 251
+      pagadores: 228.0
+      pct_pagando: 90.8
+      monto_prom_pagador: 40838.0
+      monto_med_pagador: 33705.0
+      m0_prom_set: 42794.0
+      m0_med_set: 34650.0
+      pct_ingreso_vs_m0: 86.7
+      idx_prom_vs_m0: 0.954
+      idx_med_vs_m0: 0.973
+    - cohorte: 2024 S1
+      edad: 0
+      n_observables: 351
+      pagadores: 351.0
+      pct_pagando: 100.0
+      monto_prom_pagador: 54452.0
+      monto_med_pagador: 42000.0
+      m0_prom_set: 54452.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 100.0
+      idx_prom_vs_m0: 1.0
+      idx_med_vs_m0: 1.0
+    - cohorte: 2024 S1
+      edad: 3
+      n_observables: 351
+      pagadores: 334.0
+      pct_pagando: 95.2
+      monto_prom_pagador: 43574.0
+      monto_med_pagador: 38850.0
+      m0_prom_set: 54452.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 76.1
+      idx_prom_vs_m0: 0.8
+      idx_med_vs_m0: 0.925
+    - cohorte: 2024 S1
+      edad: 6
+      n_observables: 201
+      pagadores: 186.0
+      pct_pagando: 92.5
+      monto_prom_pagador: 41529.0
+      monto_med_pagador: 41475.0
+      m0_prom_set: 52230.0
+      m0_med_set: 42000.0
+      pct_ingreso_vs_m0: 73.6
+      idx_prom_vs_m0: 0.795
+      idx_med_vs_m0: 0.988
+  claim: C-004
+- id: V-07
+  title: 'La diferencia de mediana del monto por pagador entre la cohorte 2022 mar-dic y la cohorte 2023 S2 no se
+    cierra al avanzar la edad: en M3 COP 56,7 mil frente a COP 33,6 mil, en M6 COP 52,5 mil frente a COP 33,7 mil
+    y en M12 COP 60,9 mil frente a COP 33,7 mil.'
+  spec:
+    tipo: barras
+    x:
+    - monto med pagador
+    - monto med pagador
+    - monto med pagador
+    - monto med pagador
+    - monto med pagador
+    - monto med pagador
+    formato: cop
+    series:
+    - nombre: ''
+      valores:
+      - 56700.0
+      - 33600.0
+      - 52500.0
+      - 33705.0
+      - 60900.0
+      - 33705.0
+  claim: C-003
+- id: V-08
+  title: 'Con el promedio en lugar de la mediana, la parte del primer pago que se mantiene a M6 difiere de forma
+    marcada entre cohortes: 0,45 en 2022 mar-dic frente a 0,89 en 2023 S1, 0,89 en 2023 S2 y 0,80 en 2024 S1, diferencia
+    que coincide con los pagos iniciales grandes del ticket de entrada de 2022.'
+  spec:
+    tipo: barras
+    x:
+    - idx prom vs m0
+    - idx prom vs m0
+    - idx prom vs m0
+    - idx prom vs m0
+    formato: num2
+    series:
+    - nombre: ''
+      valores:
+      - 0.453
+      - 0.891
+      - 0.887
+      - 0.795
+  claim: C-005
+- id: V-09
+  title: 'El churn observado de logos bajó entre 2022 y 2024 (de 3,52% a 2,04%) mientras el churn que no vuelve
+    a pagar en el plazo de seguimiento corto se mantuvo (de 0,98% a 0,96%): la continuidad de pago a igual edad
+    no separa cancelación de pausa o atraso.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: pct
+    series:
+    - nombre: Churn observado
+      valores:
+      - 0.035218783351120594
+      - 0.02244320773652039
+      - 0.020378151260504202
+    - nombre: Churn que no vuelve a pagar en 3 meses
+      valores:
+      - 0.009782995375311278
+      - 0.010947906212936776
+      - 0.009558823529411765
+    claim_fase1: C-RET-03
+  claim: C-009
+- id: V-10
+  title: El monto promedio por pagador de la cohorte 2022 mar-dic sube entre M6 y M12 (de COP 58,2 mil a COP 75,8
+    mil), patrón consistente con la parte del movimiento del monto pagado que vuelve al nivel previo al mes siguiente
+    (25,3%) y con los retornos que liquidan exactamente los meses pendientes (32%).
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-011
+purpose_ok: true
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260928-182040-2720
+  path: investigations/caso/W5.json
+  modelo: claude-opus-5
+  finished_ms: 1790641621191
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260928-182040-2720
+  type: internal_analysis
+  quality: A
+  path: finora-eda/investigations/caso/W5.json
+  note: Evidencia interna registrada por las tools del workspace (DuckDB, solo lectura)
+links:
+- Q-015
+- H-021
+- F-018
+- F-053
+- F-054
+- F-033
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/investigations/caso/W5.json
+  imported_at: '2026-09-28T22:22:26-06:00'
+  run_id: INV-20260928-182040-2720
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

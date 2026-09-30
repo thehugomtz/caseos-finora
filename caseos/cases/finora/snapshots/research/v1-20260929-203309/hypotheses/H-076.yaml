@@ -1,0 +1,21 @@
+id: H-076
+type: hypothesis
+statement: Parte de lo que pide el to-be de R-033 ya existe en los sistemas de Finora y no llegó al caso. Por ejemplo,
+  estados y fechas de leads y oportunidades en el CRM (el caso habla de New, Working, Engaged y SQL) y el plan o
+  precio en el sistema de cobro. Si es así, el primer paso es unir (account_id + crosswalk), no capturar desde cero,
+  y parte de 2022–2024 se podría leer por cohorte.
+falsifier: El inventario de Finora muestra que el CRM guarda solo el estado actual, sin fechas de etapa ni un ID
+  que lo una con quien paga, y que el cobro solo tiene monto por mes. En ese caso el to-be es captura nueva y mide
+  solo hacia adelante (F-242).
+status: open
+phase: synthesis
+links:
+- R-033
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-191956-cos-c056
+created_at: '2026-09-29T19:30:13-06:00'
+updated_at: '2026-09-29T19:30:13-06:00'
+version: 1

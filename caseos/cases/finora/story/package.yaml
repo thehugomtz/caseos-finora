@@ -116,7 +116,6 @@ sections:
   claim_ids:
   - C-015
   - C-024
-  - C-016
   - C-017
   - C-018
   - C-019
@@ -160,7 +159,7 @@ claims:
   visual_finding: F-072
   hugo_wording: Finora suma clientes mucho más rápido que monto pagado (4,5× vs 2,8×; ~−38% por cliente activo).
     Esa brecha abre Growth y Revenue.
-  strength: pending
+  strength: supported
 - claim_id: C-002
   key: overview-mezcla
   question: ¿El −38% por cliente viene de la base que ya teníamos o de quién entra?
@@ -202,7 +201,7 @@ claims:
     monto por cliente, ganan peso y bajan el promedio.'
   visual_finding: ''
   hugo_wording: Observaciones generales y salud del negocio que introducen las secciones siguientes.
-  strength: pending
+  strength: supported
 - claim_id: C-003
   key: growth-entradas
   question: ¿Qué cambió en quién entra y en qué industrias?
@@ -253,7 +252,7 @@ claims:
     crece mucho menos.'
   visual_finding: ''
   hugo_wording: Revisar entradas y actividad económica de clientes y segmentos.
-  strength: pending
+  strength: supported
 - claim_id: C-004
   key: growth-gasto
   question: ¿Hasta dónde se puede relacionar la Inversión en Marketing por categoría con las ventas cruzando fechas?
@@ -316,7 +315,7 @@ claims:
   hugo_wording: 'Inversión de S&M por categoría (generación de demanda ToFu: Paid Media y publicidad no web · Team:
     Payroll Expenses y Travel · habilitación, ¿producto?: Software Tools y Freelance) y hasta dónde se puede relacionar
     con ventas cruzando fechas.'
-  strength: pending
+  strength: supported
 - claim_id: C-005
   key: funnel-puertas
   question: ¿Cómo definir el funnel si no todos lo recorren igual?
@@ -475,7 +474,7 @@ claims:
   visual_finding: ''
   hugo_wording: Dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets,
     mix).
-  strength: pending
+  strength: supported
 - claim_id: C-008
   key: perdida-burbuja
   question: ¿Hay industrias de bajo churn, ticket alto y poco volumen que valga la pena mirar?
@@ -643,7 +642,7 @@ claims:
   visual_finding: ''
   hugo_wording: «C-009 ¿hay otras métricas que debean de proponerse? De todo eso hay que ser explicitos en como
     se miden y siempre siempre ser MECE» · MRR, ARR, ARPU, CAC, LTV, Churn, UCM y cómo medirlas.
-  strength: pending
+  strength: supported
 - claim_id: C-022
   key: metricas-catalogo
   question: ¿Cómo se evita que una métrica aparezca en dos lugares o con dos fórmulas?
@@ -719,7 +718,7 @@ claims:
     que su nivel.'
   visual_finding: ''
   hugo_wording: CAC (qué métricas propondrías que hoy no existen).
-  strength: pending
+  strength: supported
 - claim_id: C-011
   key: hipotesis-arbol
   question: ¿Cuánto de «no más ventas» depende de cómo se cuenta y cuánto es negocio?
@@ -937,7 +936,9 @@ claims:
 - claim_id: C-014
   key: operar-foros
   question: ¿Cómo opera el CRO el funnel de forma recurrente y qué decide en cada foro?
-  headline: 'Proponemos un tablero por foro atado a decisiones: semanal, mensual y trimestral'
+  headline: 'Proponemos dos vías: una formal y ejecutiva a través de dashboards adhoc a los foros recurrentes y
+    otro para preguntas del día a día a través de agentes de IA que permitan generar visualizaciones y hacer análisis
+    adhoc'
   answer: 'Cada foro trae sus métricas (C-006, C-009) y la decisión que habilita. Semanal (CRO, líderes de SDR/AE
     y RevOps): estancamiento por etapa, calidad del handoff, tiempo en etapa, carga por SDR/AE y stock sin tocar
     del loop Reactivate → qué journeys avanzar, retomar o descalificar, y dónde reasignar capacidad. Mensual de
@@ -1051,47 +1052,6 @@ claims:
     la concentra y la contracción no.'
   visual_finding: ''
   hugo_wording: Qué data observable de pricing introductorio podemos sacar.
-  strength: pending
-- claim_id: C-016
-  key: monto-dos-lecturas
-  question: 'Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece
-    el descuento: ¿se puede leer cada caso con el monto pagado?'
-  headline: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas
-  answer: 'Con cliente, mes y monto, pasar de 100 a 80 puede ser una suscripción más chica, un descuento o un cobro
-    que cambió de mes. Seguir en 100 con la suscripción en 130 no se distingue de «sin cambio», y el fin del descuento
-    se vería como expansión. En los datos pasa algo parecido: 25,3% del movimiento bruto sin altas vuelve exacto
-    al nivel previo al mes siguiente, 29% del MRR de expansión se revierte, 32% de los retornos tras meses sin pago
-    liquida exactamente los meses pendientes y hay 260 eventos de ajuste con cobro retroactivo exacto. El monto
-    no trae lista, descuento, crédito ni pausa.'
-  role_in_story: evidence
-  evidence_ids:
-  - F-093
-  - F-090
-  - F-073
-  - F-130
-  - F-082
-  - F-062
-  - F-177
-  table_ids:
-  - T-058
-  - T-061
-  - T-028
-  - T-074
-  research_ids:
-  - R-002
-  - R-020
-  - R-027
-  - R-011
-  framework_ids: []
-  confidence: high
-  limitations:
-  - Pendiente de tu aceptación; F-130 tiene la fuente sin verificar.
-  - Los casos del CFO son ejemplos del enunciado, no observaciones de Finora.
-  - Es una prueba de observabilidad, no una lectura de lo que ocurrió.
-  visual_intent: 'Una observación, varias lecturas: el mismo monto pagado se abre en lecturas distintas que hoy
-    no se pueden separar.'
-  visual_finding: ''
-  hugo_wording: Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).
   strength: pending
 - claim_id: C-017
   key: descuento-objeto
@@ -1624,7 +1584,6 @@ guion_map:
   note: Mecanismo Propuesto, casuísticas por origen e Implicaciones Multidisciplinarias. Las preguntas del CFO se
     contestan en S3.4 (C-025) porque necesitan la regla de clasificación; si prefieres, suben aquí.
   claim_ids:
-  - C-016
   - C-017
   - C-018
 - slide_id: S3.3
@@ -1746,29 +1705,17 @@ visual_references:
 - 'C-004 · F-214 y R-030: S&M total y primeros pagadores sobre el mismo eje de meses, con los tramos 2023 ene–may
   y jun–dic (T-101, T-108). La elegiste tú.'
 validation:
-  ok: false
-  errors:
-  - 'C-016: cifra(s) sin tabla que las respalde: 32%, 260.'
+  ok: true
+  errors: []
   warnings:
   - 'C-011: lenguaje causal («porque») — la evidencia es observacional.'
+  - 'C-014: titular largo (38 palabras); el Storyteller lo recortará.'
   - 'Láminas del guion sin evidencia todavía: S2.1 (van a research, no se rellenan).'
   pending:
-  - F-001
-  - F-002
-  - F-019
-  - F-020
-  - F-022
-  - F-023
   - F-024
-  - F-030
-  - F-033
-  - F-037
-  - F-039
-  - F-045
   - F-056
   - F-058
   - F-059
-  - F-062
   - F-063
   - F-065
   - F-066
@@ -1777,17 +1724,14 @@ validation:
   - F-070
   - F-071
   - F-072
-  - F-073
   - F-074
   - F-075
   - F-076
   - F-079
   - F-081
-  - F-082
   - F-083
   - F-086
   - F-087
-  - F-090
   - F-092
   - F-093
   - F-094
@@ -1904,4 +1848,6 @@ validation:
   - F-240
   - F-241
   - F-242
-  checked_at: '2026-09-29T20:12:15-06:00'
+  checked_at: '2026-09-29T20:42:13-06:00'
+rejected_claims:
+- C-016

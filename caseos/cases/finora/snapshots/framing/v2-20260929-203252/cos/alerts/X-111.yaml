@@ -1,0 +1,38 @@
+id: X-111
+type: alert
+kind: weakening
+status: open
+severity: low
+effect: weakens
+source: R-025
+target: H-058
+title: R-025 debilita H-058
+finding_text: 'Con lo que hay no se puede validar ni descartar ninguna causa del funnel: el modelo no trae leads
+  ni CRM, solo pagos y gasto. Lo que sí muestran los pagos: la caída de primeros pagadores es de jul–oct 2024 (−19%),
+  después de un ene–jun que creció +29%. No la explican ni octubre incompleto, ni las r…'
+why: 'Con las cifras de R-025, H-058 se cumple en un tramo y en el otro no. En jul–oct-24 sí: las reactivaciones
+  casi no cambian (57 vs 60, que sale de 260−203 y 311−251) y el peso sube porque caen las Nuevas. En ene–jun-24
+  no. Si con reactivaciones el crecimiento pasa de +29% a +38%, las reactivaciones tuvieron que crecer más de +38%,
+  así que ahí el peso se mueve por ellas.'
+options:
+- key: A
+  label: Reformularla por tramo
+  consequence: Queda como una descripción correcta, pero no explica nada del problema del CRO.
+- key: B
+  label: Cerrarla y dejar la lectura por tramo como nota de método en H-037
+  consequence: Queda una hipótesis menos, y la lectura queda donde se usa.
+recommended: B
+recommended_why: No alimenta ningún claim. Con la regla de método de H-037 alcanza.
+detected_by: cos
+links:
+- R-025
+- H-058
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-162146-cos-be42
+created_at: '2026-09-29T16:36:54-06:00'
+updated_at: '2026-09-29T16:36:54-06:00'
+version: 1

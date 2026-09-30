@@ -1,0 +1,50 @@
+id: X-134
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-030
+target: H-023
+title: R-030 requiere más investigación H-023
+finding_text: Gasto de S&M y altas se mueven en direcciones opuestas
+why: 'R-030 usa ago-23 (1,10 u) como valle (F-215) y como extremo con rezago (F-220). De ese mes dependen también
+  el mínimo de S&M por alta de 0,02 (F-221) y el 38% de Team (F-218).
+
+
+  Si ago-23 es uno de los 5 meses con PayrollExpenses negativo (R-014, X-015), el total se achica y la participación
+  de Team sube sola. R-030 no separa Payroll ni el fin de Freelance, así que no prueba ni descarta H-023.
+
+
+  Lo que cambia es el peso: ahora ese mes entraría a la lámina de C-004. X-015 ya pidió revisar el Payroll negativo
+  en el S&M de R-015; aquí se aterriza en un mes y una lámina concretos.'
+options:
+- key: A
+  label: Meter el chequeo en la misma corrida de C-004
+  consequence: Desglose por rubro de may a sep-23, y F-214, F-215 y F-219 recalculados sin los meses con PayrollExpenses
+    negativo. Una sola corrida responde H-023 y deja lista la lámina.
+- key: B
+  label: Dejar H-023 abierta y sacar ago-23 de la lámina
+  consequence: Sin research. Salen el −68% (F-215), F-220 y el mínimo de 0,02 (F-221). La lámina pierde el contraste
+    de extremos y H-023 sigue sin respuesta.
+- key: C
+  label: Pasarla a la lista de preguntas a Finora (reversos o reclasificaciones de Payroll y fin de Freelance en
+    jun–ago-23)
+  consequence: Es lo único que separa un registro contable de menos gasto real, pero depende de una respuesta externa
+    y no desbloquea la lámina.
+recommended: A
+recommended_why: Usa data por rubro que ya tenemos (R-013, R-014) y comparte corrida con C-004. Si el valle se sostiene
+  sin Payroll negativo, ago-23 puede quedarse como ejemplo. Si no, sale con una razón escrita.
+detected_by: cos
+links:
+- R-030
+- H-023
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-180911-cos-f1c8
+created_at: '2026-09-29T18:19:59-06:00'
+updated_at: '2026-09-29T18:19:59-06:00'
+version: 1

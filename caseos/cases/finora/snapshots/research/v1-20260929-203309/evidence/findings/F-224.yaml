@@ -1,0 +1,77 @@
+id: F-224
+type: finding
+headline: La única comparación válida entre rutas es por puerta, con cohorte y ventana fija. La ruta se clasifica
+  al final con una regla por eventos, y las métricas de etapa se leen dentro de cada ruta.
+evidence_text: Las fuentes de práctica coinciden en armar cohortes por fecha de entrada y seguirlas en intervalos
+  fijos (EXT-4, EXT-5). También cuentan como convertido a quien completa los pasos dentro de una ventana, según
+  el paso más lejano que alcanzó (EXT-3), y eso deja espacio a los saltos de C-021. El bowtie mide volumen, conversión
+  y tiempo en todo el ciclo (EXT-9), y un PQL se define por uso, fit e intención (EXT-8). Como la ruta depende del
+  camino recorrido, comparar rutas mete sesgo de selección (INF-1).
+confidence: medium
+limitations:
+- Las fuentes son de práctica y de proveedores, no evidencia sobre Finora. La regla para separar Hybrid A de Hybrid
+  B es una propuesta.
+kind: measurement
+claims:
+- claim: En un análisis de funnel, un usuario cuenta como convertido si entra y completa los pasos dentro de la
+    ventana de conversión, y se le cuenta según el paso más lejano al que llegó.
+  source_id: EXT-3
+  source_type: company
+  confidence: high
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es la base de la ventana fija W y de la conversión por alcance (C-006, C-021).
+- claim: El análisis de conversión por cohortes agrupa por fecha de adquisición o por hito y sigue a cada grupo
+    en intervalos fijos (día 0, 7, 14, 30, 60, 90). Los agregados esconden las diferencias entre cohortes.
+  source_id: EXT-4
+  source_type: industry
+  confidence: medium
+  freshness: '2026-09-25'
+  supports_or_contests: supports
+  notes: 'Glosario de proveedor: sirve como referencia de método.'
+- claim: Leer las cohortes por fuente muestra diferencias de conversión y de velocidad entre fuentes que el reporte
+    agregado no deja ver.
+  source_id: EXT-5
+  source_type: industry
+  confidence: low
+  freshness: '2020-04-08'
+  supports_or_contests: supports
+  notes: Es un ejemplo de proveedor. Apoya comparar puertas (C-006).
+- claim: Un PQL se define por uso alto del producto, fit con el ICP y/o intención de compra, y los PQL se segmentan
+    en sales, sales-assist o nurture.
+  source_id: EXT-8
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Base del handoff producto → persona en Hybrid A.
+- claim: El bowtie mide tiempo, conversión y volumen en todo el ciclo del cliente, no solo hasta Won.
+  source_id: EXT-9
+  source_type: industry
+  confidence: medium
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es una página de servicio y no trae fórmulas.
+- claim: La ruta depende del camino recorrido, así que solo se conoce completa al cerrar. Comparar la conversión
+    entre rutas describe lo que pasó, pero no prueba que la intervención de una persona cause más Won.
+  source_id: INF-1
+  source_type: internal
+  confidence: medium
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Inferencia de diseño, sin cifras. Apoya C-006.
+unverified: false
+source_ref:
+  research: R-031
+links:
+- R-031
+- Q-063
+- Q-064
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T18:41:41-06:00'
+updated_at: '2026-09-29T18:41:41-06:00'
+version: 1

@@ -1,0 +1,133 @@
+id: T-057
+type: table
+table_key: FIN-F-089
+title: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo del monto…
+question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos,
+  sin leerla como descuento?
+columns:
+- anio
+- meses_cliente
+- pct_en_monto_usual
+- pct_sobre_usual
+- pct_bajo_usual
+- pct_1_5x_o_mas_del_usual
+- pct_firma_pago_multimes
+rows:
+- - 2022
+  - 5590
+  - 68.9
+  - 10.4
+  - 20.7
+  - 6.0
+  - 6.8
+- - 2023
+  - 10855
+  - 80.9
+  - 10.4
+  - 8.8
+  - 2.5
+  - 2.4
+- - 2024
+  - 14216
+  - 78.8
+  - 18.3
+  - 2.9
+  - 2.6
+  - 1.8
+units:
+  anio: int
+  meses_cliente: int
+  pct_en_monto_usual: num2
+  pct_sobre_usual: num2
+  pct_bajo_usual: num2
+  pct_1_5x_o_mas_del_usual: num2
+  pct_firma_pago_multimes: num2
+definitions: {}
+message: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo del
+  monto usual del cliente pasan de 20,7% en 2022 a 8,8% en 2023 y 2,9% en 2024, los pagos por encima del monto usual
+  pasan de 10,4% a 18,3% y la firma de pago de varios meses pasa de 6,8% a 1,8%.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-007\nSELECT year AS anio,\n       COUNT(*) AS meses_cliente,\n       ROUND(100.0 * SUM(CASE WHEN amount_vs_usual_ratio
+  BETWEEN 0.99 AND 1.01 THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_en_monto_usual,\n       ROUND(100.0 * SUM(CASE
+  WHEN amount_vs_usual_ratio > 1.01 THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_sobre_usual,\n       ROUND(100.0 *
+  SUM(CASE WHEN amount_vs_usual_ratio < 0.99 THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_bajo_usual,\n       ROUND(100.0
+  * SUM(CASE WHEN amount_vs_usual_ratio >= 1.5 THEN 1 ELSE 0 END) / COUNT(*), 1) AS pct_1_5x_o_mas_del_usual,\n
+  \      ROUND(100.0 * SUM(multi_month_payment_signature) / COUNT(*), 1) AS pct_firma_pago_multimes\nFROM mart.customer_month\nWHERE
+  active_customer = 1 AND tenure_month >= 1 AND CAST(month AS VARCHAR) >= '2022-03'\nGROUP BY 1 ORDER BY 1"
+transformation: E-007 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-30ce · C-011
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: anio
+    nombre: anio
+    formato: int
+  - id: meses_cliente
+    nombre: meses_cliente
+    formato: int
+  - id: pct_en_monto_usual
+    nombre: pct_en_monto_usual
+    formato: num2
+  - id: pct_sobre_usual
+    nombre: pct_sobre_usual
+    formato: num2
+  - id: pct_bajo_usual
+    nombre: pct_bajo_usual
+    formato: num2
+  - id: pct_1_5x_o_mas_del_usual
+    nombre: pct_1_5x_o_mas_del_usual
+    formato: num2
+  - id: pct_firma_pago_multimes
+    nombre: pct_firma_pago_multimes
+    formato: num2
+  filas:
+  - anio: 2022
+    meses_cliente: 5590
+    pct_en_monto_usual: 68.9
+    pct_sobre_usual: 10.4
+    pct_bajo_usual: 20.7
+    pct_1_5x_o_mas_del_usual: 6.0
+    pct_firma_pago_multimes: 6.8
+  - anio: 2023
+    meses_cliente: 10855
+    pct_en_monto_usual: 80.9
+    pct_sobre_usual: 10.4
+    pct_bajo_usual: 8.8
+    pct_1_5x_o_mas_del_usual: 2.5
+    pct_firma_pago_multimes: 2.4
+  - anio: 2024
+    meses_cliente: 14216
+    pct_en_monto_usual: 78.8
+    pct_sobre_usual: 18.3
+    pct_bajo_usual: 2.9
+    pct_1_5x_o_mas_del_usual: 2.6
+    pct_firma_pago_multimes: 1.8
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-089
+links:
+- F-089
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 1

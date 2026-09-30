@@ -15,6 +15,7 @@ ACTIONS = {
     "create_question": "Create question", "update_story": "Update story", "to_table": "Send as table",
     "confirm": "Confirm decision", "revert": "Revert decision", "resolve": "Resolve alert", "follow_up": "Create follow-up",
     "retry": "Retry", "clear_stale": "Mark reviewed", "choose_frame": "Choose frame",
+    "accept_with_evidence": "Accept with its evidence",
 }
 
 
@@ -40,6 +41,8 @@ def available(e: dict) -> list[str]:
         base += ["create_hypothesis", "create_question", "research"]
     if t == "claim":
         base += ["update_story", "challenge"]
+        if rv != "rejected":
+            base += ["accept_with_evidence"]          # accepting the claim and the findings and tables it stands on, in one step
     if t == "decision":
         base += ["confirm"] if e.get("status") == "proposed" else (["revert"] if e.get("status") == "active" else [])
     if t == "alert" and e.get("status") == "open":
@@ -66,7 +69,12 @@ def run(store: CaseStore, eid: str, action: str, payload: dict | None = None) ->
             raise StoreError("Rechazar requiere una razón (queda en el historial).")
         if t == "research":
             return {"entity": research.reject(store, eid, note=note)}
-        return {"entity": store.set_review(eid, "rejected", actor=HUGO, note=note)}
+        out = store.set_review(eid, "rejected", actor=HUGO, note=note)
+        if t in ("claim", "finding", "table") and store.read_data("story/package.yaml"):
+            return {"entity": out, "validation": story.revalidate(store)}   # a rejected claim leaves the story at once
+        return {"entity": out}
+    if action == "accept_with_evidence":
+        return story.accept_with_evidence(store, [eid], note=note)
     if action == "challenge":
         objection = note or p.get("text") or "No estoy convencido; busca otra explicación."
         if t == "research":

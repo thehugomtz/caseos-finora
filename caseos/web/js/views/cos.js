@@ -4,7 +4,7 @@ import { h, mount as put, autosize } from "../core/dom.js";
 import { api } from "../core/api.js";
 import { icon } from "../core/icons.js";
 import { app } from "../app.js";
-import { idTag, statusChip, btn, empty, toast, thinking, ids, hhmm, ago, review, PHASE_LABEL, STATUS_LABEL } from "../ui/components.js";
+import { idTag, statusChip, btn, empty, toast, thinking, ids, hhmm, ago, review, PHASE_LABEL, STATUS_LABEL, confirmDialog } from "../ui/components.js";
 import { markdown } from "../ui/markdown.js";
 
 export async function mount(root) {
@@ -42,7 +42,9 @@ export async function mount(root) {
           h("div.panel.flush.nbas", h("div.phead", h("h2.sec", "Next best actions", h("span.count", String(room.next_best_actions.length))), h("span.small.faint", "reglas deterministas + COS; nada avanza solo")),
             h("div.pbody", room.next_best_actions.length ? room.next_best_actions.map(a => h("div.nba", h("span.n", String(a.n)), h("div", h("div.t", a.title), h("div.w", a.why), a.ids && a.ids.filter(x => x && /^[A-Z]-\d/.test(x)).length ? h("div.row.wrap", { style: { marginTop: "6px" } }, ids(a.ids.filter(x => x && /^[A-Z]-\d/.test(x)), 5)) : null),
               nbaButton(a))) : empty("Nada urgente", "El caso está al día."))),
-          h("div", h("div.row.between.mb", h("h2.sec", "Alertas de impacto", h("span.count", String(room.alerts.length))), h("span.small.faint", "nueva evidencia que puede cambiar la historia")),
+          h("div", h("div.row.between.mb", h("h2.sec", "Alertas de impacto", h("span.count", String(room.alerts.length))),
+              h("div.row", h("span.small.faint", "nueva evidencia que puede cambiar la historia"),
+                room.alerts.length ? btn(`Ignorar todas (${room.alerts.length})`, { sm: true, variant: "ghost", onClick: () => dismissAll(room.alerts.length) }) : null)),
             room.alerts.length ? h("div.stack", room.alerts.map(alertCard)) : empty("Sin alertas abiertas", "Cuando llegue research nuevo, el COS evalúa si apoya, debilita o contradice hipótesis y claims.")),
           h("div.panel.pad", h("div.eyebrow.accent", "Pregúntale al COS"), h("div.mt", askBox),
             h("div.stack.mt", conv.conversation.slice().reverse().slice(0, 5).map(c => h("div.answer-card", h("div.small.muted", `${hhmm(c.ts)} · ${c.question}`),
@@ -79,6 +81,19 @@ function nbaButton(a) {
   if (k === "research_needed") return btn("Framing", { sm: true, onClick: () => app.go("#/framing") });
   if (k === "story_package") return btn("Story", { sm: true, onClick: () => app.go("#/story") });
   return h("span");
+}
+
+// Hugo decides that none of the open alerts changes the story: one decision for all of them
+async function dismissAll(n) {
+  const note = await confirmDialog({ eyebrow: "Decisión · solo Hugo", title: `Ignorar las ${n} alertas abiertas`, human: true, confirmLabel: "Ignorar todas",
+    text: "Quedan como «sin impacto material» y se registra una sola decisión con todas. Lo que marcaron como needs_review vuelve a su estado. Nada se borra.",
+    field: { label: "Razón (queda en el decision log)", placeholder: "Revisé la historia y ninguna cambia lo que afirmamos…" } });
+  if (note === null) return;
+  try {
+    const out = await api.cpost("/cos/alerts/dismiss", { note: note === true ? "" : note });
+    toast(`${out.dismissed.length} alertas ignoradas · ${out.decision}` + (out.cleared.length ? ` · ${out.cleared.length} vuelven de needs_review` : ""), "ok", 6000);
+    await app.refresh();
+  } catch (e) { toast(e.message, "err", 7000); }
 }
 
 function alertCard(x) {

@@ -1,0 +1,63 @@
+id: X-057
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-012
+target: Q-020
+title: R-012 cambia la historia Q-020
+finding_text: Las cifras del Overview se reproducen con ventana completa; el resto es composición
+why: 'R-012 responde buena parte de «¿qué cambió y desde cuándo?», y esa respuesta cambia la forma del Overview.
+
+
+  Qué cambió: la composición de la base, no el pago dentro de las cosechas. La descomposición atribuye 108% del
+  −38% a composición y −8% al efecto dentro de las cosechas (F-075). Pasa de 100% porque, dentro de las cosechas,
+  el promedio de los clientes que siguen activos subió un poco. En oct-24 las cosechas 2023 y 2024 son 65% de los
+  activos y 50% del MRR, con COP 46,3 mil y 43,0 mil por cliente (F-076).
+
+
+  Desde cuándo: hay un salto entre 2022 y 2023 (primeras apariciones de 27,2 a 54,2 por mes; ticket de entrada promedio
+  de COP 128,7 a 47,9 mil) y una meseta entre 2023 y 2024 (54,2 → 55,4; 47,9 → 50,8 mil) (F-077, F-078). F-110/T-016
+  ubica el escalón entre dic-22 y ene-23 (de 26 a 60).
+
+
+  Contar el −38% o la duplicación de primeras apariciones como tendencia continua sería falso para 2024. Además,
+  si el CRO mide «cliente nuevo» como primer pago, chocaría con su premisa.
+
+
+  Dos cuidados de redacción: el 97,4 mil compara a los activos de ene-22 que siguen en oct-24 con los 92,8 mil de
+  toda la base de ene-22, así que mezcla pago y supervivencia y no permite decir «la base antigua paga más». Y el
+  «desde cuándo» no puede ir antes de ene-22 para stock ni antes de mar-22 para flujo.'
+options:
+- key: A
+  label: 'Abrir con las cifras del caso de punta a punta (4,5×, 2,8×, −38%) y partirlas enseguida en dos tramos:
+    el salto 2022 → 2023 y la meseta 2023 → 2024'
+  consequence: El CEO reconoce sus números y ve que no es una tendencia sino un salto, explicado por composición.
+    El paso a Growth arranca en la meseta reciente; si ese es el periodo del CRO (por confirmar), ahí se conecta
+    su pregunta.
+- key: B
+  label: Contar solo por tramos anuales y mandar el punta a punta al anexo
+  consequence: Más preciso, pero se pierde el ancla de las cifras que el CEO ya conoce, y habría que explicar por
+    qué no aparecen.
+- key: C
+  label: Dejar el punta a punta como mensaje único y la meseta como limitación
+  consequence: Más simple, pero R-012 dice que la señal no puede extenderse como tendencia única, y la duplicación
+    de primeras apariciones queda de frente contra el «no más ventas» del CRO.
+recommended: A
+recommended_why: 'Usa lo que R-012 ganó (las cifras del caso se reproducen exactas) como puerta de entrada y enseguida
+  muestra el insight: composición y salto, no deterioro continuo. Es la forma más corta de conectar el Overview
+  con Growth sin afirmar nada del funnel.'
+detected_by: cos
+links:
+- R-012
+- Q-020
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-d4c8
+created_at: '2026-09-29T11:46:03-06:00'
+updated_at: '2026-09-29T11:46:03-06:00'
+version: 1

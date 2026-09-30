@@ -1,0 +1,60 @@
+id: F-123
+type: finding
+headline: Self Service funciona como grupo de control, y los experimentos naturales van antes que un experimento
+  aleatorio (Q-023).
+evidence_text: 'Self Service no pasa por SDR/AE: si su conversión dentro de banda cae igual que la de Assisted,
+  la capacidad no lo explica. Las cifras de velocidad de respuesta que hay son correlacionales y vienen de un vendor
+  (8 veces más conversión en los primeros cinco minutos). Como los reps priorizan lo que parece mejor, ''lo que
+  se atiende rápido convierte más'' no prueba capacidad. Antes de aleatorizar se pueden usar esperas que no dependen
+  de la calidad: entradas que llegan fuera de horario o en fin de semana, el reparto automático de leads por turnos
+  (round robin) y las ausencias de reps. Un experimento aleatorio de atención rápida solo si la lectura queda ambigua
+  y la decisión es cara.'
+confidence: low
+limitations:
+- Supone que la calidad no cambió distinto según el canal. Con 30 a 84 altas al mes, cada combinación de grupo,
+  banda y velocidad tendrá pocos casos.
+kind: measurement
+claims:
+- claim: En ese estudio, que un rep siga un lead depende de la calidad de precalificación, del volumen de leads
+    de marketing y del seguimiento gerencial, con efectos que cambian según la experiencia y el desempeño del rep.
+  source_id: SRC-01
+  source_type: academic
+  confidence: high
+  freshness: '2013'
+  supports_or_contests: context
+  notes: 'Inferencia para el caso: los descartes y el ''mal fit'' que registra Sales dependen a la vez de la calidad
+    y de la carga, así que no sirven como medida de ajuste al entrar.'
+- claim: Un vendor reporta, sobre 5,7 millones de leads inbound en más de 400 empresas, una conversión 8 veces mayor
+    cuando se responde en los primeros cinco minutos, y que el 57,1% de los primeros intentos de llamada ocurre
+    después de más de una semana.
+  source_id: SRC-04
+  source_type: marketing
+  confidence: low
+  freshness: 2021 (más de 18 meses; vendor)
+  supports_or_contests: context
+  notes: 'Contenido de vendor, sin método. Es una correlación: puede reflejar que los reps atienden primero los
+    mejores leads (inferencia).'
+- claim: Las altas mensuales observadas van de 17 a 38 entre mar y dic de 2022, y de 30 a 84 en 2023–2024.
+  source_id: SRC-D2
+  source_type: data_model
+  confidence: low
+  freshness: Datos de ene-22 a oct-24
+  supports_or_contests: context
+  notes: Es volumen de compradores, no de entradas. Limita cuántos casos habrá por combinación en cualquier descomposición.
+    · fuente no recuperada en la corrida (CaseOS)
+  unverified: false
+unverified: false
+source_ref:
+  research: R-014
+links:
+- R-014
+- H-005
+- H-006
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:45:59-06:00'
+updated_at: '2026-09-29T11:57:06-06:00'
+version: 2

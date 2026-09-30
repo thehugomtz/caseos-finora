@@ -1,0 +1,94 @@
+id: F-147
+type: finding
+headline: 'Los marcos coinciden: medir volumen, alcance y tiempo por hito en cada motion y unirlos en resultados
+  económicos comunes. Un bowtie por motion (Self Service, Assisted, Executive/KAM) evita la tasa mezclada.'
+evidence_text: 'Winning by Design presenta el Bowtie como el modelo de datos del ingreso recurrente que reemplaza
+  al funnel y conecta volumen, conversión y velocidad desde la adquisición hasta la expansión (WBD-1). Quienes lo
+  implementan numeran métricas de volumen, conversión y tiempo por etapa, antes y después de la venta (DT-1), y
+  lo operan amarrando las etapas al CRM (RP-1). Las guías de embudos híbridos piden medir la conversión de cada
+  camino (self-serve vs. asistido) por separado y un registro único que una producto, CRM y facturación (AB-1).
+  La alternativa de Forrester se centra en oportunidades con buying groups (FR-1). En Finora, el primer pago observado
+  es muy disperso: 879 de 1.476 altas limpias pagan menos de 50.000 COP y 42 pagan 200.000 COP o más (DM-8). Pero
+  12 de esas 42 tienen un primer pago compatible con prepagar varios meses (DM-11), así que el tamaño inferido de
+  los pagos no sirve para deducir el motion.'
+confidence: medium
+limitations:
+- Son fuentes de práctica y de proveedores, sin evidencia que compare resultados. El marco se adopta porque encaja
+  con el problema, no porque esté probado que funciona mejor.
+kind: measurement
+claims:
+- claim: De 1.476 altas limpias, 879 (60%) tienen un primer pago observado (M0) menor a 50.000 COP, 439 (30%) entre
+    50.000 y 100.000, 116 (8%) entre 100.000 y 200.000 y 42 (3%) de 200.000 COP o más.
+  source_id: DM-8
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'M0 es el primer pago observado: no es ticket contratado ni adquisición confirmada. La dispersión es compatible
+    con varios motions, pero no lo prueba.'
+- claim: De las 42 altas con M0 de 200.000 COP o más, 12 (29%) tienen un M0 compatible con pagar varios meses juntos,
+    frente a 74 de 1.434 (5%) por debajo de ese umbral.
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: 'La cola alta de M0 mezcla prepagos con clientes más grandes: el tamaño deducido de los pagos no sustituye
+    el motion.'
+- claim: 'Winning by Design presenta el Bowtie como «the modern data model for recurring revenue—designed to replace
+    the funnel»: conecta métricas de volumen, conversión y velocidad en todas las etapas (adquisición, onboarding,
+    retención y expansión).'
+  source_id: WBD-1
+  source_type: industry
+  confidence: medium
+  freshness: Publicado el 2026-01-22
+  supports_or_contests: supports
+  notes: 'Marco propietario de una consultora: describe una práctica, no prueba resultados. El PDF no se pudo leer;
+    se usa la página resumen.'
+- claim: Quienes implementan el Bowtie numeran métricas de volumen, conversión y tiempo entre etapas en cada etapa,
+    antes y después de la venta.
+  source_id: DT-1
+  source_type: marketing
+  confidence: medium
+  freshness: '2025-08-08'
+  supports_or_contests: supports
+  notes: Blog de un proveedor (Drivetrain).
+- claim: 'Para operar el Bowtie se amarran sus etapas a los datos del CRM: lifecycle stages, objetos de ingreso
+    e hitos de adopción o de CS.'
+  source_id: RP-1
+  source_type: marketing
+  confidence: low
+  freshness: Publicado el 2022-10-31, actualizado el 2026-01-09
+  supports_or_contests: supports
+  notes: Contenido de una agencia, sin detalle técnico.
+- claim: Para embudos híbridos se recomienda medir la conversión de cada camino (self-serve, asistido e híbrido)
+    por separado, y unir producto, CRM, automatización de marketing y facturación en un registro único por cliente.
+  source_id: AB-1
+  source_type: marketing
+  confidence: low
+  freshness: 2025, sin fecha exacta ni autor
+  supports_or_contests: supports
+  notes: Guía de un proveedor.
+- claim: El B2B Revenue Waterfall de Forrester propone dejar de gestionar leads individuales y pasar a oportunidades
+    con buying groups.
+  source_id: FR-1
+  source_type: industry
+  confidence: medium
+  freshness: Página con referencia 26Q3, sin fecha explícita
+  supports_or_contests: context
+  notes: Es la alternativa si el motion Executive/KAM pesa mucho. La página no detalla métricas ni cadencia.
+unverified: false
+source_ref:
+  research: R-019
+links:
+- R-019
+- Q-016
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:06:06-06:00'
+updated_at: '2026-09-29T11:06:06-06:00'
+version: 1

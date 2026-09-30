@@ -1,5 +1,5 @@
 # CURRENT STORY — v3
-> Generado 2026-09-29T20:10 · con problemas de validación
+> Generado 2026-09-29T20:10 · válido
 
 ## Audiencia
 CEO: contexto de salud general del modelo (Overview) antes de Growth y Revenue. Qué decide todavía no está definido., CRO: cómo definir, medir y operar el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos., CFO: cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»: mecanismo, modelo de datos y clasificación.
@@ -32,7 +32,7 @@ _Situación: Finora suma clientes mucho más rápido que monto pagado, y la caí
 Entre ene-22 y oct-24 (ventana completa), los clientes con pago en el mes pasan de 377 a 1.678 (4,5×) y el MRR pagado observado, de COP 35,0 millones a COP 97,0 millones (2,8×). El MRR pagado observado por cliente activo baja de COP 92,8 mil a COP 57,8 mil (−38%). Esa brecha abre Growth (quién entra) y Revenue (qué se paga y por qué cambia).
 
 - Pregunta: ¿Qué tan sano está el modelo si suma clientes mucho más rápido que monto pagado?
-- Rol: context · confianza high · fuerza pending
+- Rol: context · confianza high · fuerza supported
 - Evidencia: F-071, F-072, F-001, F-002, F-074 · Tablas: T-026, T-027, T-001
 - Intención visual: Una línea: MRR pagado por cliente activo, en COP, de ene-22 a oct-24 (T-027): de COP 92,8 mil a 57,8 mil (−38%). Si hace falta la comparación, en apoyo: clientes activos y MRR pagado en la misma gráfica, cada uno con ene-22 = 100 (T-001), las dos líneas juntas.
 - Limitación: Pendiente de tu aceptación: F-071, F-072, F-001, F-002 y F-074 están propuestos.
@@ -47,7 +47,7 @@ Entre ene-22 y oct-24 (ventana completa), los clientes con pago en el mes pasan 
 Con base ene-22, la descomposición por cosecha asigna 108% del cambio del MRR pagado observado por cliente activo a la composición de la base; con base dic-22, 84%. La cifra depende de la ventana; la dirección no. Los clientes activos en ene-22 pasan de COP 92,8 mil a COP 97,4 mil por cliente (+5%), mientras que las cosechas 2023 y 2024 ya son 65% de los activos y 50% del MRR en oct-24, con COP 46,3 mil y COP 43,0 mil por cliente. Propuesta: reportar el monto por cliente siempre partido en base previa y cosechas, con una base de comparación fija que decidas tú.
 
 - Pregunta: ¿El −38% por cliente viene de la base que ya teníamos o de quién entra?
-- Rol: diagnosis · confianza high · fuerza pending
+- Rol: diagnosis · confianza high · fuerza supported
 - Evidencia: F-075, F-076, F-056, F-058, F-097, F-092, F-019 · Tablas: T-030, T-031, T-041, T-027
 - Intención visual: Mezcla que arrastra: la base previa sostiene su monto mientras las cosechas nuevas, con menos monto por cliente, ganan peso y bajan el promedio.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
@@ -65,7 +65,7 @@ _Lo que sí vemos (S2.2, S2.4): más primeros pagadores con menor ticket estabil
 Los primeros pagadores observados pasan de 27,2 por mes en 2022 (mar–dic) a 54,7 desde ene-23. Es un escalón sin tendencia distinguible después: pendiente de +0,47 por mes, con intervalo de −0,40 a +1,33. Entre 2022 y 2024 suben +104% por mes, mientras el valor inicial que incorporan sube +6% (run-rate temprano) o +17% (monto habitual). Con ticket estabilizado, la mediana del segundo pago baja de COP 52,5 mil en 2022 a COP 36,8 mil en 2023 y COP 38,9 mil en 2024. El efecto dentro de cada industria explica 91% del cambio 2022→2023 y 96% del cambio 2022→2024.
 
 - Pregunta: ¿Qué cambió en quién entra y en qué industrias?
-- Rol: evidence · confianza medium · fuerza pending
+- Rol: evidence · confianza medium · fuerza supported
 - Evidencia: F-110, F-039, F-113, F-045, F-037, F-160, F-161, F-162, F-163, F-164, F-114, F-030, F-192, F-193 · Tablas: T-016, T-019, T-062, T-066, T-020
 - Intención visual: Outgrow: el conteo de primeros pagadores sube en escalón y se aplana, mientras el valor que traen crece mucho menos.
 - Limitación: Pendiente de tu aceptación; F-160 a F-163 tienen confianza media.
@@ -80,7 +80,7 @@ Los primeros pagadores observados pasan de 27,2 por mes en 2022 (mar–dic) a 54
 En 2023 jun–dic hay 60,6 primeros pagadores por mes, frente a 45,2 en ene–may. En esos mismos tramos, la Generación de Demanda (ToFu) baja de 1,73 u a 0,82 u por mes y el S&M total, de 3,01 u a 1,44 u. La correlación en niveles entre S&M total y primeros pagadores del mismo mes es −0,57; en cambios mes a mes, el mayor valor absoluto es 0,27 (p mínimo 0,14): no hay una relación positiva que leer. El archivo viene en unidades reportadas (u), sin escala a COP, y hasta may-23 Team es un 12% fijo del total durante 17 meses. Propuesta: que Finora documente la unidad del gasto y lo registre por canal y campaña (campaign_spend, C-013), para leer el gasto contra entradas y Won por cohorte y canal, no cruzando fechas.
 
 - Pregunta: ¿Hasta dónde se puede relacionar la Inversión en Marketing por categoría con las ventas cruzando fechas?
-- Rol: evidence · confianza medium · fuerza pending
+- Rol: evidence · confianza medium · fuerza supported
 - Evidencia: F-214, F-220, F-219, F-221, F-217, F-107, F-118, F-023, F-024, F-063, F-066, F-115, F-065, F-068, F-119, F-207 · Tablas: T-101, T-107, T-106, T-108, T-104, T-013, T-024, T-008, T-005, T-009
 - Intención visual: Dos paneles con los mismos meses (ene-22 a oct-24): arriba el S&M total por mes (unidad reportada), abajo las altas por mes; en 2023 jun-dic el gasto baja mientras las altas suben (T-101). Apoyo: dispersión de S&M contra altas con un mes de rezago (F-220, T-107) y barras por ventana de altas por mes y S&M por alta (T-108). Sin atribuir ventas al gasto.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
@@ -125,7 +125,7 @@ Por ruta y canal, en orden y con dueño. Es propuesta; solo Executive outbound e
 No se concentra en una industria: el MRR pagado observado por cliente activo bajó en las 6 entre dic-22 y oct-24. Cayó más en Servicios profesionales (−46,6%), Restaurantes (−45,6%) y Retail (−43,1%) que en Producción (−18,8%), Tecnología (−15,5%) y Salud (−14,4%). Se asocia a cosechas: con base dic-22, la composición explica 84% del cambio, y el menor ticket de entrada ocurre dentro de cada industria (96% del cambio 2022→2024). No se asocia a salidas persistentes: el churn observado baja de 3,52% a 2,04%, mientras que el de quienes no vuelven a pagar en un trimestre queda en 0,98% y 0,96%.
 
 - Pregunta: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?
-- Rol: diagnosis · confianza high · fuerza pending
+- Rol: diagnosis · confianza high · fuerza supported
 - Evidencia: F-097, F-092, F-096, F-094, F-020, F-164, F-163, F-075, F-033, F-183, F-059, F-101, F-102 · Tablas: T-038, T-040, T-066, T-041, T-030, T-002
 - Intención visual: Difusión contra concentración: la caída aparece en todas las industrias con distinta intensidad, mientras que el peso de las cosechas de menor ticket es lo que la concentra.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
@@ -169,7 +169,7 @@ Sale directo de las etapas de C-021. Notación: journey = cuenta × intento; coh
 A tu lista (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) se suman el churn persistente, las capas de lista, descuento y neto, el quick ratio, NRR/GRR, el payback y LTV:CAC. Regla MECE: cada métrica vive en un solo lugar. Lo que pasa hasta Won y el primer pago está en el funnel (C-006); lo que pasa con la cuenta que ya paga está aquí, como común. Puerta, ruta, canal, industria y cohorte son cortes, no métricas nuevas. Semáforo: verde = se calcula hoy con nombre honesto; amarillo = proxy con una regla por aprobar; rojo = falta el dato. RESULTADO · MRR pagado observado = suma de lo pagado en el mes (verde) · MRR normalizado = cada pago repartido entre los meses que cubre (amarillo) · ARR run-rate = MRR normalizado anualizado (amarillo) · MRR de lista, descuento recurrente y MRR neto = lista − descuento; el descuento es el revenue que dejamos de capturar (rojo, se detalla en S3). MOVIMIENTO · puente: MRR nuevo + expansión + reactivación − contracción − churn = cambio del MRR (verde sobre monto pagado, se lee con cuidado); en el to-be suma la línea Descuento y deja el efecto de cobro fuera del MRR · quick ratio = entradas ÷ salidas del puente, trimestral (verde). CLIENTES · clientes activos = clientes con pago en el mes (verde) · churn de logos observado = los que dejan de pagar ÷ activos del mes previo (verde) · churn persistente = los que no vuelven a pagar en un trimestre ÷ activos del mes previo (amarillo): 3,52% contra 0,98% en 2022 y 2,04% contra 0,96% en 2024 · reactivaciones, como loop de Revenue (verde) · ARPA = MRR ÷ clientes activos, por cohorte; es lo que se pide como ARPU (verde; por usuario, rojo). RETENCIÓN POR COHORTE DE PRIMER PAGO · logos que siguen pagando en M3, M6 y M12 (verde) · NRR = MRR actual de la cohorte ÷ su MRR inicial · GRR = lo mismo sin expansión (verdes sobre monto pagado, no contractuales). EFICIENCIA · CAC = gasto de S&M ÷ nuevas cuentas; por canal y ruta = gasto del canal ÷ Won del canal (hoy solo el proxy de C-010) · payback = CAC ÷ (valor de entrada × margen bruto), en meses (rojo) · LTV empírico de ingreso = ingreso acumulado por alta a horizonte fijo, por cohorte (verde) · LTV con margen y LTV:CAC (rojos) · UCM = ARPA − costo variable de servir (rojo).
 
 - Pregunta: ¿Qué otras métricas hay que proponer y cómo se mide cada una?
-- Rol: recommendation · confianza medium · fuerza pending
+- Rol: recommendation · confianza medium · fuerza supported
 - Evidencia: F-135, F-136, F-139, F-033, F-137, F-138, F-183, F-175, F-079, F-239, F-240 · Tablas: T-002, T-085, T-034
 - Intención visual: Árbol de ingreso recurrente: el resultado se abre en movimiento, clientes, retención y eficiencia; cada hoja está en un solo lugar, con su color de semáforo.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
@@ -197,7 +197,7 @@ El catálogo no suma métricas: gobierna las del funnel (C-006) y las comunes (C
 Lo único que se puede calcular es el S&M total por primer pagador observado, en la unidad del archivo: 0,105 u en 2022 y 0,036 u en 2024 (−66%). No es CAC: la unidad del gasto no está documentada, no hay canal ni ruta, y el primer pago no es el hito de adquisición acordado. Además, depende de qué rubros se cuenten: Habilitación pesa 12% del S&M en 2022, 7% en 2023 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 si se incluye y de 0,09 a 0,03 si se excluye. En las métricas comunes (C-009) queda como proxy del CAC, en rojo hasta tener la unidad y el canal.
 
 - Pregunta: ¿Podemos calcular el CAC hoy?
-- Rol: limitation · confianza medium · fuerza pending
+- Rol: limitation · confianza medium · fuerza supported
 - Evidencia: F-081, F-108, F-069, F-070, F-022, F-137 · Tablas: T-036, T-011, T-012
 - Intención visual: Sensibilidad: el mismo cociente cambia según qué rubros entren; muestra lo frágil del proxy más que su nivel.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.
@@ -263,7 +263,7 @@ AS-IS: tres fuentes, todas de después del pago. Pagos, con grano cliente × mes
 - Limitación: Mide hacia adelante, salvo que Finora tenga historial en sus sistemas (F-242). Que el caso no traiga canal ni etapas no prueba que Finora no los registre.
 - En palabras de Hugo: “«C-013, quiero ver explicitamente el modelo de datos que se propone, as is vs to be» · técnica: pulir CRM, analítica digital.”
 
-**C-014 · Proponemos un tablero por foro atado a decisiones: semanal, mensual y trimestral**
+**C-014 · Proponemos dos vías: una formal y ejecutiva a través de dashboards adhoc a los foros recurrentes y otro para preguntas del día a día a través de agentes de IA que permitan generar visualizaciones y hacer análisis adhoc**
 
 Cada foro trae sus métricas (C-006, C-009) y la decisión que habilita. Semanal (CRO, líderes de SDR/AE y RevOps): estancamiento por etapa, calidad del handoff, tiempo en etapa, carga por SDR/AE y stock sin tocar del loop Reactivate → qué journeys avanzar, retomar o descalificar, y dónde reasignar capacidad. Mensual de Growth & Revenue (CRO, Marketing, CS/KAM y Finanzas): entradas y win rate de cohorte por puerta y canal, mezcla de Won por ruta, tiempo de cierre, MRR de entrada, puente de MRR y churn persistente → mover la Inversión en Marketing entre canales y ajustar el ruteo entre rutas. Trimestral (CEO, CFO y CRO): CAC y costo por Won por canal y ruta, payback, NRR/GRR por cohorte y MRR de lista contra neto → repartir entre Generación de Demanda, Team y Habilitación. Por encima van el Análisis Ad hoc por hoja del árbol (C-023) y agentes de IA que trabajan solo sobre métricas gobernadas (vigilancia de estancamientos, pre-lectura del foro, higiene del CRM), con un piloto controlado.
 
@@ -306,19 +306,6 @@ Se ve cuánto cambió el monto pagado y en qué movimiento del puente, pero part
 - Limitación: El reparto exacto de un pago entre los meses que cubre no se puede medir; solo se acota (F-186).
 - Limitación: Las etiquetas del puente describen el monto pagado, no altas, bajas ni expansiones contractuales.
 - En palabras de Hugo: “Qué data observable de pricing introductorio podemos sacar.”
-
-**C-016 · Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas**
-
-Con cliente, mes y monto, pasar de 100 a 80 puede ser una suscripción más chica, un descuento o un cobro que cambió de mes. Seguir en 100 con la suscripción en 130 no se distingue de «sin cambio», y el fin del descuento se vería como expansión. En los datos pasa algo parecido: 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente, 29% del MRR de expansión se revierte, 32% de los retornos tras meses sin pago liquida exactamente los meses pendientes y hay 260 eventos de ajuste con cobro retroactivo exacto. El monto no trae lista, descuento, crédito ni pausa.
-
-- Pregunta: Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece el descuento: ¿se puede leer cada caso con el monto pagado?
-- Rol: evidence · confianza high · fuerza pending
-- Evidencia: F-093, F-090, F-073, F-130, F-082, F-062, F-177 · Tablas: T-058, T-061, T-028, T-074
-- Intención visual: Una observación, varias lecturas: el mismo monto pagado se abre en lecturas distintas que hoy no se pueden separar.
-- Limitación: Pendiente de tu aceptación; F-130 tiene la fuente sin verificar.
-- Limitación: Los casos del CFO son ejemplos del enunciado, no observaciones de Finora.
-- Limitación: Es una prueba de observabilidad, no una lectura de lo que ocurrió.
-- En palabras de Hugo: “Con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento).”
 
 **C-017 · El descuento se registra como objeto propio, con origen, source y fecha de fin**
 
@@ -428,6 +415,6 @@ Con el modelo (C-019, C-020), los ejemplos del enunciado se separan. De 100 a 80
 - D-018 contra D-007: ¿entran los diseños a la historia como propuesta?
 
 ## Validación
-- ✖ C-016: cifra(s) sin tabla que las respalde: 32%, 260.
 - ⚠ C-011: lenguaje causal («porque») — la evidencia es observacional.
+- ⚠ C-014: titular largo (38 palabras); el Storyteller lo recortará.
 - ⚠ Láminas del guion sin evidencia todavía: S2.1 (van a research, no se rellenan).

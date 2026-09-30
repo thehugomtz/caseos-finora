@@ -1,0 +1,44 @@
+id: X-153
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-032
+target: H-006
+title: R-032 cambia el framing H-006
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: R-032 deja H-006 solo en la rama 3, con firma de tiempo a primer toque y carga (F-231). Pero H-006 habla de
+  SDRs y AEs, y X-085 ya incluía la carga por AE. La parte AE (demos y propuestas que se demoran con más SQL por
+  AE) cae en la rama 4, en el «avance del AE», que en R-032 no tiene hipótesis. Si se mide solo el primer toque,
+  se puede descartar H-006 aunque el cuello esté en los AEs.
+options:
+- key: A
+  label: 'Mantener H-006 entera con dos firmas: primer toque y carga por SDR (rama 3); tiempo de SQL a demo o propuesta
+    y carga por AE (rama 4).'
+  consequence: El avance del AE queda con dueño sin crear otra hipótesis. H-006 aparece en dos ramas, como permite
+    la opción A del framing.
+- key: B
+  label: 'Partir H-006: la parte SDR en la rama 3 y una hipótesis nueva de capacidad del AE en la rama 4.'
+  consequence: Más limpio por hoja, pero suma un ID y separa algo que Hugo planteó como uno.
+- key: C
+  label: Dejarla como la pone R-032, solo con el primer toque.
+  consequence: Menos trabajo, con riesgo de descartar capacidad mirando solo al SDR.
+recommended: A
+recommended_why: Conserva la hipótesis como se planteó, llena el hueco de la rama 4 y no fuerza una causa a un solo
+  lugar.
+detected_by: cos
+links:
+- R-032
+- H-006
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

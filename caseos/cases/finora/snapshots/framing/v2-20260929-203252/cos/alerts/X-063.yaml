@@ -1,0 +1,47 @@
+id: X-063
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-017
+target: H-011
+title: R-017 requiere más investigación H-011
+finding_text: 'La pérdida no es sectorial: se concentra en cosechas y ticket de entrada'
+why: 'H-011 es de la rama CFO (HF2a): habla de clientes que salen y de su valor antes de descuentos. R-017 solo
+  ve churn observado. Por promedio, quienes hacen churn pagaban 1,70×, 1,58× y 1,37× lo del cliente activo del mes
+  previo (2022–2024), con límite inferior del intervalo por encima de 1 (F-101). Por mediana no pagaban más (1,00;
+  0,97; 1,11; F-102), así que la diferencia la ponen pocas cuentas grandes. «Antes de descuentos» no se puede evaluar,
+  porque los pagos no permiten separar precio y descuento (F-093). Y, por D-004, el pago observado no sustituye
+  la respuesta a una pregunta del CFO. Además, el churn observado incluye a quienes vuelven (reactivación de COP
+  86,5 millones en R-004), y el churn persistente es bastante menor que el observado (F-103). Esas cuentas grandes
+  podrían estar saltándose un pago, no saliendo.'
+options:
+- key: A
+  label: Mantener H-011 abierta como no evaluable con estos datos y usar en la story solo la redacción observada
+  consequence: Sin trabajo extra. La story diría «en promedio el churn se lleva más monto por cliente, pero el cliente
+    típico que sale no pagaba más», sin saber si son salidas o pagos que se saltan un mes.
+- key: B
+  label: 'Chequeo corto: la misma razón (promedio y mediana) solo sobre churn persistente, y cuántas cuentas explican
+    la diferencia'
+  consequence: Es un análisis con datos del caso. Dice si el «churn caro» se sostiene al quitar a quienes vuelven
+    y qué tan concentrado está. H-011 sigue abierta como pregunta del CFO.
+- key: C
+  label: Leer el promedio como apoyo a H-011
+  consequence: 'Es rápido, pero choca con D-004 y con la mediana: el CFO lo desarma con una sola pregunta.'
+recommended: B
+recommended_why: Es lo más barato para convertir «pocas cuentas grandes» en algo que se pueda decir o descartar.
+  Mientras tanto vale la redacción de A; C expone el caso sin necesidad.
+detected_by: cos
+links:
+- R-017
+- H-011
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-5c65
+created_at: '2026-09-29T11:52:09-06:00'
+updated_at: '2026-09-29T11:52:09-06:00'
+version: 1

@@ -1,0 +1,60 @@
+{
+ "id": "JOB-20260929-143020-fc7c",
+ "case_id": "finora",
+ "kind": "cos_impact",
+ "title": "COS evalúa el impacto de R-022",
+ "params": {
+  "source_id": "R-022",
+  "reason": "research completado"
+ },
+ "agent": "cos",
+ "status": "succeeded",
+ "created_at": "2026-09-29T14:30:20-06:00",
+ "started_at": "2026-09-29T14:30:20-06:00",
+ "finished_at": "2026-09-29T14:44:08-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T14:30:20-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T14:30:20-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-143020-cos-4d70",
+   "agent": "cos",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:30:21-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:44:08-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "created": [
+   "X-080",
+   "X-081",
+   "X-082",
+   "X-083",
+   "X-084",
+   "X-085",
+   "X-086",
+   "X-087",
+   "H-058",
+   "H-059",
+   "Q-066",
+   "Q-067",
+   "Q-068"
+  ],
+  "summary": "R-022 es diseño de métricas, no evidencia de causas. No mueve ninguna explicación del CRO (H-004 a H-007, H-028), porque hoy no se puede calcular nada por motion ni nada anterior al pago (F-159). Lo que sí trae de data cambia cómo se cuenta:\n- En los pagos, el loop de Reactivate es sobre todo vueltas tras un solo mes en cero (70,5%).\n- El peso de las reactivaciones en las entradas a pago se movió: 30,4% en 2022 feb–dic, 17,7% en 2023 y 22,6% en 2024 ene–oct.\n\nHay cinco alertas nuevas:\n- **framing** (severidad alta): una reactivación observada no es win-back, y una baja sin regreso no es cancelación.\n- **H-037**: la premisa se cumple, pero la dirección depende de la ventana.\n- **C-005**: pasar a Hybrid y a la regla de dos pasos.\n- **C-012**: según R-022, probar la palanca de H-006/H-028 requiere un experimento. Esto completa U12 (Q-023).\n- **H-007**: en la respuesta corta, Hybrid no mide post-SQL, estancamientos ni Won→pago.\n\nQ-050 suma un segundo research a favor del primer pago; la decisión sigue en X-052. Igual que R-019 y R-021, R-022 es una propuesta de métricas: la tensión con D-007 sigue en X-055 y X-073, así que no abro otra alerta.\n\nSiguientes pasos, en orden de desbloqueo:\n1. Decidir el nudo en X-052 junto con una regla de gracia (Q-050). De eso dependen F-156, el peso de Reactivate y H-037.\n2. Decidir el límite de Reactivate en el framing.\n3. Revisar el cuerpo de R-022 por el tramo post-SQL de Hybrid y decidir qué hace R-023 (en curso), que pregunta casi lo mismo que R-016 y R-022.\n4. Revisar F-155 a F-159. Con eso, ajustar C-005 y C-012 y responder U12.\n5. En paralelo, contar con los pagos las reactivaciones por mes (hipótesis nueva). Así se sabe si el peso que usa H-037 se mueve por las reactivaciones o por las Nuevas."
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

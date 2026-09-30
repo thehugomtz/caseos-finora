@@ -1,0 +1,156 @@
+id: T-046
+type: table
+table_key: FIN-F-102
+title: Medido por la mediana, quienes hacen churn no pagaban más
+question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria,
+  banda de ticket de entrada, cosecha, churn observado)? ¿Hay industrias de bajo churn, ticket alto y poco volumen?
+columns:
+- Año del churn
+- Churns
+- Monto usual de quienes se van
+- Monto usual de los activos (mes previo)
+- Razón de medias
+- IC 90% inf.
+- IC 90% sup.
+- Razón de medianas
+- IC 90% inf.
+- IC 90% sup.
+- Último pago > 1,5× el usual
+rows:
+- - '2022'
+  - 198
+  - 133087.59863636363
+  - 78455.8128453829
+  - 1.696338280232295
+  - 1.2634790795200008
+  - 2.224080525675505
+  - 1.0
+  - 0.87876
+  - 1.124964583333333
+  - 0.26262626262626265
+- - '2023'
+  - 246
+  - 106094.50719512194
+  - 67272.86549129273
+  - 1.5770772720964885
+  - 1.178530933374979
+  - 2.034690726227998
+  - 0.9695267189897904
+  - 0.7761115001327191
+  - 1.1631226077499652
+  - 0.17479674796747968
+- - '2024'
+  - 279
+  - 76992.64849462366
+  - 56073.2567275895
+  - 1.373072530255609
+  - 1.095458963426737
+  - 1.7079014682480618
+  - 1.1112046013740944
+  - 0.9654208351271151
+  - 1.2624007474082342
+  - 0.12186379928315412
+- - total
+  - 723
+  - 102256.6282572614
+  - 66013.57466285104
+  - 1.5490242541706507
+  - 1.3104627355800427
+  - 1.7983999176874217
+  - 1.0409724208594457
+  - 0.966042846185038
+  - 1.153745014943061
+  - 0.17842323651452283
+units:
+  Churns: int
+  Monto usual de quienes se van: cop
+  Monto usual de los activos (mes previo): cop
+  Razón de medias: num2
+  IC 90% inf.: num2
+  IC 90% sup.: num2
+  Razón de medianas: num2
+  Último pago > 1,5× el usual: pct0
+definitions: {}
+message: 'Medido por la mediana, quienes hacen churn no pagaban más: la razón de medianas es 1,00 en 2022, 0,97
+  en 2023 y 1,11 en 2024, con intervalos que van de 0,97 a 1,15 en el total, de modo que la diferencia de promedios
+  se concentra en pocas cuentas grandes.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  tools:
+  - run_analysis
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-007
+
+  run_analysis(''churn_selection'', {"persistente_meses": 3})'
+transformation: E-007 · run_analysis · Razón de medias y de medianas del monto usual, bootstrap 2.000 (IC 90%)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-505c · C-018
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+preferred_visual: slope
+visual_artifact:
+  tipo: puntos
+  filas:
+  - 2022 · medias
+  - 2022 · medianas
+  - 2023 · medias
+  - 2023 · medianas
+  - 2024 · medias
+  - 2024 · medianas
+  - total · medias
+  - total · medianas
+  formato: num2
+  referencia: 1.0
+  series:
+  - nombre: IC 90% inferior
+    valores:
+    - 1.2634790795200008
+    - 0.87876
+    - 1.178530933374979
+    - 0.7761115001327191
+    - 1.095458963426737
+    - 0.9654208351271151
+    - 1.3104627355800427
+    - 0.966042846185038
+  - nombre: Razón
+    valores:
+    - 1.696338280232295
+    - 1.0
+    - 1.5770772720964885
+    - 0.9695267189897904
+    - 1.373072530255609
+    - 1.1112046013740944
+    - 1.5490242541706507
+    - 1.0409724208594457
+  - nombre: IC 90% superior
+    valores:
+    - 2.224080525675505
+    - 1.124964583333333
+    - 2.034690726227998
+    - 1.1631226077499652
+    - 1.7079014682480618
+    - 1.2624007474082342
+    - 1.7983999176874217
+    - 1.153745014943061
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-102
+links:
+- F-102
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 1

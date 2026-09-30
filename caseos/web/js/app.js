@@ -408,6 +408,7 @@ export async function resolveAlert(x) {
       try {
         const out = await api.action(x.id, "resolve", { choice: picked, note: why.value });
         toast(`Decisión ${out.decision} registrada`, "ok");
+        if (app.drawerId === x.id) openEntity(x.id, true);          // the drawer shows the alert as resolved, not open
         if (out.research_prefill) app.go("#/research?q=" + encodeURIComponent(out.research_prefill.question));
         if (out.framer_prefill) { sessionStorage.setItem("caseos.framer.prefill", out.framer_prefill); app.go("#/framing"); }
         await app.refresh();

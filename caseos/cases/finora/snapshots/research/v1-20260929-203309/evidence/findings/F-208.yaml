@@ -1,0 +1,131 @@
+id: F-208
+type: finding
+headline: 'Para separar las 17 causas: comparar cohortes de entrada a igual edad y partir el cambio en volumen,
+  mezcla y tasa, por motion'
+evidence_text: 'Sin CRM en el modelo, cada causa se define por su firma en los datos y su condición de descarte.
+  Las fuentes externas dicen qué medir, no qué pasó en Finora: medir por cohorte y a igual edad (Mixpanel, Etumos);
+  no mezclar lead y oportunidad sin reglas (Forrester); limpiar duplicados que distorsionan volumen y conversión
+  (Integrate); vigilar metas del SDR que premian volumen (TTEC); no confiar solo en los motivos de pérdida del CRM
+  (Clozd); no atribuir a ventas lo que Self Service cerraba solo (Poyar).'
+confidence: medium
+limitations:
+- 'Varias fuentes son de proveedores o casos únicos: sirven como contexto y ninguna cifra externa describe a Finora.
+  El marco solo sirve si Finora tiene los eventos que pide Q-065.'
+kind: measurement
+claims:
+- claim: El modelo del caso no tiene tablas de leads, SQL, oportunidades, dueños ni fechas de etapa. Solo tiene
+    pagos cliente × mes, industria y gasto S&M mensual.
+  source_id: DM-0
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: No se puede calcular ninguna conversión del funnel. Todo el lado de leads depende de Q-065.
+- claim: Oldroyd, McElheran y Elkington (HBR, 2011, vol. 89 n.º 3) sostienen que la mayoría de las empresas no responde
+    lo bastante rápido a los leads online.
+  source_id: EXT-1
+  source_type: academic
+  confidence: medium
+  freshness: '2011'
+  supports_or_contests: context
+  notes: Benchmark de otras empresas; contexto para H-006, no evidencia sobre Finora.
+- claim: 'Según la cita del estudio de HBR (auditoría de 2.241 empresas de EE. UU.): 37% respondió en menos de una
+    hora y 23% nunca respondió. Contactar dentro de la primera hora hizo casi 7 veces más probable calificar el
+    lead que hacerlo una hora después, y más de 60 veces que tras 24 horas.'
+  source_id: EXT-2
+  source_type: marketing
+  confidence: medium
+  freshness: 2011 (citado en página actualizada 2026-04-13)
+  supports_or_contests: context
+  notes: Fuente secundaria. Es una asociación observacional, no causa, y está confundida por el triage (H-028).
+- claim: 'Sabnis, Chatterjee, Grewal y Lilien (Journal of Marketing, 2013): los reps no persiguen cerca del 70%
+    de los leads de marketing. El seguimiento depende de la precalificación, del seguimiento gerencial, del volumen
+    de leads y de la experiencia y desempeño del rep.'
+  source_id: EXT-3
+  source_type: academic
+  confidence: high
+  freshness: '2013'
+  supports_or_contests: context
+  notes: Mecanismo para H-006, H-028 y H-055. La cifra es de otras empresas.
+- claim: Forrester (Daniels, 2023) recomienda medir sobre la oportunidad y el grupo de compra en vez del MQL. Dice
+    que menos del 1% de los leads llega a negocio cerrado y que reportar entre objetos distintos (conversión de
+    leads, leads reciclados) genera fricción.
+  source_id: EXT-4
+  source_type: industry
+  confidence: medium
+  freshness: '2023-11-21'
+  supports_or_contests: context
+  notes: Sustenta el marco alternativo. El <1% es una cifra general, no de Finora.
+- claim: TTEC pagaba a sus SDR por reunión agendada aunque no se convirtiera en SAL u oportunidad, y eso llevó a
+    pasar leads peor filtrados. Al premiar SAL u oportunidad, bajaron los SQL pero subió la probabilidad de ganar
+    los que pasan.
+  source_id: EXT-5
+  source_type: company
+  confidence: low
+  freshness: s/f (cambio en primavera 2022)
+  supports_or_contests: context
+  notes: 'Caso único y autorreportado: ilustra el mecanismo de H-054, no su frecuencia.'
+- claim: 'Integrate (2025): tasas altas de duplicados distorsionan el volumen, la conversión y el esfuerzo del SDR.
+    Según su estimación, controles previos al CRM pueden bloquear o recuperar entre 15% y 30% de los leads inbound.'
+  source_id: EXT-6
+  source_type: marketing
+  confidence: low
+  freshness: '2025-08-08'
+  supports_or_contests: context
+  notes: Contexto para H-052. Proveedor con interés comercial; la cifra es una estimación propia.
+- claim: 'Mixpanel: quien no completa los pasos dentro de la ventana de conversión sale del funnel y no se cuenta
+    como conversión.'
+  source_id: EXT-7
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Fundamenta comparar cohortes a igual edad (cohortes inmaduras, H-029).
+- claim: 'Etumos: una cohorte es un grupo de prospectos que cruza un umbral del funnel en el mismo periodo; superponer
+    cohortes muestra patrones de conversión y velocidad.'
+  source_id: EXT-8
+  source_type: industry
+  confidence: medium
+  freshness: 2020-04-08 (actualizado 2026-08-27)
+  supports_or_contests: context
+  notes: Apoya el grano por cohorte de entrada.
+- claim: 'Kyle Poyar (AMA en Pocus, 2023): «si solo trabajas los PQL, trabajas la fruta al alcance que quizá convierte
+    sola». En el modelo híbrido, Self Service es el punto de partida y ventas entra donde hace falta.'
+  source_id: EXT-9
+  source_type: expert
+  confidence: low
+  freshness: '2023-02-20'
+  supports_or_contests: context
+  notes: 'Opinión experta que ilustra el riesgo de H-053: atribuir a ventas compras que Self Service cerraba solo.'
+- claim: 'Clozd (2026): al comparar los motivos de pérdida del rep con entrevistas a compradores, los reps se equivocaron
+    en el motivo real el 85% de las veces.'
+  source_id: EXT-10
+  source_type: marketing
+  confidence: low
+  freshness: '2026-09-23'
+  supports_or_contests: contests
+  notes: Cuestiona usar solo los motivos del CRM para probar H-056. Es un proveedor de win-loss con interés comercial.
+- claim: 'Recurly: el churn involuntario ocurre cuando la suscripción se cae por un pago fallido (tarjeta vencida,
+    rechazo), no por decisión del cliente.'
+  source_id: EXT-11
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Definición útil para separar, en H-057, el pago fallido del arrepentimiento.
+unverified: false
+source_ref:
+  research: R-025
+links:
+- R-025
+- H-029
+- H-024
+- H-037
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:56:18-06:00'
+updated_at: '2026-09-29T14:56:18-06:00'
+version: 1

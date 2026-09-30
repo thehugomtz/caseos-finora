@@ -1,0 +1,95 @@
+id: T-034
+type: table
+table_key: FIN-F-079
+title: El churn mensual observado de logos baja de 3,5% en 2022 a 1,9% en 2024, mientras el churn que no vuelve
+  a pa…
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Periodo
+- Churn mensual de logos
+- Churn observado
+rows:
+- - '2022'
+  - 0.035218783351120594
+  - 198.0
+- - '2023'
+  - 0.02244320773652039
+  - 246.0
+- - '2024'
+  - 0.019465568966720158
+  - 279.0
+units:
+  Churn mensual de logos: pct
+  Churn observado: int
+definitions:
+  Churn mensual observado (logos): Churn observado del mes dividido entre clientes activos del mes anterior.
+message: El churn mensual observado de logos baja de 3,5% en 2022 a 1,9% en 2024, mientras el churn que no vuelve
+  a pagar en un plazo de un trimestre pasa de 0,98% a 0,96%, y 44% de los churns observados vuelve a pagar al mes
+  siguiente.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-006
+  - EC-RET-03
+  - EC-RET-02
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-006
+
+  WITH m AS (SELECT month, SUM(churned_customer) AS churn, SUM(active_customer) AS activos FROM mart.customer_month
+  WHERE TRUE GROUP BY ALL), l AS (SELECT *, LAG(activos) OVER (PARTITION BY 1 ORDER BY month) AS activos_prev FROM
+  m) SELECT substr(month, 1, 4) AS periodo, SUM(churn)::DOUBLE / NULLIF(SUM(activos_prev), 0) AS valor, SUM(churn)
+  AS churn, SUM(activos_prev) AS activos_mes_anterior, COUNT(*) AS meses FROM l WHERE month BETWEEN ''2022-03''
+  AND ''2024-10'' GROUP BY ALL ORDER BY periodo'
+transformation: E-006 · query_metric · Métrica del catálogo · Churn mensual de logos; EC-RET-03 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); EC-RET-02 · search_evidence · Afirmación canónica verificada
+  en código (Fase 1)
+filters:
+- periodo 2022-01–2024-10
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: year
+analysis_id: INV-20260929-103202-db67 · C-009
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2022'
+  - '2023'
+  - '2024'
+  formato: pct
+  series:
+  - nombre: Churn observado
+    valores:
+    - 0.035218783351120594
+    - 0.02244320773652039
+    - 0.020378151260504202
+  - nombre: Churn que no vuelve a pagar en 3 meses
+    valores:
+    - 0.009782995375311278
+    - 0.010947906212936776
+    - 0.009558823529411765
+  claim_fase1: C-RET-03
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-079
+links:
+- F-079
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:17-06:00'
+version: 1

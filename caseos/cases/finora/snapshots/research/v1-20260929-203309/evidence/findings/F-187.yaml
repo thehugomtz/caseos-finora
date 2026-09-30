@@ -1,0 +1,69 @@
+id: F-187
+type: finding
+headline: 'Las cuatro etiquetas mezclan dos cosas: cómo compra la cuenta (Executive, Hybrid, Self Service) y si
+  ya pagó antes (Reactivate). El mix solo es MECE si se fijan universo, unidad, momento y un orden de prioridad
+  con una categoría de respaldo.'
+evidence_text: 'Forrester pasó de medir leads individuales a medir grupos compradores, e incluye renovación y upsell
+  como tipos de oportunidad [8]. ChartMogul y Chargebee definen la reactivación por la historia de pago, no por
+  la forma de comprar [9][10]. Las reglas de asignación de un CRM se evalúan en orden: gana la primera que aplica
+  y lo que no encaja cae en una cola de respaldo [11]. Por eso Reactivate va primero y la forma en que vuelve cada
+  excliente se guarda como atributo. Los clientes que ya pagan no entran al mix: van a expansión, al lado derecho
+  del bowtie.'
+confidence: high
+limitations:
+- 'El orden de prioridad es una decisión de negocio. La fuente sobre reglas de CRM es un blog de proveedor: la documentación
+  oficial de Salesforce no se pudo leer en esta corrida.'
+kind: measurement
+claims:
+- claim: Forrester pasó su waterfall de leads individuales a grupos compradores y sumó renovación, cross-sell y
+    upsell como tipos de oportunidad. Según Forrester, el papel de marketing y ventas es ayudar al comprador a avanzar,
+    no empujar leads por un funnel.
+  source_id: S-EXT-02
+  source_type: industry
+  confidence: medium
+  freshness: '2021-05-04'
+  supports_or_contests: supports
+  notes: Respalda usar cuenta × episodio como unidad y medir hitos en vez de un embudo lineal.
+- claim: ChartMogul clasifica como Reactivation el MRR de un «former paying subscriber» y como New Business la primera
+    suscripción. No fija un plazo de inactividad y reporta el churn al final del período facturado.
+  source_id: S-EXT-03
+  source_type: company
+  confidence: high
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Reactivate se define por la historia de pago, no por la forma de comprar; el plazo lo decide Finora. Fechar
+    el churn al final del período pagado evita contar como churn los meses cubiertos por un pago de varios meses.
+- claim: Chargebee define Reactivation MRR como el MRR de clientes que antes hicieron churn o cancelaron y aportaron
+    $0 en el período previo. Excluye pruebas gratuitas y la cuenta como parte del expansion MRR.
+  source_id: S-EXT-04
+  source_type: company
+  confidence: high
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: context
+  notes: 'ChartMogul la separa de New Business y Chargebee la mete en expansión. No hay estándar: Finora tiene que
+    decidir y dejarlo por escrito.'
+- claim: 'En Salesforce las reglas de asignación se evalúan de arriba abajo: se aplica la primera que coincide y
+    ahí se detiene. Se recomienda poner lo más específico arriba y una cola de respaldo al final.'
+  source_id: S-EXT-05
+  source_type: industry
+  confidence: medium
+  freshness: '2026-06-02'
+  supports_or_contests: supports
+  notes: Es un blog de proveedor que describe cómo funciona Salesforce; la documentación oficial no se pudo leer
+    en esta corrida.
+unverified: false
+source_ref:
+  research: R-023
+links:
+- R-023
+- H-006
+- H-028
+- H-036
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:45:42-06:00'
+updated_at: '2026-09-29T14:45:42-06:00'
+version: 1

@@ -1,0 +1,48 @@
+id: X-035
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-018
+target: T-004
+title: R-018 requiere más investigación T-004
+finding_text: 'Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado»
+  y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn
+  (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acu…'
+why: 'Hallazgo: F-139 dice que el ARPA de entrada se mide con un monto estabilizado (M1 o monto usual), no con el
+  primer pago. Por qué importa: el ticket de entrada de T-004 y T-018 (COP 63,0 mil en 2022, 36,8 mil en 2023 y
+  42,0 mil en 2024) se mide con el primer pago, como lo describe R-003. El valor inicial de T-019 también, si usa
+  la misma base. Si el primer pago no representa el monto usual (por ejemplo, un mes parcial), parte de esa caída
+  podría ser de medición. R-006 y R-009 apuntan en la misma dirección con medidas que no son solo el primer pago:
+  la dirección podría sostenerse, pero la magnitud no la sabemos.'
+options:
+- key: A
+  label: Recalcular con M1 y monto usual, y renombrar mientras tanto
+  consequence: Poner lado a lado primer pago, M1 y monto usual por año de entrada; hasta tenerlo, llamarlo «primer
+    pago observado». Confirma o corrige que «entran con un ticket menor», pieza central de Growth y de los entrantes
+    del CFO. Se hace con el panel actual.
+- key: B
+  label: Solo renombrar
+  consequence: Poner «primer pago observado» en T-004, T-018 y T-019, sin recalcular. Es honesto y no cuesta trabajo,
+    pero el mensaje sobre quién entra queda más débil.
+- key: C
+  label: Mantener «ticket de entrada» con una advertencia
+  consequence: Rápido, pero si el primer pago está sesgado, el mensaje central de R-003 queda expuesto frente al
+    CRO y al CFO.
+recommended: A
+recommended_why: 'Es el chequeo más barato del caso: no depende de ninguna regla ni de datos nuevos, y protege una
+  de las cifras que más se van a ver en Growth y Revenue.'
+detected_by: cos
+links:
+- R-018
+- T-004
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110140-cos-d716
+created_at: '2026-09-29T11:32:01-06:00'
+updated_at: '2026-09-29T11:32:01-06:00'
+version: 1

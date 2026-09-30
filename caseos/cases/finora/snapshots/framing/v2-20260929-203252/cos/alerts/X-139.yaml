@@ -1,0 +1,37 @@
+id: X-139
+type: alert
+kind: story_review
+status: open
+severity: medium
+effect: requires_research
+source: R-031
+target: C-021
+title: 'R-031 toca C-021: revisar el claim'
+finding_text: 'Propongo cuatro rutas que se clasifican al final del recorrido, según los eventos: Executive (arranca
+  con persona y nunca pasa por Checkout Self), Self Service (nunca interviene una persona), Hybrid A (arranca en
+  el producto y después entra una persona) e Hybrid B (arranca con persona y pasa por Ch…'
+why: La nueva evidencia comparte linaje (misma hipótesis o finding) con este claim de la story.
+options:
+- key: A
+  label: Revisar el claim con la nueva evidencia
+  consequence: El claim queda needs_review hasta que lo confirmes.
+- key: B
+  label: Pedir al COS que evalúe el efecto
+  consequence: Clasificación supports / weakens / contradicts con opciones.
+- key: C
+  label: Sin impacto material
+  consequence: Se registra la decisión y se cierra la alerta.
+recommended: B
+recommended_why: La relación existe por linaje; su efecto necesita lectura.
+detected_by: lineage
+links:
+- R-031
+- C-021
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+created_at: '2026-09-29T18:41:41-06:00'
+updated_at: '2026-09-29T18:41:41-06:00'
+version: 1

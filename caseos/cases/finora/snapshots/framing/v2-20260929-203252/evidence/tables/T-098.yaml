@@ -1,0 +1,94 @@
+id: T-098
+type: table
+table_key: FIN-F-201
+title: En 2023 y en 2024 (ene–oct) las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas por mes, de modo
+  qu…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- Periodo
+- Reactivaciones
+- Reactivaciones por mes
+rows:
+- - '2022'
+  - 166.0
+  - 16.6
+- - '2023'
+  - 140.0
+  - 11.666666666666666
+- - '2024'
+  - 162.0
+  - 16.2
+units:
+  Reactivaciones: int
+  Reactivaciones por mes: int
+definitions:
+  Reactivaciones: Clientes que vuelven a pagar después de al menos un mes en cero.
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: En 2023 y en 2024 (ene–oct) las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas por mes, de modo
+  que sumarlas o separarlas deja ambos periodos en el mismo orden.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-011
+  - E-003
+  tools:
+  - query_metric
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-011
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(reactivated_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(reactivated_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo
+
+
+  -- E-003
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo'
+transformation: E-011 · query_metric · Métrica del catálogo · Reactivaciones; E-003 · query_metric · Métrica del
+  catálogo · Altas
+filters:
+- periodo 2022-03–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: year
+analysis_id: INV-20260929-143800-2198 · C-013
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2023'
+  - '2024'
+  series:
+  - nombre: Reactivaciones
+    valores:
+    - 11.666666666666666
+    - 16.2
+  - nombre: Altas
+    valores:
+    - 54.166666666666664
+    - 55.4
+  formato: int
+created_at: '2026-09-29T14:46:21-06:00'
+status: valid
+validation_errors: []
+finding: F-201
+links:
+- F-201
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:46:21-06:00'
+version: 1

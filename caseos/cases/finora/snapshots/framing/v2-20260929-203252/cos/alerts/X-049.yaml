@@ -1,0 +1,50 @@
+id: X-049
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-016
+target: Q-001
+title: R-016 cambia el framing Q-001
+finding_text: 'No midan un funnel único: midan un bowtie por puertas. Self Service, Assisted y Executive tienen
+  cada una sus propios hitos a la izquierda, y todas comparten el mismo nudo (primer pago) y el mismo lado derecho
+  (retención, expansión, NRR). Reactivación va aparte como otro tipo de entrada, y AAARRR s…'
+why: 'Según F-142, con el modelo actual «llega más gente» no se puede observar: es lo que dice el CRO, no un dato
+  del caso (ni confirmado ni descartado). La otra mitad sí se ve en el nudo. Los primeros pagadores observados por
+  mes subieron +104% entre 2022 y 2024 (T-019) y rondan 54–55 por mes en 2023–2024 (R-016). O sea, los nuevos sí
+  crecieron; lo que no se puede ver es si crecieron menos que las entradas. Además, lo que cuenta como «cliente
+  nuevo» mueve el conteo: las reactivaciones observadas equivalen al 18–38% de las entradas a pago, y el hito de
+  adquisición sigue sin acordar (ver el impacto sobre el framing). Con los datos no se puede responder Q-001 como
+  «¿por qué?». Sí se puede responder qué pasó en el nudo y cómo medir el resto.'
+options:
+- key: A
+  label: 'Mantener Q-001 con las palabras del CRO y responderla en dos mitades. Primera mitad: lo que se ve en el
+    nudo (primeros pagadores observados, con las reactivaciones aparte). Segunda mitad: lo que no se ve (el lado
+    izquierdo), con el bowtie y la lista de evidencia de Q-016.'
+  consequence: 'Respeta la pregunta del CRO, no afirma nada sobre conversión y deja claro qué mitad tiene datos.
+    Versión ejecutiva posible: «Los primeros pagadores sí crecieron; lo que los datos no muestran es si crecieron
+    menos que las entradas, ni por qué. Esto se ve, esto falta y así se mediría.»'
+- key: B
+  label: 'Reformular Q-001 como pregunta de medición: «¿cómo sabríamos por qué llega más gente pero los nuevos no
+    crecen igual?».'
+  consequence: Es más fiel a los datos, pero pierde la voz del CRO y puede leerse como que esquivamos la pregunta.
+- key: C
+  label: Mantenerla como pregunta causal, con un caveat al pie.
+  consequence: Es lo más simple, pero arriesga que la story lea «llega más gente» como un hecho verificado.
+recommended: A
+recommended_why: 'Responde con datos lo que sí se ve, sin tratar la premisa del CRO como dato. Además encaja con
+  la pregunta ejecutiva del framing: qué defendemos, qué hueco hay en su WoW y qué modelo proponemos.'
+detected_by: cos
+links:
+- R-016
+- Q-001
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110242-cos-2ab0
+created_at: '2026-09-29T11:38:42-06:00'
+updated_at: '2026-09-29T11:38:42-06:00'
+version: 1

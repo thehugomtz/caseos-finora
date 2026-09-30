@@ -1,0 +1,45 @@
+id: X-067
+type: alert
+kind: new_hypothesis
+status: open
+severity: medium
+effect: opens_new_hypothesis
+source: R-020
+target: Q-003
+title: R-020 abre una hipótesis nueva Q-003
+finding_text: El ticket de entrada es medible; el descuento no es verificable aquí
+why: 'La caída del ticket de entrada se concentra entre 2022 y 2023: la mediana pasa de COP 63,0 mil a 36,8 mil
+  (F-083). Ocurre en 6 industrias y el 97% del cambio se da dentro de cada una (F-088). 2023 es además el año en
+  que el 2.º pago más coincide con el 1.º: 90,3%, frente a 73,5% en 2022 (F-087). A eso se suma el salto de altas
+  de 26 en dic-22 a 60 en ene-23 (T-016), y que en 2023 hubo más altas con menos gasto en Generación de Demanda
+  (R-015). Juntas, estas señales sugieren una posible conexión Growth–Revenue para el CEO: un cambio general en
+  la entrada hacia inicios de 2023. Es una hipótesis, no un hallazgo: el ticket solo está medido por año.'
+options:
+- key: A
+  label: Añadir la hipótesis y correr solo el chequeo mensual
+  consequence: 'Una tabla con los datos actuales: la mediana mensual del primer pago junto a las altas, en toda
+    la ventana limpia y mirando el paso de dic-22 a ene-23. Si aparece un escalón en ene-23, el CEO recibe una conexión
+    concreta y queda una pregunta precisa para Finora.'
+- key: B
+  label: Llevarla a la historia como pregunta abierta, sin chequeo
+  consequence: No suma trabajo, pero la lámina insinuaría una coincidencia en el tiempo que nadie ha verificado.
+- key: C
+  label: No añadirla
+  consequence: Q-003 se responde con lo que ya hay (ticket de entrada y gasto por alta), sin ninguna hipótesis de
+    mecanismo.
+recommended: A
+recommended_why: Es barato, usa datos que ya existen, se puede correr junto con el chequeo de Q-012 y es la pieza
+  que hoy le falta a la pregunta del CEO.
+detected_by: cos
+links:
+- R-020
+- Q-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-150b
+created_at: '2026-09-29T11:55:06-06:00'
+updated_at: '2026-09-29T11:55:06-06:00'
+version: 1

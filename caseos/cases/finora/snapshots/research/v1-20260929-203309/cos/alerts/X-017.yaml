@@ -1,0 +1,54 @@
+id: X-017
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-010
+target: H-004
+title: R-010 cambia el framing H-004
+finding_text: 'Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002)
+  y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad
+  (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede v…'
+why: 'R-010 y F-127 cuentan toda H-004 como artefacto de tiempo («se descartan los artefactos, 4 de 8»). Solo HC3a
+  lo es: compran más tarde y terminan en lo mismo. HC3b (la diferencia sigue con seguimiento comparable) es justo
+  la brecha dentro de los segmentos que abre la entrega 2. En el framing, H-005–H-008 (HC3q/s/p/o) cuelgan de ahí.
+
+
+  Otros dos puntos:
+
+  - «Se descartan» presupone el resultado. La entrega 1 pone a prueba los artefactos, y confirmarlos ya sería una
+  respuesta para el CRO.
+
+  - R-010 mueve H-003 a «tiempo», mientras que D-001 y Q-005 lo dejan en la rama de mezcla (HC2b).'
+options:
+- key: A
+  label: Ajustar la redacción antes de aceptar F-127
+  consequence: 'Queda así: «La entrega 1 pone a prueba H-001 a H-003 y separa, dentro de H-004, ''compran más tarde''
+    (HC3a) de ''compran menos'' (HC3b). Si queda HC3b, se abre la entrega 2 para H-005 a H-008». Se conserva el
+    árbol de D-001 y la versión ejecutiva sigue simple: primero medición, después explicaciones de fondo.'
+- key: B
+  label: Aceptar F-127 como está
+  consequence: El mensaje es más corto («4 de 8 son artefactos»), pero inexacto. Si aparece HC3b, la story habrá
+    llamado artefacto a la brecha central y habrá prometido descartar algo que quizá se confirma.
+- key: C
+  label: Reordenar la rama CRO con la lente de R-010
+  consequence: «Artefactos vs causas» reemplaza a cantidad / mezcla / compra según tiempo. Exige una decisión nueva
+    que reemplace a D-001, con el Framing en needs_review.
+recommended: A
+recommended_why: Corrige el único punto en que R-010 se sale del árbol aprobado, sin tocar D-001, y deja visible
+  la puerta HC3b, que es la bisagra de la rama CRO. En la story, según D-003, H-005–H-008 van como «explicaciones
+  de fondo a contrastar», no como «causas reales».
+detected_by: cos
+links:
+- R-010
+- H-004
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104715-cos-fbed
+created_at: '2026-09-29T11:27:18-06:00'
+updated_at: '2026-09-29T11:27:18-06:00'
+version: 1

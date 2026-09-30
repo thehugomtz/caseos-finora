@@ -501,6 +501,35 @@ def resolve_alert(store: CaseStore, xid: str, *, choice: str, rationale: str = "
     return {"decision": d["id"], "status": status, **follow}
 
 
+def dismiss_alerts(store: CaseStore, *, ids: list[str] | None = None, rationale: str = "", actor: str = "hugo") -> dict:
+    """Hugo marks many impact alerts as «sin impacto material» at once: one decision for all of them (not one per alert),
+    each alert points to it, and what those alerts had flagged as needs_review goes back to its state."""
+    if actor != "hugo":
+        raise ValueError("Solo Hugo resuelve alertas.")
+    open_ = [x for x in store.list("alert") if x.get("status") == "open"]
+    targets = [x for x in open_ if not ids or x["id"] in ids]
+    if not targets:
+        return {"decision": None, "dismissed": [], "cleared": []}
+    xids = [x["id"] for x in targets]
+    d = decisions.record_decision(store, title=f"{len(xids)} alertas de impacto del COS sin impacto material",
+                                  context="Hugo las revisó en bloque en el Chief of Staff: " + ", ".join(xids[:40]) + ("…" if len(xids) > 40 else ""),
+                                  options={}, agent_recommendation="", user_choice="Sin impacto material (ignorar)", user_rationale=rationale,
+                                  affected_items=xids, downstream_impact="Las alertas quedan descartadas; lo que marcaron como needs_review vuelve a su estado.",
+                                  kind="synthesis", phase="synthesis", actor=actor)
+    cleared = []
+    with store.batch():
+        for x in targets:
+            store.update(x["id"], {"status": "dismissed", "resolution": {"choice": "ignore", "label": "Sin impacto material", "decision": d["id"],
+                                                                          "at": now_iso(), "bulk": True}},
+                         actor=actor, summary=f"Hugo resolvió {x['id']}: sin impacto material (en bloque, {d['id']})", verb="resolved", material=False)
+            tgt = store.get(x.get("target") or "") if type_of(x.get("target") or "") else None
+            if tgt and str((tgt.get("stale") or {}).get("reason", "")).startswith(f"{x['id']}:"):
+                store.update(tgt["id"], {"stale": None}, actor=actor, summary=f"{tgt['id']}: sin impacto material ({x['id']}); vuelve a su estado",
+                             material=False, verb="cleared")
+                cleared.append(tgt["id"])
+    return {"decision": d["id"], "dismissed": xids, "cleared": cleared}
+
+
 def _impact_title(sid: str, effect: str | None, tgt: str) -> str:
     label = EFFECT_LABELS.get(effect or "", "")
     return f"{sid} {label}" if tgt == "framing" and "framing" in label else f"{sid} {label} {tgt}"

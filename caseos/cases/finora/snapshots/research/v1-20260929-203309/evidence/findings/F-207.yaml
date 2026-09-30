@@ -1,0 +1,69 @@
+id: F-207
+type: finding
+headline: 'El gasto y los primeros pagadores se mueven en sentido contrario en los dos semestres: el gasto no sirve
+  como proxy de capacidad ni de leads'
+evidence_text: 'Ene–jun 2024 vs 2023: generación de demanda −21%, capacidad comercial −29%, S&M −28%, con primeros
+  pagadores +29%. Jul–oct: +46%, +27% y +38%, con primeros pagadores −19%. El recorte de capacidad de ene–jun llega
+  antes de la caída de jul–oct. Eso encaja con H-006 con rezago, pero también con un gasto que reacciona a los resultados
+  o con primeros pagadores poco atados al gasto. Contexto externo: Sabnis et al. (2013) ligan el seguimiento de
+  leads al volumen y a la precalificación; el estudio de HBR (2011) asocia la velocidad de respuesta con calificar
+  el lead en otras empresas.'
+confidence: low
+limitations:
+- 'La unidad del gasto no está documentada, y el rubro de capacidad mezcla Team, PayrollExpenses y Travel: no es
+  headcount ni carga. Los benchmarks son de otras empresas y otros años.'
+kind: measurement
+claims:
+- claim: 'Gasto 2024 vs 2023 (unidad no documentada). Ene–jun: generación de demanda 9,722→7,655 (−21%), capacidad
+    comercial 5,663→3,998 (−29%), S&M 16,853→12,204 (−28%). Jul–oct: 2,985→4,367 (+46%), 2,274→2,882 (+27%), 5,454→7,551
+    (+38%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'En el mart, capacidad = Team + PayrollExpenses + Travel: no es headcount ni carga. Encaja con H-006 con
+    rezago, pero no la prueba.'
+- claim: 'Gasto S&M por primer pagador (unidad no documentada): en jul–oct sube de 0,0217 a 0,0372 (+71%); en ene–oct
+    baja de 0,0427 a 0,0357 (−16%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'Cálculo sobre las sumas de DM-7. Es un cociente del mismo periodo: ignora el rezago entre gasto, entrada
+    y pago.'
+- claim: 'Según la cita del estudio de HBR (auditoría de 2.241 empresas de EE. UU.): 37% respondió en menos de una
+    hora y 23% nunca respondió. Contactar dentro de la primera hora hizo casi 7 veces más probable calificar el
+    lead que hacerlo una hora después, y más de 60 veces que tras 24 horas.'
+  source_id: EXT-2
+  source_type: marketing
+  confidence: medium
+  freshness: 2011 (citado en página actualizada 2026-04-13)
+  supports_or_contests: context
+  notes: Fuente secundaria. Es una asociación observacional, no causa, y está confundida por el triage (H-028).
+- claim: 'Sabnis, Chatterjee, Grewal y Lilien (Journal of Marketing, 2013): los reps no persiguen cerca del 70%
+    de los leads de marketing. El seguimiento depende de la precalificación, del seguimiento gerencial, del volumen
+    de leads y de la experiencia y desempeño del rep.'
+  source_id: EXT-3
+  source_type: academic
+  confidence: high
+  freshness: '2013'
+  supports_or_contests: context
+  notes: Mecanismo para H-006, H-028 y H-055. La cifra es de otras empresas.
+unverified: false
+source_ref:
+  research: R-025
+links:
+- R-025
+- H-029
+- H-024
+- H-037
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:56:18-06:00'
+updated_at: '2026-09-29T14:56:18-06:00'
+version: 1

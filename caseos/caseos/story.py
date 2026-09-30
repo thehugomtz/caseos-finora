@@ -327,11 +327,43 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
     return {"version": pkg["version"], "claims": claim_ids, "errors": errors, "warnings": warnings, "pending": pend}
 
 
+def accept_with_evidence(store: CaseStore, claim_ids: list[str], *, note: str = "", actor: str = "hugo") -> dict:
+    """Hugo read these claims and accepts them together with the evidence they stand on (findings and tables still
+    proposed). Rejected evidence is never accepted this way."""
+    if actor != "hugo":
+        raise ValueError("Solo Hugo acepta evidencia.")
+    ents = store.all()
+    done = {"claims": [], "evidence": [], "tables": []}
+    with store.batch():
+        for cid in claim_ids:
+            c = ents.get(cid)
+            if not c or c.get("type") != "claim" or (c.get("review") or {}).get("state") == "rejected":
+                continue
+            for key, bucket in (("evidence_ids", "evidence"), ("table_ids", "tables")):
+                for i in c.get(key) or []:
+                    e = ents.get(i)
+                    if e and (e.get("review") or {}).get("state") not in ("accepted", "rejected") and i not in done[bucket]:
+                        store.set_review(i, "accepted", actor=actor, note=note or f"aceptado con {cid} en la story")
+                        done[bucket].append(i)
+            if (c.get("review") or {}).get("state") != "accepted":
+                store.set_review(cid, "accepted", actor=actor, note=note or "aceptado con su evidencia")
+                done["claims"].append(cid)
+    return {**done, "validation": revalidate(store)}
+
+
 def revalidate(store: CaseStore) -> dict:
     pkg = store.read_data("story/package.yaml")
     if not pkg:
         return {"ok": False, "errors": ["No hay Story Package."], "warnings": []}
     ents = store.all()
+    # a claim Hugo rejected leaves the story (it stays in the case, with his reason)
+    out = [c.get("claim_id") for c in pkg.get("claims") or [] if (ents.get(c.get("claim_id")) or {}).get("review", {}).get("state") == "rejected"]
+    if out:
+        pkg["claims"] = [c for c in pkg["claims"] if c.get("claim_id") not in out]
+        pkg["rejected_claims"] = sorted(set(pkg.get("rejected_claims") or []) | set(out))
+        for k in ("sections", "recommendations", "guion_map"):
+            for x in pkg.get(k) or []:
+                x["claim_ids"] = [i for i in x.get("claim_ids") or [] if i not in out]
     for c in pkg.get("claims") or []:
         e = ents.get(c.get("claim_id"))
         if e:

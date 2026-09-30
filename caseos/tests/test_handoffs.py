@@ -294,3 +294,39 @@ def test_a_new_draft_keeps_the_chart_hugo_chose(case):
     story.apply_package(case, _package(f, t, key="entry", answer="Otra redacción", visual_intent="Barras"), actor="cos", draft=True)
     c = case.get(cid)
     assert c["visual_finding"] == chart["id"] and c["visual_intent"] == "Línea en COP" and chart["id"] in c["evidence_ids"]
+
+
+def test_hugo_ignores_every_open_alert_in_one_decision(case):
+    h = case.create("hypothesis", {"statement": "La calidad bajó", "status": "open"}, actor="framer")
+    xs = [case.create("alert", {"kind": "weakening", "status": "open", "source": "R-001", "target": h["id"], "title": f"alerta {i}"},
+                      actor="cos") for i in range(3)]
+    case.mark_stale(h["id"], reason=f"{xs[0]['id']}: Revisar", actor="hugo", phase="synthesis")
+    with pytest.raises(ValueError):
+        cos.dismiss_alerts(case, actor="cos")                                   # only Hugo resolves alerts
+    out = cos.dismiss_alerts(case, rationale="Ninguna cambia la historia")
+    assert sorted(out["dismissed"]) == sorted(x["id"] for x in xs) and out["cleared"] == [h["id"]]
+    assert all(case.get(x["id"])["status"] == "dismissed" for x in xs) and not case.get(h["id"]).get("stale")
+    d = case.get(out["decision"])
+    assert d["status"] == "active" and d["user_rationale"] == "Ninguna cambia la historia"   # one decision, his reason
+    assert cos.dismiss_alerts(case)["dismissed"] == []
+
+
+def test_a_rejected_claim_leaves_the_story_and_accepting_with_evidence_unblocks_ready(case):
+    from caseos import actions, phases
+    t = case.create("table", {**_table(), "status": "valid"}, actor="analytics")
+    f = case.create("finding", {"headline": "El monto de entrada cayó 38%", "links": [t["id"]]}, actor="analytics")
+    pkg = _package(f, t, key="entry")
+    pkg["claims"].append({**pkg["claims"][0], "key": "extra", "headline": "Otra lectura con 52%", "answer": "52%"})
+    story.apply_package(case, pkg, actor="cos", draft=True)
+    saved = case.read_data("story/package.yaml")
+    keep, drop = saved["claims"][0]["claim_id"], saved["claims"][1]["claim_id"]
+    assert any(drop in e for e in saved["validation"]["errors"])                 # the extra claim has a figure without table
+    out = actions.run(case, drop, "reject", {"note": "Ya respondido más adelante"})
+    saved = case.read_data("story/package.yaml")
+    assert [c["claim_id"] for c in saved["claims"]] == [keep] and saved["rejected_claims"] == [drop]
+    assert out["validation"]["ok"] and not any(drop in e for e in out["validation"]["errors"])
+    assert any("no has aceptado" in b for b in phases.readiness(case, "story")["blockers"])
+    res = story.accept_with_evidence(case, [keep, drop], note="Leí la historia")
+    assert res["claims"] == [keep] and res["evidence"] == [f["id"]] and res["tables"] == [t["id"]]   # the rejected one is left alone
+    assert (case.get(f["id"])["review"] or {})["state"] == "accepted" and res["validation"]["pending"] == []
+    assert not any("no has aceptado" in b for b in phases.readiness(case, "story")["blockers"])

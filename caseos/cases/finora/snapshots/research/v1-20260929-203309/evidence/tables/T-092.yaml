@@ -1,0 +1,135 @@
+id: T-092
+type: table
+table_key: FIN-F-195
+title: El panel registra 1.961 filas cliente-mes en oct-24, mismo número que en ene-24, y el MRR pagado de oct-24
+  es…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- mes
+- filas
+- activos
+- mrr_cop
+- altas
+- churns
+rows:
+- - 2024-01
+  - 1961
+  - 1283.0
+  - 76506002.0
+  - 57.0
+  - 32.0
+- - 2024-02
+  - 1961
+  - 1292.0
+  - 75633087.0
+  - 32.0
+  - 37.0
+- - 2024-03
+  - 1961
+  - 1320.0
+  - 78038810.0
+  - 43.0
+  - 30.0
+- - 2024-04
+  - 1961
+  - 1397.0
+  - 84120684.0
+  - 69.0
+  - 18.0
+- - 2024-05
+  - 1961
+  - 1457.0
+  - 85651681.0
+  - 66.0
+  - 22.0
+- - 2024-06
+  - 1961
+  - 1530.0
+  - 90094989.0
+  - 84.0
+  - 28.0
+- - 2024-07
+  - 1961
+  - 1566.0
+  - 89433914.0
+  - 48.0
+  - 27.0
+- - 2024-08
+  - 1961
+  - 1602.0
+  - 91188777.0
+  - 56.0
+  - 29.0
+- - 2024-09
+  - 1961
+  - 1645.0
+  - 92663693.0
+  - 49.0
+  - 23.0
+- - 2024-10
+  - 1961
+  - 1678.0
+  - 97007447.0
+  - 50.0
+  - 33.0
+units:
+  mes: texto
+  filas: int
+  activos: num2
+  mrr_cop: num2
+  altas: num2
+  churns: num2
+definitions: {}
+message: El panel registra 1.961 filas cliente-mes en oct-24, mismo número que en ene-24, y el MRR pagado de oct-24
+  es COP 97,0 millones frente a COP 92,7 millones en sep-24 y COP 76,5 millones en ene-24.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-008
+  tools:
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-008
+
+  SELECT CAST(month AS VARCHAR) AS mes, COUNT(*) AS filas, SUM(active_customer) AS activos, ROUND(SUM(paid_mrr_cop))
+  AS mrr_cop, SUM(new_customer) AS altas, SUM(churned_customer) AS churns FROM mart.customer_month WHERE CAST(month
+  AS VARCHAR) >= ''2024-01'' GROUP BY 1 ORDER BY 1'
+transformation: E-008 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-2198 · C-006
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - oct-24
+  - sep-24
+  - ene-24
+  formato: cop
+  series:
+  - nombre: mrr cop
+    valores:
+    - 97007447.0
+    - 92663693.0
+    - 76506002.0
+created_at: '2026-09-29T14:46:19-06:00'
+status: valid
+validation_errors: []
+finding: F-195
+links:
+- F-195
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:46:19-06:00'
+version: 1

@@ -1,0 +1,33 @@
+id: X-043
+type: alert
+kind: research_needed
+status: open
+severity: medium
+effect: requires_research
+source: R-011
+target: Q-009
+title: R-011 requiere más investigación Q-009
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: En quienes permanecen solo se ve la variación del monto, y más de la mitad del COP de contracción parece efecto
+  del momento de cobro (confianza media). La respuesta observada necesita el puente con el cobro separado (alerta
+  en T-003). La parte «qué cambió» en plan, tarifa o descuento no se puede identificar con estos datos (H-013, H-014,
+  H-015).
+options: []
+recommended: Resolver primero la alerta de T-003
+recommended_why: Sin separar el momento de cobro, la respuesta a Q-009 contaría como cambio de suscripción algo
+  que en buena parte es efecto del cobro.
+detected_by: cos
+links:
+- R-011
+- Q-009
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

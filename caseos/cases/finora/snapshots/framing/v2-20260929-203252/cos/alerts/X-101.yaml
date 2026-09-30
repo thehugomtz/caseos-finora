@@ -1,0 +1,46 @@
+id: X-101
+type: alert
+kind: contradiction
+status: open
+severity: medium
+effect: contradicts
+source: R-028
+target: T-034
+title: R-028 contradice T-034
+finding_text: La reactivación concentra firmas de momento de cobro; la contracción no
+why: 'Hay dos cifras para el mismo churn observado de 2024: 1,9% en T-034 (F-079) y 2,04% en T-085 (F-183, R-028)
+  y en T-077 (F-175, R-027). Para 2022 coinciden (3,5% y 3,52%).
+
+
+  La diferencia puede venir de la ventana: el churn que no vuelve necesita un trimestre de seguimiento, y eso recorta
+  los meses de 2024. También puede venir de la forma de promediar. Desde el estado no lo puedo ver.
+
+
+  T-034 está en C-009 y F-079 está en C-007: si no se fija una sola cifra, el CFO ve dos números para lo mismo.
+  Dejo la contradicción registrada sin resolverla.'
+options:
+- key: A
+  label: Conciliar y usar un solo par
+  consequence: Se revisan la ventana y el cálculo de F-079 y F-183, y se lleva a la story el par que mida churn
+    observado y churn que no vuelve sobre los mismos meses. La otra cifra queda como nota de método, y C-007 y C-009
+    quedan con una sola cifra que se puede rastrear.
+- key: B
+  label: Mantener ambas, cada una con su ventana
+  consequence: No hay que recalcular, pero la lámina carga dos números para lo mismo y hay que explicarlos cada
+    vez.
+recommended: A
+recommended_why: Para decir que el churn observado es más del doble del que no vuelve, las dos tasas tienen que
+  salir de los mismos meses. Es una revisión corta.
+detected_by: cos
+links:
+- R-028
+- T-034
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144540-cos-37bd
+created_at: '2026-09-29T15:08:18-06:00'
+updated_at: '2026-09-29T15:08:18-06:00'
+version: 1

@@ -48,7 +48,10 @@ export async function mount(root) {
             v.ok ? h("span.chip.good", (v.pending || []).length ? "sin errores" : "paquete válido") : h("span.chip.bad", `${(v.errors || []).length} problema(s)`),
             (v.warnings || []).length ? h("span.chip.warn", `${v.warnings.length} aviso(s)`) : null),
           (v.pending || []).length ? h("div.small", { style: { marginTop: "10px", color: "var(--human-ink)" } },
-            "Borrador: así quedaría la historia. Para marcar Ready acepta o rechaza en Research la evidencia que usa: ", ids(v.pending, 14)) : null,
+            "Borrador: así quedaría la historia. Para marcar Ready acepta o rechaza la evidencia que usa: ", ids(v.pending, 14),
+            h("div.row", { style: { marginTop: "8px" } }, btn(`Aceptar la historia con su evidencia (${(pkg.claims || []).length} claims · ${v.pending.length} evidencias)`,
+              { sm: true, variant: "human", human: true, onClick: () => acceptStory(pkg, v) }))) : null,
+          (pkg.rejected_claims || []).length ? h("div.small.muted", { style: { marginTop: "8px" } }, "Fuera de la historia (los rechazaste): ", ids(pkg.rejected_claims, 8)) : null,
           pkg.from_to && pkg.from_to.from ? h("div.grid2.mt", h("div", h("div.eyebrow", "Hoy creen"), h("div.small", { style: { marginTop: "4px" } }, pkg.from_to.from)), h("div", h("div.eyebrow", "Deben salir creyendo"), h("div.small", { style: { marginTop: "4px" } }, pkg.from_to.to))) : null),
         (v.errors || []).length || (v.warnings || []).length ? h("div.panel.pad.mt" + ((v.errors || []).length ? ".alert" : ""), h("div.eyebrow", "Validación del contrato"), h("ul.validation", (v.errors || []).map(e => h("li.e", "✖ " + e)), (v.warnings || []).map(w => h("li.w", "⚠ " + w))),
           h("div.row", btn("Revalidar", { sm: true, icon: "refresh", onClick: async () => { await api.cpost("/story/validate"); paint(); } }))) : null,
@@ -92,7 +95,8 @@ function claimCard(c, ent, i) {
       c.role_in_story === "recommendation" && (c.research_ids || []).length ? designs(c.research_ids) : null,
       c.visual_intent ? h("div.small.muted", "Intención visual: " + c.visual_intent) : null,
       (c.limitations || []).length ? h("div.small.faint", "Límites: " + c.limitations.join(" · ")) : null,
-      h("div.row", btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => app.openEntity(c.claim_id, false, { paths: true }) }),
+      h("div.row", lvl === "pending" ? btn("Aceptar con su evidencia", { sm: true, variant: "human", human: true, onClick: () => acceptClaim(c) }) : null,
+        btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => app.openEntity(c.claim_id, false, { paths: true }) }),
         btn("Editar claim", { sm: true, variant: "ghost", onClick: () => editClaim(c) }), btn("Detalle", { sm: true, variant: "ghost", onClick: () => app.openEntity(c.claim_id) }))));
 }
 
@@ -120,6 +124,30 @@ function claimChart(fid) {
     requestAnimationFrame(() => renderVisual(wrap.querySelector(".chart"), f.visual, wrap.querySelector(".legend")));
   }).catch(() => wrap.remove());
   return wrap;
+}
+
+// Hugo read the claim (or the whole story) and accepts it with the evidence it stands on: findings and tables still proposed
+async function acceptStory(pkg, v) {
+  const n = await confirmDialog({ eyebrow: "Decisión · solo Hugo", title: "Aceptar la historia con su evidencia", human: true, confirmLabel: "Aceptar todo",
+    text: `Aceptas los ${(pkg.claims || []).length} claims del paquete y la evidencia que citan y todavía espera tu revisión (${v.pending.length} findings, más sus tablas). La evidencia que rechazaste no se toca. Después puedes marcar Story Ready.`,
+    field: { label: "Nota para el registro (opcional)", placeholder: "Leí los claims y su evidencia los sostiene…" } });
+  if (n === null) return;
+  try {
+    const out = await api.cpost("/story/accept", { note: n === true ? "" : n });
+    toast(`Aceptados: ${out.claims.length} claims · ${out.evidence.length} findings · ${out.tables.length} tablas` + (out.validation.ok ? " · paquete válido" : " · revisa la validación"), out.validation.ok ? "ok" : "err", 6000);
+    await app.refresh();
+  } catch (e) { toast(e.message, "err", 7000); }
+}
+
+async function acceptClaim(c) {
+  const n = await confirmDialog({ eyebrow: "Decisión · solo Hugo", title: `Aceptar ${c.claim_id} con su evidencia`, human: true, confirmLabel: "Aceptar",
+    text: "Aceptas el claim y los findings y tablas que cita y todavía esperan tu revisión.", field: { label: "Nota (opcional)" } });
+  if (n === null) return;
+  try {
+    const out = await api.action(c.claim_id, "accept_with_evidence", { note: n === true ? "" : n });
+    toast(`${c.claim_id} aceptado · ${out.evidence.length} findings · ${out.tables.length} tablas`, "ok");
+    await app.refresh();
+  } catch (e) { toast(e.message, "err", 7000); }
 }
 
 async function editClaim(c) {

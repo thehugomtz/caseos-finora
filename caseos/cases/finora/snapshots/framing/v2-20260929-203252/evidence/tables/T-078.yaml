@@ -1,0 +1,77 @@
+id: T-078
+type: table
+table_key: FIN-F-176
+title: En oct-24, la reactivación fue la mayor entrada del puente con COP 4,5 millones, por encima del MRR nuevo
+  con…
+question: 'Simulación ilustrativa con las cifras del enunciado del CFO: ¿cómo se leen los tres casos (paga 100 y
+  luego 80; lista de 100 a 130 con descuento de 30 y pago de 100; fin de ese descuento) y el caso mixto en un puente
+  de tres capas —MRR de lista, descuento y MRR neto—, frente a cómo los lee hoy el puente de monto pagado?'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - lb_reactivation_mrr_cop
+  - MRR de reactivación del último mes (oct-24)
+  - COP 4,5 millones
+- - lb_new_mrr_cop
+  - MRR nuevo del último mes (oct-24)
+  - COP 2,2 millones
+- - lb_expansion_mrr_cop
+  - MRR de expansión del último mes (oct-24)
+  - COP 2,1 millones
+units: {}
+definitions:
+  MRR de reactivación: Monto pagado por los clientes que se reactivan en el mes.
+message: En oct-24, la reactivación fue la mayor entrada del puente con COP 4,5 millones, por encima del MRR nuevo
+  con COP 2,2 millones y de la expansión con COP 2,1 millones.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RES-05
+  - E-005
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-005
+
+  SELECT substr(month, 1, 4) AS periodo, COALESCE(SUM(reactivation_mrr_cop), 0)::DOUBLE AS valor, COUNT(DISTINCT
+  month) AS meses, (COALESCE(SUM(reactivation_mrr_cop), 0)::DOUBLE) / COUNT(DISTINCT month) AS promedio_mensual
+  FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10'' GROUP BY ALL ORDER BY periodo'
+transformation: EC-RES-05 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-005 · query_metric
+  · Métrica del catálogo · MRR de reactivación
+filters:
+- periodo 2022-01–2024-10
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: year
+analysis_id: INV-20260929-143800-3f07 · C-010
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '9.2'
+  claim_fase1: C-RES-05
+  cubre:
+  - C-RES-05
+created_at: '2026-09-29T14:44:04-06:00'
+status: valid
+validation_errors: []
+finding: F-176
+links:
+- F-176
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:44:04-06:00'
+version: 1

@@ -1,0 +1,69 @@
+id: F-129
+type: finding
+headline: Para H-008 no alcanzan las razones de pérdida del CRM. Además hay una señal lateral que amerita una pregunta
+  concreta sobre precio o condiciones en 2024.
+evidence_text: Clozd afirma que las razones que da el vendedor rara vez coinciden con las del comprador (sin metodología
+  publicada). En jul–oct 2024, los clientes con expansión pasaron de 138 a 363 (de ≈3,3% a ≈5,6% de los activos
+  por mes) y el MRR de expansión de 3,5 a 7,1 MM COP. El aumento mediano fue ≈8–9%, frente a ≈4–5% en ago–oct 2023.
+  En jul–sep 2024, 220 de 243 expansiones no son picos de un mes ni pagos de varios meses juntos. Las reactivaciones
+  se mantuvieron planas (60→57). El primer pago de los clientes nuevos no muestra un escalón en 2024-S2.
+confidence: low
+limitations:
+- Es monto pagado observado, no precio de lista. Octubre 2024 no se puede verificar como pico. La señal también
+  es compatible con upsell o con que parte de la demanda nueva venga de clientes existentes; no prueba un cambio
+  de precio.
+kind: measurement
+claims:
+- claim: 'Por trimestre de alta: 2023-Q3 tuvo 187 altas, 2024-Q2 219 (el máximo) y 2024-Q3 153. La mediana del primer
+    pago fue 35,3k COP en 2023-Q3, 46,2k en 2024-Q2, 37,8k en 2024-Q3 y 34,1k en oct-24.'
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Datos 2023-01 a 2024-10
+  supports_or_contests: supports
+  notes: Hay una caída reciente del volumen. No se ve un escalón en el primer pago de los nuevos en 2024-S2 que
+    sugiera un aumento de precio para ellos (es monto observado, no precio de lista).
+- claim: 'Jul–oct 2023 frente a 2024: las reactivaciones pasaron de 60 a 57, los clientes con expansión de 138 a
+    363 y el MRR de expansión de 3,5 a 7,1 MM COP.'
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Datos 2023-07 a 2024-10
+  supports_or_contests: context
+  notes: Con los clientes activos de DM-12 (4.191 vs 6.491 cliente-mes), la expansión sube de ≈3,3% a ≈5,6% por
+    mes. Las compras de clientes existentes aparecen como expansión, no como alta.
+- claim: En jul–sep 2024, 220 de 243 expansiones no son picos de un mes ni pagos de varios meses juntos. El aumento
+    mediano sobre el mes previo fue ≈8–9% en jul–oct 2024, frente a ≈4–5% en ago–oct 2023.
+  source_id: DM-10
+  source_type: data_model
+  confidence: medium
+  freshness: Datos 2023-07 a 2024-10
+  supports_or_contests: context
+  notes: Octubre 2024 no se puede verificar como pico porque no hay mes siguiente. El patrón de muchos aumentos
+    pequeños es compatible con un ajuste de precio o condiciones, o con upsell; no está probado. El total por año
+    sale de DM-09.
+- claim: 'Clozd: al comparar razones de pérdida del CRM con entrevistas a compradores, «reps were wrong about the
+    real reason for the outcome 85% of the time».'
+  source_id: EXT-09
+  source_type: marketing
+  confidence: low
+  freshness: Sin fecha visible; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Proveedor de win/loss; la cifra no tiene metodología publicada. Solo apoya que la razón que registra Sales
+    no basta (H-005, H-008).
+unverified: false
+source_ref:
+  research: R-010
+links:
+- R-010
+- H-001
+- H-002
+- H-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:47:15-06:00'
+updated_at: '2026-09-29T10:47:15-06:00'
+version: 1

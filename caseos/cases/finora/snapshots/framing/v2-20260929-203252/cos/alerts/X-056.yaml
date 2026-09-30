@@ -1,0 +1,51 @@
+id: X-056
+type: alert
+kind: weakening
+status: open
+severity: medium
+effect: weakens
+source: R-012
+target: H-017
+title: R-012 debilita H-017
+finding_text: Las cifras del Overview se reproducen con ventana completa; el resto es composición
+why: 'R-012 muestra que sí se puede comparar, pero no «sin distorsiones importantes». Lo que se sostiene: el stock
+  de punta a punta (ene-22 → oct-24) sale exacto con la escala fija de amount y «activo» = pago > 0 en el mes (F-071,
+  F-072). Lo que no se sostiene: (1) stock y flujo usan ventanas distintas, con ene-22 como base del stock y mar-22
+  como inicio del flujo (F-074). (2) 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente,
+  y 29% de la expansión se revierte (F-073). (3) El churn observado baja de 3,5% a 1,9%, pero el que no vuelve en
+  un trimestre casi no se mueve (0,98% → 0,96%), y 44% vuelve a pagar al mes siguiente (F-079). (4) No se puede
+  verificar que amount sea un importe contractual en COP, ni qué significa un mes sin pago (F-082). Además quedan
+  dos riesgos sin medir: que las primeras apariciones de 2022 incluyan clientes anteriores al panel, y que el 97,4
+  mil de la base de ene-22 mezcle pago y supervivencia. La evaluación «No soportada» del agente se mantiene, ahora
+  con números.'
+options:
+- key: A
+  label: Cerrar H-017 como no soportada tal como está y dejar escrita la regla de comparación
+  consequence: 'La regla: el stock de punta a punta sí se compara, con definiciones fijas; los movimientos mensuales,
+    el churn y las primeras apariciones de 2022 solo se usan con su limitación. El Overview usa las cifras de stock
+    con una nota de método, Revenue no lee movimientos mensuales como cambios de contrato, y la regla queda como
+    limitación escrita para Story.'
+- key: B
+  label: Dividir H-017 en dos hipótesis (stock / flujo) y evaluarlas por separado
+  consequence: Más trazable, pero las dos quedarían resueltas desde el inicio con lo que ya hay (F-071/F-072 por
+    un lado, F-073/F-079 por el otro). Es trámite sin información nueva.
+- key: C
+  label: Mantenerla abierta hasta que Finora confirme la escala de amount y el estado de los clientes sin pago
+  consequence: No se cierra algo que un dato nuevo podría cambiar, pero el Overview queda esperando un dato que
+    quizá no llegue, cuando la lectura observada ya se puede defender.
+recommended: A
+recommended_why: 'Cierra con lo que R-012 sí muestra: una parte comparable y útil para el CEO, y otra con distorsiones
+  que ya tienen número. Además deja la regla donde Story la va a necesitar. B es trámite; C bloquea sin necesidad.'
+detected_by: cos
+links:
+- R-012
+- H-017
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110925-cos-d4c8
+created_at: '2026-09-29T11:46:03-06:00'
+updated_at: '2026-09-29T11:46:03-06:00'
+version: 1

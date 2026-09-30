@@ -1,0 +1,69 @@
+id: F-148
+type: finding
+headline: 'La operación recurrente se sostiene con el historial de etapas del CRM (viene de forma nativa) y un tablero
+  por foro: el semanal decide oportunidades, el mensual la mezcla de motion y canal, el trimestral la inversión
+  y la capacidad.'
+evidence_text: 'HubSpot genera automáticamente la fecha de entrada, la de salida y el tiempo en cada etapa, y los
+  mantiene si el registro se reabre (HS-1). Salesforce guarda en el historial de oportunidades la etapa de origen
+  y de destino, el monto, la fecha de cierre y la probabilidad (SF-1). La práctica de RevOps reparte así: en la
+  semanal se decide avanzar, deslizar o descalificar oportunidades; en la mensual se revisa la composición (cobertura
+  por segmento, antigüedad, mezcla de fuentes, razones de churn); en la trimestral, los supuestos (win rate, ciclo,
+  ticket, capacidad). Hay además revisiones fuera de ciclo que se activan con disparadores (ORM-1, RW-1). RevOps
+  es dueño de las definiciones y los datos; el CRO, de las decisiones (RW-1).'
+confidence: medium
+limitations:
+- Las fuentes sobre cadencia son contenido de proveedores y no hay evidencia verificada del impacto de instalarla.
+  No sabemos qué CRM usa Finora.
+kind: measurement
+claims:
+- claim: HubSpot genera para cada etapa las propiedades de fecha de entrada, fecha de salida, tiempo desde la última
+    entrada y tiempo acumulado, y las sigue actualizando si el registro se cierra y se reabre.
+  source_id: HS-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29; sin fecha de publicación
+  supports_or_contests: supports
+  notes: Describe una capacidad del producto; no dice qué usa Finora.
+- claim: El reporte Opportunity History de Salesforce incluye, por cada cambio, la etapa de origen, la de destino,
+    el monto, la fecha de cierre y la probabilidad.
+  source_id: SF-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: La página no muestra la duración en etapa como columna nativa; se calcula entre cambios.
+- claim: Una cadencia de RevOps separa revisiones semanales (inspección de pipeline, forecast, excepciones de SLA,
+    riesgo de renovación), mensuales (conversión del funnel, calidad de fuente, antigüedad en etapa, handoffs, señales
+    de expansión, razones de churn) y trimestrales (supuestos del funnel, cobertura, segmentos, precisión del forecast,
+    capacidad). El CRO es dueño de las decisiones de forecast y funnel; RevOps, de procesos, datos y definiciones.
+  source_id: RW-1
+  source_type: marketing
+  confidence: medium
+  freshness: Sin fecha visible; consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: Contenido de un proveedor, sin cifras de impacto.
+- claim: En la revisión semanal se decide avanzar, deslizar o descalificar oportunidades; en la mensual se mira
+    la composición (cobertura por segmento, antigüedad, concentración, mezcla de fuentes); en la trimestral se revisan
+    los supuestos de win rate, ciclo y ticket. Hay revisiones fuera de ciclo que se activan con disparadores, como
+    varios cambios de fecha de cierre en una semana o una caída del 50% en la creación de una fuente frente al plan.
+  source_id: ORM-1
+  source_type: marketing
+  confidence: medium
+  freshness: '2026-07-03'
+  supports_or_contests: supports
+  notes: 'Blog de un proveedor: describe una práctica, no evidencia resultados.'
+unverified: false
+source_ref:
+  research: R-019
+links:
+- R-019
+- Q-016
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:06:06-06:00'
+updated_at: '2026-09-29T11:06:06-06:00'
+version: 1

@@ -1,0 +1,87 @@
+id: F-149
+type: finding
+headline: Los agentes de IA y la atribución van encima, no en la base. Los agentes deben trabajar solo sobre métricas
+  gobernadas y entrar con un piloto controlado. La atribución reparte crédito; para decidir presupuesto hacen falta
+  experimentos.
+evidence_text: Un preprint de 2026 encontró que el único sistema sin alucinaciones medidas en seis categorías fue
+  el que limitaba la analítica hecha con LLM a definiciones gobernadas. Aun así, rechazar métricas no definidas
+  siguió fallando (GR-1). Según el título de su comunicado, Gartner predice que para 2028 los agentes superarán
+  a los vendedores 10 a 1, pero menos del 40% de los vendedores dirá que mejoraron su productividad (GT-1). GA4
+  define la atribución como asignar crédito. Su modelo data-driven usa un enfoque contrafactual, pero, según mi
+  inferencia, sigue siendo un modelo sobre datos observados y no un experimento (GA-1). Google pide al menos dos
+  años de datos para su modelo de mezcla de medios (MMM) y recomienda calibrarlo con experimentos (GM-1). Finora
+  tiene 34 meses de gasto mensual, sin geografía y con unidad no documentada (DM-3).
+confidence: medium
+limitations:
+- GR-1 es un preprint de un solo autor con un benchmark sintético. De Gartner solo pude leer los títulos porque
+  el acceso estaba bloqueado. Que un MMM sería frágil con estos datos es inferencia.
+kind: measurement
+claims:
+- claim: El gasto S&M viene en 7 rubros × 34 meses (2022-01 a 2024-10), con grano mensual, sin geografía y con unidad
+    no documentada.
+  source_id: DM-3
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Lo de la unidad no documentada viene del catálogo. Impide calcular CAC o payback en COP.
+- claim: GA4 define la atribución como «assigning credit» (asignar crédito) a las interacciones del camino. Su modelo
+    data-driven usa un enfoque contrafactual, y las visitas directas no reciben crédito salvo en caminos solo directos.
+  source_id: GA-1
+  source_type: company
+  confidence: high
+  freshness: Consultado el 2026-09-29
+  supports_or_contests: context
+  notes: 'Inferencia propia: el contrafactual se modela sobre datos observados, no es un experimento; sigue asignando
+    crédito, no prueba causa.'
+- claim: Google describe Meridian (su MMM) como una medición del impacto incremental con datos agregados, que necesita
+    al menos dos años de datos y se calibra con resultados de experimentos de incrementalidad.
+  source_id: GM-1
+  source_type: company
+  confidence: medium
+  freshness: Julio de 2025
+  supports_or_contests: context
+  notes: 'Contenido de Google sobre su propia herramienta. Inferencia: con 34 meses de gasto mensual, sin geografía
+    y con unidad no documentada, un MMM sería frágil.'
+- claim: En un preprint de 2026, limitar la analítica hecha con LLM a una capa semántica gobernada fue el único
+    sistema sin alucinaciones medidas en seis categorías, con cero violaciones de filtros y de seguridad por fila.
+    Rechazar métricas no definidas siguió fallando.
+  source_id: GR-1
+  source_type: academic
+  confidence: medium
+  freshness: Enviado el 2026-07-06
+  supports_or_contests: supports
+  notes: Preprint de un solo autor, no revisado por pares; benchmark sintético de 100 preguntas más datos de NHTSA.
+- claim: Gartner predice que para 2028 los agentes de IA superarán a los vendedores 10 a 1, pero menos del 40% de
+    los vendedores dirá que los agentes mejoraron su productividad.
+  source_id: GT-1
+  source_type: industry
+  confidence: low
+  freshness: '2026-07-28'
+  supports_or_contests: contests
+  notes: Solo el título del comunicado (el cuerpo devolvió 403). Es una predicción, no evidencia; modera las expectativas
+    sobre los agentes.
+- claim: Gartner reporta que las organizaciones de ventas que dan next best actions habilitadas por IA tienen 2,6
+    veces más probabilidad de lograr crecimiento comercial.
+  source_id: GT-2
+  source_type: industry
+  confidence: low
+  freshness: '2026-05-20'
+  supports_or_contests: context
+  notes: Solo el título (el cuerpo devolvió 403). Probablemente es una asociación de encuesta, no una causa; no
+    verificado.
+unverified: false
+source_ref:
+  research: R-019
+links:
+- R-019
+- Q-016
+- Q-003
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:06:06-06:00'
+updated_at: '2026-09-29T11:06:06-06:00'
+version: 1

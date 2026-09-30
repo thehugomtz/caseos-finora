@@ -1,0 +1,49 @@
+id: X-006
+type: alert
+kind: new_hypothesis
+status: open
+severity: high
+effect: opens_new_hypothesis
+source: R-015
+target: Q-020
+title: R-015 abre una hipótesis nueva Q-020
+finding_text: Altas y gasto de S&M no se mueven en el mismo sentido
+why: 'R-015 le da a Q-020 dos fechas que ninguna hipótesis actual explica. (1) Las primeras apariciones saltan de
+  26 en dic-22 a 60 en ene-23, con el S&M todavía en 3,01 u/mes (ene–may-23). El salto no se sostiene igual en feb–may:
+  el promedio de ene–may es 45,2 (F-107, F-110). (2) El tramo jun–dic-23 (60,6/mes) coincide con el cambio en cómo
+  se arma el archivo de gasto: Team deja de ser un porcentaje fijo después de may-23, Freelance está en cero desde
+  may-23 y el S&M baja de 3,45 u (may-23) a 1,10 u (ago-23) (F-108, F-115, F-117). El salto de enero llega antes
+  que la caída del gasto. Si parte de ese salto fuera un efecto de cómo se registran los datos, habría que revisar
+  R-003, R-009 y F-113.'
+options:
+- key: A
+  label: Abrir las hipótesis y revisarlas con los pagos
+  consequence: 'Se abren las dos hipótesis nuevas (registro en ene-23; cambio de operación a mitad de 2023) y se
+    hacen tres chequeos con data que ya tenemos: (1) serie mensual de primeras apariciones y ticket alrededor de
+    ene-23 y jun-23; (2) salidas de nov–dic-22 que coincidan con las entradas de ene-23; (3) ene-24 frente a dic-23,
+    para ver si es estacional. En paralelo, se pregunta a Finora qué pasó en esas fechas.'
+- key: B
+  label: Solo preguntar a Finora
+  consequence: No hay análisis extra, pero Q-020 queda abierta y R-003, R-009 y F-113 siguen apoyados en un salto
+    que nadie revisó.
+- key: C
+  label: Registrar las fechas sin abrir hipótesis
+  consequence: Q-020 avanza con «cambios en ene-23 y en jun–dic-23» como observación. Es rápido, pero el riesgo
+    de registro queda sin revisar y la coincidencia con el gasto se puede leer como causa.
+recommended: A
+recommended_why: Los chequeos son baratos y usan data que ya tenemos. Buena parte de la historia de entrada (R-003,
+  R-009, F-113) se apoya en el salto de ene-23, así que conviene descartar un efecto de registro antes de aceptar
+  esos findings.
+detected_by: cos
+links:
+- R-015
+- Q-020
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103957-cos-6a2b
+created_at: '2026-09-29T11:19:36-06:00'
+updated_at: '2026-09-29T11:19:36-06:00'
+version: 1

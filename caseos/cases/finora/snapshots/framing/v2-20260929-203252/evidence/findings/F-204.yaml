@@ -1,0 +1,78 @@
+id: F-204
+type: finding
+headline: 'En pagos, el problema aparece en jul–oct 2024, no en todo el año: hay que fijar el periodo antes de buscar
+  causas'
+evidence_text: 'Primeros pagadores observados: ene–jun 2024 fueron 351 vs 272 (+29%); jul–oct, 203 vs 251 (−19%);
+  ene–oct, 554 vs 523 (+6%). Jun-24 es el mes limpio más alto (84) y jul-24 baja a 48. El gasto S&M por primer pagador
+  baja en ene–oct (−16%) y sube en jul–oct (+71%). Q-001 dice «no crecen en la misma proporción»: según la ventana,
+  eso significa crecer menos que los leads (ene–oct) o caer (jul–oct).'
+confidence: high
+limitations:
+- Primer pago no equivale a venta ni a adquisición confirmada. El modelo no tiene leads, así que no sabemos en qué
+  meses hubo «más leads». La unidad del gasto no está documentada.
+kind: measurement
+claims:
+- claim: 'Primeros pagadores por mes: dic-22 26 → ene-23 60; jun-24 84 (el mes limpio más alto) → jul-24 48; oct-24
+    50 vs oct-23 64.'
+  source_id: DM-1
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Muestra el quiebre de julio 2024 y el salto de ene-23 que examina H-024.
+- claim: 'Jul–oct: 251 (2023) vs 203 (2024) primeros pagadores (−19%). Sin octubre (jul–sep): 187 vs 153 (−18%).'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: Va contra H-029 en su parte de octubre incompleto. El rezago Won→pago no se ve en los pagos.
+- claim: 'Ene–jun: 272 (2023) vs 351 (2024) primeros pagadores (+29%). Ene–oct: 523 vs 554 (+6%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: La caída es solo del segundo tramo; la historia depende de la ventana que use el CRO.
+- claim: 'Mar–oct: 227 (2022), 433 (2023) y 465 (2024) primeros pagadores.'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 2022 está afectado por el inicio de la ventana (ene-22) y el arrastre de feb-22.
+- claim: 'Gasto 2024 vs 2023 (unidad no documentada). Ene–jun: generación de demanda 9,722→7,655 (−21%), capacidad
+    comercial 5,663→3,998 (−29%), S&M 16,853→12,204 (−28%). Jul–oct: 2,985→4,367 (+46%), 2,274→2,882 (+27%), 5,454→7,551
+    (+38%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'En el mart, capacidad = Team + PayrollExpenses + Travel: no es headcount ni carga. Encaja con H-006 con
+    rezago, pero no la prueba.'
+- claim: 'Gasto S&M por primer pagador (unidad no documentada): en jul–oct sube de 0,0217 a 0,0372 (+71%); en ene–oct
+    baja de 0,0427 a 0,0357 (−16%).'
+  source_id: DM-7
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: 'Cálculo sobre las sumas de DM-7. Es un cociente del mismo periodo: ignora el rezago entre gasto, entrada
+    y pago.'
+unverified: false
+source_ref:
+  research: R-025
+links:
+- R-025
+- H-029
+- H-024
+- H-037
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:56:18-06:00'
+updated_at: '2026-09-29T14:56:18-06:00'
+version: 1

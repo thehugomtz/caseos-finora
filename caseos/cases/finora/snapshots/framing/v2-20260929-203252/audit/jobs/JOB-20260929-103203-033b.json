@@ -1,0 +1,327 @@
+{
+ "id": "JOB-20260929-103203-033b",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué solución analítica le permitiría al CRO operar el funn…",
+ "params": {
+  "research_id": "R-019"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:03-06:00",
+ "started_at": "2026-09-29T10:32:03-06:00",
+ "finished_at": "2026-09-29T11:06:06-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:03-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:48:41-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-103203-measurement-e10a",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:48:42-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:48:44-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T10:48:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT MIN(month) AS first_month, MAX(month) AS last_month, COUNT(*) AS months, SUM(new_customers) AS total_new, SUM(churned_customers) AS t"
+  },
+  {
+   "t": "2026-09-29T10:48:51-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT industry, COUNT(*) AS customers FROM staging.stg_customers GROUP BY industry ORDER BY customers DESC"
+  },
+  {
+   "t": "2026-09-29T10:48:51-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS rows_n FROM mart.customer_month GROUP BY movement_type ORDER BY rows_n DESC"
+  },
+  {
+   "t": "2026-09-29T10:48:52-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT rubro, COUNT(*) AS months, MIN(month) AS first_month, MAX(month) AS last_month FROM staging.stg_sm_spend GROUP BY rubro ORDER BY rubr"
+  },
+  {
+   "t": "2026-09-29T10:48:57-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_events, SUM(CASE WHEN returned_next_month = 1 THEN 1 ELSE 0 END) AS returned_next_month, SUM(CASE WHEN months_to_re"
+  },
+  {
+   "t": "2026-09-29T10:48:58-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS events, SUM(CASE WHEN reverts_next_month = 1 THEN 1 ELSE 0 END) AS reverts_next_month, SUM(CASE WHEN multi"
+  },
+  {
+   "t": "2026-09-29T10:48:59-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS customers FROM mart.customer_month WHERE cohort_flag IS NOT NULL GROUP BY cohort_flag"
+  },
+  {
+   "t": "2026-09-29T10:49:00-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, active_customers, new_customers, churned_customers, reactivated_customers, total_paid_mrr_cop, new_mrr_cop, expansion_mrr_cop,"
+  },
+  {
+   "t": "2026-09-29T10:49:13-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model recurring revenue data model volume conversion time metrics”"
+  },
+  {
+   "t": "2026-09-29T10:49:13-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall opportunity-centric buying groups model”"
+  },
+  {
+   "t": "2026-09-29T10:49:24-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-29T10:49:25-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/"
+  },
+  {
+   "t": "2026-09-29T10:49:34-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/02/The-Bowtie-A-Proposed-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T10:49:43-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.drivetrain.ai/post/essential-saas-bowtie-funnel-metrics"
+  },
+  {
+   "t": "2026-09-29T10:49:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://blog.revpartners.io/en/revops-articles/bowtie-funnel"
+  },
+  {
+   "t": "2026-09-29T10:49:52-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “hybrid go-to-market self-serve and sales-assisted motions separate funnel metrics product qualified account PQA”"
+  },
+  {
+   "t": "2026-09-29T10:49:53-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “revenue operating cadence weekly pipeline review monthly business review quarterly business review forecast call RevOps”"
+  },
+  {
+   "t": "2026-09-29T10:50:09-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://resources.rework.com/libraries/revenue-operations/revenue-cadence"
+  },
+  {
+   "t": "2026-09-29T10:50:10-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://orm-tech.com/blog/pipeline-review-cadence"
+  },
+  {
+   "t": "2026-09-29T10:50:20-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Gartner AI agents sales revenue teams prediction 2026 CRO”"
+  },
+  {
+   "t": "2026-09-29T10:50:20-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “semantic layer governed metrics for AI agents LLM analytics trustworthy answers dbt semantic layer”"
+  },
+  {
+   "t": "2026-09-29T10:50:32-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.gartner.com/en/newsroom/press-releases/2026-07-28-gartner-predicts-ai-agents-will-outnumber-sellers-10-to-1-by-2028-yet-fewer-than-40-percent-of-sellers-will-say-agents-improved-productivity"
+  },
+  {
+   "t": "2026-09-29T10:50:34-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.gartner.com/en/newsroom/press-releases/2026-05-20-gartner-survey-finds-sales-organizations-that-provide-ai-enabled-next-best-actions-are-two-point-six-times-more-likely-to-achieve-commercial-growth"
+  },
+  {
+   "t": "2026-09-29T10:50:42-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://arxiv.org/abs/2608.26157"
+  },
+  {
+   "t": "2026-09-29T10:50:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HubSpot lifecycle stage \"date entered\" property lifecycle stage history report knowledge base”"
+  },
+  {
+   "t": "2026-09-29T10:50:52-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/properties/stage-calculated-properties"
+  },
+  {
+   "t": "2026-09-29T10:50:52-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce opportunity history stage duration field history tracking report \"Opportunity History\"”"
+  },
+  {
+   "t": "2026-09-29T10:51:02-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.salesforce.com/s/articleView?id=sf.reports_opp_history.htm&language=en_US&type=5"
+  },
+  {
+   "t": "2026-09-29T10:51:02-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Google Analytics 4 attribution models data-driven attribution help center conversion credit”"
+  },
+  {
+   "t": "2026-09-29T10:51:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://support.google.com/analytics/answer/10596866?hl=en"
+  },
+  {
+   "t": "2026-09-29T10:51:13-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Google Meridian marketing mix model incrementality vs attribution documentation”"
+  },
+  {
+   "t": "2026-09-29T10:51:23-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://business.google.com/uk/think/measurement/meridian-marketing-mix-model/"
+  },
+  {
+   "t": "2026-09-29T10:51:24-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Stripe billing MRR definition subscription analytics churn \"monthly recurring revenue\" documentation”"
+  },
+  {
+   "t": "2026-09-29T10:51:34-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/billing/subscriptions/view-metrics"
+  },
+  {
+   "t": "2026-09-29T10:51:36-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.airbook.io/guides/hybrid-plg-sales-funnel"
+  },
+  {
+   "t": "2026-09-29T10:51:59-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUBSTR(month,1,4) AS year, ROUND(SUM(demand_gen_spend)/SUM(total_sm_spend),3) AS demand_gen_share, ROUND(SUM(sales_capacity_spend)/SU"
+  },
+  {
+   "t": "2026-09-29T10:52:00-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS altas_clean, MIN(m0_cop) AS min_m0, MAX(m0_cop) AS max_m0, ROUND(AVG(m0_cop),0) AS avg_m0 FROM mart.new_customers WHERE c"
+  },
+  {
+   "t": "2026-09-29T10:52:02-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT bucket, COUNT(*) AS altas FROM (SELECT CASE WHEN m0_cop < 50000 THEN 'a_<50k' WHEN m0_cop < 100000 THEN 'b_50k-100k' WHEN m0_cop < 20"
+  },
+  {
+   "t": "2026-09-29T10:52:10-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “McKinsey agentic AI B2B sales revenue growth commercial teams 2026”"
+  },
+  {
+   "t": "2026-09-29T10:52:11-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025"
+  },
+  {
+   "t": "2026-09-29T10:52:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-future-of-b2b-sales-how-growth-champions-rewire-their-playbooks-with-ai"
+  },
+  {
+   "t": "2026-09-29T10:53:24-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-future-of-b2b-sales-how-growth-champions-rewire-their-playbooks-with-ai"
+  },
+  {
+   "t": "2026-09-29T10:54:39-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS rows_with_signature, COUNT(DISTINCT customer_id) AS customers_with_signature, (SELECT COUNT(DISTINCT customer_id) FROM ma"
+  },
+  {
+   "t": "2026-09-29T10:54:40-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS months_negative_bridge_check, SUM(CASE WHEN ABS(mrr_bridge_diff_cop) < 0.01 THEN 1 ELSE 0 END) AS months_bridge_ok, SUM(C"
+  },
+  {
+   "t": "2026-09-29T10:56:19-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN n.m0_cop >= 200000 THEN 'm0_>=200k' ELSE 'm0_<200k' END AS tramo, COUNT(*) AS altas, SUM(CASE WHEN c.multi_month_payment_si"
+  },
+  {
+   "t": "2026-09-29T11:06:06-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-019",
+  "findings": [
+   "F-145",
+   "F-146",
+   "F-147",
+   "F-148",
+   "F-149"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T20:10:59-06:00 · motivo: cambios en lote
+> Actualizado: 2026-09-29T20:35:56-06:00 · motivo: Hugo resolvió X-003: Sin impacto material
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -13,19 +13,19 @@ Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) O
 CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación
 
 ## Current Phase
-**Framing**
+**Synthesis**
 
 | Fase | Estado | Ready |
 |---|---|---|
 | 01 Briefing | ready | v1 · 2026-09-29T00:13 |
-| 02 Framing | needs_review | v1 · 2026-09-29T09:49 |
-| 03 Research | in_progress | — |
+| 02 Framing | ready | v2 · 2026-09-29T20:32 |
+| 03 Research | ready | v1 · 2026-09-29T20:33 |
 | 04 Synthesis | in_progress | — |
 | 05 Story | in_progress | — |
 | 06 Slides | not_started | — |
 
 ## Current Status
-32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 160 alertas abiertas.
+32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 11 findings aceptados · 15 decisiones activas · 158 alertas abiertas.
 
 COS: R-033 cierra, junto con R-034, el diseño as-is/to-be del modelo de datos. El as-is del caso es solo de después del pago (confianza alta) y el to-be sale de patrones de afuera (confianza media); falta saber qué sistemas tiene Finora y qué es un «Cliente N». La research está prácticamente cerrada (R-007 y R-008 siguen bloqueadas por falta de data) y el cuello de botella ahora es la revisión: hay 0 findings aceptados de 242 propuestos, así que ningún claim está listo para el story, y sigue pendiente D-018, que decide si las propuestas de modelo y tablero entran a la historia.
 
@@ -33,7 +33,7 @@ COS: R-033 cierra, junto con R-034, el diseño as-is/to-be del modelo de datos. 
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
 
 ## Approved Framing
-v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
+v2 aprobada el 2026-09-29 → `framing/approved/current.v2.md`
 
 ## Governing Question
 ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
@@ -57,17 +57,17 @@ v1 aprobada el 2026-09-29 → `framing/approved/current.v1.md`
 - **C-010** Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC · pending
 
 ## Decisions
+- **D-022** R-013 requiere más investigación H-022: Sin impacto material · 2026-09-29 → Sin impacto material
+- **D-021** R-013 cambia el framing Q-018: Sin impacto material · 2026-09-29 → Sin impacto material
+- **D-020** Research marcada Ready (v1) · 2026-09-29 → Ready
+- **D-019** Framing marcada Ready (v2) · 2026-09-29 → Ready
 - **D-017** Delegación a Claude (2): que el COS y los especialistas respondan las 8 preguntas del caso con propuestas sólidas y el storytelling lo mues… · 2026-09-29 → «Voy a comer pero ahí checa con el chief y las herramientas…
 - **D-016** Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling · 2026-09-29 → «Vale, voy a desayunar ahorita que acabes lo corres, creo q…
 - **D-014** Framing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-013** Briefing marcada Ready (v1) · 2026-09-29 → Ready
 - **D-001** CRO pasa de cuatro a tres ramas · 2026-09-28 → Cantidad, mezcla y compra según tiempo. Se deja de tratar c…
 - **D-002** CFO conserva tres grupos · 2026-09-28 → Entrantes, salientes y continuos, con suscripción y descuen…
-- **D-003** Calidad, atención, post-SQL y oferta son explicaciones para contrastar · 2026-09-28 → Son explicaciones para contrastar, no causas ya confirmadas…
-- **D-004** Preguntas de pagos separadas de causas · 2026-09-28 → HO responde cosas más pequeñas que HC/HF. No se usa un sust…
-- **D-005** Prioridad por importancia × capacidad · 2026-09-28 → Orden revisable cuando conozcamos datos y resultados. Cero…
-- **D-007** Solución fuera de esta etapa · 2026-09-28 → Sin dashboards, métricas definitivas, modelo de datos ni de…
-- … y 1 más
+- … y 5 más
 
 _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 
@@ -85,7 +85,17 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - … y 67 más
 
 ## Evidence We Trust
-_Todavía no hay evidencia aceptada._
+- **F-001** (C-RES-01) Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24. · high
+- **F-002** (C-RES-02) El MRR por cliente activo de oct-24 es más de 30% menor que el de ene-22. · high
+- **F-019** (C-MON-04) Los clientes existentes no pagan menos y las cosechas 2023–24, de menor ticket, ya son la mayoría de los clientes activos. · high
+- **F-020** (C-MON-05) El MRR por cliente activo bajó en las seis industrias entre dic-22 y oct-24. · high
+- **F-022** (C-INV-02) El S&M total por cliente nuevo es más de 50% menor en 2024 que en 2022. · high
+- **F-023** (C-INV-03) Las correlaciones en niveles entre gasto y altas (rezagos 0–1) son todas negativas, y ninguna correlación de cambios mes a mes alcanza |r| ≥ 0,3 ni p < 0,05. · medium
+- **F-030** (C-ADQ-07) El aumento de altas por mes entre 2022 y 2024 corresponde a clientes con run-rate inicial menor que la mediana de 2022; por encima de esa mediana, las altas por mes no aumentaron. · high
+- **F-033** (C-RET-03) El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos. · high
+- **F-037** (C-ADQ-08) El valor inicial incorporado por mes creció menos que las altas entre 2022 y 2024 en las tres normalizaciones probadas, y entre 2023 y 2024 cambió menos de 10% en todas. · high
+- **F-039** (C-ADQ-09) Las altas por mes se duplicaron con un escalón a inicios de 2023 y desde ene-23 no muestran una tendencia distinguible de cero. · medium
+- … y 1 más
 
 ## Things We Cannot Claim
 - Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.
@@ -141,7 +151,6 @@ _Sin tablas aceptadas._
 - **X-101** R-028 contradice T-034
 
 ## Risks
-- **X-001** R-013 cambia el framing Q-018
 - **X-004** R-013 cambia el framing
 - **X-005** R-015 cambia el framing
 - **X-006** R-015 abre una hipótesis nueva Q-020
@@ -151,11 +160,13 @@ _Sin tablas aceptadas._
 - **X-036** R-011 cambia la historia Q-002
 - **X-037** R-011 cambia la historia T-003
 - **X-038** R-011 cambia el framing Q-026
-- … y 31 más
+- **X-049** R-016 cambia el framing Q-001
+- … y 30 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
-- Framing v1: `framing/approved/current.v1.md`
+- Framing v2: `framing/approved/current.v2.md`
+- Research v1: `research/approved/research.v1.yaml`
 - **A-001** Brief de trabajo v0.3 (fuente de verdad) (`brief/sources/alegra_brief_de_trabajo.html`)
 - **A-002** Business Exploration Workspace (Finora) (`/ws/finora/`)
 - **A-003** Propuesta de arquitectura v1.2 del workspace agentic (`finora-eda/docs/propuesta_arquitectura_v1.md`)
@@ -174,16 +185,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 20:10 · Story Package v3 (borrador): 25 claims · 3 problema(s) a resolver · 151 evidencia(s) esperan tu aceptación
-- 2026-09-29 20:10 · C-025 actualizado en el Story Package
-- 2026-09-29 20:10 · C-020 actualizado en el Story Package
-- 2026-09-29 20:10 · C-019 actualizado en el Story Package
-- 2026-09-29 20:10 · C-018 actualizado en el Story Package
-- 2026-09-29 20:10 · C-017 actualizado en el Story Package
-- 2026-09-29 20:10 · C-016 actualizado en el Story Package
-- 2026-09-29 20:10 · C-024 actualizado en el Story Package
-- 2026-09-29 20:10 · C-015 actualizado en el Story Package
-- 2026-09-29 20:10 · C-014 actualizado en el Story Package
+- 2026-09-29 20:35 · Hugo resolvió X-003: Sin impacto material
+- 2026-09-29 20:35 · Hugo decidió: R-013 requiere más investigación H-022: Sin impacto material
+- 2026-09-29 20:35 · Hugo resolvió X-001: Sin impacto material
+- 2026-09-29 20:35 · Hugo decidió: R-013 cambia el framing Q-018: Sin impacto material
+- 2026-09-29 20:34 · Hugo aceptó C-024
+- 2026-09-29 20:34 · Hugo aceptó C-025
+- 2026-09-29 20:33 · Research marcada Ready (v1)
+- 2026-09-29 20:33 · Hugo decidió: Research marcada Ready (v1)
+- 2026-09-29 20:32 · Framing marcada Ready (v2)
+- 2026-09-29 20:32 · Hugo decidió: Framing marcada Ready (v2)
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

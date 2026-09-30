@@ -1,0 +1,326 @@
+{
+ "id": "JOB-20260929-182406-b263",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Data Engineering · Propuesta de modelo de datos para operar el funnel, as-is v…",
+ "params": {
+  "research_id": "R-033"
+ },
+ "agent": "data_engineering",
+ "status": "failed",
+ "created_at": "2026-09-29T18:24:06-06:00",
+ "started_at": "2026-09-29T18:24:06-06:00",
+ "finished_at": "2026-09-29T18:49:11-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T18:24:06-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T18:24:06-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-182406-data_engineering-1c3e",
+   "agent": "data_engineering",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T18:24:13-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T18:24:18-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T18:24:25-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month) AS primer_mes, MAX(month) AS u"
+  },
+  {
+   "t": "2026-09-29T18:24:25-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC"
+  },
+  {
+   "t": "2026-09-29T18:24:26-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT MIN(month) AS primer_mes, MAX(month) AS ultimo_mes, COUNT(DISTINCT month) AS meses, COUNT(DISTINCT rubro) AS rubros, COUNT(*) AS fila"
+  },
+  {
+   "t": "2026-09-29T18:24:27-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag ORDER BY clientes DESC"
+  },
+  {
+   "t": "2026-09-29T18:24:35-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT (SELECT COUNT(DISTINCT customer_id) FROM staging.stg_customer_month) AS clientes_pagos, (SELECT COUNT(DISTINCT customer_id) FROM stag"
+  },
+  {
+   "t": "2026-09-29T18:24:36-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT movement_type, COUNT(*) AS filas FROM mart.customer_month GROUP BY movement_type ORDER BY filas DESC"
+  },
+  {
+   "t": "2026-09-29T18:24:37-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT rubro, COUNT(*) AS meses, ROUND(SUM(amount),2) AS total_periodo, ROUND(MIN(amount),2) AS min_mes, ROUND(MAX(amount),2) AS max_mes FRO"
+  },
+  {
+   "t": "2026-09-29T18:24:40-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUM(CASE WHEN multi_month_payment_signature >= 2 THEN 1 ELSE 0 END) AS filas_firma_pago_multimes, COUNT(DISTINCT CASE WHEN multi_mont"
+  },
+  {
+   "t": "2026-09-29T18:25:04-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUM(CASE WHEN movement_type = 'churn' THEN returned_next_month ELSE 0 END) AS churn_vuelve_t1, SUM(CASE WHEN movement_type = 'churn' "
+  },
+  {
+   "t": "2026-09-29T18:25:05-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, rubro, amount FROM staging.stg_sm_spend WHERE amount <= 0 ORDER BY month, rubro"
+  },
+  {
+   "t": "2026-09-29T18:25:06-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, COUNT(*) AS altas, SUM(CASE WHEN clean = 1 THEN 1 ELSE 0 END) AS altas_clean FROM mart.new_customers GROUP BY vintage ORDER "
+  },
+  {
+   "t": "2026-09-29T18:25:10-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce object reference Lead ConvertedAccountId ConvertedOpportunityId ConvertedDate fields”"
+  },
+  {
+   "t": "2026-09-29T18:25:11-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce OpportunityHistory object stage history fields StageName Amount CloseDate”"
+  },
+  {
+   "t": "2026-09-29T18:25:12-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HubSpot lifecycle stages \"date entered\" property lead status New Open In Progress”"
+  },
+  {
+   "t": "2026-09-29T18:25:12-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Stripe subscription object current_period_start status past_due canceled discount subscription items”"
+  },
+  {
+   "t": "2026-09-29T18:25:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunityhistory.htm"
+  },
+  {
+   "t": "2026-09-29T18:25:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/records/use-lifecycle-stages?r44b=no"
+  },
+  {
+   "t": "2026-09-29T18:25:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/api/subscriptions/object?lang=ruby"
+  },
+  {
+   "t": "2026-09-29T18:25:41-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunityhistory.htm"
+  },
+  {
+   "t": "2026-09-29T18:25:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce CampaignMember object fields FirstRespondedDate HasResponded Status LeadId ContactId”"
+  },
+  {
+   "t": "2026-09-29T18:25:43-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kimball accumulating snapshot fact table pipeline milestones order fulfillment design tip”"
+  },
+  {
+   "t": "2026-09-29T18:25:43-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ChartMogul MRR movements new business expansion contraction churn reactivation definition discounts annual plans normalized”"
+  },
+  {
+   "t": "2026-09-29T18:25:58-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/4416682609426"
+  },
+  {
+   "t": "2026-09-29T18:25:59-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/accumulating-snapshot-fact-table/"
+  },
+  {
+   "t": "2026-09-29T18:26:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Segment spec B2B SaaS events group call account groupId \"Account Created\" \"Trial Started\"”"
+  },
+  {
+   "t": "2026-09-29T18:26:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model revenue architecture stages VM1 VM2 impact conversion rates”"
+  },
+  {
+   "t": "2026-09-29T18:26:12-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/01/The-Bowtie-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T18:26:13-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.twilio.com/docs/segment/connections/spec/b2b-saas"
+  },
+  {
+   "t": "2026-09-29T18:26:25-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://developer.salesforce.com/docs/atlas.en-us.change_data_capture.meta/change_data_capture/cdc_standard_objects_lead_conversion.htm"
+  },
+  {
+   "t": "2026-09-29T18:26:26-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/press/winning-by-design-releases-updated-bowtie-model-and-benchmarks-to-provide-go-to-market-teams-with-a-standardized-customer-journey-and-data-model/"
+  },
+  {
+   "t": "2026-09-29T18:26:27-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Fivetran dbt salesforce package opportunity_enhanced daily history salesforce__opportunity_line_item_enhanced”"
+  },
+  {
+   "t": "2026-09-29T18:26:40-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://fivetran.com/docs/transformations/data-models/salesforce-data-model/salesforce-transform-model"
+  },
+  {
+   "t": "2026-09-29T18:26:41-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall buying groups opportunity replaces demand waterfall leads”"
+  },
+  {
+   "t": "2026-09-29T18:26:42-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/api/discounts/object"
+  },
+  {
+   "t": "2026-09-29T18:26:59-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/resources/b2b-marketing-planning/revenue-waterfall-guide"
+  },
+  {
+   "t": "2026-09-29T18:27:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Salesforce Task object WhoId WhatId ActivityDate TaskSubtype Type field reference”"
+  },
+  {
+   "t": "2026-09-29T18:27:00-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kimball slowly changing dimension type 2 add new row effective date expiration date current row indicator”"
+  },
+  {
+   "t": "2026-09-29T18:27:14-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.stripe.com/api/invoice-line-item/object"
+  },
+  {
+   "t": "2026-09-29T18:27:14-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “ChartMogul how MRR is calculated annual plan divided by 12 normalized monthly past due invoices churn”"
+  },
+  {
+   "t": "2026-09-29T18:27:25-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://help.chartmogul.com/hc/en-us/articles/203299812"
+  },
+  {
+   "t": "2026-09-29T18:28:49-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT COUNT(*) AS churn_con_pago_t1, SUM(CASE WHEN ABS(n.paid_mrr_cop - c.previous_month_mrr) <= 0.005 * c.previous_month_mrr THEN 1 ELSE 0"
+  },
+  {
+   "t": "2026-09-29T18:28:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT multi_month_payment_signature AS k, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month WHERE multi_m"
+  },
+  {
+   "t": "2026-09-29T18:29:01-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN multi_month_payment_signature = 2 THEN 'k=2' ELSE 'k>=3' END AS firma, movement_type, COUNT(*) AS filas FROM mart.customer_"
+  },
+  {
+   "t": "2026-09-29T18:29:02-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT c.customer_id, c.month, c.observed_amount, c.previous_month_mrr, c.paid_mrr_cop, c.usual_amount_cop, c.movement_type, c.multi_month_p"
+  },
+  {
+   "t": "2026-09-29T18:43:32-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product qualified lead PQL definition product usage signals sales handoff product-led sales data model”"
+  },
+  {
+   "t": "2026-09-29T18:43:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://productled.com/blog/how-to-define-pqls"
+  },
+  {
+   "t": "2026-09-29T18:49:11-06:00",
+   "kind": "failed",
+   "error": "Se cortó: el agente tardó más de 25 min.",
+   "error_kind": "timeout"
+  }
+ ],
+ "result": null,
+ "error": "Se cortó: el agente tardó más de 25 min.",
+ "error_kind": "timeout",
+ "retry_of": null
+}

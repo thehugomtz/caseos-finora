@@ -1,0 +1,48 @@
+id: F-242
+type: finding
+headline: 'Lo que no se capture desde ya no se reconstruye después: el to-be mide hacia adelante, salvo que Finora
+  tenga historial en sus sistemas.'
+evidence_text: Los 377 clientes que ya estaban activos en ene-22 (left_censored) no tienen fecha de entrada ni puerta.
+  Hay 108 altas de feb-22 que parecen arrastre. No existe registro de quien no compró, y el catálogo no guarda historia
+  de etapas, dueños ni estados.
+confidence: medium
+limitations:
+- Si el CRM o la facturación de Finora guardan historial, se puede reconstruir hacia atrás. No sabemos si lo guardan.
+kind: data_engineering
+claims:
+- claim: 'Por cohort_flag: 1.476 clientes con alta limpia, 377 left_censored (ya activos en ene-22) y 108 suspected_spillover
+    (feb-22).'
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: Los 377 no tienen fecha de entrada ni puerta que se pueda recuperar de estos datos.
+- claim: 'Los 1.961 clientes del archivo pagaron al menos un mes: no hay ningún registro de alguien que no compró.'
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Por construcción no hay denominador de funnel: nada antes del pago.'
+- claim: El catálogo no tiene ninguna tabla ni columna de lead, canal, fuente, campaña, oportunidad, etapa, actividad,
+    dueño/asignación, evento de producto, plan, cantidad, precio, descuento, factura ni estado de suscripción.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Es ausencia en el extracto del caso, no prueba de que Finora no lo tenga en otros sistemas.
+unverified: false
+source_ref:
+  research: R-033
+links:
+- R-033
+phase: research
+review:
+  state: proposed
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T19:19:55-06:00'
+updated_at: '2026-09-29T19:19:55-06:00'
+version: 1

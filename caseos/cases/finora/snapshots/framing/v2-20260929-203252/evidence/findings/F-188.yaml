@@ -1,0 +1,85 @@
+id: F-188
+type: finding
+headline: La puerta se asigna al abrir el episodio, con información previa al contacto, y no se cambia. Lo que pasa
+  después (contacto humano, escalamiento) se registra aparte.
+evidence_text: 'El principio de intención de tratar de los ensayos clínicos dice: clasificar por lo asignado y no
+  por el tratamiento recibido evita sesgos y resultados demasiado optimistas [12]. En ventas, que un lead se trabaje
+  depende del volumen y de la precalificación [13]. Si la puerta se define por «quién lo atendió», se mueve con
+  la capacidad comercial instalada, que es justo lo que H-006 y H-028 quieren probar. Además, una tasa mezclada
+  puede moverse solo porque cambia la mezcla [14]. Contra separar funnels está el riesgo de silos [17]. La respuesta:
+  se separa la medición, no los equipos, y los pasos de una puerta a otra se registran como eventos [18]. El tiempo
+  hasta el primer contacto es un hito clave [19].'
+confidence: medium
+limitations:
+- 'La intención de tratar viene de los ensayos clínicos y aquí se aplica por analogía. Exige que Finora registre
+  datos al momento de la entrada. No mide el efecto causal del contacto humano: para eso hace falta un experimento.'
+kind: measurement
+claims:
+- claim: El análisis por intención de tratar incluye a todos según lo que se les asignó, sin importar el tratamiento
+    que recibieron. Excluir o reclasificar según lo que pasó después puede crear diferencias entre grupos y resultados
+    demasiado optimistas.
+  source_id: S-EXT-06
+  source_type: academic
+  confidence: high
+  freshness: '2011'
+  supports_or_contests: supports
+  notes: 'Se aplica por analogía: la puerta asignada al entrar es la asignación; el contacto humano es el tratamiento.'
+- claim: En un estudio con 461 vendedores de cuatro empresas, cerca del 70% de los leads de marketing no se trabaja.
+    Que se trabajen depende del volumen de leads, de la precalificación y del seguimiento de los gerentes.
+  source_id: S-EXT-07
+  source_type: academic
+  confidence: medium
+  freshness: 2013-01
+  supports_or_contests: context
+  notes: Es un benchmark, no evidencia sobre Finora. Respalda que ser atendido depende de la capacidad, así que
+    la puerta no puede definirse por quién atendió.
+- claim: Una asociación entre dos variables puede aparecer, desaparecer o invertirse al dividir la población en
+    subgrupos con composición distinta (paradoja de Simpson).
+  source_id: S-EXT-08
+  source_type: academic
+  confidence: high
+  freshness: 2021; revisión 2026-06-06
+  supports_or_contests: supports
+  notes: Base para no reportar una tasa mezclada entre puertas y para el mecanismo de mezcla de H-036.
+- claim: Sin retroalimentación entre producto y ventas, el funnel híbrido se parte en dos silos. Se sugiere pasar
+    la entrada a un humano cuando hay señales de intención (varias señales en 48 h → contacto en pocas horas).
+  source_id: S-EXT-11
+  source_type: marketing
+  confidence: low
+  freshness: '2026-05-30'
+  supports_or_contests: contests
+  notes: Es el argumento en contra de separar funnels. La propuesta separa la medición, no los equipos, y registra
+    el escalamiento como evento.
+- claim: Se recomienda registrar los puntos de entrada, los pasos entre self-service y venta asistida y banderas
+    de canal claras, y calcular el CAC por forma de venta.
+  source_id: S-EXT-10
+  source_type: industry
+  confidence: low
+  freshness: Sin fecha; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Contenido de consultora; respalda los eventos de entrada y de escalamiento.
+- claim: Oldroyd, McElheran y Elkington (HBR, 2011) concluyen que la mayoría de las empresas no responde lo bastante
+    rápido a los leads online.
+  source_id: S-EXT-12
+  source_type: academic
+  confidence: medium
+  freshness: '2011'
+  supports_or_contests: context
+  notes: Solo se verificó el resumen, por eso no se usan cifras. Respalda medir el tiempo hasta el primer contacto
+    como hito clave (H-006).
+unverified: false
+source_ref:
+  research: R-023
+links:
+- R-023
+- H-006
+- H-028
+- H-036
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:45:42-06:00'
+updated_at: '2026-09-29T14:45:42-06:00'
+version: 1

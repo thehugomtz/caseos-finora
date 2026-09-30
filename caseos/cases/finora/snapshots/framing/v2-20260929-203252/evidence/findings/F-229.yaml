@@ -1,0 +1,83 @@
+id: F-229
+type: finding
+headline: 'Antes del árbol hay que fijar qué es «venta» y qué ventana se compara: en los pagos, la respuesta cambia
+  según la unidad y el trimestre.'
+evidence_text: 'En mar–oct, las altas fueron 227 (2022), 433 (2023) y 465 (2024) (DM-02). El monto promedio del
+  primer pago por alta fue 118.771, 45.002 y 52.828 COP (DM-02), y la mediana 63.000, 35.280 y 42.000 COP (DM-03).
+  Por trimestre, entre 2023 y 2024, T2 pasa de 144 a 219 altas y T3 de 187 a 153, mientras el gasto de generación
+  de demanda de T3 pasa de 2,215 a 3,327, en unidad no documentada (DM-04). Las reactivaciones fueron 104 en mar–oct
+  2023 y 131 en mar–oct 2024 (DM-02): si se cuentan como venta o como New, contaminan la brecha. Entre 2022 y 2023,
+  la mediana bajó dentro de 5 de 6 industrias y Retail subió de 18,9% a 27,7% de las altas (DM-05): el valor cambió
+  por mezcla y por tasa.'
+confidence: high
+limitations:
+- Son primeros pagos observados (primera aparición, no adquisición ni Won) y montos pagados, no MRR contratado.
+  No dicen nada sobre leads ni conversión. El gasto S&M no tiene unidad documentada, y las medianas por industria
+  tienen n chico.
+kind: measurement
+claims:
+- claim: En las ventanas mar–oct, las altas (primer pago observado) fueron 227 en 2022, 433 en 2023 y 465 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29; datos hasta oct-24
+  supports_or_contests: context
+  notes: Primera aparición en pagos, no adquisición. Ventanas iguales de 8 meses con cobertura completa.
+- claim: En mar–oct, el monto promedio pagado en el primer mes por alta fue 118.771 COP en 2022, 45.002 en 2023
+    y 52.828 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Es monto pagado observado (columna new_mrr_cop), no MRR contratado. El promedio es sensible a valores extremos.
+- claim: La mediana del primer pago de las altas limpias de mar–oct fue 63.000 COP (2022), 35.280 (2023) y 42.000
+    (2024).
+  source_id: DM-03
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: Muestra que «ventas» en logos y en valor pueden ir en direcciones distintas.
+- claim: Entre 2023 y 2024, las altas de T2 pasaron de 144 a 219 y las de T3 de 187 a 153; en T3, el gasto de generación
+    de demanda pasó de 2,215 a 3,327 (unidad no documentada).
+  source_id: DM-04
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: La lectura «no más ventas» depende de la ventana. No es conversión ni relación causal entre gasto y altas.
+- claim: Las reactivaciones (vuelven a pagar tras al menos un mes en cero) fueron 148 en mar–oct 2022, 104 en 2023
+    y 131 en 2024.
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda separar Reactivate de New tanto en el numerador (ventas) como en el denominador (leads). Churn
+    observado ≠ cancelación.
+- claim: Entre 2022 y 2023, la mediana del primer pago bajó en 5 de 6 industrias (solo Salud subió) y Retail pasó
+    de 18,9% a 27,7% de las altas, con la mediana más baja de 2023 (21.000 COP).
+  source_id: DM-05
+  source_type: data_model
+  confidence: medium
+  freshness: Consulta 2026-09-29
+  supports_or_contests: context
+  notes: 'Ejemplo de mezcla y tasa moviéndose a la vez del lado observable. Hay industrias con n chico (Servicios
+    profesionales: 13 altas en 2022).'
+unverified: false
+source_ref:
+  research: R-032
+links:
+- R-032
+- H-052
+- H-053
+- H-005
+phase: research
+review:
+  state: proposed
+origin:
+  actor: measurement
+created_at: '2026-09-29T18:42:02-06:00'
+updated_at: '2026-09-29T18:42:02-06:00'
+version: 1

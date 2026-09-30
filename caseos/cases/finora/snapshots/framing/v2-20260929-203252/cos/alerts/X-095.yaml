@@ -1,0 +1,38 @@
+id: X-095
+type: alert
+kind: research_needed
+status: open
+severity: low
+effect: requires_research
+source: R-026
+target: H-026
+title: R-026 requiere más investigación H-026
+finding_text: La caída del ticket de entrada se sostiene con el ticket estabilizado
+why: 'R-026 no mide bandas de ticket, así que no sostiene ni debilita H-026. Pero cambia con qué monto hay que probarla.
+  Si se usan bandas del primer pago (como la cola alta de T-042), 2022 aparece con más entradas de ticket alto de
+  las que hay en el monto que se repite. La razón: el primer pago promedio de 2022 más que duplica el del 2.º mes
+  (F-166), y el 23,2% de los primeros pagadores de 2022 hizo un primer pago muy por encima del 2.º (F-086).'
+options:
+- key: A
+  label: Probar H-026 ya, con bandas del 2.º pago o del monto usual, sumándola a la corrida de H-041.
+  consequence: La comparación del ticket alto de 2022 contra 2024 deja de depender de cobros iniciales, pero agranda
+    una corrida que conviene mantener chica.
+- key: B
+  label: Dejarla para después de la story, con la nota de que se prueba con el 2.º pago.
+  consequence: C-003 no la necesita para sostenerse; solo se posterga el matiz de que el volumen extra es sobre
+    todo de ticket bajo.
+recommended: B
+recommended_why: No bloquea la story; lo importante es que no se pruebe con el primer pago.
+detected_by: cos
+links:
+- R-026
+- H-026
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-144317-cos-48de
+created_at: '2026-09-29T14:58:13-06:00'
+updated_at: '2026-09-29T14:58:13-06:00'
+version: 1

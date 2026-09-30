@@ -1,0 +1,75 @@
+id: F-133
+type: finding
+headline: Se sabe qué forma tiene la evidencia que confirmaría cada componente; lo que no se sabe es si Finora la
+  tiene.
+evidence_text: 'Cada componente tiene su fuente: la vigencia está en el contrato y en el evento de cancelación con
+  fecha efectiva; las características, en versiones del ítem con vigencia; la tarifa, en un catálogo con fechas;
+  el descuento, en un registro propio con inicio y fin ligado a la suscripción o al ítem, y en una línea de factura
+  que separa subtotal, descuento y periodo de servicio; el momento de cobro, en el periodo de servicio y el pago
+  asignado. Stripe normaliza a mes (un plan anual se divide entre 12) y mantiene en el MRR las suscripciones morosas
+  (past_due) hasta que pasan a impagas (unpaid). La historia con vigencia se implementa como SCD2 (valid_from /
+  valid_to).'
+confidence: low
+limitations:
+- Describe cómo lo resuelven los sistemas de facturación. No se sabe si Finora tiene estos registros ni desde cuándo.
+kind: data_engineering
+claims:
+- claim: Stripe define el MRR como el valor normalizado a mes de las suscripciones active y past_due (un plan anual
+    se divide entre 12); una suscripción cancelada o impaga (unpaid) cuenta como churn y excluye del MRR los productos
+    por uso (metered).
+  source_id: S4
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Apoya separar el periodo facturado del MRR y no tratar la mora como churn inmediato.
+- claim: Por defecto, ChartMogul mantiene las suscripciones morosas en el MRR y como activas hasta que se cancelan
+    en el sistema de facturación, con opción de pasarlas a churn tras X días de mora.
+  source_id: S3
+  source_type: company
+  confidence: high
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: context
+  notes: Cuándo la mora se vuelve churn es una política por decidir.
+- claim: En Stripe el descuento es un objeto propio con fecha de inicio y de fin (fin nulo si es de una vez o permanente),
+    ligado a la suscripción o a un ítem. La línea de factura trae el subtotal antes de descuentos, los montos de
+    descuento por cada descuento y el periodo de servicio; los descuentos de línea se aplican antes que los de factura.
+  source_id: S6, S7
+  source_type: company
+  confidence: low
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Referencia para los campos de discount_grant e invoice_line.
+  unverified: true
+- claim: Chargebee modela el descuento con tipo (porcentaje, monto fijo o unidades gratis), duración (una vez, para
+    siempre o periodo limitado con periodo y unidad) y alcance (factura completa o ítem específico).
+  source_id: S9
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Confirma los campos mínimos de un descuento.
+- claim: Los snapshots de dbt implementan historia SCD2 con dbt_valid_from / dbt_valid_to; valid_to nulo significa
+    que la fila está vigente.
+  source_id: S11
+  source_type: company
+  confidence: high
+  freshness: consultado 2026-09-29
+  supports_or_contests: context
+  notes: Forma de historizar fuentes que cambian (CRM, suscripciones).
+unverified: true
+source_ref:
+  research: R-011
+links:
+- R-011
+- H-016
+- H-015
+- H-013
+phase: research
+review:
+  state: proposed
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T10:48:41-06:00'
+updated_at: '2026-09-29T10:48:41-06:00'
+version: 1

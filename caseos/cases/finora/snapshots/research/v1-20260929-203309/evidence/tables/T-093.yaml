@@ -1,0 +1,88 @@
+id: T-093
+type: table
+table_key: FIN-F-196
+title: Excluyendo oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyendo oct-24 son 55.
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- Periodo
+- Altas
+- Altas por mes
+rows:
+- - '2023'
+  - 650.0
+  - 54.166666666666664
+- - '2024'
+  - 504.0
+  - 56.0
+units:
+  Altas: int
+  Altas por mes: int
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: Excluyendo oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023; incluyendo oct-24 son 55.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-010
+  - E-003
+  tools:
+  - query_metric
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-010
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2023-01'' AND ''2024-09''
+  GROUP BY ALL ORDER BY periodo
+
+
+  -- E-003
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo'
+transformation: E-010 · query_metric · Métrica del catálogo · Altas; E-003 · query_metric · Métrica del catálogo
+  · Altas
+filters:
+- periodo 2023-01–2024-09
+- periodo 2022-03–2024-10
+period:
+  desde: 2023-01
+  hasta: 2024-09
+grain: year
+analysis_id: INV-20260929-143800-2198 · C-016
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2023'
+  - '2024'
+  series:
+  - nombre: Altas
+    valores:
+    - 54.166666666666664
+    - 56.0
+  - nombre: Altas
+    valores:
+    - null
+    - 55.4
+  formato: int
+created_at: '2026-09-29T14:46:19-06:00'
+status: valid
+validation_errors: []
+finding: F-196
+links:
+- F-196
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:46:19-06:00'
+version: 1

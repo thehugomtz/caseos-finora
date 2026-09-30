@@ -1,0 +1,47 @@
+id: X-002
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-013
+target: Q-022
+title: R-013 cambia el framing Q-022
+finding_text: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+why: 'En lo central, R-013 responde U07 con un no. La data actual no da pistas sobre moneda ni escala, ni sobre
+  si SoftwareTools y Freelance son Habilitación comercial o gasto de producto: solo trae el nombre del rubro y el
+  monto, y la agrupación es una convención del catálogo (F-068). Sí da pistas sobre la estructura: Freelance se
+  apaga en jun-23, y Habilitación pesa 12% del S&M en 2022, 7% en 2023 y 4% en 2024 (F-069). Según F-070, la clasificación
+  cambia el nivel, no la dirección: entre 2022 y 2024 el gasto por primer pagador observado baja tanto con Habilitación
+  (0,11→0,04 u) como sin ella (0,09→0,03 u). F-070 lo llama «gasto por alta». Por eso la pregunta útil ya no es
+  «¿dónde va Habilitación?», que esta data no puede decidir, sino «¿cuánto cambia la lectura según dónde vaya?».'
+options:
+- key: A
+  label: Cerrar U07 como «la data no lo resuelve» y tratar Habilitación como sensibilidad
+  consequence: Cada cifra de gasto por primer pagador va en par (con y sin Habilitación) y en u. Moneda, escala
+    y centro de costo pasan a la lista de huecos. No bloquea nada.
+- key: B
+  label: Adoptar como supuesto declarado la convención del catálogo (Habilitación dentro del S&M comercial)
+  consequence: Queda una sola cifra, más fácil de contar. Pero el nivel se apoya en una convención, y como Habilitación
+    pesa 12% en 2022 y 4% en 2024, el supuesto infla más el punto de partida que el de llegada.
+- key: C
+  label: Dejar U07 abierta hasta que Finora dé centro de costo y proveedor
+  consequence: Evita el supuesto, pero el nivel de cualquier gasto por primer pagador (y el CAC que busca R-018)
+    queda en espera, sin fecha.
+recommended: A
+recommended_why: La dirección no depende de la clasificación y el nivel ya está en u, así que mostrar el par con
+  y sin cuesta poco y no esconde nada. Además, que el archivo no traiga centro de costo es en sí un hueco del WoW
+  que el caso pide nombrar.
+detected_by: cos
+links:
+- R-013
+- Q-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103618-cos-07f6
+created_at: '2026-09-29T11:11:30-06:00'
+updated_at: '2026-09-29T11:11:30-06:00'
+version: 1
