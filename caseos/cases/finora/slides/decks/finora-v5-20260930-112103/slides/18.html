@@ -37,7 +37,7 @@ P.draw('S18', (s, P) => {
   // Plan: three mini bridges on one shared scale (0–140), cols 1–4 · 5–8 · 9–12; the reading under each ·
   // bottom band: today (not buildable, the current bridge mixes origins) · the underlying business.
   // Accent only on the line that the observed amount hides (case 2).
-  const PX = [112, 688, 1264], SLOT = 108, BW = 64, BASE = 640, K = 1.9;
+  const PX = [112, 688, 1264], SLOT = 128, BW = 64, BASE = 640, K = 1.75;
   const y = (v) => BASE - v * K;
   const cases = [
     { t: '<i>1</i>Paga 100 y luego 80', steps: [{ v: 100, tot: true }, { from: 100, to: 80, lab: '−20', cl: '¿qué capa?', tone: 'ink-4' }, { v: 80, tot: true }],
@@ -70,8 +70,8 @@ P.draw('S18', (s, P) => {
 
   // Today · the underlying business.
   s.line(112, 842, 1808, 842, { stroke: 'rule', w: 1.5 });
-  s.label(112, 862, '<b>Hoy no es construible</b>: no hay lista, plan ni descuento; el puente actual mezcla orígenes (29% de la expansión se revierte; 44% de 751 churns vuelve a pagar).', { cls: 'nt', w: 800 });
-  s.label(1000, 862, '<b>Negocio subyacente</b>: −38% por cliente activo con la base previa en +5% es composición, no precio ni descuento; lo no capturado se mide hacia adelante.', { cls: 'nt num', w: 808 });
+  s.label(112, 862, '<b>Hoy no es construible</b>: no hay lista, plan ni descuento; el puente mezcla orígenes (29% de la expansión se revierte; 44% de 751 churns vuelve a pagar).', { cls: 'nt', w: 800 });
+  s.label(1000, 862, '<b>Negocio subyacente</b>: −38% por cliente activo con la base previa en +5% es composición, no un efecto separable de precio o descuento; lo no capturado se mide hacia adelante.', { cls: 'nt num', w: 808 });
 });
 </script>
 </body>

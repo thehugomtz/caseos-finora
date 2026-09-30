@@ -74,6 +74,14 @@ una lámina de resumen y no se agregó.
 | 33 | S33 | — | C-018 | anexo | layered_divergence + mechanism + implications | evidence | densa | descuento | reutilizada v3 S21 |
 | 34 | S34 | — | C-020 | anexo | decision_tree | logic | densa | rama «Descuento» | reutilizada v3 S23 |
 
+**Ajustes de la corrida que retomó el deck (30-sep, 13:00):** ninguna composición cambió de familia. 07: la lista con
+viñetas de «resultados comunes» se volvió una espina que sale del nudo (el nudo ahora dice «por acordar», Q-050).
+16: el conector punteado suelto se volvió una llave que agrupa oferta → código → descuento aplicado, atada al objeto.
+18: ranuras más anchas y escala menor en los mini puentes. 03: la cuña se corta exactamente en los cruces. 04: un rótulo
+«2022» para feb-22 y la cosecha 2022; «Abre Growth» sale del acento. Brief de C-001: pedía como héroe la línea por
+cliente (−38%). El spec eligió la brecha 4,5× contra 2,8× porque de eso habla el título aprobado, y la línea por
+cliente queda como consecuencia a la derecha. Se mantiene.
+
 **Chequeo de ritmo** (`deck-rhythm.md`): ninguna composición repetida seguida en el cuerpo; ninguna familia tres veces
 seguidas (09–10 logic, 11 comparison); 0 card grids; 100% de composiciones distintas en el cuerpo (14 de 14).
 **Excepción consciente:** Growth tiene siete láminas densas seguidas (06–12) porque el guion de Hugo pone ahí siete

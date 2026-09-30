@@ -77,15 +77,16 @@ P.draw('S07', (s, P) => {
   // The knot: the only place where funnels meet.
   s.circle(KX, KY, 24, { fill: 'accent', stroke: 'ink', w: 2, id: 's07-knot', focal: true });
   s.label(KX, KY - 40, 'Nudo', { anchor: 'bc', cls: 'kn' });
-  s.label(KX, KY + 38, 'Won', { anchor: 'tc', cls: 'label-sm' });
-  s.line(KX + 26, KY, R0 + 20, KY, { stroke: 'ink', w: 3, arrow: 'end', headSize: 12 });
-
-  // Right zone: common results, compared across funnels (always cut by funnel).
+  s.label(KX, KY + 38, 'por acordar', { anchor: 'tc', cls: 'label-sm' });   // Q-050: Won, primer pago o suscripción activa
+  // Right zone: common results, compared across funnels (always cut by funnel). The knot's line opens
+  // into one spine that feeds every common result (no bullets: the results come out of the knot).
   s.label(R0 + 24, T + 20, '<b>Entre funnels</b>, solo resultados comunes', { cls: 'zt', w: R1 - R0 - 48 });
+  const SX = R0 + 40, RY = [454, 504, 554, 604, 654];
+  s.line(KX + 26, KY, SX, KY, { stroke: 'ink', w: 3 });
+  s.line(SX, RY[0], SX, RY[4], { stroke: 'ink', w: 3 });
   ['Won', 'MRR inicial', 'Retención temprana', 'CAC', 'Payback'].forEach((t, i) => {
-    const y = 454 + i * 50;
-    s.dot(R0 + 56, y, { r: 7, fill: 'ink' });
-    s.label(R0 + 76, y, t, { anchor: 'ml', cls: 'res' });
+    s.line(SX, RY[i], SX + 22, RY[i], { stroke: 'ink', w: 3 });
+    s.label(SX + 34, RY[i], t, { anchor: 'ml', cls: 'res' });
   });
   s.label(R0 + 24, 714, '<b>Siempre cortados por funnel</b>; tasas por puerta, no por ruta', { cls: 'rule-t', w: R1 - R0 - 48 });
 

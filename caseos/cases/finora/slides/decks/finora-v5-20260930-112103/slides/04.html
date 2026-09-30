@@ -18,7 +18,7 @@
   .v.hot span { color: var(--accent-text); }
   .q { font-family: var(--font-display); font-size: 40px; line-height: 1.15; color: var(--ink); letter-spacing: -0.01em; }
   .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .go { font-size: 22px; font-weight: 600; color: var(--accent-text); }
+  .go { font-size: 22px; font-weight: 600; color: var(--ink-3); }
 }
 </style>
 </head>
@@ -42,8 +42,8 @@ P.draw('S04', (s, P) => {
   // Findings (bold line + one supporting line).
   const F = [
     ['La base previa sostiene su monto', 'Base previa: <b>+5%</b> por cliente; cosechas 2023–24: <b>65%</b> de los activos'],
-    ['Entran más, con menor ticket', '<b>91%</b> del cambio del ticket ocurre dentro de cada industria'],
-    ['El gasto no acompaña las altas', 'Cruzar fechas no atribuye ventas al gasto'],
+    ['Entran más, con menor ticket', '<b>91%</b> del cambio del ticket 2022→2023 ocurre dentro de cada industria'],
+    ['El gasto no acompaña las altas', 'Cruzar fechas no atribuye ventas'],
   ];
   F.forEach(([h, t], i) => {
     s.label(112, ROWS[i] - 58, h, { cls: 'fd', w: 500, id: `s04-f${i}` });
@@ -54,19 +54,23 @@ P.draw('S04', (s, P) => {
   const mix = [
     { k: 'base', share: 0.17759237187127533, v: 97.39, tone: 'ink', lab: '97,4', name: 'base previa' },
     { k: 'feb', share: 0.048271752085816445, v: 69.86, tone: 'ink-4' },
-    { k: 'c22', share: 0.12216924910607867, v: 65.44, tone: 'ink-4', name: '2022' },
+    { k: 'c22', share: 0.12216924910607867, v: 65.44, tone: 'ink-4' },
     { k: 'c23', share: 0.3396901072705602, v: 46.30, tone: 'accent', lab: '46,3', name: '2023', hot: true },
     { k: 'c24', share: 0.31227651966626935, v: 42.98, tone: 'accent', lab: '43,0', name: '2024', hot: true },
   ];
   const MX = 688, MW = 544, BASE = 455, hk = 130 / 97.39;
   let cx = MX;
+  const span = {};
   mix.forEach((o) => {
     const w = o.share * MW, h = o.v * hk;
     s.rect(cx + 1.5, BASE - h, w - 3, h, { fill: o.tone, role: 'bar', id: `s04-${o.k}` });
     if (o.lab) s.label(cx + w / 2, BASE - h - 6, o.lab, { anchor: 'bc', cls: `v num${o.hot ? ' hot' : ''}` });
     if (o.name) s.label(cx + w / 2, BASE + 8, o.name, { anchor: 'tc', cls: 'label-sm' });
+    span[o.k] = [cx, cx + w];
     cx += w;
   });
+  // Altas de feb-22 (marcadas) and cosecha mar–dic 2022 are both 2022 entries: one label under the pair.
+  s.label((span.feb[0] + span.c22[1]) / 2, BASE + 8, '2022', { anchor: 'tc', cls: 'label-sm' });
   s.line(MX, BASE, MX + MW, BASE, { stroke: 'ink-4', w: 1.5, role: 'axis' });
   s.label(MX + MW, 306, 'MRR por cliente, oct-24 (COP mil)<br>ancho = % de activos', { anchor: 'tr', cls: 'label-sm', align: 'right', w: 330 });
 

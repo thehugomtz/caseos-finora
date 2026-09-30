@@ -64,7 +64,10 @@ P.draw('S16', (s, P) => {
     s.label(CX, y, `${t}${sub ? `<span>${sub}</span>` : ''}`, { anchor: 'ml', cls: 'ch', id: `s16-c${i}` });
     if (i) s.line(CX + 8, y - 64, CX + 8, y - 26, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 9 });
   });
-  s.line(OX + OW + 8, 520, CX - 20, 520, { stroke: 'ink-3', w: 2, dash: 'dot' });
+  // The object is modelled as this chain: a brace groups offer → code → applied discount, tied to the object.
+  const U = s.union('#s16-c0,#s16-c1,#s16-c2');
+  s.bracket('#s16-c0,#s16-c1,#s16-c2', { side: 'left', style: 'curly', offset: 14, depth: 16, tone: 'ink-3', w: 2 });
+  s.line(OX + OW, U.cy, U.l - 14 - 16 - 4, U.cy, { stroke: 'ink-3', w: 2 });
   s.label(CX, 632, '<b>Source del alta</b>, en todos los clientes', { cls: 'cv', w: 360 });
 
   // CFO convention.

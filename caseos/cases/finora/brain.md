@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-30T11:21:56-06:00 · motivo: Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): relanzado con el reu…
+> Actualizado: 2026-09-30T13:49:51-06:00 · motivo: cambios en lote
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -197,6 +197,8 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-30 13:49 · Deck finora-v5-20260930-112103: 34 slides · completed
+- 2026-09-30 13:00 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): retoma el deck v5 congelado a las 12:28 (34 láminas hechas)
 - 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): relanzado con el reuso por contenido corregido (15 láminas sin cambio)
 - 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): deck con su selección para 5 min, su paleta, portadas, separadores y anexos (D-026)
 - 2026-09-30 11:21 · Story Package v5 preparado para el Visual Storyteller (finora-v5-20260930-112103)
@@ -205,8 +207,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-30 11:20 · Hugo aceptó C-025 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
 - 2026-09-30 11:20 · Hugo aceptó C-019 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
 - 2026-09-30 11:20 · Hugo aceptó C-017 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
-- 2026-09-30 11:20 · Hugo aceptó C-024 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
-- 2026-09-30 11:20 · Hugo aceptó C-015 — Delegado por Hugo en el chat (D-027: «Delego y sigue de corrido»); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

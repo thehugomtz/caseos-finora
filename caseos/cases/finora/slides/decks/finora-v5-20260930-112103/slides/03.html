@@ -44,10 +44,19 @@ P.draw('S03', (s, P) => {
   s.line(200, c.b, c.r, c.b, { stroke: 'ink-4', w: 1.5, role: 'axis' });
   [[0, 'ene-22'], [12, 'ene-23'], [24, 'ene-24'], [33, 'oct-24']].forEach(([i, t]) => s.label(x(i), c.b + 14, t, { anchor: 'tc', cls: 'label-sm' }));
 
-  // The gap (la brecha): area where clients outgrow paid MRR.
-  const top = ci.map((v, i) => [x(i), y(Math.max(v, mi[i]))]);
-  const bot = mi.map((v, i) => [x(i), y(v)]).reverse();
-  s.poly([...top, ...bot], { fill: 'accent', stroke: null, id: 's03-gap', focal: true, opacity: 0.9 });
+  // The gap (la brecha): area where clients outgrow paid MRR, cut exactly where the two lines cross.
+  const top = [], bot = [];
+  ci.forEach((v, i) => {
+    top.push([x(i), y(Math.max(v, mi[i]))]);
+    bot.push([x(i), y(mi[i])]);
+    const d = v - mi[i], d2 = i < 33 ? ci[i + 1] - mi[i + 1] : 0;
+    if (d * d2 < 0) {
+      const t = d / (d - d2), yc = mi[i] + (mi[i + 1] - mi[i]) * t;
+      top.push([x(i + t), y(yc)]);
+      bot.push([x(i + t), y(yc)]);
+    }
+  });
+  s.poly([...top, ...bot.reverse()], { fill: 'accent', stroke: null, id: 's03-gap', focal: true, opacity: 0.9 });
   c.line(ci.map((v, i) => ({ i, v })), { x: (d) => x(d.i), y: (d) => y(d.v), tone: 'ink', w: 3 });
   c.line(mi.map((v, i) => ({ i, v })), { x: (d) => x(d.i), y: (d) => y(d.v), tone: 'ink-3', w: 3 });
   s.dot(x(33), y(ci[33]), { r: 7, fill: 'ink' });
