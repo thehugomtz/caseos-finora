@@ -91,3 +91,17 @@ def test_only_text_found_once_in_the_code_is_offered(case, deck):
                  "P.draw('S3', () => { s.label(1, 2, 'Único', {}); const steps = [{ v: 100 }, { v: 100 }]; s.label(3, 4, '100', {});"),
                  encoding="utf-8")
     assert deckedit.locate(case, "DECK-1", "03.html", [{"old": "Único"}, {"old": "100"}, {"old": "nada"}]) == [True, False, False]
+
+
+def test_a_divider_goes_where_hugo_says_and_the_rest_moves_down(case, deck):
+    s = case.create("slide", {"title": "dos", "deck": "DECK-1", "html": "slides/decks/demo/slides/02.html",
+                              "render": "slides/decks/demo/renders/02.png"}, actor="visual_storyteller")
+    out = deckedit.add_divider(case, "DECK-1", "Data", "#FF6364", after="01.html", via="vía Claude (pedido de Hugo)")
+    assert out == {"file": "02.html", "position": 2, "slide_id": "SDATA", "moved": 2}
+    new = (deck / "slides" / "02.html").read_text(encoding="utf-8")
+    assert "'Data'" in new and "background: #ff6364;" in new and "color: 'ink'" in new           # dark text reads on coral
+    assert '<main class="slide" data-slide="S2">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
+    assert (deck / "renders" / "04.png").read_bytes() == b"png3" and case.get(s["id"])["html"].endswith("slides/03.html")
+    assert "color: 'bg'" in (deck / "slides" / f"{deckedit.add_divider(case, 'DECK-1', 'Anexos', '#101010')['position']:02d}.html").read_text(encoding="utf-8")
+    with pytest.raises(StoreError):
+        deckedit.add_divider(case, "DECK-1", "", "#FF6364")

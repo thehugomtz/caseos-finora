@@ -4,7 +4,7 @@ import { h, mount as put } from "../core/dom.js";
 import { api } from "../core/api.js";
 import { icon } from "../core/icons.js";
 import { app } from "../app.js";
-import { idTag, statusChip, btn, empty, toast, thinking, hhmm, ago, confirmDialog } from "../ui/components.js";
+import { idTag, statusChip, btn, empty, toast, thinking, hhmm, ago, confirmDialog, modal } from "../ui/components.js";
 
 const VENDORED_IN_APP = ["Inter", "Newsreader", "IBM Plex Mono"];
 const loadedFonts = new Set();
@@ -107,7 +107,7 @@ export async function mount(root) {
         h("div.panel.pad", h("div.eyebrow", "Decks"), decks.length ? h("div.list.mt", decks.map(x => h("div.item", { style: { gridTemplateColumns: "1fr auto" }, on: { click: () => { open = x.id; paint(); } } },
           h("div.body", h("div.t", x.slug), h("div.m", h("span", `v${x.package_version} · ${x.direction}`), x.slides ? h("span", `${x.slides} slides`) : null, h("span", ago(x.created_at)), x.cost_usd ? h("span", `US$${Number(x.cost_usd).toFixed(2)} eq.`) : null)),
           x.status === "running" ? h("span.row", thinking(), statusChip("running")) : statusChip(x.status === "prepared" ? "draft" : x.status)))) : empty("Sin decks todavía", "El deck aparece aquí cuando envías el Story Package."))),
-      cur ? deckView(cur, job, d.slides.filter(s => s.deck === cur.id), paint) : null);
+      cur ? deckView(cur, job, d.slides.filter(s => s.deck === cur.id), paint, d.style || {}) : null);
   };
   put(root, body);
   await paint();
@@ -116,7 +116,7 @@ export async function mount(root) {
   return { update: paint, destroy: () => { app.listeners.job = (app.listeners.job || []).filter(f => f !== onJob); } };
 }
 
-function deckView(x, job, slides, paint) {
+function deckView(x, job, slides, paint, style = {}) {
   const base = `/case-files/${app.caseId}/decks/${x.slug}/`;
   return h("div.mt2",
     h("div.row.between.mb", h("h2.sec", x.title || x.slug), h("div.row", x.presentation ? btn("Abrir presentación", { icon: "eye", onClick: () => window.open(base + "presentation.html", "_blank") }) : null,
@@ -131,7 +131,7 @@ function deckView(x, job, slides, paint) {
       h("div.progress.mt", { style: { maxHeight: "300px" } }, ((job || {}).progress || []).slice(-40).map(p => h("div", h("span.t", hhmm(p.t)), h("span", p.summary || p.kind))))) : null,
     x.status === "failed" || x.status === "interrupted" ? h("div.panel.pad.alert", h("div.eyebrow", { style: { color: "var(--bad-ink)" } }, x.status === "interrupted" ? "La corrida se interrumpió" : "La corrida falló"), h("p.prose", x.error || ""), h("div.small.muted", "El Story Package y la carpeta del deck se conservaron.")) : null,
     x.presentation ? h("div.deckframe", h("iframe#deckframe", { src: base + "presentation.html", title: "Deck" })) : null,
-    x.presentation && x.status !== "running" ? orderEditor(x) : null,
+    x.presentation && x.status !== "running" ? orderEditor(x, style) : null,
     slides.length ? h("div.mt", h("h2.sec.mb", "Slides y linaje"), h("div.thumbs", slides.map(s => h("div.thumb", { on: { click: () => app.openEntity(s.id) } },
       s.render ? h("img", { src: `/case-files/${app.caseId}/decks/${s.render.split("/decks/")[1]}`, alt: s.title }) : h("div", { style: { aspectRatio: "16/9", display: "grid", placeItems: "center", color: "var(--ink-4)" } }, "sin render"),
       h("div.c", h("div.clamp2", s.title), h("div.row", { style: { marginTop: "6px" } }, idTag(s.id), s.claim_id ? idTag(s.claim_id) : null, s.qa_verdict ? h("span.chip" + (s.qa_verdict === "PASS" ? ".good" : ".warn"), s.qa_verdict) : null)))))) : null,
@@ -146,7 +146,39 @@ function reloadDeckFrame() {
   if (f) f.src = f.src.split("?")[0] + "?v=" + Date.now();
 }
 
-function orderEditor(x) {
+// the case's palette: the colors of its format guide plus any hex written in its notes (Hugo's own palette)
+function palette(style) {
+  const c = Object.values((style || {}).colors || {});
+  const inNotes = ((style || {}).notes || "").match(/#[0-9a-fA-F]{6}\b/g) || [];
+  return [...new Set([...c, ...inNotes].map(v => v.toLowerCase()))];
+}
+
+function addDivider(x, files, style, onDone) {
+  const cols = palette(style);
+  let color = cols.find(c => !["#ffffff", "#000000"].includes(c)) || "#101010";
+  const name = h("input", { placeholder: "Ej. Data", maxlength: 40 });
+  const pick = h("input", { type: "color", value: color, on: { input: e => { color = e.target.value; paintSw(); } } });
+  const sw = h("div.row.wrap", { style: { gap: "6px" } });
+  const paintSw = () => put(sw, cols.map(c => h("button.swatch" + (c === color ? ".on" : ""), { type: "button", title: c, style: { background: c },
+    on: { click: () => { color = c; pick.value = c; paintSw(); } } })), pick);
+  paintSw();
+  const where = h("select", files.map(f => h("option", { value: f.file }, `Después de la ${f.n} · ${f.title.slice(0, 60)}`)));
+  where.value = files.length ? files[files.length - 1].file : "";
+  modal({ eyebrow: "Tus ajustes al deck", title: "Agregar separador de sección", body: h("div.stack",
+      h("div.field", h("label", "Nombre"), name), h("div.field", h("label", "Color"), sw),
+      h("div.field", h("label", "Dónde va"), where),
+      h("div.small.faint", "Color sólido y solo el nombre, como los separadores del deck. Después lo puedes arrastrar a otro lugar.")),
+    actions: [{ label: "Cancelar", variant: "ghost" }, { label: "Agregar", variant: "human", human: true, onClick: async () => {
+      if (!name.value.trim()) { toast("Ponle nombre al separador", "err"); return false; }
+      try {
+        const out = await api.cpost(`/slides/${x.id}/divider`, { title: name.value, color, after: where.value });
+        toast(`Separador «${name.value.trim()}» agregado como lámina ${out.position} · su miniatura aparece en un minuto`, "ok", 7000);
+        onDone(); reloadDeckFrame(); setTimeout(onDone, 70000);
+      } catch (e) { toast(e.message, "err", 7000); return false; }
+    } }] });
+}
+
+function orderEditor(x, style = {}) {
   const box = h("div.panel.pad.mt.deckedit");
   const base = `/case-files/${app.caseId}/decks/${x.slug}/`;
   let files = [], dirty = false, drag = null;
@@ -167,7 +199,8 @@ function orderEditor(x) {
   const draw = () => put(box,
     h("div.row.between", h("div", h("div.eyebrow", "Tus ajustes al deck"),
       h("div.small.muted", "Arrastra las láminas para cambiar el orden. Haz clic en una para editar su texto. Todo queda en la bitácora del caso.")),
-      h("div.row", dirty ? btn("Deshacer", { sm: true, variant: "ghost", onClick: load }) : null,
+      h("div.row", btn("Agregar separador", { sm: true, variant: "ghost", icon: "plus", onClick: () => { if (dirty) { toast("Guarda el orden primero", "info"); return; } addDivider(x, files, style, load); } }),
+        dirty ? btn("Deshacer", { sm: true, variant: "ghost", onClick: load }) : null,
         btn(dirty ? "Guardar orden" : "Orden guardado", { sm: true, variant: "human", human: true, disabled: !dirty, onClick: save }))),
     h("div.dstrip", files.map((f, i) => h("div.dthumb" + (drag === i ? ".dragging" : ""), {
       draggable: "true", title: "Arrastra para mover · clic para editar el texto",

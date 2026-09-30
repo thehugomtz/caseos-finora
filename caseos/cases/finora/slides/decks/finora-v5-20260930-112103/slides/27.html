@@ -3,80 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S27 · Finora</title>
+<title>S26 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S27"] {
-  .root { font-size: 30px; font-weight: 600; color: var(--ink); }
-  .br { font-size: 24px; font-weight: 600; color: var(--ink); }
-  .chip { background: var(--accent); color: var(--ink); padding: 2px 12px; margin-left: -12px; font-size: 24px; font-weight: 600; }
-  .lf { font-size: 22px; line-height: 1.2; color: var(--ink-2); }
-  .key { font-size: 20px; color: var(--ink-2); }
-  .nt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .nt b { color: var(--ink); font-weight: 600; }
+[data-slide="S26"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .q { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .bl { font-size: 20px; color: var(--ink-2); }
+  .ko { background: var(--bg); padding: 4px 0; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S27" data-composition="driver_tree + status_markers" data-family="logic" data-word-budget="125" data-page="27">
+<main class="slide" data-slide="S26" data-composition="bubble_matrix" data-family="comparison" data-word-budget="100" data-page="26">
   <header class="header">
-    <div class="kicker">Anexo · métricas comunes y catálogo</div>
-    <h1 class="headline">Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta</h1>
+    <div class="kicker">Anexo · señal de Salud</div>
+    <h1 class="headline">Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (C-009) sobre pagos cliente × mes de Finora · F-135, F-136, F-137, F-138, F-139, F-183, F-239, F-240</span><span class="page"></span></footer>
-  <aside class="notes">A la lista (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) se suman churn persistente, las capas de lista, descuento y neto, quick ratio, NRR/GRR, payback y LTV:CAC. Cómo se mide cada una. Resultado: MRR pagado observado = suma de lo pagado en el mes (verde); MRR normalizado = cada pago repartido entre los meses que cubre (amarillo); ARR run-rate = MRR normalizado × 12 (amarillo); MRR de lista, descuento recurrente y MRR neto = lista − descuento (rojo, se detalla en Revenue). Movimiento: puente = nuevo + expansión + reactivación − contracción − churn (verde sobre monto pagado; se lee con cuidado); en el to-be suma la línea Descuento y deja el efecto de cobro fuera del MRR; quick ratio = entradas ÷ salidas del puente, trimestral (verde). Clientes: activos = con pago en el mes; churn de logos observado = dejan de pagar ÷ activos del mes previo; churn persistente = no vuelven a pagar en un trimestre ÷ activos del mes previo (amarillo); reactivaciones como loop de Revenue; ARPA = MRR ÷ clientes activos, por cohorte (es lo que se pide como ARPU; por usuario, rojo). Retención por cohorte de primer pago: logos en M3, M6 y M12; NRR = MRR actual de la cohorte ÷ su MRR inicial; GRR = lo mismo sin expansión (verdes sobre monto pagado, no contractuales). Eficiencia: CAC = gasto de S&amp;M ÷ nuevas cuentas, por canal y ruta (hoy solo el proxy de la lámina siguiente); payback = CAC ÷ (valor de entrada × margen bruto); LTV empírico de ingreso = ingreso acumulado por alta a horizonte fijo (verde); LTV con margen y LTV:CAC (rojos); UCM = ARPA − costo variable de servir (rojo). El monto pagado mezcla fecha de cobro y mes de servicio: churn, reactivación y expansión observados salen inflados (F-136). Por eso el churn persistente va en amarillo: 2022 → 2024, el observado baja de 3,52% a 2,04% y el persistente pasa de 0,98% a 0,96% (CFO-03). Puerta, ruta, canal, industria y cohorte son cortes, no métricas nuevas.</aside>
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, 2024; churn persistente = no vuelve a pagar en un trimestre; ticket = mediana del primer pago · F-104, F-103, F-105, F-165</span><span class="page"></span></footer>
+  <aside class="notes">Salud combina el menor churn persistente (0,56 pp mensuales), el ticket de entrada mediano más alto de 2024 (COP 52,5 mil, empatado con Restaurantes) y poco volumen: 124 clientes activos en oct-24 frente a 459 en Restaurantes. Es además de las industrias con menor caída del MRR por cliente entre dic-22 y oct-24 (−14,4%) y aporta 11,7% del crecimiento del MRR. En 2024 el churn observado por industria va de 1,46 a 2,57 pp mensuales: un rango estrecho. Es una señal para validar con tamaño, canal y motivos de salida, no un segmento. Límites: F-104, F-099, F-103, F-105 y F-165 tienen confianza media; con pocos clientes por industria las medianas se mueven con pocas altas; Salud es la excepción del tramo 2022→2023 (su ticket baja recién en 2024); no se fabrica un segmento por clustering (H-044 sigue abierta).</aside>
 </main>
 <script>
-P.draw('S27', (s, P) => {
-  // Plan: root centred (cols 5–8) → spine → five branch columns (module 339 px) → leaves on a stem
-  // with status markers; Eficiencia (the red branch) last on the right, in the accent. Key bottom-right; MECE rule at the bottom.
-  const X = [112, 451, 790, 1129, 1468], SPINE = 382, BY = 404, L0 = 486, DL = 46;
-  const R = 8;
-  const green = (x, y) => s.dot(x, y, { r: R + 1, fill: 'ink' });
-  const amber = (x, y) => { s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M${x},${y - R} A${R},${R} 0 0 0 ${x},${y + R} Z`, { fill: 'ink', stroke: null }); };
-  const red = (x, y) => s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
-  const mark = { g: green, a: amber, r: red };
+P.draw('S26', (s, P) => {
+  // F-104: [industria, churn persistente, ticket mediano 2024 (COP mil), activos oct-24]
+  const d = [['Restaurantes', 0.62, 52.5, 459], ['Servicios profesionales', 0.87, 31.5, 140], ['Tecnología', 0.91, 49.35, 206], ['Producción', 1.07, 39.9, 389], ['Retail', 1.33, 26.25, 360], ['Salud', 0.56, 52.5, 124]];
+  const c = s.chart({ x: 220, y: 400, w: 930, h: 470 });
+  const x = c.linear([0.5, 1.4], { axis: 'x' }), y = c.linear([20, 60]);
+  const r = (n) => 2.4 * Math.sqrt(n);   // area ∝ activos
 
-  // Root and spine.
-  s.label(960, 300, 'Ingreso recurrente', { anchor: 'tc', cls: 'root', id: 's27-root' });
-  s.line(960, 346, 960, SPINE, { stroke: 'ink-3', w: 2 });
-  s.line(X[0] + 10, SPINE, X[4] + 10, SPINE, { stroke: 'ink-3', w: 2 });
+  // Target region: low persistent churn, high ticket.
+  s.rect(c.x, c.y, x(0.78) - c.x, y(45) - c.y, { fill: 'surface', role: 'area' });
+  s.label(c.x + 12, c.y + 12, 'Bajo churn · ticket alto', { cls: 'q' });
 
-  const branches = [
-    ['Resultado', [['g', 'MRR pagado observado'], ['a', 'MRR normalizado'], ['a', 'ARR run-rate'], ['r', 'Lista, descuento y neto']]],
-    ['Movimiento', [['g', 'Puente del MRR'], ['g', 'Quick ratio']]],
-    ['Clientes', [['g', 'Clientes activos'], ['g', 'ARPA por cohorte'], ['g', 'Reactivaciones'], ['g', 'Churn observado'], ['a', 'Churn persistente']]],
-    ['Retención por cohorte', [['g', 'Logos M3, M6, M12'], ['g', 'NRR'], ['g', 'GRR']]],
-    ['Eficiencia', [['r', 'CAC por canal y ruta'], ['r', 'Payback'], ['g', 'LTV empírico de ingreso'], ['r', 'LTV con margen, LTV:CAC'], ['r', 'UCM']]],
-  ];
-  branches.forEach(([name, leaves], i) => {
-    const x = X[i], hot = i === 4, last = L0 + (leaves.length - 1) * DL;
-    s.line(x + 10, SPINE, x + 10, BY - 4, { stroke: hot ? 'accent' : 'ink-3', w: hot ? 5 : 2 });
-    s.label(x, BY, name, { cls: hot ? 'chip' : 'br', id: `s27-b${i}`, focal: hot });
-    s.line(x + 10, BY + 44, x + 10, last, { stroke: hot ? 'accent' : 'ink-4', w: hot ? 5 : 2 });
-    leaves.forEach(([st, t], j) => {
-      const y = L0 + j * DL;
-      mark[st](x + 10, y);
-      s.label(x + 32, y, t, { anchor: 'ml', cls: 'lf' });
-    });
+  c.gridY(y, [30, 40, 50]);
+  c.axisY(y, [20, 30, 40, 50, 60]);
+  s.line(c.x, c.b, c.r, c.b, { stroke: 'ink-4', w: 1.5 });
+  [0.6, 0.8, 1.0, 1.2, 1.4].forEach((v) => s.label(x(v), c.b + 12, String(v.toFixed(1)).replace('.', ','), { anchor: 'tc', cls: 'label-sm num' }));
+  s.label(c.r, c.b + 44, 'Churn persistente 2024, pp mensuales →', { anchor: 'tr', cls: 'label-sm' });
+  s.label(c.x - 60, c.y - 16, 'Ticket de entrada mediano 2024, COP mil', { anchor: 'bl', cls: 'label-sm' });
+
+  d.forEach(([n, ch, tk, a]) => {
+    const cx = x(ch), cy = y(tk), rr = r(a);
+    if (n === 'Salud') s.circle(cx, cy, rr, { fill: 'accent', stroke: 'ink', w: 1.5, id: 's26-salud', focal: true });
+    else {
+      s.circle(cx, cy, rr, { fill: 'ink-4', fillOpacity: 0.45, stroke: 'ink-3', w: 1.5 });
+      s.label(cx + rr + 10, cy, `${n} · ${a}`, { anchor: 'ml', cls: 'bl num' });
+    }
   });
 
-  // What is missing (under Eficiencia).
-  const cy = L0 + 4 * DL + 44;
-  s.label(X[4], cy, '<b>Faltan unidad del gasto, canal, margen y costo de servir</b>', { cls: 'nt', w: 330 });
+  // Salud: annotation in the empty lower-left of the plot, short leader straight down from the bubble.
+  s.callout({ target: [x(0.56), y(52.5) + r(124)], at: [c.x + 56, 626], w: 250, anchor: 'tl', cls: 'annotation ko',
+    text: '<b>Salud</b>: churn persistente 0,56; ticket 52,5 (como Restaurantes); 124 clientes contra 459' });
 
-  // Reading rules: MECE rule (cols 1–8) and the traffic-light key (cols 9–12).
-  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
-  s.label(112, 908, '<b>Regla MECE</b>: hasta el primer pago, cada métrica vive en el funnel; después, aquí.', { cls: 'nt', w: 960 });
-  const ky = 924;
-  s.label(1129, ky, 'Semáforo', { anchor: 'ml', cls: 'key', weight: 600 });
-  green(1244, ky); s.label(1260, ky, 'se calcula hoy', { anchor: 'ml', cls: 'key' });
-  amber(1422, ky); s.label(1438, ky, 'proxy por aprobar', { anchor: 'ml', cls: 'key' });
-  red(1628, ky); s.label(1644, ky, 'falta el dato', { anchor: 'ml', cls: 'key' });
+  const X = P.grid.col(9) + 60;
+  s.label(X, 420, 'Tamaño del círculo = clientes activos en oct-24', { cls: 'label-sm', w: 460 });
+  s.label(X, 520, '<b>Señal para validar</b> con tamaño, canal y motivos de salida; no es un segmento.', { cls: 'annotation', w: 460 });
 });
 </script>
 </body>

@@ -488,6 +488,11 @@
   .num { font-variant-numeric: tabular-nums; }
 }
 </style>
+<style data-for="SDATA">
+[data-slide="SDATA"] {
+  background: #ff6364;
+}
+</style>
 <style data-for="S19">
 [data-slide="S19"] {
   .statement b { font-weight: 600; }
@@ -1364,6 +1369,9 @@
   <footer class="footer"><span class="source">Casos = ejemplos del enunciado (100, 80, 130, 30), no datos de Finora; la lectura depende de la convención del CFO · 29%: T-074 · 44%: T-076 · −38% y +5%: T-080, T-030 · F-150, F-151, F-168, F-177</span><span class="page"></span></footer>
   <aside class="notes">Con el modelo propuesto, cada caso del enunciado (ejemplos, no datos de Finora) cae en su capa. Si paga 100 y luego 80, el modelo distingue una contracción real (lo contratado baja a 80) de un inicio de descuento (lo contratado sigue en 100 y la diferencia va a «Descuento»). Si la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100, el puente muestra expansión de 30 e inicio de descuento de −30, con el neto sin cambio; si después desaparece el descuento, la subida del pago va a fin de descuento, no a expansión. Hoy ese puente por capas no es construible (no hay lista, plan ni descuento en los datos), y el puente actual mezcla orígenes: 29% del MRR de expansión se revierte al mes siguiente y 44% de los 751 churns observados vuelve a pagar al mes siguiente. Sobre el negocio subyacente, lo que se observa es composición de la base, no un efecto separable de precio o descuento: el MRR pagado observado por cliente activo pasa de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24 (−38%), mientras el de la base previa cambia +5%; el revenue que dejamos de capturar por descuentos solo se medirá hacia adelante, con la capa de descuento. Límites: los casos prueban qué distingue el modelo, no describen lo que pasó en Finora; el puente por capas no es construible con los datos del caso (F-168); no se puede repartir la caída por cliente entre un precio de lista distinto y un descuento (F-177); el −38% no se presenta como deterioro; la convención la decide el CFO (F-151).</aside>
 </main>
+<main class="slide" data-slide="SDATA" data-composition="section_divider" data-family="editorial" data-word-budget="3">
+  <aside class="notes">Separador de sección: Data.</aside>
+</main>
 <main class="slide" data-slide="S19" data-composition="cover" data-family="editorial" data-word-budget="12" data-page="19">
   <aside class="notes">Cierre: la misma portada del inicio (guía de Hugo). Lo que sigue son los anexos: el detalle que salió de la presentación de 5 minutos.</aside>
 </main>
@@ -2226,6 +2234,12 @@ P.draw('S18', (s, P) => {
   s.line(112, 842, 1808, 842, { stroke: 'rule', w: 1.5 });
   s.label(112, 862, '<b>Hoy no es construible</b>: no hay lista, plan ni descuento; el puente mezcla orígenes (29% de la expansión se revierte; 44% de 751 churns vuelve a pagar).', { cls: 'nt', w: 800 });
   s.label(1000, 862, '<b>Negocio subyacente</b>: −38% por cliente activo con la base previa en +5% es composición, no un efecto separable de precio o descuento; lo no capturado se mide hacia adelante.', { cls: 'nt num', w: 808 });
+});
+</script>
+<script data-for="SDATA">
+P.draw('SDATA', (s, P) => {
+  // Separador de sección (agregado por Hugo desde CaseOS): color sólido, solo el nombre.
+  s.label(112, 900, 'Data', { cls: 'statement', size: 144, anchor: 'bl', color: 'ink', id: 'sdata-name', focal: true });
 });
 </script>
 <script data-for="S19">

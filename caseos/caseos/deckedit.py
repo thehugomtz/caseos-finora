@@ -331,6 +331,97 @@ def reorder(store: CaseStore, deck_id: str, order: list[str], *, actor: str = "h
     return {"moved": len(moved), "order": [moves[o] for o in order]}
 
 
+# ------------------------------------------------------------------------------------------ section dividers
+DIVIDER = """<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{sid} · {title_html}</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="{sid}"] {{
+  background: {color};
+}}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="{sid}" data-composition="section_divider" data-family="editorial" data-word-budget="3">
+  <aside class="notes">Separador de sección: {title_html}.</aside>
+</main>
+<script>
+P.draw('{sid}', (s, P) => {{
+  // Separador de sección (agregado por Hugo desde CaseOS): color sólido, solo el nombre.
+  s.label(112, 900, '{title_js}', {{ cls: 'statement', size: 144, anchor: 'bl', color: '{ink}', id: '{lid}', focal: true }});
+}});
+</script>
+</body>
+</html>
+"""
+
+
+def _luminance(hex_: str) -> float:
+    r, g, b = (int(hex_[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    f = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+
+
+def _shift(deck: Path, frm: int, by: int = 1) -> dict:
+    """Renumber slides (and renders) from position `frm` on, last first so nothing collides."""
+    moved = {}
+    for f in sorted((x for x in slide_files(deck) if int(x[:2]) >= frm), reverse=True):
+        n, m = f[:2], f"{int(f[:2]) + by:02d}"
+        for base, ext in ((deck / "slides", ".html"), (deck / "renders", ".png"), (deck / "renders" / "thumbs", ".png")):
+            if (base / f"{n}{ext}").exists():
+                (base / f"{n}{ext}").rename(base / f"{m}{ext}")
+        moved[f] = f"{m}.html"
+    return moved
+
+
+def add_divider(store: CaseStore, deck_id: str, title: str, color: str, *, after: str = "", via: str = "",
+                actor: str = "hugo") -> dict:
+    """A solid-color section divider with only its name, like the ones the Storyteller drew, placed after `after`
+    (a slide file; empty = at the end). The text is dark or light, whichever reads on that color."""
+    if actor != "hugo":
+        raise StoreError("Solo Hugo agrega láminas al deck.")
+    title = re.sub(r"\s+", " ", title or "").strip()[:40]
+    if not title:
+        raise StoreError("El separador necesita un nombre.")
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", color or ""):
+        raise StoreError("El color debe ser un hex como #FF6364.")
+    d, deck = _deck(store, deck_id)
+    files_ = slide_files(deck)
+    if after and after not in files_:
+        raise StoreError("No encuentro la lámina después de la cual va el separador.")
+    pos = (int(after[:2]) + 1) if after else len(files_) + 1
+    used = {m for f in files_ for m in re.findall(r'data-slide="([^"]+)"', (deck / "slides" / f).read_text(encoding="utf-8"))}
+    base_id = "S" + (re.sub(r"[^A-Za-z0-9]", "", title).upper()[:12] or "SEC")
+    sid, k = base_id, 2
+    while sid in used:
+        sid, k = f"{base_id}{k}", k + 1
+    moved = _shift(deck, pos)
+    rel = lambda n, sub, ext: str((deck / sub / f"{n}{ext}").relative_to(store.root))
+    for e in store.list("slide"):
+        if e.get("deck") == deck_id and e.get("html") and Path(e["html"]).name in moved:
+            n = moved[Path(e["html"]).name][:2]
+            store.update(e["id"], {"html": rel(n, "slides", ".html"), "render": rel(n, "renders", ".png")}, actor=actor,
+                         material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
+    esc = html_lib.escape(title)
+    js = title.replace("\\", "\\\\").replace("'", "\\'").replace("<", "&lt;")
+    file = f"{pos:02d}.html"
+    (deck / "slides" / file).write_text(DIVIDER.format(sid=sid, title_html=esc, title_js=js, color=color.lower(),
+                                                       ink="bg" if _luminance(color) < 0.18 else "ink", lid=f"{sid.lower()}-name"),
+                                        encoding="utf-8")
+    _record(store, d, deck, {"kind": "divider", "file": file, "title": title, "color": color.lower(), "moved": moved},
+            f"Hugo agregó el separador «{title}» ({color.lower()}) como lámina {pos} del deck {d['slug']}" + (f" · {via}" if via else ""))
+    rebuild(deck)
+    threading.Thread(target=render_one, args=(deck, file[:2]), daemon=True).start()
+    return {"file": file, "position": pos, "slide_id": sid, "moved": len(moved)}
+
+
 # ------------------------------------------------------------------------------------------ record + rebuild
 def _record(store: CaseStore, d: dict, deck: Path, entry: dict, summary: str) -> None:
     with (deck / "edits.jsonl").open("a", encoding="utf-8") as fh:

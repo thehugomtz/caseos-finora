@@ -3,65 +3,108 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S26 · Finora</title>
+<title>S25 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S26"] {
-  .num { font-variant-numeric: tabular-nums; }
-  .q { font-size: 18px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
-  .bl { font-size: 20px; color: var(--ink-2); }
-  .ko { background: var(--bg); padding: 4px 0; }
+[data-slide="S25"] {
+  .fam { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cm { font-size: 22px; line-height: 1.2; color: var(--ink); }
+  .pr { font-size: 20px; line-height: 1.2; color: var(--ink-2); }
+  .hd { font-size: 20px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .hd-k { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .kn { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .kn b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S26" data-composition="bubble_matrix" data-family="comparison" data-word-budget="100" data-page="26">
+<main class="slide" data-slide="S25" data-composition="measurement_map" data-family="process" data-word-budget="115" data-page="25">
   <header class="header">
-    <div class="kicker">Anexo · señal de Salud</div>
-    <h1 class="headline">Salud combina menor churn persistente, ticket alto y poco volumen: señal a validar</h1>
+    <div class="kicker">Anexo · rutas, puertas y medición anterior</div>
+    <h1 class="headline">Proponemos medir cada funnel por volumen, conversión, velocidad, valor, calidad y estancamiento</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, 2024; churn persistente = no vuelve a pagar en un trimestre; ticket = mediana del primer pago · F-104, F-103, F-105, F-165</span><span class="page"></span></footer>
-  <aside class="notes">Salud combina el menor churn persistente (0,56 pp mensuales), el ticket de entrada mediano más alto de 2024 (COP 52,5 mil, empatado con Restaurantes) y poco volumen: 124 clientes activos en oct-24 frente a 459 en Restaurantes. Es además de las industrias con menor caída del MRR por cliente entre dic-22 y oct-24 (−14,4%) y aporta 11,7% del crecimiento del MRR. En 2024 el churn observado por industria va de 1,46 a 2,57 pp mensuales: un rango estrecho. Es una señal para validar con tamaño, canal y motivos de salida, no un segmento. Límites: F-104, F-099, F-103, F-105 y F-165 tienen confianza media; con pocos clientes por industria las medianas se mueven con pocas altas; Salud es la excepción del tramo 2022→2023 (su ticket baja recién en 2024); no se fabrica un segmento por clustering (H-044 sigue abierta).</aside>
+  <footer class="footer"><span class="source">Propuesta de diseño (C-006), sin cifras; W, umbral de estancamiento y plazo Won → pago se acuerdan con Finora · F-223–F-227, F-141, F-144, F-155, F-158, F-212, F-213</span><span class="page"></span></footer>
+  <aside class="notes">Versión anterior de la medición del funnel (C-006); en la presentación la reemplaza C-027 con las definiciones de Hugo. Journey = cuenta × intento; cohorte = los journeys con New en el mes; W = ventana fija desde New, que Finora calibra con su ciclo real. Toda tasa se lee por cohorte y solo cuando la cohorte ya cumplió W. Capa común (por puerta y canal, la única que se compara entre funnels): entradas por puerta y canal (p. ej., leads digitales = entradas con canal paid media u orgánico); entradas válidas = entradas menos duplicados, clientes actuales, ex-clientes y spam; tasa de no-prospectos; mezcla de ajuste con criterios congelados al crear el lead; win rate de cohorte = journeys con Won dentro de W ÷ journeys de la cohorte (p. ej., CR digital); tiempo de cierre = mediana y P75 de New a Won, siempre por ruta y junto al win rate; Won → primer pago = mediana y parte de los Won sin pago en el plazo; MRR de entrada por Won = mediana del MRR contratado y del primer pago; MRR nuevo = Won × MRR de entrada por Won. Por ruta, sobre sus etapas literales: volumen por etapa (alcanzan o se saltan), conversión por etapa en N días, tiempo en etapa (mediana y P75), estancamiento = abiertos sin actividad por más de su umbral ÷ abiertos, calidad del handoff = lo que acepta el siguiente dueño ÷ lo que recibe (p. ej., SQL aceptados por el AE ÷ SQL SDR). Loop Reactivate: entradas al loop, re-enganche, tiempo a re-enganche, Won y MRR atribuidos y stock de estancados. Hoy no se calcula nada de esto antes del pago (F-223). Las tasas se comparan entre puertas, no entre rutas (H-050). La retención y el costo por Won viven en las métricas comunes (C-009).</aside>
 </main>
 <script>
-P.draw('S26', (s, P) => {
-  // F-104: [industria, churn persistente, ticket mediano 2024 (COP mil), activos oct-24]
-  const d = [['Restaurantes', 0.62, 52.5, 459], ['Servicios profesionales', 0.87, 31.5, 140], ['Tecnología', 0.91, 49.35, 206], ['Producción', 1.07, 39.9, 389], ['Retail', 1.33, 26.25, 360], ['Salud', 0.56, 52.5, 124]];
-  const c = s.chart({ x: 220, y: 400, w: 930, h: 470 });
-  const x = c.linear([0.5, 1.4], { axis: 'x' }), y = c.linear([20, 60]);
-  const r = (n) => 2.4 * Math.sqrt(n);   // area ∝ activos
+P.draw('S25', (s, P) => {
+  // Plan: families + key cols 1–2 · journey x 420–1470: New 450 · route stages 650–1010 (zone 596–1064)
+  // · knot band 1180–1460 (Won 1240, first payment 1400) · side note cols 11–12 (x ≥ 1500).
+  const AX = 380, Y = [458, 546, 634, 722, 810, 898], BOT = 934;
+  const NEW = 450, ST = [650, 770, 890, 1010], WON = 1240, PAY = 1400;
 
-  // Target region: low persistent churn, high ticket.
-  s.rect(c.x, c.y, x(0.78) - c.x, y(45) - c.y, { fill: 'surface', role: 'area' });
-  s.label(c.x + 12, c.y + 12, 'Bajo churn · ticket alto', { cls: 'q' });
+  // Zones: route stages (read only inside the route) and the knot (the only comparison across doors).
+  s.rect(596, AX, 468, BOT - AX, { fill: 'surface' });
+  s.rect(1180, AX, 280, BOT - AX, { fill: 'accent', fillOpacity: 0.2, id: 's25-knot', focal: true });
+  s.rect(1180, AX - 7, 280, 7, { fill: 'accent' });
 
-  c.gridY(y, [30, 40, 50]);
-  c.axisY(y, [20, 30, 40, 50, 60]);
-  s.line(c.x, c.b, c.r, c.b, { stroke: 'ink-4', w: 1.5 });
-  [0.6, 0.8, 1.0, 1.2, 1.4].forEach((v) => s.label(x(v), c.b + 12, String(v.toFixed(1)).replace('.', ','), { anchor: 'tc', cls: 'label-sm num' }));
-  s.label(c.r, c.b + 44, 'Churn persistente 2024, pp mensuales →', { anchor: 'tr', cls: 'label-sm' });
-  s.label(c.x - 60, c.y - 16, 'Ticket de entrada mediano 2024, COP mil', { anchor: 'bl', cls: 'label-sm' });
+  // Journey axis + milestone headers.
+  s.line(420, AX, 1476, AX, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 11 });
+  [NEW, ...ST].forEach((x) => s.line(x, AX - 8, x, AX, { stroke: 'ink-3', w: 2 }));
+  s.label(NEW, AX - 16, 'New', { anchor: 'bc', cls: 'hd-k' });
+  s.label(830, AX - 16, 'Etapas literales de cada ruta', { anchor: 'bc', cls: 'hd' });
+  s.label(1320, AX - 50, 'Nudo', { anchor: 'bc', cls: 'hd-k' });
+  s.label(WON, AX - 16, 'Won', { anchor: 'bc', cls: 'hd' });
+  s.label(PAY, AX - 16, 'primer pago', { anchor: 'bc', cls: 'hd' });
 
-  d.forEach(([n, ch, tk, a]) => {
-    const cx = x(ch), cy = y(tk), rr = r(a);
-    if (n === 'Salud') s.circle(cx, cy, rr, { fill: 'accent', stroke: 'ink', w: 1.5, id: 's26-salud', focal: true });
-    else {
-      s.circle(cx, cy, rr, { fill: 'ink-4', fillOpacity: 0.45, stroke: 'ink-3', w: 1.5 });
-      s.label(cx + rr + 10, cy, `${n} · ${a}`, { anchor: 'ml', cls: 'bl num' });
-    }
+  // Key (families column head).
+  s.dot(122, AX - 64, { r: 9, fill: 'ink' });
+  s.label(142, AX - 64, 'se compara entre puertas', { anchor: 'ml', cls: 'pr' });
+  s.circle(122, AX - 30, 7, { fill: 'bg', stroke: 'ink-3', w: 2.5 });
+  s.label(142, AX - 30, 'solo dentro de la ruta', { anchor: 'ml', cls: 'pr' });
+
+  const dot = (x, y) => s.dot(x, y, { r: 9, fill: 'ink' });
+  const ring = (x, y) => s.circle(x, y, 7, { fill: 'bg', stroke: 'ink-3', w: 2.5 });
+  const span = (a, b, y) => s.line(a, y, b, y, { stroke: 'ink', w: 4 });
+  const above = (x, y, t, cls = 'cm') => s.label(x, y - 16, t, { anchor: 'bl', cls });
+  const below = (x, y, t) => s.label(x, y + 14, t, { anchor: 'tl', cls: 'pr' });
+
+  // Rows follow the order of the headline.
+  const fams = ['Volumen', 'Conversión', 'Velocidad', 'Valor', 'Calidad', 'Estancamiento'];
+  fams.forEach((f, i) => {
+    s.label(112, Y[i], f, { anchor: 'ml', cls: 'fam' });
+    s.line(420, Y[i], 1460, Y[i], { stroke: 'rule', w: 1.5 });
   });
 
-  // Salud: annotation in the empty lower-left of the plot, short leader straight down from the bubble.
-  s.callout({ target: [x(0.56), y(52.5) + r(124)], at: [c.x + 56, 626], w: 250, anchor: 'tl', cls: 'annotation ko',
-    text: '<b>Salud</b>: churn persistente 0,56; ticket 52,5 (como Restaurantes); 124 clientes contra 459' });
+  // Volumen: entries at New · per stage (rings) · Won and its route mix at the knot.
+  let y = Y[0];
+  dot(NEW, y); above(NEW - 9, y, 'entradas');
+  ST.forEach((x) => ring(x, y));
+  dot(WON, y); above(WON - 9, y, 'Won y mezcla por ruta');
 
-  const X = P.grid.col(9) + 60;
-  s.label(X, 420, 'Tamaño del círculo = clientes activos en oct-24', { cls: 'label-sm', w: 460 });
-  s.label(X, 520, '<b>Señal para validar</b> con tamaño, canal y motivos de salida; no es un segmento.', { cls: 'annotation', w: 460 });
+  // Conversión: cohort win rate New → Won inside W · per stage (rings).
+  y = Y[1];
+  span(NEW, WON, y); dot(NEW, y); dot(WON, y); above(NEW - 9, y, 'win rate de cohorte en W');
+  ST.forEach((x) => ring(x, y));
+
+  // Velocidad: time to close · time in stage · Won → first payment.
+  y = Y[2];
+  span(NEW, PAY, y); dot(NEW, y); dot(WON, y); dot(PAY, y); above(NEW - 9, y, 'tiempo de cierre (mediana, P75)');
+  ST.forEach((x) => ring(x, y)); below(ST[0] - 7, y, 'tiempo en etapa');
+  s.label((WON + PAY) / 2, y - 16, 'Won → pago', { anchor: 'bc', cls: 'cm' });
+
+  // Valor: entry MRR per Won, contracted and first payment.
+  y = Y[3];
+  dot(WON, y); dot(PAY, y); s.label(1476, y, 'MRR de entrada por Won', { anchor: 'ml', cls: 'cm' });
+
+  // Calidad: valid entries at New · handoff inside the route.
+  y = Y[4];
+  dot(NEW, y); above(NEW - 9, y, 'válidas · no-prospectos · ajuste');
+  ring(830, y); below(823, y, 'handoff: aceptado ÷ recibido');
+
+  // Estancamiento: open without activity beyond the stage threshold.
+  y = Y[5];
+  ST.forEach((x) => ring(x, y)); below(ST[0] - 7, y, 'abiertos sin actividad > umbral');
+
+  // The knot: where doors are compared.
+  s.line(1468, 590, 1500, 590, { stroke: 'ink-3', w: 2 });
+  s.label(1512, 590, '<b>Aquí se comparan las puertas</b>, por cohorte y con ventana W', { anchor: 'ml', cls: 'kn', w: 296 });
+
+  s.label(112, 962, 'Hoy no se calcula nada antes del pago: solo hay primeros pagos y su monto, sin puerta ni ruta.', { cls: 'annotation', w: 1100 });
 });
 </script>
 </body>

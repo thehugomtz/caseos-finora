@@ -759,6 +759,18 @@ def deck_locate(cid: str, deck_id: str, body: LocateBody):
     return {"found": deckedit.locate(S(cid), deck_id, body.file, body.texts)}
 
 
+class DividerBody(BaseModel):
+    title: str
+    color: str
+    after: str = ""                    # the slide file it goes after; empty = at the end
+    via: str = ""
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/divider")
+def deck_divider(cid: str, deck_id: str, body: DividerBody):
+    return deckedit.add_divider(S(cid), deck_id, body.title, body.color, after=body.after, via=body.via)
+
+
 @app.post("/api/cases/{cid}/slides/{deck_id}/pdf")
 def deck_pdf(cid: str, deck_id: str):
     return deckedit.rebuild_pdf(S(cid), deck_id)

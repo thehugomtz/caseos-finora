@@ -252,3 +252,6 @@ Package. Encontrado y corregido:
   lleva su copia), el cursor se vuelve un punto rojo con brillo que deja una estela que se desvanece (~0,85 s); con el
   botón presionado la estela dura ~2,6 s para subrayar o encerrar, sin seleccionar texto. Encendido al presentar, apagado
   en la vista general (G); la tecla L lo apaga o prende. Aplicado al deck v5 (presentación rearmada) y a los decks futuros.
+- **Separadores desde el editor (30-sep):** «Agregar separador» crea una lámina de color sólido con solo el nombre, como
+  las del Storyteller, en la posición que Hugo elija (las siguientes se recorren) y con el texto oscuro o claro según el
+  contraste. Primer uso, a pedido de Hugo: «Data» en coral `#FF6364` (el color de su paleta que faltaba) como lámina 19.
