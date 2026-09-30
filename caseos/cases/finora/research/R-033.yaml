@@ -4,7 +4,10 @@ research_question: 'Propuesta de modelo de datos para operar el funnel, as-is vs
   industria, gasto de S&M) y qué responden, qué entidades se agregan (cuenta, lead, canal y fuente, campaña, oportunidad,
   historial de etapas, actividades de SDR/AE, eventos de producto, asignación, suscripción) con llaves y grano,
   y qué métrica de C-006 y C-009 habilita cada una?'
-case_question: C-013, C-014, C-006, C-009
+case_question: 'C-013: definiciones y fuentes comunes unidas por un ID de cuenta (Hugo lo pidió en N-052: «quiero
+  ver explícitamente el modelo de datos que se propone, as is vs to be»). Sirve a C-006 (cohorte de entrada por
+  puerta con ventana fija), a C-009 (árbol de ingreso recurrente con semáforo) y a C-014 (tableros por foro). Lámina
+  S2.7, tarea RT-032.'
 specialty: data_engineering
 intensity: L2
 route:
@@ -41,7 +44,7 @@ route:
     note: ''
   source: hugo
   rationale: Palabras clave → Measurement; intensidad L3.
-status: running
+status: completed
 purpose_ok: true
 purpose_note: ''
 forced_without_purpose: false
@@ -50,17 +53,22 @@ links:
 - C-014
 - C-006
 - C-009
+- F-238
+- F-239
+- F-240
+- F-241
+- F-242
 phase: research
 review:
   state: proposed
 origin:
   actor: hugo
 created_at: '2026-09-29T18:24:05-06:00'
-updated_at: '2026-09-29T18:24:06-06:00'
-version: 4
-job_id: JOB-20260929-182406-b263
+updated_at: '2026-09-29T19:19:55-06:00'
+version: 8
+job_id: JOB-20260929-190141-65e4
 error: null
-started_at: '2026-09-29T18:24:06-06:00'
+started_at: '2026-09-29T19:01:41-06:00'
 shaping_task: RT-032
 slides:
 - S2.7
@@ -97,3 +105,1870 @@ task:
     - mart.customer_month
     - mart.sm_monthly
 requested_via: vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+failed_at: '2026-09-29T18:49:11-06:00'
+why_it_matters: De este modelo depende qué métricas de C-006 y C-009 se le pueden prometer al CRO y al CFO, qué
+  color lleva cada rama del semáforo de C-009 y en qué orden se instrumenta. Si el as-is ni siquiera separa churn
+  de mora después del pago, las ramas post-pago del árbol no pueden ir en verde.
+short_answer: 'Hoy hay tres fuentes y todas son de después del pago: pagos por cliente × mes (1.961 clientes × 34
+  meses, todos con al menos un pago), industria por cliente y gasto S&M por rubro × mes. Responden el stock y el
+  puente de monto pagado, los cortes por industria y por cohorte de primer pago y la eficiencia S&M agregada. No
+  responden nada de antes del pago (canal, etapa, tiempo de cierre, intervención, estancamiento) y tampoco separan
+  cancelación de mora: 330 de 751 churn observados vuelven a pagar al mes siguiente. El to-be de la hipótesis de
+  trabajo se sostiene con patrones estándar (objetos de CRM, UTM, eventos B2B, suscripciones tipo Stripe, snapshots
+  de Kimball), con tres ajustes: una espina account_id con crosswalk de IDs, una tabla de entradas (funnel_entry)
+  que separa la puerta de la ruta para C-006, y la suscripción dividida en ítems con vigencia, descuentos, facturas
+  y pagos, para que C-009 se calcule sobre MRR contratado y muestre el cobrado al lado. Confianza alta en el as-is
+  (lo consulté en el modelo) y media en el to-be (son patrones externos; no conocemos el stack ni las definiciones
+  de Finora).'
+claims:
+- claim: 'raw.transactions es un panel balanceado cliente × mes: 66.674 filas = 1.961 clientes × 34 meses (2022-01
+    a 2024-10), con 33.703 filas en cero y 32.971 positivas; sin negativos ni nulos.'
+  source_id: DM-05
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29; datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Confirma el grano cliente × mes y que los ceros vienen explícitos (no es ausencia de fila).
+- claim: 'Los 1.961 clientes del archivo pagaron al menos un mes: no hay ningún registro de alguien que no compró.'
+  source_id: DM-06
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: 'Por construcción no hay denominador de funnel: nada antes del pago.'
+- claim: El campo month es una fecha de fin de mes (34 valores; p. ej. 1/31/2022, 2/28/2022). No hay día de pago,
+    factura ni hora.
+  source_id: DM-15
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Impide medir tiempos en días, incluso en la parte post-pago. Formato también visible en DM-02.
+- claim: 'La llave de cliente viene en dos formatos: «1» en raw.transactions y «Cliente 1» en raw.industry. Después
+    de parsear, 1.961 clientes cruzan en ambos sentidos sin huérfanos, y raw.industry trae 1 fila vacía (1.962 filas).'
+  source_id: DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Muestra que hoy la llave común de C-013 depende de parsear texto. Formatos en DM-02 y DM-03.
+- claim: 'La industria tiene 6 valores, uno fijo por cliente y sin fecha: Restaurantes 529, Producción 454, Retail
+    428, Tecnología 241, Servicios profesionales 165, Salud 144.'
+  source_id: DM-08
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: 'No hay vigencia: si un cliente cambió de industria, no se sabe.'
+- claim: 'El gasto S&M viene como mes × 7 rubros (paid_media, publicidad_no_web, team, payroll_expenses, travel,
+    software_tools, freelance): 34 meses = 238 filas, en texto con «$» y unidad no documentada. No trae canal, campaña
+    ni cliente.'
+  source_id: DM-10
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29; ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Formato en DM-04 y rango en DM-15. Solo permite eficiencia agregada, no por canal ni por puerta.
+- claim: El catálogo no tiene ninguna tabla ni columna de lead, canal, fuente, campaña, oportunidad, etapa, actividad,
+    dueño/asignación, evento de producto, plan, cantidad, precio, descuento, factura ni estado de suscripción.
+  source_id: DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Es ausencia en el extracto del caso, no prueba de que Finora no lo tenga en otros sistemas.
+- claim: Sobre monto pagado, customer_month clasifica 1.584 altas, 377 clientes ya activos al inicio de la ventana,
+    751 churn observados (549 clientes), 468 reactivaciones (340), 1.294 expansiones (831) y 1.247 contracciones
+    (788).
+  source_id: DM-09
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: Son movimientos de monto pagado observado, no de MRR contratado.
+- claim: De los 751 churn observados, 330 vuelven a pagar al mes siguiente (87 con el mismo monto previo) y 33 caen
+    en oct-24, sin mes siguiente observable.
+  source_id: DM-14
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: Verificado con self-join; coincide con returned_next_month (DM-11). Con estos datos no se sabe si son mora,
+    desfase de cobro o cancelación con regreso.
+- claim: 512 cliente-mes (325 clientes) tienen firma de pago multimes (k × monto usual), y 211 de 2.541 expansiones/contracciones
+    se revierten al mes siguiente.
+  source_id: DM-11
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: La firma es una heurística del mart. Sin periodo de factura no se distingue un prepago de un pago de atrasos.
+- claim: 'Por cohort_flag: 1.476 clientes con alta limpia, 377 left_censored (ya activos en ene-22) y 108 suspected_spillover
+    (feb-22).'
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29
+  supports_or_contests: context
+  notes: Los 377 no tienen fecha de entrada ni puerta que se pueda recuperar de estos datos.
+- claim: 'El monto observado toma 1.627 valores distintos (395 montos usuales) y no hay columnas de plan, precio
+    ni cantidad: no se puede descomponer en precio × cantidad − descuento.'
+  source_id: DM-13
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29
+  supports_or_contests: supports
+  notes: El conteo es exacto. Que no se pueda descomponer es estructural (faltan columnas, DM-01); el porqué de
+    tantos valores es desconocido.
+- claim: 'Kimball define el accumulating snapshot para procesos con inicio, pasos intermedios y fin: una fila por
+    ítem, una fecha por cada hito, que se actualiza a medida que avanza e incluye los lags entre hitos.'
+  source_id: W-01
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el grano natural de funnel_entry para cohortes con ventana fija (C-006).
+- claim: Kimball define el periodic snapshot con grano = periodo y filas densas aunque no haya actividad (ceros).
+  source_id: W-03
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el patrón de mart.customer_month hoy y de account_month en el to-be.
+- claim: 'Kimball: un cambio tipo 2 agrega una fila nueva con fecha de inicio, fecha de expiración e indicador de
+    fila vigente.'
+  source_id: W-02
+  source_type: expert
+  confidence: high
+  freshness: s.f.; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para asignación, industria, plan/precio, descuentos y mapeo de canal.
+- claim: Google exige utm_source, utm_medium y utm_campaign, recomienda utm_id y utm_source_platform, y advierte
+    que si faltan, los reportes muestran «(not set)».
+  source_id: W-04
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Define los campos mínimos de touch, channel y campaign.
+- claim: 'La spec B2B SaaS de Segment usa context.groupId como ID de la cuenta en eventos como Account Created,
+    Signed Up (type: invited u organic) y Trial Started/Ended.'
+  source_id: W-05
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda que product_event lleve account_id obligatorio y que se distinga el registro orgánico del invitado.
+- claim: En Salesforce, OpportunityHistory guarda en cada cambio la etapa, el monto, la fecha de cierre esperada,
+    la probabilidad, el autor (CreatedById) y la fecha del cambio (CreatedDate).
+  source_id: W-09
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Documentación de terceros (CData) del esquema de Salesforce; la página oficial devolvió 403.
+- claim: El Lead de Salesforce trae LeadSource, Status, OwnerId, CreatedDate e IsConverted/ConvertedDate, con los
+    IDs de la cuenta, el contacto y la oportunidad que se crean al convertir.
+  source_id: W-10
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es el enlace lead → cuenta → oportunidad que hoy falta.
+- claim: CampaignMember enlaza leads y contactos con campañas, con estado, HasResponded y FirstRespondedDate.
+  source_id: W-11
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para campaign_member (grano persona/lead × campaña).
+- claim: 'Task registra cada actividad con quién (WhoId: lead o contacto), sobre qué (WhatId: oportunidad o cuenta),
+    dueño, fechas, estado, tipo de llamada y duración.'
+  source_id: W-12
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Patrón para activity (toques de SDR/AE).
+- claim: HubSpot guarda por etapa de lifecycle «Date entered», «Date exited» y el tiempo último y acumulado en la
+    etapa; muestra la fuente de cada cambio en el historial y, por defecto, las actualizaciones automáticas solo
+    mueven la etapa hacia adelante.
+  source_id: W-13
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Enfoque alternativo (fechas como propiedades). Los retrocesos y las re-entradas requieren manejo explícito.
+- claim: Stripe calcula el MRR como la suma normalizada al mes de las suscripciones active y past_due (un plan anual
+    cuenta 1/12); una suscripción canceled o unpaid cuenta como churn.
+  source_id: W-06
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Es referencia de definición, no recomendación. En ese marco, una mora no es churn hasta que la suscripción
+    se cancela o queda impaga.
+- claim: Stripe deja configurable si los descuentos recurrentes y los de una vez restan del MRR, y justifica restarlos
+    como una postura conservadora.
+  source_id: W-07
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: context
+  notes: W-06 agrega que los descuentos recurrentes permanentes siempre restan. Confirma que cómo se trata el descuento
+    temporal es una decisión de negocio.
+- claim: Stripe deja configurable cuándo un suscriptor cuenta como activo (al iniciar la suscripción o al recibir
+    el primer pago), arma las cohortes por el primer mes con MRR positivo y exporta un log de cambios de MRR por
+    cliente (nuevo, upgrade, downgrade, reactivación, churn).
+  source_id: W-06
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: context
+  notes: La fecha de «alta» también es una decisión. C-006 usa cohorte de entrada, que es distinta de la cohorte
+    de ingreso.
+- claim: La suscripción de Stripe tiene los estados incomplete, incomplete_expired, trialing, active, past_due,
+    canceled, unpaid y paused; guarda start_date, cancel_at, canceled_at, ended_at, el motivo de cancelación, los
+    descuentos y los ítems con precio (e intervalo) y cantidad.
+  source_id: W-08
+  source_type: official
+  confidence: high
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Campos mínimos de subscription y subscription_item_version.
+- claim: El paquete dbt de Fivetran para Salesforce genera modelos de historial diario por cuenta, contacto, oportunidad
+    y campaña, además de desempeño de campañas y actividad diaria.
+  source_id: W-14
+  source_type: industry
+  confidence: medium
+  freshness: Vigente; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: 'Práctica común: reconstruir estados diarios desde el historial del CRM. Solo funciona si ese historial
+    existe.'
+sources:
+- id: DM-01
+  title: 'Catálogo: tablas, grano y columnas que existen hoy en el modelo'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: catalogo_modelo()
+  verified: true
+- id: DM-02
+  title: 'Muestra de raw.transactions: formato de ID, mes y monto'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT * FROM raw.transactions LIMIT 5
+  verified: true
+- id: DM-03
+  title: 'Muestra de raw.industry: formato «Cliente N» e industria'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT * FROM raw.industry LIMIT 5
+  verified: true
+- id: DM-04
+  title: 'Muestra de raw.sm_spend: rubros en columnas, texto con «$»'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT * FROM raw.sm_spend LIMIT 3
+  verified: true
+- id: DM-05
+  title: 'Perfil del panel cliente × mes: filas, clientes, meses, rango y ceros'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month)
+    AS primer_mes, MAX(month) AS ultimo_mes, SUM(CASE WHEN amount = 0 THEN 1 ELSE 0 END) AS filas_en_cero, SUM(CASE
+    WHEN amount > 0 THEN 1 ELSE 0 END) AS filas_positivas, SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END) AS filas_negativas,
+    SUM(CASE WHEN amount IS NULL THEN 1 ELSE 0 END) AS filas_nulas FROM staging.stg_customer_month
+  verified: true
+- id: DM-06
+  title: Clientes que nunca pagan vs clientes con algún pago
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT SUM(CASE WHEN mx = 0 THEN 1 ELSE 0 END) AS clientes_nunca_pagan, SUM(CASE WHEN mx > 0 THEN 1 ELSE
+    0 END) AS clientes_con_algun_pago, COUNT(*) AS clientes FROM (SELECT customer_id, MAX(amount) AS mx FROM staging.stg_customer_month
+    GROUP BY customer_id) t
+  verified: true
+- id: DM-07
+  title: Cobertura de la llave entre pagos e industria; filas vacías
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT (SELECT COUNT(DISTINCT customer_id) FROM staging.stg_customer_month) AS clientes_en_pagos, (SELECT
+    COUNT(DISTINCT customer_id) FROM staging.stg_customers) AS clientes_en_industria, (SELECT COUNT(DISTINCT m.customer_id)
+    FROM staging.stg_customer_month m LEFT JOIN staging.stg_customers c ON m.customer_id = c.customer_id WHERE c.customer_id
+    IS NULL) AS pagos_sin_industria, (SELECT COUNT(*) FROM staging.stg_customers c WHERE c.customer_id NOT IN (SELECT
+    DISTINCT customer_id FROM staging.stg_customer_month)) AS industria_sin_pagos, (SELECT COUNT(*) FROM raw.industry
+    WHERE "ID" IS NULL OR TRIM("ID") = '') AS filas_industria_vacias
+  verified: true
+- id: DM-08
+  title: Distribución de clientes por industria
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC
+  verified: true
+- id: DM-09
+  title: Distribución de movement_type en customer_month
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT movement_type, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month
+    GROUP BY movement_type ORDER BY filas DESC
+  verified: true
+- id: DM-10
+  title: Rubros de gasto S&M disponibles
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT DISTINCT rubro FROM staging.stg_sm_spend ORDER BY rubro
+  verified: true
+- id: DM-11
+  title: Churn que vuelve en t+1, reversiones de expansión/contracción y firmas de pago multimes
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT SUM(CASE WHEN movement_type = 'churn' THEN 1 ELSE 0 END) AS eventos_churn, SUM(CASE WHEN movement_type
+    = 'churn' AND returned_next_month = 1 THEN 1 ELSE 0 END) AS churn_vuelve_t1, SUM(CASE WHEN movement_type = 'churn'
+    AND returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS churn_vuelve_t1_mismo_monto, SUM(CASE WHEN movement_type
+    IN ('expansion','contraction') THEN 1 ELSE 0 END) AS eventos_exp_contr, SUM(CASE WHEN movement_type IN ('expansion','contraction')
+    AND reverts_next_month = 1 THEN 1 ELSE 0 END) AS exp_contr_revierte_t1, SUM(CASE WHEN multi_month_payment_signature
+    > 0 THEN 1 ELSE 0 END) AS filas_firma_pago_multimes, COUNT(DISTINCT CASE WHEN multi_month_payment_signature
+    > 0 THEN customer_id END) AS clientes_firma_pago_multimes FROM mart.customer_month
+  verified: true
+- id: DM-12
+  title: Clientes por cohort_flag (limpia, left_censored, spillover)
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag
+    ORDER BY clientes DESC
+  verified: true
+- id: DM-13
+  title: Montos distintos y rango del monto observado
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(DISTINCT observed_amount) AS montos_distintos, COUNT(DISTINCT usual_amount_cop) AS montos_usuales_distintos,
+    MIN(CASE WHEN observed_amount > 0 THEN observed_amount END) AS monto_min_positivo, MAX(observed_amount) AS monto_max
+    FROM mart.customer_month
+  verified: true
+- id: DM-14
+  title: 'Verificación por self-join: churn observado que paga en t+1'
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT COUNT(*) AS eventos_churn, SUM(CASE WHEN n.observed_amount > 0 THEN 1 ELSE 0 END) AS paga_en_t1,
+    SUM(CASE WHEN n.observed_amount > 0 AND ABS(n.paid_mrr_cop - c.previous_month_mrr) < 1 THEN 1 ELSE 0 END) AS
+    paga_en_t1_mismo_monto_previo, SUM(CASE WHEN n.customer_id IS NULL THEN 1 ELSE 0 END) AS churn_en_ultimo_mes_sin_t1
+    FROM mart.customer_month c LEFT JOIN mart.customer_month n ON n.customer_id = c.customer_id AND n.month_index
+    = c.month_index + 1 WHERE c.movement_type = 'churn'
+  verified: true
+- id: DM-15
+  title: Rango del gasto S&M y formato del mes en pagos
+  url: ''
+  publisher: Modelo de datos del caso (finora-eda)
+  date: '2026-09-29'
+  source_type: data_model
+  quality: A
+  note: SELECT (SELECT MIN(month) FROM staging.stg_sm_spend) AS sm_primer_mes, (SELECT MAX(month) FROM staging.stg_sm_spend)
+    AS sm_ultimo_mes, (SELECT COUNT(DISTINCT month) FROM staging.stg_sm_spend) AS sm_meses, (SELECT COUNT(*) FROM
+    staging.stg_sm_spend) AS sm_filas_mes_rubro, (SELECT COUNT(DISTINCT month) FROM raw.transactions) AS tx_valores_mes_distintos,
+    (SELECT MIN(month) FROM raw.transactions WHERE month LIKE '1/%') AS tx_ejemplo_enero, (SELECT MIN(month) FROM
+    raw.transactions WHERE month LIKE '2/%') AS tx_ejemplo_febrero
+  verified: true
+- id: W-01
+  title: Accumulating Snapshot Fact Table
+  url: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/accumulating-snapshot-fact-table/
+  publisher: Kimball Group
+  date: s.f. (consultado 2026-09-29)
+  source_type: expert
+  quality: A
+  note: 'Fuente canónica del patrón: una fila por ítem del pipeline, una fecha por hito, lags; se actualiza al avanzar.'
+  verified: true
+- id: W-02
+  title: 'Type 2: Add New Row (Slowly Changing Dimensions)'
+  url: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/
+  publisher: Kimball Group
+  date: s.f. (consultado 2026-09-29)
+  source_type: expert
+  quality: A
+  note: 'Registros con vigencia: fecha de inicio, de expiración e indicador de fila vigente.'
+  verified: true
+- id: W-03
+  title: Periodic Snapshot Fact Table
+  url: https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/periodic-snapshot-fact-table/
+  publisher: Kimball Group
+  date: s.f. (consultado 2026-09-29)
+  source_type: expert
+  quality: A
+  note: Grano = periodo; filas densas con ceros aunque no haya actividad.
+  verified: true
+- id: W-04
+  title: 'URL builders: Collect campaign data with custom URLs'
+  url: https://support.google.com/analytics/answer/10917952
+  publisher: Google Analytics Help
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: Parámetros UTM requeridos y recomendados; «(not set)» cuando faltan.
+  verified: true
+- id: W-05
+  title: 'Spec: B2B SaaS'
+  url: https://www.twilio.com/docs/segment/connections/spec/b2b-saas
+  publisher: Twilio Segment
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: Eventos B2B (Account Created, Signed Up, Trial Started/Ended…) con groupId como ID de cuenta.
+  verified: true
+- id: W-06
+  title: 'Billing analytics: definiciones de MRR, suscriptores activos, churn y cohortes'
+  url: https://docs.stripe.com/billing/subscriptions/analytics/glossary
+  publisher: Stripe Docs
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: MRR = active + past_due normalizado al mes; canceled/unpaid = churn; descuentos y definición de activo configurables;
+    cohortes por primer MRR positivo.
+  verified: true
+- id: W-07
+  title: Metric configurations
+  url: https://support.stripe.com/questions/metric-configurations
+  publisher: Stripe Support
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: Si los descuentos recurrentes y de una vez restan del MRR es configurable, con su justificación.
+  verified: true
+- id: W-08
+  title: The Subscription object
+  url: https://docs.stripe.com/api/subscriptions/object
+  publisher: Stripe API Reference
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: Estados de suscripción, fechas de cancelación y fin, descuentos, ítems con precio e intervalo y cantidad.
+  verified: true
+- id: W-09
+  title: OpportunityHistory (esquema de Salesforce)
+  url: https://cdn.cdata.com/help/RFM/py/pg_table-opportunityhistory.htm
+  publisher: CData
+  date: Vigente (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: Documentación de terceros; la página oficial de Salesforce devolvió 403 en esta corrida.
+  verified: true
+- id: W-10
+  title: Lead (esquema de Salesforce)
+  url: https://cdn.cdata.com/help/RFM/py/pg_table-lead.htm
+  publisher: CData
+  date: Vigente (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: LeadSource, Status, OwnerId y campos de conversión a cuenta, contacto y oportunidad.
+  verified: true
+- id: W-11
+  title: CampaignMember (esquema de Salesforce)
+  url: https://cdn.cdata.com/help/RFM/py/pg_table-campaignmember.htm
+  publisher: CData
+  date: Vigente (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: Relación lead/contacto ↔ campaña con estado y fecha de primera respuesta.
+  verified: true
+- id: W-12
+  title: Task (esquema de Salesforce)
+  url: https://cdn.cdata.com/help/RFM/py/pg_table-task.htm
+  publisher: CData
+  date: Vigente (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: Actividad con WhoId, WhatId, OwnerId, fechas, tipo de llamada y duración.
+  verified: true
+- id: W-13
+  title: Use lifecycle stages
+  url: https://knowledge.hubspot.com/records/use-lifecycle-stages
+  publisher: HubSpot Knowledge Base
+  date: Vigente (consultado 2026-09-29)
+  source_type: official
+  quality: A
+  note: Fechas de entrada y salida por etapa, tiempo en etapa, historial con fuente; por defecto solo avanza.
+  verified: true
+- id: W-14
+  title: fivetran/dbt_salesforce (README)
+  url: https://github.com/fivetran/dbt_salesforce
+  publisher: Fivetran (GitHub)
+  date: Vigente (consultado 2026-09-29)
+  source_type: industry
+  quality: B
+  note: Modelos de historial diario (cuenta, contacto, oportunidad, campaña) y de desempeño de campañas y actividad.
+  verified: true
+alternative_explanations:
+- Finora podría tener ya CRM, facturación y analítica de producto con historial, y el caso solo compartió un extracto
+  de pagos. Si es así, la brecha es de integración y llave común, no de captura.
+- Los ceros que vuelven a pagar en t+1 pueden ser un desfase en la fecha de cobro (se registró el mes siguiente),
+  mora, o cancelación con regreso. Con cliente × mes × monto no se distinguen; hacen falta el periodo de factura,
+  el estado de suscripción y la fecha de pago.
+- Las firmas de pago multimes pueden ser prepagos (anuales o trimestrales) o pagos de atrasos acumulados. Se separan
+  con invoice.period_start/period_end.
+- 'Diseño alternativo para etapas: en vez de stage_history como tabla de eventos, propiedades «fecha de entrada
+  a etapa» en la cuenta o el lead (estilo HubSpot). Es más simple, pero si no se guarda el historial se pierden
+  las re-entradas, el autor y los retrocesos.'
+- Definir la puerta por el canal del primer toque (atribución first-touch) en vez de por el primer hito. Cambia
+  la puerta de las cuentas que vieron un anuncio y después se registraron solas.
+- Tratar Hybrid como puerta y no como ruta. Chocaría con C-006 («comparar entre puertas, no rutas»), porque Hybrid
+  se define por lo que pasa después de entrar.
+what_is_established:
+- raw.transactions es un panel balanceado cliente × mes (1.961 × 34, ene-22 a oct-24) con ceros explícitos, y solo
+  contiene clientes que pagaron al menos una vez.
+- 'El mes es una fecha de fin de mes: no hay día de pago, factura, plan, cantidad, precio ni descuento.'
+- Los dos archivos de cliente usan formatos de ID distintos («1» vs «Cliente 1»); el cruce funciona al 100% después
+  de parsear, y hay 1 fila vacía en industria.
+- El gasto S&M es mes × 7 rubros, con unidad no documentada y sin canal, campaña ni cliente.
+- Ninguna tabla del modelo tiene lead, canal, campaña, oportunidad, etapa, actividad, asignación, evento de producto
+  ni suscripción.
+- Hoy, 330 de 751 churn observados vuelven a pagar en t+1, y 512 cliente-mes tienen firma de pago multimes.
+- Existen patrones estándar y documentados para cada entidad del to-be (CRM, UTM, spec B2B, suscripción, snapshots).
+what_is_contested:
+- Si un mes en cero es churn, mora o desfase de cobro (330 de 751 vuelven en t+1).
+- Si los descuentos temporales restan del MRR oficial (es una decisión; Stripe lo deja configurable).
+- Si una cuenta es activa desde el contrato o desde el primer pago, y si el «alta» se cuenta desde el contrato o
+  desde el primer pago.
+- Si Hybrid es puerta o ruta (propongo ruta, para respetar C-006).
+- Si la puerta se define por el primer hito o por el canal del primer toque.
+what_remains_unknown:
+- Qué sistemas tiene Finora hoy (CRM, facturación/suscripciones, analítica de producto) y desde cuándo guardan historial.
+- La unidad y la moneda del gasto S&M.
+- 'Qué representa «Cliente N»: empresa, entidad de facturación o sede.'
+- Por qué hay 1.627 montos distintos (lista de precios, prorrateos, FX, pagos parciales).
+- Las definiciones operativas de New, Working, Engaged, Hybrid y Reactivate en el WoW de Finora.
+- Si el monto del archivo es cobrado, facturado o contratado (hoy «cobrado» es hipótesis).
+case_implication: 'Para S2.7 y C-013, la lámina puede mostrar con datos consultados que el as-is es un modelo de
+  «después del pago» a grano cliente × mes. Por eso C-006 hoy está entero en rojo, y las ramas post-pago de C-009
+  van en amarillo: miden monto pagado, no MRR contratado, y churn observado, no cancelación. El to-be no es una
+  lista de tablas sino una espina (account_id + crosswalk) con tres capas de captura (demanda, comercial, producto-facturación)
+  y dos marts. funnel_entry hace medible la comparación por puerta con ventana fija (C-006). account_month construye
+  el árbol sobre MRR contratado con el cobrado al lado (C-009) y convive con mart.customer_month, que ya existe.
+  La implicación práctica es de secuencia: primero definiciones y llave, sin sistemas nuevos. Después, capturar
+  lo que no se puede reconstruir: UTMs, historial de etapas y dueños, actividades, estado de suscripción y periodo
+  de factura. Solo entonces se pueden prometer métricas por puerta, y las primeras cohortes se podrán leer W días
+  después de empezar la captura.'
+changes_current_story:
+  value: maybe
+  why: 'No cambia la tesis de C-013 (definiciones y fuentes comunes unidas por un ID de cuenta): la concreta. Sí
+    puede cambiar el semáforo de C-009: como el as-is no separa cancelación de mora ni prepago de expansión, las
+    ramas post-pago irían en amarillo, no en verde. Y precisa C-006: Hybrid va como ruta dentro de la puerta, no
+    como puerta.'
+affected_hypotheses: []
+affected_claims:
+- id: C-013
+  effect: supports
+  why: 'Concreta el modelo: la espina es account_id con un crosswalk de IDs con vigencia. Hoy los dos archivos de
+    cliente ya usan formatos distintos («1» vs «Cliente 1») y el cruce depende de parsear texto.'
+- id: C-006
+  effect: supports
+  why: 'Hoy no se puede medir nada de C-006 (no hay datos antes del pago). funnel_entry, un accumulating snapshot
+    con puerta, ruta y una fecha por hito, lo hace medible: cohorte de entrada, alcance en ventana W, tiempo a hito,
+    estancamiento. Hybrid queda como ruta, no como puerta.'
+- id: C-009
+  effect: changes_framing
+  why: 'Propongo que el semáforo distinga tres colores. Verde: se mide con la definición correcta (monto pagado,
+    cortes por industria). Amarillo: se mide como proxy de pago (MRR, churn, expansión, altas, eficiencia S&M agregada).
+    Rojo: no se puede medir (entradas, conversión, canal, puerta, pipeline, descuentos, CAC por canal). Y que el
+    árbol se construya sobre MRR contratado, con una línea paralela de cobrado.'
+- id: C-014
+  effect: supports
+  why: 'Cada foro sale de tablas concretas. Semanal: stage_history, activity y assignment (estancamiento, speed-to-lead).
+    Mensual: account_month (puente de MRR). Trimestral: funnel_entry por puerta y campaign_spend (CAC por canal).'
+suggested_action: 'Propongo armar S2.7 en tres bloques. (1) As-is: las 3 fuentes y sus marts, con grano, qué responden
+  y qué no, y los números del modelo (1.961 × 34; 0 no-compradores; 330 de 751 churn que vuelven en t+1). (2) To-be:
+  la espina account + crosswalk, las tres capas con sus relaciones 1—n y los dos marts. (3) Tabla de brecha por
+  necesidad: qué hay hoy → qué se agrega → qué métrica de C-006/C-009 habilita. Junto con la lámina, llevarle a
+  Hugo la lista de decisiones de definición para que elija: descuento en MRR, activo desde contrato o pago, churn
+  vs mora, regla de puertas, ventana W y N de estancamiento. En paralelo, pedirle a Finora el inventario de sistemas.'
+new_questions:
+- ¿Qué sistemas tiene Finora hoy (CRM, facturación/suscripciones, analítica de producto) y desde qué fecha guardan
+  historial de etapas, dueños y estados de suscripción?
+- ¿Qué reglas de puerta y qué ventana W aprueba Hugo para C-006? ¿La entrada se cuenta desde el primer hito (registro,
+  formulario, outbound) o desde el primer toque?
+- ¿El MRR oficial de C-009 se reporta antes o después de los descuentos temporales, y una cuenta es activa desde
+  el contrato o desde el primer pago?
+handoff_to_cos:
+  summary: 'R-033 listo. El as-is está confirmado en el modelo: 3 fuentes post-pago con grano cliente × mes, cliente
+    y mes; nada antes del pago; ni siquiera separa churn de mora (330 de 751 churn observados pagan en t+1). El
+    to-be tiene una espina account + crosswalk, tres capas (demanda / comercial / producto-facturación) y dos marts:
+    funnel_entry para C-006 y account_month para C-009. Incluye la brecha por necesidad y la métrica que habilita
+    cada tabla.'
+  recommended_next: Presentarle a Hugo la estructura de S2.7 (as-is | to-be | brecha) para que la apruebe, y las
+    6 decisiones de definición abiertas para que elija. En paralelo, pedirle a Finora el inventario de sistemas
+    para saber si la brecha es de integración o de captura.
+confidence_buckets:
+  high_confidence:
+  - El as-is es post-pago, con granos cliente × mes, cliente y mes, y sin ninguna entidad de antes del pago.
+  - La llave de cliente viene en dos formatos y cruza al 100% después de parsear.
+  - Los datos no distinguen cancelación de mora ni prepago de expansión (330/751; 512 cliente-mes con firma multimes).
+  - Existen patrones estándar y documentados para cada entidad del to-be.
+  plausible:
+  - funnel_entry (accumulating snapshot) es el grano correcto para cohortes de entrada con ventana fija.
+  - account_month sobre MRR contratado, conviviendo con el monto pagado, es la base correcta del árbol de C-009.
+  - Hybrid funciona mejor como ruta que como puerta.
+  - La secuencia definiciones → captura → marts → tableros minimiza el retrabajo.
+  contested:
+  - Si los descuentos temporales restan del MRR.
+  - Si una cuenta es activa desde el contrato o desde el primer pago.
+  - Si un mes en cero es churn, mora o desfase de cobro.
+  - Si la puerta se define por el primer hito o por el canal del primer toque.
+  unknown:
+  - Qué sistemas tiene Finora y si guardan historial.
+  - La unidad y la moneda del gasto S&M.
+  - Qué representa «Cliente N» (empresa, entidad de facturación, sede).
+  - Las definiciones operativas de New, Working, Engaged, Hybrid y Reactivate en Finora.
+specialist:
+  data_model:
+    conceptual_model: 'La espina es account_id (cuenta = empresa cliente o prospecto), con un crosswalk con vigencia
+      hacia los IDs de cada sistema: CRM, producto, facturación y los legados «1» / «Cliente 1». Sobre la espina
+      van tres capas de captura, cada una con su grano. (1) Demanda: channel 1—n campaign; campaign 1—n touch; person
+      1—n touch; campaign 1—n campaign_member n—1 person/lead; campaign 1—n campaign_spend. (2) Comercial: account
+      1—n person; person 1—n lead; account 1—n lead; lead 1—0..1 opportunity; account 1—n opportunity; lead 1—n
+      stage_history; opportunity 1—n stage_history; sales_user 1—n activity; lead/opportunity/account 1—n activity;
+      sales_user 1—n assignment; lead/opportunity/account 1—n assignment. (3) Producto y facturación: account 1—n
+      product_event n—1 person; account 1—n subscription; opportunity 1—0..1 subscription; subscription 1—n subscription_item_version
+      (lo contratado y tarifado); subscription 1—n discount (lo descontado); subscription 1—n invoice (lo facturado);
+      invoice 1—n payment (lo cobrado). Encima, dos marts analíticos: funnel_entry (accumulating snapshot; account
+      1—n funnel_entry 1—0..1 subscription) para C-006, y account_month (periodic snapshot, cuenta × mes) para C-009.
+      account_month convive con mart.customer_month (monto pagado observado) y se reconcilia con él cada mes.'
+    as_is:
+    - table: raw.transactions (→ staging.stg_customer_month)
+      grain: Cliente × mes. Panel balanceado 1.961 × 34 (ene-22 a oct-24), 66.674 filas, ceros explícitos.
+      fields: 'ID (texto, «1»), month (texto M/D/AAAA, fin de mes), amount (texto sin escala). En staging: customer_id,
+        month AAAA-MM, amount y amount_cop (× 10.000).'
+      answers: Monto pagado observado por cliente y mes; quién paga cada mes; base del puente de monto pagado y
+        de las cohortes por primer pago.
+      cannot: 'Nada de quien no pagó. Tampoco: fecha exacta de pago o factura; plan, cantidad, precio o descuento
+        detrás del monto; si un cero es cancelación, mora o desfase; si un pico es prepago multimes o expansión.'
+    - table: raw.industry (→ staging.stg_customers)
+      grain: Cliente. 1.962 filas (1 vacía) → 1.961.
+      fields: ID (texto «Cliente N»), Industria (6 valores).
+      answers: Corte por industria de cualquier métrica de pago.
+      cannot: Cambios de industria en el tiempo, tamaño o segmento, y una llave en el mismo formato que pagos (hay
+        que parsear).
+    - table: raw.sm_spend (→ staging.stg_sm_spend, mart.sm_monthly)
+      grain: Mes. 34 filas × 7 rubros en columnas (238 filas en formato largo).
+      fields: Month, PaidMedia, Travel, PublicidadNoWeb, Freelance, SoftwareTools, Team, PayrollExpenses (texto
+        con «$», unidad no documentada). El mart los agrupa en demand_gen, sales_capacity y enablement.
+      answers: Gasto S&M total y por rubro o grupo por mes; eficiencia agregada contra altas (en mart.monthly_metrics_phase1).
+      cannot: Gasto por canal, campaña o puerta; moneda y unidad; asignación a cuentas; CAC por canal o por puerta.
+    - table: mart.customer_month
+      grain: Cliente × mes (denso).
+      fields: observed_amount, paid_mrr_cop, active_customer, movement_type (new/expansion/contraction/flat/churn/reactivation…),
+        cohort_month, cohort_flag, tenure_month, usual_amount_cop, multi_month_payment_signature, returned_next_month,
+        reverts_next_month, vintage, industry.
+      answers: Puente de monto pagado por cliente; cohortes y cosechas por primer pago; señales de pago multimes
+        y de ceros que vuelven.
+      cannot: MRR contratado; churn confirmado; entrada al funnel, puerta, canal o dueño; por qué cambia el monto.
+    - table: mart.monthly_metrics (+ mart.monthly_metrics_phase1)
+      grain: Mes (34).
+      fields: Clientes activos, nuevos, con churn, reactivados, con expansión y con contracción; total_paid_mrr_cop
+        y los 5 movimientos; tasas (logo churn, NRR de existentes, quick ratio); gasto por rubro y eficiencia (S&M
+        por alta, S&M por MRR nuevo).
+      answers: Salud agregada y puente mensual de monto pagado (cuadra al centavo); eficiencia S&M agregada.
+      cannot: Conversión, volumen de entrada, eficiencia por canal o por puerta; nada por etapa.
+    - table: mart.new_customers
+      grain: Alta (1.584).
+      fields: customer_id, cohort_month, m0_cop, m1_cop, early_run_rate_cop, early_months_observed, industry, vintage,
+        clean.
+      answers: Valor de entrada (primer pago) por cohorte e industria.
+      cannot: Puerta, canal, tiempo de cierre, quién vendió, si hubo descuento de entrada; tampoco si el primer
+        pago es la adquisición (es la primera aparición).
+    - table: mart.churn_events
+      grain: Evento de churn observado (751).
+      fields: customer_id, month, prev_mrr_cop, months_to_return, returned_next_month, industry, vintage.
+      answers: Tamaño de los ceros y cuánto tardan en volver a pagar.
+      cannot: Motivo, fecha de cancelación, si fue voluntario o por impago.
+    - table: mart.vintage_month
+      grain: Cosecha × mes (170).
+      fields: vintage, month, active_customers, mrr_cop, arpa_cop.
+      answers: Retención de clientes y de monto por cosecha anual.
+      cannot: Retención por puerta o canal; cohortes de entrada.
+    gap:
+    - need: Llave común (C-013)
+      as_is: customer_id numérico parseado de dos formatos («1» en pagos, «Cliente 1» en industria); cruza 1.961/1.961.
+        No hay IDs de CRM, producto ni facturación.
+      to_be: account (account_id estable) + account_xref con vigencia (crm, product, billing, legacy_*) + person.
+      enables: 'Todos los cruces. C-006: asignar cada entrada, toque y pago a la misma cuenta. C-009: un MRR por
+        cuenta aunque tenga varias suscripciones. C-013: definiciones y fuentes unidas por un ID.'
+    - need: Canal y fuente
+      as_is: No existe en pagos ni en clientes. El gasto solo viene por rubro (paid_media, publicidad_no_web…) y
+        sin unidad.
+      to_be: touch (utm_source/medium/campaign/id/content/term), channel (regla source/medium → canal, con vigencia),
+        campaign, campaign_member, campaign_spend con moneda.
+      enables: 'C-006: entradas por canal dentro de cada puerta. C-009, rama de eficiencia: costo por entrada, por
+        nueva cuenta y por MRR nuevo, por canal y campaña.'
+    - need: Puerta de entrada (separada de la ruta)
+      as_is: Solo existe «new» = primer mes con pago (primera aparición). 377 clientes no tienen inicio observable.
+      to_be: funnel_entry.door y route, entry_at y entry_seq, derivadas de lead.lead_source, product_event (Signed
+        Up), activity outbound y suscripciones previas (Reactivate).
+      enables: 'El núcleo de C-006: tamaño de cohorte por puerta y comparación entre puertas; % Hybrid dentro de
+        self-serve como descripción de la ruta.'
+    - need: Etapa
+      as_is: 'Solo dos estados por mes: pagó / no pagó.'
+      to_be: lead.status + opportunity.stage + stage_history (from/to, changed_at, changed_by, change_source).
+      enables: 'C-006: alcance de Engaged, SQL, oportunidad y pago en ventana fija por puerta. C-009: pipeline abierto
+        y conversión que alimentan la rama de nuevas cuentas.'
+    - need: Tiempo de cierre
+      as_is: 'Imposible: no hay nada antes del pago y el mes es fin de mes (sin día).'
+      to_be: Timestamps de hitos en funnel_entry (entry_at, sql_at, opportunity_created_at, won_at, first_paid_at)
+        y lags calculados.
+      enables: 'C-006: mediana y percentiles de días entrada → pago y entrada → SQL, por puerta y cohorte; lectura
+        justa de la ventana W.'
+    - need: Intervención de SDR/AE
+      as_is: Solo costo agregado por mes (team, payroll_expenses, travel); nada por cuenta.
+      to_be: activity (quién, sobre qué, dueño, occurred_at, outcome), sales_user (rol, equipo, fecha de inicio),
+        assignment (dueño por periodo).
+      enables: 'C-006: ruta Hybrid (self-serve con toque antes del pago), speed-to-lead, toques por entrada, resultados
+        con vs sin toque (observacional, no causal). C-009: capacidad comercial por puerta.'
+    - need: Estancamientos
+      as_is: Nada antes del pago; después del pago, solo churn observado y meses en cero.
+      to_be: stage_history + activity + product_event → last_progress_at y stalled_flag en funnel_entry (N días
+        sin cambio de etapa, actividad ni uso).
+      enables: 'C-006: tasa de estancamiento a N semanas por puerta y etapa. C-014: lista semanal de entradas estancadas.'
+    - need: MRR contratado vs pagado (lista, descuento, facturado, cobrado)
+      as_is: Un solo monto por cliente-mes (1.627 valores distintos), sin plan, cantidad, precio ni descuento. 512
+        cliente-mes con firma multimes; 211 de 2.541 expansiones/contracciones se revierten en t+1.
+      to_be: subscription + subscription_item_version (plan, precio de lista, cantidad, intervalo, vigencia) + discount
+        (tipo, valor, vigencia, motivo) + invoice (periodo de servicio) + payment. account_month con list_mrr, discount_mrr,
+        net_mrr, invoiced y collected.
+      enables: 'C-009: puente de MRR contratado (new/expansion/contraction/churn/reactivation) separado del efecto
+        descuento y del cobro; NRR/GRR por cohorte; ARPA real; efecto de pricing y descuentos cuando se introduzcan.'
+    - need: Churn vs mora
+      as_is: Churn observado = pago en cero. 330 de 751 vuelven a pagar en t+1 (87 con el mismo monto); 33 caen
+        en oct-24 sin t+1.
+      to_be: subscription.status (active/past_due/unpaid/canceled/paused), canceled_at, ended_at, cancellation_reason;
+        invoice.status.
+      enables: 'C-009: churn voluntario vs involuntario vs mora; reactivación real (win-back) vs pago atrasado;
+        revenue que dejamos de capturar por impago.'
+    - need: Costo por puerta y por canal
+      as_is: 'sm_spend: mes × 7 rubros, unidad no documentada. Solo eficiencia agregada (S&M por alta).'
+      to_be: campaign_spend (campaña/canal × día o mes, con moneda) que cuadra contra sm_spend, más una regla para
+        asignar el costo de equipo a puertas vía assignment/activity.
+      enables: 'C-009, rama de eficiencia: CAC y payback por puerta y canal. C-006: costo por entrada y por cuenta
+        ganada en la ventana.'
+    - need: Segmento e industria con vigencia
+      as_is: Industria fija por cliente, sin fecha; 6 valores.
+      to_be: 'Historial de account (SCD2: industry, segment, valid_from/valid_to).'
+      enables: Cortes «as of» en C-006 y C-009 sin reescribir la historia.
+    entities:
+    - name: account
+      description: Empresa cliente o prospecto; es la espina del modelo. 1—n account_xref, person, lead, opportunity,
+        subscription, product_event, funnel_entry, account_month. Habilita todos los cruces (C-013).
+      grain: 1 fila = 1 cuenta (estado actual; industria y segmento con historial SCD2)
+      primary_key: account_id
+    - name: account_xref
+      description: Crosswalk de IDs por sistema, con vigencia. Resuelve «1» vs «Cliente 1» y las fusiones o separaciones
+        de cuentas. n—1 account.
+      grain: 1 fila = 1 ID de un sistema origen × periodo de validez
+      primary_key: (source_system, source_id, valid_from)
+    - name: person
+      description: 'Contacto o usuario: quien se registra, llena un formulario o atiende una llamada. n—1 account
+        una vez empatada; 1—n lead, touch, product_event, activity (quién).'
+      grain: 1 fila = 1 persona
+      primary_key: person_id
+    - name: channel
+      description: Canal normalizado y su regla de mapeo desde source/medium, con vigencia; se enlaza con el rubro
+        de sm_spend. 1—n campaign, touch. Habilita entradas por canal (C-006) y eficiencia por canal (C-009).
+      grain: 1 fila = 1 canal × versión de regla
+      primary_key: (channel_id, valid_from)
+    - name: campaign
+      description: Campaña (utm_id). n—1 channel; 1—n touch, campaign_member, campaign_spend y discount (si es promo).
+      grain: 1 fila = 1 campaña
+      primary_key: campaign_id
+    - name: campaign_member
+      description: Relación persona o lead ↔ campaña, con estado de respuesta (patrón CampaignMember).
+      grain: 1 fila = 1 persona × campaña
+      primary_key: (campaign_id, person_id)
+    - name: touch
+      description: Toque de marketing con UTMs (visita, formulario, evento). n—1 person y campaign. Habilita el
+        primer toque de cada entrada.
+      grain: 1 fila = 1 toque (evento inmutable)
+      primary_key: touch_id
+    - name: campaign_spend
+      description: Gasto por campaña o canal con moneda y unidad explícitas; cuadra contra sm_spend por rubro. Habilita
+        el CAC por canal y por puerta (C-009).
+      grain: 1 fila = 1 campaña × día (o mes)
+      primary_key: (campaign_id, spend_date)
+    - name: lead
+      description: Registro de interés con fuente, estado (New/Working/Engaged/…), creador y conversión. n—1 person
+        y account; 1—n stage_history, activity, assignment; 1—0..1 opportunity. Habilita puerta y alcance de Engaged/SQL
+        (C-006).
+      grain: 1 fila = 1 lead (estado actual)
+      primary_key: lead_id
+    - name: opportunity
+      description: Intento de venta con tipo (new/expansion/reactivation/renewal), dueño, monto esperado, cierre
+        y resultado. n—1 account; 1—n stage_history y activity; 1—0..1 subscription. Habilita alcance de oportunidad
+        y de ganada, tiempo de cierre (C-006) y pipeline (C-009).
+      grain: 1 fila = 1 oportunidad (estado actual)
+      primary_key: opportunity_id
+    - name: stage_history
+      description: Cada cambio de estado de un lead o una oportunidad, con fecha, autor y origen del cambio (patrón
+        OpportunityHistory / property history). Habilita tiempo en etapa, estancamiento y alcance por ventana (C-006).
+      grain: 1 fila = 1 cambio de etapa (evento inmutable)
+      primary_key: stage_event_id
+    - name: activity
+      description: Toque comercial de SDR/AE (llamada, email, reunión, demo, mensaje) con quién, sobre qué, cuándo
+        y resultado (patrón Task). Habilita la ruta Hybrid, speed-to-lead e intervención (C-006).
+      grain: 1 fila = 1 actividad (evento)
+      primary_key: activity_id
+    - name: sales_user
+      description: SDR, AE o CSM con rol, equipo y fecha de inicio (rampa), con vigencia del rol. 1—n activity y
+        assignment.
+      grain: 1 fila = 1 usuario × periodo de rol
+      primary_key: (user_id, valid_from)
+    - name: assignment
+      description: Quién era dueño de qué y cuándo (lead, oportunidad, cuenta), y cómo se asignó. Habilita dar el
+        crédito de cada hito a quien era dueño en ese momento, y la capacidad por puerta.
+      grain: 1 fila = 1 objeto × rol × periodo de asignación
+      primary_key: assignment_id
+    - name: product_event
+      description: 'Eventos de producto por cuenta (groupId) y usuario: registro, creación de cuenta, trial, activación
+        (definición de Finora pendiente), checkout. Habilita la puerta self-serve y los hitos de activación y checkout
+        (C-006).'
+      grain: 1 fila = 1 evento (inmutable)
+      primary_key: event_id
+    - name: subscription
+      description: Contrato recurrente con estado (trialing/active/past_due/canceled/unpaid/paused), fechas de inicio,
+        cancelación y fin, y motivo. n—1 account; 1—n subscription_item_version, discount, invoice. Habilita separar
+        churn real de mora (C-009).
+      grain: 1 fila = 1 suscripción (estado actual; los cambios de estado quedan como eventos)
+      primary_key: subscription_id
+    - name: subscription_item_version
+      description: 'Lo contratado y tarifado: plan, precio de lista, cantidad e intervalo, con vigencia. Habilita
+        el MRR de lista y la expansión/contracción por plan, cantidad o precio (C-009).'
+      grain: 1 fila = 1 ítem de suscripción × periodo de vigencia
+      primary_key: item_version_id
+    - name: discount
+      description: 'Lo descontado: tipo, valor, duración, vigencia, motivo y quién lo aprobó. Habilita separar el
+        efecto descuento del MRR contratado (C-009) cuando se introduzcan descuentos.'
+      grain: 1 fila = 1 descuento aplicado × vigencia
+      primary_key: discount_id
+    - name: invoice
+      description: 'Lo facturado: periodo de servicio que cubre, subtotal de lista, descuento, total, vencimiento
+        y estado. Habilita distinguir un pago multimes de una expansión, y detectar mora.'
+      grain: 1 fila = 1 factura
+      primary_key: invoice_id
+    - name: payment
+      description: 'Lo cobrado: fecha y monto de cada pago o intento. Agregado por cuenta × mes reproduce el raw.transactions
+        de hoy.'
+      grain: 1 fila = 1 pago o intento (evento)
+      primary_key: payment_id
+    - name: funnel_entry
+      description: 'Mart accumulating snapshot: cada entrada de una cuenta al funnel, con puerta, ruta, primer canal
+        y fecha de cada hito; se actualiza a medida que avanza. account 1—n funnel_entry 1—0..1 subscription. Habilita
+        C-006 completo: cohorte de entrada, ventana fija, alcance, tiempo a hito, estancamiento y ruta.'
+      grain: 1 fila = 1 entrada (episodio) de una cuenta
+      primary_key: entry_id
+    - name: account_month
+      description: 'Mart periodic snapshot: estado de cierre de mes por cuenta con MRR de lista, descuento, MRR
+        neto, facturado, cobrado, estado de suscripción y movimiento. Convive con mart.customer_month y se reconcilia
+        con él. Habilita el árbol y el puente de MRR contratado de C-009, y NRR/GRR por cohorte.'
+      grain: 1 fila = 1 cuenta × mes (denso, con ceros)
+      primary_key: (account_id, month)
+    grain: 'Regla: una tabla = un grano, sin mezclar. Eventos (1 fila = 1 cosa que pasó, inmutable): touch, product_event,
+      activity, stage_history, payment. Entidades con estado actual (1 fila = 1 objeto): account, person, lead,
+      opportunity, campaign, subscription, invoice. Registros con vigencia (1 fila = 1 objeto × periodo de validez):
+      account_xref, channel, sales_user, assignment, subscription_item_version, discount, historial de account.
+      Snapshots: account_month (cuenta × mes de cierre) y funnel_entry (1 entrada con sus fechas de hitos). Las
+      métricas de C-006 salen de funnel_entry y las de C-009 de account_month. Hoy el caso solo tiene cliente ×
+      mes (pagos), cliente (industria) y mes (gasto).'
+    fields:
+    - entity: account
+      field: account_id
+      type: string (surrogate)
+      definition: Llave estable de la cuenta. Es la que sobrevive a las fusiones y la que usan todas las tablas.
+      example: ACC-000001
+    - entity: account
+      field: legal_id
+      type: string
+      definition: Identificador fiscal o equivalente, para empatar CRM, producto y facturación.
+      example: NIT-ILUSTRATIVO
+    - entity: account
+      field: industry, segment (+ valid_from, valid_to en el historial)
+      type: enum
+      definition: Industria y segmento con vigencia (SCD2).
+      example: Restaurantes · pyme
+    - entity: account
+      field: first_seen_at
+      type: timestamp
+      definition: Primera aparición de la cuenta en cualquier sistema.
+      example: 2025-03-04 09:58
+    - entity: account
+      field: lifecycle_status
+      type: enum (derivado)
+      definition: prospect / customer / former_customer, derivado de las suscripciones.
+      example: customer
+    - entity: account_xref
+      field: source_system, source_id
+      type: enum, string
+      definition: Sistema origen y el ID tal cual viene de él.
+      example: legacy_industry · Cliente 1
+    - entity: account_xref
+      field: valid_from, valid_to
+      type: date
+      definition: Vigencia del mapeo; permite fusiones y separaciones sin perder historia.
+      example: 2022-01-01 · (vacío)
+    - entity: account_xref
+      field: match_method
+      type: enum
+      definition: parse / legal_id / email_domain / manual.
+      example: parse
+    - entity: person
+      field: person_id
+      type: string
+      definition: Persona (contacto o usuario).
+      example: P-7781
+    - entity: person
+      field: account_id
+      type: string (nullable)
+      definition: Cuenta a la que pertenece, una vez empatada.
+      example: ACC-EJ-01
+    - entity: person
+      field: email_hash
+      type: string
+      definition: Email normalizado y hasheado, para deduplicar sin exponer el dato personal.
+      example: sha256:…
+    - entity: channel
+      field: channel_id, channel_group
+      type: enum
+      definition: Canal normalizado y su grupo (paid / owned / earned / sales / partner / unknown).
+      example: paid_search · paid
+    - entity: channel
+      field: mapping_rule, valid_from, valid_to
+      type: string, date
+      definition: Regla utm_source + utm_medium → canal, con vigencia.
+      example: google + cpc → paid_search
+    - entity: channel
+      field: sm_rubro
+      type: enum
+      definition: Rubro de sm_spend al que se imputa el gasto del canal.
+      example: paid_media
+    - entity: campaign
+      field: campaign_id
+      type: string
+      definition: ID de la campaña; igual a utm_id cuando exista.
+      example: cmp-2025-03-ejemplo
+    - entity: campaign
+      field: channel_id, start_date, end_date, offer
+      type: string, date, string
+      definition: Canal, vigencia y oferta (p. ej. un descuento de entrada, si Finora los introduce).
+      example: paid_social · 2025-03-01 · 2025-03-31
+    - entity: campaign_member
+      field: campaign_id, person_id, lead_id
+      type: string
+      definition: Quién fue impactado por qué campaña.
+      example: cmp-2025-03-ejemplo · P-7781
+    - entity: campaign_member
+      field: status, first_responded_at
+      type: enum, timestamp
+      definition: Enviado / respondió / asistió, y fecha de la primera respuesta.
+      example: respondió · 2025-03-05
+    - entity: touch
+      field: touch_id, occurred_at
+      type: string, timestamp
+      definition: Un toque de marketing y cuándo ocurrió.
+      example: T-99120 · 2025-03-04 09:58
+    - entity: touch
+      field: person_id, anonymous_id
+      type: string
+      definition: Quién hizo el toque, o su ID anónimo antes de identificarse.
+      example: anon_ejemplo
+    - entity: touch
+      field: utm_source, utm_medium, utm_campaign, utm_id, utm_content, utm_term
+      type: string
+      definition: Parámetros UTM normalizados en minúsculas; si faltan, van a «desconocido».
+      example: google · cpc · campana-ejemplo
+    - entity: touch
+      field: touch_type, landing_page, referrer
+      type: enum, string
+      definition: Visita / formulario / evento / respuesta a campaña.
+      example: formulario
+    - entity: campaign_spend
+      field: campaign_id, channel_id, spend_date
+      type: string, date
+      definition: Grano del gasto.
+      example: cmp-2025-03-ejemplo · 2025-03-01
+    - entity: campaign_spend
+      field: amount, currency, unit
+      type: decimal, string
+      definition: Gasto con moneda y unidad explícitas (lo que hoy falta en sm_spend).
+      example: 1.250.000 · COP · pesos
+    - entity: campaign_spend
+      field: sm_rubro
+      type: enum
+      definition: Rubro para cuadrar contra sm_spend.
+      example: paid_media
+    - entity: lead
+      field: lead_id, person_id, account_id
+      type: string
+      definition: El lead y a quién pertenece.
+      example: L-501 · P-7781 · ACC-EJ-02
+    - entity: lead
+      field: created_at, created_by_user_id
+      type: timestamp, string
+      definition: Cuándo se creó y quién lo creó (sistema o SDR; distingue inbound de outbound).
+      example: 2025-03-10 09:12 · U-SDR-07
+    - entity: lead
+      field: lead_source
+      type: enum
+      definition: 'Fuente al crearse: demo_request, signup, outbound, referral, ex_customer, import.'
+      example: outbound
+    - entity: lead
+      field: first_touch_id, channel_id, campaign_id
+      type: string
+      definition: Primer toque, con su canal y su campaña.
+      example: T-99120 · paid_search
+    - entity: lead
+      field: status
+      type: enum
+      definition: New / Working / Engaged / Qualified / Disqualified / Nurture (valores a validar con Finora).
+      example: Engaged
+    - entity: lead
+      field: converted_at, converted_opportunity_id, disqualified_reason
+      type: timestamp, string, enum
+      definition: Conversión a oportunidad, o motivo del descarte.
+      example: 2025-03-24 · O-88
+    - entity: opportunity
+      field: opportunity_id, account_id, source_lead_id
+      type: string
+      definition: La oportunidad, su cuenta y el lead de origen.
+      example: O-88 · ACC-EJ-02 · L-501
+    - entity: opportunity
+      field: opportunity_type
+      type: enum
+      definition: new / expansion / reactivation / renewal.
+      example: new
+    - entity: opportunity
+      field: owner_user_id
+      type: string
+      definition: AE dueño actual (la historia vive en assignment).
+      example: U-AE-02
+    - entity: opportunity
+      field: created_at, stage, expected_mrr, expected_close_date
+      type: timestamp, enum, decimal, date
+      definition: Estado actual de la oportunidad.
+      example: 2025-03-24 · Discovery · 120
+    - entity: opportunity
+      field: closed_at, is_won, loss_reason, subscription_id
+      type: timestamp, boolean, enum, string
+      definition: Resultado y suscripción resultante.
+      example: 2025-04-15 · true · SUB-310
+    - entity: stage_history
+      field: stage_event_id, object_type, object_id, account_id
+      type: string, enum
+      definition: Qué objeto cambió (lead u oportunidad).
+      example: SH-3 · lead · L-501
+    - entity: stage_history
+      field: from_stage, to_stage
+      type: enum
+      definition: Etapa anterior y nueva; admite retrocesos y saltos.
+      example: Working → Engaged
+    - entity: stage_history
+      field: changed_at, changed_by_user_id, change_source
+      type: timestamp, string, enum
+      definition: Cuándo, quién y por qué vía (manual / workflow / integración / import).
+      example: 2025-03-18 16:05 · U-SDR-07 · manual
+    - entity: stage_history
+      field: expected_mrr_at_change, expected_close_date_at_change
+      type: decimal, date
+      definition: Monto y cierre esperados en el momento del cambio.
+      example: 120 · 2025-04-30
+    - entity: activity
+      field: activity_id, activity_type, direction
+      type: string, enum
+      definition: Llamada / email / reunión / demo / mensaje; inbound u outbound.
+      example: A-7001 · llamada · outbound
+    - entity: activity
+      field: owner_user_id
+      type: string
+      definition: SDR o AE que la ejecutó.
+      example: U-SDR-07
+    - entity: activity
+      field: person_id (quién), related_type + related_id (sobre qué), account_id
+      type: string
+      definition: Con quién y sobre qué objeto.
+      example: P-7781 · lead · L-501
+    - entity: activity
+      field: occurred_at, logged_at
+      type: timestamp
+      definition: Cuándo ocurrió y cuándo se registró (detecta registro tardío).
+      example: 2025-03-10 11:35 · 2025-03-10 11:40
+    - entity: activity
+      field: outcome, duration_seconds
+      type: enum, integer
+      definition: Conectó / sin respuesta / reunión agendada; duración.
+      example: reunión agendada · 540
+    - entity: sales_user
+      field: user_id, role, team, manager_id
+      type: string, enum
+      definition: SDR / AE / CSM y su equipo.
+      example: U-AE-02 · AE
+    - entity: sales_user
+      field: start_date, valid_from, valid_to
+      type: date
+      definition: Fecha de inicio (rampa) y vigencia del rol.
+      example: '2024-11-01'
+    - entity: assignment
+      field: assignment_id, object_type, object_id, account_id
+      type: string, enum
+      definition: Qué objeto se asignó.
+      example: AS-55 · lead · L-501
+    - entity: assignment
+      field: user_id, role
+      type: string, enum
+      definition: A quién se asignó y en qué rol.
+      example: U-SDR-07 · SDR
+    - entity: assignment
+      field: valid_from, valid_to, assignment_method
+      type: timestamp, enum
+      definition: Periodo como dueño y cómo se asignó (round robin / territorio / manual / reasignación).
+      example: 2025-03-10 · 2025-03-24 · round_robin
+    - entity: product_event
+      field: event_id, event_name
+      type: string, enum
+      definition: Signed Up, Account Created, Trial Started/Ended, Activation (definición de Finora), Checkout Started/Completed,
+        Invite Sent.
+      example: Signed Up
+    - entity: product_event
+      field: account_id (groupId), person_id, anonymous_id
+      type: string
+      definition: Cuenta y usuario del evento; account_id es obligatorio salvo antes del registro.
+      example: ACC-EJ-01
+    - entity: product_event
+      field: occurred_at, received_at
+      type: timestamp
+      definition: Hora del evento y hora de recepción (controla la carga tardía).
+      example: 2025-03-04 10:02
+    - entity: product_event
+      field: properties
+      type: json
+      definition: signup_type (organic / invited), plan, contexto UTM.
+      example: '{signup_type: organic}'
+    - entity: subscription
+      field: subscription_id, account_id, billing_customer_id
+      type: string
+      definition: La suscripción, su cuenta y el cliente en facturación.
+      example: SUB-310 · ACC-EJ-01 · cus_ILUSTRATIVO
+    - entity: subscription
+      field: source_opportunity_id
+      type: string (nullable)
+      definition: Oportunidad de origen; queda vacía en self-serve puro.
+      example: O-88
+    - entity: subscription
+      field: status
+      type: enum
+      definition: trialing / active / past_due / canceled / unpaid / paused.
+      example: past_due
+    - entity: subscription
+      field: start_date, trial_start, trial_end
+      type: date
+      definition: Inicio y periodo de trial.
+      example: '2025-04-01'
+    - entity: subscription
+      field: cancel_requested_at, canceled_at, ended_at, cancellation_reason
+      type: timestamp, enum
+      definition: Cuándo se pidió la cancelación, cuándo fue efectiva, fin y motivo.
+      example: 2025-09-30 · precio
+    - entity: subscription
+      field: collection_method
+      type: enum
+      definition: Cobro automático o por factura.
+      example: factura
+    - entity: subscription_item_version
+      field: item_version_id, subscription_id, plan_id
+      type: string
+      definition: Ítem contratado y plan de catálogo.
+      example: IV-1 · SUB-310 · plan_ejemplo
+    - entity: subscription_item_version
+      field: list_unit_price, quantity, billing_interval_months
+      type: decimal, integer
+      definition: 'Lo tarifado: precio de lista por unidad y periodo, cantidad e intervalo (1 = mensual, 12 = anual).'
+      example: 50 · 2 · 1
+    - entity: subscription_item_version
+      field: valid_from, valid_to, change_reason
+      type: date, enum
+      definition: Vigencia y motivo del cambio (upgrade / downgrade / cantidad / precio).
+      example: 2025-04-01 · (vacío) · alta
+    - entity: subscription_item_version
+      field: list_mrr (derivado)
+      type: decimal
+      definition: list_unit_price × quantity ÷ billing_interval_months.
+      example: '100'
+    - entity: discount
+      field: discount_id, subscription_id
+      type: string
+      definition: El descuento y la suscripción (o el ítem) a la que aplica.
+      example: D-9 · SUB-310
+    - entity: discount
+      field: discount_type, value, duration
+      type: enum, decimal, enum
+      definition: Porcentaje o monto; once / repeating / forever.
+      example: porcentaje · 20 · repeating
+    - entity: discount
+      field: valid_from, valid_to
+      type: date
+      definition: Vigencia; es la clave para los descuentos temporales.
+      example: 2025-04-01 · 2025-06-30
+    - entity: discount
+      field: reason, approved_by_user_id, campaign_id
+      type: enum, string
+      definition: Promo de entrada / retención / negociación; quién lo aprobó; campaña, si aplica.
+      example: promo de entrada · U-AE-02
+    - entity: invoice
+      field: invoice_id, subscription_id, account_id
+      type: string
+      definition: La factura.
+      example: INV-1201
+    - entity: invoice
+      field: period_start, period_end
+      type: date
+      definition: Periodo de servicio que cubre (distingue un prepago multimes de una expansión).
+      example: 2025-05-01 · 2026-04-30
+    - entity: invoice
+      field: subtotal_list, discount_amount, amount_due
+      type: decimal
+      definition: Lo facturado antes y después del descuento.
+      example: 600 · 0 · 600
+    - entity: invoice
+      field: due_at, status
+      type: date, enum
+      definition: Vencimiento; open / paid / void / uncollectible.
+      example: 2025-05-15 · paid
+    - entity: payment
+      field: payment_id, invoice_id, account_id
+      type: string
+      definition: Pago o intento de pago.
+      example: PAY-88
+    - entity: payment
+      field: paid_at, amount, status
+      type: timestamp, decimal, enum
+      definition: 'Lo cobrado: cuándo, cuánto y con qué resultado (succeeded / failed / refunded).'
+      example: 2025-05-10 · 600 · succeeded
+    - entity: funnel_entry
+      field: entry_id, account_id, entry_seq
+      type: string, integer
+      definition: La entrada; entry_seq > 1 indica re-entrada.
+      example: E-1003 · ACC-EJ-03 · 2
+    - entity: funnel_entry
+      field: entry_at, entry_cohort_month
+      type: timestamp, string
+      definition: Primer hito calificado y su mes (cohorte de entrada de C-006).
+      example: 2025-03-15 · 2025-03
+    - entity: funnel_entry
+      field: door
+      type: enum
+      definition: self_serve / sql_directo / outbound / reactivate / referido / unknown. Se fija al entrar.
+      example: reactivate
+    - entity: funnel_entry
+      field: route
+      type: enum
+      definition: self_serve_puro / hybrid / sales_assisted. Es descriptiva; no se compara entre puertas.
+      example: hybrid
+    - entity: funnel_entry
+      field: first_channel_id, first_campaign_id
+      type: string
+      definition: Canal y campaña del primer toque de la entrada.
+      example: paid_search
+    - entity: funnel_entry
+      field: signup_at, activation_at, engaged_at, sql_at, opportunity_created_at, first_sales_touch_at, won_at,
+        first_paid_at
+      type: timestamp
+      definition: Fecha de cada hito (vacía si no ocurrió).
+      example: 2025-03-04 · … · 2025-03-20
+    - entity: funnel_entry
+      field: days_entry_to_sql, days_entry_to_paid, reached_paid_within_w
+      type: integer, boolean
+      definition: Lags entre hitos y alcance dentro de la ventana fija W.
+      example: 16 · 1
+    - entity: funnel_entry
+      field: last_progress_at, stalled_flag, outcome, initial_list_mrr
+      type: timestamp, boolean, enum, decimal
+      definition: Último avance, estancamiento a N días, resultado (won / lost / open / expired) y MRR inicial.
+      example: 2025-03-18 · 1 · open
+    - entity: account_month
+      field: account_id, month
+      type: string
+      definition: 'PK compuesta. Tabla densa: una fila por cuenta y mes desde first_seen.'
+      example: ACC-EJ-01 · 2025-07
+    - entity: account_month
+      field: subscription_status_eom
+      type: enum
+      definition: Estado de la suscripción el último día del mes.
+      example: past_due
+    - entity: account_month
+      field: list_mrr, discount_mrr, net_mrr
+      type: decimal
+      definition: MRR contratado a precio de lista, descuentos vigentes (en negativo) y MRR neto.
+      example: 100 · 0 · 100
+    - entity: account_month
+      field: invoiced_amount, collected_amount
+      type: decimal
+      definition: Facturado y cobrado en el mes.
+      example: 100 · 0
+    - entity: account_month
+      field: legacy_paid_amount_cop
+      type: decimal
+      definition: raw.transactions × 10.000 durante la transición, para reconciliar con el as-is.
+      example: (solo meses legados)
+    - entity: account_month
+      field: mrr_movement, discount_movement, past_due_flag
+      type: enum, decimal, boolean
+      definition: Movimiento sobre la base de MRR elegida, efecto del inicio o fin de un descuento, y marca de mora.
+      example: flat · +20 · true
+    - entity: account_month
+      field: revenue_cohort_month, door_current_episode, industry_asof, owner_asof
+      type: string, enum
+      definition: Cortes de C-009 y cruce con C-006.
+      example: 2025-04 · self_serve
+    temporal_behavior: 'Hay cuatro tipos de tiempo y cada uno responde una pregunta distinta. (1) Eventos inmutables
+      con timestamp (touch, product_event, activity, stage_history, payment). Responden «¿qué pasó y cuándo?» y
+      permiten reconstruir cualquier estado pasado. (2) Registros con vigencia (valid_from/valid_to, SCD2): account_xref,
+      historial de account, channel, sales_user, assignment, subscription_item_version, discount. Responden «¿qué
+      era cierto en la fecha d?»: qué plan y precio tenía la cuenta, quién era el dueño, qué canal significaba un
+      utm. (3) Snapshot periódico de cierre de mes: account_month. Responde «¿cuánto MRR tenía cada cuenta y en
+      qué estado estaba al cierre?» y alimenta el puente de C-009; es denso (con ceros), como hoy mart.customer_month.
+      (4) Accumulating snapshot: funnel_entry. Responde «¿qué % de la cohorte de entrada de marzo llegó a pago en
+      W días y cuánto tardó?» (C-006). Se actualiza cuando se cumplen los hitos, así que conviene recalcularlo desde
+      los eventos para poder auditarlo. Reglas de corte: una cohorte de entrada solo se lee cuando entry_at + W
+      ≤ fecha de corte (censura por la derecha); el estado del mes usa la vigencia al último día del mes. Hoy el
+      caso solo tiene el tipo (3), a grano cliente × mes sobre monto pagado, y ningún evento con fecha dentro del
+      mes.'
+    business_definitions:
+    - term: Cuenta
+      definition: Empresa cliente o prospecto. Es la unidad de análisis común del funnel y del ingreso; puede tener
+        varias personas, leads, oportunidades y suscripciones.
+    - term: Persona
+      definition: Contacto o usuario individual. Entra, responde y usa el producto, pero el ingreso se atribuye
+        a la cuenta.
+    - term: Lead
+      definition: Registro de interés de una persona (o cuenta) en un momento dado, con fuente y estado. No es una
+        cuenta ni una oportunidad.
+    - term: Entrada
+      definition: Episodio en que una cuenta entra al funnel (su primer hito calificado). Una cuenta puede tener
+        varias entradas a lo largo del tiempo.
+    - term: Puerta
+      definition: 'Por dónde entró la cuenta en esa entrada: self-serve, SQL directo, outbound, Reactivate o referido.
+        Se fija al entrar y no cambia; es el eje de comparación de C-006.'
+    - term: Ruta
+      definition: 'Cómo avanzó después de entrar: self-serve puro, Hybrid o sales-assisted. Describe, pero no se
+        compara entre puertas.'
+    - term: Hybrid
+      definition: Ruta de una entrada self-serve que recibió al menos un toque comercial completado antes del primer
+        pago.
+    - term: Reactivate (puerta)
+      definition: Entrada de una cuenta que ya fue cliente y cuya suscripción terminó.
+    - term: Cohorte de entrada
+      definition: Cuentas cuya entrada ocurrió en el mismo mes (C-006). Es distinta de la cohorte de ingreso (primer
+        mes con MRR > 0, C-009) y de la cohorte legada del as-is (primer mes con pago).
+    - term: Ventana fija (W)
+      definition: Días desde entry_at dentro de los cuales se cuenta si un hito ocurrió. Es igual para todas las
+        cohortes y puertas.
+    - term: Hito
+      definition: 'Evento con fecha que marca un avance: registro, activación, Engaged, SQL, oportunidad, ganada,
+        primer pago.'
+    - term: Tiempo de cierre
+      definition: Días entre entry_at y won_at (o first_paid_at en self-serve puro).
+    - term: Estancamiento
+      definition: Entrada abierta sin cambio de etapa, sin actividad comercial y sin uso de producto durante N días.
+    - term: Intervención comercial
+      definition: Actividad de SDR/AE completada sobre la entrada (con quién, sobre qué, cuándo). Se mide; no se
+        asume que cause el resultado.
+    - term: Canal / fuente / campaña
+      definition: Canal = categoría normalizada (paid search, outbound…). Fuente = utm_source o lead_source tal
+        cual vienen. Campaña = iniciativa con ID (utm_id).
+    - term: MRR de lista (contratado)
+      definition: Suma de precio de lista × cantidad ÷ meses del intervalo, para los ítems vigentes al cierre de
+        mes de las suscripciones active o past_due.
+    - term: Descuento
+      definition: Reducción pactada sobre el precio de lista, con tipo, valor y vigencia. Se guarda aparte y nunca
+        se mezcla en el precio.
+    - term: MRR neto
+      definition: MRR de lista + descuentos vigentes (en negativo).
+    - term: Facturado
+      definition: Monto de las facturas emitidas en el mes, con su periodo de servicio.
+    - term: Cobrado
+      definition: Pagos exitosos recibidos en el mes. Es lo que hoy más se parece a raw.transactions (hipótesis
+        «cobrado»).
+    - term: Monto pagado observado (as-is)
+      definition: amount × 10.000 por cliente y mes. No es MRR contratado mientras no se confirme la recurrencia.
+    - term: Churn (to-be)
+      definition: La cuenta pasa de MRR > 0 a 0 porque sus suscripciones quedaron canceladas, impagas o terminaron.
+    - term: Churn observado (as-is)
+      definition: La cuenta pagaba el mes anterior y este mes paga cero. No es cancelación confirmada.
+    - term: Mora
+      definition: Suscripción active o past_due con una factura vencida sin pagar. Mantiene su MRR y se marca aparte.
+    - term: New / Working / Engaged
+      definition: Estados de lead en el vocabulario de Hugo. Las definiciones propuestas están en la lógica de clasificación
+        y hay que validarlas con Finora.
+    classification_logic:
+    - case: Puerta de una entrada (propuesta; el orden es decisión de Hugo/Finora)
+      rule: 'Se evalúa en entry_at con el primer hito calificado del episodio, en este orden: (1) reactivate, si
+        la cuenta tuvo una suscripción terminada (ended_at < entry_at); (2) outbound, si el primer hito es una actividad
+        outbound de SDR/AE sin toque inbound previo en R días; (3) sql_directo, si el primer hito es un formulario
+        de demo o contacto (lead_source = demo_request); (4) self_serve, si el primer hito es un product_event Signed
+        Up o Account Created; (5) referido, si existe; (6) unknown. Una sola puerta por entrada, que no cambia después.'
+    - case: Ruta dentro de la puerta (descriptiva)
+      rule: Se fija al primer pago o al cerrar la ventana. self_serve_puro = puerta self_serve sin ninguna actividad
+        comercial completada antes del primer pago. hybrid = puerta self_serve con ≥1 actividad comercial completada
+        (o asignación a SDR/AE) antes del primer pago. sales_assisted = puertas sql_directo u outbound con oportunidad.
+    - case: Nueva entrada vs misma entrada
+      rule: 'Se abre una entrada nueva si la cuenta no tiene ninguna entrada abierta y la última se cerró (ganada,
+        perdida o expirada) hace más de R días; si no, el toque se suma a la entrada abierta. Las expansiones de
+        clientes activos no abren entrada: van como opportunity_type = expansion.'
+    - case: Estados de lead New / Working / Engaged (a validar con Finora)
+      rule: 'New = creado, sin actividad outbound completada. Working = ≥1 actividad outbound completada y todavía
+        sin respuesta. Engaged = ≥1 respuesta del prospecto (contesta, llamada conectada o reunión agendada). Después:
+        Qualified (SQL) / Disqualified / Nurture. Cada cambio se escribe en stage_history.'
+    - case: Alcance en ventana fija
+      rule: reached_X_W = 1 si X_at − entry_at ≤ W días. Una cohorte de entrada solo se reporta cuando entry_at
+        + W ≤ fecha de corte.
+    - case: Estancamiento
+      rule: Una entrada abierta está estancada en la fecha d si en los últimos N días no tuvo cambio de etapa, ni
+        actividad comercial completada, ni evento de producto. N se define por etapa (decisión).
+    - case: Movimientos de MRR (sobre account_month; usar list_mrr o net_mrr como base es decisión)
+      rule: 'new: MRR_t > 0 y nunca > 0 antes. expansion: MRR_t > MRR_t-1 > 0. contraction: 0 < MRR_t < MRR_t-1.
+        churn: MRR_t-1 > 0 y MRR_t = 0 porque al cierre la suscripción quedó canceled o unpaid, o terminó. reactivation:
+        MRR_t > 0, MRR_t-1 = 0 y > 0 en algún mes previo. flat: igual al mes anterior.'
+    - case: Descuento temporal (decisión, no hecho)
+      rule: 'Propuesta por defecto: no mueve list_mrr; se registra en discount_mrr y mueve net_mrr como «movimiento
+        de descuento», separado de la expansión y la contracción. Si Hugo/Finora deciden reportar MRR neto, el inicio
+        y el fin del descuento aparecerán como contracción y expansión, y eso tiene que quedar escrito.'
+    - case: Mora (past_due)
+      rule: 'Si la suscripción está active o past_due al cierre y collected = 0, el MRR se mantiene y se marca mora:
+        no es churn. Pasa a churn en el mes en que queda unpaid o canceled.'
+    - case: Pago multimes o atrasado
+      rule: 'El MRR sale de subscription_item_version normalizado por intervalo (anual ÷ 12), no del cobro. Un cobro
+        doble por atraso o un prepago no es expansión: se ve en collected y en invoice.period.'
+    - case: Cohortes
+      rule: Cohorte de entrada (C-006) = mes de entry_at. Cohorte de ingreso (C-009) = primer mes con MRR > 0. Cohorte
+        legada (as-is) = primer mes con pago > 0, con cohort_flag left_censored o suspected_spillover. No se mezclan
+        en la misma tabla.
+    - case: Base previa del as-is
+      rule: Los 377 clientes activos en ene-22 quedan con door = unknown y entry_at vacío, fuera de las comparaciones
+        por puerta, salvo que se pueda hacer backfill desde el CRM.
+    example_records:
+    - entity: raw.transactions (as-is, datos reales de DM-02)
+      columns:
+      - ID
+      - month
+      - amount
+      rows:
+      - - '1'
+        - 1/31/2022
+        - '6.3'
+      - - '1'
+        - 2/28/2022
+        - '6.3'
+      - - '1'
+        - 3/31/2022
+        - '6.3'
+      - - '1'
+        - 4/30/2022
+        - '0'
+      - - '1'
+        - 5/31/2022
+        - '0'
+    - entity: account_xref (to-be; IDs legados reales, resto ilustrativo)
+      columns:
+      - account_id
+      - source_system
+      - source_id
+      - valid_from
+      - valid_to
+      - match_method
+      rows:
+      - - ACC-000001
+        - legacy_transactions
+        - '1'
+        - 2022-01 (inicio de ventana)
+        - ''
+        - parse
+      - - ACC-000001
+        - legacy_industry
+        - Cliente 1
+        - 2022-01 (inicio de ventana)
+        - ''
+        - parse
+      - - ACC-000001
+        - billing
+        - cus_ILUSTRATIVO
+        - (fecha de carga)
+        - ''
+        - legal_id
+      - - ACC-000001
+        - crm
+        - 001ILUSTRATIVO
+        - (fecha de carga)
+        - ''
+        - legal_id
+      - - ACC-000001
+        - product
+        - org_ILUSTRATIVO
+        - (fecha de carga)
+        - ''
+        - email_domain
+    - entity: funnel_entry (ilustrativo, no son datos del caso)
+      columns:
+      - entry_id
+      - account_id
+      - entry_seq
+      - entry_at
+      - door
+      - route
+      - first_channel
+      - signup_at
+      - first_sales_touch_at
+      - sql_at
+      - first_paid_at
+      - days_entry_to_paid
+      - paid_within_W
+      - stalled_flag
+      - outcome
+      rows:
+      - - E-1001
+        - ACC-EJ-01
+        - '1'
+        - '2025-03-04'
+        - self_serve
+        - hybrid
+        - paid_search
+        - '2025-03-04'
+        - '2025-03-06'
+        - ''
+        - '2025-03-20'
+        - '16'
+        - '1'
+        - '0'
+        - won
+      - - E-1002
+        - ACC-EJ-02
+        - '1'
+        - '2025-03-10'
+        - outbound
+        - sales_assisted
+        - outbound
+        - ''
+        - '2025-03-10'
+        - '2025-03-24'
+        - ''
+        - ''
+        - '0'
+        - '1'
+        - open
+      - - E-1003
+        - ACC-EJ-03
+        - '2'
+        - '2025-03-15'
+        - reactivate
+        - self_serve_puro
+        - email
+        - '2025-03-15'
+        - ''
+        - ''
+        - '2025-03-16'
+        - '1'
+        - '1'
+        - '0'
+        - won
+    - entity: stage_history (ilustrativo)
+      columns:
+      - stage_event_id
+      - object_type
+      - object_id
+      - account_id
+      - from_stage
+      - to_stage
+      - changed_at
+      - changed_by
+      - change_source
+      rows:
+      - - SH-1
+        - lead
+        - L-501
+        - ACC-EJ-02
+        - ''
+        - New
+        - 2025-03-10 09:12
+        - U-SDR-07
+        - integration
+      - - SH-2
+        - lead
+        - L-501
+        - ACC-EJ-02
+        - New
+        - Working
+        - 2025-03-10 11:40
+        - U-SDR-07
+        - manual
+      - - SH-3
+        - lead
+        - L-501
+        - ACC-EJ-02
+        - Working
+        - Engaged
+        - 2025-03-18 16:05
+        - U-SDR-07
+        - manual
+      - - SH-4
+        - opportunity
+        - O-88
+        - ACC-EJ-02
+        - ''
+        - Discovery
+        - 2025-03-24 10:00
+        - U-AE-02
+        - manual
+    - entity: 'account_month (ilustrativo, unidades ficticias): mismo historial leído en to-be vs as-is'
+      columns:
+      - account_id
+      - month
+      - subscription_status_eom
+      - list_mrr
+      - discount_mrr
+      - net_mrr
+      - invoiced
+      - collected
+      - mrr_movement (base list_mrr)
+      - lectura as-is (solo cobrado)
+      rows:
+      - - ACC-EJ-01
+        - 2025-04
+        - active
+        - '100'
+        - '-20'
+        - '80'
+        - '80'
+        - '80'
+        - new
+        - alta con 80
+      - - ACC-EJ-01
+        - 2025-07
+        - past_due
+        - '100'
+        - '0'
+        - '100'
+        - '100'
+        - '0'
+        - flat (mora; fin de descuento +20 en net_mrr)
+        - churn observado
+      - - ACC-EJ-01
+        - 2025-08
+        - active
+        - '100'
+        - '0'
+        - '100'
+        - '100'
+        - '200'
+        - flat
+        - reactivación con 200
+      - - ACC-EJ-04
+        - 2025-05
+        - active
+        - '50'
+        - '0'
+        - '50'
+        - '600'
+        - '600'
+        - 'new (factura anual: 600 ÷ 12)'
+        - alta con 600; luego 11 meses en cero = churn observado
+    edge_cases:
+    - 'Base previa: 377 clientes ya activos en ene-22 (left_censored), sin fecha de entrada ni puerta. Quedan fuera
+      de las cohortes por puerta, salvo que el CRM tenga historia.'
+    - '108 altas de feb-22 marcadas como suspected_spillover: posible arrastre de la base previa.'
+    - 'Churn en el último mes: 33 eventos en oct-24 sin t+1 observable (censura por la derecha).'
+    - 'Una cuenta con varias suscripciones o varias entidades de facturación, y fusiones o separaciones de cuentas:
+      se resuelven con account_xref con vigencia y una llave que sobrevive.'
+    - 'Varias personas de la misma empresa que entran por puertas distintas el mismo mes: una sola entrada por cuenta,
+      gana la primera puerta y lo demás son toques.'
+    - 'Re-entradas: un ex-cliente que vuelve (Reactivate) vs un lead que se enfría y reaparece (si pasaron menos
+      de R días, es la misma entrada).'
+    - 'Una cuenta self-serve que paga sin tener lead en el CRM: su funnel_entry nace del product_event.'
+    - 'Oportunidades de expansión: no son entradas nuevas; alimentan expansion MRR, no C-006.'
+    - 'Etapas que retroceden o se saltan: HubSpot, por defecto, solo avanza automáticamente, así que hay que registrar
+      los retrocesos de forma explícita.'
+    - 'Reasignación a mitad del ciclo: el crédito de cada hito va a quien era dueño en ese momento, según assignment.'
+    - 'Actividades registradas tarde o en lote: se usa occurred_at, no logged_at, y se mide el retraso de registro.'
+    - Pago anual o multimes, pago atrasado (cobro doble) y pago parcial.
+    - 'Descuento del 100% (¿churn o activo?) y trial gratuito (fuera del MRR hasta que pague): son decisiones de
+      definición.'
+    - 'Toques sin UTM: van a canal «desconocido» y se reporta qué porcentaje representan.'
+    - 'Moneda y escala: los montos del caso son × 10.000 COP (escala documentada); la unidad del gasto S&M no está
+      documentada.'
+    - 'Una industria que cambia en el tiempo: se maneja con el historial SCD2 de account.'
+    data_quality_rules:
+    - 'Unicidad: account_id único; cada (source_system, source_id) apunta a una sola cuenta en cualquier fecha,
+      sin solapes de vigencia.'
+    - 'Integridad: 100% de subscription, opportunity e invoice con account_id. El % de leads y product_events sin
+      cuenta se reporta cada semana (el umbral es decisión).'
+    - 'Dominios cerrados: door, route, lead.status, stage, subscription.status, activity_type y channel_group solo
+      toman valores de su lista.'
+    - 'Orden temporal: entry_at ≤ sql_at ≤ won_at (si no, se marca); changed_at creciente por objeto en stage_history;
+      valid_from < valid_to.'
+    - 'Sin solapes: assignment por objeto × rol; subscription_item_version por ítem; discount por suscripción (salvo
+      apilado explícito).'
+    - 'Reconciliación de cobro: la suma de payment por cuenta × mes = collected en account_month. Durante la transición,
+      = raw.transactions × 10.000, con el mismo patrón que los 7 checks actuales.'
+    - 'Reconciliación de gasto: la suma de campaign_spend por rubro × mes = sm_spend, con la unidad documentada.'
+    - 'Cobertura de canal: % de entradas con canal distinto de «desconocido»; UTMs normalizados en minúsculas.'
+    - 'MRR: list_mrr ≥ 0; net_mrr ≤ list_mrr; normalización por intervalo verificada.'
+    - 'Puente: MRR inicial + movimientos = MRR final de cada mes, al centavo, como hoy.'
+    - 'Frescura: eventos cargados en menos de 24 h; el snapshot mensual cierra el día N del mes siguiente (N es
+      decisión).'
+    - 'Dueño por campo: cada campo tiene dueño, tipo, valores permitidos y un test.'
+    implementation_considerations:
+    - 'Secuencia propuesta (Hugo decide): (a) definiciones + account_id + crosswalk, sin sistemas nuevos (C-013);
+      (b) capturar desde ya lo que no se puede reconstruir: UTMs en formularios y registro, lead_source, historial
+      de etapas y de dueños, actividades, estado de suscripción y periodo de factura; (c) construir funnel_entry
+      y account_month; (d) tableros por foro (C-014).'
+    - Lo que no se captura no se reconstruye. Sin historial en los sistemas de Finora, las cohortes por puerta arrancan
+      el día que empieza la captura y la primera lectura llega W días después. Si el CRM guarda historial, se puede
+      reconstruir hacia atrás (patrón de historial diario).
+    - 'No reescribir mart.customer_month: queda como capa «monto pagado observado» y account_month agrega la capa
+      «MRR contratado»; las dos se reconcilian cada mes. Usar nombres distintos para no cambiar una métrica en silencio.'
+    - 'Los objetos de Salesforce/HubSpot, la spec de Segment y Stripe son patrones de referencia, no recomendación
+      de herramienta: el stack de Finora no está en el caso.'
+    - 'funnel_entry se actualiza en el lugar (accumulating snapshot): conviene recalcularlo desde los eventos para
+      auditarlo, y versionar las reglas de puerta y ruta.'
+    - 'Dueños por capa: Marketing (UTMs, campañas, gasto), RevOps (lead, oportunidad, etapas, actividades, asignación),
+      Producto (taxonomía de eventos y definición de activación), Finanzas (suscripción, descuentos, facturas, pagos,
+      unidad del gasto).'
+    - Asignar el costo del equipo (team, payroll) a las puertas requiere una regla (por actividades o por asignación).
+      Esa regla es una decisión, no un dato; paid media se asigna por campaña.
+    - 'Datos personales (email, teléfono) en person y touch: minimizar y hashear; revisar la regulación local de
+      datos personales (no la verifiqué en esta corrida).'
+    - 'Grano único por tabla: no mezclar cuenta × mes con entrada ni con evento. Las métricas de C-006 salen de
+      funnel_entry y las de C-009 de account_month.'
+sql_runs:
+- catalogo_modelo()
+- SELECT * FROM raw.transactions LIMIT 5
+- SELECT * FROM raw.industry LIMIT 5
+- SELECT * FROM raw.sm_spend LIMIT 3
+- SELECT COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes, COUNT(DISTINCT month) AS meses, MIN(month)
+  AS primer_mes, MAX(month) AS ultimo_mes, SUM(CASE WHEN amount = 0 THEN 1 ELSE 0 END) AS filas_en_cero, SUM(CASE
+  WHEN amount > 0 THEN 1 ELSE 0 END) AS filas_positivas, SUM(CASE WHEN amount < 0 THEN 1 ELSE 0 END) AS filas_negativas,
+  SUM(CASE WHEN amount IS NULL THEN 1 ELSE 0 END) AS filas_nulas FROM staging.stg_customer_month
+- SELECT SUM(CASE WHEN mx = 0 THEN 1 ELSE 0 END) AS clientes_nunca_pagan, SUM(CASE WHEN mx > 0 THEN 1 ELSE 0 END)
+  AS clientes_con_algun_pago, COUNT(*) AS clientes FROM (SELECT customer_id, MAX(amount) AS mx FROM staging.stg_customer_month
+  GROUP BY customer_id) t
+- SELECT (SELECT COUNT(DISTINCT customer_id) FROM staging.stg_customer_month) AS clientes_en_pagos, (SELECT COUNT(DISTINCT
+  customer_id) FROM staging.stg_customers) AS clientes_en_industria, (SELECT COUNT(DISTINCT m.customer_id) FROM
+  staging.stg_customer_month m LEFT JOIN staging.stg_customers c ON m.customer_id = c.customer_id WHERE c.customer_id
+  IS NULL) AS pagos_sin_industria, (SELECT COUNT(*) FROM staging.stg_customers c WHERE c.customer_id NOT IN (SELECT
+  DISTINCT customer_id FROM staging.stg_customer_month)) AS industria_sin_pagos, (SELECT COUNT(*) FROM raw.industry
+  WHERE "ID" IS NULL OR TRIM("ID") = '') AS filas_industria_vacias
+- SELECT industry, COUNT(*) AS clientes FROM staging.stg_customers GROUP BY industry ORDER BY clientes DESC
+- SELECT movement_type, COUNT(*) AS filas, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP
+  BY movement_type ORDER BY filas DESC
+- SELECT DISTINCT rubro FROM staging.stg_sm_spend ORDER BY rubro
+- SELECT SUM(CASE WHEN movement_type = 'churn' THEN 1 ELSE 0 END) AS eventos_churn, SUM(CASE WHEN movement_type
+  = 'churn' AND returned_next_month = 1 THEN 1 ELSE 0 END) AS churn_vuelve_t1, SUM(CASE WHEN movement_type = 'churn'
+  AND returned_same_amount_next_month = 1 THEN 1 ELSE 0 END) AS churn_vuelve_t1_mismo_monto, SUM(CASE WHEN movement_type
+  IN ('expansion','contraction') THEN 1 ELSE 0 END) AS eventos_exp_contr, SUM(CASE WHEN movement_type IN ('expansion','contraction')
+  AND reverts_next_month = 1 THEN 1 ELSE 0 END) AS exp_contr_revierte_t1, SUM(CASE WHEN multi_month_payment_signature
+  > 0 THEN 1 ELSE 0 END) AS filas_firma_pago_multimes, COUNT(DISTINCT CASE WHEN multi_month_payment_signature >
+  0 THEN customer_id END) AS clientes_firma_pago_multimes FROM mart.customer_month
+- SELECT cohort_flag, COUNT(DISTINCT customer_id) AS clientes FROM mart.customer_month GROUP BY cohort_flag ORDER
+  BY clientes DESC
+- SELECT COUNT(DISTINCT observed_amount) AS montos_distintos, COUNT(DISTINCT usual_amount_cop) AS montos_usuales_distintos,
+  MIN(CASE WHEN observed_amount > 0 THEN observed_amount END) AS monto_min_positivo, MAX(observed_amount) AS monto_max
+  FROM mart.customer_month
+- SELECT COUNT(*) AS eventos_churn, SUM(CASE WHEN n.observed_amount > 0 THEN 1 ELSE 0 END) AS paga_en_t1, SUM(CASE
+  WHEN n.observed_amount > 0 AND ABS(n.paid_mrr_cop - c.previous_month_mrr) < 1 THEN 1 ELSE 0 END) AS paga_en_t1_mismo_monto_previo,
+  SUM(CASE WHEN n.customer_id IS NULL THEN 1 ELSE 0 END) AS churn_en_ultimo_mes_sin_t1 FROM mart.customer_month
+  c LEFT JOIN mart.customer_month n ON n.customer_id = c.customer_id AND n.month_index = c.month_index + 1 WHERE
+  c.movement_type = 'churn'
+- SELECT (SELECT MIN(month) FROM staging.stg_sm_spend) AS sm_primer_mes, (SELECT MAX(month) FROM staging.stg_sm_spend)
+  AS sm_ultimo_mes, (SELECT COUNT(DISTINCT month) FROM staging.stg_sm_spend) AS sm_meses, (SELECT COUNT(*) FROM
+  staging.stg_sm_spend) AS sm_filas_mes_rubro, (SELECT COUNT(DISTINCT month) FROM raw.transactions) AS tx_valores_mes_distintos,
+  (SELECT MIN(month) FROM raw.transactions WHERE month LIKE '1/%') AS tx_ejemplo_enero, (SELECT MIN(month) FROM
+  raw.transactions WHERE month LIKE '2/%') AS tx_ejemplo_febrero
+completed_at: '2026-09-29T19:19:55-06:00'
+findings:
+- F-238
+- F-239
+- F-240
+- F-241
+- F-242
+run_ids:
+- RUN-20260929-190141-data_engineering-cc86
+usage:
+  RUN-20260929-190141-data_engineering-cc86:
+    cost_usd: 3.338126
+    turns: 40
+    ms: 1092793
+    input_tokens: 26
+    output_tokens: 130048
+    cache_read: 461110
+    cache_write: 53395
+    terminal_reason: completed
+    subtype: success
+skills_loaded:
+- id: case-research-synthesis
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 2e17a5277f3b
+- id: data-modeling
+  mode: core
+  why: núcleo del agente
+  source: CaseOS
+  kind: custom
+  digest: 9260e3c616c5
+- id: measurement-strategy
+  mode: dynamic
+  why: pedido explícito
+  source: CaseOS
+  kind: custom
+  digest: 02c076192332
+- id: cro-advisor
+  mode: dynamic
+  why: pedido explícito
+  source: alirezarezvani/claude-skills · c-level-advisor/skills/cro-advisor
+  kind: vendor
+  digest: cd712605d907
+validation:
+  unverified_sources: []
+  bare_claims: []
+  seen_urls: 116
+  ok: true

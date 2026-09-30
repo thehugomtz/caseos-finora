@@ -370,7 +370,9 @@ async def _specialist(store: CaseStore, r: dict, job) -> dict:
         turns += 10
     spec = RunSpec(agent=agent, role=agent, system=system, prompt=prompt, schema=result_schema(spec_key), tools=tools,
                    max_turns=turns, skills=skills.record(selected), purpose=f"{r['id']} · {SPECIALTIES[spec_key]} {r['intensity']}",
-                   case_id=store.id, case_root=store.root, timeout_s=1500 if dm is not None else 1200, data_model=dm)
+                   case_id=store.id, case_root=store.root, data_model=dm,
+                   # a full design (stages per funnel and channel, a data model as-is vs to-be) at max effort: 25 min cut R-033
+                   timeout_s=2400 if spec_key in ("measurement", "data_engineering") else (1500 if dm is not None else 1200))
     res = await get_llm().run(spec, lambda k, d: job.event(k, d))
     out = dict(res.output)
     out["_run_ids"] = [res.run_id]

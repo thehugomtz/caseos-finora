@@ -224,3 +224,8 @@ Package. Encontrado y corregido:
   → la serie mensual de R-030 (pedida a Analytics). El kit parte en paneles con los mismos meses las series cuyas
   escalas difieren más de 5× (nunca un eje con escalas mezcladas), y una «tarjeta» del workspace muestra la tabla del
   finding en lugar de «no disponible». Los cambios que Hugo pide en el chat y hace Claude no aceptan el claim por él.
+- **Observaciones de Hugo al Story v2 (N-050…N-054):** funnels por canal con etapas literales, métricas MECE explícitas,
+  árbol MECE de causas y modelos de datos as-is vs to-be (funnel y descuentos, con promociones digitales y físicas y
+  su source). Los esquemas de Measurement y Data Engineering ganaron `stage_map`, funnel/familia/«¿hoy?» por métrica,
+  `as_is` y `gap`; Story los muestra plegados bajo cada propuesta. R-033 se cortó a los 25 min: los especialistas de
+  diseño tienen 40 min.

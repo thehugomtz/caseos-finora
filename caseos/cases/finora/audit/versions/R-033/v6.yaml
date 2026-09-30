@@ -1,0 +1,100 @@
+id: R-033
+type: research
+research_question: 'Propuesta de modelo de datos para operar el funnel, as-is vs to-be: ¿qué tablas hay hoy (cliente-mes-monto,
+  industria, gasto de S&M) y qué responden, qué entidades se agregan (cuenta, lead, canal y fuente, campaña, oportunidad,
+  historial de etapas, actividades de SDR/AE, eventos de producto, asignación, suscripción) con llaves y grano,
+  y qué métrica de C-006 y C-009 habilita cada una?'
+case_question: C-013, C-014, C-006, C-009
+specialty: data_engineering
+intensity: L2
+route:
+  specialty: data_engineering
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 2
+    analytics: 1
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - C-013
+    - C-014
+    - C-006
+    - C-009
+    suggested:
+    - Q-041
+    - Q-065
+    - D-015
+    - Q-048
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: queued
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-013
+- C-014
+- C-006
+- C-009
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T18:24:05-06:00'
+updated_at: '2026-09-29T19:01:41-06:00'
+version: 6
+job_id: JOB-20260929-190141-65e4
+error: null
+started_at: '2026-09-29T18:24:06-06:00'
+shaping_task: RT-032
+slides:
+- S2.7
+task_why: 'Hugo en el chat (29-sep, revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos
+  propuesto, as-is vs to-be.'
+task:
+  work: propuesta
+  draft_answer: 'As-is: raw.transactions (cliente, mes, monto), raw.industry, raw.sm_spend (rubro, mes, monto) y
+    sus marts; responden el stock, el puente de monto pagado y el gasto por rubro; no responden nada antes del pago,
+    ni canal, ni etapa. To-be: account (llave común CRM–producto–facturación), lead con source, medium y campaign,
+    opportunity, stage_history con fecha y autor, activity (toques de SDR/AE), product_event (registro, activación,
+    checkout), assignment (SDR/AE por periodo) y el vínculo con subscription. Cada entidad habilita métricas concretas
+    de C-006.'
+  hugo_said:
+  - text: C-013, quiero ver explicitamente el modelo de datos que se propone, as is vs to be
+    ref: N-052
+  steps:
+  - kind: proposal
+    what: 'As-is: las tablas del modelo de hoy, con grano, campos, qué responden y qué no.'
+    where: []
+  - kind: proposal
+    what: 'To-be: entidades, llaves, grano y campos mínimos, con sus relaciones (1—n) escritas.'
+    where: []
+  - kind: proposal
+    what: 'Brecha as-is → to-be por necesidad (canal, etapa, tiempo de cierre, intervención, estancamiento): qué
+      hay hoy, qué se agrega y qué métrica habilita.'
+    where: []
+  - kind: data
+    what: Confirmar en el catálogo del modelo qué columnas existen hoy.
+    where:
+    - raw.transactions
+    - raw.industry
+    - raw.sm_spend
+    - mart.customer_month
+    - mart.sm_monthly
+requested_via: vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+failed_at: '2026-09-29T18:49:11-06:00'

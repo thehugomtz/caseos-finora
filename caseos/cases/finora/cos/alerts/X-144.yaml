@@ -1,0 +1,49 @@
+id: X-144
+type: alert
+kind: story_change
+status: open
+severity: medium
+effect: changes_story
+source: R-031
+target: C-022
+title: R-031 cambia la historia C-022
+finding_text: 'Propongo cuatro rutas que se clasifican al final del recorrido, según los eventos: Executive (arranca
+  con persona y nunca pasa por Checkout Self), Self Service (nunca interviene una persona), Hybrid A (arranca en
+  el producto y después entra una persona) e Hybrid B (arranca con persona y pasa por Ch…'
+why: 'R-031 es, en la práctica, el catálogo que propone C-022: 33 métricas (8 comunes por puerta, 5 por ruta y 5
+  del loop) con su semáforo de hoy, en el que solo 4 comunes se calculan, y en agregado. Pero C-022 se apoya en
+  R-022 (F-155, F-158, F-159), y allí Hybrid es la máquina de leads que trabajan SDR/AE: cobertura, tiempo a primer
+  contacto y carga por SDR/AE. En R-029 y R-031, Hybrid es producto más persona, y el lead de formulario cae en
+  Executive o en Hybrid A, según Q-063. Si el catálogo toma las métricas de Hybrid de R-022, la story usa «Hybrid»
+  con dos significados. Lo mismo pasa con X-083 a X-086, que hablan de Hybrid en el sentido de R-022 para las pruebas
+  de H-005, H-006, H-007 y H-028. Otro punto a revisar: entre las 5 métricas por ruta de R-031 no aparece la carga
+  por SDR/AE, y H-006 la necesita (X-085).'
+options:
+- key: A
+  label: Rehacer C-022 sobre la estructura de R-031 y las definiciones de R-029/R-031. Las métricas de la máquina
+    de leads de R-022 se ubican por puerta, no bajo la etiqueta Hybrid, y si no están en las 33 se suman como métricas
+    de capacidad.
+  consequence: Queda una sola definición de Hybrid en toda la historia. Las pruebas de H-005 y H-006 quedan atadas
+    a la puerta, que no cambia con Q-063. C-022 gana evidencia directa (F-223 a F-227, todavía por revisar).
+- key: B
+  label: Dejar C-022 sobre R-022 y citar R-031 como anexo.
+  consequence: Es menos trabajo, pero el CRO ve dos Hybrid distintos en láminas seguidas.
+- key: C
+  label: Congelar C-022 hasta que termine R-033 (modelo de datos del funnel, en curso) y rehacerlo una sola vez.
+  consequence: Evitas rehacer la columna «fuente faltante», pero mientras tanto C-022 sigue con la definición vieja.
+recommended: A
+recommended_why: Lo caro de corregir después es la definición, no la columna de fuentes. Cuando vuelva R-033, solo
+  hay que completar «fuente faltante».
+detected_by: cos
+links:
+- R-031
+- C-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-184141-cos-dca6
+created_at: '2026-09-29T18:55:24-06:00'
+updated_at: '2026-09-29T18:55:24-06:00'
+version: 1

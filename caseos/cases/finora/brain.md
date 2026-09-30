@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T18:24:06-06:00 · motivo: Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas… · v…
+> Actualizado: 2026-09-29T19:19:56-06:00 · motivo: COS: R-033 podría afectar C-014
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,9 +25,9 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-28 investigaciones completadas (0 aceptadas), 4 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 135 alertas abiertas.
+32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 159 alertas abiertas.
 
-COS: R-030 respalda C-004: el gasto de S&M y los primeros pagadores no se mueven juntos, y cruzar fechas no atribuye ventas. Pero su titular descansa en el corte de jun-23 del archivo de gasto y en ago-23, así que propongo una corrida corta por tramo antes de montar la lámina. El caso sigue con 0 findings aceptados y 222 propuestos (varios replicados): ningún claim de la story está listo todavía, y Framing sigue en needs_review.
+COS: R-032 deja el árbol del CRO (Paso 0 + cinco ramas por el cociente ventas/leads): sólido como mapa, sin ninguna hoja probada con los datos de hoy (F-230). Falta que Hugo decida cómo convive con D-001 y D-003 (propuesta: lugares que suman, causas que se contrastan) y que reformule C-011 y C-023; R-033 sigue corriendo. Con pagos solo se puede revisar la ventana (F-229) y la posible compra adelantada de T2-24.
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
@@ -82,7 +82,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 61 más
+- … y 65 más
 
 ## Evidence We Trust
 _Todavía no hay evidencia aceptada._
@@ -111,7 +111,7 @@ _Todavía no hay evidencia aceptada._
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 79 más
+- … y 88 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -151,7 +151,7 @@ _Sin tablas aceptadas._
 - **X-036** R-011 cambia la historia Q-002
 - **X-037** R-011 cambia la historia T-003
 - **X-038** R-011 cambia el framing Q-026
-- … y 28 más
+- … y 30 más
 
 ## Artifacts
 - Briefing v1: `brief/approved/brief.v1.md`
@@ -174,16 +174,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 18:24 · Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
-- 2026-09-29 18:24 · Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos para operar el funnel, as-is vs to-be: ¿qué tablas hay hoy (… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
-- 2026-09-29 18:24 · Hugo pidió research (L2 · Measurement): ¿Cómo se ordenan las causas de «más leads, pero no más ventas» en un árbol MECE —cada bre… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
-- 2026-09-29 18:24 · Hugo pidió research (L2 · Measurement): ¿Qué etapas aplican a cada funnel —Executive, Self Service, Hybrid A y B, Reactivate— por… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
-- 2026-09-29 18:23 · Shaping · 4 propuesta(s) aprobadas (Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude)
-- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Con estas observaciones cambian otros claims (poco); en general el Story va por 
-- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): C-017 debe mostrar un modelo de datos as-is vs to-be con más casuísticas de desc
-- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos propuesto, as-is vs to-be.
-- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Las causas de C-023 deben ordenarse de forma MECE; tanto «artefacto» confunde.
-- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Funnels por canal con sus etapas literales, y métricas MECE explícitas por funne
+- 2026-09-29 19:19 · COS: R-033 podría afectar C-014
+- 2026-09-29 19:19 · COS: R-033 podría afectar C-013
+- 2026-09-29 19:19 · COS: R-033 podría afectar C-009
+- 2026-09-29 19:19 · COS: R-033 podría afectar C-006
+- 2026-09-29 19:19 · R-033 completada: Hoy hay tres fuentes y todas son de después del pago: pagos por cliente × mes (1.961 clientes × 34 meses, tod…
+- 2026-09-29 19:19 · R-033: finding propuesto — Lo que no se capture desde ya no se reconstruye después: el to-be mide hacia ad…
+- 2026-09-29 19:19 · R-033: finding propuesto — Seis reglas del modelo son decisiones de negocio, no hechos, y tienen que queda…
+- 2026-09-29 19:19 · R-033: finding propuesto — El to-be de la hipótesis de trabajo se sostiene con patrones estándar, con tres…
+- 2026-09-29 19:19 · R-033: finding propuesto — Incluso después del pago, el as-is no separa estados que C-009 necesita: cancel…
+- 2026-09-29 19:19 · R-033: finding propuesto — El as-is es un modelo de «después del pago»: tres fuentes con tres granos (clie…
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->
