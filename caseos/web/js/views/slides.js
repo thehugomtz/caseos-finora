@@ -121,14 +121,142 @@ function deckView(x, job, slides, paint) {
   return h("div.mt2",
     h("div.row.between.mb", h("h2.sec", x.title || x.slug), h("div.row", x.presentation ? btn("Abrir presentación", { icon: "eye", onClick: () => window.open(base + "presentation.html", "_blank") }) : null,
       x.index ? btn("Viewer (←/→, G, N)", { variant: "ghost", onClick: () => window.open(base + "index.html", "_blank") }) : null,
+      x.presentation && x.status !== "running" ? btn("Actualizar PDF", { variant: "ghost", icon: "refresh", onClick: async (ev) => {
+        const b = ev.currentTarget; b.disabled = true; toast("Regenerando el PDF con tus cambios…", "info");
+        try { const out = await api.cpost(`/slides/${x.id}/pdf`); toast(out.ok ? "PDF actualizado" : `No pude regenerar el PDF: ${out.error}`, out.ok ? "ok" : "err", 7000); }
+        catch (e) { toast(e.message, "err", 7000); } finally { b.disabled = false; } } }) : null,
+      x.presentation ? btn("Descargar PDF", { variant: "ghost", onClick: () => window.open(base + "renders/deck.pdf?v=" + Date.now(), "_blank") }) : null,
       x.status === "failed" || x.status === "interrupted" || x.status === "prepared" || x.status === "incomplete" ? btn(x.status === "prepared" ? "Correr el Storyteller" : "Reintentar", { icon: "refresh", onClick: async () => { await api.cpost(`/slides/${x.id}/run`); toast("Storyteller trabajando", "agent"); paint(); } }) : null)),
     x.status === "running" ? h("div.panel.pad.agentwork", h("div.row", thinking(), h("span", { style: { fontWeight: 560 } }, "El Visual Storyteller está trabajando"), h("span.small.muted", "Story → dirección → composición → render → QA → paquete")),
       h("div.progress.mt", { style: { maxHeight: "300px" } }, ((job || {}).progress || []).slice(-40).map(p => h("div", h("span.t", hhmm(p.t)), h("span", p.summary || p.kind))))) : null,
     x.status === "failed" || x.status === "interrupted" ? h("div.panel.pad.alert", h("div.eyebrow", { style: { color: "var(--bad-ink)" } }, x.status === "interrupted" ? "La corrida se interrumpió" : "La corrida falló"), h("p.prose", x.error || ""), h("div.small.muted", "El Story Package y la carpeta del deck se conservaron.")) : null,
-    x.presentation ? h("div.deckframe", h("iframe", { src: base + "presentation.html", title: "Deck" })) : null,
+    x.presentation ? h("div.deckframe", h("iframe#deckframe", { src: base + "presentation.html", title: "Deck" })) : null,
+    x.presentation && x.status !== "running" ? orderEditor(x) : null,
     slides.length ? h("div.mt", h("h2.sec.mb", "Slides y linaje"), h("div.thumbs", slides.map(s => h("div.thumb", { on: { click: () => app.openEntity(s.id) } },
       s.render ? h("img", { src: `/case-files/${app.caseId}/decks/${s.render.split("/decks/")[1]}`, alt: s.title }) : h("div", { style: { aspectRatio: "16/9", display: "grid", placeItems: "center", color: "var(--ink-4)" } }, "sin render"),
       h("div.c", h("div.clamp2", s.title), h("div.row", { style: { marginTop: "6px" } }, idTag(s.id), s.claim_id ? idTag(s.claim_id) : null, s.qa_verdict ? h("span.chip" + (s.qa_verdict === "PASS" ? ".good" : ".warn"), s.qa_verdict) : null)))))) : null,
     x.final_message ? h("details.panel.pad.mt", h("summary.small", { style: { cursor: "pointer" } }, "Reporte final del Storyteller"), h("pre.raw.mt", x.final_message)) : null,
     h("div.small.faint.mt", `Carpeta: cases/${app.caseId}/${x.path}`));
+}
+
+/* ------------------------------------------------------------------ Hugo's own quick edits: order and text */
+// The Storyteller builds the deck; these are the small fixes Hugo makes himself. Every change is logged in the case.
+function reloadDeckFrame() {
+  const f = document.getElementById("deckframe");
+  if (f) f.src = f.src.split("?")[0] + "?v=" + Date.now();
+}
+
+function orderEditor(x) {
+  const box = h("div.panel.pad.mt.deckedit");
+  const base = `/case-files/${app.caseId}/decks/${x.slug}/`;
+  let files = [], dirty = false, drag = null;
+  const load = async () => { try { files = (await api.cget(`/slides/${x.id}/files`)).files; dirty = false; draw(); } catch (e) { put(box, h("div.small.muted", e.message)); } };
+  const move = (from, to) => {
+    if (from === null || from === to) return;
+    const [it] = files.splice(from, 1);
+    files.splice(to, 0, it);
+    dirty = true; drag = null; draw();
+  };
+  const save = async () => {
+    try {
+      const out = await api.cpost(`/slides/${x.id}/order`, { order: files.map(f => f.file) });
+      toast(`Orden guardado · ${out.moved} láminas cambiaron de lugar · presentación rearmada`, "ok");
+      await load(); reloadDeckFrame();
+    } catch (e) { toast(e.message, "err", 7000); }
+  };
+  const draw = () => put(box,
+    h("div.row.between", h("div", h("div.eyebrow", "Tus ajustes al deck"),
+      h("div.small.muted", "Arrastra las láminas para cambiar el orden. Haz clic en una para editar su texto. Todo queda en la bitácora del caso.")),
+      h("div.row", dirty ? btn("Deshacer", { sm: true, variant: "ghost", onClick: load }) : null,
+        btn(dirty ? "Guardar orden" : "Orden guardado", { sm: true, variant: "human", human: true, disabled: !dirty, onClick: save }))),
+    h("div.dstrip", files.map((f, i) => h("div.dthumb" + (drag === i ? ".dragging" : ""), {
+      draggable: "true", title: "Arrastra para mover · clic para editar el texto",
+      on: {
+        dragstart: e => { drag = i; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(i)); },
+        dragover: e => { e.preventDefault(); e.currentTarget.classList.add("over"); },
+        dragleave: e => e.currentTarget.classList.remove("over"),
+        drop: e => { e.preventDefault(); move(drag, i); },
+        dragend: () => { drag = null; box.querySelectorAll(".over").forEach(n => n.classList.remove("over")); },
+        click: () => { if (dirty) { toast("Guarda el orden antes de editar el texto", "info"); return; } slideEditor(x, f, load); },
+      } },
+      h("span.dn", String(i + 1)),
+      f.render ? h("img", { src: base + f.render + "?v=" + f.v, alt: f.title, draggable: "false" }) : h("div.noimg", "sin render"),
+      h("div.dt.clamp2", f.title)))));
+  load();
+  return box;
+}
+
+function slideEditor(x, f, onSaved) {
+  const base = `/case-files/${app.caseId}/decks/${x.slug}/`;
+  const orig = new Map();
+  let editing = false;
+  const frame = h("iframe.se-frame", { src: base + "slides/" + f.file.replace(".html", ".edit.html") + "?v=" + Date.now(), title: "Lámina " + f.n });
+  const stage = h("div.se-stage", frame);
+  const status = h("span.small.muted", "Cargando la lámina…");
+  const fit = () => { const w = stage.clientWidth; frame.style.transform = `scale(${w / 1920})`; stage.style.height = (1080 * w / 1920) + "px"; };
+  const dirtyCount = () => [...orig].filter(([el, html0]) => el.innerHTML !== html0).length;
+  const close = () => {
+    if (dirtyCount() && !window.confirm("Tienes cambios sin guardar en esta lámina. ¿Cerrar sin guardarlos?")) return;
+    wrap.remove(); window.removeEventListener("resize", fit); document.removeEventListener("keydown", esc);
+  };
+  const esc = e => { if (e.key === "Escape" && !editing) close(); };
+  // text written in the markup (data-ct) and text the slide's script paints (.prim-label), except axis and value labels
+  const scan = async () => {
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    doc.querySelectorAll("[data-ct]").forEach(el => { if (!orig.has(el)) orig.set(el, el.innerHTML); });
+    const painted = [...doc.querySelectorAll("main.slide .prim-label")].filter(el => !orig.has(el) && !el.closest("[data-ct]") && !["axis-label", "value-label"].includes(el.dataset.role));
+    let skipped = 0;
+    if (painted.length) {
+      // only what can be found once in the slide's code is offered: a value repeated in a chart's data would be a guess
+      const { found } = await api.cpost(`/slides/${x.id}/locate`, { file: f.file, texts: painted.map(el => ({ old: el.innerHTML, id: el.id || "" })) });
+      painted.forEach((el, i) => { if (found[i]) orig.set(el, el.innerHTML); else skipped++; });
+    }
+    status.textContent = `${orig.size} textos editables` + (skipped ? ` · ${skipped} valores de gráfica se piden al Storyteller` : "")
+      + " · las etiquetas de ejes y valores calculados salen de los datos";
+  };
+  const mark = async () => {
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    const st = doc.createElement("style");
+    st.textContent = "[data-ce]{outline:1.5px dashed rgba(0,208,179,.75);outline-offset:3px;cursor:text}[data-ce]:focus{outline:2px solid #00d0b3;background:rgba(0,208,179,.06)}";
+    doc.head.append(st);
+    try { await doc.fonts.ready; } catch (e) { /* no font API: scan anyway */ }
+    requestAnimationFrame(() => setTimeout(scan, 150));        // the slide paints its text once its fonts are in
+  };
+  const toggle = async () => {
+    await scan();
+    editing = !editing;
+    orig.forEach((_, el) => { el.contentEditable = editing ? "true" : "false"; if (editing) el.dataset.ce = ""; else delete el.dataset.ce; });
+    tbtn.textContent = editing ? "Terminar de editar" : "Editar texto";
+  };
+  const save = async () => {
+    const edits = [];
+    orig.forEach((html0, el) => {
+      if (el.innerHTML === html0) return;
+      if (el.dataset.ct !== undefined) edits.push({ k: Number(el.dataset.ct), html: el.innerHTML });
+      else edits.push({ old: html0, new: el.innerHTML, id: el.id || "" });
+    });
+    if (!edits.length) { toast("No hay cambios que guardar", "info"); return; }
+    try {
+      const out = await api.cput(`/slides/${x.id}/text`, { file: f.file, edits, source: frame.contentDocument.documentElement.dataset.ctHash || "" });
+      toast(`${out.changed.length} cambio(s) guardado(s) en la lámina ${f.n} · la presentación ya los tiene; la miniatura se actualiza en un minuto`
+        + (out.failed.length ? ` · ${out.failed.length} no se pudieron ubicar` : ""), out.failed.length ? "err" : "ok", 8000);
+      setTimeout(onSaved, 70000);                                   // refresh the strip when the new thumbnail is in
+      out.failed.forEach(x => toast(`«${x.text}»: ${x.why}. Pídeselo al Storyteller.`, "err", 9000));
+      wrap.remove(); window.removeEventListener("resize", fit); document.removeEventListener("keydown", esc);
+      onSaved(); reloadDeckFrame();
+    } catch (e) { toast(e.message, "err", 8000); }
+  };
+  const tbtn = btn("Editar texto", { sm: true, onClick: toggle });
+  const wrap = h("div.se-wrap", h("div.se-box",
+    h("div.row.between", h("div", h("div.eyebrow", `Lámina ${f.n} · tus ajustes`), h("div", { style: { fontWeight: 600 } }, f.title)),
+      h("div.row", tbtn, btn("Guardar cambios", { sm: true, variant: "human", human: true, onClick: save }), btn("Cerrar", { sm: true, variant: "ghost", onClick: close }))),
+    h("div.small.faint", "Si cambias una cifra, deja de venir de su tabla: el cambio queda registrado con el antes y el después."),
+    stage, status));
+  document.body.append(wrap);
+  document.addEventListener("keydown", esc);
+  window.addEventListener("resize", fit);
+  requestAnimationFrame(fit);
+  frame.addEventListener("load", mark);
 }

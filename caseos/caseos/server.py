@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import json
 import mimetypes
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -18,7 +19,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Streamin
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, framing_doc, jobs, shaping, slidestyle,
+from . import (actions, analytics, brain, briefing, bus, cases, commands, config, cos, datamodels, decisions, deckedit, framing_doc, jobs, shaping, slidestyle,
                lineage, phases, research, search, skills, story, storyteller)
 from .agents import base as agents_base
 from .agents import briefer, framer, planner
@@ -723,8 +724,51 @@ def slides_import(cid: str, deck_id: str):
     return storyteller.import_deck(S(cid), deck_id)
 
 
+@app.get("/api/cases/{cid}/slides/{deck_id}/files")
+def deck_slide_files(cid: str, deck_id: str):
+    return {"files": deckedit.files(S(cid), deck_id)}
+
+
+class OrderBody(BaseModel):
+    order: list[str]
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/order")
+def deck_order(cid: str, deck_id: str, body: OrderBody):
+    return deckedit.reorder(S(cid), deck_id, body.order)
+
+
+class SlideTextBody(BaseModel):
+    file: str
+    edits: list                        # {k, html} for text in the markup · {old, new, id} for text a script paints
+    source: str = ""                   # the hash of the slide the editor opened (a stale editor cannot overwrite)
+
+
+@app.put("/api/cases/{cid}/slides/{deck_id}/text")
+def deck_text(cid: str, deck_id: str, body: SlideTextBody):
+    return deckedit.save_text(S(cid), deck_id, body.file, body.edits, source=body.source)
+
+
+class LocateBody(BaseModel):
+    file: str
+    texts: list
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/locate")
+def deck_locate(cid: str, deck_id: str, body: LocateBody):
+    return {"found": deckedit.locate(S(cid), deck_id, body.file, body.texts)}
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/pdf")
+def deck_pdf(cid: str, deck_id: str):
+    return deckedit.rebuild_pdf(S(cid), deck_id)
+
+
 @app.get("/case-files/{cid}/decks/{slug}/{path:path}", include_in_schema=False)
 def deck_files(cid: str, slug: str, path: str):
+    m = re.fullmatch(r"slides/(\d{2})\.edit\.html", path or "")
+    if m:                              # the slide with its editable text marked, served next to it so relative paths hold
+        return HTMLResponse(deckedit.preview(S(cid), slug, f"{m.group(1)}.html"), headers={"Cache-Control": "no-store"})
     p = storyteller.deck_file(S(cid), slug, path or "index.html")
     if not p.exists() or not p.is_file():
         raise HTTPException(404, "Archivo no encontrado")

@@ -240,3 +240,11 @@ Package. Encontrado y corregido:
   dirección visual, 25 specs, 9 láminas) y terminó las 25 con su crítica y el PDF (~US$28.7 equivalentes). Luego la
   importación a CaseOS falló por YAML suelto en un spec («: » sin comillas): el lector de specs ahora es tolerante y el
   deck se importó sin volver a correrlo.
+- **Ajustes de Hugo al deck (30-sep, tarde):** en Slides, Hugo arrastra las láminas para reordenarlas (se renumeran
+  `slides/NN.html` y sus renders; el renderer ordena por nombre y el número de página se llena solo) y edita el texto sobre
+  la lámina. Es editable el texto del marcado (por posición) y el que pinta el script (`s.label(…, 'texto', …)`, por su
+  literal, respetando comillas; si se repite, desempata el `id`). Una cifra que se repite en los datos de una gráfica no
+  se ofrece: sería adivinar, y se le pide al Storyteller. Cada guardado deja la versión anterior en `slides/.history/`,
+  registra antes → después en `edits.jsonl` y en la bitácora del caso, rearma `presentation.html` al instante (0,1 s) y
+  regenera la miniatura en segundo plano (Chrome, ~50 s); el PDF se regenera con un botón (~45 s). Probado en una copia
+  del deck v5: 14 de 26 textos de la lámina 18 son editables (los 12 restantes son valores de la gráfica).
