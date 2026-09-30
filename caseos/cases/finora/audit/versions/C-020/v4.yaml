@@ -1,0 +1,75 @@
+id: C-020
+type: claim
+key: descuento-clasificacion
+question: ¿Cómo clasificar el inicio y el fin de un descuento para que no se confundan con contracción o expansión
+  reales?
+headline: Si la suscripción no cambia, inicio o fin de descuento va a «Descuento»
+answer: 'Se comparan cierres de mes consecutivos del mismo cliente, en este orden. a) ¿Cambió la lista o el precio
+  pactado? → expansión, contracción o cambio de tarifa, con línea propia «Tarifa». b) ¿Cambió el descuento? → descuento
+  nuevo o aumentado, o descuento reducido o terminado. c) ¿Solo cambió el cobro? → momento de cobro, fuera del MRR.
+  El caso mixto se parte en líneas separadas, y cada mes los movimientos suman exactamente el cambio de bruto y
+  de neto. Para los grupos del CFO: al entrar, el alta va por el bruto y el descuento inicial va en su propia línea.
+  Quien sale, sale por su bruto, y su descuento se libera dentro del churn, nunca como fin de descuento. En quien
+  continúa, solo el cambio de descuento va a la línea Descuento.'
+role_in_story: recommendation
+evidence_ids:
+- F-150
+- F-152
+- F-151
+- F-131
+table_ids: []
+research_ids:
+- R-011
+- R-021
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-150, F-152, F-151 y F-131 están propuestos.'
+- D-007 deja fuera el modelo de datos; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa».
+  Es una regla propuesta, no construida.
+- Cuando un descuento porcentual se aplica a un bruto que cambió, qué parte va a suscripción y qué parte a Descuento
+  es una convención a documentar (R-011). Si Tarifa va en línea propia o dentro de expansión lo decide el CFO.
+- 'Solo aplica hacia adelante: el histórico no trae descuentos (F-093). Cubre los tres grupos de D-002.'
+visual_intent: 'Árbol de decisión: lista → descuento → cobro; el caso mixto se parte en líneas que suman al neto.'
+hugo_wording: probablemente lo integra la misma propuesta de modelo de datos
+links:
+- F-150
+- F-152
+- F-151
+- F-131
+- R-011
+- R-021
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-150
+  - F-152
+  - F-151
+  - F-131
+  - F-150
+  - F-152
+  - F-151
+  - F-131
+  accepted: []
+  pending:
+  - F-150
+  - F-152
+  - F-151
+  - F-131
+  - F-150
+  - F-152
+  - F-151
+  - F-131
+  tables: []
+  unsupported_numbers: []
+  stale: []

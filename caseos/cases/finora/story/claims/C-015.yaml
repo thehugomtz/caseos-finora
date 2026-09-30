@@ -3,11 +3,11 @@ type: claim
 key: pricing-entrada
 question: ¿Qué data observable de pricing introductorio podemos sacar?
 headline: Lo observable es el primer y segundo pago; el descuento no es verificable
-answer: 'La mediana del primer pago de las altas es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en
-  2024. La del segundo pago, entre quienes lo hacen, es COP 52,5 mil, COP 36,8 mil y COP 38,9 mil. El segundo pago
-  coincide exactamente con el primero en 73,5%, 90,3% y 77,3% de las altas, y el primer pago supera con holgura
-  al segundo en 23,2%, 7,1% y 11,6%: la brecha inicial es sobre todo de 2022. Eso describe la forma del primer cobro,
-  no un descuento: en los datos no hay lista, plan ni descuento.'
+answer: 'Lo observable del pricing introductorio es el primer y el segundo pago de cada alta. La mediana del primer
+  pago baja de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil en 2024; la del segundo, de COP 52,5 mil
+  a COP 36,8 mil y COP 38,9 mil. El segundo pago repite el primero en 73,5%, 90,3% y 77,3% de las altas, y el primero
+  supera con holgura al segundo en 23,2%, 7,1% y 11,6%. Eso se asocia a pagos iniciales grandes en 2022, pero no
+  dice si hubo descuento: sin lista ni descuento registrados, no es verificable.'
 role_in_story: evidence
 evidence_ids:
 - F-083
@@ -18,25 +18,21 @@ evidence_ids:
 - F-134
 - F-093
 table_ids:
+- T-051
 - T-062
 - T-054
 - T-055
-- T-051
 research_ids:
 - R-020
 - R-026
-- R-011
 framework_ids: []
 confidence: medium
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- 'T-053 da otras medianas del segundo pago para las mismas cohortes. Parece otra definición (incluir o no a quien
-  no pagó): falta conciliar.'
-- 'La huella de un descuento limpio casi no aparece (F-134), pero ausencia de evidencia no es evidencia de ausencia:
-  el caso habla de introducir descuentos.'
-- No se leen descuentos a partir del tamaño de un salto del monto.
-visual_intent: 'Antes/después por cohorte: primer pago frente a segundo pago; la brecha se cierra después de 2022.'
-hugo_wording: qué data observable de pricing introductorio podemos sacar
+- No se afirma que hubo descuentos en el histórico; el caso habla de introducirlos (F-134 no prueba ausencia).
+- No se infieren descuentos del tamaño de un salto del monto.
+visual_intent: 'Estabilización: el primer pago se acerca al segundo después de 2022; la brecha inicial se cierra.'
+hugo_wording: Qué data observable de pricing introductorio podemos sacar.
 links:
 - F-083
 - F-160
@@ -45,13 +41,12 @@ links:
 - F-087
 - F-134
 - F-093
+- T-051
 - T-062
 - T-054
 - T-055
-- T-051
 - R-020
 - R-026
-- R-011
 phase: story
 review:
   state: proposed
@@ -59,8 +54,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 4
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 6
 status: pending
 strength:
   level: pending
@@ -96,13 +91,13 @@ strength:
   - F-134
   - F-093
   tables:
-  - T-062
-  - T-054
-  - T-055
   - T-051
   - T-062
   - T-054
   - T-055
   - T-051
+  - T-062
+  - T-054
+  - T-055
   unsupported_numbers: []
   stale: []

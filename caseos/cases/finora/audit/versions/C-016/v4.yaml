@@ -1,0 +1,105 @@
+id: C-016
+type: claim
+key: monto-dos-lecturas
+question: ¿Por qué los ejemplos del CFO no se pueden leer con el monto pagado?
+headline: Con solo el monto pagado, cada ejemplo del CFO admite lecturas distintas
+answer: 'El dato es un monto por cliente y mes, sin lista, plan, descuento, crédito ni periodo de servicio. Una
+  baja puede ser contracción o descuento, y un monto estable puede esconder una expansión compensada por un descuento.
+  Además, el monto se comporta como caja: 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al
+  mes siguiente, y 29% del MRR de expansión se revierte al mes siguiente. Por eso hoy no se puede asignar la caída
+  por cliente entre precio de lista y descuento.'
+role_in_story: diagnosis
+evidence_ids:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+- F-177
+table_ids:
+- T-058
+- T-061
+- T-028
+- T-074
+research_ids:
+- R-002
+- R-011
+- R-027
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- F-130 tiene confianza baja y fuente sin verificar.
+- Es una prueba de observabilidad, no una lectura del histórico.
+visual_intent: 'Misma observación, historias distintas: un mismo monto con lecturas alternativas lado a lado.'
+hugo_wording: con solo el monto pagado, cada ejemplo del CFO admite dos lecturas (cambio de suscripción o descuento)
+links:
+- F-093
+- F-090
+- F-073
+- F-130
+- F-082
+- F-062
+- F-177
+- T-058
+- T-061
+- T-028
+- T-074
+- R-002
+- R-011
+- R-027
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  accepted: []
+  pending:
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  - F-093
+  - F-090
+  - F-073
+  - F-130
+  - F-082
+  - F-062
+  - F-177
+  tables:
+  - T-058
+  - T-061
+  - T-028
+  - T-074
+  - T-058
+  - T-061
+  - T-028
+  - T-074
+  unsupported_numbers: []
+  stale: []

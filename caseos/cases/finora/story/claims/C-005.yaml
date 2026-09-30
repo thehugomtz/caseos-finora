@@ -1,20 +1,16 @@
 id: C-005
 type: claim
 key: funnel-puertas
-question: ¿Cómo definir el funnel si no todos lo recorren igual (self-serve, entrada directa a SQL, estancamientos
-  de semanas)?
-headline: Proponemos rutas Executive, Self Service e Hybrid, más un loop de Reactivate
-answer: 'Con tus definiciones. Executive es el funnel actual SDR→AE (New → Working SDR → Engaged SDR → SQL SDR →
-  Demo AE → Proposal AE → Won); la entrada directa a SQL también es Executive, con etapa de entrada SQL. Self Service
-  es el recorrido sin persona, con sus canales. Hybrid mezcla tramos sin persona y con persona: en A empezó solo
-  y después intervino un SDR/AE; en B lo tocó una persona y terminó solo. Reactivate no es otra ruta: es un loop
-  sobre leads estancados que se reactivan y se asignan a un funnel según el caso. Para que el mix sea MECE: la unidad
-  es la cuenta; la puerta (Producto o CRM/Ventas) y el canal se fijan al entrar y no cambian; la ruta sale de quién
-  movió cada tramo. El formulario de «hablar con ventas» es una entrada por la puerta CRM, y un lead que nadie contactó
-  y compró solo es Self Service con bandera. Un episodio reactivado no cuenta como entrada nueva: conserva su fecha
-  y su puerta originales, y su primer pago cuenta una sola vez, con bandera. El nudo común es el primer pago, como
-  recomendación que decides tú. La vuelta de pagadores que se ve en los pagos no es Reactivate: es otro loop, del
-  lado Revenue.'
+question: ¿Cómo definir el funnel si no todos lo recorren igual?
+headline: Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar
+answer: 'La unidad es el journey: cuenta × intento (varias personas de una misma empresa son un solo journey). Al
+  entrar se fijan dos atributos que ya no cambian: la puerta (producto o CRM/Ventas) y el canal (outbound SDR, inbound
+  «hablar con ventas», referido o partner, o signup por paid media, publicidad no web u orgánico). La ruta se clasifica
+  al final, por eventos: Executive si arranca con persona y nunca pasa por Checkout Self; Self Service si nunca
+  interviene una persona; Hybrid A si arranca en el producto y después entra una persona; Hybrid B si arranca con
+  persona y cierra por Checkout Self. Mientras el journey está abierto, la ruta es provisional. Reactivate no es
+  otra ruta: es un loop para journeys estancados, con bandera, que no crea un New nuevo. Los clientes que vuelven
+  a pagar son un loop de Revenue y se miden aparte.'
 role_in_story: recommendation
 evidence_ids:
 - F-209
@@ -26,8 +22,12 @@ evidence_ids:
 - F-190
 - F-140
 - F-155
+- F-223
+- F-224
+- F-226
 table_ids: []
 research_ids:
+- R-031
 - R-029
 - R-023
 - R-016
@@ -35,20 +35,17 @@ research_ids:
 framework_ids: []
 confidence: medium
 limitations:
-- 'Pendiente de tu aceptación: F-209 a F-213, F-188, F-190, F-140 y F-155 están propuestos.'
-- 'No hay CRM para probarla: hoy no se mide ninguna etapa antes del primer pago, ni la puerta (F-191).'
-- 'Corrige lecturas previas: R-022 y R-023 leían Executive como cuentas nombradas o de KAM y Reactivate como ex-pagadores
-  (F-187, F-189). Aquí mandan tus definiciones (N-033, N-035, N-037, N-038), y el «Assisted» del guion pasa a Hybrid.'
-- 'Parámetros por decidir: qué cuenta como intervención (Q-063; R-029 propone solo la interacción de ida y vuelta
-  con SDR/AE), el umbral de estancado (Q-064) y el nudo común (X-052).'
-- No sabemos si en Finora existe Self Service como compra sin persona (Q-046). La ruta de un pagador no se infiere
-  del monto.
-visual_intent: 'Split and converge: rutas que entran por puertas distintas y se juntan en el primer pago; Reactivate
-  como flecha de retorno a la izquierda y la vuelta de pagadores aparte, a la derecha.'
-hugo_wording: «el funnel actual es New / Working SDR / Engaged SDR / SQL SDR / Demo Account Executie / Proposal
-  Account Executive / Won /// ese es el punto de partida»; Self Service «con sus respectivos canales»; Hybrid «en
-  alguna parte del funnel fue por Self Service y en algún otro fue intervenido por una persona»; Reactivate «los
-  que dicen que están estancados pero hay formas de reactivarlos y asignarlos a un funnel de acuerdo al caso».
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- 'Es propuesta: hoy el modelo no tiene leads, etapas, dueños, canal ni ruta (F-223).'
+- Qué cuenta como intervención de persona sigue abierto (Q-063). Con la regla actual, una entrada que pide persona
+  y que nadie atiende termina como Self Service (H-072).
+- No sabemos si existe compra self-serve sin persona, ni si hay prueba gratis, freemium o pago al registrarse (Q-046).
+- 'La ruta no se infiere del monto. La tasa de Hybrid refleja a quién eligen tocar SDR/AE (H-050): por eso las tasas
+  se comparan entre puertas, no entre rutas.'
+visual_intent: 'Split y converge: una entrada con puerta y canal fijos se abre en rutas según quién mueve cada tramo,
+  y todas llegan al mismo nudo. Reactivate aparece como un loop que devuelve el journey a la etapa donde se estancó.'
+hugo_wording: Assisted / Self Service / Executive, con canales (incl. digital, WoM, clientes que no requirieron
+  KAM), funnel propuesto.
 links:
 - F-209
 - F-210
@@ -59,6 +56,10 @@ links:
 - F-190
 - F-140
 - F-155
+- F-223
+- F-224
+- F-226
+- R-031
 - R-029
 - R-023
 - R-016
@@ -70,8 +71,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 6
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 8
 status: pending
 strength:
   level: pending
@@ -85,6 +86,9 @@ strength:
   - F-190
   - F-140
   - F-155
+  - F-223
+  - F-224
+  - F-226
   - F-209
   - F-210
   - F-211
@@ -94,6 +98,9 @@ strength:
   - F-190
   - F-140
   - F-155
+  - F-223
+  - F-224
+  - F-226
   accepted: []
   pending:
   - F-209
@@ -105,6 +112,9 @@ strength:
   - F-190
   - F-140
   - F-155
+  - F-223
+  - F-224
+  - F-226
   - F-209
   - F-210
   - F-211
@@ -114,6 +124,9 @@ strength:
   - F-190
   - F-140
   - F-155
+  - F-223
+  - F-224
+  - F-226
   tables: []
   unsupported_numbers: []
   stale: []

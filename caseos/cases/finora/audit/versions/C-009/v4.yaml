@@ -1,0 +1,93 @@
+id: C-009
+type: claim
+key: metricas-semaforo
+question: ¿Qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas?
+headline: 'Proponemos un árbol de ingreso recurrente con semáforo: qué se mide hoy y qué no'
+answer: 'En verde, lo que se calcula hoy con nombre honesto: MRR pagado observado y su puente, clientes activos,
+  ARPA por cliente (lo que se pide como ARPU; no hay datos de usuarios), churn observado y retención por cohorte.
+  En amarillo, los proxies con una regla por aprobar: churn persistente con ventana de gracia, MRR normalizado por
+  mes de servicio y ARR solo como run-rate. En rojo, lo que pide datos nuevos: CAC en COP y por funnel o canal,
+  payback, LTV con margen, LTV:CAC y UCM. El churn muestra por qué importa el nombre: el observado baja de 3,52%
+  en 2022 a 2,04% en 2024, mientras el persistente pasa de 0,98% a 0,96%.'
+role_in_story: recommendation
+evidence_ids:
+- F-135
+- F-136
+- F-139
+- F-033
+- F-137
+- F-138
+- F-183
+table_ids:
+- T-002
+research_ids:
+- R-018
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- El MRR normalizado y el churn con gracia son reglas que tienes que aprobar (F-136); se muestran junto al observado.
+- El MRR pagado observado no se compara con benchmarks de MRR contractual.
+- La cifra de churn observado de 2024 difiere entre T-034 y T-002 (X-101).
+visual_intent: 'Árbol con semáforo: resultado → drivers → economía unitaria, cada nodo coloreado según qué tan medible
+  es.'
+hugo_wording: qué métricas propondrías que hoy no existen (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) y cómo medirlas,
+  robustecerlo y bajar lo que tenga sentido
+links:
+- F-135
+- F-136
+- F-139
+- F-033
+- F-137
+- F-138
+- F-183
+- T-002
+- R-018
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-135
+  - F-136
+  - F-139
+  - F-033
+  - F-137
+  - F-138
+  - F-183
+  - F-135
+  - F-136
+  - F-139
+  - F-033
+  - F-137
+  - F-138
+  - F-183
+  accepted: []
+  pending:
+  - F-135
+  - F-136
+  - F-139
+  - F-033
+  - F-137
+  - F-138
+  - F-183
+  - F-135
+  - F-136
+  - F-139
+  - F-033
+  - F-137
+  - F-138
+  - F-183
+  tables:
+  - T-002
+  - T-002
+  unsupported_numbers: []
+  stale: []

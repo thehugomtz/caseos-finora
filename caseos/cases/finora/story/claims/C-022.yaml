@@ -1,18 +1,14 @@
 id: C-022
 type: claim
 key: metricas-catalogo
-question: ¿Qué métricas mide cada funnel, cuáles se calculan hoy y en qué foro se leen?
-headline: 'Proponemos un catálogo por funnel: definición, si existe hoy, fuente faltante y foro'
-answer: 'Executive: SQL u oportunidades por cohorte, alcance SQL→Won en ventana fija, ciclo de venta con el % aún
-  abierto, estancamientos por etapa y Won→primer pago. Falta el historial de etapas del CRM; se lee en el foro semanal.
-  Self Service: registros por canal, activación (si existe) y registro→primer pago en ventana. Faltan los eventos
-  de producto y el canal de origen; se lee en el foro mensual. Hybrid: tasa de escalamiento (entradas de producto
-  que reciben a una persona antes de pagar), mix de rutas dentro de cada puerta, tiempo a primer contacto y carga
-  por SDR/AE. Faltan las actividades de ida y vuelta y el roster; se lee en los foros semanal y mensual. Reactivate:
-  estancados por etapa, reactivados, asignados y su primer pago con bandera; foro semanal. Desde el nudo, lo único
-  que se calcula hoy con nombre honesto es: primeros pagos, ticket de entrada estabilizado, permanencia temprana,
-  churn observado y persistente, MRR pagado observado y S&M por alta en unidades reportadas. Se lee en los foros
-  mensual y trimestral.'
+question: ¿Cómo se evita que una métrica aparezca en dos lugares o con dos fórmulas?
+headline: Cada métrica vive en un solo lugar del catálogo, con dueño, fuente y foro
+answer: 'El catálogo no suma métricas: gobierna las del funnel (C-006) y las comunes (C-009). Cada métrica entra
+  una sola vez con nombre, fórmula versionada, grano, dueño, semáforo de hoy, el evento o la tabla que le falta
+  en el to-be (C-013) y el foro que la usa (C-014). Reglas MECE: un nombre, una fórmula y un lugar; puerta, ruta,
+  canal, industria y cohorte son cortes; las tasas de etapa se leen dentro de su ruta y solo la capa común se compara
+  entre puertas. Controles de cada mes: las entradas por puerta suman el total; los primeros pagos por ruta, más
+  los que no se cruzan con el CRM, igualan los primeros pagos del mes; y los puentes de clientes y de MRR cierran.'
 role_in_story: recommendation
 evidence_ids:
 - F-155
@@ -22,23 +18,23 @@ evidence_ids:
 - F-135
 - F-139
 - F-148
+- F-224
 table_ids: []
 research_ids:
+- R-031
 - R-022
 - R-029
-- R-018
 - R-019
-- R-023
+- R-018
 framework_ids: []
 confidence: medium
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- D-007 deja fuera las métricas definitivas; D-018 (propuesta, la decides tú) lo lee como «no construir en esta
-  etapa». Esto es un catálogo propuesto, no construido.
-- Hoy no se calcula ninguna métrica por funnel ni nada antes del pago (F-159).
-- Los nombres siguen a X-032 (MRR pagado observado, S&M por alta, ARPA). Ventanas y umbrales se acuerdan con Finora.
-visual_intent: Matriz funnel × métrica, con marca de «hoy / pedir» y el foro donde se lee.
-hugo_wording: cómo medirlas, robustecerlo y bajar lo que tenga sentido
+- 'Es diseño: los dueños de cada métrica se definen con Finora.'
+- Construirlo choca con D-007 tal como está redactada; D-018 lo decides tú.
+visual_intent: 'Una casilla por métrica: cada métrica del funnel y de las comunes cae en un solo lugar, conectada
+  a su fuente y a su foro.'
+hugo_wording: «siempre siempre ser MECE»
 links:
 - F-155
 - F-158
@@ -47,11 +43,12 @@ links:
 - F-135
 - F-139
 - F-148
+- F-224
+- R-031
 - R-022
 - R-029
-- R-018
 - R-019
-- R-023
+- R-018
 phase: story
 review:
   state: proposed
@@ -59,8 +56,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-165420-cos-56b6
 created_at: '2026-09-29T17:25:22-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 2
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 4
 status: pending
 strength:
   level: pending
@@ -72,6 +69,7 @@ strength:
   - F-135
   - F-139
   - F-148
+  - F-224
   - F-155
   - F-158
   - F-159
@@ -79,6 +77,7 @@ strength:
   - F-135
   - F-139
   - F-148
+  - F-224
   accepted: []
   pending:
   - F-155
@@ -88,6 +87,7 @@ strength:
   - F-135
   - F-139
   - F-148
+  - F-224
   - F-155
   - F-158
   - F-159
@@ -95,6 +95,7 @@ strength:
   - F-135
   - F-139
   - F-148
+  - F-224
   tables: []
   unsupported_numbers: []
   stale: []

@@ -1,0 +1,95 @@
+id: C-006
+type: claim
+key: funnel-conversion
+question: ¿Cómo se mide la conversión si cada funnel tiene su unidad y sus tiempos?
+headline: Proponemos medir por cohorte de entrada con ventana fija y comparar entre puertas, no rutas
+answer: 'La tasa que sirve es el % de las entradas de una cohorte que llega al primer pago dentro de una ventana
+  fija, por puerta y canal, y solo en cohortes que ya cumplieron esa ventana. La tasa de periodo castiga a las entradas
+  recientes. Antes del nudo, cada funnel se lee dentro de sí mismo. Entre funnels solo se compara del primer pago
+  hacia la derecha: ticket estabilizado, permanencia temprana y churn observado y persistente. La conversión de
+  Hybrid no mide lo que aporta la persona, porque los SDR/AE eligen a quién tocar. Por eso se compara entre puertas,
+  que quedan fijas al entrar, y se reporta el mix de rutas dentro de cada puerta. AAARRR queda como vocabulario
+  común, no como secuencia. La ventana se acuerda con Finora.'
+role_in_story: recommendation
+evidence_ids:
+- F-141
+- F-158
+- F-155
+- F-212
+- F-144
+- F-140
+- F-213
+table_ids: []
+research_ids:
+- R-016
+- R-022
+- R-029
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- Hoy solo se miden el nudo y la vuelta de pagadores (F-213, F-159).
+- 'Ventanas y plazos no son estándar de mercado: se calibran con los datos de Finora.'
+- 'Comparar entradas directas a SQL contra SQL del SDR no es un experimento: solo sirve ver cómo cambia cada grupo
+  en el tiempo, y aun así es asociación.'
+- La atribución reparte crédito, no prueba causa (F-144).
+visual_intent: 'Curvas por cohorte: alcance acumulado a primer pago por cohorte de entrada, una familia de curvas
+  por puerta; las cohortes inmaduras, marcadas.'
+hugo_wording: cómo definir y medir el funnel si no todos lo recorren igual
+links:
+- F-141
+- F-158
+- F-155
+- F-212
+- F-144
+- F-140
+- F-213
+- R-016
+- R-022
+- R-029
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-140
+  - F-213
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-140
+  - F-213
+  accepted: []
+  pending:
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-140
+  - F-213
+  - F-141
+  - F-158
+  - F-155
+  - F-212
+  - F-144
+  - F-140
+  - F-213
+  tables: []
+  unsupported_numbers: []
+  stale: []

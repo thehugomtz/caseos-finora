@@ -1,22 +1,17 @@
 id: C-014
 type: claim
 key: operar-foros
-question: ¿Qué decisiones le permite tomar al CRO y en qué foro?
+question: ¿Cómo opera el CRO el funnel de forma recurrente y qué decide en cada foro?
 headline: 'Proponemos un tablero por foro atado a decisiones: semanal, mensual y trimestral'
-answer: 'Semanal · pregunta: ¿qué entradas y oportunidades se están atorando? · métricas: estancamientos por etapa,
-  cobertura de primer contacto y carga por SDR/AE · decisión: reasignar SDR/AE entre funnels, reactivar o descalificar
-  · dueños: el CRO con los líderes de SDR y AE.
-
-  Mensual · pregunta: ¿qué funnel y qué canal traen clientes que se quedan? · métricas: alcance a primer pago por
-  cohorte y puerta, ticket estabilizado y permanencia temprana por canal · decisión: mover inversión entre canales
-  y ajustar la regla de calificación o de reparto · dueños: el CRO con Marketing y Finanzas.
-
-  Trimestral · pregunta: ¿dónde poner capacidad e inversión y qué pasa con el precio de entrada? · métricas: payback
-  por funnel cuando exista CAC en COP, retención por cohorte y mix de rutas · decisión: revisar precio o plan de
-  entrada, y contratar o reasignar capacidad · dueños: CEO, CFO y CRO.
-
-  Los análisis ad hoc se abren por hipótesis de la matriz. Los agentes de IA y la atribución van encima: trabajan
-  solo sobre métricas gobernadas y entran con un piloto controlado, y la atribución reparte crédito, no prueba causa.'
+answer: 'Cada foro trae sus métricas (C-006, C-009) y la decisión que habilita. Semanal (CRO, líderes de SDR/AE
+  y RevOps): estancamiento por etapa, calidad del handoff, tiempo en etapa, carga por SDR/AE y stock sin tocar del
+  loop Reactivate → qué journeys avanzar, retomar o descalificar, y dónde reasignar capacidad. Mensual de Growth
+  & Revenue (CRO, Marketing, CS/KAM y Finanzas): entradas y win rate de cohorte por puerta y canal, mezcla de Won
+  por ruta, tiempo de cierre, MRR de entrada, puente de MRR y churn persistente → mover la Inversión en Marketing
+  entre canales y ajustar el ruteo entre rutas. Trimestral (CEO, CFO y CRO): CAC y costo por Won por canal y ruta,
+  payback, NRR/GRR por cohorte y MRR de lista contra neto → repartir entre Generación de Demanda, Team y Habilitación.
+  Por encima van el Análisis Ad hoc por hoja del árbol (C-023) y agentes de IA que trabajan solo sobre métricas
+  gobernadas (vigilancia de estancamientos, pre-lectura del foro, higiene del CRM), con un piloto controlado.'
 role_in_story: recommendation
 evidence_ids:
 - F-147
@@ -26,27 +21,24 @@ evidence_ids:
 table_ids: []
 research_ids:
 - R-019
-- R-025
-- R-022
+- R-031
 framework_ids: []
 confidence: medium
 limitations:
-- 'Pendiente de tu aceptación: F-147, F-148, F-149 y F-144 están propuestos.'
-- D-007 deja fuera los dashboards; D-018 (propuesta, la decides tú) lo lee como «no construir en esta etapa». Es
-  un tablero propuesto, no construido.
-- 'El brief no define las decisiones del CRO: las del tablero son una propuesta para validar con él.'
-- El payback por funnel solo existe cuando haya CAC en COP.
-visual_intent: 'Escalera de cadencia: foro → pregunta → métrica → decisión → dueño, de lo táctico a lo estratégico,
-  con agentes y atribución como capa superior.'
-hugo_wording: 'decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA'
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- Las decisiones del CRO aún no están definidas; los foros son propuesta.
+- 'La atribución reparte crédito, no prueba causa: para decidir presupuesto hacen falta experimentos (F-149).'
+- Depende del modelo de C-013; mientras tanto solo existen las métricas verdes de C-009.
+visual_intent: 'Cadencia a decisión: cada foro conecta pocas métricas con una decisión concreta, de lo operativo
+  (semanal) a la inversión (trimestral).'
+hugo_wording: 'Decision making: dashboards automatizados por foro, análisis ad hoc, agentes de IA.'
 links:
 - F-147
 - F-148
 - F-149
 - F-144
 - R-019
-- R-025
-- R-022
+- R-031
 phase: story
 review:
   state: proposed
@@ -54,8 +46,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 4
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 6
 status: pending
 strength:
   level: pending

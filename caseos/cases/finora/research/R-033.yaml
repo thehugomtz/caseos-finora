@@ -64,8 +64,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T18:24:05-06:00'
-updated_at: '2026-09-29T19:19:55-06:00'
-version: 8
+updated_at: '2026-09-29T19:30:13-06:00'
+version: 9
 job_id: JOB-20260929-190141-65e4
 error: null
 started_at: '2026-09-29T19:01:41-06:00'
@@ -1972,3 +1972,111 @@ validation:
   bare_claims: []
   seen_urls: 116
   ok: true
+cos_assessment:
+  summary: 'R-033 no cambia lo que sabíamos del as-is, pero ahora está consultado directo en el modelo (confianza
+    alta): tres archivos, todos de después del pago, mensuales y sin separar cancelación de mora. Lo nuevo es que
+    les da forma de datos a los cuatro claims. El account_id común con crosswalk respalda C-013, funnel_entry respalda
+    C-006, la suscripción por capas le da una raíz a C-009 y el mes como único nivel de detalle pone un límite a
+    C-014.
+
+
+    Veo tres puntos materiales:
+
+    1. **Framing.** R-033 no sabe qué sistemas tiene Finora ni qué es un «Cliente N». Por eso «hoy no se mide» debería
+    decir «en los datos del caso», y no conviene leer el 4,5× de C-001 como empresas.
+
+    2. **C-009.** Propone «MRR contratado» como raíz, pero con un vocabulario distinto al del bloque CFO (lista,
+    descuento, neto). Además, esa convención la decide el CFO (C-018).
+
+    3. **C-014.** El foro semanal hoy no tiene ningún dato.
+
+
+    El to-be se apoya en patrones de afuera (confianza media): es benchmark, no una validación para Finora. Estas
+    evaluaciones reemplazan los avisos genéricos X-156 a X-159. No abro alerta sobre D-007, porque ese choque ya
+    está en X-039, X-055 y X-073 y depende de D-018.'
+  run_id: RUN-20260929-191956-cos-c056
+  at: '2026-09-29T19:30:13-06:00'
+  impacts:
+  - target: C-009
+    effect: changes_story
+    why: 'R-033 respalda el semáforo de C-009 con confianza alta: incluso después del pago, el as-is no separa cancelación
+      de mora, prepago de expansión, ni plan de precio y descuento (F-239). Ojo con la lectura: que 330 de 751 churn
+      observados vuelvan a pagar al mes siguiente no significa que sean mora. Significa que con estos datos no se
+      puede saber (y solo 87 vuelven con el mismo monto, X-145).
+
+
+      Lo que cambia es la raíz. R-033 propone calcular el árbol sobre «MRR contratado», con el cobrado al lado,
+      y divide la suscripción en contratado, descontado, facturado y cobrado (F-240). El bloque CFO llama distinto
+      a capas parecidas: MRR de lista, descuento y MRR neto (H-048, C-025). No queda claro si «contratado» va antes
+      o después del descuento o del precio negociado, que es justo el riesgo de H-074. Además, la capa que sirve
+      de raíz la decide el CFO (C-018). Y «MRR contratado» es lo que «No afirmar todavía» prohíbe para hoy: en el
+      story solo vale como to-be.'
+  - target: C-014
+    effect: changes_story
+    why: 'R-033 dice qué puede alimentar un tablero desde el día 1: stock y puente del monto pagado, cortes por
+      industria y por cohorte de primer pago, y S&M agregado en unidad reportada. Todo es mensual, porque el mes
+      viene como fecha de fin de mes, sin día de pago (F-238).
+
+
+      El foro semanal hoy no tiene ningún dato: lo que usaría (canal, etapa, tiempo de cierre, intervención, estancamientos)
+      pasa antes del pago. Además, lo nuevo se mide hacia adelante (F-242), así que las comparaciones por cohorte
+      de C-006 llegan una ventana después de empezar a capturar. C-014 se sostiene como propuesta, pero si no se
+      dice cuándo llega cada cosa, el CRO puede esperar un tablero semanal que no existe. El choque del tablero
+      con D-007 ya está en X-055 y depende de D-018, que sigue pendiente.'
+  - target: C-006
+    effect: supports
+    why: 'R-033 le da a C-006 la tabla que le faltaba: funnel_entry guarda por separado la puerta (que C-006 asigna
+      al entrar) y la ruta (F-240). Es la versión en datos del choque de definiciones de X-131: cada definición
+      queda en su propio campo. Si la puerta registra que alguien pidió hablar con una persona, también queda visible
+      el caso de H-072: esa persona conserva su puerta aunque nadie la atienda y la ruta termine en Self Service.
+
+
+      Hay dos límites que conviene escribir en el claim:
+
+      1. Mide hacia adelante (F-242). La primera comparación por cohorte con ventana fija llega una ventana después
+      de empezar a capturar, salvo que Finora tenga historial. Aun con historial, etiquetar hacia atrás puede dejar
+      entradas sin clasificar (H-065).
+
+      2. El to-be tiene confianza media porque sale de patrones estándar y no del stack de Finora: es benchmark,
+      no validación.'
+  - target: C-013
+    effect: supports
+    why: 'Es el claim al que R-033 le da más soporte.
+
+
+      En el as-is hay tres fuentes con tres niveles de detalle distintos: cliente × mes, cliente y mes. Incluso
+      con tan pocos archivos, los dos de cliente usan formatos de ID diferentes («1» y «Cliente 1»). Según R-033
+      cruzan al 100% después de parsear, así que hoy no hay problema (tampoco por la fila vacía de industria), pero
+      la regla queda ilustrada.
+
+
+      En el to-be, el account_id común con crosswalk (una tabla de equivalencias de IDs entre sistemas, F-240) precisa
+      el «unidas por un ID de cuenta». F-241 dice que seis reglas del modelo son decisiones de negocio y tienen
+      que quedar escritas antes de construir: eso es el «primero definiciones».
+
+
+      El límite nuevo es que no sabemos qué es un «Cliente N», y definir qué es una cuenta es la primera de esas
+      definiciones. El as-is tiene confianza alta; el to-be, media.'
+  - target: framing
+    effect: changes_framing
+    why: 'R-033 separa dos as-is que el story hoy mezcla. Uno es lo que trae el caso: tres archivos, todos de después
+      del pago. El otro es lo que tiene Finora, y ese no lo conocemos: no sabemos qué sistemas usa ni desde cuándo
+      guarda historial. El caso hasta supone que hay un CRM (H-051 y H-069 hablan de cómo registra leads y oportunidades).
+
+
+      Entonces «hoy no se mide nada antes del pago» solo vale para los archivos del caso, no necesariamente para
+      Finora: ausencia de evidencia ≠ evidencia de ausencia. Lo mismo aplica a cualquier «hueco en su WoW» que salga
+      solo de los archivos.
+
+
+      R-033 tampoco puede decir qué es un «Cliente N» (empresa, entidad de facturación o sede). De eso dependen
+      los conteos del Overview: el 4,5× de C-001, las altas de C-003, el churn y la reactivación. X-058 fija cómo
+      se leen las palabras del Overview en el panel; esto va un paso antes: qué hay detrás de cada ID. Ninguno de
+      los dos riesgos está en «No afirmar todavía».'
+  - target: C-024
+    effect: supports
+    why: 'La parte as-is de R-033 (consultada en el modelo, confianza alta) dice lo mismo que C-024. Los tres archivos
+      responden stock, puente del monto pagado, cortes por industria y por cohorte de primer pago, y S&M agregado.
+      No dicen nada de antes del pago ni separan cancelación de mora (F-238, F-239). No suma cifras nuevas, pero
+      le da a C-024 una fuente más directa: el inventario del propio modelo. Conviene citar solo el as-is, no el
+      to-be.'

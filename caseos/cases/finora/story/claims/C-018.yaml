@@ -1,36 +1,46 @@
 id: C-018
 type: claim
 key: descuento-capas
-question: ¿Qué convención de MRR usar y qué vistas se separan cuando hay descuentos?
+question: ¿Cómo debería Finora introducir descuentos temporales sin perder el porqué del MRR?
 headline: El CFO decide la convención; con descuentos, MRR neto, revenue y caja se separan
-answer: No hay un estándar de mercado para tratar descuentos temporales en el MRR, y la convención «solo neto» borra
-  justo lo que pregunta el CFO. Proponemos mostrar las capas de MRR de lista, descuento y MRR neto, más revenue
-  reconocido y caja, y que el CFO declare cuál es la oficial. Qué vista aplica depende de si los contratos de Finora
-  son mensuales cancelables o a plazo fijo, algo que el caso no dice.
+answer: 'Mecanismo Propuesto: el CFO declara la convención, porque no hay un estándar de mercado y la de C-020 se
+  aparta del default de herramientas como ChartMogul · el MRR se reporta en dos capas, lista y neto, y el descuento
+  es la diferencia: el revenue que dejamos de capturar, abierto por origen · las cohortes que entren con descuento
+  se marcan y se comparan con cohortes sin descuento. Con descuentos, el MRR neto, el revenue reconocido y la caja
+  se separan; cuál vista manda depende de si los contratos son mensuales cancelables o a plazo fijo. Implicaciones
+  Multidisciplinarias: Finanzas fija la convención y el reconocimiento; Marketing y Ventas crean promociones, códigos
+  y aprobaciones; Producto y Billing registran el descuento con su vigencia; Data arma la foto de cierre y el puente.'
 role_in_story: recommendation
 evidence_ids:
 - F-151
 - F-153
 - F-154
 - F-132
+- F-236
 table_ids: []
 research_ids:
 - R-021
+- R-034
 - R-011
 framework_ids: []
 confidence: medium
 limitations:
-- 'Pendiente de tu aceptación: F-151, F-153, F-154 y F-132 están propuestos.'
-- F-132 tiene confianza baja y fuente sin verificar.
-- H-048 (que el puente por capas separa los casos del CFO) sigue abierta hasta tener datos.
-visual_intent: 'Capas apiladas: lista menos descuento igual a neto; revenue y caja al lado, desfasados.'
-hugo_wording: cómo introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»
+- Pendiente de tu aceptación; F-132 tiene la fuente sin verificar.
+- No sabemos si los contratos de Finora son mensuales cancelables o a plazo fijo.
+- La comparación de cohortes con y sin descuento necesita un grupo comparable; con datos observados es asociación
+  (H-049).
+visual_intent: 'Dos capas que se separan: el MRR de lista y el neto divergen por el descuento, y la caja se aparta
+  de ambos.'
+hugo_wording: Cómo debería Finora introducir descuentos temporales (Mecanismo Propuesto, Implicaciones Multidisciplinarias,
+  preguntas del CFO contestadas con el modelo propuesto).
 links:
 - F-151
 - F-153
 - F-154
 - F-132
+- F-236
 - R-021
+- R-034
 - R-011
 phase: story
 review:
@@ -39,8 +49,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 4
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 6
 status: pending
 strength:
   level: pending
@@ -49,20 +59,24 @@ strength:
   - F-153
   - F-154
   - F-132
+  - F-236
   - F-151
   - F-153
   - F-154
   - F-132
+  - F-236
   accepted: []
   pending:
   - F-151
   - F-153
   - F-154
   - F-132
+  - F-236
   - F-151
   - F-153
   - F-154
   - F-132
+  - F-236
   tables: []
   unsupported_numbers: []
   stale: []

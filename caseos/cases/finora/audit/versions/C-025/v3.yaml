@@ -1,0 +1,121 @@
+id: C-025
+type: claim
+key: cfo-casos
+question: 'Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece
+  el descuento: ¿cómo se lee cada caso con el modelo propuesto?'
+headline: Con el modelo propuesto, cada caso del CFO se lee en su capa
+answer: 'Con el modelo (C-019, C-020), los ejemplos del enunciado se separan. De 100 a 80: si bajó lo contratado,
+  es Contracción; si lo contratado sigue en 100 y empezó un descuento, es «Descuento (inicio)»; si solo cambió el
+  mes del cobro, es efecto de cobro, fuera del MRR. De 100 a 130 con descuento de 30: Expansión por el paso de 100
+  a 130 y «Descuento (inicio)» por 30, con el neto en 100. Cuando desaparece el descuento: «Descuento (fin)» por
+  30, no Expansión. Hoy, con el monto pagado, el segundo caso se vería «sin cambio» y el tercero como expansión,
+  y el puente ya mezcla cobro: 29% del MRR de expansión se revierte al mes siguiente y 44% de los churn observados
+  vuelve a pagar al mes siguiente. Para Q-026, hacia adelante: MRR de lista (negocio subyacente) − MRR neto = revenue
+  que dejamos de capturar, por origen. Hoy el −38% por cliente activo no se puede repartir entre lista y descuento.'
+role_in_story: implication
+evidence_ids:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+table_ids:
+- T-074
+- T-076
+- T-080
+research_ids:
+- R-027
+- R-011
+- R-021
+- R-034
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
+- Los casos son ejemplos del enunciado, no observaciones de Finora.
+- 'No damos una cifra histórica de revenue no capturado: el histórico no trae tarifas ni descuentos.'
+- La lectura depende de la convención que declare el CFO (C-018).
+visual_intent: 'Cada caso en su capa: el mismo monto pagado se descompone en suscripción, descuento y cobro, y se
+  ve qué línea se mueve en cada ejemplo.'
+hugo_wording: Preguntas del CFO contestadas con el modelo propuesto.
+links:
+- F-168
+- F-172
+- F-174
+- F-177
+- F-178
+- F-150
+- F-151
+- T-074
+- T-076
+- T-080
+- R-027
+- R-011
+- R-021
+- R-034
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-165420-cos-56b6
+created_at: '2026-09-29T17:25:22-06:00'
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 3
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  accepted: []
+  pending:
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  - F-168
+  - F-172
+  - F-174
+  - F-177
+  - F-178
+  - F-150
+  - F-151
+  tables:
+  - T-074
+  - T-076
+  - T-080
+  - T-074
+  - T-076
+  - T-080
+  unsupported_numbers:
+  - '100'
+  - '80'
+  - '80'
+  - '100'
+  - '100'
+  - '130'
+  - '30'
+  - '100'
+  - '+30'
+  - −30
+  - '130'
+  - '+30'
+  stale: []

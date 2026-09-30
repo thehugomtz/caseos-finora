@@ -1,17 +1,14 @@
 id: C-024
 type: claim
 key: observable-semaforo
-question: ¿Qué puede y qué no puede responder cliente + mes + monto?
+question: ¿Qué se puede leer del monto pagado y qué no?
 headline: Con cliente, mes y monto se ve qué cambió, no por qué
-answer: 'Se puede: clientes activos, MRR pagado observado y su puente, primeros pagos, ticket estabilizado, churn
-  observado y persistente, y cohortes. Con cuidado, el puente, porque el cobro se mezcla con el movimiento: 29%
-  del MRR de expansión se revierte al mes siguiente, 44% de los churns observados vuelve a pagar al mes siguiente
-  y 42,6% del MRR de reactivación llega cubriendo los meses del hueco más el corriente. La contracción, en cambio,
-  casi no revierte: 4,0% regresa al nivel previo y 88,9% sigue igual o más abajo. Eso no descarta que parte de la
-  contracción sea cobro. Si llega justo después de un primer pago o de una reactivación que cubría varios meses,
-  la baja es la vuelta al monto usual y se sostiene; separarla pide el periodo de servicio. No se puede: lista,
-  tarifa, plan, descuento, estado de la suscripción ni nada antes del pago. Además, la vuelta de pagadores es un
-  loop de Revenue, no el Reactivate del funnel.'
+answer: 'Se ve cuánto cambió el monto pagado y en qué movimiento del puente, pero parte de ese movimiento es calendario
+  de cobro. 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente, 29% del MRR de
+  expansión se revierte al mes siguiente y 44% de los churn observados vuelve a pagar al mes siguiente. En la reactivación,
+  42,6% llega con un monto que cubre los meses del hueco más el corriente y 11,5% regresa al monto usual. En la
+  contracción, solo 4,0% vuelve al nivel previo y 88,9% sigue igual o más abajo. Lo que no se ve es el porqué: suscripción,
+  tarifa, descuento o cobro.'
 role_in_story: diagnosis
 evidence_ids:
 - F-172
@@ -20,7 +17,6 @@ evidence_ids:
 - F-182
 - F-184
 - F-185
-- F-131
 - F-135
 - F-136
 - F-186
@@ -30,22 +26,23 @@ table_ids:
 - T-076
 - T-082
 - T-086
+- T-087
 research_ids:
-- R-028
 - R-027
-- R-011
+- R-028
 - R-018
+- R-002
 framework_ids: []
-confidence: medium
+confidence: high
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- R-011 ubica buena parte de la contracción justo después de un primer pago o una reactivación (X-037), y R-028
-  solo prueba la reversión al mes siguiente (X-100). Se reconcilian así, sin una cifra conjunta.
-- Una parte del MRR de reactivación no encaja en firmas de cobro (T-082). Podrían ser regresos reales (H-064).
-- El puente normalizado exacto no es medible sin periodo de servicio (F-186).
-visual_intent: 'Semáforo de observabilidad: se puede / con cuidado / no se puede, con el puente en amarillo y la
-  contracción separada de la reactivación.'
-hugo_wording: qué data observable podemos sacar
+- 'F-131 salió de este claim: su lectura de la contracción choca con F-184 (X-100). Aquí se usa F-184 y la tensión
+  queda abierta.'
+- El reparto exacto de un pago entre los meses que cubre no se puede medir; solo se acota (F-186).
+- Las etiquetas del puente describen el monto pagado, no altas, bajas ni expansiones contractuales.
+visual_intent: 'Ruido contra señal: una parte del movimiento del puente se deshace al mes siguiente; la reactivación
+  la concentra y la contracción no.'
+hugo_wording: Qué data observable de pricing introductorio podemos sacar.
 links:
 - F-172
 - F-174
@@ -53,7 +50,6 @@ links:
 - F-182
 - F-184
 - F-185
-- F-131
 - F-135
 - F-136
 - F-186
@@ -62,10 +58,11 @@ links:
 - T-076
 - T-082
 - T-086
-- R-028
 - R-027
-- R-011
+- R-028
 - R-018
+- R-002
+- T-087
 phase: story
 review:
   state: proposed
@@ -73,8 +70,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-165420-cos-56b6
 created_at: '2026-09-29T17:25:22-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 2
+updated_at: '2026-09-29T20:12:15-06:00'
+version: 5
 status: pending
 strength:
   level: pending
@@ -85,7 +82,6 @@ strength:
   - F-182
   - F-184
   - F-185
-  - F-131
   - F-135
   - F-136
   - F-186
@@ -96,7 +92,6 @@ strength:
   - F-182
   - F-184
   - F-185
-  - F-131
   - F-135
   - F-136
   - F-186
@@ -109,7 +104,6 @@ strength:
   - F-182
   - F-184
   - F-185
-  - F-131
   - F-135
   - F-136
   - F-186
@@ -120,7 +114,6 @@ strength:
   - F-182
   - F-184
   - F-185
-  - F-131
   - F-135
   - F-136
   - F-186
@@ -134,5 +127,6 @@ strength:
   - T-076
   - T-082
   - T-086
-  unsupported_numbers: []
+  unsupported_numbers:
+  - 25,3%
   stale: []

@@ -1,0 +1,111 @@
+id: C-017
+type: claim
+key: descuento-objeto
+question: ¿Cómo se registra un descuento según su origen (promoción digital con su source, promoción física, negociado,
+  retención, partner o apilado) y cómo pega en el puente?
+headline: El descuento se registra como objeto propio, con origen, source y fecha de fin
+answer: 'AS-IS: un solo monto por cliente y mes, con transacciones → cliente-mes en COP → movimientos del monto
+  con banderas de expansión, contracción, churn y reactivación, monto usual y firmas de pago multimes. Responde
+  cuánto pagó el cliente y cómo se movió el monto. No guarda lista, plan, contratado, descuento, origen, source
+  ni la diferencia entre factura y pago, así que un descuento se vería igual que una contracción, un pago multimes
+  o un mes sin cobro (44% de los churn observados vuelve a pagar al mes siguiente). TO-BE por bloques. Lista y contrato:
+  price_list_version (precio por plan y frecuencia, con vigencia) y subscription_item_version (plan × cantidad ×
+  precio acordado, sin descuentos), que solo cambia con un subscription_change_event. Descuento: discount_grant,
+  con tipo, valor, duración, vigencia pactada y real, alcance, apilamiento, motivo, aprobación y un solo origen
+  (promoción, negociación, retención o partner). Atribución: campaign (con su rubro de S&M) → promotion (la oferta)
+  → promo_code (código, link o QR, con medio, canal asignado, UTM y landing) → promo_redemption (el canje, ligado
+  a la sesión), más acquisition_touch con el source observado de todo cliente, tenga o no descuento. Aplicación:
+  discount_application (cuánto descontó cada grant en cada línea de factura y en qué orden). Medición: una foto
+  de cierre por suscripción y mes con lista, contratado, descuento recurrente, neto, descuento único, facturado
+  y cobrado. CASUÍSTICA → PUENTE (C-020). Promoción digital: código con UTM y landing, canje en la sesión y source
+  del alta en acquisition_touch → «Descuento (inicio)» con origen promoción y, al vencer, «Descuento (fin)», nunca
+  expansión. Promoción física: un código por pieza, evento o punto, o un QR con UTM → la misma línea, con origen
+  promoción física, comparable con la digital en retención y MRR neto. Descuento negociado: grant ligado al deal
+  y a su aprobación, con precio especial = lista + descuento → «Descuento» con origen negociación, no menor MRR
+  de entrada. Retención: si el cliente acepta un descuento → «Descuento» con origen retención; si baja de plan →
+  Contracción real. Partner: grant ligado al partner → «Descuento» con origen partner. Apilados: cada grant con
+  su orden y su propia línea. Mes gratis: descuento total con bandera sin cobro, no churn. Pausa: estado de la suscripción,
+  no descuento.'
+role_in_story: recommendation
+evidence_ids:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-152
+- F-153
+- F-154
+- F-174
+table_ids:
+- T-076
+research_ids:
+- R-034
+- R-021
+- R-011
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-233 a F-237 y los demás findings citados están propuestos.'
+- 'No afirmamos que hubo descuentos en el histórico: el diseño es hacia adelante. Los ejemplos de promociones de
+  R-034 son ilustrativos, no datos de Finora.'
+- No sabemos si Finora captura hoy el source en el alta de todos los clientes. Si no, el código de descuento se
+  volvería la única atribución (H-073).
+- Sin la regla «precio especial = lista + descuento», los descuentos negociados, de partner o de retención quedarían
+  como precio menor (H-074).
+- Los efectos comerciales del descuento (cohortes de menor valor, churn al vencer) son evidencia externa, no de
+  Finora (F-154, H-049).
+visual_intent: 'Trazabilidad: cada peso de descuento se sigue desde la oferta y su canal hasta su línea del puente,
+  separado de lo contratado; lo digital y lo físico llegan al mismo objeto con distinto source.'
+hugo_wording: «C-017 lo mismo quiero ver un modelo de datos y considera mas casuisticas, un descuento podría provenir
+  de una promocion tanto digital como fisica y si es digital hay que considerar el source tambiem»
+links:
+- F-233
+- F-234
+- F-235
+- F-236
+- F-237
+- F-150
+- F-152
+- F-153
+- F-154
+- F-174
+- T-076
+- R-034
+- R-021
+- R-011
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 5
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  accepted: []
+  pending:
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  tables: []
+  unsupported_numbers: []
+  stale: []

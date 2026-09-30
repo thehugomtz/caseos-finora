@@ -1,0 +1,74 @@
+id: C-017
+type: claim
+key: descuento-objeto
+question: ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió el MRR?»?
+headline: Proponemos que el descuento exista como objeto propio, con fecha de fin
+answer: 'Mecanismo propuesto: cada descuento se registra como una concesión propia (tipo, valor, inicio, fin, motivo,
+  canal y aprobador), separada del plan, la cantidad y el precio de lista, y se lee desde la factura. El puente
+  de MRR suma líneas propias de «descuento nuevo o aumentado» y «descuento reducido o terminado». Hace falta porque
+  las herramientas revisadas, usadas tal cual, mostrarían el fin de un descuento como expansión, y una expansión
+  compensada por descuento como «sin cambio». Implicaciones multidisciplinarias: Ventas necesita reglas de aprobación
+  y vencimiento; Finanzas, la convención de MRR y la conciliación con revenue y caja; Producto y Facturación, el
+  objeto descuento y el periodo de servicio en la factura; Growth, marcar las cohortes con descuento y medirlas
+  contra un grupo comparable.'
+role_in_story: recommendation
+evidence_ids:
+- F-150
+- F-152
+- F-153
+- F-154
+table_ids: []
+research_ids:
+- R-021
+- R-011
+framework_ids: []
+confidence: medium
+limitations:
+- 'Pendiente de tu aceptación: F-150, F-152, F-153 y F-154 están propuestos.'
+- Las herramientas revisadas (ChartMogul, Chargebee, Stripe) son contexto externo, no validado con Finora.
+- La evidencia externa asocia la adquisición con descuento a clientes de menor valor. Para Finora es una hipótesis
+  (H-049).
+visual_intent: 'Objeto separado: el descuento como capa propia con fecha de fin, encima de la suscripción y del
+  precio de lista.'
+hugo_wording: mecanismo propuesto, implicaciones multidisciplinarias
+links:
+- F-150
+- F-152
+- F-153
+- F-154
+- R-021
+- R-011
+phase: story
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-113242-cos-850b
+created_at: '2026-09-29T11:54:06-06:00'
+updated_at: '2026-09-29T17:25:22-06:00'
+version: 4
+status: pending
+strength:
+  level: pending
+  evidence:
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  accepted: []
+  pending:
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  - F-150
+  - F-152
+  - F-153
+  - F-154
+  tables: []
+  unsupported_numbers: []
+  stale: []

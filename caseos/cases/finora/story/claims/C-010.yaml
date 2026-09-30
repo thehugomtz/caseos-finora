@@ -1,13 +1,14 @@
 id: C-010
 type: claim
 key: metricas-cac-proxy
-question: ¿Hay CAC hoy?
+question: ¿Podemos calcular el CAC hoy?
 headline: 'Hoy solo existe S&M por primer pagador en unidades reportadas: no es CAC'
-answer: 'El S&M total por alta pasa de 0,105 u en 2022 a 0,036 u en 2024 (−66%), en una unidad sin escala a COP.
-  Su nivel depende de si Habilitación cuenta como gasto comercial: pesa 12% del S&M en 2022 y 4% en 2024, y el gasto
-  por alta pasa de 0,11 a 0,04 incluyéndola y de 0,09 a 0,03 sin ella. Propuesta: para tener CAC en COP y por funnel,
-  Finora documenta la unidad del gasto, acordamos qué es adquirir un cliente (Won, primer pago o suscripción activa)
-  y el gasto se registra por canal y funnel. Con eso el CFO decide el payback por funnel.'
+answer: 'Lo único que se puede calcular es el S&M total por primer pagador observado, en la unidad del archivo:
+  0,105 u en 2022 y 0,036 u en 2024 (−66%). No es CAC: la unidad del gasto no está documentada, no hay canal ni
+  ruta, y el primer pago no es el hito de adquisición acordado. Además, depende de qué rubros se cuenten: Habilitación
+  pesa 12% del S&M en 2022, 7% en 2023 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 si se incluye y de
+  0,09 a 0,03 si se excluye. En las métricas comunes (C-009) queda como proxy del CAC, en rojo hasta tener la unidad
+  y el canal.'
 role_in_story: limitation
 evidence_ids:
 - F-081
@@ -28,11 +29,11 @@ framework_ids: []
 confidence: medium
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- 'El −66% no es eficiencia comercial: la unidad del gasto no está documentada y el hito de adquisición no está
-  acordado (X-005).'
-- PayrollExpenses es negativo en algunos meses (T-007).
-visual_intent: 'Cociente con advertencia: un ratio que baja, con la unidad marcada como no documentada.'
-hugo_wording: CAC y cómo medirlo
+- 'El −66% no se lee como más eficiencia comercial: puede venir de cómo se arma el archivo (X-005, H-070).'
+- No hay CAC por canal ni por ruta; no se da ningún valor de CAC en COP.
+visual_intent: 'Sensibilidad: el mismo cociente cambia según qué rubros entren; muestra lo frágil del proxy más
+  que su nivel.'
+hugo_wording: CAC (qué métricas propondrías que hoy no existen).
 links:
 - F-081
 - F-108
@@ -53,8 +54,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 4
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 6
 status: pending
 strength:
   level: pending

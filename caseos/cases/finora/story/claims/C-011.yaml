@@ -1,17 +1,16 @@
 id: C-011
 type: claim
 key: hipotesis-arbol
-question: ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas» y en qué orden se descartan?
-headline: Proponemos descartar primero artefactos de medición y después contrastar causas ToFu, MoFu y BoFu
-answer: '«Llega más gente» es lo que dice el CRO, no un dato del caso: los datos no traen leads. El paso 1 ya se
-  hizo con los pagos. Sin oct-24, las altas por mes de 2024 son 56, frente a 54 en 2023. Altas y reactivaciones
-  van en flujos separados: 1.476 clientes distintos con alta, 0 con pago previo y 468 reactivaciones aparte. El
-  cambio de ID no se puede verificar, aunque en 2023 el emparejamiento por monto e industria con churns recientes
-  (175) no supera al placebo (196). El estancamiento de altas queda como señal para contrastar con causas, no como
-  artefacto. Después, en orden: artefactos del lado de leads (necesitan el CRM) → ToFu → MoFu → BoFu → después del
-  cierre. En cada paso se comparan cohortes de entrada a igual edad y el cambio se parte en volumen, mezcla y tasa
-  por funnel.'
-role_in_story: recommendation
+question: ¿Cuánto de «no más ventas» depende de cómo se cuenta y cuánto es negocio?
+headline: Primero se fija qué es venta; revisar la medición en pagos no cierra la brecha
+answer: 'Paso 0 del árbol (C-023): fijar qué es «venta» (Won o primer pago) y qué ventana se compara, porque en
+  los pagos la respuesta cambia: la premisa «no más ventas» se sostiene en jul–oct 2024 y no en mar–oct. Del lado
+  de los pagadores, tres revisiones de medición no cambian la lectura. Sin oct-24, las altas por mes de 2024 son
+  56 frente a 54 en 2023 (55 con octubre). Altas y reactivaciones son flujos separados: 1.476 clientes con alta,
+  468 reactivaciones y 0 meses marcados como ambos. Y las altas que coinciden en monto e industria con un churn
+  reciente no superan al emparejamiento placebo (175 de 650 frente a 196 en 2023). Lo que falta revisar del lado
+  de los leads (no-prospectos, duplicados, cambios de definición) necesita el CRM.'
+role_in_story: evidence
 evidence_ids:
 - F-196
 - F-197
@@ -20,30 +19,33 @@ evidence_ids:
 - F-203
 - F-125
 - F-126
-- F-127
 - F-204
 - F-205
-- F-208
+- F-229
+- F-230
+- F-192
 table_ids:
 - T-093
 - T-094
 - T-100
+- T-089
 research_ids:
 - R-024
 - R-025
+- R-032
 - R-010
 framework_ids: []
 confidence: medium
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- Con los pagos solo se acotan los artefactos del lado de pagadores; los del lado de leads necesitan el CRM.
-- 'La premisa depende de la ventana: con pagos, la caída de primeros pagadores está en jul–oct 2024 (F-125, F-204,
-  X-106). Hay que fijar el periodo con el CRO.'
-- En 2024 el placebo casi no tiene pares (T-100), probablemente porque el panel termina en oct-24. La prueba de
-  IDs solo sirve para 2022–2023.
-visual_intent: 'Escalera de descarte: cada peldaño cierra artefactos antes de pasar a causas.'
-hugo_wording: Definir que hipótesis ToFu y BoFu podrían estar afectando su motor de acuerdo a su problema definido
-  y qué datos validarían o descartarían cada una
+- 'No se afirma que la medición quedó descartada: con los pagos solo se acotan las revisiones del lado de pagadores.'
+- No se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202). En 2024 el placebo
+  no sirve porque hay pocos churns posteriores.
+- Primer pago no es Won. La ventana jul–oct 2024 es corta y puede incluir compra adelantada (H-066, H-075).
+visual_intent: 'Filtro: la premisa pasa por las revisiones de medición del lado de pagos y la brecha sigue en pie;
+  lo del lado de leads queda en espera del CRM.'
+hugo_wording: Definir qué hipótesis ToFu y BoFu podrían estar afectando su motor y qué datos validarían o descartarían
+  cada una.
 links:
 - F-196
 - F-197
@@ -52,16 +54,19 @@ links:
 - F-203
 - F-125
 - F-126
-- F-127
 - F-204
 - F-205
-- F-208
+- F-229
+- F-230
 - T-093
 - T-094
 - T-100
 - R-024
 - R-025
+- R-032
 - R-010
+- T-089
+- F-192
 phase: story
 review:
   state: proposed
@@ -69,8 +74,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 5
+updated_at: '2026-09-29T20:12:15-06:00'
+version: 8
 status: pending
 strength:
   level: pending
@@ -82,10 +87,10 @@ strength:
   - F-203
   - F-125
   - F-126
-  - F-127
   - F-204
   - F-205
-  - F-208
+  - F-229
+  - F-230
   - F-196
   - F-197
   - F-201
@@ -93,10 +98,10 @@ strength:
   - F-203
   - F-125
   - F-126
-  - F-127
   - F-204
   - F-205
-  - F-208
+  - F-229
+  - F-230
   accepted: []
   pending:
   - F-196
@@ -106,10 +111,10 @@ strength:
   - F-203
   - F-125
   - F-126
-  - F-127
   - F-204
   - F-205
-  - F-208
+  - F-229
+  - F-230
   - F-196
   - F-197
   - F-201
@@ -117,10 +122,10 @@ strength:
   - F-203
   - F-125
   - F-126
-  - F-127
   - F-204
   - F-205
-  - F-208
+  - F-229
+  - F-230
   tables:
   - T-093
   - T-094
@@ -129,7 +134,7 @@ strength:
   - T-094
   - T-100
   unsupported_numbers:
-  - '1'
+  - '55'
   stale: []
 challenges:
 - by: hugo

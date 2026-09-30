@@ -3,14 +3,12 @@ type: claim
 key: perdida-cosechas
 question: ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento?
 headline: La pérdida está en el monto por cliente de cosechas de menor ticket
-answer: 'Está en el monto por cliente, no en el número de clientes: entre dic-22 y oct-24 los clientes activos suben
-  en las 6 industrias y el MRR por cliente activo baja en las 6, de −46,6% en Servicios profesionales a −14,4% en
-  Salud. Está dentro de cada industria: con el monto usual temprano, el efecto dentro explica 91% del cambio del
-  ticket de entrada 2022→2023 y 96% del 2022→2024. Y está en las cosechas de menor ticket: la composición explica
-  84% del cambio del MRR por cliente activo desde dic-22 (108% desde ene-22; la ventana la decides tú). Las cosechas
-  2023 y 2024 ya son 65% de los activos, con COP 46,3 mil y COP 43,0 mil por cliente, frente a COP 97,4 mil de la
-  base previa. Las salidas persistentes no la explican: el churn observado baja de 3,52% a 2,04% y el que no vuelve
-  a pagar pasa de 0,98% a 0,96%.'
+answer: 'No se concentra en una industria: el MRR pagado observado por cliente activo bajó en las 6 entre dic-22
+  y oct-24. Cayó más en Servicios profesionales (−46,6%), Restaurantes (−45,6%) y Retail (−43,1%) que en Producción
+  (−18,8%), Tecnología (−15,5%) y Salud (−14,4%). Se asocia a cosechas: con base dic-22, la composición explica
+  84% del cambio, y el menor ticket de entrada ocurre dentro de cada industria (96% del cambio 2022→2024). No se
+  asocia a salidas persistentes: el churn observado baja de 3,52% a 2,04%, mientras que el de quienes no vuelven
+  a pagar en un trimestre queda en 0,98% y 0,96%.'
 role_in_story: diagnosis
 evidence_ids:
 - F-097
@@ -35,21 +33,21 @@ table_ids:
 - T-002
 research_ids:
 - R-017
-- R-026
+- R-005
 - R-009
-- R-028
+- R-026
 framework_ids: []
-confidence: medium
+confidence: high
 limitations:
 - 'Pendiente de tu aceptación: todos los findings citados están propuestos.'
-- La cifra de composición depende de la ventana (X-060).
-- El churn observado de 2024 tiene dos cifras en el caso (T-034 frente a T-002). Falta conciliarlas (X-099, X-101).
-- 'Por promedio, quienes se van pagaban más; por mediana, no: el efecto está en pocas cuentas grandes (F-101, F-102).'
-- La cosecha 2022 también baja (F-059), y puede ser real o efecto de edad (X-062). No hay tamaño de cliente ni otra
-  segmentación (F-106).
-visual_intent: 'Mezcla que arrastra: las cosechas nuevas de menor ticket ganan peso; por industria, todas bajan
-  con distinta intensidad.'
-hugo_wording: dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets, mix)
+- La industria es una segmentación disponible, no un sustituto de canal ni de ruta; no se afirma una causa industrial.
+- No hay tamaño de cliente, motivos de churn ni estado de suscripción (F-106).
+- 'Quienes se van pagaban más en promedio, pero no en mediana: la salida de pocas cuentas grandes también baja el
+  promedio (F-101, F-102).'
+- La cifra de composición depende de la base elegida (X-060).
+visual_intent: 'Difusión contra concentración: la caída aparece en todas las industrias con distinta intensidad,
+  mientras que el peso de las cosechas de menor ticket es lo que la concentra.'
+hugo_wording: Dónde y en qué segmentos se concentra la pérdida de crecimiento (industria, churn, low tickets, mix).
 links:
 - F-097
 - F-092
@@ -71,9 +69,9 @@ links:
 - T-030
 - T-002
 - R-017
-- R-026
+- R-005
 - R-009
-- R-028
+- R-026
 phase: story
 review:
   state: proposed
@@ -81,8 +79,8 @@ origin:
   actor: cos
   run_id: RUN-20260929-113242-cos-850b
 created_at: '2026-09-29T11:54:06-06:00'
-updated_at: '2026-09-29T17:25:22-06:00'
-version: 4
+updated_at: '2026-09-29T20:10:59-06:00'
+version: 6
 status: pending
 strength:
   level: pending
