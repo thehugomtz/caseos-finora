@@ -241,7 +241,7 @@ Package. Encontrado y corregido:
   importación a CaseOS falló por YAML suelto en un spec («: » sin comillas): el lector de specs ahora es tolerante y el
   deck se importó sin volver a correrlo.
 - **Ajustes de Hugo al deck (30-sep, tarde):** en Slides, Hugo arrastra las láminas para reordenarlas (se renumeran
-  `slides/NN.html` y sus renders; el renderer ordena por nombre y el número de página se llena solo) y edita el texto sobre
+  `slides/NN.html` y sus renders; el renderer ordena por nombre; el número del pie sale del `data-page` de cada lámina, que desde el 30-sep se reescribe con su posición al mover o insertar) y edita el texto sobre
   la lámina. Es editable el texto del marcado (por posición) y el que pinta el script (`s.label(…, 'texto', …)`, por su
   literal, respetando comillas; si se repite, desempata el `id`). Una cifra que se repite en los datos de una gráfica no
   se ofrece: sería adivinar, y se le pide al Storyteller. Cada guardado deja la versión anterior en `slides/.history/`,
@@ -261,3 +261,8 @@ Package. Encontrado y corregido:
   describía el problema inicial»): la apertura del v3 («La brecha clientes–monto se asocia a quién entra» + Overview ·
   Growth · Revenue) como lámina 2 del v5, detrás de la portada; miniatura re-renderizada con la paleta nueva y PDF de 36
   páginas. Su kicker y su pie aún dicen «borrador 3… pendiente de aceptación»: se editan desde el editor.
+  Al revisarla apareció un error previo: el número del pie viene del `data-page` que el Storyteller escribió en cada
+  lámina, así que tras los reordenamientos de Hugo (14:45) varias mostraban su número viejo (la lámina 6 decía 8).
+  Ahora reordenar, traer una lámina o agregar un separador reescribe `data-page` = posición y re-renderiza esas
+  miniaturas en una sola pasada (un render a la vez: comparten qa.json). Aplicado al v5 (34 láminas renumeradas,
+  registrado como Claude) y verificado en la presentación: las 36 muestran su posición; portadas y separadores, ninguno.

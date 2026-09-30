@@ -79,7 +79,8 @@ def test_a_new_order_renumbers_slides_and_renders(case, deck):
         deckedit.reorder(case, "DECK-1", ["01.html", "02.html"])            # not a permutation of the deck
     out = deckedit.reorder(case, "DECK-1", ["03.html", "01.html", "02.html"])
     assert out["moved"] == 3
-    assert '<main class="slide" data-slide="S3">' in (deck / "slides" / "01.html").read_text(encoding="utf-8")
+    assert '<main class="slide" data-slide="S3" data-page="1">' in (deck / "slides" / "01.html").read_text(encoding="utf-8")
+    assert 'data-slide="S2" data-page="3"' in (deck / "slides" / "03.html").read_text(encoding="utf-8")   # the footer number follows
     assert (deck / "renders" / "01.png").read_bytes() == b"png3" and (deck / "renders" / "03.png").read_bytes() == b"png2"
     assert case.get(s["id"])["html"].endswith("slides/01.html")
     assert [f["file"] for f in deckedit.files(case, "DECK-1")] == ["01.html", "02.html", "03.html"]
@@ -100,7 +101,7 @@ def test_a_divider_goes_where_hugo_says_and_the_rest_moves_down(case, deck):
     assert out == {"file": "02.html", "position": 2, "slide_id": "SDATA", "moved": 2}
     new = (deck / "slides" / "02.html").read_text(encoding="utf-8")
     assert "'Data'" in new and "background: #ff6364;" in new and "color: 'ink'" in new           # dark text reads on coral
-    assert '<main class="slide" data-slide="S2">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
+    assert '<main class="slide" data-slide="S2" data-page="3">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
     assert (deck / "renders" / "04.png").read_bytes() == b"png3" and case.get(s["id"])["html"].endswith("slides/03.html")
     assert "color: 'bg'" in (deck / "slides" / f"{deckedit.add_divider(case, 'DECK-1', 'Anexos', '#101010')['position']:02d}.html").read_text(encoding="utf-8")
     with pytest.raises(StoreError):
@@ -120,10 +121,18 @@ def test_a_slide_from_an_earlier_deck_comes_back_where_hugo_says(case, deck):
     assert out == {"file": "02.html", "position": 2, "slide_id": "S2V2", "moved": 2}          # S2 was taken: new id
     new = (deck / "slides" / "02.html").read_text(encoding="utf-8")
     assert 'data-slide="S2V2"' in new and "P.draw('S2V2'" in new and "quién entra" in new
-    assert '<main class="slide" data-slide="S2">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
+    assert '<main class="slide" data-slide="S2" data-page="3">' in (deck / "slides" / "03.html").read_text(encoding="utf-8")
     assert (deck / "renders" / "02.png").read_bytes() == b"old0" and (deck / "renders" / "04.png").read_bytes() == b"png3"
     log = read_jsonl(case.root / "audit/activity.jsonl")
     assert any("Hugo trajo «La brecha se asocia a quién entra" in (e.get("summary") or "") and "lámina 1 de old" in e["summary"]
                and "vía Claude" in e["summary"] for e in log)
     with pytest.raises(StoreError):
         deckedit.copy_slide(case, "DECK-1", "DECK-9", "00.html")
+
+
+def test_page_numbers_follow_the_position(deck):
+    p = deck / "slides" / "02.html"
+    p.write_text(p.read_text(encoding="utf-8").replace('data-slide="S2">', 'data-slide="S2" data-page="7">'), encoding="utf-8")
+    (deck / "slides" / "03.html").write_text('<main class="slide" data-slide="S3"><p>sin pie</p></main>', encoding="utf-8")
+    assert deckedit.paginate(deck) == ["01", "02"]                  # 03 shows no number: left alone
+    assert 'data-page="2"' in p.read_text(encoding="utf-8") and deckedit.paginate(deck) == []

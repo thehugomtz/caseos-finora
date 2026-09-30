@@ -45,6 +45,32 @@ def slide_files(deck: Path) -> list[str]:
     return sorted(f.name for f in (deck / "slides").glob("*.html") if SLIDE_FILE.match(f.name))
 
 
+MAIN_TAG = re.compile(r'<main\b[^>]*\bclass="slide"[^>]*>')
+
+
+def paginate(deck: Path) -> list[str]:
+    """The number a slide's footer shows is its `data-page`, written when the Storyteller drew it. Keep it equal to the
+    slide's position, so moving or inserting slides never leaves an old number. Returns the slides that changed."""
+    changed = []
+    for i, f in enumerate(slide_files(deck), 1):
+        p = deck / "slides" / f
+        src = p.read_text(encoding="utf-8")
+        m = MAIN_TAG.search(src)
+        if not m:
+            continue
+        tag = m.group(0)
+        if "data-page=" in tag:
+            new = re.sub(r'\sdata-page="[^"]*"', f' data-page="{i}"', tag, count=1)
+        elif 'class="page"' in src:                           # a footer that shows a number but was never given one
+            new = tag[:-1] + f' data-page="{i}">'
+        else:
+            continue
+        if new != tag:
+            p.write_text(src[:m.start()] + new + src[m.end():], encoding="utf-8")
+            changed.append(f[:2])
+    return changed
+
+
 def files(store: CaseStore, deck_id: str) -> list[dict]:
     d = next((x for x in storyteller.decks(store) if x["id"] == deck_id), None)
     if not d:
@@ -325,9 +351,12 @@ def reorder(store: CaseStore, deck_id: str, order: list[str], *, actor: str = "h
             n = moved[old][:2]
             store.update(e["id"], {"html": rel(n, "slides", ".html"), "render": rel(n, "renders", ".png")},
                          actor=actor, material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
+    repaged = paginate(deck)
     _record(store, d, deck, {"kind": "order", "before": cur, "order": order, "moved": moved},
             f"Hugo reordenó el deck {d['slug']}: " + ", ".join(f"{int(o[:2])}→{int(n[:2])}" for o, n in moved.items()))
     rebuild(deck)
+    if repaged:                                                  # their thumbnails still show the old page number
+        threading.Thread(target=render_one, args=(deck, ",".join(repaged)), daemon=True).start()
     return {"moved": len(moved), "order": [moves[o] for o in order]}
 
 
@@ -381,8 +410,9 @@ def _shift(deck: Path, frm: int, by: int = 1) -> dict:
     return moved
 
 
-def _insert(store: CaseStore, deck_id: str, deck: Path, pos: int, html: str) -> tuple[str, dict]:
-    """Put a slide at position `pos`: the ones from there on move down one place (their case slides follow)."""
+def _insert(store: CaseStore, deck_id: str, deck: Path, pos: int, html: str) -> tuple[str, dict, str]:
+    """Put a slide at position `pos`: the ones from there on move down one place (their case slides follow) and
+    their page numbers follow. Returns the new file, the moves and the slides to re-render."""
     moved = _shift(deck, pos)
     rel = lambda n, sub, ext: str((deck / sub / f"{n}{ext}").relative_to(store.root))
     for e in store.list("slide"):
@@ -392,7 +422,7 @@ def _insert(store: CaseStore, deck_id: str, deck: Path, pos: int, html: str) -> 
                          material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
     file = f"{pos:02d}.html"
     (deck / "slides" / file).write_text(html, encoding="utf-8")
-    return file, moved
+    return file, moved, ",".join(sorted({file[:2], *paginate(deck)}))
 
 
 def _ids(deck: Path) -> set[str]:
@@ -427,7 +457,7 @@ def copy_slide(store: CaseStore, deck_id: str, from_deck: str, from_file: str, *
         html = (html.replace(f'data-slide="{old}"', f'data-slide="{new}"').replace(f"P.draw('{old}'", f"P.draw('{new}'")
                 .replace(f'P.draw("{old}"', f'P.draw("{new}"'))
     pos = (int(after[:2]) + 1) if after else len(files_) + 1
-    file, moved = _insert(store, deck_id, deck, pos, html)
+    file, moved, render = _insert(store, deck_id, deck, pos, html)
     png = store.root / src_d["path"] / "renders" / f"{from_file[:2]}.png"
     if png.exists():                                         # a thumbnail right away; the re-themed one follows
         shutil.copy2(png, deck / "renders" / f"{file[:2]}.png")
@@ -437,7 +467,7 @@ def copy_slide(store: CaseStore, deck_id: str, from_deck: str, from_file: str, *
             f"Hugo trajo «{name[:70]}» (lámina {int(from_file[:2]) + 1} de {src_d['slug']}) como lámina {pos} del deck {d['slug']}"
             + (f" · {via}" if via else ""))
     rebuild(deck)
-    threading.Thread(target=render_one, args=(deck, file[:2]), daemon=True).start()
+    threading.Thread(target=render_one, args=(deck, render), daemon=True).start()
     return {"file": file, "position": pos, "slide_id": new, "moved": len(moved)}
 
 
@@ -464,12 +494,12 @@ def add_divider(store: CaseStore, deck_id: str, title: str, color: str, *, after
         sid, k = f"{base_id}{k}", k + 1
     esc = html_lib.escape(title)
     js = title.replace("\\", "\\\\").replace("'", "\\'").replace("<", "&lt;")
-    file, moved = _insert(store, deck_id, deck, pos, DIVIDER.format(sid=sid, title_html=esc, title_js=js, color=color.lower(),
+    file, moved, render = _insert(store, deck_id, deck, pos, DIVIDER.format(sid=sid, title_html=esc, title_js=js, color=color.lower(),
                                                                     ink="bg" if _luminance(color) < 0.18 else "ink", lid=f"{sid.lower()}-name"))
     _record(store, d, deck, {"kind": "divider", "file": file, "title": title, "color": color.lower(), "moved": moved},
             f"Hugo agregó el separador «{title}» ({color.lower()}) como lámina {pos} del deck {d['slug']}" + (f" · {via}" if via else ""))
     rebuild(deck)
-    threading.Thread(target=render_one, args=(deck, file[:2]), daemon=True).start()
+    threading.Thread(target=render_one, args=(deck, render), daemon=True).start()
     return {"file": file, "position": pos, "slide_id": sid, "moved": len(moved)}
 
 
@@ -492,15 +522,20 @@ def _node(args: list[str], timeout: int) -> tuple[bool, str]:
         return False, "tardó demasiado"
 
 
+_RENDERING = threading.Lock()
+
+
 def render_one(deck: Path, n: str) -> bool:
-    """Re-render one slide's PNG (the thumbnail follows the text); the deck's QA files are left as they were."""
+    """Re-render a slide's PNG (`n` = "02", or several: "02,05,07") so the thumbnail follows the text; the deck's QA
+    files are left as they were. One render at a time: they share those files."""
     script = storyteller.renderer_dir() / "scripts" / "render.mjs"
     if not script.exists():
         return False
-    keep = {f: (deck / "renders" / f).read_bytes() for f in ("qa.json", "qa-summary.md") if (deck / "renders" / f).exists()}
-    ok, _ = _node([str(script), str(deck), "--only", n, "--no-contact"], 180)
-    for f, b in keep.items():
-        (deck / "renders" / f).write_bytes(b)
+    with _RENDERING:
+        keep = {f: (deck / "renders" / f).read_bytes() for f in ("qa.json", "qa-summary.md") if (deck / "renders" / f).exists()}
+        ok, _ = _node([str(script), str(deck), "--only", n, "--no-contact"], 120 + 15 * len(n.split(",")))
+        for f, b in keep.items():
+            (deck / "renders" / f).write_bytes(b)
     return ok
 
 
