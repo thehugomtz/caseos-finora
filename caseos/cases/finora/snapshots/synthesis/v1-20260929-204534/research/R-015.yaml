@@ -1,0 +1,699 @@
+id: R-015
+type: research
+research_question: ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría
+  (Generación de Demanda ToFu, Team, Habilitación) a lo largo del tiempo? ¿Hasta dónde se pueden relacionar cruzando
+  fechas sin pasar de asociación a efecto?
+case_question: Q-018, Q-022, Q-020, Q-012, H-022
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: analytics
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 1
+    business: 0
+  skills: []
+  purpose:
+    mapped:
+    - Q-018
+    - Q-022
+    - Q-020
+    - Q-012
+    - H-022
+    suggested:
+    - Q-014
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Analytics; intensidad analytics.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-018
+- Q-022
+- Q-020
+- Q-012
+- H-022
+- F-107
+- F-108
+- F-109
+- F-110
+- F-111
+- F-112
+- F-113
+- F-114
+- F-115
+- F-116
+- F-117
+- F-118
+- F-119
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:02-06:00'
+updated_at: '2026-09-29T11:19:36-06:00'
+version: 6
+job_id: JOB-20260929-103202-4197
+error: null
+started_at: '2026-09-29T10:32:02-06:00'
+shaping_task: RT-015
+slides:
+- S2.2
+task_why: Si las series divergen, la lámina lo describe y justifica pedir atribución por canal; si no agrega nada
+  que cambie la historia, sale (H-022).
+task:
+  work: datos
+  draft_answer: 'Se pueden poner lado a lado dos cosas: cuántos pagadores nuevos entran por mes y de qué industria,
+    y cómo se mueve cada categoría de gasto. Sobre los pagadores, lo investigado (R-003, R-005) dice que entran
+    más, con un primer pago más bajo y sin una industria que concentre el cambio. Cruzando fechas se describe dirección
+    y momento, por ejemplo si después de subir Generación de Demanda suben las primeras apariciones de pago uno
+    o varios meses más tarde. Eso es asociación, no efecto: con 34 meses, sin canal y con la unidad del gasto sin
+    documentar, no se puede decir que una categoría «generó» ventas ni sacar un CAC. Mi arranque: la lámina sirve
+    para mostrar si las series van juntas o divergen (H-022) y por qué hace falta atribución por canal.'
+  hugo_said:
+  - text: Entradas y Actividad económica de los clientes y de diferentes segmentos
+    ref: N-022
+  - text: Inversión en Generación de Demanda para ToFu (Paid Media y Publicidad no web) / Team + Payroll Expenses
+      + Travel / Habilitación ¿producto tal vez? (Software Tools + Freelance)
+    ref: N-023
+  - text: ¿Hasta donde si podemos determinar y relacionar un incremento en ventas con la inversión en las diferentes
+      categorías? (Cruzar con fechas)
+    ref: Q-018
+  steps:
+  - kind: data
+    what: Primeras apariciones de pago por mes e industria, con su primer pago mediano. Reutilizar R-003 y R-005
+      sin rehacerlos.
+    where:
+    - mart.new_customers
+    - mart.monthly_metrics
+  - kind: data
+    what: Gasto por grupo y mes como índices contra un mes base, porque la unidad no está documentada (la clasificación
+      sale de RT-004). Compararlo con primeras apariciones, monto nuevo y monto pagado total, con rezagos de uno
+      a pocos meses. Revisar si la relación se sostiene en las dos mitades del periodo o si es solo una tendencia
+      compartida.
+    where:
+    - mart.sm_monthly
+    - mart.monthly_metrics
+  - kind: proposal
+    what: 'La vista de S2.2 con sus reglas de lectura: qué se puede decir (dirección y momento), qué no (efecto,
+      CAC por canal) y qué dato permitiría ir más lejos (gasto y canal por cliente, pruebas controladas).'
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: ''
+short_answer: 'Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide
+  con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022
+  y 2024. El paso de asociación a efecto no es evaluable con estos datos: faltan funnel con fechas y fuente del
+  lead, y la unidad del gasto no está documentada'
+headline: Altas y gasto de S&M no se mueven en el mismo sentido
+what_is_established:
+- En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por
+  mes. El mes de mayor gasto de la ventana limpia, oct-22, registra 32 altas.
+- 'Hay señal de un escalón temporal: las altas mensuales pasan de 26 en dic-22 a 60 en ene-23, con el punto más
+  alto en jun-24 con 84. La lectura por industria es direccional y muestra altas anuales mayores en 2023 que en
+  2022 mar-dic en Retail, Servicios profesionales, Restaurantes, Producción, Tecnología y Salud.'
+- Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% por
+  run-rate temprano y +17% por monto habitual. El ticket de entrada mediano pasa de COP 63,0 mil en 2022 a COP 42,0
+  mil en 2024.
+- Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23, y
+  después su participación se mueve entre 30% en 2023 jun-dic y 23% en 2024 ene-oct. El descenso del gasto de habilitación
+  coincide con el componente de freelance en cero desde may-23.
+- La correlación en niveles entre S&M total y altas del mismo mes es −0,57 y en cambios mes a mes el mayor valor
+  absoluto observado es 0,27 con valor p mínimo de 0,14. La conclusión sostenible es que el cruce no muestra relación
+  positiva, no que exista una relación negativa.
+- Faltan etapas del funnel con fechas y fuente del lead que liguen el gasto de un mes con clientes concretos, y
+  la unidad del gasto no está documentada.
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede atribuir el movimiento de las altas al gasto de S&M: faltan etapas del funnel con fechas y fuente
+  del lead, y la unidad del gasto no está documentada.'
+- El cruce de fechas solo admite lectura de asociación y en sentido negativo o nulo; no sostiene que reducir gasto
+  se relacione con más altas.
+- 'La lectura por categoría está limitada por la construcción del archivo: participación constante de Team hasta
+  may-23, cambios de participación posteriores y descenso de habilitación que coincide con freelance en cero desde
+  may-23.'
+alternative_explanations: []
+case_implication: Si el archivo de S&M se usa para decisiones de presupuesto, convendría documentar primero su unidad
+  y su regla de asignación, dado que la participación de Team permanece exactamente constante en 17 meses consecutivos
+  hasta may-23. Si el objetivo es valor incorporado, podría revisarse el tablero comercial para seguir el ticket
+  de entrada junto al conteo de altas, ya que entre 2022 y 2024 las altas por mes cambian +104% y el valor inicial
+  por mes +6% por run-rate temprano.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Qué documentación interna define la unidad y la regla de asignación del archivo de S&M por categoría, para saber
+  si las categorías son comparables entre sí?
+- ¿Existe registro de fuente del lead o de campaña por cliente que permita ligar el gasto de un mes con los primeros
+  pagos de meses posteriores?
+- ¿El escalón de primeros pagadores de comienzos de 2023 coincide con un cambio de cobro, de empaquetamiento o de
+  canal documentado fuera del panel?
+- ¿Cómo se comporta la retención a doce meses de las cohortes que entraron en el tramo de menor gasto comercial,
+  frente a las cohortes de 2022?
+handoff_to_cos:
+  summary: Altas y gasto de S&M no se mueven en el mismo sentido
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-103202-2167
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: El mes de mayor S&M total de la ventana limpia es oct-22, con 3,75 u y 32 altas; el mes con más altas es
+    jun-24, con 84 altas y 2,00 u; y el mes de menor gasto, ago-23, coincide con 66 altas.
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: 2022-03
+      x: 1.36
+      y: 30.0
+      tam: 0.69
+    - etiqueta: 2022-04
+      x: 1.62
+      y: 19.0
+      tam: 0.47
+    - etiqueta: 2022-05
+      x: 1.67
+      y: 38.0
+      tam: 0.76
+    - etiqueta: 2022-06
+      x: 1.43
+      y: 33.0
+      tam: 0.64
+    - etiqueta: 2022-07
+      x: 1.19
+      y: 32.0
+      tam: 0.68
+    - etiqueta: 2022-08
+      x: 1.85
+      y: 26.0
+      tam: 1.07
+    - etiqueta: 2022-09
+      x: 2.13
+      y: 17.0
+      tam: 0.95
+    - etiqueta: 2022-10
+      x: 1.91
+      y: 32.0
+      tam: 1.31
+    - etiqueta: 2022-11
+      x: 1.92
+      y: 19.0
+      tam: 0.72
+    - etiqueta: 2022-12
+      x: 1.82
+      y: 26.0
+      tam: 1.11
+    - etiqueta: 2023-01
+      x: 1.95
+      y: 60.0
+      tam: 0.94
+    - etiqueta: 2023-02
+      x: 1.48
+      y: 30.0
+      tam: 0.73
+    - etiqueta: 2023-03
+      x: 1.68
+      y: 38.0
+      tam: 1.01
+    - etiqueta: 2023-04
+      x: 1.74
+      y: 51.0
+      tam: 0.89
+    - etiqueta: 2023-05
+      x: 1.79
+      y: 47.0
+      tam: 1.52
+    - etiqueta: 2023-06
+      x: 1.08
+      y: 46.0
+      tam: 0.58
+    - etiqueta: 2023-07
+      x: 0.96
+      y: 65.0
+      tam: 0.72
+    - etiqueta: 2023-08
+      x: 0.58
+      y: 66.0
+      tam: 0.49
+    - etiqueta: 2023-09
+      x: 0.68
+      y: 56.0
+      tam: 0.54
+    - etiqueta: 2023-10
+      x: 0.77
+      y: 64.0
+      tam: 0.53
+    - etiqueta: 2023-11
+      x: 0.75
+      y: 72.0
+      tam: 0.49
+    - etiqueta: 2023-12
+      x: 0.93
+      y: 55.0
+      tam: 0.48
+    - etiqueta: 2024-01
+      x: 1.04
+      y: 57.0
+      tam: 0.74
+    - etiqueta: 2024-02
+      x: 1.32
+      y: 32.0
+      tam: 0.56
+    - etiqueta: 2024-03
+      x: 1.17
+      y: 43.0
+      tam: 0.49
+    - etiqueta: 2024-04
+      x: 1.33
+      y: 69.0
+      tam: 0.86
+    - etiqueta: 2024-05
+      x: 1.46
+      y: 66.0
+      tam: 0.75
+    - etiqueta: 2024-06
+      x: 1.34
+      y: 84.0
+      tam: 0.6
+    - etiqueta: 2024-07
+      x: 1.19
+      y: 48.0
+      tam: 0.54
+    - etiqueta: 2024-08
+      x: 1.14
+      y: 56.0
+      tam: 0.7
+    - etiqueta: 2024-09
+      x: 1.0
+      y: 49.0
+      tam: 0.76
+    - etiqueta: 2024-10
+      x: 1.04
+      y: 50.0
+      tam: 0.88
+    ejes:
+      x:
+        columna: demanda
+        nombre: Generación de demanda por mes (unidad reportada)
+        formato: num2
+      y:
+        columna: altas
+        nombre: Altas del mes
+        formato: int
+      tamano:
+        columna: capacidad
+        nombre: capacidad
+        formato: num2
+    etiqueta: mes
+  claim: C-016
+- id: V-02
+  title: Las altas anuales de primeros pagadores son mayores en 2023 que en 2022 mar-dic en Retail (de 49 a 169),
+    Servicios profesionales (de 17 a 61), Restaurantes (de 78 a 164), Producción (de 70 a 155), Tecnología (de 37
+    a 64) y Salud (de 21 a 37).
+  spec:
+    tipo: dispersion
+    puntos:
+    - etiqueta: Restaurantes
+      x: 78.0
+      y: 164.0
+      tam: 52500.0
+    - etiqueta: Retail
+      x: 49.0
+      y: 169.0
+      tam: 26250.0
+    - etiqueta: Producción
+      x: 70.0
+      y: 155.0
+      tam: 39900.0
+    - etiqueta: Tecnología
+      x: 37.0
+      y: 64.0
+      tam: 49350.0
+    - etiqueta: Servicios profesionales
+      x: 17.0
+      y: 61.0
+      tam: 31500.0
+    - etiqueta: Salud
+      x: 21.0
+      y: 37.0
+      tam: 52500.0
+    ejes:
+      x:
+        columna: altas_2022
+        nombre: Altas 2022 (mar-dic)
+        formato: int
+      y:
+        columna: altas_2023
+        nombre: Altas 2023
+        formato: int
+      tamano:
+        columna: mediana_m0_2024
+        nombre: Ticket mediano de entrada 2024
+        formato: int
+    etiqueta: industry
+  claim: C-011
+- id: V-03
+  title: En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación
+    de demanda por mes baja de 1,73 u a 0,82 u y el S&M total por mes de 3,01 u a 1,44 u.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: ventana
+      nombre: ventana
+      formato: texto
+    - id: meses
+      nombre: meses
+      formato: int
+    - id: altas_por_mes
+      nombre: altas_por_mes
+      formato: num2
+    - id: demanda_por_mes
+      nombre: demanda_por_mes
+      formato: num2
+    - id: capacidad_por_mes
+      nombre: capacidad_por_mes
+      formato: num2
+    - id: habilitacion_por_mes
+      nombre: habilitacion_por_mes
+      formato: num2
+    - id: sm_total_por_mes
+      nombre: sm_total_por_mes
+      formato: num2
+    - id: sm_por_alta
+      nombre: sm_por_alta
+      formato: num2
+    - id: demanda_por_alta
+      nombre: demanda_por_alta
+      formato: num2
+    - id: part_team_en_sm
+      nombre: part_team_en_sm
+      formato: num2
+    filas:
+    - ventana: 1. 2022 mar-dic
+      meses: 10
+      altas_por_mes: 27.2
+      demanda_por_mes: 1.69
+      capacidad_por_mes: 0.84
+      habilitacion_por_mes: 0.335
+      sm_total_por_mes: 2.87
+      sm_por_alta: 0.1054
+      demanda_por_alta: 0.0622
+      part_team_en_sm: 0.12
+    - ventana: 2. 2023 ene-may
+      meses: 5
+      altas_por_mes: 45.2
+      demanda_por_mes: 1.73
+      capacidad_por_mes: 1.02
+      habilitacion_por_mes: 0.265
+      sm_total_por_mes: 3.01
+      sm_por_alta: 0.0666
+      demanda_por_alta: 0.0382
+      part_team_en_sm: 0.12
+    - ventana: 3. 2023 jun-dic
+      meses: 7
+      altas_por_mes: 60.6
+      demanda_por_mes: 0.82
+      capacidad_por_mes: 0.55
+      habilitacion_por_mes: 0.069
+      sm_total_por_mes: 1.44
+      sm_por_alta: 0.0237
+      demanda_por_alta: 0.0136
+      part_team_en_sm: 0.303
+    - ventana: 4. 2024 ene-oct
+      meses: 10
+      altas_por_mes: 55.4
+      demanda_por_mes: 1.2
+      capacidad_por_mes: 0.69
+      habilitacion_por_mes: 0.085
+      sm_total_por_mes: 1.98
+      sm_por_alta: 0.0357
+      demanda_por_alta: 0.0217
+      part_team_en_sm: 0.227
+  claim: C-007
+- id: V-04
+  title: Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en
+    jun-24 con 84.
+  spec:
+    tipo: linea
+    x:
+    - mar-22
+    - abr-22
+    - may-22
+    - jun-22
+    - jul-22
+    - ago-22
+    - sep-22
+    - oct-22
+    - nov-22
+    - dic-22
+    - ene-23
+    - feb-23
+    - mar-23
+    - abr-23
+    - may-23
+    - jun-23
+    - jul-23
+    - ago-23
+    - sep-23
+    - oct-23
+    - nov-23
+    - dic-23
+    - ene-24
+    - feb-24
+    - mar-24
+    - abr-24
+    - may-24
+    - jun-24
+    - jul-24
+    - ago-24
+    - sep-24
+    - oct-24
+    series:
+    - nombre: Altas
+      valores:
+      - 30.0
+      - 19.0
+      - 38.0
+      - 33.0
+      - 32.0
+      - 26.0
+      - 17.0
+      - 32.0
+      - 19.0
+      - 26.0
+      - 60.0
+      - 30.0
+      - 38.0
+      - 51.0
+      - 47.0
+      - 46.0
+      - 65.0
+      - 66.0
+      - 56.0
+      - 64.0
+      - 72.0
+      - 55.0
+      - 57.0
+      - 32.0
+      - 43.0
+      - 69.0
+      - 66.0
+      - 84.0
+      - 48.0
+      - 56.0
+      - 49.0
+      - 50.0
+    formato: int
+  claim: C-001
+- id: V-05
+  title: Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia
+    +6% medido por run-rate temprano y +17% medido por monto habitual.
+  spec:
+    tipo: barras
+    formato: pct_signed
+    x:
+    - Altas por mes
+    - Valor · run-rate M0–M2
+    - Valor · monto usual
+    - Valor · M1–M3
+    series:
+    - nombre: 2022 → 2024
+      valores:
+      - 1.0367647058823528
+      - 0.058347555459938194
+      - 0.16941922852264213
+      - 0.5964484358601063
+    - nombre: 2023 → 2024
+      valores:
+      - 0.022769230769230875
+      - 0.03437563744822669
+      - 0.002303686708192476
+      - 0.07674540909389393
+    claim_fase1: C-ADQ-08
+  claim: C-006
+- id: V-07
+  title: La participación de Team en el S&M total es 12% en 2022 mar-dic, 30% en 2023 jun-dic y 23% en 2024 ene-oct,
+    y se mantiene fija en 17 meses hasta may-23.
+  spec:
+    tipo: barras
+    x:
+    - 1. 2022 mar-dic
+    - 3. 2023 jun-dic
+    - 4. 2024 ene-oct
+    formato: pct0
+    series:
+    - nombre: part team en sm
+      valores:
+      - 0.12
+      - 0.303
+      - 0.227
+  claim: C-009
+- id: V-08
+  title: El gasto de habilitación por mes pasa de 0,34 u en 2022 mar-dic a 0,07 u en 2023 jun-dic y 0,09 u en 2024
+    ene-oct, y su descenso coincide con el componente de freelance en cero desde may-23.
+  spec:
+    tipo: barras
+    x:
+    - 1. 2022 mar-dic
+    - 3. 2023 jun-dic
+    - 4. 2024 ene-oct
+    formato: num2
+    series:
+    - nombre: habilitacion por mes
+      valores:
+      - 0.335
+      - 0.069
+      - 0.085
+  claim: C-010
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-103202-2167
+  path: investigations/runs/INV-20260929-103202-2167.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T10:39:57-06:00'
+findings:
+- F-107
+- F-108
+- F-109
+- F-110
+- F-111
+- F-112
+- F-113
+- F-114
+- F-115
+- F-116
+- F-117
+- F-118
+- F-119
+run_ids:
+- INV-20260929-103202-2167
+usage:
+  INV-20260929-103202-2167:
+    cost_usd: 2.1669915
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-015 respalda H-022, pero solo como descripción. El gasto de S&M registrado baja mientras suben las
+    primeras apariciones de pago. Aun así, la asociación solo aparece en niveles (−0,57), desaparece al comparar
+    mes a mes, y no se puede evaluar si el gasto causa el cambio (F-119). Lo más útil para Growth es F-113: las
+    primeras apariciones por mes suben +104% y el valor inicial que traen sube entre +6% y +17%. La pista está en
+    el valor, no en el número. Hay tres decisiones grandes: (1) sumar límites al framing: el −66% no es CAC, antes
+    de jun-23 las categorías son un reparto y no gasto observado, y «altas» debe cambiarse; (2) qué explica los
+    cambios de ene-23 y de jun–dic-23 (Q-020); (3) si F-113 entra como la pista de Q-022.'
+  run_id: RUN-20260929-103957-cos-6a2b
+  at: '2026-09-29T11:19:36-06:00'
+  impacts:
+  - target: framing
+    effect: changes_framing
+    why: 'R-015 trae dos lecturas que el «No afirmar todavía» no cubre y que el CEO puede malinterpretar con facilidad.
+      (1) El S&M por alta −66% (F-108) suena a «el CAC bajó 66%», pero la unidad no está documentada (T-005), el
+      gasto no se liga a clientes ni a canal (F-119) y la primera aparición no es el hito de adquisición. (2) Antes
+      de jun-23, el gasto por categoría es un reparto hecho desde arriba y no gasto observado: Team pesa un porcentaje
+      fijo durante 17 meses (F-115; T-008). Además, F-107–F-111, F-113 y F-118 hablan de «altas», una etiqueta que
+      el framing ya pide no usar sin vigencia verificada. T-012 también la usa, y R-004 y R-009 hacen algo parecido
+      con «MRR».'
+  - target: Q-020
+    effect: opens_new_hypothesis
+    why: 'R-015 le da a Q-020 dos fechas que ninguna hipótesis actual explica. (1) Las primeras apariciones saltan
+      de 26 en dic-22 a 60 en ene-23, con el S&M todavía en 3,01 u/mes (ene–may-23). El salto no se sostiene igual
+      en feb–may: el promedio de ene–may es 45,2 (F-107, F-110). (2) El tramo jun–dic-23 (60,6/mes) coincide con
+      el cambio en cómo se arma el archivo de gasto: Team deja de ser un porcentaje fijo después de may-23, Freelance
+      está en cero desde may-23 y el S&M baja de 3,45 u (may-23) a 1,10 u (ago-23) (F-108, F-115, F-117). El salto
+      de enero llega antes que la caída del gasto. Si parte de ese salto fuera un efecto de cómo se registran los
+      datos, habría que revisar R-003, R-009 y F-113.'
+  - target: Q-022
+    effect: changes_story
+    why: 'R-015 le da a Q-022 su pista más concreta. Entre 2022 y 2024, las primeras apariciones de pago por mes
+      suben +104% y el valor inicial que traen sube +6% (run-rate temprano) o +17% (monto habitual) (F-113). El
+      ticket de entrada mediano pasa de COP 63,0 mil a 42,0 mil (F-112). En los pagos, lo que no crece al ritmo
+      del volumen es el valor, no el número. Eso cambia cómo se cuenta Growth. Si el CRO mide «ventas» como un conteo,
+      la diferencia con los pagos viene del hito, del periodo o del registro (Q-001, Q-020). Si mide valor, los
+      pagos coinciden con su «no más ventas». Respeta D-004: es una observación de pagos, no una respuesta sobre
+      leads ni conversión.'
+  - target: H-022
+    effect: supports
+    why: 'R-015 es la prueba directa de H-022 y va a favor. En 2023, el tramo con más primeras apariciones (60,6/mes
+      en jun–dic frente a 45,2 en ene–may) tiene menos gasto en Generación de Demanda (0,82 u frente a 1,73 u) y
+      menos S&M total (1,44 u frente a 3,01 u) (F-107). El mes de más gasto (oct-22, 3,75 u) tiene 32 primeras apariciones
+      y el de más primeras apariciones (jun-24, 84) tiene 2,00 u (F-109). Hay dos límites. Primero, la asociación
+      aparece en niveles (−0,57) pero desaparece al comparar cambios mes a mes (máximo |0,27|, p mínimo 0,14; F-118).
+      Eso encaja más con dos tendencias opuestas que con una relación entre gasto y pagadores. Segundo, los contrastes
+      más fuertes cruzan el cambio del archivo en may-23 (F-115, F-117): suponen que el archivo mide lo mismo antes
+      y después.'
+  - target: R-018
+    effect: requires_research
+    why: 'R-015 deja el único cociente de gasto por pagador que se puede calcular hoy (F-108: 0,105 u → 0,036 u
+      entre 2022 y 2024), pero no es CAC. La unidad y la moneda no están documentadas (T-005), el gasto no se liga
+      a clientes ni a Canal de adquisición (F-119), la primera aparición no es el hito de adquisición y las categorías
+      antes de jun-23 son un reparto (F-115). R-018 debería marcar el CAC como «no calculable hoy» y listar lo mínimo
+      para calcularlo: unidad y moneda del archivo, canal o fuente de cada cliente y el hito de adquisición acordado.'
+  - target: Q-018
+    effect: supports
+    why: 'R-015 responde Q-018 dentro de lo que pregunta. En niveles, la asociación es negativa (−0,57). En cambios
+      mes a mes no hay nada significativo (máximo |0,27|, p mínimo 0,14). Por categoría, la lectura queda limitada
+      por cómo se armó el archivo: Team es fijo hasta may-23 y Habilitación cambia de composición cuando Freelance
+      pasa a cero (F-117). El paso a efecto no se puede evaluar (F-119). Ojo: con 48 pruebas, las 9 significativas
+      sirven para explorar, no suman evidencia. Falta el cruce dentro de cada tramo (opción B en H-022).'
+  - target: Q-003
+    effect: supports
+    why: 'F-113 es la conexión observada más directa entre cómo se consiguen clientes y qué mueve el ingreso: más
+      primeras apariciones de pago (+104% por mes) con casi el mismo valor inicial (+6% a +17%). Coincide con R-009,
+      que atribuye a la composición de entrada el 108% del cambio del monto por cliente activo. La conexión con
+      la Inversión en Marketing no se puede evaluar con estos datos (F-119). Eso no quiere decir que no exista.'
+  - target: Q-012
+    effect: supports
+    why: 'Refuerza R-003 (más primeras apariciones y un primer pago menor) y suma tres cosas: el salto de dic-22
+      a ene-23 (F-110), el aumento en 6 industrias (F-111) con la mediana del ticket bajando en 6 (F-114), y el
+      contraste entre volumen y valor (F-113). La mediana no baja en línea recta (63,0 → 36,8 → 42,0 mil) y el promedio
+      cae bastante más (128,7 → 50,8 mil, F-112). Eso apunta a un cambio en la mezcla de tickets, que queda como
+      hipótesis nueva. Antes de aceptar F-112, hay que confirmar que coincide con T-004.'
+  - target: H-009
+    effect: supports
+    why: 'Respalda la parte observable de H-009: entraron más pagadores (+104% por mes) y pagaron menos al entrar
+      (F-112, F-113). No dice nada sobre «suscripciones o tarifas distintas»: R-002 ya mostró que el monto no separa
+      plan, tarifa ni descuento.'
+  - target: H-019
+    effect: weakens
+    why: 'Por industria, R-015 va en la misma línea que R-005: el aumento de primeras apariciones (F-111) y la caída
+      del ticket (F-114) aparecen repartidos en 6 industrias, no concentrados. Pero H-019 habla de «grupos» en general,
+      y la distancia entre el promedio y la mediana del ticket (F-112) sugiere que el cambio podría concentrarse
+      en una banda de ticket. Eso es lo que está mirando R-017.'

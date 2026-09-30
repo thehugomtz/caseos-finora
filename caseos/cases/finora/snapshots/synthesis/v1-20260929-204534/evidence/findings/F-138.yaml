@@ -1,0 +1,83 @@
+id: F-138
+type: finding
+headline: El LTV con margen y el UCM están en rojo (necesitan margen bruto o costo de servir). Lo que se puede defender
+  hoy es un «LTV empírico de ingreso» a horizonte fijo por cohorte.
+evidence_text: 'En el modelo no hay margen ni costos variables. La fórmula simple (ARPA × margen ÷ churn) necesita
+  margen, asume churn lineal e ignora la expansión (ChartMogul); a16z advierte que el LTV debería ser utilidad del
+  cliente, no ingreso. El margen de contribución exige restar costos variables por cliente: infraestructura, pasarela
+  de pagos, onboarding/soporte y success (Drivetrain). El ingreso acumulado por alta a 12 meses sí se puede calcular
+  hoy.'
+confidence: low
+limitations:
+- El ingreso acumulado no es margen ni cubre la vida completa del cliente. A 24 meses solo lo tienen completo las
+  cosechas 2022.
+kind: measurement
+claims:
+- claim: El modelo no tiene usuarios o licencias, plan, intervalo de facturación, periodo de servicio, motion, canal,
+    margen ni costo de servir, y la unidad del S&M no está documentada.
+  source_id: DM-00
+  source_type: data_model
+  confidence: low
+  freshness: Catálogo consultado 2026-09-29
+  supports_or_contests: context
+  notes: Por esto CAC en COP, payback, LTV con margen, LTV:CAC, UCM y ARPU por usuario quedan en rojo. · fuente
+    no recuperada en la corrida (CaseOS)
+  unverified: false
+- claim: El ingreso observado acumulado por alta en sus primeros 12 meses es de 706.688 COP en la cosecha 2022 (272
+    altas) y de 496.402 COP en la cosecha 2023 con alta hasta oct-23 (523 altas). En M12 siguen pagando el 87,1%
+    y el 89,1%, respectivamente.
+  source_id: DM-12
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta 2026-09-29
+  supports_or_contests: supports
+  notes: Es un LTV empírico de ingreso a 12 meses, no un LTV con margen. «Paga en M12» subestima la retención cuando
+    hay huecos de cobro.
+- claim: LTV simple = ARPA × margen bruto ÷ churn de clientes. Asume churn lineal e ignora la expansión.
+  source_id: EXT-07
+  source_type: industry
+  confidence: high
+  freshness: Consultado 2026-09-29; la página cita un análisis de 2026
+  supports_or_contests: context
+  notes: Necesita margen, que no existe en el caso.
+- claim: Un error común es estimar el LTV como valor presente del ingreso, o incluso del margen bruto, en lugar
+    de la utilidad neta del cliente.
+  source_id: EXT-08
+  source_type: expert
+  confidence: high
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Refuerza no llamar LTV al ingreso acumulado.
+- claim: CAC = S&M total ÷ clientes nuevos; CAC payback = CAC ÷ (ingreso mensual por cliente × margen bruto).
+  source_id: EXT-10
+  source_type: industry
+  confidence: medium
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: El payback exige margen y un CAC en moneda conocida.
+- claim: Margen de contribución = ingreso por unidad − costo variable por unidad. En SaaS, los costos variables
+    incluyen infraestructura, procesamiento de pagos, onboarding/implementación, customer success y herramientas
+    por usuario.
+  source_id: EXT-11
+  source_type: industry
+  confidence: medium
+  freshness: Consultado 2026-09-29
+  supports_or_contests: context
+  notes: Leo UCM como Unit Contribution Margin (inferencia; conviene confirmarlo con Finora).
+unverified: false
+source_ref:
+  research: R-018
+links:
+- R-018
+- H-017
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:01:40-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 3

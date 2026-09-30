@@ -1,0 +1,345 @@
+{
+ "id": "JOB-20260929-103203-818f",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Cómo definir y medir el funnel si no todos lo recorren igu…",
+ "params": {
+  "research_id": "R-016"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T10:32:03-06:00",
+ "started_at": "2026-09-29T10:32:03-06:00",
+ "finished_at": "2026-09-29T11:02:42-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T10:32:03-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T10:45:59-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-103203-measurement-2025",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:46:00-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T10:46:04-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T10:46:39-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, month_index, active_customers, new_customers, reactivated_customers, churned_customers, total_paid_mrr_cop, new_mrr_cop, media"
+  },
+  {
+   "t": "2026-09-29T10:46:39-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT * FROM mart.sm_monthly ORDER BY month_index LIMIT 3"
+  },
+  {
+   "t": "2026-09-29T10:46:40-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, clean, COUNT(*) AS n, MIN(cohort_month) AS first_cohort, MAX(cohort_month) AS last_cohort FROM mart.new_customers GROUP BY v"
+  },
+  {
+   "t": "2026-09-29T10:46:42-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, active_customers, new_customers, reactivated_customers, churned_customers, total_paid_mrr_cop, new_mrr_cop, median_new_custome"
+  },
+  {
+   "t": "2026-09-29T10:46:44-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS yr, COUNT(*) AS months, SUM(demand_gen_spend) AS demand_gen, SUM(paid_media) AS paid_media, SUM(publicidad_no_we"
+  },
+  {
+   "t": "2026-09-29T10:46:48-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT vintage, COUNT(*) AS n, quantile_cont(m0_cop, 0.10) AS p10, quantile_cont(m0_cop, 0.25) AS p25, quantile_cont(m0_cop, 0.50) AS p50, q"
+  },
+  {
+   "t": "2026-09-29T10:46:50-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN m0_cop < 30000 THEN 'a <30k' WHEN m0_cop < 60000 THEN 'b 30k-60k' WHEN m0_cop < 100000 THEN 'c 60k-100k' WHEN m0_cop < 2000"
+  },
+  {
+   "t": "2026-09-29T10:46:55-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN n.m0_cop < 100000 THEN 'a <100k' WHEN n.m0_cop < 500000 THEN 'b 100k-500k' ELSE 'c >=500k' END AS m0_band, COUNT(*) AS n_al"
+  },
+  {
+   "t": "2026-09-29T10:46:58-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT n.vintage, COUNT(*) AS n_altas, ROUND(100.0*AVG(CASE WHEN cm1.active_customer = 1 THEN 1 ELSE 0 END),1) AS pct_active_m1, ROUND(100.0"
+  },
+  {
+   "t": "2026-09-29T10:47:07-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Dave McClure \"Startup Metrics for Pirates\" AARRR acquisition activation retention referral revenue”"
+  },
+  {
+   "t": "2026-09-29T10:47:07-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Winning by Design bowtie model volume conversion rate time revenue architecture”"
+  },
+  {
+   "t": "2026-09-29T10:47:07-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall buying groups replaces MQL demand waterfall”"
+  },
+  {
+   "t": "2026-09-29T10:47:21-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/research/bowtie-standard/"
+  },
+  {
+   "t": "2026-09-29T10:47:24-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/wp-content/uploads/2026/02/The-Bowtie-A-Proposed-Standard.pdf"
+  },
+  {
+   "t": "2026-09-29T10:47:32-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “\"Winning by Design\" bowtie \"VM1\" \"CR\" \"Δt\" awareness education selection commit onboarding”"
+  },
+  {
+   "t": "2026-09-29T10:47:33-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/the-revenue-process-alignment-series-part-1-the-end-of-mqls/"
+  },
+  {
+   "t": "2026-09-29T10:47:41-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “winningbydesign.com bowtie data model volume metric conversion rate \"time\" recurring revenue impact blueprint”"
+  },
+  {
+   "t": "2026-09-29T10:47:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product qualified lead PQL definition product-led sales hybrid self-serve sales-assisted OpenView”"
+  },
+  {
+   "t": "2026-09-29T10:47:42-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “HubSpot lifecycle stage \"date entered\" \"date exited\" skip stages cumulative time in stage properties”"
+  },
+  {
+   "t": "2026-09-29T10:47:54-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/resources/the-saas-data-model/"
+  },
+  {
+   "t": "2026-09-29T10:47:56-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://winningbydesign.com/design/bowtie-data-model/"
+  },
+  {
+   "t": "2026-09-29T10:47:57-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://openviewpartners.com/blog/your-guide-to-product-qualified-leads-pqls/"
+  },
+  {
+   "t": "2026-09-29T10:48:06-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/properties/stage-calculated-properties"
+  },
+  {
+   "t": "2026-09-29T10:48:08-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://knowledge.hubspot.com/records/use-lifecycle-stages"
+  },
+  {
+   "t": "2026-09-29T10:48:08-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Amplitude funnel analysis \"conversion window\" definition users must complete funnel within window”"
+  },
+  {
+   "t": "2026-09-29T10:48:19-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplitude.com/docs/analytics/charts/funnel-analysis/funnel-analysis-how-amplitude-computes-conversions"
+  },
+  {
+   "t": "2026-09-29T10:48:20-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Gordon Zettelmeyer Bhargava Chapsky \"A Comparison of Approaches to Advertising Measurement\" field experiments Facebook observational methods overestimate”"
+  },
+  {
+   "t": "2026-09-29T10:48:20-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “lifelines survival analysis introduction right censoring Kaplan-Meier time to event conversion”"
+  },
+  {
+   "t": "2026-09-29T10:48:30-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html"
+  },
+  {
+   "t": "2026-09-29T10:48:32-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3033144"
+  },
+  {
+   "t": "2026-09-29T10:48:33-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplitude.com/docs/analytics/charts/funnel-analysis/faq"
+  },
+  {
+   "t": "2026-09-29T10:48:39-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.scholars.northwestern.edu/en/publications/a-comparison-of-approaches-to-advertising-measurement-evidence-fr"
+  },
+  {
+   "t": "2026-09-29T10:48:40-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “AAARRR awareness acquisition activation retention revenue referral framework B2B SaaS critique linear funnel”"
+  },
+  {
+   "t": "2026-09-29T10:48:51-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.kellogg.northwestern.edu/faculty/gordon_b/files/fb_comparison.pdf"
+  },
+  {
+   "t": "2026-09-29T10:48:52-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.mindtheproduct.com/aarrr-vs-rarra-pirate-metrics-explained/"
+  },
+  {
+   "t": "2026-09-29T10:48:54-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.slideshare.net/slideshow/startup-metrics-for-pirates-long-version/89026"
+  },
+  {
+   "t": "2026-09-29T10:49:09-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/b2b-marketing/b2b-revenue-waterfall-guide/"
+  },
+  {
+   "t": "2026-09-29T10:49:10-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://ideas.repec.org/a/inm/ormksc/v38y2019i2p193-225.html"
+  },
+  {
+   "t": "2026-09-29T10:49:18-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kyle Poyar product-led sales PQL self-serve sales-assist motion metrics separate funnels Growth Unhinged”"
+  },
+  {
+   "t": "2026-09-29T10:49:18-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “a16z \"product-led\" \"top-down\" \"bottom-up\" enterprise sales motion hybrid go-to-market”"
+  },
+  {
+   "t": "2026-09-29T10:49:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://kylepoyar.substack.com/p/your-guide-to-product-led-sales?action=share"
+  },
+  {
+   "t": "2026-09-29T10:49:31-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://a16z.com/growthsales-the-new-era-of-enterprise-go-to-market/"
+  },
+  {
+   "t": "2026-09-29T10:49:49-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT substr(month,1,4) AS yr, SUM(new_customers) AS altas_nuevas, SUM(reactivated_customers) AS reactivaciones, SUM(churned_customers) AS "
+  },
+  {
+   "t": "2026-09-29T10:49:52-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH nc AS (SELECT n.customer_id, cm.usual_amount_cop FROM mart.new_customers n JOIN mart.customer_month cm ON cm.customer_id = n.customer_i"
+  },
+  {
+   "t": "2026-09-29T10:49:53-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH nc AS (SELECT n.customer_id, cm.usual_amount_cop FROM mart.new_customers n JOIN mart.customer_month cm ON cm.customer_id = n.customer_i"
+  },
+  {
+   "t": "2026-09-29T10:50:03-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH nc AS (SELECT n.customer_id, n.vintage, cm.usual_amount_cop FROM mart.new_customers n JOIN mart.customer_month cm ON cm.customer_id = n"
+  },
+  {
+   "t": "2026-09-29T10:50:12-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: WITH nc AS (SELECT n.customer_id, n.cohort_month, cm.usual_amount_cop, CASE WHEN ROUND(cm.usual_amount_cop) % 1050 = 0 THEN 'en_grilla_1050'"
+  },
+  {
+   "t": "2026-09-29T10:52:20-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://umbrex.com/resources/frameworks/marketing-frameworks/aaarrr-full-funnel-framework-awareness-acquisition-activation-revenue-retention-referral/"
+  },
+  {
+   "t": "2026-09-29T11:02:42-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-016",
+  "findings": [
+   "F-140",
+   "F-141",
+   "F-142",
+   "F-143",
+   "F-144"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

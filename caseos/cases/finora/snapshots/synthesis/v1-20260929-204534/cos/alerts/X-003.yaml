@@ -1,0 +1,48 @@
+id: X-003
+type: alert
+kind: research_needed
+status: dismissed
+severity: medium
+effect: requires_research
+source: R-013
+target: H-022
+title: R-013 requiere más investigación H-022
+finding_text: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+why: 'H-022 compara el gasto agregado con los resultados pagados. R-013 no la evalúa, pero le pone condiciones.
+  Primero, solo se pueden comparar forma y fechas (índices en u), nunca niveles contra montos en COP. Segundo, la
+  mayor variación del S&M total cae justo sobre el corte: el pico es 3,45 u en may-23 y el valle 1,10 u en ago-23
+  (F-063). Haciendo la cuenta con F-063 y F-066, Team explica poco de esa caída: pasa de ≈0,41 u en may-23 (12%
+  de 3,45) a entre ≈0,21 y ≈0,42 u en ago-23 (19–38% de 1,10), frente a una caída total de 2,35 u. La caída está
+  en otros rubros. Falta saber si es menos gasto o un movimiento contable: Freelance queda en cero después de jun-23,
+  y PayrollExpenses es negativo en 5 meses que aquí no tienen fecha. Además, la comparación 2022 vs 2024 de F-070
+  cruza ese mismo corte.'
+options:
+- key: A
+  label: 'Chequeo mínimo antes de evaluar H-022: descomponer por rubro la caída de may-23 a ago-23 y fechar los
+    5 meses con PayrollExpenses negativo'
+  consequence: Usa data que ya tenemos. Si la caída se mantiene sin PayrollExpenses ni Freelance, el agregado puede
+    cruzar el corte. Si no, H-022 se evalúa por tramos o sin esos rubros.
+- key: B
+  label: Evaluar H-022 solo dentro de cada tramo (ene-22–may-23 y jun-23–oct-24)
+  consequence: No depende del chequeo, pero se pierde la comparación 2022 vs 2024, que es justo la que usa F-070.
+recommended: A
+recommended_why: Es barato, usa data que ya existe y decide si el agregado puede cruzar el corte. B queda como salida
+  si el chequeo sale mal.
+detected_by: cos
+links:
+- R-013
+- H-022
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103618-cos-07f6
+created_at: '2026-09-29T11:11:30-06:00'
+updated_at: '2026-09-29T20:35:56-06:00'
+version: 2
+resolution:
+  choice: ignore
+  label: Sin impacto material
+  decision: D-022
+  at: '2026-09-29T20:35:56-06:00'

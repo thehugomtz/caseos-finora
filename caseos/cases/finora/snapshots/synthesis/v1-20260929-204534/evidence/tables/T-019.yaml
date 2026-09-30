@@ -1,0 +1,110 @@
+id: T-019
+type: table
+table_key: FIN-F-113
+title: Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6%
+  me…
+question: ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación
+  de Demanda ToFu, Team, Habilitación) a lo largo del tiempo? ¿Hasta dónde se pueden relacionar cruzando fechas
+  sin pasar de asociación a efecto?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - cnt_22_24
+  - Cambio de las altas por mes, 2022 a 2024
+  - +104%
+- - val_rr_22_24
+  - Cambio del valor inicial incorporado por mes (run-rate M0–M2), 2022 a 2024
+  - +6%
+- - val_usual_22_24
+  - Cambio del valor inicial incorporado por mes (monto habitual), 2022 a 2024
+  - +17%
+- - val_m1to3_22_24
+  - Cambio del valor inicial incorporado por mes (mediana M1–M3), 2022 a 2024
+  - +60%
+- - cnt_23_24
+  - Cambio de las altas por mes, 2023 a 2024
+  - +2%
+- - val_rr_23_24
+  - Cambio del valor inicial incorporado por mes (run-rate M0–M2), 2023 a 2024
+  - +3%
+- - val_usual_23_24
+  - Cambio del valor inicial incorporado por mes (monto habitual), 2023 a 2024
+  - +0%
+- - val_m1to3_23_24
+  - Cambio del valor inicial incorporado por mes (mediana M1–M3), 2023 a 2024
+  - +8%
+units: {}
+definitions:
+  Ticket de entrada (M0): MRR pagado por un cliente nuevo en su primer mes. Se reporta como promedio (MRR nuevo
+    ÷ altas), mediana y percentiles.
+message: Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia
+  +6% medido por run-rate temprano y +17% medido por monto habitual.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-ADQ-08
+  - E-005
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-005
+
+  SELECT substr(month, 1, 4) AS periodo, COUNT(*) AS altas, AVG(m0) AS valor, MEDIAN(m0) AS mediana, quantile_cont(m0,
+  0.25) AS p25, quantile_cont(m0, 0.75) AS p75, quantile_cont(m0, 0.9) AS p90 FROM (SELECT month, industry, vintage,
+  paid_mrr_cop::DOUBLE AS m0 FROM mart.customer_month WHERE new_customer = 1) WHERE month BETWEEN ''2022-03'' AND
+  ''2024-10'' GROUP BY ALL ORDER BY periodo'
+transformation: EC-ADQ-08 · search_evidence · Afirmación canónica verificada en código (Fase 1); E-005 · query_metric
+  · Métrica del catálogo · Ticket de entrada (M0)
+filters: []
+period: {}
+grain: year
+analysis_id: INV-20260929-103202-2167 · C-006
+limitations:
+- 'CV-M0-PICOS-2022: El ticket de entrada de 2022 incluye pagos iniciales grandes'
+- 'CV-OUTLIERS: Montos extremos y concentración en pocas cuentas'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  formato: pct_signed
+  x:
+  - Altas por mes
+  - Valor · run-rate M0–M2
+  - Valor · monto usual
+  - Valor · M1–M3
+  series:
+  - nombre: 2022 → 2024
+    valores:
+    - 1.0367647058823528
+    - 0.058347555459938194
+    - 0.16941922852264213
+    - 0.5964484358601063
+  - nombre: 2023 → 2024
+    valores:
+    - 0.022769230769230875
+    - 0.03437563744822669
+    - 0.002303686708192476
+    - 0.07674540909389393
+  claim_fase1: C-ADQ-08
+created_at: '2026-09-29T10:47:36-06:00'
+status: valid
+validation_errors: []
+finding: F-113
+links:
+- F-113
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: hugo
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

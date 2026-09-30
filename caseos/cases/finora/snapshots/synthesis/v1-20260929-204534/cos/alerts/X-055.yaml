@@ -1,0 +1,51 @@
+id: X-055
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-019
+target: D-007
+title: R-019 cambia el framing D-007
+finding_text: 'Propongo dos capas. La técnica: CRM con motion e historial de etapas, analítica digital que registre
+  el canal desde la primera visita, y facturación con MRR contratado y estado de suscripción, todo unido por un
+  ID de cuenta en el modelo analítico que ya existe. La de decisión: un bowtie por motion…'
+why: 'R-019 entrega justo lo que D-007 dejó fuera: tableros por foro, un modelo de datos con ID de cuenta y métricas
+  gobernadas. Lo mismo pasa, en distinto grado, con R-011, R-016 y R-018. D-007 sigue activa, y D-015, que lleva
+  al plan lo que el caso pide proponer, sigue propuesta. Si no se resuelve, el Story Package tendría que dejar fuera
+  la propuesta del CRO y el modelo de datos del CFO. Y eso pese a que el brief los pide («operar de forma recurrente»;
+  «mecanismo, modelo de datos y clasificación») y la pregunta ejecutiva del framing incluye «qué modelos se proponen».
+  No toco D-007: la decisión es tuya.'
+options:
+- key: A
+  label: Confirmar D-015 como nueva decisión que supersede a D-007 desde Research, incluida la entrada al Story
+  consequence: 'R-011, R-016, R-018 y R-019 entran como propuesta explícita: confianza media, sin evidencia de impacto
+    y condicionada a las herramientas que use Finora. Las métricas quedan como definiciones propuestas, no definitivas.
+    D-007 queda en el historial como regla de la etapa en que se tomó.'
+- key: B
+  label: Mantener D-007 como está
+  consequence: R-019 solo aparece en limitaciones, como «lo que haría falta». Operar el funnel de forma recurrente
+    y la Propuesta de Modelo de datos quedan fuera del cuerpo de la historia.
+- key: C
+  label: 'Acotar D-007 sin superarla: entran fuentes, ID de cuenta y bowtie; tableros por foro y agentes de IA quedan
+    para después'
+  consequence: 'Menos riesgo de sobrediseño, pero se cae la capa de decisión: qué decide el CRO cada semana, cada
+    mes y cada trimestre. Esa capa es el «del dato a la decisión» del caso.'
+recommended: A
+recommended_why: 'El brief pide explícitamente cómo operar el funnel y un modelo de datos. Además, el «ni deck»
+  de D-007 no puede durar hasta Slides, así que se lee como regla de la etapa en que se tomó. Superarla con una
+  decisión que la referencie mantiene la trazabilidad. La etiqueta «propuesta» conserva su intención: nada de métricas
+  definitivas ni tableros construidos.'
+detected_by: cos
+links:
+- R-019
+- D-007
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110606-cos-2530
+created_at: '2026-09-29T11:41:56-06:00'
+updated_at: '2026-09-29T11:41:56-06:00'
+version: 1

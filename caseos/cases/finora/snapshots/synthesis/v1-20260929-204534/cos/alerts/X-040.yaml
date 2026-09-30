@@ -1,0 +1,45 @@
+id: X-040
+type: alert
+kind: contradiction
+status: open
+severity: medium
+effect: contradicts
+source: R-011
+target: H-017
+title: R-011 contradice H-017
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'H-017 dice que se pueden comparar montos y primeras apariciones sin distorsiones importantes. R-011 documenta
+  una distorsión concreta: el momento de cobro. Una caída del monto no es necesariamente una suscripción más pequeña
+  (el 57,6 % del COP de contracción cae el mes siguiente a un primer pago o a una reactivación). Y el primer pago
+  no es necesariamente el valor mensual de entrada. Coincide con la evaluación del agente (No soportada).'
+options:
+- key: A
+  label: Documentar el momento de cobro en H-017 y sumar una línea a «No afirmar todavía»
+  consequence: 'Nueva línea: «Que el primer pago sea el valor mensual de entrada: puede incluir más de un mes, cargos
+    iniciales o atrasos». A la línea de etiquetas contractuales se le agrega que una contracción observada puede
+    ser momento de cobro. Protege Overview, Growth y Revenue.'
+- key: B
+  label: Documentarlo solo en H-017, sin tocar el framing
+  consequence: Menos cambios mientras Framing está en needs_review, pero en Growth y Overview se pueden colar claims
+    con esas lecturas.
+- key: C
+  label: Esperar a que Finora diga qué representa cada fila
+  consequence: Evita un cambio prematuro, pero el research sigue corriendo sin esa protección.
+recommended: A
+recommended_why: No afirma que sea efecto del cobro (la confianza es media); solo impide afirmar lo contrario sin
+  evidencia. Framing ya está en needs_review, así que es el momento de ajustarlo.
+detected_by: cos
+links:
+- R-011
+- H-017
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

@@ -1,0 +1,305 @@
+{
+ "run_id": "RUN-20260929-110925-cos-d4c8",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-012",
+ "started_at": "2026-09-29T11:46:03-06:00",
+ "duration_ms": 2198151,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-012\nTipo: research · revisión: proposed\nTexto: Las cifras del Overview se reproducen con ventana completa; el resto es composición\nRespuesta corta: Las cifras del Overview se reproducen con ventana completa; el resto es composición. Los múltiplos 4,5× y 2,8× coinciden con medir clientes activos y MRR pagado de punta a punta entre ene-22 y oct-24 sobre la ventana completa. El −38% corresponde al MRR por cliente activo, con pago mayor que cero en el mes y la escala fija del campo amount. La descomposición atribuye 108% del cambio a la composición de la base\nEstablecido: Medir de punta a punta entre ene-22 y oct-24, con la escala fija del campo amount y 'activo' como cliente con pago mayor que cero en el mes, reproduce los múltiplos 4,5× y 2,8× y la variación de −38%. La lectura queda como señal: parte del movimiento del monto pagado se revierte al mes siguiente. | Las cifras de titular se construyen sobre métricas de stock con ene-22 como mes base, mientras las métricas de flujo se miden desde mar-22. Son ventanas distintas dentro del mismo panel. | La descomposición atribuye 108% del cambio a la composición de la base y −8% al efecto dentro de las cosechas. El MRR por cliente de los activos en ene-22 pasa de COP 92,8 mil a COP 97,4 mil, es decir que la caída agregada no coincide con un menor pago de ese grupo. | Entre 2022 y 2024 las altas por mes pasan de 27,2 a 55,4 y el ticket de entrada promedio de COP 128,7 mil a COP 50,8 mil. Entre 2023 y 2024 ese patrón no continúa: el ticket promedio pasa de COP 47,9 mil a COP 50,8 mil y las altas por mes se mantienen en 54,2 y 55,4.\nNo podemos concluir: No se puede verificar con el panel la equivalencia entre el campo amount y un importe contractual en COP, ni si un cliente sin pago en el mes está cancelado, pausado o en atraso; por eso las señales se describen pero no se califican como deterioro comercial ni como artefacto de cobro. | Parte del movimiento del monto pagado se deshace al mes siguiente, lo que limita leer los movimientos mensuales como cambios de contrato. | La lectura de eficiencia comercial queda como señal direccional porque la unidad del gasto de S&M no está documentada y el archivo parece construido de arriba hacia abajo. | La señal de adquisición no se sostiene en el tramo reciente, de modo que no puede extenderse como tendencia única del periodo.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- H-017 (HG) [hypothesis] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [hypothesis] Se observa un cambio entre periodos comparables.\n- Q-010 (W0) [question] ¿Qué podemos nombrar y comparar válidamente?\n- Q-020 (U02) [question] U02 · ¿Qué cambió y desde cuándo?\nMotivo de Hugo: research recuperado; evaluación del COS pedida por Claude (D-016)\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [completed · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc… → Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad (H-00…\n- R-011 [completed · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent… → Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025 las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias (tar…\n- R-012 [completed · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del… → Las cifras del Overview se reproducen con ventana completa; el resto es composición. Los múltiplos 4,5× y 2,8× coinciden con medir clientes activos y MRR pagado de punta a punta entre ene-22 y oct-24 sobre la ventana co…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [completed · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d… → No se puede responder con los datos del caso. El modelo no tiene entradas, grupo de entrada, SDR/AE ni tiempos de contacto, y el gasto de Team/Payroll no sirve para medir capacidad (confianza alta). El dato mínimo son d…\n- R-015 [completed · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem… → Altas y gasto de S&M no se mueven en el mismo sentido. En 2023, el tramo con más altas por mes coincide con menor gasto de generación de demanda y menor S&M total por mes. El S&M total por alta cambia −66% entre 2022 y…\n- R-016 [completed · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se… → No midan un funnel único: midan un bowtie por puertas. Self Service, Assisted y Executive tienen cada una sus propios hitos a la izquierda, y todas comparten el mismo nudo (primer pago) y el mismo lado derecho (retenció…\n- R-017 [completed · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti… → La pérdida no es sectorial: se concentra en cosechas y ticket de entrada. El MRR por cliente activo cae en las industrias observadas, con caídas mayores en Servicios profesionales, Restaurantes y Retail. La descomposici…\n- R-018 [completed · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los… → Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado» y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn (el…\n- R-019 [completed · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?… → Propongo dos capas. La técnica: CRM con motion e historial de etapas, analítica digital que registre el canal desde la primera visita, y facturación con MRR contratado y estado de suscripción, todo unido por un ID de cu…\n- R-020 [completed · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com… → El ticket de entrada es medible; el descuento no es verificable aquí. El primer pago observado de las altas tiene mediana de COP 63,0 mil en 2022 y COP 42,0 mil en 2024, y en las cohortes de ventana limpia la mediana de…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-071 [proposed] Medidos de punta a punta entre ene-22 y oct-24 sobre la ventana completa, los clientes activos pasan de 377 a 1.678 (índice 445 en base ene-22) y el MRR pagado de COP 35,0 millones a COP 97,0 millones (índice 277), lo que coincide con los múltiplos 4,5× y 2,8…\n- F-072 [proposed] El MRR por cliente activo, definido como MRR pagado dividido entre los clientes con pago mayor que cero en el mes y expresado en COP tras aplicar la escala fija del campo amount, pasa de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24, una variación de −38%.\n- F-073 [proposed] Parte del movimiento del monto pagado corresponde a movimientos que se deshacen: 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente y 29% del MRR de expansión se revierte al mes siguiente, lo que es consistente con que amount…\n- F-074 [proposed] Las cifras de titular del Overview se apoyan en métricas de stock de ventana completa: ene-22 existe como mes base con 377 clientes activos, COP 35,0 millones de MRR pagado y COP 92,8 mil por cliente activo; en cambio las métricas de flujo se miden desde mar-…\n- F-075 [proposed] Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición de la base, que explica 108% del cambio, y el efecto dentro de las cosechas, que explica −8%; el MRR por cliente de los clientes activos en ene-22 pasa de…\n- F-076 [proposed] En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente de COP 46,3 mil y COP 43,0 mil, frente a COP 97,4 mil de los clientes activos en ene-22, que conservan 17,8% de los clientes activos.\n- F-077 [proposed] Las altas por mes pasan de 27,2 en 2022 (mar–dic) a 55,4 en 2024, mientras el ticket de entrada promedio de esas altas pasa de COP 128,7 mil a COP 50,8 mil y su mediana de COP 63,0 mil a COP 42,0 mil.\n- F-078 [proposed] La señal de adquisición no continúa en el último tramo: entre 2023 y 2024 el ticket de entrada promedio pasa de COP 47,9 mil a COP 50,8 mil y la mediana de COP 36,8 mil a COP 42,0 mil, mientras las altas por mes se mantienen en 54,2 y 55,4.\n- F-079 [proposed] El churn mensual observado de logos baja de 3,5% en 2022 a 1,9% en 2024, mientras el churn que no vuelve a pagar en un plazo de un trimestre pasa de 0,98% a 0,96%, y 44% de los churns observados vuelve a pagar al mes siguiente.\n- F-080 [proposed] Las reactivaciones por mes se mantienen en un rango estrecho a lo largo del periodo: 16,6 en 2022 (mar–dic), 11,7 en 2023 y 16,2 en 2024, frente a 198 y 279 eventos de churn observado en esos mismos años.\n- F-081 [proposed] El gasto comercial por alta es menor en 2024 que en 2022 (0,105 u frente a 0,036 u en la unidad reportada, un cambio de −66%), y la correlación en niveles entre el gasto total y las altas del mismo mes es −0,57.\n- F-082 [proposed] No es posible verificar con el panel ni la equivalencia entre el campo amount y un importe contractual en COP, ni si un cliente sin pago en el mes está cancelado, pausado o en atraso, por lo que las señales de Growth y Revenue se pueden describir pero no cali…\n\n## Findings propuestos sin revisar: 149 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n- T-005 `FIN-F-063` [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala\n- T-006 `FIN-F-064` [proposed] Ningún rubro del archivo de S&M tiene meses ausentes\n- T-007 `FIN-F-065` [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero…\n- T-008 `FIN-F-066` [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo\n- T-009 `FIN-F-067` [proposed] La serie de Habilitación cambia de composición dentro del panel\n- T-010 `FIN-F-068` [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a ga…\n- T-011 `FIN-F-069` [proposed] El peso de Habilitación en el S&M total no es estable\n- T-012 `FIN-F-070` [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndol…\n- T-013 `FIN-F-107` [proposed] En 2023 jun-dic las altas por mes son 60,6 frente a 45,2 en 2023 ene-may, mientras el gasto de generación de…\n- T-014 `FIN-F-108` [proposed] El S&M total por alta es 0,105 u en 2022 y 0,036 u en 2024, un cambio de −66%, y el S&M total pasa de 3,45 u…\n- T-015 `FIN-F-109` [proposed] El mes de mayor S&M total de la ventana limpia es oct-22, con 3,75 u y 32 altas; el mes con más altas es jun-…\n- T-016 `FIN-F-110` [proposed] Las altas mensuales pasan de 26 en dic-22 a 60 en ene-23 y el punto más alto del periodo se observa en jun-24…\n- T-017 `FIN-F-111` [proposed] Las altas anuales de primeros pagadores son mayores en 2023 que en 2022 mar-dic en Retail (de 49 a 169), Serv…\n- T-018 `FIN-F-112` [proposed] El ticket de entrada mediano es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el prome…\n- T-019 `FIN-F-113` [proposed] Entre 2022 y 2024 las altas por mes cambian +104% mientras el valor inicial incorporado por mes cambia +6% me…\n- T-020 `FIN-F-114` [proposed] Entre 2022 y 2024 la mediana del ticket de entrada baja en 6 industrias y el promedio baja en 6 industrias.\n- T-021 `FIN-F-115` [proposed] Team equivale a una participación exactamente constante del S&M total en 17 meses consecutivos hasta may-23.\n- T-022 `FIN-F-116` [proposed] La participación de Team en el S&M total es 12% en 2022 mar-dic, 30% en 2023 jun-dic y 23% en 2024 ene-oct, y…\n- T-023 `FIN-F-117` [proposed] El gasto de habilitación por mes pasa de 0,34 u en 2022 mar-dic a 0,07 u en 2023 jun-dic y 0,09 u en 2024 ene…\n- T-024 `FIN-F-118` [proposed] La correlación en niveles entre el S&M total y las altas del mismo mes es −0,57; en cambios mes a mes el mayo…\n- T-025 `FIN-F-119` [proposed] El paso de asociación a efecto entre el gasto de S&M por categoría y los primeros pagos observados no es eval…\n- T-026 `FIN-F-071` [proposed] Medidos de punta a punta entre ene-22 y oct-24 sobre la ventana completa, los clientes activos pasan de 377 a…\n- T-027 `FIN-F-072` [proposed] El MRR por cliente activo, definido como MRR pagado dividido entre los clientes con pago mayor que cero en el…\n- T-028 `FIN-F-073` [proposed] Parte del movimiento del monto pagado corresponde a movimientos que se deshacen\n- T-029 `FIN-F-074` [proposed] Las cifras de titular del Overview se apoyan en métricas de stock de ventana completa\n- T-030 `FIN-F-075` [proposed] Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición de l…\n- T-031 `FIN-F-076` [proposed] En oct-24 las cosechas 2023 y 2024 reúnen 65% de los clientes activos y 50% del MRR, con MRR por cliente de C…\n- T-032 `FIN-F-077` [proposed] Las altas por mes pasan de 27,2 en 2022 (mar–dic) a 55,4 en 2024, mientras el ticket de entrada promedio de e…\n- T-033 `FIN-F-078` [proposed] La señal de adquisición no continúa en el último tramo\n- T-034 `FIN-F-079` [proposed] El churn mensual observado de logos baja de 3,5% en 2022 a 1,9% en 2024, mientras el churn que no vuelve a pa…\n- T-035 `FIN-F-080` [proposed] Las reactivaciones por mes se mantienen en un rango estrecho a lo largo del periodo\n- T-036 `FIN-F-081` [proposed] El gasto comercial por alta es menor en 2024 que en 2022 (0,105 u frente a 0,036 u en la unidad reportada, un…\n- T-037 `FIN-F-082` [proposed] No es posible verificar con el panel ni la equivalencia entre el campo amount y un importe contractual en COP…\n- T-038 `FIN-F-094` [proposed] Entre dic-22 y oct-24 el MRR por cliente activo cae −46,6% en Servicios profesionales, −45,6% en Restaurantes…\n- T-039 `FIN-F-095` [proposed] Del crecimiento del MRR pagado entre dic-22 y oct-24, Producción aporta 30,8%, Restaurantes 19,5%, Tecnología…\n- T-040 `FIN-F-096` [proposed] La caída del MRR por cliente activo no se concentra en una industria\n- T-041 `FIN-F-097` [proposed] Entre dic-22 y oct-24 el MRR por cliente activo cambia −COP 31,7 mil (−35%), de lo cual la composición de cos…\n- T-042 `FIN-F-098` [proposed] La mediana del ticket de entrada pasó de COP 63,0 mil en 2022 a COP 42,0 mil en 2024 y su cola alta (decil su…\n- T-043 `FIN-F-099` [proposed] El ticket de entrada mediano de 2024 en Retail (COP 26,2 mil) y en Servicios profesionales (COP 31,5 mil) que…\n- T-044 `FIN-F-100` [proposed] El menor ticket de entrada no viene del mix de industrias\n- T-045 `FIN-F-101` [proposed] Quienes hacen churn pagaban en promedio más que el cliente activo del mes previo\n- T-046 `FIN-F-102` [proposed] Medido por la mediana, quienes hacen churn no pagaban más\n- T-047 `FIN-F-103` [proposed] En 2024 el churn observado por industria va de 1,46 en Restaurantes a 2,57 en Tecnología, y medido solo por c…\n- T-048 `FIN-F-104` [proposed] Salud combina el menor churn persistente (0,56 puntos porcentuales mensuales), el mayor ticket de entrada med…\n- T-049 `FIN-F-105` [proposed] Salud y Tecnología son también las industrias con menor caída del MRR por cliente entre dic-22 y oct-24 (−14,…\n- T-050 `FIN-F-106` [proposed] No es evaluable con estos datos si la pérdida de crecimiento se concentra en un tipo de cliente más allá de l…\n- T-051 `FIN-F-083` [proposed] El primer pago observado de las altas tiene una mediana de COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 4…\n- T-052 `FIN-F-084` [proposed] El ticket de entrada promedio de las altas pasa de COP 128,7 mil en 2022 a COP 50,8 mil en 2024 y la mediana…\n- T-053 `FIN-F-085` [proposed] En las cohortes de ventana limpia, la mediana del segundo pago queda por debajo de la mediana del primero\n- T-054 `FIN-F-086` [proposed] Entre las altas de ventana limpia, la parte cuyo primer pago supera con holgura su segundo pago es 23,2% en 2…\n- T-055 `FIN-F-087` [proposed] Entre las altas de ventana limpia, el segundo pago coincide exactamente con el primero en 73,5% de las altas…\n- T-056 `FIN-F-088` [proposed] El efecto dentro de cada industria explica 97% del cambio del ticket de entrada entre 2022 y 2024, con un int…\n- T-057 `FIN-F-089` [proposed] Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo del monto…\n- T-058 `FIN-F-090` [proposed] El movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo al mes siguiente en 25,3% del to…\n- T-059 `FIN-F-091` [proposed] Los meses-cliente activos con monto fuera de la grilla de montos pasan de 19% en 2022 S2 a 42% en 2024 S2, y…\n- T-060 `FIN-F-092` [proposed] Entre dic-22 y oct-24 el MRR por cliente activo pasa de COP 89,5 mil a COP 57,8 mil, y la composición de cose…\n- T-061 `FIN-F-093` [proposed] No es posible separar en los pagos un precio de lista, un descuento introductorio, un crédito o una pausa de…\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-012 resuelve la duda de método del Overview. Las cifras del caso (4,5× clientes activos, 2,8× MRR pagado, −38% MRR por cliente activo) salen exactas con tres definiciones: se mide de punta a punta de ene-22 a oct-24, el campo amount tiene escala fija y «activo» es un cliente con pago > 0 en el mes.\n\nLo que dice para la historia: el −38% no significa que los clientes paguen menos. La descomposición atribuye 108% del cambio a la composición de la base. Tampoco es una tendencia: es un salto entre 2022 y 2023, seguido de una meseta entre 2023 y 2024. Una versión ejecutiva posible: «Entraron muchos más clientes, con ticket menor; dentro de cada cosecha el pago promedio no bajó. El cambio fue un salto al pasar de 2022 a 2023, no una tendencia.»\n\nEfectos:\n- Debilita H-017 tal como está redactada: las distorsiones ya tienen número.\n- Apoya H-018, Q-010, Q-003 y H-016. H-022 también, pero solo como señal.\n- Cambia cómo se cuenta Q-020 en el Overview.\n- Permite resolver en el framing cómo nombrar MRR, altas y expansión sin afirmar nada contractual.\n\nOrden sugerido:\n1. Decidir la forma del Overview (Q-020) y el glosario del framing, porque destraban la revisión de F-071 a F-082.\n2. Decidir el cierre de H-017.\n3. Hacer dos chequeos rápidos con el propio panel:\n   - Los mismos clientes en ene-22 y oct-24: el 97,4 mil mezcla pago y supervivencia (pueden haberse ido los que pagaban menos).\n   - El ticket de entrada de 2022 sin mar–may-22: puede traer clientes que ya existían antes del panel.",
+  "impacts": [
+   {
+    "target": "H-017",
+    "effect": "weakens",
+    "why": "R-012 muestra que sí se puede comparar, pero no «sin distorsiones importantes». Lo que se sostiene: el stock de punta a punta (ene-22 → oct-24) sale exacto con la escala fija de amount y «activo» = pago > 0 en el mes (F-071, F-072). Lo que no se sostiene: (1) stock y flujo usan ventanas distintas, con ene-22 como base del stock y mar-22 como inicio del flujo (F-074). (2) 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente, y 29% de la expansión se revierte (F-073). (3) El churn observado baja de 3,5% a 1,9%, pero el que no vuelve en un trimestre casi no se mueve (0,98% → 0,96%), y 44% vuelve a pagar al mes siguiente (F-079). (4) No se puede verificar que amount sea un importe contractual en COP, ni qué significa un mes sin pago (F-082). Además quedan dos riesgos sin medir: que las primeras apariciones de 2022 incluyan clientes anteriores al panel, y que el 97,4 mil de la base de ene-22 mezcle pago y supervivencia. La evaluación «No soportada» del agente se mantiene, ahora con números.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Cerrar H-017 como no soportada tal como está y dejar escrita la regla de comparación",
+      "consequence": "La regla: el stock de punta a punta sí se compara, con definiciones fijas; los movimientos mensuales, el churn y las primeras apariciones de 2022 solo se usan con su limitación. El Overview usa las cifras de stock con una nota de método, Revenue no lee movimientos mensuales como cambios de contrato, y la regla queda como limitación escrita para Story."
+     },
+     {
+      "key": "B",
+      "label": "Dividir H-017 en dos hipótesis (stock / flujo) y evaluarlas por separado",
+      "consequence": "Más trazable, pero las dos quedarían resueltas desde el inicio con lo que ya hay (F-071/F-072 por un lado, F-073/F-079 por el otro). Es trámite sin información nueva."
+     },
+     {
+      "key": "C",
+      "label": "Mantenerla abierta hasta que Finora confirme la escala de amount y el estado de los clientes sin pago",
+      "consequence": "No se cierra algo que un dato nuevo podría cambiar, pero el Overview queda esperando un dato que quizá no llegue, cuando la lectura observada ya se puede defender."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Cierra con lo que R-012 sí muestra: una parte comparable y útil para el CEO, y otra con distorsiones que ya tienen número. Además deja la regla donde Story la va a necesitar. B es trámite; C bloquea sin necesidad."
+   },
+   {
+    "target": "H-018",
+    "effect": "supports",
+    "why": "Hay un cambio claro entre periodos comparables: entre ene-22 y oct-24 los clientes activos pasan de 377 a 1.678 y el MRR pagado de COP 35,0 a 97,0 millones (F-071); las primeras apariciones pasan de 27,2 a 55,4 por mes entre 2022 (mar–dic) y 2024 (F-077). Matiz para no sobreleer: el cambio de adquisición se concentra entre 2022 y 2023 y no continúa entre 2023 y 2024 (F-078), y las cifras de titular comparan dos meses sueltos.",
+    "severity": "low",
+    "options": [],
+    "recommended": "Sin decisión pendiente",
+    "recommended_why": "Sirve de apoyo cuando revises F-071 y F-077. El matiz de los tramos se decide en Q-020."
+   },
+   {
+    "target": "Q-010",
+    "effect": "supports",
+    "why": "Confirma y precisa lo que respondió R-001: lo comparable es el monto pagado observado y los clientes con pago > 0, no un MRR contratado. Ahora está claro qué hay detrás de las cifras del Overview: medición de punta a punta ene-22 → oct-24, escala fija de amount, «activo» = pago > 0 en el mes, stock con base ene-22 y flujo desde mar-22 (F-071, F-072, F-074). El límite no cambia: amount no se puede verificar como importe contractual en COP, y un mes sin pago puede ser baja, pausa o atraso (F-082).",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Sin decisión pendiente",
+    "recommended_why": "La consecuencia práctica, es decir cómo nombrar esto en el deck, va en la alerta de framing."
+   },
+   {
+    "target": "Q-020",
+    "effect": "changes_story",
+    "why": "R-012 responde buena parte de «¿qué cambió y desde cuándo?», y esa respuesta cambia la forma del Overview.\n\nQué cambió: la composición de la base, no el pago dentro de las cosechas. La descomposición atribuye 108% del −38% a composición y −8% al efecto dentro de las cosechas (F-075). Pasa de 100% porque, dentro de las cosechas, el promedio de los clientes que siguen activos subió un poco. En oct-24 las cosechas 2023 y 2024 son 65% de los activos y 50% del MRR, con COP 46,3 mil y 43,0 mil por cliente (F-076).\n\nDesde cuándo: hay un salto entre 2022 y 2023 (primeras apariciones de 27,2 a 54,2 por mes; ticket de entrada promedio de COP 128,7 a 47,9 mil) y una meseta entre 2023 y 2024 (54,2 → 55,4; 47,9 → 50,8 mil) (F-077, F-078). F-110/T-016 ubica el escalón entre dic-22 y ene-23 (de 26 a 60).\n\nContar el −38% o la duplicación de primeras apariciones como tendencia continua sería falso para 2024. Además, si el CRO mide «cliente nuevo» como primer pago, chocaría con su premisa.\n\nDos cuidados de redacción: el 97,4 mil compara a los activos de ene-22 que siguen en oct-24 con los 92,8 mil de toda la base de ene-22, así que mezcla pago y supervivencia y no permite decir «la base antigua paga más». Y el «desde cuándo» no puede ir antes de ene-22 para stock ni antes de mar-22 para flujo.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Abrir con las cifras del caso de punta a punta (4,5×, 2,8×, −38%) y partirlas enseguida en dos tramos: el salto 2022 → 2023 y la meseta 2023 → 2024",
+      "consequence": "El CEO reconoce sus números y ve que no es una tendencia sino un salto, explicado por composición. El paso a Growth arranca en la meseta reciente; si ese es el periodo del CRO (por confirmar), ahí se conecta su pregunta."
+     },
+     {
+      "key": "B",
+      "label": "Contar solo por tramos anuales y mandar el punta a punta al anexo",
+      "consequence": "Más preciso, pero se pierde el ancla de las cifras que el CEO ya conoce, y habría que explicar por qué no aparecen."
+     },
+     {
+      "key": "C",
+      "label": "Dejar el punta a punta como mensaje único y la meseta como limitación",
+      "consequence": "Más simple, pero R-012 dice que la señal no puede extenderse como tendencia única, y la duplicación de primeras apariciones queda de frente contra el «no más ventas» del CRO."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Usa lo que R-012 ganó (las cifras del caso se reproducen exactas) como puerta de entrada y enseguida muestra el insight: composición y salto, no deterioro continuo. Es la forma más corta de conectar el Overview con Growth sin afirmar nada del funnel."
+   },
+   {
+    "target": "Q-003",
+    "effect": "supports",
+    "why": "R-012 da el hilo entre el Overview y Growth/Revenue a nivel observado: el MRR pagado crece menos que los clientes activos (2,8× contra 4,5×) porque entran más clientes con ticket de entrada menor (composición: 108%), no por un menor pago dentro de las cosechas (F-071, F-075, F-077). Lo que no conecta es el «cómo conseguimos clientes»: el canal y el motion (Self Service, Assisted, Executive; Digital, KAM) no están en el panel. Eso sigue dependiendo del modelo de datos que proponen R-016 y R-019.",
+    "severity": "medium",
+    "options": [],
+    "recommended": "Sin decisión pendiente",
+    "recommended_why": "Es el hilo de la lámina puente entre Overview y Growth. Se cierra cuando decidas la forma de Q-020."
+   },
+   {
+    "target": "H-016",
+    "effect": "supports",
+    "why": "R-012 añade un caso concreto: un mes sin pago puede ser baja, pausa o atraso, y el panel no los distingue (F-082). 44% del churn observado vuelve a pagar al mes siguiente (F-079), y 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo (F-073). La misma observación admite situaciones distintas para el CFO. También abre una prueba rápida con el propio panel: ver la nueva hipótesis de calendario de cobro.",
+    "severity": "low",
+    "options": [],
+    "recommended": "Sin decisión pendiente",
+    "recommended_why": "Refuerza la evaluación «Soportada» del agente. Conviene que R-021 (descuentos, en curso) la tome en cuenta: en un mes suelto, un descuento que termina y un atraso que se pone al día se ven igual, porque en los dos el monto sube."
+   },
+   {
+    "target": "H-022",
+    "effect": "supports",
+    "why": "F-081 repite dentro de R-012 lo que ya mostraba R-015: entre 2022 y 2024 el gasto comercial por primera aparición pasa de 0,105 u a 0,036 u (−66%), y la correlación en niveles entre gasto total y primeras apariciones del mismo mes es de −0,57. Gasto y resultados pagados no se mueven juntos. Queda como señal direccional: la unidad del gasto no está documentada (T-005) y el archivo parece asignado de arriba hacia abajo (T-008, T-021). Una correlación en niveles entre dos series con tendencia no demuestra relación entre el gasto y las primeras apariciones, en ningún sentido (T-025).",
+    "severity": "low",
+    "options": [],
+    "recommended": "Sin decisión pendiente",
+    "recommended_why": "No usarla como lectura de eficiencia en el Overview. Si entra, que sea como señal y con su limitación escrita."
+   },
+   {
+    "target": "framing",
+    "effect": "changes_framing",
+    "why": "R-012 deja definido qué significan en este panel las palabras con que el caso presenta el Overview: «MRR» es la suma de pagos > 0 del mes con la escala fija de amount; «cliente activo» es un cliente con pago > 0 en el mes; el «−38%» es el MRR pagado por cliente activo. Hoy el framing prohíbe en bloque «MRR contratado» y etiquetas como alta, baja o expansión sin vigencia verificada. Pero los propios findings de R-012 ya dicen «MRR pagado», «altas» y «MRR de expansión» (F-073, F-077, F-078, F-081), igual que R-004 y R-015. Si se aceptan así, el deck carga etiquetas que el framing no permite; si se reescriben todos, se pierde el lenguaje del CEO/CFO, y «expansión» es palabra tuya. El framing está en needs_review, así que es buen momento para resolverlo de una vez.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Añadir al framing un glosario corto: los nombres del caso con su definición observada",
+      "consequence": "Términos: «MRR pagado observado», «cliente activo» (pago > 0 en el mes), «alta observada» (primer pago observado, con flujo desde mar-22; no es el hito del CRO), «expansión y contracción observadas», «churn observado vs. persistente». Se habla en el lenguaje del CEO/CFO sin afirmar nada contractual, y se define una sola vez para todo el caso. No es fijar métricas definitivas (D-007): es nombrar lo que el panel mide."
+     },
+     {
+      "key": "B",
+      "label": "Reescribir cada finding al aceptarlo con el vocabulario actual del framing («monto pagado observado», «primera aparición de pago»)",
+      "consequence": "El framing no cambia, pero hay que reescribir finding por finding y el deck suena a método, no a negocio."
+     },
+     {
+      "key": "C",
+      "label": "Aceptar los findings como están y resolverlo con una lámina de definiciones",
+      "consequence": "Rápido, pero los findings aceptados quedan con etiquetas que el framing prohíbe, y la regla deja de servir como protección."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es la única opción que respeta a la vez la regla del framing y tu vocabulario. Y R-012 es justo lo que la hace posible: ahora sí sabemos qué mide cada cifra del caso."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "Una parte importante de los movimientos que se deshacen al mes siguiente (meses sin pago seguidos de un regreso, subidas que duran un mes) son efectos del calendario de cobro: atrasos que se ponen al día y pagos dobles o parciales, no bajas, pausas ni cambios de suscripción.",
+    "falsifier": "En el panel, el pago de regreso tras un mes sin pago no se parece a la suma de lo que se dejó de pagar (por ejemplo, cerca del doble del monto previo), y las subidas que se revierten no aparecen junto a un mes sin pago o con pago parcial. Aun si la hipótesis se sostiene, sería un patrón y no una verificación: el estado real del cliente solo lo confirma Finora."
+   },
+   {
+    "statement": "Parte de las primeras apariciones de pago de 2022, sobre todo en mar–may-22, son clientes anteriores al panel que no pagaron en ene–feb-22. Eso inflaría el ticket de entrada de 2022 (COP 128,7 mil de promedio) y exageraría su caída hacia 2023.",
+    "falsifier": "El ticket de entrada de 2022 (promedio y mediana) se mantiene al excluir mar–may-22, o esas primeras apariciones no tienen un ticket distinto del resto de 2022."
+   }
+  ],
+  "new_questions": [
+   "¿A qué periodo y a qué hito se refiere el CRO con «más leads, pero no más ventas»? Si es 2023 → 2024 y el hito es el primer pago, la meseta de primeras apariciones (54,2 → 55,4 por mes, F-078) es el tramo observado que le corresponde. Si es 2022 → 2024, el panel muestra lo contrario (27,2 → 55,4).",
+   "¿Qué cambió en Finora entre dic-22 y ene-23 (oferta, precio, canal de entrada, sistema de cobro o identificadores de cliente)? Ahí están el escalón de primeras apariciones (F-110/T-016) y la caída del ticket de entrada. Solo Finora lo puede contestar.",
+   "Tomando solo a los clientes activos tanto en ene-22 como en oct-24, ¿su pago promedio sube o baja? Eso dice si el 97,4 mil significa que pagan más o que se fueron los que pagaban menos. Es un chequeo rápido con el propio panel.",
+   "¿El puente (T-003) suma movimientos mensuales o compara cierres de año? Si suma los mensuales, expansión, contracción, churn y reactivación vienen inflados por las idas y vueltas de F-073 y F-079. Un puente trimestral, o neto de reversiones de un mes, lo corregiría antes de llevarlo al CFO.",
+   "¿Se sostienen 4,5×, 2,8× y −38% si se comparan promedios de tres meses (ene–mar-22 contra ago–oct-24) en vez de dos meses sueltos? Los huecos temporales eran más frecuentes en 2022 (F-079), y eso puede mover el punto de partida.",
+   "En H-021, ¿«difieren en sus pagos posteriores» habla de nivel o de trayectoria? R-012 muestra diferencias grandes de nivel entre cosechas (F-076), pero no un deterioro dentro de ellas (F-075). Según cómo se lea, la evaluación «No soportada» puede confundir en la historia."
+  ],
+  "status_note": "Research en curso, con 0 findings aceptados y 149 propuestos sin revisar: el cuello de botella es la revisión. R-012 deja reproducidas las cifras del Overview y muestra que el −38% es composición de la entrada, con un salto entre 2022 y 2023 y una meseta entre 2023 y 2024. Queda pendiente de Hugo decidir la forma del Overview (Q-020), el cierre de H-017 y el glosario de nombres observados en el framing; R-021 (descuentos) sigue corriendo."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 701564,
+  "input_tokens": 2,
+  "output_tokens": 77770,
+  "cache_read": 3781,
+  "cache_write": 13061,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.6717202000000002,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

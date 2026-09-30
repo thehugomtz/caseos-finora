@@ -330,3 +330,13 @@ def test_a_rejected_claim_leaves_the_story_and_accepting_with_evidence_unblocks_
     assert res["claims"] == [keep] and res["evidence"] == [f["id"]] and res["tables"] == [t["id"]]   # the rejected one is left alone
     assert (case.get(f["id"])["review"] or {})["state"] == "accepted" and res["validation"]["pending"] == []
     assert not any("no has aceptado" in b for b in phases.readiness(case, "story")["blockers"])
+
+
+def test_strength_reads_the_statement_figures_like_the_validation(case):
+    b = case.read_data("brief/brief.yaml", {}) or {}
+    case.write_data("brief/brief.yaml", {**b, "brief_text": "Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento?"})
+    f, t = _accepted_evidence(case)
+    story.apply_package(case, _package(f, t, key="cfo", question="Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20?",
+                                       headline="Pagar 80 con la lista en 100 es un descuento", answer="Los 20 son descuento nuevo."), actor="cos")
+    cid = case.read_data("story/package.yaml")["claims"][0]["claim_id"]
+    assert cos.claim_strength(case, case.get(cid))["level"] == "supported"

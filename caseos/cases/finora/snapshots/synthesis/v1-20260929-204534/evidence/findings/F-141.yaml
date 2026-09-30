@@ -1,0 +1,59 @@
+id: F-141
+type: finding
+headline: La conversión que sirve es por cohorte de entrada, con ventana fija y solo en cohortes que ya la cumplieron.
+  La tasa de período y el promedio de solo los que convirtieron castigan a las entradas recientes, y ese es justo
+  el test de H-003.
+evidence_text: Las herramientas de funnel cuentan como convertido a quien hace el primer paso en el rango de fechas
+  y completa los demás dentro de una ventana (Amplitude). En análisis de supervivencia, dejar fuera a quienes todavía
+  no tuvieron el evento («censurados») subestima fuerte la duración real (lifelines). Pasa lo mismo con los tiempos
+  y conversiones de cohortes recientes. Con 30 a 84 altas por mes en 2023–2024, abrir por puerta × canal deja celdas
+  chicas.
+confidence: high
+limitations:
+- La ventana W y el umbral de estancamiento N se calibran con tiempos reales a pago por puerta, y Finora todavía
+  no los entregó. Con pocas altas por celda hace falta reportar por trimestre y exigir un n mínimo.
+kind: measurement
+claims:
+- claim: En 2023–2024, las altas mensuales se movieron entre 30 (feb-2023) y 84 (jun-2024).
+  source_id: DM-02
+  source_type: data_model
+  confidence: high
+  freshness: Datos hasta oct-2024; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: 'Inferencia de diseño: abrir por 3 puertas × varios canales deja celdas chicas. Conviene usar cohortes
+    trimestrales o móviles de 3 meses, con un n mínimo por celda.'
+- claim: 'Amplitude: un usuario entra al funnel cuando hace el primer paso dentro del rango de fechas, y cuenta
+    como convertido si completa los demás pasos «within the conversion window».'
+  source_id: EXT-13
+  source_type: company
+  confidence: high
+  freshness: Vigente; consultado el 2026-09-29
+  supports_or_contests: supports
+  notes: Es la misma lógica de cohorte + ventana que se propone aplicar por puerta.
+- claim: En análisis de supervivencia, excluir a los casos todavía abiertos («right-censored») lleva a «severely
+    underestimating» la duración real. El método aplica a «any duration», incluidas las suscripciones.
+  source_id: EXT-14
+  source_type: expert
+  confidence: high
+  freshness: Documentación de lifelines 0.30.3; consultada el 2026-09-29
+  supports_or_contests: supports
+  notes: Es la base de las curvas Kaplan-Meier de tiempo a pago y del test de H-003.
+unverified: false
+source_ref:
+  research: R-016
+links:
+- R-016
+- H-003
+- Q-001
+- Q-003
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T11:02:42-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

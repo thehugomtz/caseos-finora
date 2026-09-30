@@ -1,0 +1,61 @@
+id: F-180
+type: finding
+headline: Del MRR de reactivación de la ventana limpia, la parte que regresa al monto usual explica 11,5% y la parte
+  que llega con un monto que cubre los meses del hueco más el corriente explica 42,6%; el resto, 45,9%, no encaja
+  en esas firmas de momento de cobro.
+epistemic_state: Direccional
+confidence: medium
+kind: analytics
+visual:
+  tipo: tabla
+  columnas:
+  - id: clase
+    nombre: clase
+    formato: texto
+  - id: eventos
+    nombre: eventos
+    formato: int
+  - id: mrr_cop
+    nombre: mrr_cop
+    formato: num2
+  - id: share_pct
+    nombre: share_pct
+    formato: num2
+  filas:
+  - clase: A. Regresa al monto usual
+    eventos: 126
+    mrr_cop: 9930536.0
+    share_pct: 11.5
+  - clase: B. Monto cubre los meses del hueco mas el corriente
+    eventos: 163
+    mrr_cop: 36889570.0
+    share_pct: 42.6
+  - clase: C. Otro monto
+    eventos: 179
+    mrr_cop: 39683321.0
+    share_pct: 45.9
+visual_title: Del MRR de reactivación de la ventana limpia, la parte que regresa al monto usual explica 11,5% y
+  la parte que llega con un monto que cubre los meses del hueco más el corriente explica 42,6%; el resto, 45,9%,
+  no encaja en esas firmas de momento de cobro.
+source_ref:
+  workspace: finora-eda
+  run: INV-20260929-143800-c4dd
+  claim: C-004
+  evidence:
+  - E-011
+  - EC-DAT-08
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- T-082
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+created_at: '2026-09-29T14:45:34-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 3

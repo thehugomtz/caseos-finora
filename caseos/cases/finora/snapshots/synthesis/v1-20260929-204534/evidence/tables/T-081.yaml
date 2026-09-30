@@ -1,0 +1,81 @@
+id: T-081
+type: table
+table_key: FIN-F-179
+title: En la ventana limpia (mar-22 a oct-24) la reactivación aporta COP 86,5 millones de entradas de MRR y la contr…
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- Periodo
+- MRR de reactivación
+- MRR de reactivación por mes
+rows:
+- - total
+  - 86503427.01
+  - 2703232.0940625
+units:
+  MRR de reactivación: cop
+  MRR de reactivación por mes: cop
+definitions:
+  MRR de reactivación: Monto pagado por los clientes que se reactivan en el mes.
+  Contracción: Disminución del monto pagado de clientes que siguen pagando (0 < curr < prev). Negativo por convención.
+message: En la ventana limpia (mar-22 a oct-24) la reactivación aporta COP 86,5 millones de entradas de MRR y la
+  contracción −COP 89,5 millones de salidas, frente a un movimiento bruto de MRR de COP 404 millones y un cambio
+  neto de COP 62 millones en el periodo.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-001
+  - E-002
+  - EC-RES-04
+  tools:
+  - query_metric
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-001
+
+  SELECT ''total'' AS periodo, COALESCE(SUM(reactivation_mrr_cop), 0)::DOUBLE AS valor, COUNT(DISTINCT month) AS
+  meses, (COALESCE(SUM(reactivation_mrr_cop), 0)::DOUBLE) / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month
+  WHERE month BETWEEN ''2022-03'' AND ''2024-10'' GROUP BY ALL ORDER BY periodo
+
+
+  -- E-002
+
+  SELECT ''total'' AS periodo, COALESCE(SUM(contraction_mrr_cop), 0)::DOUBLE AS valor, COUNT(DISTINCT month) AS
+  meses, (COALESCE(SUM(contraction_mrr_cop), 0)::DOUBLE) / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month
+  WHERE month BETWEEN ''2022-03'' AND ''2024-10'' GROUP BY ALL ORDER BY periodo'
+transformation: E-001 · query_metric · Métrica del catálogo · MRR de reactivación; E-002 · query_metric · Métrica
+  del catálogo · MRR de contracción; EC-RES-04 · search_evidence · Afirmación canónica verificada en código (Fase
+  1)
+filters:
+- periodo 2022-03–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: total
+analysis_id: INV-20260929-143800-c4dd · C-001
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: hero_metric
+visual_artifact:
+  tipo: kpi
+  valor: 86503427.01
+  formato: cop
+  etiqueta: MRR de reactivación · total
+created_at: '2026-09-29T14:45:37-06:00'
+status: valid
+validation_errors: []
+finding: F-179
+links:
+- F-179
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:45:37-06:00'
+version: 1

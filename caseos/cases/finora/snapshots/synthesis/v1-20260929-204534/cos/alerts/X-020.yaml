@@ -1,0 +1,51 @@
+id: X-020
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-010
+target: Q-023
+title: R-010 cambia el framing Q-023
+finding_text: 'Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002)
+  y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (H-005, ToFu), atención y capacidad
+  (H-006), el tramo post-SQL (H-007, BoFu) y la oferta (H-008, BoFu). Hoy no se puede v…'
+why: 'R-010 permite responder media U12. Propone un método observacional: cohortes por fecha de entrada, ventana
+  fija, las entradas que aún no compran contadas aparte y la mezcla con pesos constantes. Y habla de «validar o
+  descartar» las ocho hipótesis.
+
+
+  - **H-001 a H-004:** el método alcanza. Son preguntas de medición y no piden experimentos.
+
+  - **H-005 a H-008:** los datos observados acotan, pero no prueban causa. Por ejemplo, si las entradas atendidas
+  más rápido compran más, eso no separa capacidad de calidad, porque se pueden estar atendiendo primero las que
+  parecen mejores.
+
+
+  En lo que veo de R-010, esto no se trata.'
+options:
+- key: A
+  label: Responder U12 en dos partes
+  consequence: H-001 a H-004 se resuelven sin experimentos. En H-005 a H-008 los datos observados acotan; para hablar
+    de causa hace falta variación que no dependa de la calidad de la entrada (por ejemplo, asignación o tiempo de
+    contacto controlados). En las explicaciones de fondo, la story promete «acotar», no «validar».
+- key: B
+  label: Dejar U12 abierta hasta R-019
+  consequence: Hoy no cambia nada. El riesgo es presentar el pedido como validación y que el CRO decida capacidad
+    o inversión sobre una correlación.
+recommended: A
+recommended_why: Es aplicar «observado ≠ causal» a la rama CRO. No pide research nuevo, solo precisión en lo que
+  se promete, y puede entrar en la revisión del Framing en curso.
+detected_by: cos
+links:
+- R-010
+- Q-023
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104715-cos-fbed
+created_at: '2026-09-29T11:27:18-06:00'
+updated_at: '2026-09-29T11:27:18-06:00'
+version: 1

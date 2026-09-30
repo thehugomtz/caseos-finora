@@ -1,0 +1,39 @@
+id: F-134
+type: finding
+headline: La huella de un descuento temporal limpio casi no aparece en el histórico (34 de 1.247 contracciones).
+  Eso es consistente con que los descuentos sean algo por introducir, pero no prueba que no existieran.
+evidence_text: Solo 34 contracciones vuelven exactamente al monto anterior después de 1 a 6 meses planos; 434 se
+  mantienen al menos 6 meses.
+confidence: low
+limitations:
+- 'No encontrar la huella no prueba que no hubiera descuentos: pudieron ser permanentes, darse como créditos o terminar
+  junto con otro cambio. Una «V» también puede ser un downgrade temporal.'
+kind: data_engineering
+claims:
+- claim: El patrón que dejaría un descuento temporal limpio (baja y regreso exacto al monto previo después de 1
+    a 6 meses planos) aparece en 34 de 1.247 contracciones; 434 contracciones se mantienen al menos 6 meses.
+  source_id: D5
+  source_type: data_model
+  confidence: high
+  freshness: corrida 2026-09-29
+  supports_or_contests: context
+  notes: 'No afirma que hubo o no hubo descuentos: que no aparezca la huella no prueba que no existieran.'
+unverified: false
+source_ref:
+  research: R-011
+links:
+- R-011
+- H-016
+- H-015
+- H-013
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: data_engineering
+created_at: '2026-09-29T10:48:41-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

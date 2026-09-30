@@ -1,0 +1,134 @@
+id: T-108
+type: table
+table_key: FIN-F-221
+title: Por ventana, las altas por mes van de 27,2 en 2022 mar-dic a 55,4 en 2024 ene-oct, y el S&M por alta va de
+  0,…
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- ventana
+- meses
+- altas_por_mes
+- sm_por_mes_u
+- sm_por_alta_u
+rows:
+- - 2022 mar-dic
+  - 10
+  - 27.2
+  - 2.866
+  - 0.1054
+- - 2023 ene-may
+  - 5
+  - 45.2
+  - 3.011
+  - 0.0666
+- - 2023 jun-dic
+  - 7
+  - 60.6
+  - 1.436
+  - 0.0237
+- - 2024 ene-oct
+  - 10
+  - 55.4
+  - 1.976
+  - 0.0357
+units:
+  ventana: texto
+  meses: int
+  altas_por_mes: num2
+  sm_por_mes_u: num2
+  sm_por_alta_u: num2
+definitions: {}
+message: Por ventana, las altas por mes van de 27,2 en 2022 mar-dic a 55,4 en 2024 ene-oct, y el S&M por alta va
+  de 0,11 a 0,04 en unidad reportada, con su valor menor en 2023 jun-dic (0,02).
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-005
+  - EC-INV-02
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-005\nWITH s AS (SELECT month, total_sm_spend FROM mart.sm_monthly WHERE month >= '2022-03'),\nn AS
+  (SELECT month, new_customers FROM mart.monthly_metrics WHERE month >= '2022-03'),\nj AS (SELECT s.month AS month,
+  s.total_sm_spend AS sm, n.new_customers AS altas\n      FROM s JOIN n ON n.month = s.month),\nv AS (SELECT CASE\n
+  \       WHEN month BETWEEN '2022-03' AND '2022-12' THEN '2022 mar-dic'\n        WHEN month BETWEEN '2023-01' AND
+  '2023-05' THEN '2023 ene-may'\n        WHEN month BETWEEN '2023-06' AND '2023-12' THEN '2023 jun-dic'\n        ELSE
+  '2024 ene-oct' END AS ventana, sm, altas FROM j)\nSELECT ventana,\n       COUNT(*) AS meses,\n       ROUND(AVG(altas),1)
+  AS altas_por_mes,\n       ROUND(AVG(sm),3) AS sm_por_mes_u,\n       ROUND(SUM(sm)/NULLIF(SUM(altas),0),4) AS sm_por_alta_u\nFROM
+  v GROUP BY ventana ORDER BY ventana"
+transformation: E-005 · run_sql · SQL ad hoc de solo lectura; EC-INV-02 · search_evidence · Afirmación canónica
+  verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-180321-0787 · C-008
+limitations:
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+preferred_visual: table
+visual_artifact:
+  tipo: tabla
+  columnas:
+  - id: ventana
+    nombre: ventana
+    formato: texto
+  - id: meses
+    nombre: meses
+    formato: int
+  - id: altas_por_mes
+    nombre: altas_por_mes
+    formato: num2
+  - id: sm_por_mes_u
+    nombre: sm_por_mes_u
+    formato: num2
+  - id: sm_por_alta_u
+    nombre: sm_por_alta_u
+    formato: num2
+  filas:
+  - ventana: 2022 mar-dic
+    meses: 10
+    altas_por_mes: 27.2
+    sm_por_mes_u: 2.866
+    sm_por_alta_u: 0.1054
+  - ventana: 2023 ene-may
+    meses: 5
+    altas_por_mes: 45.2
+    sm_por_mes_u: 3.011
+    sm_por_alta_u: 0.0666
+  - ventana: 2023 jun-dic
+    meses: 7
+    altas_por_mes: 60.6
+    sm_por_mes_u: 1.436
+    sm_por_alta_u: 0.0237
+  - ventana: 2024 ene-oct
+    meses: 10
+    altas_por_mes: 55.4
+    sm_por_mes_u: 1.976
+    sm_por_alta_u: 0.0357
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-221
+links:
+- F-221
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

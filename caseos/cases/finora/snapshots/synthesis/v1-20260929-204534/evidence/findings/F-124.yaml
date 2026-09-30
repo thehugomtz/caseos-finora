@@ -1,0 +1,59 @@
+id: F-124
+type: finding
+headline: Lo que el modelo sí dice sobre los compradores no permite elegir entre H-005 y H-006.
+evidence_text: 'Entre las altas limpias, la mezcla por industria se movió de forma moderada (Retail 18,0% → 26,0%
+  → 24,0%; ninguna industria aparece ni desaparece). La mediana del primer pago observado bajó de 63.000 a 36.750
+  COP entre 2022 y 2023, y bajó dentro de 5 de 6 industrias. El % de altas con pago en M3 no empeoró (90,1%, 95,8%,
+  95,2%). Todas son señales posteriores a la compra: no ven a quien no compró, y la caída del primer pago admite
+  otras lecturas.'
+confidence: high
+limitations:
+- La industria puede no ser la señal de ajuste que usa Finora. El primer pago observado no es una adquisición confirmada.
+  2024 está incompleto.
+kind: measurement
+claims:
+- claim: 'Altas por año: 380 en 2022 (272 limpias; 108 de feb-22 marcadas como posible arrastre), 650 en 2023 y
+    554 entre ene y oct de 2024. Mediana del primer pago observado: 63.000, 36.750 y 42.000 COP.'
+  source_id: SRC-D3
+  source_type: data_model
+  confidence: high
+  freshness: Datos de ene-22 a oct-24
+  supports_or_contests: context
+  notes: El primer pago observado es la primera aparición, no una adquisición confirmada. 2024 tiene 10 meses.
+- claim: Entre las altas limpias, la mezcla por industria cambió de forma moderada (Retail 18,0% → 26,0% → 24,0%;
+    Producción 25,7% → 23,8% → 20,4%; Restaurantes 28,7% → 25,2% → 27,6%). La mediana del primer pago cayó de 2022
+    a 2023 dentro de 5 de 6 industrias; Salud se mantuvo en 63.000.
+  source_id: SRC-D4
+  source_type: data_model
+  confidence: high
+  freshness: Datos de mar-22 a oct-24 (altas limpias)
+  supports_or_contests: context
+  notes: Son solo compradores. La industria es el único atributo al entrar que hay en el modelo y no necesariamente
+    la señal de ajuste de Finora. No permite elegir entre H-005 y H-006.
+- claim: 'El % de altas limpias con pago en M3 no empeoró: 90,1% (2022, mar–dic, n=272), 95,8% (2023, n=650) y 95,2%
+    (2024, ene–jul, n=399).'
+  source_id: SRC-D5
+  source_type: data_model
+  confidence: high
+  freshness: Cohortes hasta jul-24 (M3 observable)
+  supports_or_contests: context
+  notes: Son solo compradores. Un cliente que paga varios meses juntos puede aparecer con 0 en M3. No ve a quien
+    no compró.
+unverified: false
+source_ref:
+  research: R-014
+links:
+- R-014
+- H-005
+- H-006
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T10:45:59-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

@@ -1,0 +1,89 @@
+id: T-030
+type: table
+table_key: FIN-F-075
+title: Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición
+  de l…
+question: ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8×
+  y el −38% del Overview? ¿Y qué señales de salud del modelo abren Growth y Revenue sin llamarlas deterioro?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - base_arpa_start
+  - MRR por cliente de la base previa (activos en ene-22), ene-22
+  - COP 92,8 mil
+- - base_arpa_end
+  - MRR por cliente de la base previa (activos en ene-22), oct-24
+  - COP 97,4 mil
+- - base_arpa_change
+  - Cambio del MRR por cliente de la base previa, ene-22 a oct-24
+  - +5%
+units: {}
+definitions: {}
+message: Entre ene-22 y oct-24 el cambio del MRR por cliente activo de −COP 35,0 mil se reparte entre composición
+  de la base, que explica 108% del cambio, y el efecto dentro de las cosechas, que explica −8%; el MRR por cliente
+  de los clientes activos en ene-22 pasa de COP 92,8 mil a COP 97,4 mil.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-MON-01
+  - EC-MON-04
+  - E-007
+  tools:
+  - run_analysis
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-007
+
+  run_analysis(''vintage_arpa'', {"desde": "2022-01", "hasta": "2024-10"})'
+transformation: EC-MON-01 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-MON-04 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); E-007 · run_analysis · Descomposición de Shapley (punto medio)
+  del MRR por cliente por cosecha
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103202-db67 · C-006
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: waterfall
+visual_artifact:
+  tipo: cascada
+  formato: cop
+  pasos:
+  - etiqueta: ene-22
+    valor: 92839.01419098144
+    tipo: total
+  - etiqueta: Composición
+    corta: Comp.
+    valor: -37705.98731473553
+    tipo: delta
+  - etiqueta: 'Dentro de
+
+      cada cosecha'
+    corta: Dentro
+    valor: 2678.324035553832
+    tipo: delta
+  - etiqueta: oct-24
+    valor: 57811.35091179977
+    tipo: total
+created_at: '2026-09-29T11:09:17-06:00'
+status: valid
+validation_errors: []
+finding: F-075
+links:
+- F-075
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

@@ -1,0 +1,59 @@
+id: F-191
+type: finding
+headline: Hoy no se puede medir ninguna etapa antes del primer pago, ni la puerta. La prueba más rápida es que Finora
+  etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024.
+evidence_text: 'El modelo solo tiene pagos, industria y gasto S&M [0]. El primer pago toma 229 valores distintos
+  y el 93% son múltiplos de 1.050 COP [7]: parece un precio por cantidad y no permite saber por qué puerta entró
+  cada cliente. Además llega después del nudo, así que sirve para revisar la regla (¿los clientes Executive entran
+  con montos mayores?), no para decidir la puerta. La preferencia por comprar sin vendedor existe como tendencia
+  general [16], pero eso no prueba que Finora tenga Self Service (Q-046).'
+confidence: high
+limitations:
+- Esa etiqueta hacia atrás diría quién atendió de hecho a cada cliente, así que tiene el sesgo del segundo hallazgo.
+  Sirve como primera prueba, no como medición permanente.
+kind: measurement
+claims:
+- claim: El modelo de datos del caso solo tiene pagos mensuales por cliente, industria y gasto S&M por rubro. No
+    hay leads, contactos, oportunidades, etapas ni etiqueta de puerta.
+  source_id: S-DM-01
+  source_type: data_model
+  confidence: high
+  freshness: Catálogo leído en esta corrida (2026-09-29)
+  supports_or_contests: context
+  notes: Por eso ninguna etapa antes del primer pago es medible hoy y no se afirma nada sobre conversión del funnel.
+- claim: De 1.476 altas limpias, el primer pago observado toma 229 valores distintos y el 93% (1.376) son múltiplos
+    exactos de 1.050 COP.
+  source_id: S-DM-07
+  source_type: data_model
+  confidence: high
+  freshness: Datos ene-22–oct-24; consulta del 2026-09-29
+  supports_or_contests: context
+  notes: 'Inferencia: parece un precio por cantidad. No revela la puerta y llega después del nudo, así que sirve
+    para revisar la regla, no para asignar. Qué es esa cantidad es una pregunta para Finora.'
+- claim: Gartner reporta que el 61% de 632 compradores B2B (encuesta de ago–sep 2024) prefiere comprar sin vendedor.
+  source_id: S-EXT-09
+  source_type: industry
+  confidence: medium
+  freshness: '2025-06-26'
+  supports_or_contests: context
+  notes: 'Benchmark general: hace plausible que haya demanda de Self Service, pero no prueba que Finora lo tenga
+    (Q-046). La página original de Gartner no fue accesible; se leyó la versión reproducida por MarketScreener.'
+unverified: false
+source_ref:
+  research: R-023
+links:
+- R-023
+- H-006
+- H-028
+- H-036
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:45:42-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

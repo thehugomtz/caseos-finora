@@ -1,0 +1,61 @@
+id: F-210
+type: finding
+headline: 'Q-063: propongo que solo cuente como intervención la interacción de ida y vuelta con SDR/AE. El formulario
+  de «hablar con ventas» es la entrada, no un tramo sin persona.'
+evidence_text: 'Un «touch» es cualquier interacción registrada; «influencia» es la que cambió la trayectoria (creó
+  el deal, lo avanzó de etapa o reactivó uno estancado). Contar touches como bandera binaria sobreestima la contribución
+  (SRC-07). Los estados de lead separan «intentando contacto» de «trabajando», y un lead puede pasar varias veces
+  por intentos (SRC-06). Aplicado al funnel de Hugo: pasar a Working SDR (intentos) no mueve tramo; Engaged SDR
+  en adelante sí (respuesta, llamada conectada, demo, propuesta, prueba montada por un AE). Así, el lead de campaña
+  que nadie contactó y compró solo es Self Service con bandera, no Hybrid B. Origen (sourced) e influencia (influenced)
+  necesitan definiciones gobernadas para no contar doble (SRC-08): la puerta es el origen y los tramos con persona
+  son la influencia.'
+confidence: medium
+limitations:
+- 'La opción la decide Hugo. La definición estricta requiere que el CRM guarde el resultado de cada actividad (intento,
+  conectada, respondida) y marque las automatizadas. Conviene reportar la «zona gris»: los episodios que cambian
+  de ruta entre la definición amplia y la estricta.'
+kind: measurement
+claims:
+- claim: Los estados de lead separan «intentando contacto» de «trabajando», y un lead puede pasar varias veces por
+    «intentando contacto».
+  source_id: SRC-06
+  source_type: marketing
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Respalda que Working SDR (intentos) no equivale a intervención.
+- claim: Un touch es cualquier interacción registrada; la influencia es la que cambió la trayectoria del deal (lo
+    creó, lo avanzó de etapa o reactivó uno estancado). Contar touches como bandera binaria sobreestima la contribución.
+  source_id: SRC-07
+  source_type: marketing
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: Base de la propuesta estricta para Q-063.
+- claim: Sourced (quién originó) e influenced (quién ayudó a mover) requieren definiciones gobernadas para no contar
+    doble.
+  source_id: SRC-08
+  source_type: marketing
+  confidence: medium
+  freshness: sin fecha visible; consultado 2026-09-29
+  supports_or_contests: supports
+  notes: En este diseño, la puerta es el origen y los tramos con persona son la influencia; no se suman.
+unverified: false
+source_ref:
+  research: R-029
+links:
+- R-029
+- H-050
+- H-051
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T16:38:56-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

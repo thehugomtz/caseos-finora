@@ -1,0 +1,85 @@
+id: T-094
+type: table
+table_key: FIN-F-197
+title: Entre mar-22 y oct-24 las altas corresponden a 1.476 clientes distintos, con 0 meses-cliente marcados a la
+  ve…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- altas_total
+- reactivaciones_total
+- solapamiento_banderas
+- altas_con_pago_previo
+- clientes_distintos_con_alta
+rows:
+- - 1476.0
+  - 468.0
+  - 0.0
+  - 0.0
+  - 1476
+units:
+  altas_total: num2
+  reactivaciones_total: num2
+  solapamiento_banderas: num2
+  altas_con_pago_previo: num2
+  clientes_distintos_con_alta: int
+definitions:
+  Reactivaciones: Clientes que vuelven a pagar después de al menos un mes en cero.
+message: Entre mar-22 y oct-24 las altas corresponden a 1.476 clientes distintos, con 0 meses-cliente marcados a
+  la vez como alta y reactivación y 0 altas con un pago anterior registrado; las reactivaciones suman 468 eventos
+  en un flujo aparte.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-007
+  - E-002
+  tools:
+  - query_metric
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-007
+
+  SELECT SUM(new_customer) AS altas_total, SUM(reactivated_customer) AS reactivaciones_total, SUM(CASE WHEN new_customer
+  = 1 AND reactivated_customer = 1 THEN 1 ELSE 0 END) AS solapamiento_banderas, SUM(CASE WHEN new_customer = 1 AND
+  CAST(month AS VARCHAR) > CAST(first_positive_month AS VARCHAR) THEN 1 ELSE 0 END) AS altas_con_pago_previo, COUNT(DISTINCT
+  CASE WHEN new_customer = 1 THEN customer_id END) AS clientes_distintos_con_alta FROM mart.customer_month WHERE
+  month_index >= 2
+
+
+  -- E-002
+
+  SELECT month AS periodo, SUM(reactivated_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(reactivated_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo'
+transformation: E-007 · run_sql · SQL ad hoc de solo lectura; E-002 · query_metric · Métrica del catálogo · Reactivaciones
+filters:
+- periodo 2022-03–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month
+analysis_id: INV-20260929-143800-2198 · C-009
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: table
+visual_artifact: null
+created_at: '2026-09-29T14:46:20-06:00'
+status: valid
+validation_errors: []
+finding: F-197
+links:
+- F-197
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: analytics
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

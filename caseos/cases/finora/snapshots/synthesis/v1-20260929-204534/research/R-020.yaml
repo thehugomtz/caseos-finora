@@ -1,0 +1,519 @@
+id: R-020
+type: research
+research_question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de
+  los pagos, sin leerla como descuento?
+case_question: Q-011, Q-012, H-009, H-010, H-016
+specialty: analytics
+intensity: analytics
+route:
+  specialty: analytics
+  intensity: analytics
+  agent: business_research
+  scores:
+    measurement: 0
+    data_engineering: 0
+    analytics: 1
+    business: 1
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: pricing-strategist
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  - id: commercial-skills
+    mode: dynamic
+    why: 1 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - Q-011
+    - Q-012
+    - H-009
+    - H-010
+    - H-016
+    suggested:
+    - D-015
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Business Research; intensidad L2.
+status: completed
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- Q-011
+- Q-012
+- H-009
+- H-010
+- H-016
+- F-083
+- F-084
+- F-085
+- F-086
+- F-087
+- F-088
+- F-089
+- F-090
+- F-091
+- F-092
+- F-093
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T10:32:03-06:00'
+updated_at: '2026-09-29T11:55:06-06:00'
+version: 6
+job_id: JOB-20260929-103203-feea
+error: null
+started_at: '2026-09-29T10:32:03-06:00'
+shaping_task: RT-020
+slides:
+- S3.1
+task_why: Si el monto muestra patrones que parecen precio de entrada, se vuelven preguntas concretas para Finora;
+  si no, la lámina muestra el límite del monto y pasa directo al mecanismo de S3.2.
+task:
+  work: datos
+  draft_answer: 'Del pago sale la forma, no el precio. Se puede ver cuánto pagan en su primer pago observado (M0),
+    si en los meses siguientes el monto sube, baja o se queda, si los montos se repiten en valores que parezcan
+    una lista de precios y qué tan seguido un cambio se revierte al mes siguiente. Lo investigado ya dice que el
+    primer pago mediano bajó (R-003) y que hay subidas del monto que coinciden con ajustes sincronizados con firma
+    de cobro retroactivo (R-002). El límite: un primer pago más bajo puede ser prorrateo del primer mes, un plan
+    más chico o un precio de entrada, y con el monto solo no se distingue. Por eso se muestra como patrón y como
+    pregunta para Finora, nunca como descuento.'
+  hugo_said:
+  - text: Revisar Data observable de pricing y comportamiento actual, observaciones generales
+    ref: N-028
+  steps:
+  - kind: data
+    what: 'Trayectoria de entrada por cosecha: primer pago (M0) contra M1 y run-rate temprano. Qué parte de los
+      pagadores nuevos sube, baja o se queda después de M0, y si eso cambió entre cosechas.'
+    where:
+    - mart.new_customers
+  - kind: data
+    what: 'Forma del monto: si los montos se repiten en valores fijos que parezcan una lista de precios, qué tan
+      seguido cambia el monto y qué parte de los cambios se revierte al mes siguiente. Partir de R-002 sin repetirlo.'
+    where:
+    - mart.customer_month
+    - staging.stg_customer_month
+  - kind: proposal
+    what: Lista de patrones observables, cada uno con sus lecturas posibles (prorrateo, plan, precio de entrada,
+      descuento) y el campo que las separaría (RT-002), planteados como preguntas para Finora.
+    where: []
+requested_via: delegado a Claude en el chat (29-sep 10:26, D-016)
+why_it_matters: ''
+short_answer: 'El ticket de entrada es medible; el descuento no es verificable aquí. El primer pago observado de
+  las altas tiene mediana de COP 63,0 mil en 2022 y COP 42,0 mil en 2024, y en las cohortes de ventana limpia la
+  mediana del segundo pago queda por debajo de la del primero. No es posible separar precio de lista, descuento
+  introductorio, crédito ni pausa: el dato disponible es el monto observado por cliente y mes'
+headline: El ticket de entrada es medible; el descuento no es verificable aquí
+what_is_established:
+- 'El primer pago observado de las altas es una magnitud con nivel, dispersión y cambio medibles: la mediana pasa
+  de COP 63,0 mil en 2022 a COP 42,0 mil en 2024, con caída de −33%, y el promedio cae −60%.'
+- Como señal direccional, la mediana del segundo pago queda por debajo de la del primero en las cohortes de ventana
+  limpia, y la parte cuyo primer pago supera con holgura al segundo es 23,2% en 2022 frente a 11,6% en 2024. En
+  sentido contrario, el segundo pago coincide exactamente con el primero en 90,3% de las altas de 2023.
+- El efecto dentro de cada industria explica 97% del cambio del ticket de entrada entre 2022 y 2024, con intervalo
+  bootstrap de 91–102%; el ticket de entrada bajó en 6 industrias por promedio y en 6 por mediana.
+- 'Como señal, el monto por cliente convive con movimientos que se revierten y con rasgos de cobro: el movimiento
+  bruto sin altas vuelve exacto al nivel previo al mes siguiente en 25,3% del total, el MRR de expansión se revierte
+  al mes siguiente en 29% y se observan 260 eventos de ajuste con cobro retroactivo exacto. A la vez, los meses-cliente
+  fuera de la grilla de montos pasan de 19% en 2022 S2 a 42% en 2024 S2, mientras el monto coincide con el monto
+  usual del propio cliente en 78,8% de 2024.'
+- Entre dic-22 y oct-24 el MRR por cliente activo pasa de COP 89,5 mil a COP 57,8 mil, y la composición de cosechas
+  explica −COP 26,6 mil del cambio frente a −COP 5,2 mil del efecto dentro de las cosechas; el MRR por cliente de
+  la base previa pasa de COP 97,0 mil a COP 97,4 mil.
+- 'Esta pregunta queda como No evaluable: el dato disponible es el monto observado por cliente y mes, sin catálogo
+  de precios ni definición documentada de lo que ese monto representa.'
+what_is_contested: []
+what_remains_unknown:
+- 'No se puede concluir nada sobre precio introductorio, descuento o crédito: no hay catálogo de precios ni definición
+  documentada del monto observado.'
+- El monto por cliente no se puede leer como precio contractual mientras convivan reversiones al mes siguiente,
+  liquidaciones de meses pendientes y 260 eventos de ajuste con cobro retroactivo exacto.
+- 'La lectura de estabilidad depende del criterio usado: los meses-cliente fuera de la grilla de montos llegan a
+  42% en 2024 S2, mientras el monto coincide con el monto usual del propio cliente en 78,8% de 2024; estas mediciones
+  quedan como señal direccional.'
+alternative_explanations: []
+case_implication: Si se quiere reportar el ticket de entrada, convendría hacerlo por mediana y rango intercuartílico
+  y abierto por industria, dado que el efecto dentro de cada industria explica 97% del cambio entre 2022 y 2024.
+  Si se usa el monto como base de expansión y contracción, podría convenir descontar los movimientos que vuelven
+  exacto al nivel previo al mes siguiente, que son 25,3% del movimiento bruto sin altas.
+changes_current_story:
+  value: maybe
+  why: El COS evalúa el efecto sobre las hipótesis y claims enlazados.
+affected_hypotheses: []
+affected_claims: []
+suggested_action: ''
+new_questions:
+- ¿Qué parte de los primeros pagos grandes corresponde a clientes que luego se estabilizan en un nivel menor y qué
+  parte a clientes que mantienen ese nivel?
+- ¿La grilla de montos observada se puede reconstruir como escalones recurrentes por industria, y cuántos clientes
+  se ubican en cada escalón?
+- ¿Los meses-cliente por encima del monto usual se concentran en los mismos clientes a lo largo del tiempo o se
+  reparten de forma difusa?
+- ¿Puede el equipo entregar la definición operativa de amount (facturado, cobrado o contratado) y un catálogo de
+  precios de lista que permita separar cobro de precio?
+handoff_to_cos:
+  summary: El ticket de entrada es medible; el descuento no es verificable aquí
+  recommended_next: ''
+sources:
+- id: SRC-1
+  title: Investigación del workspace INV-20260929-103203-30ce
+  url: ''
+  publisher: finora-eda
+  date: '2026-09-29'
+  source_type: internal
+  quality: A
+  note: Evidencia interna registrada por las tools del workspace (solo lectura)
+visuals:
+- id: V-01
+  title: El primer pago observado de las altas tiene una mediana de COP 63,0 mil en 2022, COP 36,8 mil en 2023 y
+    COP 42,0 mil en 2024, con un rango intercuartílico en 2024 entre COP 25,2 mil y COP 60,9 mil.
+  spec:
+    tipo: barras
+    apiladas: false
+    x:
+    - <15 mil
+    - 15–30 mil
+    - 30–45 mil
+    - 45–60 mil
+    - 60–75 mil
+    - 75–100 mil
+    - 100–150 mil
+    - ≥150 mil
+    formato: pct
+    series:
+    - nombre: '2022'
+      valores:
+      - 0.09191176470588236
+      - 0.10294117647058823
+      - 0.16911764705882354
+      - 0.06985294117647059
+      - 0.20588235294117646
+      - 0.11764705882352941
+      - 0.10661764705882353
+      - 0.13602941176470587
+    - nombre: '2023'
+      valores:
+      - 0.18615384615384614
+      - 0.20615384615384616
+      - 0.24153846153846154
+      - 0.12615384615384614
+      - 0.08615384615384615
+      - 0.07692307692307693
+      - 0.055384615384615386
+      - 0.021538461538461538
+    - nombre: '2024'
+      valores:
+      - 0.10288808664259928
+      - 0.2111913357400722
+      - 0.2527075812274368
+      - 0.17689530685920576
+      - 0.10649819494584838
+      - 0.0740072202166065
+      - 0.04693140794223827
+      - 0.02888086642599278
+  claim: C-001
+- id: V-02
+  title: 'En las cohortes de ventana limpia, la mediana del segundo pago queda por debajo de la mediana del primero:
+    COP 63,0 mil frente a COP 46,2 mil en 2022, COP 36,8 mil frente a COP 35,0 mil en 2023 y COP 42,0 mil frente
+    a COP 37,8 mil en 2024.'
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: m0 mediana cop
+      valores:
+      - 63000.0
+      - 36750.0
+      - 42000.0
+    - nombre: m1 mediana cop
+      valores:
+      - 46200.0
+      - 35007.0
+      - 37800.0
+  claim: C-010
+- id: V-03
+  title: Entre dic-22 y oct-24 el MRR por cliente activo pasa de COP 89,5 mil a COP 57,8 mil, y la composición de
+    cosechas explica −COP 26,6 mil del cambio frente a −COP 5,2 mil del efecto dentro de las cosechas; el MRR por
+    cliente de la base previa pasa de COP 97,0 mil a COP 97,4 mil.
+  spec:
+    tipo: cascada
+    formato: cop
+    pasos:
+    - etiqueta: dic-22
+      valor: 89543.71829268293
+      tipo: total
+    - etiqueta: Composición
+      corta: Comp.
+      valor: -26550.904842566866
+      tipo: delta
+    - etiqueta: 'Dentro de
+
+        cada cosecha'
+      corta: Dentro
+      valor: -5181.462538316295
+      tipo: delta
+    - etiqueta: oct-24
+      valor: 57811.35091179977
+      tipo: total
+  claim: C-014
+- id: V-04
+  title: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, los pagos por debajo del
+    monto usual del cliente pasan de 20,7% en 2022 a 8,8% en 2023 y 2,9% en 2024, los pagos por encima del monto
+    usual pasan de 10,4% a 18,3% y la firma de pago de varios meses pasa de 6,8% a 1,8%.
+  spec:
+    tipo: tabla
+    columnas:
+    - id: anio
+      nombre: anio
+      formato: int
+    - id: meses_cliente
+      nombre: meses_cliente
+      formato: int
+    - id: pct_en_monto_usual
+      nombre: pct_en_monto_usual
+      formato: num2
+    - id: pct_sobre_usual
+      nombre: pct_sobre_usual
+      formato: num2
+    - id: pct_bajo_usual
+      nombre: pct_bajo_usual
+      formato: num2
+    - id: pct_1_5x_o_mas_del_usual
+      nombre: pct_1_5x_o_mas_del_usual
+      formato: num2
+    - id: pct_firma_pago_multimes
+      nombre: pct_firma_pago_multimes
+      formato: num2
+    filas:
+    - anio: 2022
+      meses_cliente: 5590
+      pct_en_monto_usual: 68.9
+      pct_sobre_usual: 10.4
+      pct_bajo_usual: 20.7
+      pct_1_5x_o_mas_del_usual: 6.0
+      pct_firma_pago_multimes: 6.8
+    - anio: 2023
+      meses_cliente: 10855
+      pct_en_monto_usual: 80.9
+      pct_sobre_usual: 10.4
+      pct_bajo_usual: 8.8
+      pct_1_5x_o_mas_del_usual: 2.5
+      pct_firma_pago_multimes: 2.4
+    - anio: 2024
+      meses_cliente: 14216
+      pct_en_monto_usual: 78.8
+      pct_sobre_usual: 18.3
+      pct_bajo_usual: 2.9
+      pct_1_5x_o_mas_del_usual: 2.6
+      pct_firma_pago_multimes: 1.8
+  claim: C-011
+- id: V-05
+  title: El ticket de entrada promedio de las altas pasa de COP 128,7 mil en 2022 a COP 50,8 mil en 2024 y la mediana
+    pasa de COP 63,0 mil a COP 42,0 mil, cambios de −60% y −33%.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2024'
+    formato: cop
+    series:
+    - nombre: Ticket de entrada (M0)
+      valores:
+      - 128694.73080882353
+      - 50841.90861010831
+    - nombre: mediana
+      valores:
+      - 63000.0
+      - 42000.0
+  claim: C-002
+- id: V-07
+  title: Entre las altas de ventana limpia, la parte cuyo primer pago supera con holgura su segundo pago es 23,2%
+    en 2022, 7,1% en 2023 y 11,6% en 2024, mientras la parte cuyo segundo pago supera con holgura al primero es
+    1,1%, 1,5% y 0,9% en los mismos años.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: m0 supera 1 5x m1
+      valores:
+      - 23.2
+      - 7.1
+      - 11.6
+    - nombre: m1 supera 1 5x m0
+      valores:
+      - 1.1
+      - 1.5
+      - 0.9
+  claim: C-006
+- id: V-08
+  title: Entre las altas de ventana limpia, el segundo pago coincide exactamente con el primero en 73,5% de las
+    altas de 2022, 90,3% de 2023 y 77,3% de 2024.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: m1 igual m0
+      valores:
+      - 73.5
+      - 90.3
+      - 77.3
+  claim: C-008
+- id: V-09
+  title: El movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo al mes siguiente en 25,3%
+    del total, el MRR de expansión se revierte al mes siguiente en 29%, 32% de los retornos tras meses sin pago
+    liquidan exactamente los meses pendientes y se observan 260 eventos de ajuste con cobro retroactivo exacto.
+  spec:
+    tipo: barras
+    apiladas: true
+    x:
+    - Movimiento bruto sin altas, mar-22 a sep-24
+    formato: pct
+    series:
+    - nombre: Vuelve exacto al nivel previo al mes siguiente
+      valores:
+      - 0.2529696008219224
+    - nombre: Resto del movimiento
+      valores:
+      - 0.7470303991780776
+    claim_fase1: C-DAT-06
+  claim: C-009
+- id: V-10
+  title: Entre los meses-cliente de clientes activos con al menos un mes de antigüedad, el monto coincide con el
+    monto usual del propio cliente en 68,9% de 2022, 80,9% de 2023 y 78,8% de 2024.
+  spec:
+    tipo: barras
+    x:
+    - '2022'
+    - '2023'
+    - '2024'
+    formato: num1
+    series:
+    - nombre: en monto usual
+      valores:
+      - 68.9
+      - 80.9
+      - 78.8
+  claim: C-012
+workspace_run:
+  workspace: finora-eda
+  run_id: INV-20260929-103203-30ce
+  path: investigations/runs/INV-20260929-103203-30ce.json
+  modelo: claude-opus-5
+completed_at: '2026-09-29T11:09:18-06:00'
+findings:
+- F-083
+- F-084
+- F-085
+- F-086
+- F-087
+- F-088
+- F-089
+- F-090
+- F-091
+- F-092
+- F-093
+run_ids:
+- INV-20260929-103203-30ce
+usage:
+  INV-20260929-103203-30ce:
+    cost_usd: 1.4424035000000002
+skills_loaded:
+- id: finora-eda brain + playbooks
+  mode: core
+  why: agente del workspace existente
+validation:
+  ok: true
+cos_assessment:
+  summary: 'R-020 deja una cosa firme y dos cuidados. Todo se apoya en los findings F-083 a F-093, que siguen propuestos.
+    Lo firme: el ticket de entrada (primer pago observado) bajó. La mediana pasa de COP 63,0 mil a 42,0 mil (−33%)
+    y la baja se da dentro de cada industria: explica el 97% del cambio (F-088). Primer cuidado: cuánto bajó depende
+    de qué pago midas. En 2022, el primer pago superaba con holgura al segundo más a menudo que en 2024 (23,2% frente
+    a 11,6%). Medida con el 2.º pago, la mediana cae ≈ −18%. Es un cálculo mío sobre F-085 y todavía no tiene tabla.
+    Segundo cuidado: el monto no separa precio, descuento, crédito ni pausa, y además cambia de forma dentro del
+    periodo. Los montos fuera de la grilla pasan de 19% a 42% y los ajustes pequeños, de 9% a 75% de los eventos
+    de expansión. Efectos: refuerza H-016 y la respuesta de Q-011. H-009 y H-010 no se pueden cerrar solo con pagos.
+    Propongo cuatro alertas: magnitud del ticket (Q-012), comparabilidad del monto (H-017), cómo abre el bloque
+    CFO (framing) y una hipótesis nueva sobre ene-23 (Q-003).'
+  run_id: RUN-20260929-110925-cos-150b
+  at: '2026-09-29T11:55:06-06:00'
+  impacts:
+  - target: Q-012
+    effect: requires_research
+    why: 'La dirección de lo que respondió R-003 se sostiene: el primer pago es más bajo, bajó en 6 industrias y
+      el 97% del cambio ocurre dentro de cada una (F-084, F-088). La magnitud no está asegurada. Entre las altas
+      de ventana limpia, el 23,2% de las de 2022 pagó el primer mes bastante más que el segundo, frente al 11,6%
+      en 2024 (F-086). Medida con el 2.º pago, la mediana pasa de COP 46,2 mil a 37,8 mil: ≈ −18%, frente al −33%
+      con el 1.er pago. Es un cálculo mío sobre F-085 y no tiene tabla propia. El −60% del promedio (F-084) no se
+      puede contrastar con el 2.º pago y es la cifra más frágil. La lectura de R-009 (composición de cosechas) no
+      queda igual de expuesta, porque mide el monto en dic-22 y oct-24, no el primer pago.'
+  - target: H-017
+    effect: weakens
+    why: 'H-017 supone que los montos se pueden comparar entre periodos sin distorsiones importantes. R-020 muestra
+      que la forma del monto cambia dentro del periodo. Los meses-cliente fuera de la grilla pasan de 19% (2022
+      S2) a 42% (2024 S2) y los ajustes pequeños, de 9% a 75% de los eventos de expansión (F-091). Los pagos por
+      debajo del monto usual del cliente bajan de 20,7% a 2,9% (F-089). Además, el 29% del MRR de expansión observado
+      se revierte al mes siguiente (F-090). Por eso, comparar 2022 con 2024 mezcla un cambio de nivel con un cambio
+      en cómo se forma el monto. R-020 trata estas medidas como señal direccional: con otro criterio, el monto coincide
+      con el usual del propio cliente en el 78,8% de 2024. Aun así, confirma la evaluación del agente (No soportada)
+      y añade algo: la distorsión no es constante en el tiempo.'
+  - target: framing
+    effect: changes_story
+    why: El bloque CFO parte de «introducir descuentos sin perder la respuesta a ¿por qué cambió el MRR?». R-020,
+      junto con R-002 y R-011, indica que con cliente × mes × monto esa respuesta ya está incompleta antes de cualquier
+      descuento. El 25,3% del movimiento bruto sin altas vuelve exacto al nivel previo al mes siguiente. El 32%
+      de los retornos tras meses sin pago liquidan exactamente los meses pendientes. Y hay 260 ajustes con cobro
+      retroactivo exacto (F-090). Además, no hay catálogo de precios ni una definición documentada del monto (F-093).
+      La pregunta del CFO no cambia; lo que cambia es cómo abre su bloque en el borrador de storytelling (D-016).
+  - target: Q-003
+    effect: opens_new_hypothesis
+    why: 'La caída del ticket de entrada se concentra entre 2022 y 2023: la mediana pasa de COP 63,0 mil a 36,8
+      mil (F-083). Ocurre en 6 industrias y el 97% del cambio se da dentro de cada una (F-088). 2023 es además el
+      año en que el 2.º pago más coincide con el 1.º: 90,3%, frente a 73,5% en 2022 (F-087). A eso se suma el salto
+      de altas de 26 en dic-22 a 60 en ene-23 (T-016), y que en 2023 hubo más altas con menos gasto en Generación
+      de Demanda (R-015). Juntas, estas señales sugieren una posible conexión Growth–Revenue para el CEO: un cambio
+      general en la entrada hacia inicios de 2023. Es una hipótesis, no un hallazgo: el ticket solo está medido
+      por año.'
+  - target: H-016
+    effect: supports
+    why: R-020 aporta confusores observados en los datos, no solo simulados. El pago no separa precio de lista,
+      descuento introductorio, crédito ni pausa (F-093). Y convive con reversiones al mes siguiente, liquidaciones
+      de meses pendientes y 260 ajustes con cobro retroactivo exacto (F-090). Como R-002 y R-011 apuntan en la misma
+      dirección, H-016 queda lista para tu revisión.
+  - target: H-009
+    effect: requires_research
+    why: 'R-020 cumple la parte observable de H-009: el primer pago es más bajo (mediana −33%, promedio −60%, F-084)
+      y el 97% del cambio ocurre dentro de cada industria (F-088). Pero no permite distinguir «suscripciones o tarifas
+      distintas» de descuento, crédito o pausa (F-093), y la misma evidencia encaja igual de bien con H-010. Por
+      D-004 no conviene darla por soportada. Para probarla harían falta el plan y la tarifa de entrada de cada cliente,
+      y esos datos no están en el caso (R-008, R-011). Además, la magnitud depende del pago que se use (ver Q-012).'
+  - target: H-010
+    effect: requires_research
+    why: En los datos no hay descuentos documentados (F-093) y el caso habla de introducirlos, así que H-010 no
+      se puede evaluar con pagos. La señal de R-020 no sirve ni para afirmar ni para negar descuentos. Un descuento
+      introductorio de un solo mes haría que el segundo pago fuera mayor que el primero, y eso solo aparece en el
+      0,9–1,5% de las altas (F-086). Pero un descuento pequeño o de varios meses daría pagos iguales, que es lo
+      que se ve en el 73,5–90,3% (F-087). Y un 2.º pago más bajo que el 1.º tampoco se puede leer como descuento
+      (F-093). Lo natural es que sirva como caso de prueba del modelo de R-021, que incluiría el descuento con su
+      vigencia.
+  - target: Q-011
+    effect: supports
+    why: Refuerza la respuesta de R-002 («el monto no identifica los escenarios del CFO») y amplía la lista de lecturas
+      posibles. Además de suscripción frente a descuento, el mismo monto puede venir de un crédito, una pausa, una
+      liquidación de meses pendientes o un ajuste retroactivo (F-090, F-093). La respuesta no cambia.

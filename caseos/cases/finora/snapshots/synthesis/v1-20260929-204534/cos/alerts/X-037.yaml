@@ -1,0 +1,49 @@
+id: X-037
+type: alert
+kind: story_change
+status: open
+severity: high
+effect: changes_story
+source: R-011
+target: T-003
+title: R-011 cambia la historia T-003
+finding_text: 'Con el modelo actual no se puede. Solo hay cliente × mes × monto pagado, y en los tres casos de Q-025
+  las alternativas dan exactamente el mismo monto (confianza alta). Propuesta: una escalera de valor con vigencias
+  (tarifa de lista → precio pactado → descuento con inicio, fin y motivo → MRR neto →…'
+why: 'Según R-011, 366 contracciones (57,6 % del COP de contracción) caen el mes siguiente a un primer pago o a
+  una reactivación, y 117 de 330 reactivaciones tras un solo mes en cero pagan exactamente el doble. Si se confirma
+  que es momento de cobro (confianza media), las líneas del puente —nuevo, reactivación, contracción y churn observado—
+  pueden estar infladas aunque el total cuadre. Parte de la expansión podría ser el mismo pico visto desde el otro
+  lado (es una inferencia, no está medido). Además, las cifras no cuadran: R-011 da expansión +41,2 M y contracción
+  −90,9 M COP, y R-004/T-003 da +39,8 M y −89,5 M; no se sabe si es por ventana o por definición. Y las cifras de
+  R-011 todavía no tienen tabla.'
+options:
+- key: A
+  label: Separar el momento de cobro en el puente (en R-020 o como tarea corta), conciliando antes las cifras con
+    R-011
+  consequence: La lámina del puente se cuenta con líneas defendibles y cada cifra con su tabla. Cuesta una vuelta
+    más de análisis con los datos que ya hay.
+- key: B
+  label: Mantener T-003 y contarlo con una advertencia explícita
+  consequence: Es rápido, pero la contracción se seguirá leyendo como clientes que bajan de suscripción.
+- key: C
+  label: Contar solo el total y el churn persistente (T-002)
+  consequence: Evita la lectura equivocada, pero se pierde el detalle del puente, que es lo que responde al «por
+    qué cambió» del CFO.
+recommended: A
+recommended_why: Se calcula con los datos actuales (R-011 ya identificó los patrones) y evita presentar como suscripciones
+  más pequeñas algo que en buena parte parece efecto del cobro. Conciliar las cifras es condición para que cualquier
+  número del puente entre en la historia.
+detected_by: cos
+links:
+- R-011
+- T-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-104841-cos-f5e7
+created_at: '2026-09-29T11:34:16-06:00'
+updated_at: '2026-09-29T11:34:16-06:00'
+version: 1

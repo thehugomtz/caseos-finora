@@ -1,0 +1,47 @@
+id: X-132
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-029
+target: H-036
+title: R-029 cambia el framing H-036
+finding_text: 'Es una propuesta con confianza media, porque no hay CRM para probarla. La ruta sale de quién movió
+  cada tramo: Executive, todo con SDR/AE (incluida la entrada directa a SQL); Self Service, nada con persona; Hybrid
+  A, empezó solo y luego intervino una persona; Hybrid B, empezó con persona y terminó…'
+why: H-036 habla de una «puerta de menor valor (por ejemplo, Self Service, si existe como compra sin intervención
+  humana)». Con R-029, esa frase junta dos ejes. Si lo que se movió es la puerta, es composición de la adquisición
+  al entrar, es decir, el puente Growth–Revenue de Q-003. Si más cuentas de las mismas puertas terminan en la ruta
+  Self Service, lo que cambió es cuánto intervienen SDR/AE, y eso está cerca de H-006. Cada caso tiene su propia
+  prueba y su propia lectura para el CEO. Lo mismo aplica a H-053.
+options:
+- key: A
+  label: Partir H-036 en dos variantes
+  consequence: '(a) La mezcla de puertas al entrar se movió hacia puertas de menor valor: es composición de adquisición
+    y el puente de Q-003. (b) Dentro de las mismas puertas, más cuentas terminan en la ruta Self Service: es menos
+    intervención, cerca de H-006. Cada variante se prueba por separado cuando haya CRM y datos de producto.'
+- key: B
+  label: Dejar H-036 solo como mezcla de puertas
+  consequence: H-036 queda más limpia, pero la lectura «menos intervención, menor ticket» queda escondida en una
+    hipótesis de capacidad (H-006) que no habla de ticket.
+- key: C
+  label: Mantenerla como está
+  consequence: Una misma señal (más Self Service) se podría leer como cambio en la adquisición o como menos trabajo
+    comercial, y la lámina de Q-003 no sabría cuál de las dos contar.
+recommended: A
+recommended_why: 'Q-003 pide conectar adquisición con ingreso. Separar si se movió la entrada o el trabajo comercial
+  decide de quién es la palanca: de la adquisición o de la capacidad comercial.'
+detected_by: cos
+links:
+- R-029
+- H-036
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-163856-cos-228b
+created_at: '2026-09-29T16:52:02-06:00'
+updated_at: '2026-09-29T16:52:02-06:00'
+version: 1

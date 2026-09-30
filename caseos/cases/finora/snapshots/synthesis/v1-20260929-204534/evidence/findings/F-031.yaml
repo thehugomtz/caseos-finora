@@ -1,0 +1,58 @@
+id: F-031
+type: finding
+headline: Todo el aumento del monto pagado entre ene-22 y oct-24 proviene de clientes que empezaron a pagar después
+  de ene-22; los clientes activos en ene-22 terminan con menos monto que al inicio.
+domain: Resultado
+epistemic_state: Hecho observado
+confidence: high
+evidence_values:
+  ga_total_start: COP 35,0 millones
+  ga_total_end: COP 97,0 millones
+  ga_base_end: COP 29,0 millones
+  ga_new_end: COP 68,0 millones
+  ga_base_survivors: 79%
+  ga_base_survivor_ratio: 1,08×
+evidence_labels:
+  ga_total_start: Monto pagado total, ene-22
+  ga_total_end: Monto pagado total, oct-24
+  ga_base_end: Monto pagado en oct-24 por los clientes activos en ene-22
+  ga_new_end: Monto pagado en oct-24 por los clientes que empezaron después de ene-22
+  ga_base_survivors: Clientes activos en ene-22 que siguen pagando en oct-24
+  ga_base_survivor_ratio: Monto oct-24 / ene-22 de esos clientes que siguen pagando (veces)
+verified_in_code: true
+alias: C-RES-08
+kind: analytics
+visual:
+  tipo: barras
+  apiladas: true
+  x:
+  - ene-22
+  - oct-24
+  formato: cop
+  series:
+  - nombre: Clientes activos en ene-22
+    valores:
+    - 35000308.35
+    - 29021572.65
+  - nombre: Clientes que empezaron a pagar después
+    valores:
+    - 0.0
+    - 67985874.18
+source_ref:
+  workspace: finora-eda
+  canonical_id: C-RES-08
+limitations:
+- 'Monto pagado observado: no es MRR contractual validado.'
+links:
+- Q-013
+phase: research
+review:
+  state: proposed
+origin:
+  actor: import
+  source: finora-eda/brain/evidence/canonical_findings.yaml#C-RES-08
+  imported_at: '2026-09-28T22:22:26-06:00'
+  note: verificado en código por el pipeline; revisión humana pendiente en origen
+created_at: '2026-09-28T22:22:26-06:00'
+updated_at: '2026-09-28T22:22:26-06:00'
+version: 1

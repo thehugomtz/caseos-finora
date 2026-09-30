@@ -1,0 +1,50 @@
+id: X-032
+type: alert
+kind: framing_change
+status: open
+severity: medium
+effect: changes_framing
+source: R-018
+target: framing
+title: R-018 cambia el framing
+finding_text: 'Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado»
+  y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn
+  (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acu…'
+why: 'Hallazgo: R-018 propone el nombre «MRR pagado observado», usa «S&M por alta» y deja fuera CAC en COP, payback,
+  LTV con margen, LTV:CAC y UCM. Por qué importa: el framing dice que se habla de «monto pagado observado» mientras
+  la recurrencia no se confirme, y R-001 no la confirmó. Además reserva «alta» como etiqueta contractual y no pone
+  límites a CAC, LTV, ARPU ni ARR, así que el borrador de storytelling (D-016) podría usarlos sin control. R-004,
+  R-005 y R-009 ya hablan de «MRR», o sea que los nombres ya están mezclados. Framing está en needs_review: buen
+  momento para ajustarlo.'
+options:
+- key: A
+  label: «MRR pagado observado» solo en la propuesta de métricas, más nuevos límites
+  consequence: 'En el diagnóstico sigue «monto pagado observado». En la propuesta de métricas se permite «MRR pagado
+    observado», siempre con el calificativo, y «S&M por alta» pasa a «S&M por primer pagador observado (u)». Se
+    añade a «No afirmar todavía»: CAC en COP o por motion/canal, payback, LTV con margen, LTV:CAC, UCM, ARPU (en
+    realidad es ARPA por cliente) y cualquier ARR que no sea run-rate. El CFO lee su vocabulario sin que se afirme
+    recurrencia.'
+- key: B
+  label: «Monto pagado observado» en todo el caso, más nuevos límites
+  consequence: Máxima coherencia con R-001. Pero hay que renombrar lo que ya dice «MRR» y traducir el término en
+    cada lámina que responde «¿por qué cambió nuestro MRR?».
+- key: C
+  label: No tocar el framing
+  consequence: Los límites quedan como advertencias dentro de F-135–F-139. Menos trabajo hoy, pero con riesgo de
+    que CAC, LTV o ARPU entren al storytelling y de que los nombres sigan mezclados.
+recommended: A
+recommended_why: Protege la regla de R-001 donde importa (el diagnóstico), le da al CFO y al CEO su vocabulario
+  en la propuesta sin afirmar recurrencia contractual, y cierra la puerta a CAC/LTV antes de que avance el borrador
+  de story.
+detected_by: cos
+links:
+- R-018
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110140-cos-d716
+created_at: '2026-09-29T11:32:01-06:00'
+updated_at: '2026-09-29T11:32:01-06:00'
+version: 1

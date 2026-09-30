@@ -1,0 +1,56 @@
+id: X-150
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-032
+target: framing
+title: R-032 cambia el framing
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: 'R-032 cambia la forma del árbol del CRO y toca dos decisiones activas. D-001 (tres ramas: cantidad, mezcla,
+  compra según tiempo): la calidad (H-005, HC3q) pasa de «la diferencia persiste» a «mezcla», el tiempo pasa sobre
+  todo al Paso 0 y H-007 deja de ser causa. D-003: R-032 dice que «cada pedazo de brecha cae en un solo término»,
+  y D-003 pidió no sumar calidad, atención, post-SQL y oferta. Eso vale para los lugares del funnel, no para las
+  causas. H-006 toca al SDR (rama 3) y al AE (rama 4), H-054 nace antes del SQL y se ve después, y H-028 cruza mezcla
+  y tasa. Además, el reparto entre mezcla y tasa depende de cuál se calcule primero. Al Paso 0 le faltan dos cosas.
+  La primera es la unidad del lead (cuenta y episodio, con la caducidad de Q-064): sin eso, un estancado que vuelve
+  como New (H-069) cuenta en las ramas 1 y 3. La segunda es una ventana elegida con la curva de tiempo a compra
+  (Q-006/H-004): sin eso, «compran más tarde» se cuela en las ramas 3–5. El «qué es venta» es el hito que el framing
+  dejó por acordar (X-052).'
+options:
+- key: A
+  label: 'Lugares que suman, causas que se contrastan: adoptar el árbol como mapa de dónde está la brecha (las ramas
+    suman, con el orden declarado). Las hipótesis quedan como explicaciones que se contrastan dentro de cada rama,
+    aunque toquen más de una. Completar el Paso 0 con la unidad del lead y la ventana.'
+  consequence: Una decisión nueva que refina D-001 y aclara D-003 citándolas, sin reemplazarlas. La story usa las
+    cuatro causas del CRO como nombres de las ramas 1–4. Cuando haya datos, hay que mostrar cuánto cambia el reparto
+    mezcla/tasa si se invierte el orden.
+- key: B
+  label: 'Árbol causal completo: adoptar R-032 tal cual, con cada hipótesis en una sola hoja y la brecha repartida
+    entre causas.'
+  consequence: Hay que reemplazar D-003 con una decisión nueva que la cite. Las causas que cruzan ramas quedan partidas
+    por convención y el tamaño de cada una depende del orden.
+- key: C
+  label: 'Solo como orden de pruebas: mantener D-001 y D-003 como están y usar R-032 solo como orden interno, fuera
+    de la story.'
+  consequence: No cambia nada del framing, pero C-011 y C-023 se quedan sin una estructura MECE que mostrarle al
+    CRO.
+recommended: A
+recommended_why: Se queda con lo mejor de R-032 (cada pedazo de brecha en un solo lugar) sin contradecir D-003,
+  y le da al CRO un árbol con sus propias palabras. Como toca dos decisiones activas, corresponde una decisión nueva
+  que las cite, no una edición en silencio.
+detected_by: cos
+links:
+- R-032
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

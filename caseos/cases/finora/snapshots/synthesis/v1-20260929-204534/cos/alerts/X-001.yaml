@@ -1,0 +1,55 @@
+id: X-001
+type: alert
+kind: framing_change
+status: dismissed
+severity: high
+effect: changes_framing
+source: R-013
+target: Q-018
+title: R-013 cambia el framing Q-018
+finding_text: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional
+why: 'R-013 deja el gasto de S&M en unidades reportadas (u), sin moneda ni escala (F-063), y con un corte en jun-23.
+  Hasta may-23 Team es un 12% fijo del total, lo que calza con una asignación y no con una medición propia; después
+  se mueve entre 19% y 38% (F-066). Además, Habilitación pierde Freelance y desde entonces es solo SoftwareTools
+  (F-067). El archivo solo trae el nombre del rubro y el monto mensual, así que no se puede asignar gasto a industrias
+  ni a pagadores: solo se puede ver si se mueven juntos en el tiempo. Q-018 pide cruzar gasto por categoría con
+  nuevos pagadores y monto pagado. Hoy ese cruce solo se sostiene en términos relativos (índices, participaciones,
+  fechas). No se puede sacar gasto en COP por pagador ni dividir monto pagado entre gasto (serían COP sobre u).
+  Y cualquier comparación por categoría que cruce jun-23 mezcla un cambio del archivo con un cambio de gasto. R-015,
+  que está en curso, hace justo este cruce por industria.'
+options:
+- key: A
+  label: Acotar Q-018 a lo que el archivo sostiene y pasarle las mismas reglas a R-015 antes de que cierre
+  consequence: El cruce se hace en u e índices. Las categorías se comparan dentro de cada tramo (ene-22–may-23 y
+    jun-23–oct-24). Team no se lee como gasto propio antes de jun-23, y Habilitación se trata según lo que se decida
+    en Q-022. Entre tramos solo se compara el agregado, y solo si pasa el chequeo de H-022. Q-018 se puede responder
+    hoy, sin cifras en COP.
+- key: B
+  label: Mantener Q-018 como está, con advertencias al pie
+  consequence: Se ve más completo (34 meses y todas las categorías), pero la comparación antes/después de jun-23
+    puede mostrar como cambio de gasto lo que en realidad es un cambio del archivo. El riesgo de describir una asociación
+    que no existe es alto.
+- key: C
+  label: Suspender Q-018 hasta que Finora dé moneda, escala y método de asignación
+  consequence: Evita el error, pero deja al caso sin el único cruce entre gasto y resultados, y sin fecha para desbloquearlo.
+recommended: A
+recommended_why: 'Es lo único defendible hoy sin inventar una escala. Lo que falta (moneda, escala, centro de costo,
+  método) no se pierde: se nombra como hueco del WoW de Finora, que ya forma parte de la pregunta ejecutiva.'
+detected_by: cos
+links:
+- R-013
+- Q-018
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-103618-cos-07f6
+created_at: '2026-09-29T11:11:30-06:00'
+updated_at: '2026-09-29T20:35:35-06:00'
+version: 2
+resolution:
+  choice: ignore
+  label: Sin impacto material
+  decision: D-021
+  at: '2026-09-29T20:35:35-06:00'

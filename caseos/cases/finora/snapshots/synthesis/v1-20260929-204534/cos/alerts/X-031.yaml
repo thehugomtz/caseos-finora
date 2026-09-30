@@ -1,0 +1,52 @@
+id: X-031
+type: alert
+kind: weakening
+status: open
+severity: high
+effect: weakens
+source: R-018
+target: H-017
+title: R-018 debilita H-017
+finding_text: 'Estas se pueden calcular hoy, siempre que se nombren tal como son: el MRR (como «MRR pagado observado»
+  y su puente de movimientos), el ARPA por cliente (lo que se pide como ARPU; no hay datos por usuario), el churn
+  (el observado y, como proxy, uno con ventana de gracia) y la retención e ingreso acu…'
+why: 'Hallazgo: el panel está completo (1.961 clientes × 34 meses, ceros explícitos, sin negativos) y el puente
+  cuadra en total. Pero el monto mezcla la fecha de cobro con el mes de servicio, y el modelo no tiene periodo de
+  servicio ni intervalo de facturación. Por qué importa: no cambia el veredicto del agente (No soportada), lo precisa.
+  Lo que no aguanta son dos cosas: los movimientos mes a mes, porque los atrasos y los pagos que cubren varios meses
+  inflan el churn, la reactivación y la expansión (F-136); y el primer pago como monto de entrada (F-139). Los sustitutos
+  que propone R-018 (MRR normalizado, churn con gracia) tienen confianza media y dependen de reglas que solo tú
+  puedes aprobar.'
+options:
+- key: A
+  label: Aprobar la regla y mostrar lo observado y el sustituto lado a lado
+  consequence: Fijas cuántos meses sin pago se toleran antes de contar una salida y cómo se reparte un pago que
+    cubre varios meses. Lo observado no se toca; el sustituto va al lado, marcado como tal. También cambian clientes
+    activos (T-001), ARPA, churn y NRR/GRR de la propuesta de métricas. Es un supuesto que no se puede verificar
+    sin el periodo de servicio.
+- key: B
+  label: Quedarse solo con lo observado
+  consequence: No se agregan supuestos. El churn, la reactivación y la expansión se ven inflados, y la brecha entre
+    churn observado y persistente (T-002) va como limitación. El CFO recibe un «¿por qué cambió?» mezclado con el
+    efecto de las fechas de cobro.
+- key: C
+  label: Pedir facturación con periodo de servicio antes de fijar reglas
+  consequence: Resuelve la causa de fondo, pero depende de Finora y del tiempo. Mientras tanto, Revenue se queda
+    en lo observado.
+recommended: A
+recommended_why: 'No borra nada: lo observado sigue siendo el hecho y el sustituto es una lectura etiquetada. T-002
+  ya separa churn observado y persistente, así que la regla formaliza algo que ya existe y desbloquea H-020 y el
+  churn de la propuesta de métricas. El pedido de C puede ir en paralelo.'
+detected_by: cos
+links:
+- R-018
+- H-017
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110140-cos-d716
+created_at: '2026-09-29T11:32:01-06:00'
+updated_at: '2026-09-29T11:32:01-06:00'
+version: 1

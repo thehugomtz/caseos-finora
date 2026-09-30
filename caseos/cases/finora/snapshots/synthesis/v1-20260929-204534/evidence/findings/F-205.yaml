@@ -1,0 +1,79 @@
+id: F-205
+type: finding
+headline: Tres artefactos del lado de pagos no alcanzan para explicar la caída de jul–oct 2024
+evidence_text: 'Sin octubre (jul–sep), la caída sigue en −18% (153 vs 187): no es solo un efecto de borde (H-029).
+  Contando reactivaciones, jul–oct cae −16% (260 vs 311) y su peso pasa de 19,3% a 21,9%: la dirección no cambia
+  (H-037). En ene–jun sí cambia la magnitud: +38% con reactivaciones vs +29% sin ellas. De 7 salidas sin retorno
+  en nov–dic-22, como mucho 2 coinciden en industria y monto exacto con primeras apariciones de ene-23 (H-024).'
+confidence: high
+limitations:
+- Quedan sin probar los artefactos del CRM (H-052, H-027, H-051), el rezago entre Won y primer pago y un posible
+  cambio de sistema de cobro. El cruce por monto exacto no detecta reapariciones con otro monto.
+kind: measurement
+claims:
+- claim: 'Jul–oct: 251 (2023) vs 203 (2024) primeros pagadores (−19%). Sin octubre (jul–sep): 187 vs 153 (−18%).'
+  source_id: DM-2
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: Va contra H-029 en su parte de octubre incompleto. El rezago Won→pago no se ve en los pagos.
+- claim: 'Jul–oct, contando reactivaciones: entradas a pago 311 (2023) vs 260 (2024), −16%. Peso de reactivaciones:
+    19,3% vs 21,9%.'
+  source_id: DM-5
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: 'Contra H-037 como explicación de jul–oct: la dirección es la misma que contando solo nuevos (−19%).'
+- claim: 'Ene–jun: reactivaciones 59 (2023) vs 105 (2024). Con ellas, las entradas a pago crecen +38% (456 vs 331)
+    en vez de +29%.'
+  source_id: DM-7
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: 'Apoya H-037 en magnitud para ene–jun: ahí contar las reactivaciones sí cambia la cifra.'
+- claim: 'Mar–oct, peso de las reactivaciones en las entradas a pago: 39,5% (2022), 19,4% (2023), 22,0% (2024).'
+  source_id: DM-2
+  source_type: data_model
+  confidence: medium
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: supports
+  notes: Si la base de comparación es 2022, «nuevos» cambia mucho según se cuenten o no las reactivaciones. 2022
+    tiene efecto de borde de ventana.
+- claim: 'Nov–dic-22: 20 churns observados; 7 no vuelven antes de oct-24.'
+  source_id: DM-6
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: context
+  notes: Es el universo de candidatos a reaparecer con otro ID en ene-23.
+- claim: Como mucho 2 salidas sin retorno de nov–dic-22 (una de Producción por 63.000 COP y una de Restaurantes
+    por 42.000 COP) coinciden en industria y monto exacto con primeras apariciones de ene-23.
+  source_id: DM-4
+  source_type: data_model
+  confidence: high
+  freshness: Corrida 2026-09-29 · datos ene-22 a oct-24
+  supports_or_contests: contests
+  notes: 'Debilita H-024. Ene-23 tuvo 60 primeras apariciones (DM-1). 42.000 es un monto común: la coincidencia
+    es posible, no probada. Tampoco detecta cambios de sistema de cobro.'
+unverified: false
+source_ref:
+  research: R-025
+links:
+- R-025
+- H-029
+- H-024
+- H-037
+phase: research
+review:
+  state: accepted
+  by: hugo
+  at: '2026-09-29T20:45:02-06:00'
+  note: Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
+origin:
+  actor: measurement
+created_at: '2026-09-29T14:56:18-06:00'
+updated_at: '2026-09-29T20:45:02-06:00'
+version: 2

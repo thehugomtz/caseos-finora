@@ -1,0 +1,256 @@
+id: T-103
+type: table
+table_key: FIN-F-216
+title: En el mes de mayor S&M del periodo, oct-22, el gasto fue 3,75 y las altas 32; en el mes de más altas, jun-24,…
+question: 'Gráficas de evidencia para C-004 (gasto de S&M y primeros pagadores): del modelo de datos, ene-22 a oct-24,
+  (1) dos gráficas de línea con el mismo eje de meses, una con el S&M total por mes (unidad reportada, sin escala
+  en COP) y otra con las altas (primeros pagadores) por mes, marcando los tramos 2023 ene-may y jun-dic; sin juntar
+  las dos escalas en un eje y sin índice; (2) barras apiladas del S&M por categoría (demanda, capacidad, habilitación)
+  por mes o semestre, más la participación de Team en el S&M total, con el tramo fijo de 12% hasta may-23; (3) dispersión
+  mensual de S&M total contra altas del mismo mes y con un mes de rezago, con su correlación; (4) barras por ventana
+  (2022 mar-dic, 2023 ene-may, 2023 jun-dic, 2024) de altas por mes y S&M por alta. Cada gráfica con su tabla y
+  su lectura sin atribuir ventas al gasto.'
+columns:
+- mes
+- sm_total_u
+- team_participacion
+- altas_mismo_mes
+- altas_mes_siguiente
+rows:
+- - 2022-01
+  - 2.0
+  - 0.12
+  - 0
+  - 108
+- - 2022-02
+  - 2.3
+  - 0.12
+  - 108
+  - 30
+- - 2022-03
+  - 2.3
+  - 0.12
+  - 30
+  - 19
+- - 2022-04
+  - 2.351
+  - 0.1199
+  - 19
+  - 38
+- - 2022-05
+  - 2.7
+  - 0.12
+  - 38
+  - 33
+- - 2022-06
+  - 2.351
+  - 0.1199
+  - 33
+  - 32
+- - 2022-07
+  - 2.2
+  - 0.12
+  - 32
+  - 26
+- - 2022-08
+  - 3.251
+  - 0.12
+  - 26
+  - 17
+- - 2022-09
+  - 3.5
+  - 0.12
+  - 17
+  - 32
+- - 2022-10
+  - 3.752
+  - 0.1199
+  - 32
+  - 19
+- - 2022-11
+  - 3.0
+  - 0.12
+  - 19
+  - 26
+- - 2022-12
+  - 3.251
+  - 0.12
+  - 26
+  - 60
+- - 2023-01
+  - 3.251
+  - 0.12
+  - 60
+  - 30
+- - 2023-02
+  - 2.5
+  - 0.12
+  - 30
+  - 38
+- - 2023-03
+  - 2.9
+  - 0.12
+  - 38
+  - 51
+- - 2023-04
+  - 2.951
+  - 0.12
+  - 51
+  - 47
+- - 2023-05
+  - 3.451
+  - 0.12
+  - 47
+  - 46
+- - 2023-06
+  - 1.8
+  - 0.2289
+  - 46
+  - 65
+- - 2023-07
+  - 1.751
+  - 0.237
+  - 65
+  - 66
+- - 2023-08
+  - 1.1
+  - 0.3782
+  - 66
+  - 56
+- - 2023-09
+  - 1.252
+  - 0.3347
+  - 56
+  - 64
+- - 2023-10
+  - 1.351
+  - 0.3131
+  - 64
+  - 72
+- - 2023-11
+  - 1.3
+  - 0.3323
+  - 72
+  - 55
+- - 2023-12
+  - 1.5
+  - 0.2953
+  - 55
+  - 57
+- - 2024-01
+  - 1.851
+  - 0.2388
+  - 57
+  - 32
+- - 2024-02
+  - 2.0
+  - 0.2215
+  - 32
+  - 43
+- - 2024-03
+  - 1.751
+  - 0.2467
+  - 43
+  - 69
+- - 2024-04
+  - 2.251
+  - 0.1964
+  - 69
+  - 66
+- - 2024-05
+  - 2.351
+  - 0.1893
+  - 66
+  - 84
+- - 2024-06
+  - 2.0
+  - 0.2235
+  - 84
+  - 48
+- - 2024-07
+  - 1.8
+  - 0.2489
+  - 48
+  - 56
+- - 2024-08
+  - 1.9
+  - 0.2363
+  - 56
+  - 49
+- - 2024-09
+  - 1.851
+  - 0.2426
+  - 49
+  - 50
+- - 2024-10
+  - 2.0
+  - 0.2265
+  - 50
+  - null
+units:
+  mes: texto
+  sm_total_u: num2
+  team_participacion: num2
+  altas_mismo_mes: int
+  altas_mes_siguiente: int
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+message: En el mes de mayor S&M del periodo, oct-22, el gasto fue 3,75 y las altas 32; en el mes de más altas, jun-24,
+  las altas fueron 84 con un gasto de 2,00.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-003
+  - E-002
+  - E-001
+  tools:
+  - query_metric
+  - run_sql
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-003\nWITH s AS (SELECT month, total_sm_spend, team FROM mart.sm_monthly),\nn AS (SELECT month, new_customers
+  FROM mart.monthly_metrics)\nSELECT s.month AS mes,\n       ROUND(s.total_sm_spend,3) AS sm_total_u,\n       ROUND(s.team
+  / NULLIF(s.total_sm_spend,0),4) AS team_participacion,\n       n.new_customers AS altas_mismo_mes,\n       LEAD(n.new_customers)
+  OVER (ORDER BY s.month) AS altas_mes_siguiente\nFROM s LEFT JOIN n ON n.month = s.month\nORDER BY s.month\n\n--
+  E-002\nSELECT * FROM mart.sm_monthly ORDER BY 1\n\n-- E-001\nSELECT month AS periodo, SUM(new_customer) AS valor,
+  COUNT(DISTINCT month) AS meses, (SUM(new_customer)) / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month
+  WHERE month BETWEEN '2022-03' AND '2024-10' GROUP BY ALL ORDER BY periodo"
+transformation: E-003 · run_sql · SQL ad hoc de solo lectura; E-002 · run_sql · SQL ad hoc de solo lectura; E-001
+  · query_metric · Métrica del catálogo · Altas
+filters:
+- periodo 2022-01–2024-10
+period:
+  desde: 2022-01
+  hasta: 2024-10
+grain: month
+analysis_id: INV-20260929-180321-0787 · C-010
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-SM-UNIDAD: La unidad del gasto de S&M no está documentada'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - oct-22
+  - jun-24
+  formato: num2
+  series:
+  - nombre: sm total u
+    valores:
+    - 3.752
+    - 2.0
+created_at: '2026-09-29T18:09:10-06:00'
+status: valid
+validation_errors: []
+finding: F-216
+links:
+- F-216
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 1

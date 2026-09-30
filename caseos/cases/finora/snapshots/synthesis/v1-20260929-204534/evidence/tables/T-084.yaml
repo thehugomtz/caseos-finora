@@ -1,0 +1,77 @@
+id: T-084
+type: table
+table_key: FIN-F-182
+title: Los retornos de pago coinciden con interrupciones cortas y con liquidación de atrasos
+question: '¿Qué parte de la reactivación y de la contracción del puente observado (T-003) es solo momento de cobro?
+  Puente normalizado: un mes sin pago con regreso al monto usual no cuenta como baja ni reactivación, y un pago
+  que cubre varios meses se reparte.'
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - churn_back_1m
+  - Churns observados que vuelven a pagar al mes siguiente
+  - 44%
+- - churn_events
+  - Eventos de churn observado (mar-22 a oct-24)
+  - '751'
+units: {}
+definitions: {}
+message: 'Los retornos de pago coinciden con interrupciones cortas y con liquidación de atrasos: 44% de los churns
+  observados vuelve a pagar al mes siguiente y 32% de los retornos tras meses sin pago liquida exactamente los meses
+  pendientes.'
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-RET-02
+  - EC-DAT-08
+  - EC-DAT-09
+  - E-011
+  tools:
+  - run_sql
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: "-- E-011\nWITH b AS (\n  SELECT customer_id, month, month_index, paid_mrr_cop, reactivated_customer, reactivation_mrr_cop,\n
+  \   MAX(CASE WHEN active_customer=1 THEN month_index END) OVER (PARTITION BY customer_id ORDER BY month_index
+  ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS last_idx,\n    LAST_VALUE(CASE WHEN active_customer=1 THEN
+  paid_mrr_cop END IGNORE NULLS) OVER (PARTITION BY customer_id ORDER BY month_index ROWS BETWEEN UNBOUNDED PRECEDING
+  AND 1 PRECEDING) AS prev_amt\n  FROM mart.customer_month\n), r AS (\n  SELECT reactivation_mrr_cop AS mrr, (month_index
+  - last_idx) AS gap,\n    paid_mrr_cop / NULLIF(prev_amt,0) AS ratio\n  FROM b WHERE reactivated_customer=1 AND
+  month >= '2022-03' AND month <= '2024-10' AND prev_amt > 0\n), z AS (\n  SELECT mrr, CASE\n    WHEN ratio BETWEEN
+  0.9 AND 1.1 THEN 'A. Regresa al monto usual'\n    WHEN abs(ratio - gap) <= 0.1*gap THEN 'B. Monto cubre los meses
+  del hueco mas el corriente'\n    ELSE 'C. Otro monto' END AS clase\n  FROM r\n)\nSELECT clase, COUNT(*) AS eventos,
+  ROUND(SUM(mrr)) AS mrr_cop,\n  ROUND(100.0*SUM(mrr)/SUM(SUM(mrr)) OVER (),1) AS share_pct\nFROM z GROUP BY clase
+  ORDER BY clase"
+transformation: EC-RET-02 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-DAT-08 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); EC-DAT-09 · search_evidence · Afirmación canónica verificada
+  en código (Fase 1); E-011 · run_sql · SQL ad hoc de solo lectura
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-143800-c4dd · C-006
+limitations:
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: table
+visual_artifact:
+  tipo: tarjeta
+  tarjeta: '9.3'
+  claim_fase1: C-RET-02
+  cubre:
+  - C-RET-02
+created_at: '2026-09-29T14:45:37-06:00'
+status: valid
+validation_errors: []
+finding: F-182
+links:
+- F-182
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:45:37-06:00'
+version: 1

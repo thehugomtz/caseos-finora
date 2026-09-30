@@ -114,9 +114,12 @@ def claim_strength(store: CaseStore, c: dict, ents: dict | None = None) -> dict:
     tb = [i for i in (c.get("table_ids") or []) + [l for l in c.get("links") or [] if type_of(l) == "table"] if i in ents]
     acc = [i for i in ev if _rv(ents[i]) == "accepted"]
     stale = [i for i in ev + tb if ents[i].get("stale")] + (["self"] if c.get("stale") else [])
-    from .evidence import unsupported_numbers
+    from .evidence import numbers_in, supported, unsupported_numbers
+    from .story import statement_numbers                  # late import: story depends on cos
     text = f"{c.get('headline', '')} {c.get('answer', '')}"
-    unsup = unsupported_numbers(text, [ents[t] for t in tb])
+    # same rule as the package validation: the case statement's own figures, posed by the claim's question, are an example
+    given = [n.value for n in numbers_in(c.get("question") or "") if supported(n, statement_numbers(store))]
+    unsup = unsupported_numbers(text, [ents[t] for t in tb], given)
     pend = [i for i in ev if _rv(ents[i]) not in ("accepted", "rejected")]
     if c.get("role_in_story") in ("recommendation", "limitation") and not ev:
         level = "proposal"

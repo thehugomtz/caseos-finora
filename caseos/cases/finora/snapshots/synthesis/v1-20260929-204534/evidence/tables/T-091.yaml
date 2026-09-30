@@ -1,0 +1,202 @@
+id: T-091
+type: table
+table_key: FIN-F-194
+title: En oct-24 se registran 50 altas frente a un promedio de 55 altas por mes en 2024 (ene–oct), y los clientes
+  ac…
+question: 'Paso 1 de C-011 con los pagos: ¿cuánto del «no más clientes nuevos» que se ve en los primeros pagadores
+  observados es artefacto (octubre-24 incompleto, reactivaciones contadas como altas, reapariciones con otro ID)
+  y cuánto queda para contrastar con causas?'
+columns:
+- Periodo
+- Altas
+- Altas por mes
+rows:
+- - mar-22
+  - 30.0
+  - 30.0
+- - abr-22
+  - 19.0
+  - 19.0
+- - may-22
+  - 38.0
+  - 38.0
+- - jun-22
+  - 33.0
+  - 33.0
+- - jul-22
+  - 32.0
+  - 32.0
+- - ago-22
+  - 26.0
+  - 26.0
+- - sep-22
+  - 17.0
+  - 17.0
+- - oct-22
+  - 32.0
+  - 32.0
+- - nov-22
+  - 19.0
+  - 19.0
+- - dic-22
+  - 26.0
+  - 26.0
+- - ene-23
+  - 60.0
+  - 60.0
+- - feb-23
+  - 30.0
+  - 30.0
+- - mar-23
+  - 38.0
+  - 38.0
+- - abr-23
+  - 51.0
+  - 51.0
+- - may-23
+  - 47.0
+  - 47.0
+- - jun-23
+  - 46.0
+  - 46.0
+- - jul-23
+  - 65.0
+  - 65.0
+- - ago-23
+  - 66.0
+  - 66.0
+- - sep-23
+  - 56.0
+  - 56.0
+- - oct-23
+  - 64.0
+  - 64.0
+- - nov-23
+  - 72.0
+  - 72.0
+- - dic-23
+  - 55.0
+  - 55.0
+- - ene-24
+  - 57.0
+  - 57.0
+- - feb-24
+  - 32.0
+  - 32.0
+- - mar-24
+  - 43.0
+  - 43.0
+- - abr-24
+  - 69.0
+  - 69.0
+- - may-24
+  - 66.0
+  - 66.0
+- - jun-24
+  - 84.0
+  - 84.0
+- - jul-24
+  - 48.0
+  - 48.0
+- - ago-24
+  - 56.0
+  - 56.0
+- - sep-24
+  - 49.0
+  - 49.0
+- - oct-24
+  - 50.0
+  - 50.0
+units:
+  Altas: int
+  Altas por mes: int
+definitions:
+  Altas (clientes nuevos): Clientes con MRR pagado mayor que cero en el mes y que nunca antes habían pagado.
+  Clientes activos: Clientes con MRR pagado mayor que cero en el mes.
+message: En oct-24 se registran 50 altas frente a un promedio de 55 altas por mes en 2024 (ene–oct), y los clientes
+  activos de oct-24 son 1.678 contra 1.645 en sep-24 y 1.283 en ene-24.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - E-001
+  - E-003
+  - E-004
+  tools:
+  - query_metric
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: '-- E-001
+
+  SELECT month AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer)) / COUNT(DISTINCT
+  month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10'' GROUP BY ALL
+  ORDER BY periodo
+
+
+  -- E-003
+
+  SELECT substr(month, 1, 4) AS periodo, SUM(new_customer) AS valor, COUNT(DISTINCT month) AS meses, (SUM(new_customer))
+  / COUNT(DISTINCT month) AS promedio_mensual FROM mart.customer_month WHERE month BETWEEN ''2022-03'' AND ''2024-10''
+  GROUP BY ALL ORDER BY periodo
+
+
+  -- E-004
+
+  WITH m AS (SELECT month, month AS periodo, SUM(active_customer) AS valor FROM mart.customer_month WHERE month
+  BETWEEN ''2024-01'' AND ''2024-10'' GROUP BY ALL) SELECT periodo, arg_max(valor, month) AS valor, max(month) AS
+  mes_cierre, COUNT(*) AS meses FROM m GROUP BY ALL ORDER BY periodo'
+transformation: E-001 · query_metric · Métrica del catálogo · Altas; E-003 · query_metric · Métrica del catálogo
+  · Altas; E-004 · query_metric · Métrica del catálogo · Clientes activos
+filters:
+- periodo 2022-03–2024-10
+- periodo 2024-01–2024-10
+period:
+  desde: 2022-03
+  hasta: 2024-10
+grain: month, year
+analysis_id: INV-20260929-143800-2198 · C-003
+limitations:
+- 'CV-VENTANA: Ventana limpia de flujos desde mar-22'
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+preferred_visual: bar
+visual_artifact:
+  tipo: barras
+  x:
+  - '2024'
+  - ene-24
+  - sep-24
+  - oct-24
+  series:
+  - nombre: Altas
+    valores:
+    - null
+    - null
+    - null
+    - 50.0
+  - nombre: Altas
+    valores:
+    - 55.4
+    - null
+    - null
+    - null
+  - nombre: Clientes activos
+    valores:
+    - null
+    - 1283.0
+    - 1645.0
+    - 1678.0
+  formato: int
+created_at: '2026-09-29T14:46:19-06:00'
+status: valid
+validation_errors: []
+finding: F-194
+links:
+- F-194
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T14:46:19-06:00'
+version: 1

@@ -1,0 +1,273 @@
+{
+ "id": "JOB-20260929-143800-bdd6",
+ "case_id": "finora",
+ "kind": "research",
+ "title": "Measurement · ¿Qué causas potenciales —las cuatro que trae el caso (deman…",
+ "params": {
+  "research_id": "R-025"
+ },
+ "agent": "measurement",
+ "status": "succeeded",
+ "created_at": "2026-09-29T14:38:00-06:00",
+ "started_at": "2026-09-29T14:38:00-06:00",
+ "finished_at": "2026-09-29T14:56:18-06:00",
+ "attempts": 1,
+ "progress": [
+  {
+   "t": "2026-09-29T14:38:00-06:00",
+   "kind": "running"
+  },
+  {
+   "t": "2026-09-29T14:38:00-06:00",
+   "kind": "start",
+   "run_id": "RUN-20260929-143800-measurement-8dc5",
+   "agent": "measurement",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:38:01-06:00",
+   "kind": "session",
+   "auth": "suscripción de Claude (sesión de Claude Code)",
+   "model": "claude-opus-5-5"
+  },
+  {
+   "t": "2026-09-29T14:38:07-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__catalogo_modelo",
+   "summary": "Leyendo el catálogo del modelo de datos"
+  },
+  {
+   "t": "2026-09-29T14:38:14-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, window_flag, active_customers, new_customers, reactivated_customers, churned_customers, demand_gen_spend, sales_capacity_spend"
+  },
+  {
+   "t": "2026-09-29T14:38:15-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, COUNT(*) AS altas, SUM(CASE WHEN clean THEN 1 ELSE 0 END) AS altas_clean, ROUND(AVG(m0_cop)) AS m0_prom, MIN(cohort_month) AS p"
+  },
+  {
+   "t": "2026-09-29T14:38:24-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUBSTR(month,1,4) AS anio, SUM(CASE WHEN SUBSTR(month,6,2) BETWEEN '03' AND '10' THEN new_customers ELSE 0 END) AS nuevos_mar_oct, SU"
+  },
+  {
+   "t": "2026-09-29T14:38:25-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT year, industry, COUNT(*) AS altas FROM mart.new_customers WHERE clean GROUP BY year, industry ORDER BY year, altas DESC"
+  },
+  {
+   "t": "2026-09-29T14:38:46-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT CASE WHEN cohort_month BETWEEN '2023-07' AND '2023-10' THEN 'jul-oct 2023' WHEN cohort_month BETWEEN '2024-07' AND '2024-10' THEN 'ju"
+  },
+  {
+   "t": "2026-09-29T14:38:48-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT n.customer_id, n.industry, n.m0_cop, c.customer_id AS churn_id, c.month AS churn_month, c.prev_mrr_cop, c.months_to_return FROM mart."
+  },
+  {
+   "t": "2026-09-29T14:39:06-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUBSTR(month,1,4) AS anio, SUM(new_customers) AS nuevos_jul_oct, SUM(reactivated_customers) AS react_jul_oct, SUM(new_customers)+SUM("
+  },
+  {
+   "t": "2026-09-29T14:39:07-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT month, COUNT(*) AS churns, SUM(CASE WHEN months_to_return IS NULL THEN 1 ELSE 0 END) AS no_vuelven FROM mart.churn_events WHERE month"
+  },
+  {
+   "t": "2026-09-29T14:39:24-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “\"The Short Life of Online Sales Leads\" Harvard Business Review Oldroyd response time”"
+  },
+  {
+   "t": "2026-09-29T14:39:25-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Sabnis Chatterjee Grewal Lilien 2013 \"Sales Lead Black Hole\" Journal of Marketing follow-up marketing leads”"
+  },
+  {
+   "t": "2026-09-29T14:39:25-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Forrester B2B Revenue Waterfall opportunity-centric replaces demand waterfall MQL buying group”"
+  },
+  {
+   "t": "2026-09-29T14:39:44-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://hbr.org/2011/03/the-short-life-of-online-sales-leads"
+  },
+  {
+   "t": "2026-09-29T14:39:46-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pure.psu.edu/en/publications/the-sales-lead-black-hole-on-sales-reps-follow-up-of-marketing-le/"
+  },
+  {
+   "t": "2026-09-29T14:39:47-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/saying-goodbye-to-mqls-sweet-and-no-sorrow"
+  },
+  {
+   "t": "2026-09-29T14:39:53-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.forrester.com/blogs/saying-goodbye-to-mqls-sweet-and-no-sorrow/"
+  },
+  {
+   "t": "2026-09-29T14:39:54-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://scholarsarchive.byu.edu/facpub/9711"
+  },
+  {
+   "t": "2026-09-29T14:40:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “\"within an hour\" \"nearly seven times as likely to qualify the lead\" Harvard Business Review 2,241 companies”"
+  },
+  {
+   "t": "2026-09-29T14:40:06-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “product-led sales self-serve cannibalization sales-assist measure incremental revenue PQL holdout”"
+  },
+  {
+   "t": "2026-09-29T14:40:07-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “SDR compensation meetings booked vs opportunities accepted quality Goodhart sales development metrics SQL acceptance rate”"
+  },
+  {
+   "t": "2026-09-29T14:40:28-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://ventureharbour.com/how-fast-do-marketing-leads-turn-cold-and-how-to-stop-it-happening/"
+  },
+  {
+   "t": "2026-09-29T14:40:29-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.ttec.com/blog/grow-your-sales-pipeline-changing-your-sdr-approach-we-did-it-and-you-can-too"
+  },
+  {
+   "t": "2026-09-29T14:40:29-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Kyle Poyar sales-assist self-serve hybrid \"product-led sales\" route signups to sales conversion cannibalize”"
+  },
+  {
+   "t": "2026-09-29T14:40:43-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “B2B inbound lead forms duplicates existing customers support requests spam percentage of leads not real prospects lead data quality”"
+  },
+  {
+   "t": "2026-09-29T14:40:43-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Recurly research involuntary churn failed payments share of subscription churn”"
+  },
+  {
+   "t": "2026-09-29T14:40:44-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “cohort-based funnel conversion vs period-based conversion rate lag sales cycle lead to customer measurement bias”"
+  },
+  {
+   "t": "2026-09-29T14:40:57-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.demandgenreport.com/industry-news/study-40-of-generated-leads-are-invalid-incomplete-or-duplicated/23003/"
+  },
+  {
+   "t": "2026-09-29T14:40:58-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://etumos.com/marketing-automation/marketing-lead-reporting-use-cohort-analysis-better-understand-conversion-velocity"
+  },
+  {
+   "t": "2026-09-29T14:40:59-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://amplitude.com/docs/api/content/analytics/charts/funnel-analysis/faq"
+  },
+  {
+   "t": "2026-09-29T14:41:10-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.integrate.com/resources/blog/data-quality-metrics/"
+  },
+  {
+   "t": "2026-09-29T14:41:10-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “Mixpanel funnels conversion window users entering near end of date range may still convert later excluded”"
+  },
+  {
+   "t": "2026-09-29T14:41:27-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://docs.mixpanel.com/docs/reports/funnels/funnels-advanced"
+  },
+  {
+   "t": "2026-09-29T14:41:27-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://pocus.com/blog/product-led-sales-pls-ama-kyle-poyar-openview-pls-benchmarks"
+  },
+  {
+   "t": "2026-09-29T14:41:27-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://recurly.com/glossary/involuntary-churn/"
+  },
+  {
+   "t": "2026-09-29T14:41:47-06:00",
+   "kind": "tool",
+   "tool": "WebSearch",
+   "summary": "Buscando: “win-loss analysis CRM loss reasons reported by sales reps differ from buyer interviews price blamed study”"
+  },
+  {
+   "t": "2026-09-29T14:41:58-06:00",
+   "kind": "tool",
+   "tool": "WebFetch",
+   "summary": "Leyendo: https://www.clozd.com/blog/win-loss-analysis-whats-the-best-source-of-win-loss-data"
+  },
+  {
+   "t": "2026-09-29T14:49:09-06:00",
+   "kind": "tool",
+   "tool": "mcp__caseos_datos__consultar_modelo",
+   "summary": "Consultando el modelo: SELECT SUBSTR(month,1,4) AS anio, CASE WHEN SUBSTR(month,6,2) BETWEEN '01' AND '06' THEN 'ene-jun' ELSE 'jul-oct' END AS tramo, SUM(new_cust"
+  },
+  {
+   "t": "2026-09-29T14:56:18-06:00",
+   "kind": "succeeded"
+  }
+ ],
+ "result": {
+  "research_id": "R-025",
+  "findings": [
+   "F-204",
+   "F-205",
+   "F-206",
+   "F-207",
+   "F-208"
+  ]
+ },
+ "error": null,
+ "error_kind": null,
+ "retry_of": null
+}

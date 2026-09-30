@@ -1,0 +1,37 @@
+id: X-157
+type: alert
+kind: story_review
+status: open
+severity: medium
+effect: requires_research
+source: R-033
+target: C-009
+title: 'R-033 toca C-009: revisar el claim'
+finding_text: 'Hoy hay tres fuentes y todas son de después del pago: pagos por cliente × mes (1.961 clientes × 34
+  meses, todos con al menos un pago), industria por cliente y gasto S&M por rubro × mes. Responden el stock y el
+  puente de monto pagado, los cortes por industria y por cohorte de primer pago y la eficie…'
+why: La nueva evidencia comparte linaje (misma hipótesis o finding) con este claim de la story.
+options:
+- key: A
+  label: Revisar el claim con la nueva evidencia
+  consequence: El claim queda needs_review hasta que lo confirmes.
+- key: B
+  label: Pedir al COS que evalúe el efecto
+  consequence: Clasificación supports / weakens / contradicts con opciones.
+- key: C
+  label: Sin impacto material
+  consequence: Se registra la decisión y se cierra la alerta.
+recommended: B
+recommended_why: La relación existe por linaje; su efecto necesita lectura.
+detected_by: lineage
+links:
+- R-033
+- C-009
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+created_at: '2026-09-29T19:19:56-06:00'
+updated_at: '2026-09-29T19:19:56-06:00'
+version: 1

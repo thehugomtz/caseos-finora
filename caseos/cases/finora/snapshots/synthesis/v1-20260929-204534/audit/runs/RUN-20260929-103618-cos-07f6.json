@@ -1,0 +1,274 @@
+{
+ "run_id": "RUN-20260929-103618-cos-07f6",
+ "agent": "cos",
+ "role": "cos_impact",
+ "purpose": "Impacto de R-013",
+ "started_at": "2026-09-29T11:11:30-06:00",
+ "duration_ms": 2111780,
+ "model": "claude-opus-5-5",
+ "effort": "max",
+ "system_prompt": "audit/prompts/832caacb0a2fb653.md",
+ "system_prompt_hash": "832caacb0a2fb653",
+ "prompt": "# Nueva evidencia a evaluar: R-013\nTipo: research · revisión: proposed\nTexto: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional\nRespuesta corta: El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae el nombre del rubro y su monto mensual, sin centro de costo ni atribución funcional. Sí está documentada la cobertura de 34 meses de ene-22 a oct-24 sin valores ausentes, en unidades reportadas (u) sin factor de escala, que no se pueden leer como COP\nEstablecido: El archivo no documenta moneda ni factor de escala: los montos están en unidades reportadas (u) y sus magnitudes no admiten lectura como COP. | La cobertura formal del panel está íntegra: 34 meses de ene-22 a oct-24 sin valores ausentes. La cobertura efectiva es desigual, porque Freelance queda en cero en 17 meses y PayrollExpenses toma valor negativo en 5. | Que Team equivalga a 12% del S&M total en 17 meses hasta may-23 y luego se mueva entre 19% y 38% con 17 valores distintos en 17 meses es consistente con una asignación por porcentaje fijo en el primer tramo y con un cambio de método desde jun-23. | Freelance registra su último valor distinto de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde ese corte Habilitación coincide con SoftwareTools. La serie no mide lo mismo antes y después.\nNo podemos concluir: No se puede decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: falta centro de costo, proveedor y atribución funcional, y la agrupación actual es una convención del catálogo de métricas. | No se puede expresar ningún monto en COP ni comparar contra el estado de resultados, porque el archivo no documenta unidad ni factor de escala. | No se puede tratar cada rubro como una medición independiente en el tramo hasta may-23, donde Team equivale a 12% del S&M total en 17 meses.\n\nCandidatos por linaje (evalúa estos primero; puedes añadir otros IDs existentes si el efecto es claro):\n- Q-018 (W8) [question] ¿Qué relación entre el gasto de Marketing por categoría y los nuevos pagadores o el monto pagado se puede describir cruzando fechas, y hasta dónde llega (asociación, no efecto)?\n- Q-022 (U07) [question] U07 · ¿La data actual da alguna pista?\nMotivo de Hugo: research completado\n\nPara cada elemento afectado da un efecto. Solo efectos materiales necesitan opciones (2–3, A/B/C) y recomendación. No dupliques alertas abiertas existentes. Target debe ser un ID existente o 'framing'.\n\n# Caso Finora — Business Analytics: del dato a la decisión\nObjetivo: Responder a Finora en tres bloques, con datos solo donde realmente ayudan: (1) Overview — entender la salud general del modelo y qué señales tener en mente antes de entrar a Growth y Revenue; (2) Growth / CRO — cómo definir y medir el funnel si no todos los clientes lo recorren igual, qué hipótesis podrían explicar “más leads, pero no más ventas” (qué sostiene la data, qué sigue siendo posibilida…\nAudiencia: CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenue; qué decide no está definido, CRO — cómo definir, medir y operar de forma recurrente el funnel en un modelo híbrido, y qué podría explicar más leads sin más clientes nuevos, CFO — cómo introducir descuentos temporales sin perder la respuesta a “¿por qué cambió nuestro MRR?”: mecanismo, modelo de datos y clasificación\nFases: Briefing=ready · Framing=needs_review · Research=in_progress · Synthesis=not_started · Story=not_started · Slides=not_started\nPregunta ejecutiva del framing: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?\nNo afirmar todavía: Que el monto sea MRR contratado: mientras la recurrencia no se confirme, se habla de monto pagado observado.; Que la primera transacción sea la adquisición del cliente: mientras la historia no se confirme, es la primera aparición observada.; Que una comparación sin cobertura completa describa al negocio: se detiene esa comparación.; Que hubo descuentos en el histórico: el caso habla de introducirlos.; Que una simulación de escenarios describe lo que ocurrió: prueba qué se puede distinguir, no qué pasó.; Nada sobre conversión de leads o del funnel: los pagos no incluyen a quien no compró.; Que la primera aparición sea el hito de adquisición del CRO (Won, primer pago o suscripción activa siguen por acordar).; Etiquetas contractuales (alta, baja o expansión de suscripción) sin vigencia verificada.\n\n## Preguntas ejecutivas\n- Q-001 (CRO) ¿Por qué está llegando más gente, pero los clientes nuevos no crecen en la misma proporción?\n- Q-002 (CFO) ¿Por qué cambió el ingreso recurrente y cuánto se explica por lo que el cliente contrata, por la tarifa o por descuentos?\n- Q-003 (CEO) ¿Cómo se conectan cómo conseguimos clientes y qué mueve el ingreso recurrente?\n\n## Hipótesis (id · estado · evaluación importada)\n- H-001 (HC1) [open] New creció, pero otras entradas bajaron. Entonces el total de personas que podrían comprar no creció tanto como parecía.\n- H-002 (HC2a) [open] Aumentó la proporción de personas que históricamente compran menos o tardan más en hacerlo.\n- H-003 (HC2b) [open] Hay más entradas recientes que todavía no tuvieron la misma oportunidad de comprar.\n- H-004 (HC3ab) [open] HC3a: al principio compran menos, pero después alcanzan un resultado parecido. HC3b: la diferencia sigue existiendo incluso con más seguimiento comparable.\n- H-005 (HC3q) [open] Bajó la calidad de lo que genera la máquina de leads: al entrar, muestran menos necesidad, intención o ajuste. Es H-005 en palabras de Hugo.\n- H-006 (HC3s) [open] El volumen de entradas superó la capacidad instalada de SDRs y AEs, así que la atención se demora y la compra cae. Es H-006 con un mecanismo concreto: la capacidad.\n- H-007 (HC3p) [open] Con entradas y avance previo comparables, el deterioro aparece después de un punto del recorrido.\n- H-008 (HC3o) [open] Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas.\n- H-009 (HF1a) [open] Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas.\n- H-010 (HF1b) [open] Hay descuentos documentados al entrar y cambió cuánto reducen el precio.\n- H-011 (HF2a) [open] Salieron más clientes o salieron clientes que aportaban más antes de descuentos.\n- H-012 (HF2b) [open] Los clientes que salen ya pagaban menos por descuentos; el ingreso que desaparece es distinto del valor sin descuento.\n- H-013 (HF3a) [open] Cambió plan, cantidad, características o uso, manteniendo condiciones de tarifa comparables.\n- H-014 (HF3b) [open] La empresa cambió la tarifa aplicable a una suscripción comparable.\n- H-015 (HF3c) [open] El descuento empezó, aumentó, se redujo o terminó, cambiando el pago o compensando un cambio de suscripción.\n- H-016 (HIF) [open · agente: Soportada] Al menos dos situaciones importantes para el CFO podrían producir el mismo pago observado.\n- H-017 (HG) [open · agente: No soportada] Las definiciones y los datos permiten comparar montos y primeras apariciones sin distorsiones importantes.\n- H-018 (HO1) [open · agente: Soportada] Se observa un cambio entre periodos comparables.\n- H-019 (HO2) [open · agente: No soportada] Una parte de los grupos explica buena parte del cambio observado.\n- H-020 (HO3) [open · agente: Direccional] El cambio se concentra en uno o varios de esos componentes observados.\n- H-021 (HO4) [open · agente: No soportada] Los grupos que empezaron a pagar en distintos momentos difieren en sus pagos posteriores.\n- H-022 (HO5) [open] Gasto agregado y resultados pagados evolucionan de forma diferente.\n\n## Research (id · estado · revisión)\n- R-001 (W0) [completed · proposed · analytics] ¿Qué podemos nombrar y comparar válidamente? → Solo monto pagado observado y primera aparición observada son comparables. La puerta de interpretación no se sostiene: el comportamiento del monto y el del churn observado no permiten nombrarlos como nivel contractual n…\n- R-002 (W1) [completed · proposed · analytics] ¿El monto identifica los escenarios del CFO? → El monto no identifica los escenarios del CFO: observaciones idénticas admiten lecturas distintas. La observación cliente + mes + monto no distingue los escenarios planteados: una subida del monto coincide con ajustes s…\n- R-003 (W2) [completed · proposed · analytics] ¿Qué cambió en los primeros pagadores observados? → Más primeras apariciones de pago, con un primer pago menor. Entre los periodos comparables, las primeras apariciones de pago por mes subieron y la mediana de su primer pago bajó; el cambio se mantiene al igualar la vent…\n- R-004 (W3) [completed · proposed · analytics] ¿Dónde se concentra el cambio del monto observado? → El cambio se concentra en la entrada de pagadores nuevos observados. El puente concilia con el total: MRR nuevo COP 94,3 millones, expansión COP 39,8 millones, reactivación COP 86,5 millones, contracción −COP 89,5 millo…\n- R-005 (W4) [completed · proposed · analytics] ¿La industria concentra el cambio observado? → La industria no concentra el cambio: el patrón aparece difundido. Respuesta parcial: la industria no aparece como el eje que concentra el cambio. El MRR por cliente activo bajó en 6 industrias entre dic-22 y oct-24 y el…\n- R-006 (W5) [completed · proposed · analytics] ¿Cambió la economía posterior de los nuevos pagadores? → Respuesta parcial: a igual edad el aporte posterior es menor, concentrado en la entrada. Respuesta parcial. A la misma edad desde el alta, el aporte por cliente de las cohortes 2023 se observa por debajo del de las coho…\n- R-007 (W6) [blocked · proposed · analytics] ¿Qué evidencia mínima permitiría distinguir las explicaciones del CRO? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-008 (W7) [blocked · proposed · analytics] ¿Qué distinguiría los componentes del valor y la pertenencia recurrente? → Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta.\n- R-009 (Q2) [completed · proposed · analytics] ¿Por qué disminuyó el MRR por cliente? → La caída se concentra en quién entra, no en la base previa. La descomposición por cosecha asigna a la composición de entrada 108% del cambio del MRR por cliente activo. En oct-24 las cosechas 2023 y 2024 concentran 65%…\n- R-010 [running · proposed · measurement] ¿Qué hipótesis ToFu y BoFu podrían explicar «más leads, pero no más ventas»? ¿Y qué información mínima validaría o desc…\n- R-011 [running · proposed · data_engineering] ¿Cómo separar el valor de la suscripción del precio efectivamente pagado y clasificar el inicio y el fin de un descuent…\n- R-012 [running · proposed · analytics] ¿Qué periodo, meses completos, escala a COP y definición de cliente activo están detrás del 4,5×, el 2,8× y el −38% del…\n- R-013 [completed · proposed · analytics] ¿Qué documenta el archivo de gasto de S&M (unidad, moneda y meses por rubro)? ¿Software Tools + Freelance va en Habilit… → El archivo documenta cobertura mensual, pero no unidad ni clasificación funcional. No es posible decidir con estos datos si SoftwareTools y Freelance son habilitación comercial o gasto de producto: el archivo solo trae…\n- R-014 [running · proposed · measurement] ¿Qué dato mínimo y qué comparación separarían una capacidad comercial insuficiente (H-006) de una caída en la calidad d…\n- R-015 [running · proposed · analytics] ¿Qué muestran juntos los primeros pagadores observados por industria y el gasto de S&M por categoría (Generación de Dem…\n- R-016 [running · proposed · measurement] ¿Cómo definir y medir el funnel si no todos lo recorren igual (self-service, entrada directa a SQL, leads estancados se…\n- R-017 [running · proposed · analytics] ¿Dónde y en qué segmentos se concentra la pérdida de crecimiento entre los pagadores observados (industria, banda de ti…\n- R-018 [running · proposed · measurement] ¿Qué métricas propondrías (MRR, ARR, ARPU, CAC, LTV, Churn, UCM), cómo se miden, cuáles se pueden calcular hoy con los…\n- R-019 [running · proposed · measurement] ¿Qué solución analítica le permitiría al CRO operar el funnel de forma recurrente y qué decisiones le permitiría tomar?…\n- R-020 [running · proposed · analytics] ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos, sin leerla com…\n- R-021 [running · proposed · business] ¿Cómo debería Finora introducir descuentos temporales sin perder la respuesta a «¿por qué cambió nuestro MRR?»? Mecanis…\n\n## Findings aceptados (0)\n\n## Findings en foco\n- F-063 [proposed] El archivo de gasto de S&M reporta cada rubro en unidades reportadas (u) sin factor de escala: el S&M total va de 1,10 u en su valle de ago-23 a 3,45 u en su pico de may-23, magnitudes que no se pueden leer como COP.\n- F-064 [proposed] Ningún rubro del archivo de S&M tiene meses ausentes: PaidMedia, PublicidadNoWeb, Team, Travel y SoftwareTools registran valor positivo en los 34 meses del panel y ninguno presenta valores nulos.\n- F-065 [proposed] Todos los rubros del archivo de S&M cubren los mismos 34 meses de ene-22 a oct-24 sin valores ausentes, pero Freelance queda en cero en 17 de esos meses y PayrollExpenses toma valor negativo en 5.\n- F-066 [proposed] El archivo se comporta como una asignación de arriba hacia abajo en su primer tramo: Team equivale a 12% del S&M total en 17 meses hasta may-23, y desde jun-23 su participación se mueve entre 19% y 38% con 17 valores distintos en 17 meses.\n- F-067 [proposed] La serie de Habilitación cambia de composición dentro del panel: Freelance registra su último valor distinto de cero en jun-23 y aporta 0,00 al total de 2024, de modo que desde ese corte Habilitación coincide con SoftwareTools, que tiene valor positivo en 34…\n- F-068 [proposed] No es posible decidir con los datos si SoftwareTools y Freelance corresponden a habilitación comercial o a gasto de producto: el archivo solo trae el nombre del rubro y su monto mensual, sin centro de costo, proveedor ni atribución funcional; agruparlos en Ha…\n- F-069 [proposed] El peso de Habilitación en el S&M total no es estable: pasa de 12% en 2022 a 7% en 2023 y 4% en 2024, por lo que el nivel del gasto por alta depende de si el rubro se cuenta como comercial.\n- F-070 [proposed] Habilitación pesa 12% del S&M total en 2022 y 4% en 2024, y el gasto por alta baja de 0,11 a 0,04 incluyéndola y de 0,09 a 0,03 excluyéndola.\n\n## Findings propuestos sin revisar: 70 (IDs: F-001, F-002, F-003, F-004, F-005, F-006, F-007, F-008, F-009, F-010, F-011, F-012, F-013, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-023, F-024, F-025, F-026, F-027, F-028, F-029, F-030, F-031, F-032, F-033, F-034, F-035, F-036, F-037, F-038, F-039, F-040…)\n\n## Tablas\n- T-001 `FIN-GROWTH-01` [proposed] Clientes activos y monto observado por cliente activo\n- T-002 `CFO-03` [proposed] Churn observado vs churn persistente\n- T-003 `FIN-BRIDGE-01` [proposed] Puente anual del monto observado\n- T-004 `CRO-TICKET-01` [proposed] Ticket de entrada de los nuevos pagadores por año\n\n## Decisiones activas\n- D-001 CRO pasa de cuatro a tres ramas → Cantidad, mezcla y compra según tiempo. Se deja de tratar conversión final y tiempo como dos cosas que necesariamente p…\n- D-002 CFO conserva tres grupos → Entrantes, salientes y continuos, con suscripción y descuento dentro de cada uno.\n- D-003 Calidad, atención, post-SQL y oferta son explicaciones para contrastar → Son explicaciones para contrastar, no causas ya confirmadas ni partes que debamos sumar.\n- D-004 Preguntas de pagos separadas de causas → HO responde cosas más pequeñas que HC/HF. No se usa un sustituto fácil para fingir que respondimos una pregunta sin dat…\n- D-005 Prioridad por importancia × capacidad → Orden revisable cuando conozcamos datos y resultados. Cero de capacidad no equivale a irrelevancia.\n- D-007 Solución fuera de esta etapa → Sin dashboards, métricas definitivas, modelo de datos ni deck.\n- D-008 Versiones del brief conservadas → v0.3 técnica y v0.4 corta siguen accesibles; esta edición no modifica sus archivos.\n- D-013 Briefing marcada Ready (v1) → Ready\n- D-014 Framing marcada Ready (v1) → Ready\n- D-016 Delegación a Claude: armar el plan, aprobarlo, lanzar la investigación y un borrador del storytelling → «Vale, voy a desayunar ahorita que acabes lo corres, creo que la información, el storytelling y todo eso ya está sobrad…\n\n## Decisiones propuestas\n- D-009 El brief v0.3 es la fuente de verdad del caso\n- D-010 Componer las respuestas desde evidencia verificada existente, no con una corrida del agente por pregunta\n- D-011 La demo pública es el HTML estático; el agente se muestra en el video del proceso con IA\n- D-012 Sin deck ni narrativa final todavía\n- D-015 Lo que el caso pide proponer y la data no alcanza a responder entra al plan de research como tareas: definición y medición del funnel, métricas nueva…\n\n## Alertas abiertas\n\n## Claims de la story",
+ "schema": {
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+   "summary",
+   "impacts",
+   "new_hypotheses",
+   "new_questions",
+   "status_note"
+  ],
+  "properties": {
+   "summary": {
+    "type": "string"
+   },
+   "impacts": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "target",
+      "effect",
+      "why",
+      "severity",
+      "options",
+      "recommended",
+      "recommended_why"
+     ],
+     "properties": {
+      "target": {
+       "type": "string"
+      },
+      "effect": {
+       "type": "string",
+       "enum": [
+        "supports",
+        "weakens",
+        "contradicts",
+        "opens_new_hypothesis",
+        "changes_framing",
+        "changes_story",
+        "requires_research",
+        "no_material_impact"
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ]
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "key",
+         "label",
+         "consequence"
+        ],
+        "properties": {
+         "key": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "consequence": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "recommended": {
+       "type": "string"
+      },
+      "recommended_why": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_hypotheses": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "statement",
+      "falsifier"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string"
+      },
+      "falsifier": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "new_questions": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "status_note": {
+    "type": "string"
+   }
+  }
+ },
+ "tools": [],
+ "skills": [
+  {
+   "id": "case-chief-of-staff",
+   "mode": "core",
+   "why": "núcleo del agente",
+   "source": "CaseOS (adapts alirezarezvani chief-of-staff, decision-logger, context-engine — MIT)",
+   "kind": "custom",
+   "digest": "eb505278c785"
+  }
+ ],
+ "lenses": [],
+ "max_turns": 4,
+ "status": "ok",
+ "error": null,
+ "output": {
+  "summary": "R-013 revisó el archivo de gasto de S&M y deja tres límites. Primero, los montos están en unidades reportadas (u), sin moneda ni escala. Segundo, hay un corte en jun-23: hasta may-23 Team es un 12% fijo del total, y desde ahí Habilitación es solo SoftwareTools. Tercero, con esta data no se puede clasificar Habilitación. R-013 no prueba ni tumba ninguna hipótesis de negocio, pero tiene cuatro efectos: 1) acota el cruce entre gasto y pagadores (Q-018 y R-015, que lo está corriendo); 2) convierte U07 (Q-022) en una sensibilidad con y sin Habilitación; 3) pide un chequeo antes de leer H-022 a través del corte; 4) deja ver que el framing no tiene límites del lado del gasto. Es urgente porque R-015 y R-018 (que incluye CAC) siguen en curso. Todo se apoya en F-063–F-070, que siguen propuestos.",
+  "impacts": [
+   {
+    "target": "Q-018",
+    "effect": "changes_framing",
+    "why": "R-013 deja el gasto de S&M en unidades reportadas (u), sin moneda ni escala (F-063), y con un corte en jun-23. Hasta may-23 Team es un 12% fijo del total, lo que calza con una asignación y no con una medición propia; después se mueve entre 19% y 38% (F-066). Además, Habilitación pierde Freelance y desde entonces es solo SoftwareTools (F-067). El archivo solo trae el nombre del rubro y el monto mensual, así que no se puede asignar gasto a industrias ni a pagadores: solo se puede ver si se mueven juntos en el tiempo. Q-018 pide cruzar gasto por categoría con nuevos pagadores y monto pagado. Hoy ese cruce solo se sostiene en términos relativos (índices, participaciones, fechas). No se puede sacar gasto en COP por pagador ni dividir monto pagado entre gasto (serían COP sobre u). Y cualquier comparación por categoría que cruce jun-23 mezcla un cambio del archivo con un cambio de gasto. R-015, que está en curso, hace justo este cruce por industria.",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Acotar Q-018 a lo que el archivo sostiene y pasarle las mismas reglas a R-015 antes de que cierre",
+      "consequence": "El cruce se hace en u e índices. Las categorías se comparan dentro de cada tramo (ene-22–may-23 y jun-23–oct-24). Team no se lee como gasto propio antes de jun-23, y Habilitación se trata según lo que se decida en Q-022. Entre tramos solo se compara el agregado, y solo si pasa el chequeo de H-022. Q-018 se puede responder hoy, sin cifras en COP."
+     },
+     {
+      "key": "B",
+      "label": "Mantener Q-018 como está, con advertencias al pie",
+      "consequence": "Se ve más completo (34 meses y todas las categorías), pero la comparación antes/después de jun-23 puede mostrar como cambio de gasto lo que en realidad es un cambio del archivo. El riesgo de describir una asociación que no existe es alto."
+     },
+     {
+      "key": "C",
+      "label": "Suspender Q-018 hasta que Finora dé moneda, escala y método de asignación",
+      "consequence": "Evita el error, pero deja al caso sin el único cruce entre gasto y resultados, y sin fecha para desbloquearlo."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es lo único defendible hoy sin inventar una escala. Lo que falta (moneda, escala, centro de costo, método) no se pierde: se nombra como hueco del WoW de Finora, que ya forma parte de la pregunta ejecutiva."
+   },
+   {
+    "target": "Q-022",
+    "effect": "changes_framing",
+    "why": "En lo central, R-013 responde U07 con un no. La data actual no da pistas sobre moneda ni escala, ni sobre si SoftwareTools y Freelance son Habilitación comercial o gasto de producto: solo trae el nombre del rubro y el monto, y la agrupación es una convención del catálogo (F-068). Sí da pistas sobre la estructura: Freelance se apaga en jun-23, y Habilitación pesa 12% del S&M en 2022, 7% en 2023 y 4% en 2024 (F-069). Según F-070, la clasificación cambia el nivel, no la dirección: entre 2022 y 2024 el gasto por primer pagador observado baja tanto con Habilitación (0,11→0,04 u) como sin ella (0,09→0,03 u). F-070 lo llama «gasto por alta». Por eso la pregunta útil ya no es «¿dónde va Habilitación?», que esta data no puede decidir, sino «¿cuánto cambia la lectura según dónde vaya?».",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Cerrar U07 como «la data no lo resuelve» y tratar Habilitación como sensibilidad",
+      "consequence": "Cada cifra de gasto por primer pagador va en par (con y sin Habilitación) y en u. Moneda, escala y centro de costo pasan a la lista de huecos. No bloquea nada."
+     },
+     {
+      "key": "B",
+      "label": "Adoptar como supuesto declarado la convención del catálogo (Habilitación dentro del S&M comercial)",
+      "consequence": "Queda una sola cifra, más fácil de contar. Pero el nivel se apoya en una convención, y como Habilitación pesa 12% en 2022 y 4% en 2024, el supuesto infla más el punto de partida que el de llegada."
+     },
+     {
+      "key": "C",
+      "label": "Dejar U07 abierta hasta que Finora dé centro de costo y proveedor",
+      "consequence": "Evita el supuesto, pero el nivel de cualquier gasto por primer pagador (y el CAC que busca R-018) queda en espera, sin fecha."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "La dirección no depende de la clasificación y el nivel ya está en u, así que mostrar el par con y sin cuesta poco y no esconde nada. Además, que el archivo no traiga centro de costo es en sí un hueco del WoW que el caso pide nombrar."
+   },
+   {
+    "target": "H-022",
+    "effect": "requires_research",
+    "why": "H-022 compara el gasto agregado con los resultados pagados. R-013 no la evalúa, pero le pone condiciones. Primero, solo se pueden comparar forma y fechas (índices en u), nunca niveles contra montos en COP. Segundo, la mayor variación del S&M total cae justo sobre el corte: el pico es 3,45 u en may-23 y el valle 1,10 u en ago-23 (F-063). Haciendo la cuenta con F-063 y F-066, Team explica poco de esa caída: pasa de ≈0,41 u en may-23 (12% de 3,45) a entre ≈0,21 y ≈0,42 u en ago-23 (19–38% de 1,10), frente a una caída total de 2,35 u. La caída está en otros rubros. Falta saber si es menos gasto o un movimiento contable: Freelance queda en cero después de jun-23, y PayrollExpenses es negativo en 5 meses que aquí no tienen fecha. Además, la comparación 2022 vs 2024 de F-070 cruza ese mismo corte.",
+    "severity": "medium",
+    "options": [
+     {
+      "key": "A",
+      "label": "Chequeo mínimo antes de evaluar H-022: descomponer por rubro la caída de may-23 a ago-23 y fechar los 5 meses con PayrollExpenses negativo",
+      "consequence": "Usa data que ya tenemos. Si la caída se mantiene sin PayrollExpenses ni Freelance, el agregado puede cruzar el corte. Si no, H-022 se evalúa por tramos o sin esos rubros."
+     },
+     {
+      "key": "B",
+      "label": "Evaluar H-022 solo dentro de cada tramo (ene-22–may-23 y jun-23–oct-24)",
+      "consequence": "No depende del chequeo, pero se pierde la comparación 2022 vs 2024, que es justo la que usa F-070."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Es barato, usa data que ya existe y decide si el agregado puede cruzar el corte. B queda como salida si el chequeo sale mal."
+   },
+   {
+    "target": "framing",
+    "effect": "changes_framing",
+    "why": "La lista «No afirmar todavía» cuida el lado de los pagos (MRR, adquisición, alta), pero no dice nada del gasto. R-015 y R-018 (que incluye CAC) están en curso y van a leer ese gasto. R-013 fija límites que hoy no están escritos. Además, F-069 y F-070 ya hablan de «gasto por alta», que choca con dos límites existentes: «alta» como etiqueta contractual y «primera aparición ≠ adquisición». Propongo tres líneas en el formato del framing: (1) Que el gasto de S&M esté en COP o se compare con el estado de resultados: el archivo no trae moneda ni escala, así que se habla de unidades reportadas (u). (2) Que el gasto sobre primeras apariciones sea CAC: falta la moneda y el hito de adquisición sigue por acordar, así que se habla de gasto por primer pagador observado. (3) Que Team o Habilitación midan lo mismo antes y después de jun-23: Team es un 12% fijo del total hasta may-23 y Freelance se apaga en jun-23. La línea (3) además evita que Team se use como proxy de la capacidad comercial de H-006 (R-014 está en curso).",
+    "severity": "high",
+    "options": [
+     {
+      "key": "A",
+      "label": "Sumar las tres líneas y reescribir F-069 y F-070 sin «alta» (gasto por primer pagador observado, en u)",
+      "consequence": "R-015, R-018 y la story las heredan: ninguna cifra de gasto sale en COP ni como CAC. El framing, que ya está en needs_review, suma tres líneas."
+     },
+     {
+      "key": "B",
+      "label": "Dejarlas como limitaciones dentro de R-013 (F-063–F-070), sin tocar el framing",
+      "consequence": "El framing no se mueve, pero cada research en curso tiene que volver a descubrirlas. El riesgo concreto es un CAC en COP en R-018 que después haya que deshacer."
+     },
+     {
+      "key": "C",
+      "label": "Sumar solo (1) y (2), y dejar el corte de jun-23 como limitación de Q-018 y H-022",
+      "consequence": "La lista queda más corta, pero la story podría comparar Team o Habilitación entre tramos sin aviso."
+     }
+    ],
+    "recommended": "A",
+    "recommended_why": "Son límites de lectura, no hallazgos, así que van donde todos los agentes miran. Como el framing ya está abierto a revisión, sumarlas cuesta poco."
+   }
+  ],
+  "new_hypotheses": [
+   {
+    "statement": "El valle del S&M total en ago-23 (1,10 u) refleja en parte movimientos contables (PayrollExpenses negativo, fin de Freelance) y no solo menos gasto.",
+    "falsifier": "Si PayrollExpenses no es negativo entre may-23 y ago-23 y la caída desde may-23 se mantiene al excluir PayrollExpenses y Freelance, el valle es menos gasto registrado y el agregado puede cruzar el corte de jun-23."
+   }
+  ],
+  "new_questions": [
+   "¿PayrollExpenses y Team se solapan (los dos suenan a costo de personas)? ¿Los 5 meses con PayrollExpenses negativo son reversos o reclasificaciones, y en qué meses caen?",
+   "¿Qué le pedimos a Finora para cerrar el gasto (moneda y factor de escala, centro de costo y proveedor por rubro, método de asignación antes y después de jun-23)? ¿Lo contamos como hueco de su WoW en la respuesta?",
+   "F-070 da el gasto por primer pagador con dos decimales, y en 2024 la diferencia con y sin Habilitación (0,04 vs 0,03 u) es del tamaño del redondeo. ¿Se reporta como índice 2022 = 100?",
+   "¿Fusionamos F-064 con F-065 y F-069 con F-070 antes de revisar R-013? Repiten la misma evidencia."
+  ],
+  "status_note": "Research en curso: R-013 cerró la revisión del archivo de gasto de S&M (unidades sin moneda, corte de método en jun-23, Habilitación no clasificable). Eso condiciona el cruce entre gasto y pagadores (Q-018, R-015) y cualquier CAC (R-018). No hay findings aceptados de 70 propuestos y el Framing está en needs_review: es buen momento para fijar los límites del lado del gasto antes de que cierren R-015 y R-018."
+ },
+ "usage": {
+  "turns": 2,
+  "ms": 526221,
+  "input_tokens": 2,
+  "output_tokens": 57733,
+  "cache_read": 0,
+  "cache_write": 11457,
+  "terminal_reason": "completed",
+  "subtype": "success"
+ },
+ "cost_usd": 1.253,
+ "tool_trace": [],
+ "seen_urls": [],
+ "auth": "suscripción de Claude (sesión de Claude Code)",
+ "sql_runs": []
+}

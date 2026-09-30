@@ -1,0 +1,46 @@
+id: X-155
+type: alert
+kind: new_hypothesis
+status: open
+severity: medium
+effect: opens_new_hypothesis
+source: R-032
+target: H-066
+title: R-032 abre una hipótesis nueva H-066
+finding_text: 'Propongo ordenarlo por la identidad del cociente ventas/leads y no por áreas: Paso 0 fija qué es
+  «venta» y la ventana por cohortes. Luego vienen, en orden: (1) el aumento de New no es demanda nueva comprable
+  (H-052 no-prospectos, desfase o cambio de definición, H-053 misma demanda por otra puerta);…'
+why: 'R-032 trae una cifra que no estaba: en T2 (abr–jun) las altas pasan de 144 a 219, justo antes de que T3 caiga
+  de 187 a 153. Sumando los dos trimestres, suben de 331 a 372 (+12%, cálculo mío). H-066 lee jul-24 como un escalón
+  después del pico de jun-24. Otra lectura posible es compra adelantada a T2, por una campaña o por un cambio de
+  precio o plan (el chequeo que pide X-113). Oct-24 sigue abajo (50 vs 64, X-107), así que el adelanto no alcanza
+  para toda la caída, pero puede explicar una parte.'
+options:
+- key: A
+  label: 'Registrar la hipótesis de compra adelantada y revisarla con pagos: ¿el excedente de T2-24 y el faltante
+    de T3-24 están en las mismas industrias y bandas de ticket? Usar ticket estabilizado, no primer pago, como pide
+    X-095.'
+  consequence: Chequeo barato con data que ya existe. Si se sostiene, la story tiene que matizar la «caída absoluta»
+    de jul–oct.
+- key: B
+  label: Sumarla al chequeo de precio de X-113, sin registrarla aparte.
+  consequence: Un ID menos, pero se pierde el caso de adelanto sin cambio de precio.
+- key: C
+  label: No registrarla y dejarla como matiz de F-229.
+  consequence: No hay nada que hacer, pero la story sigue leyendo jul–oct como caída pura.
+recommended: A
+recommended_why: 'Con D-005 (importancia × capacidad) sube de prioridad: pesa en la respuesta de Q-001 y es de lo
+  poco que la data de hoy sí contesta.'
+detected_by: cos
+links:
+- R-032
+- H-066
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-190141-cos-d151
+created_at: '2026-09-29T19:17:28-06:00'
+updated_at: '2026-09-29T19:17:28-06:00'
+version: 1

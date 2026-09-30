@@ -1,0 +1,53 @@
+id: X-054
+type: alert
+kind: framing_change
+status: open
+severity: high
+effect: changes_framing
+source: R-019
+target: Q-003
+title: R-019 cambia el framing Q-003
+finding_text: 'Propongo dos capas. La técnica: CRM con motion e historial de etapas, analítica digital que registre
+  el canal desde la primera visita, y facturación con MRR contratado y estado de suscripción, todo unido por un
+  ID de cuenta en el modelo analítico que ya existe. La de decisión: un bowtie por motion…'
+why: 'R-019 deja establecido, con confianza alta (DM-0), que en los datos no hay leads, oportunidades, motion ni
+  canal. Hoy no se puede unir, cuenta por cuenta, cómo llegó un cliente con cómo se mueve su MRR pagado observado.
+  Solo hay dos mitades sueltas. En Revenue, el cambio se concentra en quién entra (R-004, R-009) y los clientes
+  nuevos aportan menos a igual edad (R-006); nada de esto está aceptado todavía. En Growth solo hay mezcla de gasto,
+  y la relación entre gasto y altas es una asociación agregada: el paso a efecto no es evaluable (R-015, T-025).
+  Tal como está redactada, Q-003 promete una conexión que los datos no pueden mostrar. Además, el ID de cuenta de
+  R-019 no basta para unir las dos mitades: también hace falta el gasto con unidad y clasificación (R-013), y la
+  capa técnica de R-019 no lo incluye.'
+options:
+- key: A
+  label: Reformular Q-003 en dos mitades y un eslabón
+  consequence: 'Versión ejecutiva: «Qué mueve hoy el ingreso recurrente, por qué todavía no se puede unir a cómo
+    conseguimos clientes y qué haría falta para unirlo». El Overview responde con lo que muestran los pagos y nombra
+    el hueco del lado Growth. El puente hacia la propuesta es el ID de cuenta de R-019 más el gasto gobernado.'
+- key: B
+  label: Mantener Q-003 y responder el puente con gasto S&M frente a altas (R-015, T-024)
+  consequence: 'Hay algo que mostrarle al CEO, pero es asociación agregada: T-025 dice que el paso a efecto no es
+    evaluable, y el archivo de gasto no documenta unidad (R-013). Alto riesgo de que se lea como causa.'
+- key: C
+  label: Sacar Q-003 del Overview y dejarla abierta hasta que exista el ID de cuenta
+  consequence: El Overview queda como salud del lado Revenue y se pierde el hilo entre Growth y Revenue. Q-003 pasa
+    a las preguntas sin resolver del Story.
+recommended: A
+recommended_why: 'Responde al CEO sin inventar el puente. Encaja con D-004: no usar un sustituto fácil, como gasto
+  frente a altas, para fingir que respondimos. También encaja con D-005: que hoy no haya datos no vuelve irrelevante
+  la pregunta, por eso no la sacaría del Overview. Usa lo que ya muestran R-004, R-006 y R-009, cuando se acepten,
+  y convierte el hueco en la entrada natural a la propuesta. Eso es lo que pide la pregunta ejecutiva del framing:
+  huecos en su WoW y modelos que se proponen.'
+detected_by: cos
+links:
+- R-019
+- Q-003
+phase: synthesis
+review:
+  state: proposed
+origin:
+  actor: cos
+  run_id: RUN-20260929-110606-cos-2530
+created_at: '2026-09-29T11:41:56-06:00'
+updated_at: '2026-09-29T11:41:56-06:00'
+version: 1

@@ -367,7 +367,7 @@ Regla base: New, Expansión, Contracción, Churn y Reactivación se definen sobr
 Con el modelo (C-019, C-020), los ejemplos del enunciado se separan. De 100 a 80: si bajó lo contratado, es Contracción; si lo contratado sigue en 100 y empezó un descuento, es «Descuento (inicio)»; si solo cambió el mes del cobro, es efecto de cobro, fuera del MRR. De 100 a 130 con descuento de 30: Expansión por el paso de 100 a 130 y «Descuento (inicio)» por 30, con el neto en 100. Cuando desaparece el descuento: «Descuento (fin)» por 30, no Expansión. Hoy, con el monto pagado, el segundo caso se vería «sin cambio» y el tercero como expansión, y el puente ya mezcla cobro: 29% del MRR de expansión se revierte al mes siguiente y 44% de los churn observados vuelve a pagar al mes siguiente. Para Q-026, hacia adelante: MRR de lista (negocio subyacente) − MRR neto = revenue que dejamos de capturar, por origen. Hoy el −38% por cliente activo no se puede repartir entre lista y descuento.
 
 - Pregunta: Paga 100 y luego 80; la suscripción pasa de 100 a 130 con un descuento de 30 y sigue pagando 100; desaparece el descuento: ¿cómo se lee cada caso con el modelo propuesto?
-- Rol: implication · confianza medium · fuerza weak
+- Rol: implication · confianza medium · fuerza supported
 - Evidencia: F-168, F-172, F-174, F-177, F-178, F-150, F-151 · Tablas: T-074, T-076, T-080
 - Intención visual: Cada caso en su capa: el mismo monto pagado se descompone en suscripción, descuento y cobro, y se ve qué línea se mueve en cada ejemplo.
 - Limitación: Pendiente de tu aceptación: todos los findings citados están propuestos.

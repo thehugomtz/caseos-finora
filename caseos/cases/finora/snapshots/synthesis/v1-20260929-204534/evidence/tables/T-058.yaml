@@ -1,0 +1,75 @@
+id: T-058
+type: table
+table_key: FIN-F-090
+title: El movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo al mes siguiente en 25,3% del
+  to…
+question: ¿Qué data observable de pricing introductorio y de comportamiento del monto se puede sacar de los pagos,
+  sin leerla como descuento?
+columns:
+- Dato
+- Qué mide
+- Valor
+rows:
+- - rt_gross
+  - Movimiento bruto total del monto pagado sin altas, mar-22 a sep-24 (no es lo revertido)
+  - COP 282,8 millones
+- - rt_share
+  - Parte de ese movimiento bruto que vuelve exacto al nivel previo al mes siguiente
+  - 25,3%
+units: {}
+definitions: {}
+message: El movimiento bruto del monto pagado sin altas vuelve exacto al nivel previo al mes siguiente en 25,3%
+  del total, el MRR de expansión se revierte al mes siguiente en 29%, 32% de los retornos tras meses sin pago liquidan
+  exactamente los meses pendientes y se observan 260 eventos de ajuste con cobro retroactivo exacto.
+source:
+  system: finora-eda (Business Exploration Workspace)
+  dataset: Transactions · Industry · S&M_spend (data/raw)
+  warehouse: warehouse/finora.duckdb (mart de solo lectura)
+  evidence_ids:
+  - EC-DAT-06
+  - EC-DAT-03
+  - EC-DAT-08
+  - EC-DAT-07
+  tools:
+  - search_evidence
+  data_version: sha256:4a799a744543c8d8
+  brain_version: sha256:d87e62466354e64a
+query: ''
+transformation: EC-DAT-06 · search_evidence · Afirmación canónica verificada en código (Fase 1); EC-DAT-03 · search_evidence
+  · Afirmación canónica verificada en código (Fase 1); EC-DAT-08 · search_evidence · Afirmación canónica verificada
+  en código (Fase 1); EC-DAT-07 · search_evidence · Afirmación canónica verificada en código (Fase 1)
+filters: []
+period: {}
+grain: según evidencia
+analysis_id: INV-20260929-103203-30ce · C-009
+limitations:
+- 'CV-AMOUNT-COBRO: `amount` se comporta como monto cobrado, no como MRR contractual'
+- 'CV-CHURN-PAUSAS: El churn observado incluye pausas y atrasos'
+preferred_visual: stacked_bar
+visual_artifact:
+  tipo: barras
+  apiladas: true
+  x:
+  - Movimiento bruto sin altas, mar-22 a sep-24
+  formato: pct
+  series:
+  - nombre: Vuelve exacto al nivel previo al mes siguiente
+    valores:
+    - 0.2529696008219224
+  - nombre: Resto del movimiento
+    valores:
+    - 0.7470303991780776
+  claim_fase1: C-DAT-06
+created_at: '2026-09-29T11:09:18-06:00'
+status: valid
+validation_errors: []
+finding: F-090
+links:
+- F-090
+phase: research
+review:
+  state: proposed
+origin:
+  actor: analytics
+updated_at: '2026-09-29T11:09:18-06:00'
+version: 1
