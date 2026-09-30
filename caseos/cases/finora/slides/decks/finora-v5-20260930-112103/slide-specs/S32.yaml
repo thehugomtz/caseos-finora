@@ -2,14 +2,15 @@ slide:
   id: S32
   file: slides/32.html
   claim_id: C-013
-  reused_from: finora-v3-20260929-212258/S16 (claim sin cambios; re-tematizada; va en anexo — su línea clave entra en S12)
+  reused_from: finora-v3-20260929-212258/S16 (claim sin cambios; re-tematizada; iba en anexo — su línea clave entra en S12)
   full_spec: reuse/finora-v3-20260929-212258/slide-specs/S16.yaml
-  role_in_story: appendix
-  kicker: "Anexo · modelo del funnel"
+  revision: "REV-20260930-161812: Hugo la subió del anexo a la sección Data (justo después del separador Data); se explican las dos tablas de análisis y se dice qué limita hoy y qué habilita la propuesta"
+  role_in_story: recommendation
+  kicker: "Data · modelo de datos · propuesta"
   headline: "Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción"
-  takeaway: "Hoy hay tres fuentes aisladas de después del pago; el to-be las une en una llave de cuenta con demanda, comercial y suscripción."
+  takeaway: "Hoy hay tres fuentes aisladas de después del pago; el to-be las une en una llave de cuenta con demanda, comercial y suscripción, y de ahí salen el funnel por puerta y un puente de MRR limpio."
   question: "¿Qué modelo de datos se propone para operar el funnel, as-is vs to-be?"
-  relationship: "three isolated after-payment sources TRANSFORM into one account spine that JOINS demand, sales and subscription"
+  relationship: "three isolated after-payment sources TRANSFORM into one account spine that JOINS demand, sales and subscription; two analysis tables FEED the metrics"
   evidence_type: structure
   composition: from_to_architecture
   family: operating_model
@@ -18,7 +19,15 @@ slide:
     - {id: tabla brecha → métrica, rejected_because: "pierde el antes/después"}
   focal_point: spine
   encodings: {solid: "existe hoy", dashed: "propuesta to-be", accent: "la llave común de cuenta"}
-  text_budget: 120
+  objects:
+    - {id: limits_today, kind: text, content: "Qué limita hoy: las tres son de después del pago: sin canal, etapa, plan ni descuento, y sin saber si un cero es cancelación o mora (44% de los churns vuelve a pagar al mes siguiente)"}
+    - {id: funnel_entry, kind: node, content: "funnel_entry → métricas del funnel · una fila por cada vez que una cuenta entra al funnel, con su puerta, su ruta y la fecha de cada hito (registro, primer toque, SQL, Won, primer pago) (R-033)"}
+    - {id: account_month, kind: node, content: "account_month → puente de MRR · una fila por cuenta y mes: estado de la suscripción, MRR de lista, descuento, neto, facturado y cobrado; se concilia cada mes con el monto pagado de hoy (R-033)"}
+    - {id: enables, kind: text, content: "Qué habilita: medir el funnel de la entrada al pago por puerta · CAC y payback por canal · un puente de MRR que no mezcla descuento ni cobro"}
+  layout_intent:
+    grid: "as-is cols 1–3 con «qué limita hoy» debajo; flecha col 4; to-be cols 5–12: capas, espina, dos tablas de análisis con su línea simple y «qué habilita» debajo"
+    reading_path: "as-is → qué limita → espina → tablas de análisis → qué habilita"
+  text_budget: 215           # era 120; sube por la explicación de las tablas de análisis y el qué limita / qué habilita que pidió Hugo (REV-20260930-161812)
   avoid: ["ERD completo", "tabla"]
   data: {source: "propuesta (R-033, C-013); 44%: FIN-F-199 (contrato del deck v3)"}
   sources: [F-136, F-144, F-145, F-146, F-191, F-238, F-239, F-240, F-241]

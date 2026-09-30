@@ -24,14 +24,14 @@
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="125" data-page="11">
+<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="165" data-page="11">
   <header class="header">
     <div class="kicker">Growth · métricas nuevas · propuesta</div>
     <h1 class="headline">Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO</h1>
   </header>
 
   <footer class="footer"><span class="source">Propuesta (R-036); decisiones del CRO por definir con Finora · S&amp;M por alta en unidad reportada (u), sin escala a COP: T-036 · F-135–F-139, F-141, F-146, F-246, F-247, F-249, F-252</span><span class="page"></span></footer>
-  <aside class="notes">Proponemos medir por ruta lo que hoy no existe y atar cada métrica a una decisión del CRO: entradas, alcance por etapa en cohorte y tiempo por tramo, para saber si falta volumen o tasa antes de pedir más SDR/AE o más gasto; tiempo a primer toque y carga por SDR/AE, para separar capacidad de calidad; estancamiento por etapa, para decidir qué tramo y qué dueño arreglar primero; valor y calidad por ruta (MRR inicial con run-rate y guardarraíles, no con el primer pago, y retención temprana), para decidir a qué puerta ponerle persona; y eficiencia (CAC y payback por ruta), para repartir el S&amp;M entre rutas y canales. Hoy se calcula, con nombre honesto y solo en total, el MRR pagado observado y su puente, los clientes activos, el ARPA por cliente (lo que se pide como ARPU), el churn observado y las métricas de cohorte. La eficiencia hoy solo existe como S&amp;M por alta en unidad reportada, 0,105 u en 2022 y 0,036 u en 2024 (−66%), y eso no es CAC: sin la unidad del gasto no hay CAC en COP ni payback, sin ruta ni canal no hay CAC por ruta, y el LTV con margen y el UCM necesitan margen bruto o costo de servir. Límites: F-246, F-247, F-249 y F-252 están propuestos (R-035, R-036), pendientes de aceptación; ninguna métrica propia de ruta se calcula hoy y ninguna métrica común se puede cortar por ruta (F-146); churn y MRR observados necesitan regla de normalización y ventana de gracia (F-136); las decisiones del CRO son propuesta: Finora aún no las define; la «reactivación» del modelo actual es retorno de pago de clientes, no el Reactivate de leads (F-252). El detalle del semáforo y del catálogo está en el anexo (C-009, C-010, C-022).</aside>
+  <aside class="notes">Proponemos medir por ruta lo que hoy no existe y atar cada métrica a una decisión del CRO: entradas, alcance por etapa en cohorte y tiempo por tramo, para saber si faltan leads (volumen) o si entran pero no avanzan (tasa) antes de pedir más SDR/AE o más gasto; tiempo a primer toque y carga por SDR/AE, para saber si un lead no avanza porque nadie lo atendió a tiempo (capacidad: se arregla con gente, SLA o priorización) o porque no iba a comprar (calidad: se arregla con a quién se le habla); estancamiento por etapa, para decidir qué tramo y qué dueño arreglar primero; valor y calidad por ruta (MRR inicial con run-rate y guardarraíles, no con el primer pago, y retención temprana), para decidir en qué puertas de entrada (outbound del SDR, «hablar con ventas», SQL directo o registro en el producto) conviene que intervenga un SDR/AE y cuáles dejar en Self Service; y eficiencia (CAC y payback por ruta), para repartir el presupuesto de S&amp;M entre rutas y canales según cuánto cuesta ganar un cliente y en cuánto se recupera. Hoy se calcula, con nombre honesto y solo en total, el MRR pagado observado y su puente, los clientes activos, el ARPA por cliente (lo que se pide como ARPU), el churn observado y las métricas de cohorte. La eficiencia hoy solo existe como S&amp;M por alta en unidad reportada, 0,105 u en 2022 y 0,036 u en 2024 (−66%), y eso no es CAC: sin la unidad del gasto no hay CAC en COP ni payback, sin ruta ni canal no hay CAC por ruta, y el LTV con margen y el UCM necesitan margen bruto o costo de servir. Límites: F-246, F-247, F-249 y F-252 están propuestos (R-035, R-036), pendientes de aceptación; ninguna métrica propia de ruta se calcula hoy y ninguna métrica común se puede cortar por ruta (F-146); churn y MRR observados necesitan regla de normalización y ventana de gracia (F-136); las decisiones del CRO son propuesta: Finora aún no las define; la «reactivación» del modelo actual es retorno de pago de clientes, no el Reactivate de leads (F-252). El detalle del semáforo y del catálogo está en el anexo (C-009, C-010, C-022).</aside>
 </main>
 <script>
 P.draw('S09', (s, P) => {
@@ -42,11 +42,11 @@ P.draw('S09', (s, P) => {
   s.label(DX, 318, 'Decisión del CRO', { anchor: 'bl', cls: 'cap' });
 
   const rows = [
-    ['<b>Volumen y tasa</b>: entradas, alcance y tiempo por etapa', '¿Volumen o tasa? Antes de pedir SDR/AE o gasto'],
-    ['<b>Capacidad</b>: tiempo a primer toque y carga por SDR/AE', 'Separar capacidad de calidad'],
+    ['<b>Volumen y tasa</b>: entradas, alcance y tiempo por etapa', '¿Faltan leads o no avanzan? Saberlo antes de pedir más SDR/AE o gasto'],
+    ['<b>Capacidad</b>: tiempo a primer toque y carga por SDR/AE', '¿No avanzan por falta de atención o porque no iban a comprar? Se arreglan distinto'],
     ['<b>Estancamiento</b> por etapa', 'Qué tramo y qué dueño arreglar primero'],
-    ['<b>Valor y calidad</b>: MRR inicial con run-rate y retención temprana', 'A qué puerta ponerle persona'],
-    ['<span class="chip">Eficiencia</span> <b>CAC y payback por ruta</b>', 'Repartir el S&amp;M entre rutas y canales'],
+    ['<b>Valor y calidad</b>: MRR inicial con run-rate y retención temprana', 'En qué puertas de entrada conviene que intervenga un SDR/AE y cuáles dejar en Self Service'],
+    ['<span class="chip">Eficiencia</span> <b>CAC y payback por ruta</b>', 'Repartir el presupuesto de S&amp;M entre rutas y canales, según cuánto cuesta ganar un cliente y en cuánto se recupera'],
   ];
   const Y = [392, 482, 572, 662, 764];
   rows.forEach(([m, d], i) => {

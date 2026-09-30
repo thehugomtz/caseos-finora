@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S08 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S08"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .ct { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cs { font-size: 20px; color: var(--ink-3); }
+  .cl { font-size: 22px; color: var(--ink-2); }
+  .cl b { color: var(--ink); font-weight: 600; }
+  .cl.hot, .cl.hot b { color: var(--accent-text); }
+  .v0 { font-size: 22px; color: var(--ink-2); }
+  .ind { font-size: 20px; color: var(--ink-2); }
+  .pc { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S08" data-composition="cohort_slope (tamaño = peso) + ranked_bars" data-family="comparison" data-word-budget="110" data-page="7">
+  <header class="header">
+    <div class="kicker">Growth · dónde se concentra la pérdida</div>
+    <h1 class="headline">La pérdida está en el monto por cliente de cosechas de menor ticket</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; MRR pagado observado por cliente activo; cosecha = año del primer pago; churn persistente = no vuelve a pagar en 3 meses · T-041, T-038, T-040, T-002</span><span class="page"></span></footer>
+  <aside class="notes">La pérdida no es sectorial: entre dic-22 y oct-24 el MRR pagado observado por cliente activo baja en las 6 industrias, con caídas de −46,6% en Servicios profesionales, −45,6% en Restaurantes y −43,1% en Retail, frente a −18,8% en Producción, −15,5% en Tecnología y −14,4% en Salud. Se concentra en las cosechas: la base previa sostiene su monto (COP 97,0 mil por cliente en dic-22 y COP 97,4 mil en oct-24), mientras las cosechas 2023 y 2024 llegan a oct-24 con COP 46,3 mil y COP 43,0 mil por cliente y ya son 34,0% y 31,2% de los activos. La descomposición asigna el cambio sobre todo a esa composición de cosechas; el efecto dentro de las cosechas es menor y se concentra en la cosecha 2022 (de COP 81,0 mil a COP 65,4 mil por cliente) y en las altas de feb-22 (de COP 85,8 mil a COP 69,9 mil). El menor ticket de entrada ocurre dentro de cada industria y no por el mix de industrias, y el churn persistente casi no se mueve (0,98% en 2022 y 0,96% en 2024) aunque el observado baje de 3,52% a 2,04%. Límites: composición no es causa (F-093); el peso de la composición depende de la base (dic-22 o ene-22) y la base la decides tú (X-060); la descomposición va sin montos (corrección D-026); el efecto dentro de la cosecha 2022 puede ser real o reflejar pagos iniciales grandes de 2022 (H-042, X-062); quienes hacen churn pagaban más en promedio pero no en mediana (F-101, F-102); el churn observado de 2024 no coincide entre T-034 y T-002 (X-099, X-101); la industria no sustituye al canal ni a la ruta; la señal de Salud (C-008) va en anexo.</aside>
+</main>
+<script>
+P.draw('S08', (s, P) => {
+  // Plan: cohort slope cols 1–7 (dic-22 → oct-24, y = MRR per client, circle area = share of actives) ·
+  // industry ranked bars cols 9–12 · churn note in a bottom band. No decomposition amounts (D-026).
+  const XA = 380, XB = 860, Y0 = 380, Y1 = 800;
+  const y = (v) => Y1 - (v - 30) / (105 - 30) * (Y1 - Y0);
+  const r = (sh) => 44 * Math.sqrt(sh);   // area ∝ share of active clients
+  s.label(112, 322, 'MRR pagado por cliente, por cosecha (COP mil)', { anchor: 'bl', cls: 'ct' });
+  s.label(112, 330, 'Tamaño = % de clientes activos', { cls: 'cs' });
+  [XA, XB].forEach((x) => s.line(x, Y0 - 20, x, Y1 + 20, { stroke: 'rule', w: 1.5 }));
+  s.label(XA, Y1 + 30, 'dic-22', { anchor: 'tc', cls: 'label-sm' });
+  s.label(XB, Y1 + 30, 'oct-24', { anchor: 'tc', cls: 'label-sm' });
+
+  // T-041 (FIN-F-097): [cosecha, share dic-22, share oct-24, MRR/cliente dic-22, oct-24].
+  const C = [
+    { n: 'Base previa', a: 0.49067, b: 0.17759, va: 96.957, vb: 97.388, la: '97,0', tone: 'ink', w: 4 },
+    { n: 'Altas feb-22', a: 0.14921, b: 0.04827, va: 85.821, vb: 69.860, la: '85,8', tone: 'ink-3', w: 2.5, da: -24 },
+    { n: 'Cosecha 2022', a: 0.36011, b: 0.12217, va: 80.985, vb: 65.437, la: '81,0', tone: 'ink-3', w: 2.5, da: 24 },
+    { n: 'Cosecha 2023', a: 0, b: 0.33969, vb: 46.297, tone: 'accent', hot: true, dx: -30 },
+    { n: 'Cosecha 2024', a: 0, b: 0.31228, vb: 42.984, tone: 'accent', hot: true, dx: 30 },
+  ];
+  C.forEach((c, i) => {
+    const xa = XA + (c.da || 0), xb = XB + (c.dx || 0);
+    if (c.va) {
+      s.line(xa, y(c.va), xb, y(c.vb), { stroke: c.tone, w: c.w });
+      s.circle(xa, y(c.va), r(c.a), { fill: c.tone === 'ink' ? 'ink' : 'ink-4', stroke: 'bg', w: 1.5 });
+      s.label(XA - 60, y(c.va), c.la, { anchor: 'mr', cls: 'v0 num' });
+    }
+    s.circle(xb, y(c.vb), r(c.b), { fill: c.hot ? 'accent' : (c.tone === 'ink' ? 'ink' : 'ink-4'), stroke: c.hot ? 'ink' : 'bg', w: 1.5, id: `s08-c${i}`, focal: i === 3 });
+  });
+  // Direct labels at oct-24 (right of the column), spread where values are close.
+  const lab = (yy, html, hot) => s.label(XB + 64, yy, html, { anchor: 'ml', cls: `cl num${hot ? ' hot' : ''}`, w: 460 });
+  lab(y(97.388), '<b>Base previa</b> · 97,4');
+  lab(y(69.860) - 12, 'Altas feb-22 · 69,9');
+  lab(y(65.437) + 14, 'Cosecha 2022 · 65,4');
+  lab(y(46.297) - 16, '<b>Cosecha 2023</b> · 46,3 · 34,0% de activos', true);
+  lab(y(42.984) + 18, '<b>Cosecha 2024</b> · 43,0 · 31,2%', true);
+
+  // Industry ranked bars (T-038): variation dic-22 → oct-24, all six fall.
+  const X = 1400, BW = 180;
+  s.label(X, 322, 'Por industria, dic-22 → oct-24', { anchor: 'bl', cls: 'ct' });
+  s.label(X, 330, 'Baja en las 6', { cls: 'cs' });
+  const ind = [['Servicios prof.', 46.6], ['Restaurantes', 45.6], ['Retail', 43.1], ['Producción', 18.8], ['Tecnología', 15.5], ['Salud', 14.4]];
+  ind.forEach(([n, v], i) => {
+    const yy = 416 + i * 56;
+    s.label(X + 140, yy, n, { anchor: 'mr', cls: 'ind' });
+    s.rect(X + 152, yy - 13, BW * v / 50, 26, { fill: i < 3 ? 'ink-2' : 'ink-4', role: 'bar' });
+    s.label(X + 152 + BW * 0.94 + 10, yy, `−${String(v).replace('.', ',')}%`, { anchor: 'ml', cls: 'pc num' });
+  });
+  s.label(X, 752, 'El menor ticket ocurre dentro de cada industria, no por el mix.', { cls: 'nt', w: 408 });
+
+  // Churn: persistent exits barely move (T-002).
+  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
+  s.label(112, 904, '<b>No se asocia a salidas persistentes</b>: el churn observado baja de 3,52% a 2,04%; el persistente, de 0,98% a 0,96% (2022 → 2024).', { cls: 'nt', w: 1696 });
+});
+</script>
+</body>
+</html>

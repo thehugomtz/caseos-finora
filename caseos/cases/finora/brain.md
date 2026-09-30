@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-30T14:54:17-06:00 · motivo: Hugo trajo «La brecha clientes–monto se asocia a quién entra» (lámina 1 de finora-v3-20260929-212258) como lámina 2 del deck finora-v5-2026…
+> Actualizado: 2026-09-30T16:18:12-06:00 · motivo: Hugo pidió al Visual Storyteller cambios en las láminas 2, 6, 7, 11, 12, 13, 15, 16, 17, 19, 21 del deck finora-v5-20260930-112103 · vía Cl…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -184,6 +184,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **A-003** Propuesta de arquitectura v1.2 del workspace agentic (`finora-eda/docs/propuesta_arquitectura_v1.md`)
 - **A-004** Narrativa en borrador: Caso CFO · qué mide hoy el MRR (`finora-eda/narratives/NAR-20260928-150639-9b63.json`)
 - **A-005** Narrativa en borrador: Exploración General (`finora-eda/narratives/NAR-20260928-163219-5cba.json`)
+- … y 1 más
 
 ## Language Profile
 ```yaml
@@ -197,6 +198,8 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-30 16:18 · Hugo pidió al Visual Storyteller cambios en las láminas 2, 6, 7, 11, 12, 13, 15, 16, 17, 19, 21 del deck finora-v5-20260930-112103 · vía Claude: Hugo pidió ajustar las láminas donde tuvo dudas, reencuadrar la de cada hoja del árbol con su idea de volumen y tiempo (o un ribbon) y sumar lo que Claude identificó
+- 2026-09-30 16:16 · Hugo reordenó el deck finora-v5-20260930-112103: 15→6, 6→7, 7→15, 34→19, 19→20, 20→21, 21→22, 22→23, 23→24, 24→25, 25→26, 26→27, 27→28, 28→29, 29→30, 30→31, 31→32, 32→33, 33→34 · vía Claude: Hugo respondió «Va» a mover las láminas 15, 7 y 34 para que sigan su guion
 - 2026-09-30 14:54 · Hugo trajo «La brecha clientes–monto se asocia a quién entra» (lámina 1 de finora-v3-20260929-212258) como lámina 2 del deck finora-v5-20260930-112103 · vía Claude: Hugo pidió recuperar la lámina inicial del deck v3 («la lámina inicial… que describía el problema inicial»)
 - 2026-09-30 14:45 · Hugo reordenó el deck finora-v5-20260930-112103: 19→18, 20→19, 21→20, 22→21, 23→22, 24→23, 25→24, 26→25, 27→26, 28→27, 29→28, 18→29
 - 2026-09-30 14:45 · Hugo reordenó el deck finora-v5-20260930-112103: 8→5, 15→6, 5→7, 6→8, 7→9, 9→10, 10→11, 11→12, 17→15, 18→16, 19→17, 32→18, 16→19, 12→20, 20→21, 21→22, 22→23, 23→24, 24→25, 25→26, 26→27, 27→28, 28→29, 29→30, 30→31, 31→32
@@ -204,9 +207,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-30 13:49 · Deck finora-v5-20260930-112103: 34 slides · completed
 - 2026-09-30 13:00 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): retoma el deck v5 congelado a las 12:28 (34 láminas hechas)
 - 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): relanzado con el reuso por contenido corregido (15 láminas sin cambio)
-- 2026-09-30 11:21 · Hugo envió el Story Package al Visual Storyteller (finora-v5-20260930-112103) · vía Claude, delegado por Hugo (D-027): deck con su selección para 5 min, su paleta, portadas, separadores y anexos (D-026)
-- 2026-09-30 11:21 · Story Package v5 preparado para el Visual Storyteller (finora-v5-20260930-112103)
-- 2026-09-30 11:20 · Story marcada Ready (v2)
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

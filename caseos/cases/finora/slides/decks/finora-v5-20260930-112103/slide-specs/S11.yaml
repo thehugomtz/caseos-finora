@@ -6,11 +6,12 @@ slide:
   role_in_story: recommendation
   kicker: "Growth · hipótesis ToFu y BoFu · propuesta"
   headline: "Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso"
-  takeaway: "Cada rama tiene el dato que la valida o descarta; ninguno está en el caso; la prueba más rápida es etiquetar desde el CRM a los pagadores observados."
+  takeaway: "Cada rama tiene el dato que la valida o descarta; ninguno está en el caso; con cada etiqueta fechada, volumen y tiempo muestran dónde y cuándo cambió la brecha, y el primer paso es reetiquetar hacia atrás el histórico del CRM."
   question: "¿Qué dato valida o descarta cada hoja del árbol, y lo tenemos hoy?"
-  relationship: "each branch of the tree (same order) is MATCHED with its signature and minimum data; none EXISTS in the case today"
+  relationship: "each branch of the tree (same order) is MATCHED with its signature and minimum data; none EXISTS in the case today; volume and time per dated tag FRAME the search (ribbon)"
   evidence_type: comparison
-  composition: match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + fastest_test
+  composition: match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + ribbon (volumen y tiempo por etiqueta)
+  revision: "REV-20260930-161812: la banda «prueba más rápida» se vuelve un ribbon con la idea de Hugo (volumen y tiempo por etiqueta fechada) y la columna «Firma y dato mínimo» pasa a lenguaje simple"
   family: comparison
   alternatives_considered:
     - id: tree_repeated_with_data_leaves
@@ -20,28 +21,39 @@ slide:
       score: {fidelity: 2, focal: 2, evidence: 2, variety: 2, risk: -1}
       rejected_because: "las fuentes no están definidas en el caso; la matriz inventaría columnas"
   chosen_score: {fidelity: 3, focal: 2, evidence: 3, variety: 2, risk: 0}
-  focal_point: fastest_test
+  focal_point: ribbon
   visual_hierarchy:
-    1: la columna «no» en coral (ninguna hoja tiene su dato)
-    2: el dato mínimo de cada rama, en el mismo orden del árbol (números en acento)
-    3: la prueba más rápida (acento suave)
+    1: el ribbon a todo el ancho (acento suave + barra de acento) con la idea de Hugo y el primer paso
+    2: la columna «no» en coral (ninguna hoja tiene su dato)
+    3: el dato mínimo de cada rama en lenguaje simple, en el mismo orden del árbol (números en acento)
     4: el gasto no sirve de proxy
   objects:
-    - {id: branch_rows, kind: text, content: "1 Artefactos · 2 Mezcla · 3 Antes del SQL · 4 Después del SQL · 5 Cobro, con su firma y dato mínimo"}
+    - id: branch_rows
+      kind: text
+      content:
+        - "1 Artefactos · Leads con fecha, fuente y dominio, cruzados con clientes y leads previos: repetidos, no-prospectos y el volumen de cada etiqueta en el tiempo"
+        - "2 Mezcla (ToFu) · Cómo era cada lead al crearse (fuente, segmento, tamaño), no lo que Ventas opinó después: ¿entran más de los que siempre convierten poco?"
+        - "3 Antes del SQL · Cuánto tarda el primer contacto, cuántos leads carga cada SDR y cuántos llevan semanas sin avanzar"
+        - "4 Después del SQL (BoFu) · Cuántos SQL acepta el AE según quién los generó, y por qué se pierden, preguntado a los compradores"
+        - "5 Cobro · Cada Won ligado a su primer pago: cuántos ganados nunca pagan"
     - {id: status_column, kind: text, content: "¿En el caso? no × 5 (coral)"}
-    - {id: fastest_test, kind: text, content: "etiquetar desde el CRM, hacia atrás, a los pagadores ya observados"}
+    - {id: ribbon, kind: band, content: "Con cada etiqueta fechada (fuente, dominio, puerta, etapa), el volumen y el tiempo de cada una muestran dónde y cuándo cambió la brecha · Primer paso: reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados"}
   encodings:
     numbers_accent: "mismo orden del árbol (hilo con S10)"
     coral: "lo que no existe (guía de Hugo)"
-    accent_soft: "la siguiente acción"
+    accent_soft: "la idea que ordena la búsqueda y la siguiente acción (ribbon)"
   annotations:
-    - {at: fastest_test, text: "Prueba más rápida: etiquetar desde el CRM a los pagadores ya observados"}
+    - {at: ribbon, text: "Primer paso: reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados"}
+  hugo_words:
+    - "al detectar las variaciones por fecha y estas características se puede comenzar a inferir el problema por evolución y volumetría"
+    - "lo que sí puedo ver es relaciones de volumetría y temporalidad de todas las etiquetas que se pongan"
+    - "empezando por un reetiquetado del CRM del histórico se podría empezar a ver todo esto"
   layout_intent:
-    grid: "ramas cols 1–4; firma y dato cols 5–10; estado col 12; banda inferior"
-    reading_path: "fila por fila → la columna «no» → la prueba más rápida"
+    grid: "ramas cols 1–4; firma y dato cols 5–11 (máx. 2 líneas por fila); estado col 12; nota del proxy bajo las filas; ribbon cols 1–12"
+    reading_path: "fila por fila → la columna «no» → el ribbon"
     whitespace: "entre dato y estado (sin guías punteadas: las filas ya tienen hairline)"
-  text_budget: 130
-  must_show: ["mismo orden del árbol", "dato mínimo por rama", "ninguno está hoy", "prueba más rápida"]
+  text_budget: 210           # era 130; sube por la columna en lenguaje simple y el ribbon que pidió Hugo (REV-20260930-161812)
+  must_show: ["mismo orden del árbol", "dato mínimo por rama, en lenguaje simple", "ninguno está hoy", "volumen y tiempo por etiqueta fechada", "primer paso: reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados"]
   avoid: ["tabla sin orden", "cards por hipótesis", "cifras"]
   data: {source: "sin datos: propuesta (R-032, R-014)", values: []}
   notes: "Parte del dato puede estar en el CRM de Finora sin historia (F-128, H-076); parámetros por acordar; tocados vs no tocados asigna crédito (F-159)."

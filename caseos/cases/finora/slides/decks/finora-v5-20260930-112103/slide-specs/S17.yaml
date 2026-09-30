@@ -28,20 +28,21 @@ slide:
     3: MRR (clasifica cierres de mes) vs caja (solo efecto de cobro)
     4: la regla y las decisiones por escribir
   objects:
-    - {id: steps, kind: bar, content: "Lista · Pactado · Descuento · MRR neto · Facturado · Cobrado (esquema sin escala)"}
-    - {id: movements, kind: text, content: "cambio de tarifa · New/Expansión/Contracción/Churn · «Descuento» inicio y fin · efecto de cobro"}
+    - {id: steps, kind: bar, content: "Lista · Pactado · Descuento · MRR neto · Facturado · Cobrado (esquema sin escala; peldaños de 216 px para que quepa la definición del MRR neto)"}
+    - {id: net_step, kind: text, content: "MRR neto = pactado − descuento vigente: lo que el cliente se comprometió a pagar ese mes (REV-20260930-161812)"}
+    - {id: movements, kind: text, content: "cambio de tarifa · New/Expansión/Contracción/Churn · «Descuento» inicio y fin · ningún movimiento de MRR: solo efecto de cobro; concilia el monto pagado de hoy"}
     - {id: rule, kind: text, content: "sin cambio de suscripción → «Descuento»; si cambian ambos, primero la suscripción; quien sale con descuento es churn"}
   encodings:
     height: "esquemático: el valor baja peldaño a peldaño (sin escala)"
     outline: "caja (facturado, cobrado)"
     accent: "el peldaño Descuento"
   annotations:
-    - {at: steps, text: "MRR, de lista y neto: se clasifica comparando cierres de mes · Caja: solo efecto de cobro"}
+    - {at: steps, text: "MRR, de lista y neto: se clasifica comparando cierres de mes · Caja: explica el pago, nunca mueve el MRR"}
   layout_intent:
     grid: "encabezados cols 1–2; peldaños cols 3–12; regla a todo el ancho"
     reading_path: "izquierda → derecha, bajando; luego la regla"
     whitespace: "arriba a la derecha de los peldaños bajos"
-  text_budget: 130
+  text_budget: 150           # era 130; sube por la definición del MRR neto y la aclaración de caja (REV-20260930-161812)
   must_show: ["escalera con vigencias", "MRR vs caja", "regla de «Descuento» (C-020)", "reglas de negocio por escribir"]
   avoid: ["nombres de tabla en el lienzo", "cifras", "cards por peldaño"]
   data: {source: "sin datos: propuesta (R-034, R-011)", values: []}

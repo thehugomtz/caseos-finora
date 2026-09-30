@@ -19,30 +19,31 @@
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S00" data-composition="single_big_statement + section_tracker" data-family="editorial" data-word-budget="90" data-page="2">
+<main class="slide" data-slide="S00" data-composition="single_big_statement + section_tracker" data-family="editorial" data-word-budget="110" data-page="2">
   <header class="header">
-    <div class="kicker">Finora · crecimiento y revenue · borrador para CEO, CRO y CFO</div>
+    <div class="kicker">Finora · crecimiento y revenue · para CEO, CRO y CFO</div>
   </header>
   <h1 class="statement" id="s00-st" data-focal>La brecha clientes–monto se asocia a <span class="hl">quién entra</span></h1>
   <p class="lead" id="s00-lead">El porqué no está en los pagos: proponemos medir por funnel y separar descuento de suscripción.</p>
 
-  <footer class="footer"><span class="source">Borrador 3 · material de soporte propuesto, pendiente de aceptación · cifras: pagos cliente × mes de Finora, ene-22–oct-24, monto pagado observado</span><span class="page"></span></footer>
-  <aside class="notes">Abrimos con la respuesta. La brecha entre clientes y monto pagado coincide con quién entra (más primeros pagadores, con menor ticket), no con la base previa ni con salidas persistentes. El porqué del CRO (más leads sin más ventas) y del CFO (qué cambió en el MRR) no está en los datos de pagos: por eso la propuesta es de medición y de modelo de datos. El deck sigue tu guion: Overview → Growth → Revenue.</aside>
+  <footer class="footer"><span class="source">Cifras: pagos cliente × mes de Finora, ene-22–oct-24, monto pagado observado</span><span class="page"></span></footer>
+  <aside class="notes">Abrimos con la respuesta. La brecha entre clientes y monto pagado coincide con quién entra (más primeros pagadores, con menor ticket), no con la base previa ni con salidas persistentes. El porqué del CRO (más leads sin más ventas) y del CFO (qué cambió en el MRR) no está en los datos de pagos: por eso la propuesta es de medición y de modelo de datos. El deck sigue tu guion: Overview → Growth → Revenue → Data. En Data: el modelo de datos de hoy (tres tablas, todas de después del pago) frente al propuesto, el descuento como objeto propio y cómo darle seguimiento, por foro y con agentes.</aside>
 </main>
 <script>
 P.draw('S00', (s, P) => {
-  // Tracker: one hairline with three stops (cols 1, 5, 9), read left → right.
-  const Y = 752, xs = [P.grid.col(1), P.grid.col(5), P.grid.col(9)];
+  // Tracker: one hairline with four stops (cols 1, 4, 7, 10), read left → right.
+  const Y = 752, xs = [P.grid.col(1), P.grid.col(4), P.grid.col(7), P.grid.col(10)];
   s.line(P.grid.col(1), Y, P.grid.colEnd(12), Y, { stroke: 'rule', w: 1.5, arrow: 'end', headSize: 12 });
   const items = [
     ['1', 'Overview', 'Clientes 4,5× contra MRR pagado 2,8×; la base previa sostiene su monto.'],
     ['2', 'Growth', 'Más primeros pagadores con menor ticket; proponemos rutas, métricas por funnel y un árbol MECE para hallar el porqué.'],
     ['3', 'Revenue', 'El monto pagado no separa suscripción, descuento y cobro; proponemos un modelo que los registra aparte.'],
+    ['4', 'Data', 'Hoy, tres tablas de después del pago; proponemos una cuenta común con funnel y suscripción, y cómo darle seguimiento.'],
   ];
   items.forEach(([n, name, txt], i) => {
     s.dot(xs[i], Y, { r: 7, fill: 'ink' });
     s.label(xs[i], Y - 22, `<i>${n}</i>${name}`, { anchor: 'bl', cls: 'sec' });
-    s.label(xs[i], Y + 26, txt, { w: 470, cls: 'annotation' });
+    s.label(xs[i], Y + 26, txt, { w: 400, cls: 'annotation' });
   });
 });
 </script>

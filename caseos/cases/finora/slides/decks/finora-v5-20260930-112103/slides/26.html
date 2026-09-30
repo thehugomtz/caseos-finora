@@ -3,80 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S24 · Finora</title>
+<title>S23 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S24"] {
-  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .rr { font-size: 20px; color: var(--ink-2); margin-left: 8px; }
-  .zn { font-size: 20px; color: var(--ink-2); }
-  .zn b { color: var(--ink); font-weight: 600; }
-  .chip { background: var(--accent); color: var(--ink); padding: 6px 14px; font-size: 22px; font-weight: 600; }
-  .ttl { font-size: 30px; font-weight: 600; color: var(--ink); }
+[data-slide="S23"] {
+  .num { font-variant-numeric: tabular-nums; }
+  .avg { font-size: 22px; font-weight: 600; color: var(--ink); background: var(--bg); padding: 0 6px; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S24" data-composition="split_and_converge + reactivate_loop" data-family="process" data-word-budget="120" data-page="26">
+<main class="slide" data-slide="S23" data-composition="small_multiples_time + window_highlight" data-family="evidence" data-word-budget="100" data-page="26">
   <header class="header">
-    <div class="kicker">Anexo · rutas, puertas y medición anterior</div>
-    <h1 class="headline">Proponemos rutas Executive, Self Service e Hybrid, con puerta y canal fijos al entrar</h1>
+    <div class="kicker">Anexo · Overview</div>
+    <h1 class="headline">Gasto de S&amp;M y primeros pagadores van en sentidos distintos; cruzar fechas no atribuye ventas</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta de diseño (R-031): hoy el modelo no tiene leads, etapas, dueños, canal ni ruta · F-209, F-210, F-211, F-212, F-213, F-188, F-190, F-140, F-155, F-223, F-224, F-226</span><span class="page"></span></footer>
-  <aside class="notes">La unidad es el journey: cuenta × intento (varias personas de una misma empresa son un solo journey). Al entrar se fijan dos atributos que ya no cambian: la puerta (producto o CRM/Ventas) y el canal (outbound SDR, inbound «hablar con ventas», referido o partner, o signup por paid media, publicidad no web u orgánico). Mientras el journey está abierto, la ruta es provisional. La ruta se clasifica al final, por eventos: Executive si arranca con persona y nunca pasa por Checkout Self; Self Service si nunca interviene una persona; Hybrid A si arranca en el producto y después entra una persona; Hybrid B si arranca con persona y cierra por Checkout Self. Mientras el journey está abierto, la ruta es provisional. Reactivate no es otra ruta: es un loop para journeys estancados, con bandera, que no crea un New nuevo. Los clientes que vuelven a pagar son un loop de Revenue y se miden aparte. Las tasas se comparan entre puertas (fijas al entrar), no entre rutas: la ruta se define por lo que pasó y eso sesga la conversión de Hybrid (H-050). Abierto: qué cuenta como intervención de persona (Q-063); si existe compra self-serve sin persona o prueba gratis (Q-046).</aside>
+  <footer class="footer"><span class="source">Fuente: archivo S&amp;M_spend y pagos cliente × mes de Finora; S&amp;M en unidad reportada (u), sin escala a COP; primeros pagadores del mes siguiente al gasto · F-220, F-214, F-219, F-118, F-066, F-063</span><span class="page"></span></footer>
+  <aside class="notes">En 2023 jun–dic hay 60,6 primeros pagadores por mes, frente a 45,2 en ene–may. En esos mismos tramos, la Generación de Demanda (ToFu) baja de 1,73 u a 0,82 u por mes y el S&amp;M total, de 3,01 u a 1,44 u. La correlación en niveles entre S&amp;M total y primeros pagadores del mismo mes es −0,57; en cambios mes a mes, el mayor valor absoluto es 0,27 (p mínimo 0,14, ninguna significativa): no hay una relación positiva que leer. Apoyo: con un mes de rezago, el mes de mayor S&amp;M (oct-22, 3,75) precede a 19 altas y el de menor S&amp;M (ago-23, 1,10) a 56. El archivo viene en unidades reportadas (u), sin escala a COP, y hasta may-23 Team es un 12% fijo del total durante 17 meses; PayrollExpenses es negativo en 5 meses y Freelance queda en cero desde jun-23. No se puede decidir si SoftwareTools y Freelance son Habilitación o producto (F-068). Es coincidencia temporal, no efecto (F-119, F-222). Propuesta: que Finora documente la unidad del gasto y lo registre por canal y campaña (campaign_spend, C-013).</aside>
 </main>
 <script>
-P.draw('S24', (s, P) => {
-  // Entry (cols 1–3) → split → four routes (cols 4–8) → knot (col 10) → common right side (cols 11–12).
-  const SY = 625, SX = 600, L0 = 700, L1 = 1290, LM = 995, KX = 1440;
-  // The entry carries two fixed attributes into the split: the chip sits on the entry line.
-  s.label(112, SY - 72, 'Entrada', { anchor: 'bl', cls: 'ttl' });
-  s.label(112, SY - 40, 'journey = cuenta × intento', { anchor: 'ml', cls: 'label-sm' });
-  s.label(112, SY, 'Fijos al entrar', { anchor: 'ml', cls: 'chip', id: 's24-chip', focal: true });
-  s.line(s.box('#s24-chip').r + 8, SY, SX, SY, { stroke: 'ink-3', w: 2 });
-  s.dot(SX, SY, { r: 6, fill: 'ink-3' });
-  s.label(112, SY + 44, '<b>Puerta</b> · producto o CRM/Ventas', { cls: 'annotation', w: 420 });
-  s.label(112, SY + 92, '<b>Canal</b> · outbound SDR, inbound, referido o partner, signup', { cls: 'annotation', w: 420 });
+P.draw('S23', (s, P) => {
+  // F-220: S&M total del mes (feb-22 → sep-24) y primeros pagadores del mes siguiente (mar-22 → oct-24). Índice 0 = ene-22.
+  const sm = [null, 2.3, 2.3, 2.351, 2.7, 2.351, 2.2, 3.251, 3.5, 3.752, 3.0, 3.251, 3.251, 2.5, 2.9, 2.951, 3.451, 1.8, 1.751, 1.1, 1.252, 1.351, 1.3, 1.5, 1.851, 2.0, 1.751, 2.251, 2.351, 2.0, 1.8, 1.9, 1.851, null];
+  const al = [null, null, 30, 19, 38, 33, 32, 26, 17, 32, 19, 26, 60, 30, 38, 51, 47, 46, 65, 66, 56, 64, 72, 55, 57, 32, 43, 69, 66, 84, 48, 56, 49, 50];
+  // F-214 windows: [from, to, S&M/mes, primeros pagadores/mes]
+  const win = [[2, 11, 2.866, 27.2], [12, 16, 3.011, 45.2], [17, 23, 1.436, 60.6], [24, 33, 1.976, 55.4]];
 
-  // Pre-knot zone: nothing here is measured in today's data.
-  s.rect(672, 340, 654, 522, { fill: 'surface' });
-  s.label(L0, 366, '<b>Antes del nudo</b>: nada se mide hoy', { anchor: 'ml', cls: 'zn' });
+  const X0 = 200, W = 980;
+  const A = s.chart({ x: X0, y: 390, w: W, h: 210 }), B = s.chart({ x: X0, y: 706, w: W, h: 210 });
+  const x = A.linear([0, 33], { axis: 'x' }), ys = A.linear([0, 4]), ya = B.linear([0, 90]);
 
-  const routes = [
-    ['Executive', 'persona de punta a punta', 452, ['P', 'P']],
-    ['Hybrid B', 'arranca con persona; cierra en Checkout Self', 572, ['P', 'S']],
-    ['Hybrid A', 'arranca en producto; luego entra una persona', 692, ['S', 'P']],
-    ['Self Service', 'nunca interviene una persona', 812, ['S', 'S']],
-  ];
-  routes.forEach(([name, rule, y, segs]) => {
-    s.path(`M${SX},${SY} C${SX + 60},${SY} ${L0 - 50},${y} ${L0},${y}`, { stroke: 'ink-3', w: 2 });
-    segs.forEach((k, j) => {
-      const a = j ? LM + 4 : L0, b = j ? L1 : LM - 4;
-      s.line(a, y, b, y, k === 'P' ? { stroke: 'ink', w: 7, cap: 'butt' } : { stroke: 'ink-3', w: 2 });
-    });
-    s.path(`M${L1},${y} C${L1 + 80},${y} ${KX - 90},${SY} ${KX - 18},${SY}`, { stroke: 'ink-3', w: 2 });
-    s.label(L0, y - 16, `<span class="rn">${name}</span><span class="rr">${rule}</span>`, { anchor: 'bl', cls: 'label' });
+  // Focal: the window where they move apart (2023 jun–dic).
+  const b0 = x(16.5), b1 = x(23.5);
+  s.rect(b0, 358, b1 - b0, 572, { fill: 'accent', opacity: 0.24, role: 'area', id: 's23-band', focal: true });
+  s.label(b0 + 10, 366, '<b>2023 jun–dic</b>', { cls: 'label-sm', color: 'ink' });
+
+  A.gridY(ys, [1, 2, 3]); B.gridY(ya, [30, 60]);
+  A.axisY(ys, [0, 2, 4], { format: (v) => `${v} u` });
+  B.axisY(ya, [0, 30, 60, 90]);
+  s.line(X0, A.b, X0 + W, A.b, { stroke: 'ink-4', w: 1.5 });
+  s.line(X0, B.b, X0 + W, B.b, { stroke: 'ink-4', w: 1.5 });
+  s.label(X0, 340, 'S&amp;M total por mes, unidad reportada (u)', { anchor: 'bl', cls: 'label' });
+  s.label(X0, 660, 'Primeros pagadores por mes', { anchor: 'bl', cls: 'label' });
+
+  const series = (arr, sc) => {
+    const pts = arr.map((v, i) => (v == null ? null : [x(i), sc(v)])).filter(Boolean);
+    s.polyline(pts, { stroke: 'ink-4', w: 2 });
+    pts.forEach((p) => s.dot(p[0], p[1], { r: 3.5, fill: 'ink-4' }));
+  };
+  series(sm, ys); series(al, ya);
+
+  // Window averages as bold steps.
+  win.forEach(([f, t, m, n]) => {
+    s.line(x(f - 0.5), ys(m), x(t + 0.5), ys(m), { stroke: 'ink', w: 4, cap: 'butt' });
+    s.line(x(f - 0.5), ya(n), x(t + 0.5), ya(n), { stroke: 'ink', w: 4, cap: 'butt' });
   });
-  // Key for the lane weight (top-right of the panel).
-  s.line(1040, 360, 1080, 360, { stroke: 'ink', w: 7, cap: 'butt' });
-  s.label(1090, 360, 'con persona (SDR/AE)', { anchor: 'ml', cls: 'zn' });
-  s.line(1040, 390, 1080, 390, { stroke: 'ink-3', w: 2 });
-  s.label(1090, 390, 'sin persona', { anchor: 'ml', cls: 'zn' });
+  s.label(x(14), ys(3.011) - 10, '3,01', { anchor: 'bc', cls: 'avg num' });
+  s.label(x(20), ys(1.436) + 10, '1,44', { anchor: 'tc', cls: 'avg num' });
+  s.label(x(14), ya(45.2) + 10, '45,2', { anchor: 'tc', cls: 'avg num' });
+  s.label(x(20), ya(60.6) - 10, '60,6', { anchor: 'bc', cls: 'avg num' });
 
-  // Knot: first payment, the only common thing measured today (solid).
-  s.circle(KX, SY, 16, { fill: 'ink', id: 's24-knot' });
-  s.line(KX + 22, SY, 1790, SY, { stroke: 'ink', w: 3, arrow: 'end' });
-  s.label(1486, SY - 18, 'Desde el nudo se compara por puerta, no por ruta', { anchor: 'bl', cls: 'annotation', w: 300 });
-  s.label(1486, SY + 20, '<b>Nudo: primer pago</b>, lo único que hoy se mide', { cls: 'zn', w: 300 });
-  s.label(1486, SY + 96, 'La ruta se clasifica al final, por eventos', { cls: 'annotation', w: 300 });
+  [[0, 'ene-22'], [12, 'ene-23'], [17, 'jun-23'], [24, 'ene-24'], [33, 'oct-24']].forEach(([i, t]) => s.label(x(i), B.b + 14, t, { anchor: 'tc', cls: 'label-sm' }));
 
-  // Reactivate: a loop over stalled journeys, not a fourth route.
-  s.path('M1180,866 C1180,940 850,940 850,872', { stroke: 'ink-3', w: 2, arrow: 'end' });
-  s.label(1015, 944, 'Reactivate: loop de estancados; vuelve a su etapa sin crear un New', { anchor: 'tc', cls: 'label-sm', w: 640, align: 'center' });
+  // Reading notes, cols 9–12.
+  const X = P.grid.col(9) + 40, w = 500;
+  s.label(X, 390, 'Correlación en niveles <b>−0,57</b>; mes a mes, ninguna significativa (|r| ≤ 0,27).', { cls: 'annotation', w });
+  s.label(X, 560, 'Gasto en unidades reportadas, sin escala a COP; hasta may-23, Team es 12% fijo del total.', { cls: 'annotation', w });
+  s.label(X, 730, '<b>Propuesta</b>: registrar el gasto por canal y campaña y leerlo contra entradas y Won por cohorte.', { cls: 'annotation', w });
+  s.line(X - 24, 390, X - 24, 820, { stroke: 'rule', w: 1.5 });
 });
 </script>
 </body>

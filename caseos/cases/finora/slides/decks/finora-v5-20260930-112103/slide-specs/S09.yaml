@@ -28,7 +28,15 @@ slide:
     4: el proxy de hoy en coral y lo que existe solo en total
   objects:
     - {id: metric_rows, kind: text, content: "volumen y tasa · capacidad · estancamiento · valor y calidad · eficiencia"}
-    - {id: efficiency_link, kind: path, content: "CAC y payback por ruta → repartir el S&M entre rutas y canales"}
+    - id: cro_decisions      # REV-20260930-161812: Hugo pidió que cada decisión se entienda sola (máx. 2 líneas por fila)
+      kind: text
+      content:
+        - "¿Faltan leads o no avanzan? Saberlo antes de pedir más SDR/AE o gasto"
+        - "¿No avanzan por falta de atención o porque no iban a comprar? Se arreglan distinto"
+        - "Qué tramo y qué dueño arreglar primero"
+        - "En qué puertas de entrada conviene que intervenga un SDR/AE y cuáles dejar en Self Service"
+        - "Repartir el presupuesto de S&M entre rutas y canales, según cuánto cuesta ganar un cliente y en cuánto se recupera"
+    - {id: efficiency_link, kind: path, content: "CAC y payback por ruta → repartir el presupuesto de S&M entre rutas y canales, según cuánto cuesta ganar un cliente y en cuánto se recupera"}
     - {id: proxy_today, kind: text, content: "T-036: S&M por alta 0,105 u → 0,036 u (−66%); no es CAC"}
     - {id: exists_today, kind: text, content: "MRR pagado y su puente, activos, ARPA, churn observado, cohortes (solo en total)"}
   encodings:
@@ -41,7 +49,7 @@ slide:
     grid: "métricas cols 1–5; flechas cols 6–7; decisiones cols 8–12"
     reading_path: "cada fila de izquierda a derecha; de arriba (entrada) a abajo (dinero)"
     whitespace: "entre las flechas"
-  text_budget: 125
+  text_budget: 165           # era 125; sube porque las decisiones del CRO ahora se explican solas (REV-20260930-161812)
   must_show: ["métricas que hoy no existen", "eficiencia", "decisión que habilita cada una", "por qué S&M por alta no es CAC"]
   avoid: ["tabla de métricas sin decisión", "semáforo repetido del anexo", "cifras fuera de data/"]
   data: {source: "data/FIN-F-081.yaml (T-036)", values: "0,105 u · 0,036 u · −66%"}

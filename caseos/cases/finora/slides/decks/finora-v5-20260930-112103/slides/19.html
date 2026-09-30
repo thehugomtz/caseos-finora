@@ -3,90 +3,88 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S16 · Finora</title>
+<title>S32 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S16"] {
+[data-slide="S32"] {
   .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .og { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .oh { font-size: 26px; font-weight: 600; color: var(--ink); }
-  .of { font-size: 22px; line-height: 1.55; color: var(--ink); }
-  .os { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
-  .ch { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .ch span { display: block; font-weight: 400; font-size: 20px; color: var(--ink-2); margin-top: 2px; }
-  .cv { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .cv b { color: var(--ink); font-weight: 600; }
-  .im { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .im b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; }
+  .src { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .src span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
+  .ly { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .hb { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .tb { font-family: var(--font-mono); font-size: 20px; line-height: 1.35; color: var(--ink); }
+  .sp { font-size: 22px; color: var(--ink); }
+  .sp code { font-family: var(--font-mono); font-size: 22px; font-weight: 600; }
+  .mt { font-size: 22px; line-height: 1.3; color: var(--ink); }
+  .mt code { font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--ink); }
+  .mt span { display: block; font-size: 20px; line-height: 1.3; color: var(--ink-2); margin-top: 6px; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S16" data-composition="object_anatomy (orígenes → objeto propio → aplicación) + implications_strip" data-family="operating_model" data-word-budget="130" data-page="19">
+<main class="slide" data-slide="S32" data-composition="from_to_architecture" data-family="operating_model" data-word-budget="215" data-page="19">
   <header class="header">
-    <div class="kicker">Revenue · cómo introducir descuentos · propuesta</div>
-    <h1 class="headline">El descuento se registra como objeto propio, con origen, source y fecha de fin</h1>
+    <div class="kicker">Data · modelo de datos · propuesta</div>
+    <h1 class="headline">Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (R-034, R-021); el histórico no trae tarifas ni descuentos; 44% de 751 churns observados: T-076 · F-150–F-154, F-174, F-233–F-237</span><span class="page"></span></footer>
-  <aside class="notes">Mecanismo Propuesto: cada descuento se registra como objeto propio, con tipo, valor, duración, fecha de inicio y de fin, motivo, aprobador y origen exclusivo (promoción digital o física, negociación, retención o partner), separado de la cantidad contratada y del precio de lista, y se lee desde la factura; el modelo separa la oferta, el código que la distribuye y el descuento aplicado con su vigencia. El source se captura en la adquisición de todos los clientes, no solo en el descuento, y el canal asignado al código se guarda aparte; negociación, retención y partner llevan registro propio, para que un precio especial no esconda un descuento ni un downgrade de retención se confunda con uno. Cómo pega el descuento en el MRR no es un estándar de mercado: es una convención que el CFO decide y declara, y las herramientas revisadas no separan por sí solas descuento de cambio de suscripción. Implicaciones Multidisciplinarias: con descuentos, MRR neto, revenue reconocido y caja pueden separarse según el tipo de contrato; el descuento cambia la composición de las cohortes, que hay que marcar y medir contra un grupo comparable; y el puente actual ya mezcla interrupciones con bajas (44% de los 751 churns observados vuelve a pagar al mes siguiente), lo mismo que un descuento que vence volvería a mezclar si no tiene fecha de fin. Límites: es propuesta; no se afirma que hubo descuentos; la convención la declara el CFO y se aparta del default del mercado (F-236); qué vista aplica depende de si los contratos son mensuales cancelables o a plazo fijo (F-153); la relación entre descuento y clientes de menor valor es evidencia externa (F-154); si el source no se captura para todos, el código quedaría como única atribución (H-073); el revenue que dejamos de capturar se mide hacia adelante. La regla de clasificación y la convención en detalle están en el anexo (C-018, C-020).</aside>
+  <footer class="footer"><span class="source">Propuesta (R-033, C-013): diseño, no algo construido; mide hacia adelante (F-242) · 44%: T-096, 751 churns observados, mar-22–oct-24 · F-136, F-144, F-145, F-146, F-191, F-238–F-241</span><span class="page"></span></footer>
+  <aside class="notes">Qué limita hoy: tres fuentes, todas de después del pago, sin canal, etapa, plan ni descuento. Pagos (cliente × mes: customer_id, month, amount_cop) responde cuánto pagó cada cliente cada mes, el puente de monto pagado y las cohortes por primer pago; no responde nada de quien no pagó, ni plan, precio o descuento, ni si un cero es cancelación, mora o desfase (44% de los 751 churns observados vuelve a pagar al mes siguiente), ni si un pico es prepago o expansión. Industria (cliente, ID en otro formato) responde el corte por industria. Gasto S&amp;M (mes × rubro, sin unidad) responde el gasto por rubro; no canal ni campaña. Ninguna responde canal, puerta, etapa, intervención, tiempo de cierre ni estancamiento. To-be: una espina y tres capas. Espina: account (una fila por cuenta) y account_xref (sistema + ID de origen + inicio de vigencia), que une CRM, producto, facturación y los IDs de hoy. Demanda: channel, campaign, touch (con UTMs), campaign_member y campaign_spend (con moneda). Comercial: person, lead, opportunity, stage_history (de, a, cuándo y quién), activity y assignment. Producto y facturación: product_event, subscription, subscription_item_version (contratado), discount (descontado), invoice (facturado) y payment (cobrado). Dos tablas de análisis salen de ahí. funnel_entry tiene una fila por cada vez que una cuenta entra al funnel, con su puerta, su ruta y la fecha de cada hito (registro, primer toque, SQL, Won, primer pago): de ahí salen las métricas del funnel. account_month tiene una fila por cuenta y mes, con el estado de la suscripción, el MRR de lista, el descuento, el neto, lo facturado y lo cobrado: de ahí sale el puente de MRR, que se concilia cada mes con el monto pagado de hoy. Qué habilita: medir el funnel de la entrada al pago por puerta, CAC y payback por canal, y un puente de MRR que no mezcla descuento ni cobro. Seis reglas son decisiones de negocio por escribir antes de construir (F-241): orden de puerta, cuándo una entrada es nueva, estados New/Working/Engaged, ventana W, umbral de estancamiento y base del puente. R-033 trata Reactivate como puerta y C-005 como loop: alinear antes de construir. La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024 (F-191).</aside>
 </main>
 <script>
-P.draw('S16', (s, P) => {
-  // Plan: Mecanismo Propuesto — origins cols 1–2 → the discount object (accent, cols 4–6) → offer/code/applied
-  // chain cols 8–9 · CFO convention cols 10–12 · Implicaciones Multidisciplinarias in a bottom strip.
-  s.label(112, 318, 'Mecanismo Propuesto', { anchor: 'bl', cls: 'cap' });
-
-  // The object: its own record, one origin, read from the invoice.
-  const OX = 560, OY = 372, OW = 420, OH = 300;
-  s.rect(OX, OY, OW, OH, { fill: 'none', stroke: 'ink', w: 2 });
-  s.rect(OX, OY, OW, 56, { fill: 'accent', stroke: null, id: 's16-obj', focal: true });
-  s.label(OX + 22, OY + 28, 'Descuento · objeto propio', { anchor: 'ml', cls: 'oh' });
-  s.label(OX + 22, OY + 76, 'tipo · valor · duración<br><b>inicio y fin</b><br>motivo · aprobador<br><b>un solo origen</b>', { cls: 'of', w: OW - 44 });
-  s.label(OX + 22, OY + OH - 18, 'aparte de lo contratado y de la lista; se lee de la factura', { anchor: 'bl', cls: 'os', w: OW - 44 });
-
-  // Origins (exclusive): each discount has exactly one.
-  const O = ['Promoción digital', 'Promoción física', 'Negociación', 'Retención', 'Partner'];
-  O.forEach((t, i) => {
-    const y = 402 + i * 60;
-    s.label(112, y, t, { anchor: 'ml', cls: 'og', id: `s16-o${i}` });
-    s.connect(`#s16-o${i}`, [OX - 4, OY + 90 + i * 40], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 12 });
+P.draw('S32', (s, P) => {
+  // Plan: as-is cols 1–3 (solid = exists) + what limits it → arrow col 4 → to-be cols 5–12: three dashed layers
+  // hang from the accent account spine; two analysis tables below, each explained in one plain line, and what the
+  // proposal enables.
+  s.label(112, 318, 'Hoy · as-is', { anchor: 'bl', cls: 'cap' });
+  const srcs = [['Pagos', 'cliente × mes'], ['Industria', 'cliente'], ['Gasto S&amp;M', 'mes × rubro, sin unidad']];
+  srcs.forEach(([n, g], i) => {
+    const y = 338 + i * 104;
+    s.rect(112, y, 360, 84, { fill: 'none', stroke: 'ink-3', w: 1.5 });
+    s.label(132, y + 42, `${n}<span>${g}</span>`, { anchor: 'ml', cls: 'src' });
   });
+  s.label(112, 662, '<b>Qué limita hoy</b>: las tres son de después del pago: sin canal, etapa, plan ni descuento, y sin saber si un cero es cancelación o mora (44% de los churns vuelve a pagar al mes siguiente)', { cls: 'nt', w: 380 });
 
-  // Offer → code → applied discount (with validity); source of every acquisition kept apart.
-  const CX = 1056;
-  const chain = [['Oferta', ''], ['Código', 'con su canal'], ['Descuento aplicado', 'con su vigencia']];
-  chain.forEach(([t, sub], i) => {
-    const y = 404 + i * 92;
-    s.label(CX, y, `${t}${sub ? `<span>${sub}</span>` : ''}`, { anchor: 'ml', cls: 'ch', id: `s16-c${i}` });
-    if (i) s.line(CX + 8, y - 64, CX + 8, y - 26, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 9 });
-  });
-  // The object is modelled as this chain: a brace groups offer → code → applied discount, tied to the object.
-  const U = s.union('#s16-c0,#s16-c1,#s16-c2');
-  s.bracket('#s16-c0,#s16-c1,#s16-c2', { side: 'left', style: 'curly', offset: 14, depth: 16, tone: 'ink-3', w: 2 });
-  s.line(OX + OW, U.cy, U.l - 14 - 16 - 4, U.cy, { stroke: 'ink-3', w: 2 });
-  s.label(CX, 632, '<b>Source del alta</b>, en todos los clientes', { cls: 'cv', w: 360 });
+  const W = 352, SPY = 620, SPH = 48;
+  // from → to
+  s.line(500, SPY + SPH / 2, 640, SPY + SPH / 2, { stroke: 'ink-3', w: 3, arrow: 'end', headSize: 16 });
 
-  // CFO convention.
-  s.line(1452, 372, 1452, 672, { stroke: 'rule', w: 1.5 });
-  s.label(1484, 372, 'Cómo pega en el MRR <b>no es estándar</b>: <b>el CFO lo decide y lo declara</b>', { cls: 'cv', w: 324 });
-
-  // Implicaciones Multidisciplinarias.
-  s.line(112, 736, 1808, 736, { stroke: 'rule', w: 1.5 });
-  s.label(112, 758, 'Implicaciones Multidisciplinarias', { cls: 'cap' });
-  const IM = [
-    ['MRR neto, revenue y caja', 'pueden separarse según el tipo de contrato'],
-    ['Cohortes con descuento', 'se marcan y se miden contra un grupo comparable'],
-    ['Fecha de fin obligatoria', 'sin ella se mezcla, como hoy: 44% de 751 churns vuelve a pagar'],
+  // To-be.
+  s.label(688, 318, 'Propuesta · to-be', { anchor: 'bl', cls: 'cap' });
+  const L = [
+    { x: 688, n: 'Demanda', hb: '→ entradas, win rate y costo por Won por canal', tb: ['touch', 'channel', 'campaign', 'campaign_spend'] },
+    { x: 1072, n: 'Funnel comercial', hb: '→ conversión, tiempos, carga y handoff por etapa', tb: ['lead', 'opportunity', 'stage_history', 'activity', 'assignment'] },
+    { x: 1456, n: 'Suscripción y facturación', hb: '→ churn por cancelación vs mora; MRR de lista y neto', tb: ['subscription', 'subscription_item_version', 'discount_grant', 'invoice', 'payment'] },
   ];
-  IM.forEach(([h, t], i) => {
-    const x = 112 + i * 576;
-    if (i) s.line(x - 24, 806, x - 24, 900, { stroke: 'rule', w: 1.5 });
-    s.label(x, 806, `<b>${h}</b>${t}`, { cls: 'im', w: 520 });
+  L.forEach(({ x, n, hb, tb }) => {
+    s.label(x, 338, n, { cls: 'ly' });
+    s.label(x, 374, hb, { cls: 'hb', w: W });
+    s.rect(x, 444, W, 160, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
+    s.label(x + 20, 458, tb.join('<br>'), { cls: 'tb', w: W - 40 });
+    s.line(x + W / 2, 604, x + W / 2, SPY, { stroke: 'ink-3', w: 2 });
   });
+
+  // The spine: one account key that joins CRM, product, billing and today's IDs.
+  s.rect(688, SPY, 1120, SPH, { fill: 'accent', id: 's32-spine', focal: true });
+  s.label(708, SPY + SPH / 2, '<code>account · account_xref</code>  —  llave común de cuenta', { anchor: 'ml', cls: 'sp' });
+
+  // Analysis tables (marts), each explained in one plain line (R-033).
+  const M = [
+    { x: 688, t: '<code>funnel_entry</code> → métricas del funnel<span>Una fila por cada vez que una cuenta entra al funnel, con su puerta, su ruta y la fecha de cada hito (registro, primer toque, SQL, Won, primer pago)</span>' },
+    { x: 1256, t: '<code>account_month</code> → puente de MRR<span>Una fila por cuenta y mes: estado de la suscripción, MRR de lista, descuento, neto, facturado y cobrado; se concilia cada mes con el monto pagado de hoy</span>' },
+  ];
+  const MY = 704, MH = 142;
+  M.forEach(({ x, t }) => {
+    s.line(x + 60, SPY + SPH, x + 60, MY - 4, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 11 });
+    s.rect(x, MY, 552, MH, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash' });
+    s.label(x + 20, MY + 16, t, { cls: 'mt', w: 512 });
+  });
+  s.label(688, MY + MH + 22, '<b>Qué habilita</b>: medir el funnel de la entrada al pago por puerta · CAC y payback por canal · un puente de MRR que no mezcla descuento ni cobro', { cls: 'nt', w: 1120 });
 });
 </script>
 </body>

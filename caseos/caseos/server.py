@@ -731,11 +731,22 @@ def deck_slide_files(cid: str, deck_id: str):
 
 class OrderBody(BaseModel):
     order: list[str]
+    via: str = ""
 
 
 @app.post("/api/cases/{cid}/slides/{deck_id}/order")
 def deck_order(cid: str, deck_id: str, body: OrderBody):
-    return deckedit.reorder(S(cid), deck_id, body.order)
+    return deckedit.reorder(S(cid), deck_id, body.order, via=body.via)
+
+
+class RevisionBody(BaseModel):
+    changes: list                      # [{file: "NN.html", request: "what Hugo wants changed"}]
+    via: str = ""
+
+
+@app.post("/api/cases/{cid}/slides/{deck_id}/revise")
+def deck_revise(cid: str, deck_id: str, body: RevisionBody):
+    return storyteller.submit_revision(S(cid), deck_id, body.changes, via=body.via)
 
 
 class SlideTextBody(BaseModel):

@@ -136,3 +136,55 @@ def test_page_numbers_follow_the_position(deck):
     (deck / "slides" / "03.html").write_text('<main class="slide" data-slide="S3"><p>sin pie</p></main>', encoding="utf-8")
     assert deckedit.paginate(deck) == ["01", "02"]                  # 03 shows no number: left alone
     assert 'data-page="2"' in p.read_text(encoding="utf-8") and deckedit.paginate(deck) == []
+
+
+def test_hugo_asks_the_storyteller_for_changes_on_some_slides(case, deck, monkeypatch):
+    submitted = []
+    monkeypatch.setattr(storyteller.jobs, "submit", lambda cid, kind, title, params, agent="": submitted.append((title, params))
+                        or type("J", (), {"id": "JOB-1"})())
+    with pytest.raises(StoreError):
+        storyteller.submit_revision(case, "DECK-1", [{"file": "02.html", "request": "más claro"}])     # not finished yet
+    (deck / "presentation.html").write_text("<html></html>", encoding="utf-8")
+    for bad in ([{"file": "09.html", "request": "x"}], [{"file": "02.html", "request": " "}],
+                [{"file": "02.html", "request": "a"}, {"file": "02.html", "request": "b"}], []):
+        with pytest.raises(StoreError):
+            storyteller.submit_revision(case, "DECK-1", bad)
+    out = storyteller.submit_revision(case, "DECK-1", [{"file": "02.html", "request": "Explica la decisión 2: «¿para qué?»"},
+                                                        {"file": "03.html", "request": "Pon un ribbon con volumen y tiempo"}],
+                                      via="vía Claude (pedido de Hugo)")
+    rid = out["revision"]
+    assert submitted[0][0].startswith("Visual Storyteller · cambios en láminas 2, 3") and submitted[0][1]["revision"] == rid
+    assert (deck / "slides" / ".history" / f"02.{rid}.html").exists()                  # the version before the change
+    d = next(x for x in storyteller.decks(case) if x["id"] == "DECK-1")
+    assert d["status"] == "running" and d["revising"]["files"] == ["02.html", "03.html"]
+    with pytest.raises(StoreError):                                                    # one Storyteller job at a time
+        storyteller.submit_revision(case, "DECK-1", [{"file": "01.html", "request": "x"}])
+    rev = storyteller.read_yaml(deck / "revisions" / f"{rid}.yaml")
+    ask = storyteller.revision_ask(deck, rev, critic=True)
+    assert "### slides/02.html" in ask and "«¿para qué?»" in ask and "--only 02,03" in ask and "independent-slide-critic" in ask
+
+    p = deck / "slides" / "02.html"                                                     # the Storyteller edits one of them
+    p.write_text(p.read_text(encoding="utf-8").replace("Growth · métricas", "Growth · métricas y decisiones"), encoding="utf-8")
+    rebuilt = []
+    monkeypatch.setattr(deckedit, "rebuild", lambda deck, pdf=False: rebuilt.append(pdf) or {"ok": True})
+    res = storyteller.finish_revision(case, "DECK-1", rid, final="02: kicker → «Growth · métricas y decisiones»", cost=1.25)
+    assert res["revision"]["changed"] == ["02.html"] and res["revision"]["untouched"] == ["03.html"]
+    assert rebuilt == [True]                                                           # its bundle was older than the edit
+    d = next(x for x in storyteller.decks(case) if x["id"] == "DECK-1")
+    assert d["status"] == "completed" and d["revising"] is None and d["revisions"] == 1
+    edits = read_jsonl(deck / "edits.jsonl")
+    assert edits[-1]["kind"] == "revision" and edits[-1]["files"] == ["02.html"] and edits[-1]["by"] == "visual_storyteller"
+    log = read_jsonl(case.root / "audit/activity.jsonl")
+    assert any("Hugo pidió al Visual Storyteller cambios en las láminas 2, 3" in (e.get("summary") or "") and "vía Claude" in e["summary"]
+               for e in log)
+    assert any(e["actor"] == "visual_storyteller" and "aplicados en las láminas 2 del deck" in e["summary"] for e in log)
+
+
+def test_a_revision_cut_by_a_restart_gives_the_deck_back(case, deck, monkeypatch):
+    monkeypatch.setattr(storyteller.jobs, "submit", lambda *a, **k: type("J", (), {"id": "JOB-X"})())
+    (deck / "presentation.html").write_text("<html></html>", encoding="utf-8")
+    rid = storyteller.submit_revision(case, "DECK-1", [{"file": "01.html", "request": "x"}])["revision"]
+    assert storyteller.recover_decks(case) == 1
+    d = next(x for x in storyteller.decks(case) if x["id"] == "DECK-1")
+    assert d["status"] == "completed" and d["revising"] is None and "slides/.history" in d["revision_error"]
+    assert storyteller.read_yaml(deck / "revisions" / f"{rid}.yaml")["status"] == "interrupted"

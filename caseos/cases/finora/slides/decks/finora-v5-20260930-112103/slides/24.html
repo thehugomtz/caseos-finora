@@ -3,65 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S22 · Finora</title>
+<title>S21 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S22"] {
+[data-slide="S21"] {
   .num { font-variant-numeric: tabular-nums; }
-  .val { font-size: 30px; font-weight: 600; color: var(--ink); }
-  .val.hot { color: var(--accent-text); }
-  .big { font-family: var(--font-display); font-size: 56px; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
+  .ref b { color: var(--ink); }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S22" data-composition="diverging_small_multiples + within_industry_bar" data-family="evidence" data-word-budget="100" data-page="24">
+<main class="slide" data-slide="S21" data-composition="marimekko" data-family="economics" data-word-budget="100" data-page="24">
   <header class="header">
     <div class="kicker">Anexo · Overview</div>
-    <h1 class="headline">Entran más primeros pagadores, con menor ticket estabilizado, en las 6 industrias</h1>
+    <h1 class="headline">La caída por cliente se asocia a quién entra; la base previa sostiene su monto</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; primeros pagadores observados (no es Won ni suscripción activa); cohortes de ventana limpia · F-192, F-110, F-160, F-113, F-164, F-114</span><span class="page"></span></footer>
-  <aside class="notes">Los primeros pagadores observados pasan de 27,2 por mes en 2022 (mar–dic) a 54,7 desde ene-23: un escalón sin tendencia distinguible después (pendiente +0,47 por mes, intervalo −0,40 a +1,33). Entre 2022 y 2024 suben +104% por mes, mientras el valor inicial que incorporan sube +6% (run-rate temprano) o +17% (monto habitual). Con ticket estabilizado, la mediana del segundo pago baja de COP 52,5 mil en 2022 a COP 36,8 mil en 2023 y COP 38,9 mil en 2024. El efecto dentro de cada industria explica 91% del cambio 2022→2023 y 96% del cambio 2022→2024. Límites: F-160 a F-163 tienen confianza media; primer pago observado no es adquisición (X-052); el escalón de 2023 puede ser en parte registro (H-024) o un cambio operativo (H-025, H-068); el ticket estabilizado sigue siendo monto pagado; la industria es la única segmentación disponible.</aside>
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; MRR pagado observado por cliente activo en oct-24, por cosecha de primer pago · F-075, F-076, F-097, F-072</span><span class="page"></span></footer>
+  <aside class="notes">La base previa (activos en ene-22) pasa de COP 92,8 mil a COP 97,4 mil por cliente (+5%). En oct-24 las cosechas 2023 y 2024 ya son 65% de los clientes activos y 50% del MRR, con COP 46,3 mil y COP 43,0 mil por cliente: pesan más y pagan menos, y eso baja el promedio a COP 57,8 mil. Con base ene-22 la composición explica 108% del cambio y el efecto dentro de las cosechas −8%; con base dic-22, 84%. La cifra depende de la ventana; la dirección no. Propuesta: reportar el monto por cliente siempre partido en base previa y cosechas, con una base de comparación fija que decidas tú (X-060). Composición no es causa: no separa tipo de cliente, plan, tarifa ni descuento (F-062). La salida de pocas cuentas grandes también baja el promedio (F-101, F-102). «Quién entra» describe primeros pagadores observados, no la calidad de los leads.</aside>
 </main>
 <script>
-P.draw('S22', (s, P) => {
-  const yrs = ['2022', '2023', '2024'];
-  // Panel A · cols 1–4: primeros pagadores por mes (F-192).
-  const A = s.chart({ x: 150, y: 420, w: 500, h: 360 });
-  const ax = A.band(yrs, { padding: 0.42 }), ay = A.linear([0, 60]);
-  s.label(150, 318, 'Primeros pagadores por mes', { cls: 'label' });
-  s.label(150, 348, '2022: mar–dic · 2024: ene–oct', { cls: 'label-sm' });
-  A.bars([['2022', 27], ['2023', 54], ['2024', 55]], { key: (d) => d[0], value: (d) => d[1], x: ax, y: ay, tone: 'ink-4', label: (d) => d[1], labelCls: 'val num' });
-  A.axisX(ax, { cls: 'label-sm' });
-  s.label(150, 850, 'Escalón de 26 <span style="white-space:nowrap">(dic-22)</span> a 60 <span style="white-space:nowrap">(ene-23)</span>, sin tendencia después', { cls: 'annotation', w: 500 });
+P.draw('S21', (s, P) => {
+  // F-076 (T-031): participación en clientes activos y MRR por cliente, oct-24.
+  const d = [
+    { k: 'base', share: 0.17759237187127533, v: 97387.83, tone: 'ink', name: 'Base previa', pct: '17,8%' },
+    { k: 'feb', share: 0.048271752085816445, v: 69859.97, tone: 'ink-4', name: 'feb-22', pct: '4,8%', val: '69,9' },
+    { k: 'c22', share: 0.12216924910607867, v: 65436.71, tone: 'ink-4', name: '2022', pct: '12,2%', val: '65,4' },
+    { k: 'c23', share: 0.3396901072705602, v: 46297.03, tone: 'accent', name: '2023', pct: '34,0%', val: '46,3' },
+    { k: 'c24', share: 0.31227651966626935, v: 42983.56, tone: 'accent', name: '2024', pct: '31,2%', val: '43,0' },
+  ];
+  // Marimekko on cols 1–7 (x 200 → 1160); annotations to the right.
+  const X0 = 200, W = 960, Y0 = 340, Y1 = 840;
+  const y = (v) => Y1 - v / 110000 * (Y1 - Y0);
+  let cx = X0; d.forEach((o) => { o.x = cx; o.w = o.share * W; cx += o.w; });
+  s.label(1264, 318, 'Ancho: % de clientes activos · alto: MRR por cliente, oct-24 (COP mil)', { cls: 'label-sm', w: 500 });
+  d.forEach((o) => {
+    s.rect(o.x + 2, y(o.v), o.w - 4, Y1 - y(o.v), { fill: o.tone, id: `s21-${o.k}`, role: 'bar', focal: o.k === 'c23' });
+    if (o.val) s.label(o.x + o.w / 2, y(o.v) - 8, o.val, { anchor: 'bc', cls: 'label num' });
+    s.label(o.x + o.w / 2, Y1 + 12, o.name, { anchor: 'tc', cls: 'label-sm' });
+    s.label(o.x + o.w / 2, Y1 + 40, o.pct, { anchor: 'tc', cls: 'label-sm num' });
+  });
+  s.line(X0, Y1, X0 + W, Y1, { stroke: 'ink-4', w: 1.5, role: 'axis' });
 
-  // Panel B · cols 5–8: ticket estabilizado (F-160, mediana del segundo pago).
-  const B = s.chart({ x: 790, y: 420, w: 500, h: 360 });
-  const bx = B.band(yrs, { padding: 0.42 }), by = B.linear([0, 60]);
-  s.label(790, 318, 'Ticket estabilizado', { cls: 'label' });
-  s.label(790, 348, 'Mediana del segundo pago, COP mil', { cls: 'label-sm' });
-  const tk = [['2022', 52.5, '52,5'], ['2023', 36.75, '36,8'], ['2024', 38.85, '38,9']];
-  B.bars(tk, { key: (d) => d[0], value: (d) => d[1], x: bx, y: by, tone: (d) => (d[0] === '2022' ? 'ink-4' : 'accent'), focal: (d) => d[0] === '2023' });
-  tk.forEach((d) => s.label(bx.center(d[0]), by(d[1]) - 10, d[2], { anchor: 'bc', cls: `val num${d[0] === '2022' ? '' : ' hot'}` }));
-  B.axisX(bx, { cls: 'label-sm' });
-  s.label(790, 850, 'El valor inicial incorporado por mes sube +6% a +17%, contra +104% de primeros pagadores (2022→2024)', { cls: 'annotation', w: 500 });
+  // Reference averages (F-072): ene-22 92,8 mil; oct-24 57,8 mil.
+  s.line(X0, y(92839), X0 + W + 10, y(92839), { stroke: 'ink-3', w: 1.5 });
+  s.label(X0 + W + 22, y(92839), 'Promedio ene-22 · <b>COP 92,8 mil</b>', { anchor: 'ml', cls: 'label-sm ref' });
+  s.line(X0, y(57811), X0 + W + 10, y(57811), { stroke: 'ink', w: 2.5 });
+  s.label(X0 + W + 22, y(57811), 'Promedio oct-24 · <b>COP 57,8 mil</b>', { anchor: 'ml', cls: 'label-sm ref' });
 
-  // Separators.
-  [720, 1360].forEach((xx) => s.line(xx, 318, xx, 930, { stroke: 'rule', w: 1.5 }));
+  // Base previa holds its amount.
+  s.callout({ target: [d[0].x + d[0].w / 2, y(d[0].v)], at: [d[0].x + d[0].w + 40, 316], w: 400, anchor: 'tl',
+    text: '<b>Base previa</b> (activos en ene-22): COP 92,8 → 97,4 mil por cliente, <b>+5%</b>', elbow: false });
 
-  // Panel C · cols 10–12: en las 6 industrias (F-114, F-164).
-  const X = P.grid.col(10);
-  s.label(X, 318, '6 de 6', { cls: 'big' });
-  s.label(X, 392, 'industrias bajan su ticket de entrada (primer pago), 2022→2024', { cls: 'label', w: 400 });
-  s.label(X, 580, 'Cambio del monto usual temprano 2022→2024', { anchor: 'bl', cls: 'label-sm', w: 400 });
-  s.rect(X, 594, 400 * 0.96, 30, { fill: 'ink-3', role: 'bar' });
-  s.rect(X + 400 * 0.96 + 3, 594, 400 * 0.04 - 3, 30, { fill: 'ink-4', role: 'bar' });
-  s.label(X, 638, '<b>96%</b> dentro de cada industria', { cls: 'label-sm' });
-  s.label(X + 400, 638, '<b>4%</b> mezcla', { anchor: 'tr', cls: 'label-sm' });
+  // New cohorts: 65% of clients, 50% of MRR.
+  s.bracket(['#s21-c23', '#s21-c24'], { side: 'bottom', style: 'square', offset: 84, depth: 14, tone: 'ink-3', label: '<b>Cosechas 2023–24</b>: 65% de los clientes activos y 50% del MRR', labelW: 820 });
+
+  s.label(1264, 660, 'La composición explica <b>108%</b> del cambio con base ene-22 y <b>84%</b> con base dic-22: la cifra depende de la ventana; la dirección, no.', { cls: 'annotation', w: 520 });
 });
 </script>
 </body>

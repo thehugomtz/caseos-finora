@@ -3,66 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S31 · Finora</title>
+<title>S27 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S31"] {
-  .hd { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .hd span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 6px; }
-  .rl { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .ax { font-size: 20px; color: var(--ink-3); }
-  .mv { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+[data-slide="S27"] {
+  .root { font-size: 30px; font-weight: 600; color: var(--ink); }
+  .br { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .chip { background: var(--accent); color: var(--ink); padding: 2px 12px; margin-left: -12px; font-size: 24px; font-weight: 600; }
+  .lf { font-size: 22px; line-height: 1.2; color: var(--ink-2); }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
   .nt b { color: var(--ink); font-weight: 600; }
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S31" data-composition="signature_small_multiples" data-family="comparison" data-word-budget="100" data-page="30">
+<main class="slide" data-slide="S27" data-composition="driver_tree + status_markers" data-family="logic" data-word-budget="125" data-page="30">
   <header class="header">
-    <div class="kicker">Anexo · premisa y capacidad</div>
-    <h1 class="headline">Calidad y capacidad se separan con mezcla contra tasa, dentro de cada puerta</h1>
+    <div class="kicker">Anexo · métricas comunes y catálogo</div>
+    <h1 class="headline">Proponemos métricas comunes MECE con semáforo: qué se mide hoy y qué falta</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (C-012); esquema ilustrativo, sin cifras: hoy faltan entradas, reps y tiempos de contacto (F-120) · F-121, F-122, F-124, F-159, F-231, F-232</span><span class="page"></span></footer>
-  <aside class="notes">En el árbol, la calidad es la hoja de mezcla y la capacidad es una hoja de antes del SQL. Se separan por puerta, entre el periodo base y el de la caída. Si empeora la mezcla de ajuste al entrar y la velocidad de atención está estable, apunta a calidad (H-005). Si la mezcla está estable, suben la carga y la espera y la caída de la tasa se concentra en entradas atendidas tarde, apunta a capacidad (H-006). Si pasan ambas cosas, apunta a las dos a la vez (H-028). Dato mínimo: entradas con su banda de ajuste congelada al crearse y su primer contacto humano, más un roster semanal de SDR/AE con su ramp; el gasto de Team no mide capacidad. Con datos observados es asociación, porque SDR/AE eligen a quién tocar: para probar la palanca hacen falta experimentos naturales (llegadas fuera de horario, reparto por turnos) o un piloto. No usamos Self Service como grupo de control (X-012). La capacidad también puede estar en el AE, no solo en el SDR (X-153). Las bandas de ajuste deben validarse antes en el periodo base.</aside>
+  <footer class="footer"><span class="source">Propuesta (C-009) sobre pagos cliente × mes de Finora · F-135, F-136, F-137, F-138, F-139, F-183, F-239, F-240</span><span class="page"></span></footer>
+  <aside class="notes">A la lista (MRR, ARR, ARPU, CAC, LTV, Churn, UCM) se suman churn persistente, las capas de lista, descuento y neto, quick ratio, NRR/GRR, payback y LTV:CAC. Cómo se mide cada una. Resultado: MRR pagado observado = suma de lo pagado en el mes (verde); MRR normalizado = cada pago repartido entre los meses que cubre (amarillo); ARR run-rate = MRR normalizado × 12 (amarillo); MRR de lista, descuento recurrente y MRR neto = lista − descuento (rojo, se detalla en Revenue). Movimiento: puente = nuevo + expansión + reactivación − contracción − churn (verde sobre monto pagado; se lee con cuidado); en el to-be suma la línea Descuento y deja el efecto de cobro fuera del MRR; quick ratio = entradas ÷ salidas del puente, trimestral (verde). Clientes: activos = con pago en el mes; churn de logos observado = dejan de pagar ÷ activos del mes previo; churn persistente = no vuelven a pagar en un trimestre ÷ activos del mes previo (amarillo); reactivaciones como loop de Revenue; ARPA = MRR ÷ clientes activos, por cohorte (es lo que se pide como ARPU; por usuario, rojo). Retención por cohorte de primer pago: logos en M3, M6 y M12; NRR = MRR actual de la cohorte ÷ su MRR inicial; GRR = lo mismo sin expansión (verdes sobre monto pagado, no contractuales). Eficiencia: CAC = gasto de S&amp;M ÷ nuevas cuentas, por canal y ruta (hoy solo el proxy de la lámina siguiente); payback = CAC ÷ (valor de entrada × margen bruto); LTV empírico de ingreso = ingreso acumulado por alta a horizonte fijo (verde); LTV con margen y LTV:CAC (rojos); UCM = ARPA − costo variable de servir (rojo). El monto pagado mezcla fecha de cobro y mes de servicio: churn, reactivación y expansión observados salen inflados (F-136). Por eso el churn persistente va en amarillo: 2022 → 2024, el observado baja de 3,52% a 2,04% y el persistente pasa de 0,98% a 0,96% (CFO-03). Puerta, ruta, canal, industria y cohorte son cortes, no métricas nuevas.</aside>
 </main>
 <script>
-P.draw('S31', (s, P) => {
-  // Plan: indicator labels cols 1–3 · «calidad» cols 4–6 · «capacidad» cols 7–9 · notes cols 10–12.
-  // Each cell: schematic slope base → caída (no data). Accent = the indicator that moves (the signature); gray = quiet.
-  const COLS = [{ x: 560, w: 380 }, { x: 992, w: 380 }], ROWS = [468, 616, 764], H = 34;
-  s.label(COLS[0].x, 376, 'Si bajó la calidad de los leads', { anchor: 'bl', cls: 'hd', w: 400 });
-  s.label(COLS[1].x, 376, 'Si falta capacidad comercial', { anchor: 'bl', cls: 'hd', w: 400 });
+P.draw('S27', (s, P) => {
+  // Plan: root centred (cols 5–8) → spine → five branch columns (module 339 px) → leaves on a stem
+  // with status markers; Eficiencia (the red branch) last on the right, in the accent. Key bottom-right; MECE rule at the bottom.
+  const X = [112, 451, 790, 1129, 1468], SPINE = 382, BY = 404, L0 = 486, DL = 46;
+  const R = 8;
+  const green = (x, y) => s.dot(x, y, { r: R + 1, fill: 'ink' });
+  const amber = (x, y) => { s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M${x},${y - R} A${R},${R} 0 0 0 ${x},${y + R} Z`, { fill: 'ink', stroke: null }); };
+  const red = (x, y) => s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
+  const mark = { g: green, a: amber, r: red };
 
-  const rows = ['Mezcla de ajuste al entrar', 'Tasa dentro de cada banda de ajuste', 'Carga por SDR/AE y espera al primer contacto'];
-  rows.forEach((t, i) => s.label(112, ROWS[i], t, { anchor: 'ml', cls: 'rl', w: 380 }));
-  [ROWS[0] - 74, ROWS[1] - 74, ROWS[2] - 74, ROWS[2] + 100].forEach((y) => s.line(112, y, 1372, y, { stroke: 'rule', w: 1.5 }));
+  // Root and spine.
+  s.label(960, 300, 'Ingreso recurrente', { anchor: 'tc', cls: 'root', id: 's27-root' });
+  s.line(960, 346, 960, SPINE, { stroke: 'ink-3', w: 2 });
+  s.line(X[0] + 10, SPINE, X[4] + 10, SPINE, { stroke: 'ink-3', w: 2 });
 
-  // signatures: -1 = baja, 0 = quieta, +1 = sube
-  const sig = [[-1, 0], [0, -1], [0, 1]];
-  sig.forEach((r, i) => r.forEach((d, j) => {
-    const cy = ROWS[i], xa = COLS[j].x + 40, xb = COLS[j].x + 250;
-    const ya = cy - d * -H, yb = cy + d * -H;
-    const hot = d !== 0;
-    s.line(xa, ya, xb, yb, { stroke: hot ? 'accent' : 'ink-4', w: hot ? 7 : 3, focal: hot && i === 0 && j === 0, id: hot ? `s31-sig-${i}${j}` : null });
-    s.dot(xa, ya, { r: 7, fill: hot ? 'ink' : 'ink-4' });
-    s.dot(xb, yb, { r: 7, fill: hot ? 'ink' : 'ink-4' });
-    if (hot) s.label(xb + 18, yb, d < 0 ? (i === 0 ? 'empeora' : 'cae') : 'suben', { anchor: 'ml', cls: 'mv' });
-  }));
-  COLS.forEach(({ x }) => {
-    s.label(x + 40, ROWS[2] + 58, 'periodo base', { anchor: 'tc', cls: 'ax' });
-    s.label(x + 250, ROWS[2] + 58, 'periodo de caída', { anchor: 'tc', cls: 'ax' });
+  const branches = [
+    ['Resultado', [['g', 'MRR pagado observado'], ['a', 'MRR normalizado'], ['a', 'ARR run-rate'], ['r', 'Lista, descuento y neto']]],
+    ['Movimiento', [['g', 'Puente del MRR'], ['g', 'Quick ratio']]],
+    ['Clientes', [['g', 'Clientes activos'], ['g', 'ARPA por cohorte'], ['g', 'Reactivaciones'], ['g', 'Churn observado'], ['a', 'Churn persistente']]],
+    ['Retención por cohorte', [['g', 'Logos M3, M6, M12'], ['g', 'NRR'], ['g', 'GRR']]],
+    ['Eficiencia', [['r', 'CAC por canal y ruta'], ['r', 'Payback'], ['g', 'LTV empírico de ingreso'], ['r', 'LTV con margen, LTV:CAC'], ['r', 'UCM']]],
+  ];
+  branches.forEach(([name, leaves], i) => {
+    const x = X[i], hot = i === 4, last = L0 + (leaves.length - 1) * DL;
+    s.line(x + 10, SPINE, x + 10, BY - 4, { stroke: hot ? 'accent' : 'ink-3', w: hot ? 5 : 2 });
+    s.label(x, BY, name, { cls: hot ? 'chip' : 'br', id: `s27-b${i}`, focal: hot });
+    s.line(x + 10, BY + 44, x + 10, last, { stroke: hot ? 'accent' : 'ink-4', w: hot ? 5 : 2 });
+    leaves.forEach(([st, t], j) => {
+      const y = L0 + j * DL;
+      mark[st](x + 10, y);
+      s.label(x + 32, y, t, { anchor: 'ml', cls: 'lf' });
+    });
   });
 
-  // Notes: both at once · minimum data.
-  s.label(1440, 404, '<b>Si se mueven ambas</b>, apunta a las dos', { cls: 'nt', w: 368 });
-  s.label(1440, 560, '<b>Dato mínimo</b>: entradas con ajuste congelado y primer contacto humano; roster semanal de SDR/AE', { cls: 'nt', w: 368 });
-  s.label(112, 914, 'Con datos observados es asociación: probar la palanca requiere experimentos naturales o un piloto.', { cls: 'nt', w: 1300 });
+  // What is missing (under Eficiencia).
+  const cy = L0 + 4 * DL + 44;
+  s.label(X[4], cy, '<b>Faltan unidad del gasto, canal, margen y costo de servir</b>', { cls: 'nt', w: 330 });
+
+  // Reading rules: MECE rule (cols 1–8) and the traffic-light key (cols 9–12).
+  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
+  s.label(112, 908, '<b>Regla MECE</b>: hasta el primer pago, cada métrica vive en el funnel; después, aquí.', { cls: 'nt', w: 960 });
+  const ky = 924;
+  s.label(1129, ky, 'Semáforo', { anchor: 'ml', cls: 'key', weight: 600 });
+  green(1244, ky); s.label(1260, ky, 'se calcula hoy', { anchor: 'ml', cls: 'key' });
+  amber(1422, ky); s.label(1438, ky, 'proxy por aprobar', { anchor: 'ml', cls: 'key' });
+  red(1628, ky); s.label(1644, ky, 'falta el dato', { anchor: 'ml', cls: 'key' });
 });
 </script>
 </body>

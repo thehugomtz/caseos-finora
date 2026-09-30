@@ -320,7 +320,7 @@ def save_text(store: CaseStore, deck_id: str, file: str, edits: list, *, source:
 
 
 # ------------------------------------------------------------------------------------------ order
-def reorder(store: CaseStore, deck_id: str, order: list[str], *, actor: str = "hugo") -> dict:
+def reorder(store: CaseStore, deck_id: str, order: list[str], *, via: str = "", actor: str = "hugo") -> dict:
     """New order = the files renumbered 01..NN (slides and their renders); the slides of the case follow."""
     if actor != "hugo":
         raise StoreError("Solo Hugo reordena el deck.")
@@ -353,7 +353,8 @@ def reorder(store: CaseStore, deck_id: str, order: list[str], *, actor: str = "h
                          actor=actor, material=False, summary=f"{e['id']}: ahora es la lámina {int(n)}")
     repaged = paginate(deck)
     _record(store, d, deck, {"kind": "order", "before": cur, "order": order, "moved": moved},
-            f"Hugo reordenó el deck {d['slug']}: " + ", ".join(f"{int(o[:2])}→{int(n[:2])}" for o, n in moved.items()))
+            f"Hugo reordenó el deck {d['slug']}: " + ", ".join(f"{int(o[:2])}→{int(n[:2])}" for o, n in moved.items())
+            + (f" · {via}" if via else ""))
     rebuild(deck)
     if repaged:                                                  # their thumbnails still show the old page number
         threading.Thread(target=render_one, args=(deck, ",".join(repaged)), daemon=True).start()

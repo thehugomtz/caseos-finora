@@ -3,72 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S30 · Finora</title>
+<title>S29 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S30"] {
-  .chip { background: var(--accent); color: var(--ink); padding: 6px 16px; font-size: 26px; font-weight: 600; }
-  .p0 { font-size: 26px; line-height: 1.3; color: var(--ink-2); }
-  .p0 b { color: var(--ink); font-weight: 600; }
-  .p0s { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .gt { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .gr { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .gr b { color: var(--ink); font-weight: 600; }
-  .pm { font-size: 22px; color: var(--ink-2); }
-  .res { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1.2; }
-  .ld { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .ld b { color: var(--ink); font-weight: 600; }
+[data-slide="S29"] {
+  .nd { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .nd span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 6px; }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .chip { background: var(--accent); color: var(--ink); padding: 8px 16px; font-size: 24px; font-weight: 600; }
+  .fd { font-size: 22px; color: var(--ink-2); }
+  .fd b { color: var(--ink); font-weight: 600; }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S30" data-composition="filter_pipeline" data-family="process" data-word-budget="110" data-page="33">
+<main class="slide" data-slide="S29" data-composition="hub_and_spoke (registro del catálogo)" data-family="relationships" data-word-budget="105" data-page="33">
   <header class="header">
-    <div class="kicker">Anexo · premisa y capacidad</div>
-    <h1 class="headline">Primero se fija qué es venta; revisar la medición en pagos no cierra la brecha</h1>
+    <div class="kicker">Anexo · métricas comunes y catálogo</div>
+    <h1 class="headline">Cada métrica vive en un solo lugar del catálogo, con dueño, fuente y foro</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; altas = primer pago observado, no Won · T-093, T-094, T-100, T-089 · F-125, F-126, F-201, F-202, F-204, F-205, F-229, F-230</span><span class="page"></span></footer>
-  <aside class="notes">Paso 0 del árbol (C-023): fijar qué es «venta» (Won o primer pago) y qué ventana se compara, porque en los pagos la respuesta cambia: la premisa «no más ventas» se sostiene en jul–oct 2024 y no en mar–oct. Del lado de los pagadores, tres revisiones de medición no cambian la lectura. Sin oct-24, las altas por mes de 2024 son 56 frente a 54 en 2023 (55 con octubre). Altas y reactivaciones son flujos separados: 1.476 clientes con alta, 468 reactivaciones y 0 meses marcados como ambos; las reactivaciones por mes son 12 y 16 frente a 54 y 55 altas, así que sumarlas o separarlas deja el mismo orden. Las altas que coinciden en monto e industria con un churn reciente no superan al emparejamiento placebo (175 de 650 frente a 196 en 2023; 76 de 272 contra 68 en 2022). En 2024 el placebo no sirve porque hay pocos churns posteriores. No se afirma que la medición quedó descartada: con los pagos solo se acotan las revisiones del lado de pagadores; no se puede verificar si un primer pagador es un negocio que ya pagaba con otro ID (F-202). Primer pago no es Won. La ventana jul–oct 2024 es corta y puede incluir compra adelantada (H-066, H-075). Lo del lado de los leads necesita el CRM.</aside>
+  <footer class="footer"><span class="source">Propuesta de diseño (C-022), sin cifras; los dueños se definen con Finora · F-135, F-139, F-148, F-155, F-158, F-159, F-213, F-224</span><span class="page"></span></footer>
+  <aside class="notes">El catálogo no suma métricas: gobierna las del funnel (C-006) y las comunes (C-009). Cada métrica entra una sola vez con nombre, fórmula versionada, grano, dueño, semáforo de hoy, el evento o la tabla que le falta en el to-be (C-013) y el foro que la usa (C-014). Reglas MECE: un nombre, una fórmula y un lugar; puerta, ruta, canal, industria y cohorte son cortes; las tasas de etapa se leen dentro de su ruta y solo la capa común se compara entre puertas. Controles de cada mes: las entradas por puerta suman el total; los primeros pagos por ruta, más los que no se cruzan con el CRM, igualan los primeros pagos del mes; y los puentes de clientes y de MRR cierran. Es diseño: los dueños de cada métrica se definen con Finora. Construirlo choca con D-007 tal como está redactada; D-018 lo decides tú.</aside>
 </main>
 <script>
-P.draw('S30', (s, P) => {
-  // Plan: Paso 0 cols 1–3 (accent) → premise line y=600 through three gates (cols 5, 7, 9–10) → result cols 11–12;
-  // leads-side branch dashed underneath (needs data that does not exist today).
-  const Y = 572, G = [812, 1092, 1372], X0 = 508, X1 = 1616;
+P.draw('S29', (s, P) => {
+  // Plan: inputs cols 1–3 → record (hub) cols 5–8 → outputs cols 10–12; reading rules in a bottom band cols 1–12.
+  const RX = 688, RY = 372, RW = 544, RH = 440;
+  s.rect(RX, RY, RW, RH, { fill: 'none', stroke: 'ink-3', w: 1.5, dash: 'dash', id: 's29-rec' });
+  s.label(RX, RY - 14, 'Registro del catálogo', { anchor: 'bl', cls: 'cap' });
+  s.label(RX + 28, RY + 30, 'un nombre · una fórmula · un lugar', { cls: 'chip', id: 's29-rule', focal: true });
 
-  // Paso 0 comes first: the premise leaves from it.
-  s.label(112, Y - 128, 'Paso 0', { anchor: 'bl', cls: 'chip', id: 's30-p0', focal: true });
-  s.label(112, Y - 106, '<b>Fijar qué es venta</b> (Won o primer pago) <b>y qué ventana</b>', { cls: 'p0', w: 350 });
-  s.label(112, Y + 40, 'En pagos, se sostiene en <span style="white-space:nowrap">jul–oct 2024</span>, no en <span style="white-space:nowrap">mar–oct</span>', { cls: 'p0s', w: 340 });
-  s.line(112, Y, X0, Y, { stroke: 'accent', w: 8, cap: 'butt' });
-
-  // The premise travels left → right and survives every payment-side check.
-  s.line(X0, Y, X1 - 16, Y, { stroke: 'ink', w: 4, arrow: 'end', headSize: 16 });
-  s.dot(X0, Y, { r: 8, fill: 'ink' });
-  s.label(X0 + 16, Y - 18, 'Premisa «no más ventas»', { anchor: 'bl', cls: 'pm' });
-
-  const gates = [
-    ['¿Octubre incompleto?', 'Sin oct-24: <b>56</b> por mes en 2024 vs <b>54</b> en 2023 (55 con octubre)'],
-    ['¿Altas o reactivaciones?', '<b>1.476</b> altas, <b>468</b> reactivaciones, <b>0</b> meses marcados como ambas'],
-    ['¿Recompras con otro ID?', '<b>175</b> de 650 altas de 2023 coinciden con un churn reciente; placebo: <b>196</b>'],
-  ];
-  gates.forEach(([t, r], i) => {
-    const x = G[i];
-    s.line(x, Y - 64, x, Y - 14, { stroke: 'ink-3', w: 3, cap: 'butt' });
-    s.line(x, Y + 14, x, Y + 64, { stroke: 'ink-3', w: 3, cap: 'butt' });
-    s.label(x - 2, Y - 80, t, { anchor: 'bl', cls: 'gt', w: 280 });
-    s.label(x - 2, Y + 84, r, { cls: 'gr', w: 250 });
+  const fields = [['f-name', 'nombre'], ['f-form', 'fórmula versionada'], ['f-grain', 'grano'], ['f-owner', 'dueño'],
+    ['f-light', 'semáforo de hoy'], ['f-src', 'evento o tabla que le falta'], ['f-forum', 'foro que la usa']];
+  const F0 = 482, DF = 44;
+  fields.forEach(([id, t], i) => {
+    const y = F0 + i * DF;
+    if (i) s.line(RX + 28, y - DF / 2, RX + RW - 28, y - DF / 2, { stroke: 'rule', w: 1 });
+    s.label(RX + 28, y, t, { anchor: 'ml', cls: 'fd', id: `s29-${id}`, w: RW - 56 });
   });
-  s.label(X1 + 10, Y, 'La brecha sigue en pie', { anchor: 'ml', cls: 'res', w: 176, id: 's30-res' });
 
-  // Leads side: waits for the CRM (dashed = data that does not exist today).
-  const BY = 872;
-  s.path(`M${X0 + 150},${Y + 8} V${BY} H${X0 + 250}`, { stroke: 'ink-3', w: 2, dash: 'dash', arrow: 'end' });
-  s.label(X0 + 266, BY, '<b>Lado de leads</b>: no-prospectos, duplicados y cambios de definición esperan al CRM', { anchor: 'ml', cls: 'ld', w: 1000 });
+  // Inputs: every metric enters once.
+  s.label(112, 500, 'Métricas del funnel<span>hasta el primer pago</span>', { anchor: 'ml', cls: 'nd', id: 's29-in1' });
+  s.label(112, 700, 'Métricas comunes<span>la cuenta que ya paga</span>', { anchor: 'ml', cls: 'nd', id: 's29-in2' });
+  s.connect([430, 500], [RX - 4, 562], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, label: 'entra una vez', labelAt: 0.42 });
+  s.connect([430, 700], [RX - 4, 602], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, label: 'entra una vez', labelAt: 0.42 });
+  s.dot(430, 500, { r: 5, fill: 'ink-3' });
+  s.dot(430, 700, { r: 5, fill: 'ink-3' });
+
+  // Outputs: each entry points to its source (to-be model) and its forum.
+  s.label(1440, 604, 'Fuente<span>tabla o evento del modelo to-be</span>', { anchor: 'ml', cls: 'nd', id: 's29-out1', w: 368 });
+  s.label(1440, 760, 'Foro<span>semanal · mensual · trimestral</span>', { anchor: 'ml', cls: 'nd', id: 's29-out2', w: 368 });
+  s.connect([RX + RW + 2, F0 + 5 * DF], '#s29-out1', { route: 'curve', toSide: 'left', gap: 14, tone: 'ink-3', w: 2 });
+  s.connect([RX + RW + 2, F0 + 6 * DF], '#s29-out2', { route: 'curve', toSide: 'left', gap: 14, tone: 'ink-3', w: 2 });
+  s.dot(RX + RW, F0 + 5 * DF, { r: 5, fill: 'ink-3' });
+  s.dot(RX + RW, F0 + 6 * DF, { r: 5, fill: 'ink-3' });
+
+  // Reading rules.
+  s.line(112, 866, 1808, 866, { stroke: 'rule', w: 1.5 });
+  s.label(112, 890, '<b>Cortes, no métricas</b>: puerta · ruta · canal · industria · cohorte', { cls: 'nt', w: 640 });
+  s.label(832, 890, '<b>Controles de cada mes</b>: entradas por puerta = total; primeros pagos por ruta + no cruzados = los del mes; los puentes cierran.', { cls: 'nt', w: 976 });
 });
 </script>
 </body>

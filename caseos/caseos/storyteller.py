@@ -8,6 +8,8 @@ renderer scripts and read-only commands. import_deck(): slides come back as S- e
 """
 from __future__ import annotations
 
+import asyncio
+import json
 import os
 import re
 import shlex
@@ -19,7 +21,7 @@ from . import cases, config, jobs, phases, slidestyle
 from .llm import AgentError
 from .model import title_of
 from .store import CaseStore, StoreError
-from .util import clip, now_iso, now_ms, read_yaml, slugify, stamp, write_json, yaml_dump
+from .util import clip, now_iso, now_ms, read_yaml, slugify, stamp, write_json, write_yaml, yaml_dump
 
 DIRECTIONS = {"editorial": "Editorial — serif display, mucho aire, un acento",
               "modern": "Modern — sans geométrica, contraste alto",
@@ -296,11 +298,129 @@ def recover_decks(store: CaseStore) -> int:
     items, n = decks(store), 0
     for d in items:
         if d.get("status") == "running" and d.get("job_id") not in jobs.LIVE:
-            d.update({"status": "interrupted", "error": "El servidor se reinició durante la corrida; la carpeta del deck se conservó."})
+            if d.get("revising"):                   # changes to a finished deck: the deck is still there and usable
+                rid = d["revising"].get("id", "")
+                rp = store.root / d["path"] / "revisions" / f"{rid}.yaml"
+                if rp.exists():
+                    write_yaml(rp, {**(read_yaml(rp, {}) or {}), "status": "interrupted", "finished_at": now_iso()})
+                d.update({"status": "completed", "revising": None, "revision_error": (
+                    "El servidor se reinició mientras el Storyteller aplicaba los cambios; las láminas quedaron como estaban al "
+                    "cortarse y la versión previa está en slides/.history.")})
+            else:
+                d.update({"status": "interrupted", "error": "El servidor se reinició durante la corrida; la carpeta del deck se conservó."})
             n += 1
     if n:
         _save_decks(store, items)
     return n
+
+
+# ------------------------------------------------------------------------------------------ changes to a finished deck
+SLIDE_FILE = re.compile(r"^\d{2}\.html$")
+
+
+def submit_revision(store: CaseStore, deck_id: str, changes: list, *, via: str = "") -> dict:
+    """Hugo asks for changes on some slides of a finished deck. The Visual Storyteller applies them (the text and, when a
+    request needs it, the composition), re-renders only those slides and rebuilds the deck. It is not a new run: the
+    storyline, the theme and the other slides stay. The version before the change goes to slides/.history."""
+    d = next((x for x in decks(store) if x["id"] == deck_id), None)
+    if not d:
+        raise StoreError("Deck no encontrado.")
+    busy = [x["slug"] for x in decks(store) if x.get("status") == "running"]
+    if busy:
+        raise StoreError(f"El Visual Storyteller ya está trabajando ({', '.join(busy)}); espera a que termine.")
+    deck = store.root / d["path"]
+    if not (deck / "presentation.html").exists():
+        raise StoreError("Los cambios puntuales son sobre un deck terminado, y este todavía no lo está.")
+    clean, seen = [], set()
+    for c in changes or []:
+        f, req = (c or {}).get("file", ""), ((c or {}).get("request") or "").strip()
+        if not SLIDE_FILE.match(f) or not (deck / "slides" / f).exists():
+            raise StoreError(f"No encuentro la lámina {f or '(vacía)'} en el deck.")
+        if not req:
+            raise StoreError(f"Falta el cambio que pides en la lámina {int(f[:2])}.")
+        if f in seen:
+            raise StoreError(f"La lámina {int(f[:2])} viene dos veces; junta sus cambios en uno.")
+        seen.add(f)
+        clean.append({"file": f, "request": req[:6000]})
+    if not clean:
+        raise StoreError("No hay cambios que pedir.")
+    rid = f"REV-{stamp()}"
+    hist = deck / "slides" / ".history"
+    hist.mkdir(exist_ok=True)
+    for c in clean:
+        shutil.copy2(deck / "slides" / c["file"], hist / f"{c['file'][:2]}.{rid}.html")
+    write_yaml(deck / "revisions" / f"{rid}.yaml", {"id": rid, "at": now_iso(), "via": via, "status": "running", "changes": clean})
+    nums = ", ".join(str(int(c["file"][:2])) for c in clean)
+    job = jobs.submit(store.id, "storyteller", f"Visual Storyteller · cambios en láminas {nums} · {d['slug']}",
+                      {"deck_id": deck_id, "revision": rid}, agent="visual_storyteller")
+    d.update({"status": "running", "job_id": job.id, "started_at": now_iso(), "error": None, "revision_error": None,
+              "revising": {"id": rid, "files": [c["file"] for c in clean]}})
+    _upsert_deck(store, d)
+    store.log("hugo", "handoff", [deck_id], f"Hugo pidió al Visual Storyteller cambios en las láminas {nums} del deck {d['slug']}"
+              + (f" · {via}" if via else ""), material=True, data={"revision": rid})
+    return {"job_id": job.id, "revision": rid}
+
+
+def revision_ask(deck: Path, rev: dict, *, critic: bool) -> str:
+    rend = renderer_dir()
+    only = ",".join(c["file"][:2] for c in rev["changes"])
+    parts = [f"Cambios puntuales a un deck terminado, en {deck}. Hugo pidió cambios en {len(rev['changes'])} láminas: aplícalos "
+             "y no toques ninguna otra lámina, ni el storyline, ni el tema.", "", "## Cambios pedidos"]
+    for c in rev["changes"]:
+        parts += ["", f"### slides/{c['file']}", c["request"]]
+    parts += ["", "## Cómo trabajar",
+              "- Antes de tocar una lámina, léela completa (HTML y su spec en slide-specs/, que encuentras por su data-slide). "
+              "Edita el HTML; si cambia el contenido, actualiza también su spec.",
+              "- Cifras: solo las que ya están en la lámina, en su spec o en data/*.yaml, o las que el pedido trae con su fuente "
+              "(cítala en el pie). No calcules ni inventes cifras.",
+              "- El número de página (data-page) lo maneja CaseOS: no lo cambies. No renombres, muevas ni borres archivos.",
+              f"- Re-renderiza solo esas láminas (node {rend}/scripts/render.mjs {deck} --only {only} --no-contact) y mira cada "
+              "render: nada desbordado, encimado ni cortado. Si no cabe, recorta palabras antes que achicar la letra.",
+              ("- Cuando estén, pídele al agente independent-slide-critic que revise solo esas láminas y aplica lo que proponga."
+               if critic else "- Aplica tu propio loop de QA a esas láminas."),
+              f"- Al final: node {rend}/scripts/bundle.mjs {deck} --pdf",
+              "- Mensaje final: por lámina, el texto antes → después de lo que cambió, qué más tocaste y por qué, y el veredicto."]
+    return "\n".join(parts)
+
+
+def finish_revision(store: CaseStore, deck_id: str, rid: str, *, final: str = "", usage: dict | None = None, cost=None,
+                    error: str = "") -> dict:
+    """Records what the Storyteller changed (slides that differ from their copy in .history), rebuilds the deck if its own
+    bundle is older than the edited slides, and gives the deck back as finished."""
+    d = next((x for x in decks(store) if x["id"] == deck_id), None)
+    if not d:
+        raise StoreError("Deck no encontrado.")
+    deck = store.root / d["path"]
+    rp = deck / "revisions" / f"{rid}.yaml"
+    rev = read_yaml(rp, {}) or {}
+    changed, untouched = [], []
+    for c in rev.get("changes") or []:
+        before, now = deck / "slides" / ".history" / f"{c['file'][:2]}.{rid}.html", deck / "slides" / c["file"]
+        (changed if before.exists() and now.exists() and before.read_bytes() != now.read_bytes() else untouched).append(c["file"])
+    rev.update({"status": "failed" if error else "done", "finished_at": now_iso(), "changed": changed, "untouched": untouched,
+                "final": clip(final, 6000), "usage": usage or {}, "cost_usd": cost})
+    if error:
+        rev["error"] = error[:600]
+    write_yaml(rp, rev)
+    if changed:
+        with (deck / "edits.jsonl").open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"at": now_iso(), "by": "visual_storyteller", "kind": "revision", "revision": rid,
+                                 "files": changed, "via": rev.get("via", "")}, ensure_ascii=False) + "\n")
+        newest = max((deck / "slides" / f).stat().st_mtime for f in changed)
+        outs = [deck / "presentation.html", deck / "renders" / "deck.pdf"]
+        if any(not o.exists() or o.stat().st_mtime < newest for o in outs):
+            from . import deckedit
+            deckedit.rebuild(deck, pdf=True)
+    d = next((x for x in decks(store) if x["id"] == deck_id), d)     # fresh: Hugo may have edited the deck meanwhile
+    d.update({"status": "completed", "revising": None, "revised_at": now_iso(), "last_revision": rid, "error": None,
+              "revisions": int(d.get("revisions") or 0) + 1, "revision_error": error[:600] if error else None})
+    _upsert_deck(store, d)
+    nums = ", ".join(str(int(f[:2])) for f in changed) or "ninguna"
+    store.log("visual_storyteller", "edited", [deck_id],
+              (f"No se pudieron aplicar todos los cambios de Hugo ({error[:120]}); láminas cambiadas: {nums}" if error else
+               f"Cambios de Hugo aplicados en las láminas {nums} del deck {d['slug']}")
+              + (f" · US${cost:.2f} equivalente" if cost else ""), material=True, data={"revision": rid})
+    return {"deck": d, "revision": rev}
 
 
 def _guard(deck: Path, on_deny=None):
@@ -382,7 +502,15 @@ async def _run_job(job, params):
                     if direction == "auto" else f"Dirección visual elegida por Hugo: **{direction}** (ya aplicada en assets/theme.css; no pidas elegir).")
     critic_text = ("Antes de terminar, pasa la crítica independiente con el agente `independent-slide-critic` y aplica sus veredictos."
                    if d.get("critic") else "No uses el agente de crítica independiente en esta corrida (Hugo lo desactivó); sí tu propio loop de QA.")
+    rid = params.get("revision")
+    rev = read_yaml(deck / "revisions" / f"{rid}.yaml", {}) if rid else None
     append = f"""
+# CaseOS — cambios puntuales de Hugo a un deck terminado (Executive Visual Storyteller)
+Trabajas para CaseOS en la carpeta del deck: {deck}
+- Usa la skill `html-slide-renderer` para editar y re-renderizar láminas. La dirección visual, el tema, la paleta y la
+  tipografía ya están fijos en assets/: no los cambies.
+- Escribe solo dentro de la carpeta del deck. No hay usuario disponible para preguntas: decide y documenta.
+""" if rev else f"""
 # CaseOS handoff — Executive Visual Storyteller
 Trabajas para CaseOS en la carpeta del deck: {deck}
 Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story → Visual direction → Concept → Render → QA loop → Package).
@@ -427,7 +555,9 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
     built = sorted((deck / "slides").glob("*.html")) if (deck / "slides").is_dir() else []
     resume = ((deck / "storyline.md").exists() and specs)
     ask = f"Construye el deck ejecutivo de CaseOS en {deck} siguiendo la skill executive-visual-storyteller y el handoff."
-    if resume:
+    if rev:
+        ask = revision_ask(deck, rev, critic=bool(agents))
+    elif resume:
         ask += (f" Esta carpeta trae el trabajo de una corrida anterior que se cortó por un error técnico, no por calidad: "
                 f"storyline.md, visual-direction.md, {len(specs)} specs de lámina y {len(built)} láminas en slides/. Retoma desde ahí: "
                 "conserva lo hecho salvo que la crítica visual pida cambiarlo y termina el render, la crítica y el deck final. "
@@ -455,10 +585,19 @@ Carga y sigue la skill `executive-visual-storyteller` (pipeline completo: Story 
                 if m.is_error:
                     raise AgentError("unknown", f"{m.subtype}: {'; '.join(m.errors or []) or final[:300]}")
     except Exception as e:
+        if rev:
+            write_json(deck / "revisions" / f"{rid}.run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost,
+                                                              "error": str(e)})
+            await asyncio.to_thread(finish_revision, store, d["id"], rid, final=final, usage=usage, cost=cost, error=str(e))
+            raise
         d.update({"status": "failed", "error": str(e)[:600], "finished_at": now_iso()})
         _upsert_deck(store, d)
         write_json(deck / "caseos-run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost, "error": str(e)})
         raise
+    if rev:                  # the deck's own run record stays; this one goes with the revision
+        write_json(deck / "revisions" / f"{rid}.run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost,
+                                                          "final": final})
+        return await asyncio.to_thread(finish_revision, store, d["id"], rid, final=final, usage=usage, cost=cost)
     write_json(deck / "caseos-run.json", {"trace": trace, "denials": denials, "usage": usage, "cost_usd": cost, "final": final})
     result = import_deck(store, d["id"], final=final, usage=usage, cost=cost)
     return result

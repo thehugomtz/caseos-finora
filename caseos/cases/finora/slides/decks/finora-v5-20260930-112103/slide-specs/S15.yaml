@@ -30,6 +30,13 @@ slide:
   objects:
     - {id: bars, kind: bar, content: "T-076 44% de 751 · T-082 42,6/11,5/45,9% · T-074 29% · T-086 4,0/88,9%"}
     - {id: lead, kind: text, content: "T-087 25,3% de COP 282,8 millones"}
+    - id: how_computed       # REV-20260930-161812: Hugo pidió cómo se calcula cada movimiento; franja compacta, una línea por definición
+      kind: text
+      content:
+        - "Cuadre del puente: MRR inicial + altas + expansión − contracción − churn + reactivación = MRR final"
+        - "Churn observado: pagaba el mes anterior y este paga 0 (sobre activos); no es cancelación confirmada · persistente: no vuelve a pagar en 3 meses (T-002)"
+        - "Reactivación: había dejado de pagar y vuelve a pagar"
+        - "Expansión / contracción: pagó los dos meses y este paga más / menos; la diferencia suma o resta"
   encodings:
     width: "% del MRR de cada línea del puente"
     accent: "firma de momento de cobro"
@@ -37,12 +44,12 @@ slide:
   annotations:
     - {at: bars, text: "Antes de llamarlo churn o MRR: regla de normalización y ventana de gracia"}
   layout_intent:
-    grid: "barras cols 1–8; lo que no se ve cols 10–12"
-    reading_path: "lead → barras → columna derecha"
+    grid: "barras cols 1–8; lo que no se ve cols 10–12; franja «cómo se calcula» bajo las barras (rótulo en la columna de nombres, definiciones alineadas con las barras)"
+    reading_path: "lead → barras → columna derecha → cómo se calcula"
     whitespace: "bajo el título"
-  text_budget: 105
+  text_budget: 185           # era 105; sube por la franja de definiciones que pidió Hugo (REV-20260930-161812)
   must_show: ["qué cambió vs por qué", "expansión y reactivación se revierten", "contracción se sostiene"]
   avoid: ["tabla", "pie", "cifras fuera de data/"]
-  data: {source: "data/FIN-F-172.yaml, FIN-F-174.yaml, FIN-F-180.yaml, FIN-F-184.yaml, FIN-F-185.yaml", values: "literales"}
-  notes: "F-186; F-136; X-100; X-102/X-145; F-213."
+  data: {source: "data/FIN-F-172.yaml, FIN-F-174.yaml, FIN-F-180.yaml, FIN-F-184.yaml, FIN-F-185.yaml; definiciones de churn: data/CFO-03.yaml (T-002)", values: "literales"}
+  notes: "F-186; F-136; X-100; X-102/X-145; F-213. Abre la sección Revenue (Hugo la movió detrás del separador); el kicker ya sirve."
   sources: [F-172, F-174, F-180, F-182, F-184, F-185, F-135, F-136, F-186, F-213]

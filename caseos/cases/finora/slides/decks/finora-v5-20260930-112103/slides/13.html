@@ -24,49 +24,50 @@
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S11" data-composition="match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + fastest_test" data-family="comparison" data-word-budget="130" data-page="13">
+<main class="slide" data-slide="S11" data-composition="match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + ribbon (volumen y tiempo por etiqueta)" data-family="comparison" data-word-budget="210" data-page="13">
   <header class="header">
     <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
     <h1 class="headline">Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso</h1>
   </header>
 
   <footer class="footer"><span class="source">Propuesta (C-029, R-032, R-014); el mismo orden del árbol; parámetros (deduplicación, SLA, umbral de estancamiento) por acordar con Finora · F-120–F-129, F-159, F-191, F-207, F-225, F-228–F-232</span><span class="page"></span></footer>
-  <aside class="notes">En el mismo orden del árbol, cada hoja tiene una firma y un dato mínimo. Artefactos: export de leads con fecha, fuente y dominio, cruzado con customer_id y con leads previos, para quitar no-prospectos y duplicados, y el cruce de identidad para ver la misma demanda por otra puerta; las entradas únicas con fecha (con canal, motion y segmento) y su vínculo con el pago bastan para separar conteo, mezcla y tiempo. Mezcla o calidad: señales de ajuste congeladas al crear el lead, comparando mezcla contra tasa dentro de cada puerta, nunca con lo que Sales opinó después. Antes del SQL: tiempo a primer toque humano y carga por SDR/AE, con un roster semanal que distinga ramp (capacidad), y la bolsa de estancados con fechas por etapa y lo que compran los retomados (estancamiento). Después del SQL: aceptación del AE según el origen del SQL (incentivos del SDR) y motivos validados con compradores (oferta o precio), porque las razones de pérdida del CRM no alcanzan. Cobro: Won ligado al primer pago. Nada de esto está en el caso: el modelo empieza en el primer pago, el gasto de S&amp;M no sirve como proxy de capacidad ni de leads, y probar la palanca de capacidad pide un experimento; la prueba más rápida es que Finora etiquete hacia atrás, desde su CRM, a los pagadores ya observados. Límites: es propuesta, ninguna hoja tiene hoy su dato (F-230, F-126); que el caso no traiga canal ni etapas no prueba que Finora no los registre: parte puede estar en su CRM, aunque no siempre con historia (F-128, H-076); ventana de deduplicación, SLA y umbral de estancamiento se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no efecto (F-159); comparar entradas directas a SQL contra SQL del SDR no es un experimento; con los pagos solo se acotan los artefactos del lado de pagadores.</aside>
+  <aside class="notes">En el mismo orden del árbol, cada hoja tiene una firma y un dato mínimo, y ninguno está hoy en el caso. Artefactos: leads con fecha, fuente y dominio, cruzados con clientes (customer_id) y con leads previos, para ver repetidos y no-prospectos y el volumen de cada etiqueta en el tiempo; el mismo cruce de identidad deja ver la misma demanda que llega por otra puerta. Mezcla (ToFu): cómo era cada lead al crearse (fuente, segmento, tamaño), no lo que Ventas opinó después, comparando mezcla contra tasa dentro de cada puerta: ¿entran más de los que siempre convierten poco? Antes del SQL: cuánto tarda el primer contacto humano, cuántos leads carga cada SDR (con un roster semanal que distinga ramp) y cuántos llevan semanas sin avanzar, con fechas por etapa. Después del SQL (BoFu): cuántos SQL acepta el AE según quién los generó (incentivos del SDR) y por qué se pierden, preguntado a los compradores (oferta o precio), porque las razones de pérdida del CRM no alcanzan. Cobro: cada Won ligado a su primer pago, para ver cuántos ganados nunca pagan. La idea que ordena todo: con cada etiqueta fechada (fuente, dominio, puerta, etapa), el volumen y el tiempo de cada una muestran dónde y cuándo cambió la brecha; las entradas únicas con fecha y su vínculo con el pago bastan para separar conteo, mezcla y tiempo. El primer paso es reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados. El gasto de S&amp;M no sirve como proxy de capacidad ni de leads, y probar la palanca de capacidad pide un experimento. Límites: es propuesta, ninguna hoja tiene hoy su dato (F-230, F-126); que el caso no traiga canal ni etapas no prueba que Finora no los registre: parte puede estar en su CRM, aunque no siempre con historia (F-128, H-076); ventana de deduplicación, SLA y umbral de estancamiento se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no efecto (F-159); comparar entradas directas a SQL contra SQL del SDR no es un experimento; con los pagos solo se acotan los artefactos del lado de pagadores.</aside>
 </main>
 <script>
 P.draw('S11', (s, P) => {
   // Plan: the tree's five branches in the same order (accent numbers, as in the previous slide) cols 1–4 →
-  // minimum data cols 5–10 → «¿en el caso?» col 12 (coral: what does not exist) · bottom band: proxy warning +
-  // fastest test (accent, focal).
+  // minimum data in plain words cols 5–11 → «¿en el caso?» col 12 (coral: what does not exist) ·
+  // proxy note under the rows · ribbon (focal, full width): Hugo's idea of volume and time per dated tag.
   const BX = 160, DX = 624, SX = 1690;
   s.label(112, 318, 'Rama del árbol', { anchor: 'bl', cls: 'cap' });
   s.label(DX, 318, 'Firma y dato mínimo', { anchor: 'bl', cls: 'cap' });
   s.label(1808, 318, '¿En el caso?', { anchor: 'br', cls: 'cap' });
 
   const rows = [
-    ['Artefactos', '', 'Leads con fecha, fuente y dominio, cruzados con clientes y leads previos'],
-    ['Mezcla', 'ToFu', 'Señales de ajuste congeladas al crear el lead; mezcla contra tasa por puerta'],
-    ['Antes del SQL', '', 'Primer toque y carga por SDR/AE; estancados con fechas'],
-    ['Después del SQL', 'BoFu', 'Aceptación del AE por origen del SQL; motivos validados con compradores'],
-    ['Cobro', '', 'Won ligado al primer pago'],
+    ['Artefactos', '', 'Leads con fecha, fuente y dominio, cruzados con clientes y leads previos: repetidos, no-prospectos y el volumen de cada etiqueta en el tiempo'],
+    ['Mezcla', 'ToFu', 'Cómo era cada lead al crearse (fuente, segmento, tamaño), no lo que Ventas opinó después: ¿entran más de los que siempre convierten poco?'],
+    ['Antes del SQL', '', 'Cuánto tarda el primer contacto, cuántos leads carga cada SDR y cuántos llevan semanas sin avanzar'],
+    ['Después del SQL', 'BoFu', 'Cuántos SQL acepta el AE según quién los generó, y por qué se pierden, preguntado a los compradores'],
+    ['Cobro', '', 'Cada Won ligado a su primer pago: cuántos ganados nunca pagan'],
   ];
-  const Y = [388, 472, 556, 640, 724];
+  const Y = [382, 470, 558, 646, 734];
   s.line(BX, Y[0], BX, Y[4], { stroke: 'accent', w: 5 });
   rows.forEach(([b, sub, d], i) => {
     const y = Y[i];
-    s.line(112, y + 42, 1808, y + 42, { stroke: 'rule', w: 1 });
+    s.line(112, y + 44, 1808, y + 44, { stroke: 'rule', w: 1 });
     s.circle(BX, y, 15, { fill: 'accent', stroke: 'bg', w: 2 });
     s.label(BX, y, String(i + 1), { anchor: 'mc', cls: 'n' });
     s.label(BX + 32, y, `${b}${sub ? `<span>${sub}</span>` : ''}`, { anchor: 'ml', cls: 'br' });
-    s.label(DX, y, d, { anchor: 'ml', cls: 'dt', w: 960 });
+    s.label(DX, y, d, { anchor: 'ml', cls: 'dt', w: 1040 });
     s.label(1808, y, 'no', { anchor: 'mr', cls: 'no', id: `s11-no${i}` });
   });
 
-  // Bottom band: why spend is not a proxy · the fastest test (focal).
-  s.label(112, 818, '<b>El gasto de S&amp;M no sirve de proxy</b>; probar la capacidad pide un experimento', { cls: 'nt', w: 700 });
-  s.rect(904, 800, 904, 118, { fill: 'accent-soft', stroke: null });
-  s.rect(904, 800, 6, 118, { fill: 'accent', stroke: null, id: 's11-fast', focal: true });
-  s.label(936, 859, '<b>Prueba más rápida</b>: etiquetar desde el CRM, hacia atrás, a los pagadores ya observados', { anchor: 'ml', cls: 'ft', w: 840 });
+  // Why spend is not a proxy (under the rows) · the ribbon: volume and time of every dated tag (focal).
+  s.label(112, 798, '<b>El gasto de S&amp;M no sirve de proxy</b>; probar la capacidad pide un experimento', { cls: 'nt', w: 1696 });
+  const RY = 846, RH = 112;
+  s.rect(112, RY, 1696, RH, { fill: 'accent-soft', stroke: null });
+  s.rect(112, RY, 8, RH, { fill: 'accent', stroke: null, id: 's11-ribbon', focal: true });
+  s.label(148, RY + RH / 2, 'Con cada etiqueta fechada (fuente, dominio, puerta, etapa), el volumen y el tiempo de cada una muestran dónde y cuándo cambió la brecha · <b>Primer paso</b>: reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados', { anchor: 'ml', cls: 'ft', w: 1628 });
 });
 </script>
 </body>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S15 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S15"] {
+  .rl { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .in { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .in.kn { color: var(--bg); }
+  .in.lt { font-weight: 400; color: var(--ink-2); }
+  .ds { font-size: 20px; color: var(--ink-2); }
+  .ds b { color: var(--ink); font-weight: 600; }
+  .lead2 { font-size: 26px; line-height: 1.3; color: var(--ink-2); }
+  .lead2 b { color: var(--ink); font-weight: 600; }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 26px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 8px; }
+  .nr { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nr b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S15" data-composition="stacked_decomposition (100% por línea del puente)" data-family="economics" data-word-budget="105" data-page="15">
+  <header class="header">
+    <div class="kicker">Revenue · qué vemos y qué no</div>
+    <h1 class="headline">Con cliente, mes y monto se ve qué cambió, no por qué</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, mar-22–oct-24; cada barra = 100% del MRR de esa línea del puente de monto pagado · T-074, T-076, T-082, T-086, T-087 · F-136, F-186</span><span class="page"></span></footer>
+  <aside class="notes">Con el monto pagado se puede operar hoy el MRR pagado observado y su puente, pero el puente mezcla orígenes. En la expansión, 29% del MRR se revierte al mes siguiente, y 25,3% del movimiento bruto sin altas (que suma COP 282,8 millones entre mar-22 y sep-24) vuelve exacto al nivel previo. En el churn, 44% de los 751 churns observados vuelve a pagar al mes siguiente; en la reactivación, la parte cuyo monto cubre los meses del hueco más el corriente explica 42,6% del MRR, frente a 11,5% que regresa al monto usual, y el resto, 45,9%, no encaja en esas firmas. La contracción, en cambio, no muestra firma de cobro: 88,9% de su MRR sigue igual o más abajo al mes siguiente y 4,0% regresa al nivel previo. Sin estado de suscripción ni periodo de servicio no se sabe por qué cambió: antes de llamar churn o MRR a esos movimientos hace falta una regla de normalización y una ventana de gracia. Límites: sin estado de suscripción, periodo de servicio ni fecha de factura, el puente normalizado exacto no es medible, solo se acota (F-186); las firmas de cobro son lecturas de patrón, no confirmación de atraso o prepago (F-136); la prueba de la contracción solo mira el mes siguiente (X-100); el 44% dice que vuelve a pagar, no con qué monto (X-102, X-145); la vuelta de pagadores es un loop de Revenue, no el Reactivate del CRO (F-213).</aside>
+</main>
+<script>
+P.draw('S15', (s, P) => {
+  // Plan: 100% bars per bridge line cols 1–8 (label · bar · descriptor under the bar) · «qué no se ve» cols 10–12.
+  // Accent = billing-timing signature (undoes itself next month) · ink = holds · light = no signature.
+  const X0 = 400, BW = 780, H = 42, Y = [460, 572, 684, 796];
+  const bw = (p) => (p / 100) * BW;
+
+  s.label(112, 322, '<b>25,3%</b> del movimiento bruto sin altas (<span style="white-space:nowrap">COP 282,8 millones</span>, <span style="white-space:nowrap">mar-22–sep-24</span>) vuelve exacto al nivel previo al mes siguiente', { cls: 'lead2', w: 1200 });
+  s.rect(X0, 406, 22, 22, { fill: 'accent' });
+  s.label(X0 + 32, 417, 'firma de cobro: se deshace al mes siguiente', { anchor: 'ml', cls: 'key' });
+
+  const rows = [
+    ['Churn observado', [[44, 'accent', '44%']], 'de 751 churns, vuelve a pagar'],
+    ['Reactivación', [[42.6, 'accent', '42,6%'], [11.5, 'accent', '11,5%'], [45.9, 'ink-5', '45,9%']], 'cubre el hueco · vuelve al monto usual · sin firma'],
+    ['Expansión', [[29, 'accent', '29%']], 'se revierte'],
+    ['Contracción', [[4.0, 'accent', ''], [7.1, 'ink-5', ''], [88.9, 'ink-3', '88,9%']], '<b>4,0%</b> vuelve al nivel previo · sigue igual o más abajo'],
+  ];
+  rows.forEach(([name, segs, desc], i) => {
+    const y = Y[i];
+    s.label(112, y + H / 2, name, { anchor: 'ml', cls: 'rl' });
+    s.rect(X0, y, BW, H, { fill: 'ink-5' });
+    let x = X0;
+    segs.forEach(([p, tone, lab], j) => {
+      const w = bw(p);
+      s.rect(x, y, w, H, { fill: tone, id: i === 1 && j === 0 ? 's15-react' : null, focal: i === 1 && j === 0 });
+      if (j) s.line(x, y, x, y + H, { stroke: 'bg', w: 3 });
+      if (lab) s.label(x + 14, y + H / 2, lab, { anchor: 'ml', cls: 'in' + (tone === 'ink-3' ? ' kn' : tone === 'ink-5' ? ' lt' : '') });
+      x += w;
+    });
+    s.label(X0, y + H + 10, desc, { cls: 'ds', w: BW });
+  });
+
+  // What cannot be seen, and what it takes before naming these movements.
+  s.line(1400, 460, 1400, 862, { stroke: 'rule', w: 1.5 });
+  s.label(1436, 460, '<b>No se ve el porqué</b>suscripción, tarifa, descuento o cobro', { cls: 'nt', w: 372 });
+  s.label(1436, 680, '<b>Antes de llamarlo churn o MRR</b>: regla de normalización y ventana de gracia', { cls: 'nr', w: 372 });
+});
+</script>
+</body>
+</html>

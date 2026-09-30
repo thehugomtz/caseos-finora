@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S14 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S14"] {
+  .yr { font-size: 26px; font-weight: 600; color: var(--ink); }
+  .vl { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .vl.m1 { color: var(--ink-2); font-weight: 400; }
+  .ax { font-size: 20px; color: var(--ink-3); }
+  .key { font-size: 20px; color: var(--ink-2); }
+  .hd { font-size: 20px; line-height: 1.25; color: var(--ink-2); }
+  .hd b { color: var(--ink); font-weight: 600; }
+  .pc { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .pc.lt { font-weight: 400; color: var(--ink-2); }
+  .nt { font-size: 24px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S14" data-composition="dumbbell + aligned_shares" data-family="comparison" data-word-budget="90" data-page="6">
+  <header class="header">
+    <div class="kicker">Revenue · pricing introductorio observable</div>
+    <h1 class="headline">Lo observable es el primer y segundo pago; el descuento no es verificable</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, altas de ventana limpia; medianas del primer y segundo pago; con holgura = más de 1,5× · T-051, T-062, T-054, T-055 · F-093, F-134</span><span class="page"></span></footer>
+  <aside class="notes">Del pricing de entrada solo se observa lo que pagan las altas en sus primeros meses. La mediana del primer pago es COP 63,0 mil en 2022, COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y la del segundo pago, COP 52,5 mil, COP 36,8 mil y COP 38,9 mil. En 2022 el primer pago supera con holgura al segundo en 23,2% de las altas, frente a 7,1% en 2023 y 11,6% en 2024, y el segundo pago repite exacto el primero en 73,5%, 90,3% y 77,3%: un patrón que coincide con pagos iniciales grandes o cobros retroactivos en 2022 más que con un cambio de tarifa. Precio de lista, descuento introductorio, crédito o pausa no se pueden separar: el dato es un monto por cliente y mes, sin catálogo de precios. Límites: es monto pagado observado, sin lista, plan, descuento ni crédito (F-093); primer pago observado no es adquisición ni precio de entrada; las medianas del segundo pago son de las altas con segundo pago (T-062) y los porcentajes, sobre todas las altas (T-054, T-055); la huella de un descuento temporal limpio casi no aparece en el histórico, consistente con que los descuentos sean algo por introducir, pero no prueba que no existieran (F-134); no se infieren descuentos del tamaño de un salto del monto.</aside>
+</main>
+<script>
+P.draw('S14', (s, P) => {
+  // Plan: dumbbell cols 1–8 (rows 2022–2024, x = median payment, COP mil) · aligned shares cols 9–12.
+  const M0 = [63.0, 36.75, 42.0], M1 = [52.5, 36.75, 38.85], YR = ['2022', '2023', '2024'];
+  const Y = [470, 590, 710], X0 = 300, X1 = 1100;
+  const x = (v) => X0 + ((v - 30) / 40) * (X1 - X0);
+
+  // Axis and grid.
+  [30, 40, 50, 60, 70].forEach((t) => {
+    s.line(x(t), 410, x(t), 772, { stroke: t === 30 ? 'rule' : 'ink-5', w: 1.5 });
+    s.label(x(t), 786, String(t), { anchor: 'tc', cls: 'ax' });
+  });
+  s.label(X1, 822, 'Mediana del pago, COP mil', { anchor: 'tr', cls: 'ax' });
+
+  // Key.
+  s.dot(X0 + 8, 372, { r: 9, fill: 'ink' });
+  s.label(X0 + 26, 372, 'primer pago', { anchor: 'ml', cls: 'key' });
+  s.circle(X0 + 172, 372, 8, { fill: 'bg', stroke: 'ink', w: 2.5 });
+  s.label(X0 + 190, 372, 'segundo pago', { anchor: 'ml', cls: 'key' });
+
+  YR.forEach((yr, i) => {
+    const y = Y[i], a = x(M0[i]), b = x(M1[i]);
+    s.label(112, y, yr, { anchor: 'ml', cls: 'yr' });
+    if (i === 0) s.line(b, y, a, y, { stroke: 'accent', w: 12, cap: 'butt', id: 's14-gap', focal: true });
+    else if (a !== b) s.line(b, y, a, y, { stroke: 'ink-4', w: 4 });
+    s.circle(b, y, a === b ? 16 : 10, { fill: 'bg', stroke: 'ink', w: 3 });
+    s.dot(a, y, { r: 10, fill: 'ink' });
+    if (a === b) s.label(a + 28, y, P.fmt(M0[i], { d: 1 }).replace('.', ',') + ' <span class="vl m1">iguales</span>', { anchor: 'ml', cls: 'vl' });
+    else {
+      s.label(a + 18, y, P.fmt(M0[i], { d: 1 }).replace('.', ','), { anchor: 'ml', cls: 'vl' });
+      s.label(b - 18, y, P.fmt(M1[i], { d: 1 }).replace('.', ','), { anchor: 'mr', cls: 'vl m1' });
+    }
+  });
+  s.callout({ target: [(x(52.5) + x(63)) / 2, Y[0] - 8], at: [x(52.5) - 60, 404], text: 'Pagos iniciales grandes o retroactivos, más que un cambio de tarifa', anchor: 'bl', w: 520, cls: 'annotation' });
+
+  // Aligned shares (same rows): bars on one 0–100% scale.
+  const S1 = [73.5, 90.3, 77.3], S2 = [23.2, 7.1, 11.6], BX = [1272, 1576], BW = 180;
+  s.label(BX[0], 430, '<b>2.º pago repite el 1.º</b>', { anchor: 'bl', cls: 'hd', w: 280 });
+  s.label(BX[1], 430, '<b>1.º supera al 2.º con holgura</b>', { anchor: 'bl', cls: 'hd', w: 232 });
+  [S1, S2].forEach((S, k) => S.forEach((v, i) => {
+    const w = (v / 100) * BW, y = Y[i];
+    s.line(BX[k], y - 22, BX[k], y + 22, { stroke: 'rule', w: 1.5 });
+    s.rect(BX[k], y - 14, w, 28, { fill: k === 1 && i === 0 ? 'ink' : 'ink-4' });
+    s.label(BX[k] + w + 10, y, P.fmt(v, { d: 1 }).replace('.', ',') + '%', { anchor: 'ml', cls: 'pc' + (k === 1 && i === 0 ? '' : ' lt') });
+  }));
+
+  s.label(112, 880, '<b>No es verificable</b>: lista, descuento, crédito o pausa no se separan en un monto por cliente y mes.', { cls: 'nt', w: 1600 });
+});
+</script>
+</body>
+</html>

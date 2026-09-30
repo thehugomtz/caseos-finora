@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S12 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S12"] {
+  .vt { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .vt span { font-weight: 400; color: var(--ink-2); font-size: 22px; }
+  .fo { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .fd { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .dd { font-size: 24px; line-height: 1.3; color: var(--ink); }
+  .dd span { display: block; font-size: 22px; color: var(--ink-2); margin-top: 4px; }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .cp { font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .cp span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
+  .chip { background: var(--accent); color: var(--ink); font-size: 20px; font-weight: 600; padding: 2px 10px; }
+  .nt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
+  .ac { font-size: 22px; line-height: 1.3; color: var(--accent-text); }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S12" data-composition="layered_stack (capa técnica → dos vías de uso)" data-family="operating_model" data-word-budget="125" data-page="21">
+  <header class="header">
+    <div class="kicker">Growth · cómo operarlo · propuesta</div>
+    <h1 class="headline">Proponemos una vía formal por foro y otra de agentes para el día a día</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta (R-019, R-033); qué decide el CRO en cada foro está por definir con Finora; no se afirma que Finora tenga un problema de CRM · F-144, F-145, F-147–F-149, F-238, F-240, F-242</span><span class="page"></span></footer>
+  <aside class="notes">Primero la capa técnica: una cuenta común que une CRM, producto y facturación; el historial de etapas del CRM, que suele venir de forma nativa; la puerta y el canal por cuenta desde la primera visita; el gasto por canal, y la facturación con estado de suscripción. Si Finora ya lo registra, se conecta; si no, se instrumenta, porque lo que no se capture desde ya no se reconstruye después. Encima, una vía formal por foro que lee el bowtie por motion: el semanal decide oportunidades, estancamientos y handoffs; el mensual, la mezcla de motion y canal; el trimestral, la inversión y la capacidad. Y otra vía para el día a día: Análisis Ad hoc por hipótesis y agentes de IA que trabajan solo sobre métricas gobernadas y entran con un piloto controlado. El lado Revenue ya se puede operar mes a mes, pero con pagos observados el CRO confundiría el momento del cobro con churn y expansión: la facturación es la primera pieza técnica. Límites: qué decide el CRO en cada foro aún no está definido por Finora; no sabemos qué parte de la capa técnica ya existe (H-076); la atribución reparte crédito, no prueba causa: para decidir presupuesto hacen falta experimentos (F-144, F-149); los agentes van encima de métricas gobernadas, no en la base, con piloto controlado (F-149); el to-be mide hacia adelante salvo que Finora tenga historial (F-242). La línea de cuenta común e historial de etapas viene de C-013 (anexo).</aside>
+</main>
+<script>
+P.draw('S12', (s, P) => {
+  // Plan: two uses on top — formal forums as a staircase by horizon (cols 1–8) · day-to-day (cols 9–12) —
+  // resting on the technical layer (full width). Accent: billing, the first technical piece.
+  // Formal way.
+  s.label(112, 318, '<b>Vía formal por foro</b> <span>· bowtie por motion</span>', { cls: 'vt', w: 1000 });
+  const ST = [[112, 600, 'Semanal', 'oportunidades, estancamientos y handoffs'], [472, 536, 'Mensual', 'mezcla de motion y canal'], [832, 472, 'Trimestral', 'inversión y capacidad']];
+  s.polyline([[112, 600], [472, 600], [472, 536], [832, 536], [832, 472], [1168, 472]], { stroke: 'ink', w: 2.5 });
+  ST.forEach(([x, y, f, d], i) => {
+    const tx = i ? x + 20 : x;             // clear the riser
+    s.label(tx, y - 14, f, { anchor: 'bl', cls: 'fo' });
+    s.label(tx, y + 16, d, { cls: 'fd', w: 316 });
+  });
+
+  // Day-to-day way.
+  s.line(1224, 320, 1224, 690, { stroke: 'rule', w: 1.5 });
+  s.label(1264, 318, '<b>Vía del día a día</b>', { cls: 'vt', w: 544 });
+  s.label(1264, 430, 'Análisis Ad hoc<span>por hipótesis del árbol</span>', { cls: 'dd', w: 544 });
+  s.label(1264, 560, 'Agentes de IA<span>solo sobre métricas gobernadas, con piloto controlado</span>', { cls: 'dd', w: 544 });
+
+  // Both ways rest on the technical layer.
+  [640, 1520].forEach((x) => s.line(x, 744, x, 700, { stroke: 'ink-3', w: 2.5, arrow: 'end', headSize: 12 }));
+  s.rect(112, 756, 1696, 124, { fill: 'surface', stroke: null });
+  s.line(112, 756, 1808, 756, { stroke: 'ink', w: 3 });
+  s.label(136, 776, 'Capa técnica, primero', { cls: 'cap' });
+  const C = [
+    [136, 'Cuenta común', 'CRM, producto y facturación'],
+    [472, 'Historial de etapas', 'del CRM, suele venir nativo'],
+    [800, 'Puerta y canal', 'desde la primera visita'],
+    [1132, 'Gasto por canal', ''],
+    [1464, 'Facturación', 'con estado de suscripción'],
+  ];
+  C.forEach(([x, t, sub], i) => s.label(x, 818, `${t}${sub ? `<span>${sub}</span>` : ''}`, { cls: 'cp', w: 310, id: `s12-c${i}` }));
+  const fb = s.box('#s12-c4');
+  s.label(fb.l + 140, 818, 'primera pieza', { cls: 'chip', id: 's12-first', focal: true });
+
+  // Notes under the layer.
+  s.label(112, 904, '<b>Si existe, se conecta; si no, se instrumenta</b>: lo que no se capture ya no se reconstruye', { cls: 'nt', w: 1180 });
+  s.label(1464, 904, 'Sin ella, el cobro se confunde con churn y expansión', { cls: 'ac', w: 344 });
+});
+</script>
+</body>
+</html>

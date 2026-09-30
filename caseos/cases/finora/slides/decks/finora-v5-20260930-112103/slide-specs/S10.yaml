@@ -29,22 +29,36 @@ slide:
     4: estado de las hojas (ninguna se valida hoy; del cobro solo el arranque)
   objects:
     - {id: root, kind: text, content: "Brecha: más leads, no más ventas"}
-    - {id: step0, kind: node, content: "Paso 0: qué es venta (Won o primer pago) y la ventana, por cohorte de entrada"}
+    - id: step0
+      kind: node
+      content: "Paso 0: qué es venta (Won o primer pago) y la ventana, por cohorte de entrada"
+      why: "Importa porque la premisa cambia según qué se cuente y en qué ventana. Altas 2024 contra 2023: mar–oct 433 → 465 (+7%); jul–oct 251 → 203 (−19%) (F-125)"
     - {id: order_spine, kind: path, content: "1 Artefactos · 2 Mezcla (ToFu) · 3 Antes del SQL · 4 Después del SQL (BoFu) · 5 Cobro"}
-    - {id: leaves, kind: text, content: "no-prospectos y duplicados · cambio de definición · misma demanda, otra puerta · peor mezcla al entrar · capacidad y primer toque · estancados · incentivos del SDR · decisión en Proposal · Won que no llega a pagar"}
+    - id: leaves             # REV-20260930-161812: cada hoja lleva una glosa simple (4–8 palabras) bajo su nombre (R-032)
+      kind: text
+      content:
+        - "No-prospectos y duplicados · spam, clientes o ex-clientes, leads repetidos"
+        - "Cambio de definición · cambió qué es lead, o cohortes sin madurar"
+        - "Misma demanda, otra puerta · compraba por Self Service; ahora entra como lead"
+        - "Peor mezcla al entrar · entran más de los que siempre convierten poco"
+        - "Capacidad y tiempo a primer toque · nadie los contacta a tiempo"
+        - "Estancados en Working o Engaged · contactados o que respondieron; semanas sin ser SQL"
+        - "Incentivos del SDR · pago por reunión o SQL: pasa SQL inmaduros"
+        - "Decisión en Proposal: oferta o precio · pierden por precio, competidor o funcionalidad"
+        - "Won que no llega a pagar · se cerró la venta pero nunca paga"
   encodings:
     accent: "el orden de descarte"
     hollow_marker: "hoy no se valida ni se descarta"
-    half_marker: "del cobro solo se ve el arranque"
+    half_marker: "en los pagos no existe el Won; solo se ve quién paga el 1.er mes y no el 2.º: 2,8% de las altas en 2023 y 3,1% en 2024 (F-230)"
   annotations:
     - {at: order_spine, text: "en este orden"}
   layout_intent:
     grid: "raíz cols 1–2; paso 0 cols 3–4; ramas cols 5–7; hojas cols 8–12"
     reading_path: "izquierda → derecha, de arriba abajo en las ramas"
     whitespace: "arriba a la izquierda"
-  text_budget: 120
-  must_show: ["qué es venta y qué ventana, antes", "orden artefactos → mezcla → antes del SQL → después del SQL → cobro", "cada pedazo en una sola hoja"]
-  avoid: ["matriz de hipótesis con bullets", "cards por hipótesis", "cifras"]
-  data: {source: "sin datos: propuesta (R-032)", values: []}
-  notes: "Reordena las ramas de D-001 (X-150, decisión de Hugo); premisa depende de la ventana (F-125, F-229); comprobación en pagos en anexo (C-011, C-012)."
+  text_budget: 230           # era 120; sube por las glosas de cada hoja, el porqué del Paso 0 y la nota del cobro que pidió Hugo (REV-20260930-161812)
+  must_show: ["qué es venta y qué ventana, antes, y por qué importa", "orden artefactos → mezcla → antes del SQL → después del SQL → cobro", "cada pedazo en una sola hoja", "cada hoja se entiende sola (glosa)"]
+  avoid: ["matriz de hipótesis con bullets", "cards por hipótesis", "cifras fuera de F-125 y F-230", "jerga sin glosa (p. ej. «señales congeladas»: se explica en S11 y en notas)"]
+  data: {source: "propuesta (R-032); cifras del pedido de Hugo con su fuente", values: ["F-125: altas 2024 vs 2023, mar–oct 433 → 465 (+7%), jul–oct 251 → 203 (−19%)", "F-230: altas que pagan el 1.er mes y no el 2.º, 2,8% (2023) y 3,1% (2024), altas de mar–oct con 2.º mes observable"]}
+  notes: "Reordena las ramas de D-001 (X-150, decisión de Hugo); premisa depende de la ventana (F-125, F-229); comprobación en pagos en anexo (C-011, C-012). La hoja «Peor mezcla al entrar» deja de llevar «(señales congeladas)» en el lienzo: su glosa dice qué es; cómo se mide va en S11 y en las notas."
   sources: [F-228, F-229, F-230, F-231, F-232, F-127, F-128, F-129, F-122, F-212, F-125]
