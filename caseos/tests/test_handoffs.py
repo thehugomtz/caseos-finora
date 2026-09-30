@@ -281,3 +281,16 @@ def test_a_claim_edit_hugo_asked_for_in_the_chat_does_not_accept_it_for_him(case
     assert case.read_data("story/package.yaml")["claims"][0]["visual_finding"] == chart["id"] and out["validation"]
     with pytest.raises(StoreError):
         actions.run(case, cid, "update_story", {"visual_finding": f["id"], "via": "vía Claude"})         # no chart, no swap
+
+
+def test_a_new_draft_keeps_the_chart_hugo_chose(case):
+    from caseos import actions
+    f, t = _accepted_evidence(case)
+    story.apply_package(case, _package(f, t, key="entry"), actor="cos")
+    cid = case.read_data("story/package.yaml")["claims"][0]["claim_id"]
+    chart = case.create("finding", {"headline": "MRR por cliente activo", "visual": {"tipo": "linea", "x": ["ene-22"], "series": []},
+                                    "links": [t["id"]]}, actor="analytics")
+    actions.run(case, cid, "update_story", {"visual_finding": chart["id"], "visual_intent": "Línea en COP", "via": "vía Claude"})
+    story.apply_package(case, _package(f, t, key="entry", answer="Otra redacción", visual_intent="Barras"), actor="cos", draft=True)
+    c = case.get(cid)
+    assert c["visual_finding"] == chart["id"] and c["visual_intent"] == "Línea en COP" and chart["id"] in c["evidence_ids"]

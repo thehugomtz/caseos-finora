@@ -1,4 +1,4 @@
-version: 23
+version: 22
 executive_question: ¿Qué explicaciones podemos defender ante el CRO y el CFO con los datos disponibles, qué huecos
   en su WoW y qué modelos se proponen para poder llegar a tomar mejores decisiones?
 executive_question_history:
@@ -246,7 +246,7 @@ risks:
 - Cualquier comparación entre leads trabajados y no trabajados mezcla a quién eligió el SDR con lo que aporta el
   contacto (H-028, H-050).
 mode: challenge
-updated_at: '2026-09-29T18:23:49-06:00'
+updated_at: '2026-09-29T14:51:13-06:00'
 executive_question_note: Formulada como pregunta desde brief v0.3 §01 · Qué estamos tratando de conseguir.
 stress_test:
 - n: 1
@@ -328,7 +328,263 @@ parked:
   modelar quién comprará «algún día»; adivinar descuentos históricos; diseñar o mostrar funciones de la herramienta.
   (brief v0.3 §08 · Lo que dejamos fuera por ahora)
 source: brief v0.3 (importado)
-pending: {}
+pending:
+  plan:RT-030:
+    value:
+      id: RT-030
+      question: ¿Qué etapas aplican a cada funnel —Executive, Self Service, Hybrid A y B, Reactivate— por canal
+        de entrada, literalmente como el Executive (New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal
+        AE → Won), y cómo se mide cada funnel con un catálogo MECE de métricas explícitas (volumen, conversión por
+        etapa, velocidad como el tiempo de cierre, valor, calidad y estancamiento)?
+      kind: measurement
+      agent: measurement
+      intensity: L2
+      work: propuesta
+      draft_answer: 'De arranque: el canal es la puerta de entrada y el funnel es la ruta. Canales candidatos, a
+        confirmar con Finora: digital (pago, orgánico, contenido), referidos, partners, eventos y prospección saliente.
+        Executive usa las etapas de Hugo tal cual. Self Service: visita → registro → activación → checkout → primer
+        pago. Hybrid A: registro → uso → señal → contacto SDR/AE → Demo o Proposal → Won → primer pago. Hybrid B:
+        New → Working SDR → Engaged → registro en producto → checkout → primer pago. Reactivate: estancado → reactivado
+        → reasignado a una ruta. En cada funnel, métricas por familia: volumen (p. ej., leads digitales), conversión
+        por etapa (p. ej., CR digital de lead a primer pago), velocidad (tiempo a primer contacto, tiempo en etapa,
+        tiempo de cierre), valor (ticket estabilizado al nudo), calidad (permanencia temprana) y estancamiento;
+        cada métrica en un solo lugar.'
+      hugo_said:
+      - text: queria ver una prouesta aterrizada por casuistica de canal literalmente de los funeles asi como te
+          pase la de new, working, SDR, engaged, bla bla quiero ver cuales aplican para los otros
+        ref: N-050
+      - text: ¿cada funnel? ¿cómo lo mides? no me refiero a solo medir la connversión, ¿que metricas hay en todo
+          eso? Ej. Digital podría tener digital leads y CR digital, algo asi, Executive ya sabes que tiens New,
+          pero tambien puedes tener métricas de tiempo de cierre
+        ref: N-050
+      - text: C-009 ¿hay otras métricas que debean de proponerse? De todo eso hay que ser explicitos en como se
+          miden y siempre siempre ser MECE
+        ref: N-050
+      steps:
+      - kind: proposal
+        what: 'Mapa funnel × canal: qué canales alimentan cada funnel y sus etapas literales en orden, con criterio
+          de entrada y salida y dueño; cuáles etapas del Executive aplican a los demás y cuáles no, y por qué.'
+        where: []
+      - kind: proposal
+        what: 'Catálogo MECE por funnel y canal: volumen, conversión por etapa, velocidad (incluido el tiempo de
+          cierre), valor, calidad y estancamiento, con fórmula explícita, grano, hito y si se calcula hoy. Ejemplos
+          de Hugo: Digital con leads digitales y CR digital; Executive con New y tiempo de cierre.'
+        where: []
+      - kind: proposal
+        what: 'Métricas que C-009 aún no propone (p. ej., CAC por funnel y canal, payback, win rate, velocidad del
+          pipeline, cobertura de primer contacto) con cómo se miden, y la prueba de MECE: cada métrica en un solo
+          funnel o como común.'
+        where: []
+      - kind: data
+        what: 'Lo que ya se puede medir con los pagos: el nudo (primer pago) por mes y el ticket estabilizado.'
+        where:
+        - mart.new_customers
+        - mart.customer_month
+      why: 'Hugo en el chat (29-sep, revisión del Story v2): C-021 va bien pero falta la propuesta aterrizada por
+        canal con las etapas de cada funnel; C-006 no se entiende y debe salir de C-021; C-009 debe proponer más
+        métricas, explícitas y MECE.'
+      links:
+      - C-021
+      - C-006
+      - C-009
+      - C-005
+      - R-029
+      - R-022
+      - R-023
+      - N-033
+      - N-037
+      - N-038
+      - N-050
+      - Q-063
+      - Q-064
+      slides:
+      - S2.3
+      - S2.5
+      flags: []
+    basis: hugo
+    why: 'Hugo en el chat (29-sep, revisión del Story v2): C-021 va bien pero falta la propuesta aterrizada por
+      canal con las etapas de cada funnel; C-006 no se entiende y debe salir de C-021; C-009 debe proponer más métricas,
+      explícitas y MECE.'
+    hugo_wording: ''
+    turn_id: ''
+    by: claude
+    at: '2026-09-29T18:23:49-06:00'
+    revises: false
+  plan:RT-031:
+    value:
+      id: RT-031
+      question: ¿Cómo se ordenan las causas de «más leads, pero no más ventas» en un árbol MECE —cada brecha observada
+        en una sola rama—, con qué tendría que ser cierto para validar o descartar cada hoja, el dato mínimo y la
+        palanca del CRO?
+      kind: measurement
+      agent: measurement
+      intensity: L2
+      work: propuesta
+      draft_answer: 'De arranque, en tres cortes: 1) ¿la brecha es real o de medición? (medición: cómo se cuentan
+        los leads, cómo se registra el CRM, tiempo o rezago); 2) si es real, ¿en qué tramo se pierde? (entrada,
+        contacto, calificación, cierre o pago); 3) en ese tramo, ¿por qué? (demanda, calidad, capacidad y velocidad,
+        oferta y precio). Cada hoja con una prueba y un dato; las causas de R-025 y H-052 a H-057 se acomodan en
+        el árbol sin repetirse.'
+      hugo_said:
+      - text: lo mismo en C-023mucho artefacto pero no hay nada MECE, me confunde
+        ref: N-051
+      steps:
+      - kind: proposal
+        what: Árbol MECE en 2–3 niveles, con la regla de corte de cada nivel y la prueba de que las ramas no se
+          traslapan ni dejan huecos.
+        where: []
+      - kind: proposal
+        what: 'Por hoja: qué tendría que ser cierto, qué la descarta, dato mínimo, si existe hoy o hay que pedirlo
+          y qué palanca del CRO mueve; cada causa de R-025 y H-052 a H-057 en una sola hoja.'
+        where: []
+      - kind: proposal
+        what: 'Una versión para lámina que se lea sin la palabra «artefacto»: medición vs negocio, con nombres claros.'
+        where: []
+      why: 'Hugo en el chat (29-sep, revisión del Story v2): en C-023 hay mucho artefacto pero nada MECE, y confunde.'
+      links:
+      - C-023
+      - C-011
+      - R-025
+      - R-010
+      - H-052
+      - H-053
+      - H-054
+      - H-055
+      - H-056
+      - H-057
+      - H-005
+      - H-006
+      - H-007
+      - N-051
+      slides:
+      - S2.6
+      flags: []
+    basis: hugo
+    why: 'Hugo en el chat (29-sep, revisión del Story v2): en C-023 hay mucho artefacto pero nada MECE, y confunde.'
+    hugo_wording: ''
+    turn_id: ''
+    by: claude
+    at: '2026-09-29T18:23:49-06:00'
+    revises: false
+  plan:RT-032:
+    value:
+      id: RT-032
+      question: 'Propuesta de modelo de datos para operar el funnel, as-is vs to-be: ¿qué tablas hay hoy (cliente-mes-monto,
+        industria, gasto de S&M) y qué responden, qué entidades se agregan (cuenta, lead, canal y fuente, campaña,
+        oportunidad, historial de etapas, actividades de SDR/AE, eventos de producto, asignación, suscripción) con
+        llaves y grano, y qué métrica de C-006 y C-009 habilita cada una?'
+      kind: data_model
+      agent: data_engineering
+      intensity: L2
+      work: propuesta
+      draft_answer: 'As-is: raw.transactions (cliente, mes, monto), raw.industry, raw.sm_spend (rubro, mes, monto)
+        y sus marts; responden el stock, el puente de monto pagado y el gasto por rubro; no responden nada antes
+        del pago, ni canal, ni etapa. To-be: account (llave común CRM–producto–facturación), lead con source, medium
+        y campaign, opportunity, stage_history con fecha y autor, activity (toques de SDR/AE), product_event (registro,
+        activación, checkout), assignment (SDR/AE por periodo) y el vínculo con subscription. Cada entidad habilita
+        métricas concretas de C-006.'
+      hugo_said:
+      - text: C-013, quiero ver explicitamente el modelo de datos que se propone, as is vs to be
+        ref: N-052
+      steps:
+      - kind: proposal
+        what: 'As-is: las tablas del modelo de hoy, con grano, campos, qué responden y qué no.'
+        where: []
+      - kind: proposal
+        what: 'To-be: entidades, llaves, grano y campos mínimos, con sus relaciones (1—n) escritas.'
+        where: []
+      - kind: proposal
+        what: 'Brecha as-is → to-be por necesidad (canal, etapa, tiempo de cierre, intervención, estancamiento):
+          qué hay hoy, qué se agrega y qué métrica habilita.'
+        where: []
+      - kind: data
+        what: Confirmar en el catálogo del modelo qué columnas existen hoy.
+        where:
+        - raw.transactions
+        - raw.industry
+        - raw.sm_spend
+        - mart.customer_month
+        - mart.sm_monthly
+      why: 'Hugo en el chat (29-sep, revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos
+        propuesto, as-is vs to-be.'
+      links:
+      - C-013
+      - C-014
+      - C-006
+      - C-009
+      - R-019
+      - R-029
+      - N-052
+      slides:
+      - S2.7
+      flags: []
+    basis: hugo
+    why: 'Hugo en el chat (29-sep, revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos
+      propuesto, as-is vs to-be.'
+    hugo_wording: ''
+    turn_id: ''
+    by: claude
+    at: '2026-09-29T18:23:49-06:00'
+    revises: false
+  plan:RT-033:
+    value:
+      id: RT-033
+      question: 'Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas: ¿cómo
+        se registra un descuento según su origen —promoción digital o física, negociación comercial, retención o
+        partner—, si es digital con su source (canal, campaña, código, landing), y con su tipo, duración, alcance,
+        apilamiento y aprobador, sin confundirlo con cambios de suscripción?'
+      kind: data_model
+      agent: data_engineering
+      intensity: L2
+      work: propuesta
+      draft_answer: 'As-is: solo cliente-mes-monto; no hay lista, plan, descuento ni su origen. To-be, sobre la
+        escalera de R-011: promotion (campaña con canal digital o físico, vigencia y reglas de elegibilidad), promo_code
+        o enlace con source, medium, campaign y landing, y discount_grant ampliado (porcentaje o monto, duración
+        en meses o hasta una fecha, alcance por ítem o suscripción, apilable o no, aprobador y motivo: promoción,
+        negociación, retención o partner), ligado a la suscripción y al evento de cambio. La clasificación de C-020
+        no cambia; el origen permite ver qué canal o promoción trae clientes que se quedan.'
+      hugo_said:
+      - text: C-017 lo mismo quiero ver un modelo de datos y considera mas casuisticas, un descuento podría provenir
+          de una promocion tanto digital como fisica y si es digital hay que considerar el source tambiem
+        ref: N-053
+      steps:
+      - kind: proposal
+        what: 'As-is: lo que hay hoy y qué no responde (origen, source, lista, descuento).'
+        where: []
+      - kind: proposal
+        what: 'To-be: entidades y campos (promotion, promo_code y source, discount_grant ampliado, elegibilidad,
+          aprobación), llaves y vigencias, ligadas a la escalera de R-011.'
+        where: []
+      - kind: proposal
+        what: 'Casuísticas: promoción digital con source, promoción física, descuento negociado, retención, partner,
+          apilados, recurrente contra único, y cómo se clasifica cada una en el puente (C-020).'
+        where: []
+      - kind: proposal
+        what: Brecha as-is → to-be con la pregunta del CFO que habilita cada cambio.
+        where: []
+      why: 'Hugo en el chat (29-sep, revisión del Story v2): C-017 debe mostrar un modelo de datos as-is vs to-be
+        y más casuísticas: promociones digitales y físicas, y el source si es digital.'
+      links:
+      - C-017
+      - C-019
+      - C-020
+      - C-025
+      - R-011
+      - R-021
+      - D-002
+      - N-053
+      slides:
+      - S3.3
+      - S3.2
+      flags: []
+    basis: hugo
+    why: 'Hugo en el chat (29-sep, revisión del Story v2): C-017 debe mostrar un modelo de datos as-is vs to-be
+      y más casuísticas: promociones digitales y físicas, y el source si es digital.'
+    hugo_wording: ''
+    turn_id: ''
+    by: claude
+    at: '2026-09-29T18:23:49-06:00'
+    revises: false
 shaping_state:
   guion:S2:
     state: approved
@@ -470,30 +726,6 @@ shaping_state:
     at: '2026-09-29T14:51:13-06:00'
     version: 1
     via: delegado a Claude en el chat (29-sep 14:05, D-017)
-  plan:RT-030:
-    state: approved
-    by: hugo
-    at: '2026-09-29T18:23:49-06:00'
-    version: 1
-    via: Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude
-  plan:RT-031:
-    state: approved
-    by: hugo
-    at: '2026-09-29T18:23:49-06:00'
-    version: 1
-    via: Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude
-  plan:RT-032:
-    state: approved
-    by: hugo
-    at: '2026-09-29T18:23:49-06:00'
-    version: 1
-    via: Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude
-  plan:RT-033:
-    state: approved
-    by: hugo
-    at: '2026-09-29T18:23:49-06:00'
-    version: 1
-    via: Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude
 storyline_guide:
 - id: S1
   title: Overview
@@ -1807,238 +2039,6 @@ research_plan:
   research_id: R-029
   approved_at: '2026-09-29T14:51:13-06:00'
   sent_at: '2026-09-29T14:51:14-06:00'
-- id: RT-030
-  question: ¿Qué etapas aplican a cada funnel —Executive, Self Service, Hybrid A y B, Reactivate— por canal de entrada,
-    literalmente como el Executive (New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won), y
-    cómo se mide cada funnel con un catálogo MECE de métricas explícitas (volumen, conversión por etapa, velocidad
-    como el tiempo de cierre, valor, calidad y estancamiento)?
-  kind: measurement
-  agent: measurement
-  intensity: L2
-  work: propuesta
-  draft_answer: 'De arranque: el canal es la puerta de entrada y el funnel es la ruta. Canales candidatos, a confirmar
-    con Finora: digital (pago, orgánico, contenido), referidos, partners, eventos y prospección saliente. Executive
-    usa las etapas de Hugo tal cual. Self Service: visita → registro → activación → checkout → primer pago. Hybrid
-    A: registro → uso → señal → contacto SDR/AE → Demo o Proposal → Won → primer pago. Hybrid B: New → Working SDR
-    → Engaged → registro en producto → checkout → primer pago. Reactivate: estancado → reactivado → reasignado a
-    una ruta. En cada funnel, métricas por familia: volumen (p. ej., leads digitales), conversión por etapa (p.
-    ej., CR digital de lead a primer pago), velocidad (tiempo a primer contacto, tiempo en etapa, tiempo de cierre),
-    valor (ticket estabilizado al nudo), calidad (permanencia temprana) y estancamiento; cada métrica en un solo
-    lugar.'
-  hugo_said:
-  - text: queria ver una prouesta aterrizada por casuistica de canal literalmente de los funeles asi como te pase
-      la de new, working, SDR, engaged, bla bla quiero ver cuales aplican para los otros
-    ref: N-050
-  - text: ¿cada funnel? ¿cómo lo mides? no me refiero a solo medir la connversión, ¿que metricas hay en todo eso?
-      Ej. Digital podría tener digital leads y CR digital, algo asi, Executive ya sabes que tiens New, pero tambien
-      puedes tener métricas de tiempo de cierre
-    ref: N-050
-  - text: C-009 ¿hay otras métricas que debean de proponerse? De todo eso hay que ser explicitos en como se miden
-      y siempre siempre ser MECE
-    ref: N-050
-  steps:
-  - kind: proposal
-    what: 'Mapa funnel × canal: qué canales alimentan cada funnel y sus etapas literales en orden, con criterio
-      de entrada y salida y dueño; cuáles etapas del Executive aplican a los demás y cuáles no, y por qué.'
-    where: []
-  - kind: proposal
-    what: 'Catálogo MECE por funnel y canal: volumen, conversión por etapa, velocidad (incluido el tiempo de cierre),
-      valor, calidad y estancamiento, con fórmula explícita, grano, hito y si se calcula hoy. Ejemplos de Hugo:
-      Digital con leads digitales y CR digital; Executive con New y tiempo de cierre.'
-    where: []
-  - kind: proposal
-    what: 'Métricas que C-009 aún no propone (p. ej., CAC por funnel y canal, payback, win rate, velocidad del pipeline,
-      cobertura de primer contacto) con cómo se miden, y la prueba de MECE: cada métrica en un solo funnel o como
-      común.'
-    where: []
-  - kind: data
-    what: 'Lo que ya se puede medir con los pagos: el nudo (primer pago) por mes y el ticket estabilizado.'
-    where:
-    - mart.new_customers
-    - mart.customer_month
-  why: 'Hugo en el chat (29-sep, revisión del Story v2): C-021 va bien pero falta la propuesta aterrizada por canal
-    con las etapas de cada funnel; C-006 no se entiende y debe salir de C-021; C-009 debe proponer más métricas,
-    explícitas y MECE.'
-  links:
-  - C-021
-  - C-006
-  - C-009
-  - C-005
-  - R-029
-  - R-022
-  - R-023
-  - N-033
-  - N-037
-  - N-038
-  - N-050
-  - Q-063
-  - Q-064
-  slides:
-  - S2.3
-  - S2.5
-  flags: []
-  status: sent
-  research_id: R-031
-  approved_at: '2026-09-29T18:23:49-06:00'
-  sent_at: '2026-09-29T18:24:05-06:00'
-- id: RT-031
-  question: ¿Cómo se ordenan las causas de «más leads, pero no más ventas» en un árbol MECE —cada brecha observada
-    en una sola rama—, con qué tendría que ser cierto para validar o descartar cada hoja, el dato mínimo y la palanca
-    del CRO?
-  kind: measurement
-  agent: measurement
-  intensity: L2
-  work: propuesta
-  draft_answer: 'De arranque, en tres cortes: 1) ¿la brecha es real o de medición? (medición: cómo se cuentan los
-    leads, cómo se registra el CRM, tiempo o rezago); 2) si es real, ¿en qué tramo se pierde? (entrada, contacto,
-    calificación, cierre o pago); 3) en ese tramo, ¿por qué? (demanda, calidad, capacidad y velocidad, oferta y
-    precio). Cada hoja con una prueba y un dato; las causas de R-025 y H-052 a H-057 se acomodan en el árbol sin
-    repetirse.'
-  hugo_said:
-  - text: lo mismo en C-023mucho artefacto pero no hay nada MECE, me confunde
-    ref: N-051
-  steps:
-  - kind: proposal
-    what: Árbol MECE en 2–3 niveles, con la regla de corte de cada nivel y la prueba de que las ramas no se traslapan
-      ni dejan huecos.
-    where: []
-  - kind: proposal
-    what: 'Por hoja: qué tendría que ser cierto, qué la descarta, dato mínimo, si existe hoy o hay que pedirlo y
-      qué palanca del CRO mueve; cada causa de R-025 y H-052 a H-057 en una sola hoja.'
-    where: []
-  - kind: proposal
-    what: 'Una versión para lámina que se lea sin la palabra «artefacto»: medición vs negocio, con nombres claros.'
-    where: []
-  why: 'Hugo en el chat (29-sep, revisión del Story v2): en C-023 hay mucho artefacto pero nada MECE, y confunde.'
-  links:
-  - C-023
-  - C-011
-  - R-025
-  - R-010
-  - H-052
-  - H-053
-  - H-054
-  - H-055
-  - H-056
-  - H-057
-  - H-005
-  - H-006
-  - H-007
-  - N-051
-  slides:
-  - S2.6
-  flags: []
-  status: sent
-  research_id: R-032
-  approved_at: '2026-09-29T18:23:49-06:00'
-  sent_at: '2026-09-29T18:24:05-06:00'
-- id: RT-032
-  question: 'Propuesta de modelo de datos para operar el funnel, as-is vs to-be: ¿qué tablas hay hoy (cliente-mes-monto,
-    industria, gasto de S&M) y qué responden, qué entidades se agregan (cuenta, lead, canal y fuente, campaña, oportunidad,
-    historial de etapas, actividades de SDR/AE, eventos de producto, asignación, suscripción) con llaves y grano,
-    y qué métrica de C-006 y C-009 habilita cada una?'
-  kind: data_model
-  agent: data_engineering
-  intensity: L2
-  work: propuesta
-  draft_answer: 'As-is: raw.transactions (cliente, mes, monto), raw.industry, raw.sm_spend (rubro, mes, monto) y
-    sus marts; responden el stock, el puente de monto pagado y el gasto por rubro; no responden nada antes del pago,
-    ni canal, ni etapa. To-be: account (llave común CRM–producto–facturación), lead con source, medium y campaign,
-    opportunity, stage_history con fecha y autor, activity (toques de SDR/AE), product_event (registro, activación,
-    checkout), assignment (SDR/AE por periodo) y el vínculo con subscription. Cada entidad habilita métricas concretas
-    de C-006.'
-  hugo_said:
-  - text: C-013, quiero ver explicitamente el modelo de datos que se propone, as is vs to be
-    ref: N-052
-  steps:
-  - kind: proposal
-    what: 'As-is: las tablas del modelo de hoy, con grano, campos, qué responden y qué no.'
-    where: []
-  - kind: proposal
-    what: 'To-be: entidades, llaves, grano y campos mínimos, con sus relaciones (1—n) escritas.'
-    where: []
-  - kind: proposal
-    what: 'Brecha as-is → to-be por necesidad (canal, etapa, tiempo de cierre, intervención, estancamiento): qué
-      hay hoy, qué se agrega y qué métrica habilita.'
-    where: []
-  - kind: data
-    what: Confirmar en el catálogo del modelo qué columnas existen hoy.
-    where:
-    - raw.transactions
-    - raw.industry
-    - raw.sm_spend
-    - mart.customer_month
-    - mart.sm_monthly
-  why: 'Hugo en el chat (29-sep, revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos propuesto,
-    as-is vs to-be.'
-  links:
-  - C-013
-  - C-014
-  - C-006
-  - C-009
-  - R-019
-  - R-029
-  - N-052
-  slides:
-  - S2.7
-  flags: []
-  status: sent
-  research_id: R-033
-  approved_at: '2026-09-29T18:23:49-06:00'
-  sent_at: '2026-09-29T18:24:06-06:00'
-- id: RT-033
-  question: 'Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas: ¿cómo se
-    registra un descuento según su origen —promoción digital o física, negociación comercial, retención o partner—,
-    si es digital con su source (canal, campaña, código, landing), y con su tipo, duración, alcance, apilamiento
-    y aprobador, sin confundirlo con cambios de suscripción?'
-  kind: data_model
-  agent: data_engineering
-  intensity: L2
-  work: propuesta
-  draft_answer: 'As-is: solo cliente-mes-monto; no hay lista, plan, descuento ni su origen. To-be, sobre la escalera
-    de R-011: promotion (campaña con canal digital o físico, vigencia y reglas de elegibilidad), promo_code o enlace
-    con source, medium, campaign y landing, y discount_grant ampliado (porcentaje o monto, duración en meses o hasta
-    una fecha, alcance por ítem o suscripción, apilable o no, aprobador y motivo: promoción, negociación, retención
-    o partner), ligado a la suscripción y al evento de cambio. La clasificación de C-020 no cambia; el origen permite
-    ver qué canal o promoción trae clientes que se quedan.'
-  hugo_said:
-  - text: C-017 lo mismo quiero ver un modelo de datos y considera mas casuisticas, un descuento podría provenir
-      de una promocion tanto digital como fisica y si es digital hay que considerar el source tambiem
-    ref: N-053
-  steps:
-  - kind: proposal
-    what: 'As-is: lo que hay hoy y qué no responde (origen, source, lista, descuento).'
-    where: []
-  - kind: proposal
-    what: 'To-be: entidades y campos (promotion, promo_code y source, discount_grant ampliado, elegibilidad, aprobación),
-      llaves y vigencias, ligadas a la escalera de R-011.'
-    where: []
-  - kind: proposal
-    what: 'Casuísticas: promoción digital con source, promoción física, descuento negociado, retención, partner,
-      apilados, recurrente contra único, y cómo se clasifica cada una en el puente (C-020).'
-    where: []
-  - kind: proposal
-    what: Brecha as-is → to-be con la pregunta del CFO que habilita cada cambio.
-    where: []
-  why: 'Hugo en el chat (29-sep, revisión del Story v2): C-017 debe mostrar un modelo de datos as-is vs to-be y
-    más casuísticas: promociones digitales y físicas, y el source si es digital.'
-  links:
-  - C-017
-  - C-019
-  - C-020
-  - C-025
-  - R-011
-  - R-021
-  - D-002
-  - N-053
-  slides:
-  - S3.3
-  - S3.2
-  flags: []
-  status: sent
-  research_id: R-034
-  approved_at: '2026-09-29T18:23:49-06:00'
-  sent_at: '2026-09-29T18:24:06-06:00'
 problem:
   statement: Hay que definir nosotros diferentes propuestas de acuerdo a lo que se requiere, propuestas de medición,
     frameworks, etc.

@@ -53,8 +53,8 @@ review:
 origin:
   actor: hugo
 created_at: '2026-09-29T18:03:21-06:00'
-updated_at: '2026-09-29T18:19:59-06:00'
-version: 7
+updated_at: '2026-09-29T18:09:10-06:00'
+version: 6
 job_id: JOB-20260929-180321-45d5
 error: null
 started_at: '2026-09-29T18:03:21-06:00'
@@ -1106,112 +1106,3 @@ skills_loaded:
   why: agente del workspace existente
 validation:
   ok: true
-cos_assessment:
-  summary: "R-030 respalda C-004 en lo que importa: el gasto de S&M y los primeros pagadores no se mueven juntos,
-    y cruzar fechas no atribuye ventas (F-222).\n\n**Qué trae de nuevo.** En buena parte es una réplica con gráficas
-    de R-015: F-216≈F-109, F-218≈F-115/F-116, F-219≈F-118, F-221≈F-108 y F-222≈F-119. Lo nuevo es:\n- el rezago
-    de un mes (F-219, F-220);\n- la composición del gasto por ventana (F-217).\n\n**El riesgo está en el titular:**\n-
-    **El corte de jun-23.** La comparación principal (S&M de 3,01 a 1,44 u contra primeros pagadores de 45,2 a 60,6
-    por mes, F-214) parte justo en may/jun-23. Es el mes en que el archivo deja de repartir Team como un 12% fijo
-    (F-218).\n- **Ago-23.** El −68% de F-215 termina en ago-23, el mes que H-023 sospecha contable.\n- **Dentro
-    de cada tramo.** Hice la cuenta con cifras de R-030. Dentro de cada tramo no aparece «menos gasto, más altas»:\n
-    \ - antes del corte, el S&M queda casi plano mientras los primeros pagadores suben;\n  - después, el S&M sube
-    y los primeros pagadores bajan.\n\n**Qué propongo:**\n1. Contar la lámina como «no se mueven juntos en ningún
-    tramo».\n2. Pedir una corrida corta por tramo, con y sin PayrollExpenses negativo y con jul–oct 2024 aparte.\n3.
-    Registrar una rival de H-025: el corte en cómo se arma el archivo.\n\n**Dos sugerencias más:**\n- Al revisar
-    findings, aceptar uno de cada par replicado para no contar dos veces la misma evidencia.\n- Cuando resuelvas
-    X-004/X-005, el corte de jun-23 es candidato al «No afirmar todavía»."
-  run_id: RUN-20260929-180911-cos-f1c8
-  at: '2026-09-29T18:19:59-06:00'
-  impacts:
-  - target: C-004
-    effect: changes_story
-    why: 'R-030 respalda el claim en lo esencial: en ninguna ventana el S&M acompaña a los primeros pagadores, y
-      R-030 mismo dice que no hay atribución (F-222). Propongo que esto sea el contenido de X-133, no una alerta
-      aparte. Lo que cambia es qué va en la lámina.
-
-
-      1) **El corte de jun-23.** El titular (S&M de 3,01 a 1,44 u y primeros pagadores de 45,2 a 60,6 por mes, F-214)
-      compara ene-may con jun-dic 2023. Ese corte es justo donde el archivo deja de repartir Team como un 12% fijo
-      (F-218, F-115, T-008). C-004 ya cita F-066 y F-115. Lo que no veo explícito es que su comparación principal
-      (F-107, y ahora F-214) cruza ese corte.
-
-
-      2) **El −68% de F-215.** Va de may-23, el último mes del tramo repartido, a ago-23, el mes que H-023 sospecha
-      contable. Además:
-
-      - F-215 llama «pico» a may-23 (3,45), pero el máximo del periodo es oct-22 (3,75, F-216).
-
-      - Pone un movimiento de tres meses del gasto al lado de promedios de 10 y 22 meses de primeros pagadores.
-
-      - F-220 y el mínimo de 0,02 de F-221 dependen del mismo ago-23.
-
-
-      3) **La −0,57 de F-219.** Mezcla dos tramos con niveles distintos y puede salir casi entera del salto entre
-      ellos. T-024 (F-118) ya trae la asociación en cambios mes a mes; R-030 no la reporta.
-
-
-      4) **Cálculo mío.** Uso cifras redondeadas de R-030 y T-014, y supongo que S&M por alta = gasto total ÷ altas
-      de la ventana.
-
-      - Antes del corte, el S&M por mes queda casi plano: ≈2,9–3,0 u en 2022 mar-dic y 3,01 en 2023 ene-may. Mientras
-      tanto, los primeros pagadores suben de 27,2 a 45,2.
-
-      - Después del corte, el S&M sube (1,44 → ≈2,0–2,2 en 2024 ene-oct) y los primeros pagadores bajan de 60,6
-      a 55,4.
-
-
-      Lo robusto es «no se mueven juntos en ningún tramo». «Cuando baja el gasto suben las altas» depende del corte.
-      Esto no prueba que la oposición sea falsa: solo que hoy no se puede separar del cambio en el archivo.'
-  - target: H-023
-    effect: requires_research
-    why: 'R-030 usa ago-23 (1,10 u) como valle (F-215) y como extremo con rezago (F-220). De ese mes dependen también
-      el mínimo de S&M por alta de 0,02 (F-221) y el 38% de Team (F-218).
-
-
-      Si ago-23 es uno de los 5 meses con PayrollExpenses negativo (R-014, X-015), el total se achica y la participación
-      de Team sube sola. R-030 no separa Payroll ni el fin de Freelance, así que no prueba ni descarta H-023.
-
-
-      Lo que cambia es el peso: ahora ese mes entraría a la lámina de C-004. X-015 ya pidió revisar el Payroll negativo
-      en el S&M de R-015; aquí se aterriza en un mes y una lámina concretos.'
-  - target: H-025
-    effect: opens_new_hypothesis
-    why: 'R-030 afina la coincidencia que H-025 quiere explicar: entre ene-may y jun-dic 2023, los primeros pagadores
-      pasan de 45,2 a 60,6 por mes y el S&M de 3,01 a 1,44 u (F-214).
-
-
-      Pero en ese mismo corte el archivo cambia de forma: Team deja de ser un 12% fijo (F-218, F-115). R-030 reconoce
-      que antes de jun-23 no se distingue el gasto observado de un reparto porcentual.
-
-
-      Eso abre una rival igual de compatible con los datos: la caída del S&M es en parte un cambio en cómo se arma
-      el archivo y no tiene relación con los primeros pagadores. Pagos y gasto no separan las dos (F-222). Las separa
-      la documentación del archivo o una bitácora de cambios comerciales con fecha (X-110, X-118).'
-  - target: H-022
-    effect: supports
-    why: 'R-030 lo muestra con el S&M total: sentidos distintos entre ventanas (F-214, F-221) y asociación negativa
-      en niveles (F-219, T-106). En su versión descriptiva, el cálculo por tramo (ver C-004) lo deja más firme:
-      en ningún tramo el gasto acompaña a los primeros pagadores.
-
-
-      Siguen abiertas las condiciones de X-003 (solo forma y fechas, sin montos comparables) y de X-015 (Payroll
-      negativo). Si el recálculo sin Payroll negativo mueve los niveles, lo que hay que volver a mirar es la dirección
-      por tramo, no la hipótesis.'
-  - target: C-010
-    effect: supports
-    why: 'F-221 reproduce el cociente de C-010 (0,11 → 0,04 u; T-014 lo da como 0,105 → 0,036), y F-222 refuerza
-      que no es CAC. Tres cuidados para la lámina:
-
-      1) La comparación 2022 vs 2024 también cruza el corte de jun-23. El −66% vale como cociente en u, no como
-      gasto comparable.
-
-      2) El mínimo de 0,02 en 2023 jun-dic cae en el tramo de ago-23 (H-023) y no debería ir arriba.
-
-      3) Habilitación sale 10% en 2022 S1 (F-217) y 12% en 2022 (T-012). Son ventanas distintas, pero en dos láminas
-      seguidas parecen contradicción.'
-  - target: H-006
-    effect: no_material_impact
-    why: F-217 muestra que la «capacidad comercial» pasa de 26% a 38% del S&M. Pero es participación de gasto, no
-      número de SDR/AE ni tiempos de atención. Además, antes de jun-23, según el propio R-030, no se distingue de
-      un reparto porcentual. F-207 y X-014 ya cierran ese atajo. No suma ni resta a H-006.

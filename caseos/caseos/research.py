@@ -136,12 +136,21 @@ MEASUREMENT = _obj({
     "problem_interpretation": _S, "measurement_objective": _S,
     "recommended_framework": _obj({"name": _S, "structure": _S, "why": _S}),
     "alternative_frameworks": {"type": "array", "items": _obj({"name": _S, "when_better": _S, "tradeoff": _S})},
-    "metric_definitions": {"type": "array", "items": _obj({"metric": _S, "definition": _S, "formula": _S, "grain": _S, "milestone": _S, "notes": _S})},
+    # every metric says which funnel it measures, its family and whether it can be computed today: that is what makes a
+    # catalog checkable for MECE (no metric in two places, no stage without one)
+    "metric_definitions": {"type": "array", "items": _obj({"metric": _S, "funnel": _S, "family": _S, "definition": _S, "formula": _S,
+                                                            "grain": _S, "milestone": _S, "today": _S, "notes": _S})},
+    # the stages each path goes through, per entry channel (empty when the question is not about a funnel)
+    "stage_map": {"type": "array", "items": _obj({"funnel": _S, "channel": _S, "stages": _SA, "owner": _S, "notes": _S})},
     "required_events": {"type": "array", "items": _obj({"event": _S, "trigger": _S, "properties": _SA})},
     "required_dimensions": {"type": "array", "items": _obj({"dimension": _S, "why": _S})},
     "decision_enabled": _S, "limitations": _SA, "implementation_implications": _SA})
 DATA_MODEL = _obj({
-    "conceptual_model": _S, "entities": {"type": "array", "items": _obj({"name": _S, "description": _S, "grain": _S, "primary_key": _S})},
+    "conceptual_model": _S,
+    # as-is: the tables the case has today (what each answers, what it cannot); entities/fields below are the to-be
+    "as_is": {"type": "array", "items": _obj({"table": _S, "grain": _S, "fields": _S, "answers": _S, "cannot": _S})},
+    "gap": {"type": "array", "items": _obj({"need": _S, "as_is": _S, "to_be": _S, "enables": _S})},
+    "entities": {"type": "array", "items": _obj({"name": _S, "description": _S, "grain": _S, "primary_key": _S})},
     "grain": _S, "fields": {"type": "array", "items": _obj({"entity": _S, "field": _S, "type": _S, "definition": _S, "example": _S})},
     "temporal_behavior": _S, "business_definitions": {"type": "array", "items": _obj({"term": _S, "definition": _S})},
     "classification_logic": {"type": "array", "items": _obj({"case": _S, "rule": _S})},

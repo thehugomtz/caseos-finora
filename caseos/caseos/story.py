@@ -181,11 +181,14 @@ def _evidence_block(store: CaseStore, *, draft: bool = False) -> str:
                 fw = m.get("recommended_framework") or {}
                 extra = (f" · marco propuesto: {fw.get('name', '')} — {clip(fw.get('structure', ''), 1500)}"
                          f"\n  decisiones que habilita: {clip(_flat(m.get('decision_enabled')), 700)}"
-                         f"\n  métricas: {clip(_flat(m.get('metric_definitions')), 3000)}"
+                         f"\n  etapas por funnel y canal: {clip(_flat(m.get('stage_map')), 2500)}"
+                         f"\n  métricas: {clip(_flat(m.get('metric_definitions')), 3500)}"
                          f"\n  eventos y dimensiones que hacen falta: {clip(_flat([m.get('required_events'), m.get('required_dimensions')]), 1200)}")
             elif sp.get("data_model"):
                 dm = sp["data_model"]
                 extra = (f" · modelo propuesto: {clip(_flat(dm.get('conceptual_model')), 2000)}"
+                         f"\n  as-is (lo que hay hoy): {clip(_flat(dm.get('as_is')), 1500)}"
+                         f"\n  de as-is a to-be: {clip(_flat(dm.get('gap')), 2000)}"
                          f"\n  entidades: {clip(_flat(dm.get('entities')), 1800)}"
                          f"\n  clasificación: {clip(_flat(dm.get('classification_logic')), 2500)}"
                          f"\n  ejemplos: {clip(_flat(dm.get('example_records')), 1500)}")
@@ -261,6 +264,11 @@ def apply_package(store: CaseStore, out: dict, *, run_id: str | None = None, act
                     "links": list(dict.fromkeys(ev + tb + rs + fw)), "phase": "story"}
             if c["key"] in existing:
                 e = existing[c["key"]]
+                if e.get("visual_finding"):
+                    data["visual_intent"] = e.get("visual_intent") or data["visual_intent"]   # Hugo chose this chart: a new draft keeps it
+                    if e["visual_finding"] not in data["evidence_ids"]:
+                        data["evidence_ids"].append(e["visual_finding"])
+                        data["links"] = list(dict.fromkeys(data["links"] + [e["visual_finding"]]))
                 changed = any(e.get(k) != data[k] for k in ("headline", "answer", "evidence_ids", "table_ids"))
                 if changed:
                     e = store.update(e["id"], {**data, "review": {"state": "proposed"}}, actor=actor, run_id=run_id,

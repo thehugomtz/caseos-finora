@@ -23,13 +23,18 @@ evita una tasa de conversión mezclada que no describe a nadie. Separa volumen, 
 crédito, no prueba causa. Una métrica sin su evento es un deseo: di qué eventos y dimensiones hacen falta.
 Puedes consultar fuentes externas (WebSearch/WebFetch) para respaldar un framework; cita solo lo que recuperaste.
 Entrega el bloque de especialista y la síntesis para el caso.
+- Cada métrica dice a qué funnel mide (o «común»), su familia (volumen · conversión · velocidad · valor · calidad ·
+  estancamiento), su fórmula explícita y si se calcula hoy, con cuidado o no se puede. El catálogo es MECE: ninguna
+  métrica en dos lugares y ninguna etapa sin métrica.
+- `stage_map`: las etapas de cada funnel por canal de entrada, literales y en orden (como Hugo escribió el Executive:
+  New → Working SDR → … → Won), con su dueño. Vacío si la pregunta no es de funnel.
 
 ## Inputs
 Pregunta reformulada, contexto del caso (framing, hipótesis, datos disponibles y faltantes), IDs enlazados.
 
 ## Outputs
 `ResearchResult` con `specialist.measurement`: problem_interpretation, measurement_objective, recommended_framework,
-alternative_frameworks, metric_definitions, required_events, required_dimensions, decision_enabled, limitations,
+alternative_frameworks, metric_definitions, stage_map, required_events, required_dimensions, decision_enabled, limitations,
 implementation_implications.
 
 ## Skills

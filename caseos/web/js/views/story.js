@@ -89,10 +89,25 @@ function claimCard(c, ent, i) {
       h("div.row.wrap", h("span.small.muted", "Evidencia"), ids(c.evidence_ids, 6), h("span.small.muted", "· Tablas"), (c.table_ids || []).length ? ids(c.table_ids, 4) : h("span.chip.warn", "sin tabla")),
       s.unsupported_numbers && s.unsupported_numbers.length ? h("div.corr", "Cifras sin tabla: " + s.unsupported_numbers.join(", ")) : null,
       c.visual_finding ? claimChart(c.visual_finding) : null,
+      c.role_in_story === "recommendation" && (c.research_ids || []).length ? designs(c.research_ids) : null,
       c.visual_intent ? h("div.small.muted", "Intención visual: " + c.visual_intent) : null,
       (c.limitations || []).length ? h("div.small.faint", "Límites: " + c.limitations.join(" · ")) : null,
       h("div.row", btn("Cómo se llegó a esto", { sm: true, icon: "route", onClick: () => app.openEntity(c.claim_id, false, { paths: true }) }),
         btn("Editar claim", { sm: true, variant: "ghost", onClick: () => editClaim(c) }), btn("Detalle", { sm: true, variant: "ghost", onClick: () => app.openEntity(c.claim_id) }))));
+}
+
+// the specialist designs a proposal stands on (data model as-is vs to-be, stages per funnel and channel, metric catalog),
+// folded: the claim says it in words, the design shows it explicitly
+function designs(rids) {
+  const box = h("div.stack");
+  Promise.all(rids.map(rid => api.cget(`/entities/${rid}`).catch(() => null))).then(async (list) => {
+    const withDesign = list.map(d => d && (d.entity || d)).filter(r => r && r.specialist && (r.specialist.measurement || r.specialist.data_model));
+    if (!withDesign.length) { box.remove(); return; }
+    const { specialistBlock } = await import("./research.js");
+    withDesign.forEach(r => box.append(h("details.design", h("summary.small", `Ver el diseño de ${r.id} · ${r.specialist.data_model ? "modelo de datos" : "medición"}`),
+      specialistBlock(r))));
+  });
+  return box;
 }
 
 // the chart of the finding the claim names (the deck draws its own from the tables and the visual intent)

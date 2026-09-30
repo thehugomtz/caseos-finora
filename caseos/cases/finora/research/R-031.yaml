@@ -1,0 +1,115 @@
+id: R-031
+type: research
+research_question: ¿Qué etapas aplican a cada funnel —Executive, Self Service, Hybrid A y B, Reactivate— por canal
+  de entrada, literalmente como el Executive (New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE
+  → Won), y cómo se mide cada funnel con un catálogo MECE de métricas explícitas (volumen, conversión por etapa,
+  velocidad como el tiempo de cierre, valor, calidad y estancamiento)?
+case_question: C-021, C-006, C-009, C-005, Q-063, Q-064
+specialty: measurement
+intensity: L2
+route:
+  specialty: measurement
+  intensity: L2
+  agent: measurement
+  scores:
+    measurement: 4
+    data_engineering: 0
+    analytics: 0
+    business: 0
+  skills:
+  - id: case-research-synthesis
+    mode: core
+    why: núcleo del agente
+  - id: measurement-strategy
+    mode: core
+    why: núcleo del agente
+  - id: cro-advisor
+    mode: dynamic
+    why: 2 disparador(es) en la pregunta
+  purpose:
+    mapped:
+    - C-021
+    - C-006
+    - C-009
+    - C-005
+    - Q-063
+    - Q-064
+    suggested:
+    - H-055
+    - H-054
+    ok: true
+    note: ''
+  source: hugo
+  rationale: Palabras clave → Measurement; intensidad L3.
+status: running
+purpose_ok: true
+purpose_note: ''
+forced_without_purpose: false
+links:
+- C-021
+- C-006
+- C-009
+- C-005
+- Q-063
+- Q-064
+phase: research
+review:
+  state: proposed
+origin:
+  actor: hugo
+created_at: '2026-09-29T18:24:05-06:00'
+updated_at: '2026-09-29T18:24:05-06:00'
+version: 4
+job_id: JOB-20260929-182405-8cad
+error: null
+started_at: '2026-09-29T18:24:05-06:00'
+shaping_task: RT-030
+slides:
+- S2.3
+- S2.5
+task_why: 'Hugo en el chat (29-sep, revisión del Story v2): C-021 va bien pero falta la propuesta aterrizada por
+  canal con las etapas de cada funnel; C-006 no se entiende y debe salir de C-021; C-009 debe proponer más métricas,
+  explícitas y MECE.'
+task:
+  work: propuesta
+  draft_answer: 'De arranque: el canal es la puerta de entrada y el funnel es la ruta. Canales candidatos, a confirmar
+    con Finora: digital (pago, orgánico, contenido), referidos, partners, eventos y prospección saliente. Executive
+    usa las etapas de Hugo tal cual. Self Service: visita → registro → activación → checkout → primer pago. Hybrid
+    A: registro → uso → señal → contacto SDR/AE → Demo o Proposal → Won → primer pago. Hybrid B: New → Working SDR
+    → Engaged → registro en producto → checkout → primer pago. Reactivate: estancado → reactivado → reasignado a
+    una ruta. En cada funnel, métricas por familia: volumen (p. ej., leads digitales), conversión por etapa (p.
+    ej., CR digital de lead a primer pago), velocidad (tiempo a primer contacto, tiempo en etapa, tiempo de cierre),
+    valor (ticket estabilizado al nudo), calidad (permanencia temprana) y estancamiento; cada métrica en un solo
+    lugar.'
+  hugo_said:
+  - text: queria ver una prouesta aterrizada por casuistica de canal literalmente de los funeles asi como te pase
+      la de new, working, SDR, engaged, bla bla quiero ver cuales aplican para los otros
+    ref: N-050
+  - text: ¿cada funnel? ¿cómo lo mides? no me refiero a solo medir la connversión, ¿que metricas hay en todo eso?
+      Ej. Digital podría tener digital leads y CR digital, algo asi, Executive ya sabes que tiens New, pero tambien
+      puedes tener métricas de tiempo de cierre
+    ref: N-050
+  - text: C-009 ¿hay otras métricas que debean de proponerse? De todo eso hay que ser explicitos en como se miden
+      y siempre siempre ser MECE
+    ref: N-050
+  steps:
+  - kind: proposal
+    what: 'Mapa funnel × canal: qué canales alimentan cada funnel y sus etapas literales en orden, con criterio
+      de entrada y salida y dueño; cuáles etapas del Executive aplican a los demás y cuáles no, y por qué.'
+    where: []
+  - kind: proposal
+    what: 'Catálogo MECE por funnel y canal: volumen, conversión por etapa, velocidad (incluido el tiempo de cierre),
+      valor, calidad y estancamiento, con fórmula explícita, grano, hito y si se calcula hoy. Ejemplos de Hugo:
+      Digital con leads digitales y CR digital; Executive con New y tiempo de cierre.'
+    where: []
+  - kind: proposal
+    what: 'Métricas que C-009 aún no propone (p. ej., CAC por funnel y canal, payback, win rate, velocidad del pipeline,
+      cobertura de primer contacto) con cómo se miden, y la prueba de MECE: cada métrica en un solo funnel o como
+      común.'
+    where: []
+  - kind: data
+    what: 'Lo que ya se puede medir con los pagos: el nudo (primer pago) por mes y el ticket estabilizado.'
+    where:
+    - mart.new_customers
+    - mart.customer_month
+requested_via: vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)

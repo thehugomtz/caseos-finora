@@ -341,7 +341,7 @@ function bucketList(title, items, cls) {
   return h("div.bucket." + cls, h("h4", title), xs.length ? h("ul", xs.map(x => h("li", typeof x === "string" ? x : JSON.stringify(x)))) : h("div.small.faint", "—"));
 }
 
-function specialistBlock(r) {
+export function specialistBlock(r) {
   const s = r.specialist || {};
   if (s.measurement) {
     const m = s.measurement;
@@ -351,8 +351,11 @@ function specialistBlock(r) {
         h("div.panel.pad.glow", h("div.eyebrow.accent", "Framework recomendado"), h("div", { style: { fontSize: "18px", fontWeight: 600, margin: "8px 0" } }, (m.recommended_framework || {}).name),
           h("p.prose", (m.recommended_framework || {}).structure), h("p.small.muted", (m.recommended_framework || {}).why),
           (m.alternative_frameworks || []).map(a => h("div.frame", { style: { marginTop: "8px" } }, h("span.n", a.name), h("div.small.muted", `Mejor cuando: ${a.when_better}`), h("div.small.faint", `Trade-off: ${a.tradeoff}`))))),
-      h("div.panel.flush.mt", h("div.phead", h("h2.sec", "Definiciones de métricas")), h("div.pbody", h("table.spec-table", h("thead", h("tr", h("th", "Métrica"), h("th", "Definición"), h("th", "Fórmula"), h("th", "Grano"), h("th", "Hito"))),
-        h("tbody", (m.metric_definitions || []).map(d => h("tr", h("td", d.metric), h("td", d.definition), h("td.mono", d.formula), h("td", d.grain), h("td", d.milestone))))))),
+      (m.stage_map || []).length ? h("div.panel.flush.mt", h("div.phead", h("h2.sec", "Etapas por funnel y canal")), h("div.pbody", h("table.spec-table",
+        h("thead", h("tr", h("th", "Funnel"), h("th", "Canal"), h("th", "Etapas"), h("th", "Dueño"), h("th", "Notas"))),
+        h("tbody", m.stage_map.map(x => h("tr", h("td", h("b", x.funnel)), h("td", x.channel), h("td", h("span.stages", (x.stages || []).join(" → "))), h("td", x.owner), h("td.small", x.notes))))))) : null,
+      h("div.panel.flush.mt", h("div.phead", h("h2.sec", "Definiciones de métricas")), h("div.pbody", h("table.spec-table", h("thead", h("tr", h("th", "Funnel"), h("th", "Familia"), h("th", "Métrica"), h("th", "Definición"), h("th", "Fórmula"), h("th", "Grano"), h("th", "Hito"), h("th", "¿Hoy?"))),
+        h("tbody", (m.metric_definitions || []).map(d => h("tr", h("td", d.funnel || "—"), h("td", d.family || "—"), h("td", h("b", d.metric)), h("td", d.definition), h("td.mono", d.formula), h("td", d.grain), h("td", d.milestone), h("td.small", d.today || "—"))))))),
       h("div.grid2.mt", h("div.panel.pad", h("h3.sub", "Eventos requeridos"), (m.required_events || []).map(e => h("div.small", { style: { padding: "5px 0", borderBottom: "1px solid var(--line)" } }, h("span.mono", { style: { color: "var(--accent-ink)" } }, e.event), " — ", e.trigger, h("span.faint", (e.properties || []).length ? ` · ${e.properties.join(", ")}` : "")))),
         h("div.panel.pad", h("h3.sub", "Dimensiones requeridas"), (m.required_dimensions || []).map(d => h("div.small", { style: { padding: "5px 0", borderBottom: "1px solid var(--line)" } }, h("span.mono", d.dimension), " — ", h("span.muted", d.why))))),
       h("div.grid2.mt", bucketList("Limitaciones", m.limitations, "un"), bucketList("Implicaciones de implementación", m.implementation_implications, "pl")));
@@ -361,6 +364,13 @@ function specialistBlock(r) {
     const m = s.data_model;
     return h("div.mt2", h("h2.sec.mb", "Modelo de datos"),
       h("div.panel.pad", h("h3.sub", "Modelo conceptual"), h("p.prose", m.conceptual_model), h("div.small", h("span.muted", "Grano: "), m.grain)),
+      (m.as_is || []).length ? h("div.panel.flush.mt", h("div.phead", h("h2.sec", "As-is · lo que hay hoy")), h("div.pbody", h("table.spec-table",
+        h("thead", h("tr", h("th", "Tabla"), h("th", "Grano"), h("th", "Campos"), h("th", "Responde"), h("th", "No responde"))),
+        h("tbody", m.as_is.map(x => h("tr", h("td.mono", x.table), h("td", x.grain), h("td.small", x.fields), h("td.small", x.answers), h("td.small", x.cannot))))))) : null,
+      (m.gap || []).length ? h("div.panel.flush.mt", h("div.phead", h("h2.sec", "De as-is a to-be")), h("div.pbody", h("table.spec-table",
+        h("thead", h("tr", h("th", "Necesidad"), h("th", "Hoy (as-is)"), h("th", "Propuesta (to-be)"), h("th", "Habilita"))),
+        h("tbody", m.gap.map(x => h("tr", h("td", h("b", x.need)), h("td.small", x.as_is), h("td.small", x.to_be), h("td.small", x.enables))))))) : null,
+      (m.as_is || []).length ? h("h3.sub.mt", "To-be · entidades propuestas") : null,
       h("div.entity-map.mt", (m.entities || []).map(e => h("div.entity-box", h("div.en", e.name), h("div.small", e.description), h("div.eg", `grano: ${e.grain} · PK: ${e.primary_key}`)))),
       h("div.panel.flush.mt", h("div.phead", h("h2.sec", "Campos")), h("div.pbody", h("table.spec-table", h("thead", h("tr", h("th", "Entidad"), h("th", "Campo"), h("th", "Tipo"), h("th", "Definición"), h("th", "Ejemplo"))),
         h("tbody", (m.fields || []).map(f => h("tr", h("td", f.entity), h("td.mono", f.field), h("td", f.type), h("td", f.definition), h("td.mono", f.example))))))),

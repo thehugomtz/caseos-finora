@@ -24,12 +24,14 @@ como decisión de negocio, no como hecho. Cuando los datos actuales no distingue
 campos que sí lo harían. Entrega modelo conceptual, entidades, campos, comportamiento temporal, definiciones,
 lógica de clasificación, registros de ejemplo, casos borde, reglas de calidad y consideraciones de implementación —
 no solo SQL.
+- As-is vs to-be, explícito: `as_is` son las tablas que el caso tiene hoy (grano, campos, qué responden y qué no);
+  `entities` y `fields` son el to-be; `gap` dice, necesidad por necesidad, qué hay hoy, qué se agrega y qué habilita.
 
 ## Inputs
 Pregunta reformulada, contexto del caso (qué datos existen, sus columnas y limitaciones), IDs enlazados.
 
 ## Outputs
-`ResearchResult` con `specialist.data_model`: conceptual_model, entities, grain, fields, temporal_behavior,
+`ResearchResult` con `specialist.data_model`: conceptual_model, as_is, gap, entities, grain, fields, temporal_behavior,
 business_definitions, classification_logic, example_records, edge_cases, data_quality_rules,
 implementation_considerations.
 

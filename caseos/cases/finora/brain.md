@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T18:11:27-06:00 · motivo: Hugo pidió cambiar C-004 en la story · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
+> Actualizado: 2026-09-29T18:24:06-06:00 · motivo: Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas… · v…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -25,9 +25,9 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 06 Slides | not_started | — |
 
 ## Current Status
-28 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 133 alertas abiertas.
+28 investigaciones completadas (0 aceptadas), 4 en curso, 2 bloqueadas · 0 findings aceptados · 11 decisiones activas · 135 alertas abiertas.
 
-COS: R-029 cierra el diseño del funnel con las definiciones de Hugo: la ruta sale de quién movió cada tramo, la puerta queda fija al entrar y Reactivate es un loop, no otra ruta. Es una propuesta de confianza media sin CRM: hoy solo se miden el nudo (1.476 primeros pagos observados) y la vuelta de pagadores, que es un loop de Revenue y no Reactivate. Con 0 de 213 findings aceptados, ningún claim está listo; lo que más desbloquea es que Hugo decida la taxonomía de C-005 y la regla de nombre Reactivate/reactivación (junto con X-080), y llevar Q-063 y Q-064 a Finora.
+COS: R-030 respalda C-004: el gasto de S&M y los primeros pagadores no se mueven juntos, y cruzar fechas no atribuye ventas. Pero su titular descansa en el corte de jun-23 del archivo de gasto y en ago-23, así que propongo una corrida corta por tramo antes de montar la lámina. El caso sigue con 0 findings aceptados y 222 propuestos (varios replicados): ningún claim de la story está listo todavía, y Framing sigue en needs_review.
 
 ## Approved Briefing
 v1 aprobada el 2026-09-29 → `brief/approved/brief.v1.md`
@@ -82,7 +82,7 @@ _Por confirmar:_ D-009, D-010, D-011, D-012, D-015, D-018
 - **H-008** (HC3o) Cambios de producto, precio, condiciones o alternativas afectan la elección aunque intención inicial y atención sean parecidas. · open
 - **H-009** (HF1a) Entraron más o menos clientes, o entraron con suscripciones o tarifas distintas. · open
 - **H-010** (HF1b) Hay descuentos documentados al entrar y cambió cuánto reducen el precio. · open
-- … y 59 más
+- … y 61 más
 
 ## Evidence We Trust
 _Todavía no hay evidencia aceptada._
@@ -111,7 +111,7 @@ _Todavía no hay evidencia aceptada._
 - **Q-011** (W1) ¿El monto identifica los escenarios del CFO?
 - **Q-012** (W2) ¿Qué cambió en los primeros pagadores observados?
 - **Q-013** (W3) ¿Dónde se concentra el cambio del monto observado?
-- … y 76 más
+- … y 79 más
 
 ## Research Queue
 - **R-001** (W0) Solo monto pagado observado y primera aparición observada son comparables · completed · por revisar
@@ -124,7 +124,7 @@ _Todavía no hay evidencia aceptada._
 - **R-008** (W7) Bloqueada: no hay sustituto válido con los datos actuales. La respuesta es la lista de evidencia que falta. · blocked
 - **R-009** (Q2) La caída se concentra en quién entra, no en la base previa · completed · por revisar
 - **R-010** Hay ocho explicaciones en juego. Tres son artefactos de medición: conteo (H-001), mezcla (H-002) y tiempo (H-003/H-004). Las otras cuatro serían causas reales: calidad al entrar (… · completed · por revisar
-- … y 20 más
+- … y 24 más
 
 ## Accepted Frameworks
 - **D-001** CRO pasa de cuatro a tres ramas
@@ -174,16 +174,16 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
-- 2026-09-29 18:11 · Hugo pidió cambiar C-004 en la story · vía Claude (Hugo lo pidió en el chat: faltan visualizaciones en las evidencias de C-004)
-- 2026-09-29 18:09 · COS: R-030 podría afectar C-004
-- 2026-09-29 18:09 · R-030 completada: Gasto de S&M y altas se mueven en direcciones opuestas. Entre 2023 ene-may y 2023 jun-dic el S&M por mes pasó…
-- 2026-09-29 18:09 · F-222 → tabla canónica FIN-F-222 (0 filas)
-- 2026-09-29 18:09 · F-221 → tabla canónica FIN-F-221 (4 filas)
-- 2026-09-29 18:09 · F-220 → tabla canónica FIN-F-220 (32 filas)
-- 2026-09-29 18:09 · F-219 → tabla canónica FIN-F-219 (2 filas)
-- 2026-09-29 18:09 · F-218 → tabla canónica FIN-F-218 (2 filas)
-- 2026-09-29 18:09 · F-217 → tabla canónica FIN-F-217 (6 filas)
-- 2026-09-29 18:09 · F-216 → tabla canónica FIN-F-216 (34 filas)
+- 2026-09-29 18:24 · Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos de precios y descuentos, as-is vs to-be, con más casuísticas… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+- 2026-09-29 18:24 · Hugo pidió research (L2 · Data Engineering): Propuesta de modelo de datos para operar el funnel, as-is vs to-be: ¿qué tablas hay hoy (… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+- 2026-09-29 18:24 · Hugo pidió research (L2 · Measurement): ¿Cómo se ordenan las causas de «más leads, pero no más ventas» en un árbol MECE —cada bre… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+- 2026-09-29 18:24 · Hugo pidió research (L2 · Measurement): ¿Qué etapas aplican a cada funnel —Executive, Self Service, Hybrid A y B, Reactivate— por… · vía Claude (Hugo lo pidió en el chat, 29-sep, revisión del Story v2)
+- 2026-09-29 18:23 · Shaping · 4 propuesta(s) aprobadas (Hugo lo pidió en el chat (29-sep, revisión del Story v2); lo armó Claude)
+- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Con estas observaciones cambian otros claims (poco); en general el Story va por 
+- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): C-017 debe mostrar un modelo de datos as-is vs to-be con más casuísticas de desc
+- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): C-013 debe mostrar explícitamente el modelo de datos propuesto, as-is vs to-be.
+- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Las causas de C-023 deben ordenarse de forma MECE; tanto «artefacto» confunde.
+- 2026-09-29 18:23 · Palabras de Hugo en el chat (revisión del Story v2): Funnels por canal con sus etapas literales, y métricas MECE explícitas por funne
 
 
-<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 26, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->
+<!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->
