@@ -340,3 +340,11 @@ def test_strength_reads_the_statement_figures_like_the_validation(case):
                                        headline="Pagar 80 con la lista en 100 es un descuento", answer="Los 20 son descuento nuevo."), actor="cos")
     cid = case.read_data("story/package.yaml")["claims"][0]["claim_id"]
     assert cos.claim_strength(case, case.get(cid))["level"] == "supported"
+
+
+def test_a_slide_spec_with_a_stray_colon_still_imports(tmp_path):
+    p = tmp_path / "S12.yaml"
+    p.write_text("slide:\n  id: S12\n  claim_id: C-010\n  headline: \"Hoy no es CAC\"\n"
+                 "  composition: formula_anatomy (hoy vs CAC: término contra término)\n  family: economics\n", encoding="utf-8")
+    spec = storyteller._spec(p)
+    assert spec["id"] == "S12" and spec["claim_id"] == "C-010" and spec["headline"] == "Hoy no es CAC"

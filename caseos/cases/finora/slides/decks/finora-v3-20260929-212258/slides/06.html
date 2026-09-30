@@ -27,7 +27,7 @@
   </header>
 
   <footer class="footer"><span class="source">Propuesta de diseño (R-031); solo Executive · outbound SDR es la secuencia literal del brief · F-209, F-210, F-211, F-223, F-224, F-225, F-191, F-155</span><span class="page"></span></footer>
-  <aside class="notes">Por ruta y canal, en orden y con dueño. Executive outbound: New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won; el SDR es dueño hasta SQL SDR y el AE desde Demo AE. Executive inbound «hablar con ventas»: se salta Working SDR porque la cuenta levantó la mano. Referido o partner (tu WoM, por confirmar): New → Demo AE → Proposal AE → Won, solo con AE. Self Service (signup): New → Signup Self → Activated Self → Checkout Self → Won; dueño Growth/Producto, por confirmar; sin prueba ni registro antes del pago queda New → Checkout Self → Won. Hybrid A: pasa de Growth/Producto al SDR y al AE; la persona entra por una señal de uso, fit o intención; Engaged SDR y SQL SDR se pueden saltar; variante: la persona ayuda y la cuenta paga sola por Checkout Self. Hybrid B: pasa del SDR al AE y la cuenta cierra sola por Checkout Self; Demo AE se puede saltar. New y Won aplican a todas; Working SDR solo con prospección outbound; Proposal AE en Executive e Hybrid A (en Hybrid B la reemplaza Checkout Self); Self Service no usa etapas de SDR ni de AE. No afirmamos que Finora tenga criterios de etapa definidos; parte de los saltos puede ser registro del CRM (H-051). La frontera Executive inbound / Hybrid A depende de Q-063.</aside>
+  <aside class="notes">Por ruta y canal, en orden y con dueño. Executive outbound: New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won; el SDR es dueño hasta SQL SDR y el AE desde Demo AE. Executive inbound «hablar con ventas»: se salta Working SDR porque la cuenta levantó la mano. Referido o partner (el WoM que mencionó Hugo, por confirmar): New → Demo AE → Proposal AE → Won, solo con AE. Self Service (signup): New → Signup Self → Activated Self → Checkout Self → Won; dueño Growth/Producto, por confirmar; sin prueba ni registro antes del pago queda New → Checkout Self → Won. Hybrid A: pasa de Growth/Producto al SDR y al AE; la persona entra por una señal de uso, fit o intención; Engaged SDR y SQL SDR se pueden saltar; variante: la persona ayuda y la cuenta paga sola por Checkout Self. Hybrid B: pasa del SDR al AE y la cuenta cierra sola por Checkout Self; Demo AE se puede saltar. New y Won aplican a todas; Working SDR solo con prospección outbound; Proposal AE en Executive e Hybrid A (en Hybrid B la reemplaza Checkout Self); Self Service no usa etapas de SDR ni de AE. No afirmamos que Finora tenga criterios de etapa definidos; parte de los saltos puede ser registro del CRM (H-051). La frontera Executive inbound / Hybrid A depende de Q-063.</aside>
 </main>
 <script>
 P.draw('S06', (s, P) => {
@@ -63,13 +63,13 @@ P.draw('S06', (s, P) => {
       if (v === 2) s.circle(X[i], y, 8, { fill: 'bg', stroke: 'ink-3', w: 2.5 });
     });
     if (route) s.label(112, y, route, { anchor: 'ml', cls: 'rn' });
-    s.label(290, y, canal + (hot ? ' · <span class="acc">tu secuencia literal</span>' : ''), { anchor: 'ml', cls: 'cn' });
+    s.label(290, y, canal + (hot ? '<br><span class="acc">secuencia literal del brief</span>' : ''), { anchor: 'ml', cls: 'cn', style: { lineHeight: '1.2' } });
   });
 
   // Key + open items.
   s.dot(120, 950, { r: 8, fill: 'ink' }); s.label(136, 950, 'usa la etapa', { anchor: 'ml', cls: 'label-sm' });
   s.circle(290, 950, 7, { fill: 'bg', stroke: 'ink-3', w: 2.5 }); s.label(306, 950, 'se puede saltar', { anchor: 'ml', cls: 'label-sm' });
-  s.label(648 - 20, 930, 'Reactivate es un loop sobre cualquier etapa abierta: vuelve a su etapa con su puerta y su ruta. Por confirmar: Demo y Proposal en el CRM, el canal referido o partner y el dueño de Self Service.', { cls: 'label-sm', w: 1180 });
+  s.label(648 - 20, 930, 'Reactivate: loop sobre cualquier etapa abierta. Por confirmar: Demo y Proposal en el CRM, el canal referido o partner y el dueño de Self Service.', { cls: 'label-sm', w: 1180 });
 });
 </script>
 </body>

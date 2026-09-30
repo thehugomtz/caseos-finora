@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S17 · Finora</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+[data-slide="S17"] {
+  .ln { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .ln span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 6px; }
+  .fo { font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1.15; }
+  .fo span { display: block; font-size: 20px; font-weight: 400; color: var(--ink-2); margin-top: 4px; }
+  .dc { font-size: 23px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+  .mt { font-size: 20px; line-height: 1.3; color: var(--ink-2); }
+  .dl { font-size: 24px; line-height: 1.3; color: var(--ink); font-weight: 600; }
+  .dl span { color: var(--ink-2); }
+  .bs { font-size: 20px; color: var(--ink-2); }
+  .bs b { color: var(--ink); font-weight: 600; }
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide="S17" data-composition="operating_cadence + continuous_lane" data-family="operating_model" data-word-budget="120" data-page="18">
+  <header class="header">
+    <div class="kicker">Growth · cómo operarlo · propuesta</div>
+    <h1 class="headline">Proponemos dos vías: dashboards para los foros recurrentes y agentes de IA para el día a día</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta (C-014): las decisiones del CRO aún no están definidas; depende del modelo to-be (mientras, solo las métricas verdes) · F-144, F-147, F-148, F-149</span><span class="page"></span></footer>
+  <aside class="notes">Título completo de Hugo: «Proponemos dos vías: una formal y ejecutiva a través de dashboards adhoc a los foros recurrentes y otro para preguntas del día a día a través de agentes de IA que permitan generar visualizaciones y hacer análisis adhoc». Cada foro trae sus métricas y la decisión que habilita. Semanal (CRO, líderes de SDR/AE y RevOps): estancamiento por etapa, calidad del handoff, tiempo en etapa, carga por SDR/AE y stock sin tocar del loop Reactivate → qué journeys avanzar, retomar o descalificar, y dónde reasignar capacidad. Mensual de Growth &amp; Revenue (CRO, Marketing, CS/KAM y Finanzas): entradas y win rate de cohorte por puerta y canal, mezcla de Won por ruta, tiempo de cierre, MRR de entrada, puente de MRR y churn persistente → mover la Inversión en Marketing entre canales y ajustar el ruteo entre rutas. Trimestral (CEO, CFO y CRO): CAC y costo por Won por canal y ruta, payback, NRR/GRR por cohorte y MRR de lista contra neto → repartir entre Generación de Demanda, Team y Habilitación. Por encima van el análisis ad hoc por hoja del árbol y agentes de IA que trabajan solo sobre métricas gobernadas (vigilancia de estancamientos, pre-lectura del foro, higiene del CRM), con un piloto controlado. La atribución reparte crédito, no prueba causa: para decidir presupuesto hacen falta experimentos (F-149).</aside>
+</main>
+<script>
+P.draw('S17', (s, P) => {
+  // Plan: lane labels cols 1–2 · forums cols 3–12 as a staircase of horizon (weekly → quarterly),
+  // decision per forum marked in lime · daily lane below · governed-metrics base at the bottom. All proposed (dashed).
+  const X = [400, 880, 1360], W = 448, T = [572, 484, 396], FLOOR = 760;
+  s.poly([[X[0], FLOOR], [X[0], T[0]], [X[1], T[0]], [X[1], T[1]], [X[2], T[1]], [X[2], T[2]], [1808, T[2]], [1808, FLOOR]],
+    { fill: 'surface', stroke: 'ink-4', w: 1.5, dash: 'dash' });
+
+  s.label(112, T[1] + 40, 'Vía formal<span>dashboards por foro</span>', { cls: 'ln', w: 260 });
+  s.label(112, 832, 'Vía del día a día<span>agentes de IA y ad hoc</span>', { anchor: 'ml', cls: 'ln', w: 260 });
+
+  const F = [
+    ['Semanal', 'CRO, SDR/AE, RevOps', 'avanzar, retomar o descalificar journeys; reasignar capacidad', 'estancamiento, handoff y carga por SDR/AE'],
+    ['Mensual Growth &amp; Revenue', 'CRO, Marketing, CS, Finanzas', 'mover inversión entre canales y ajustar el ruteo', 'entradas y win rate por puerta y canal; puente de MRR'],
+    ['Trimestral', 'CEO, CFO, CRO', 'repartir entre Demanda, Team y Habilitación', 'CAC por canal, payback, NRR/GRR'],
+  ];
+  F.forEach(([n, who, dec, met], i) => {
+    const x = X[i] + 24, t = T[i];
+    s.line(X[i], t, i < 2 ? X[i + 1] : 1808, t, { stroke: 'ink', w: 3 });
+    s.label(x, t - 14, `${n}<span>${who}</span>`, { anchor: 'bl', cls: 'fo', w: W - 40 });
+    s.label(x, t + 22, dec, { cls: 'dc', w: W - 56, id: `s17-dec${i}`, focal: i === 0 });
+    const db = s.box(`#s17-dec${i}`);
+    s.label(x, db.b + 14, met, { cls: 'mt', w: W - 56 });
+  });
+
+  // Daily lane: continuous, on governed metrics only (as much weight as the formal way).
+  const LY = 832;
+  s.line(X[0], LY, 1800, LY, { stroke: 'ink-2', w: 3, dash: 'dash', arrow: 'end', headSize: 14 });
+  s.label(X[0] + 24, LY - 18, 'por hoja del árbol: vigilancia de estancamientos, pre-lectura del foro', { anchor: 'bl', cls: 'dl', w: 1100 });
+  s.label(X[0] + 24, LY + 18, 'solo sobre métricas gobernadas, con un piloto controlado', { cls: 'mt', w: 1100 });
+
+  // Base.
+  s.line(112, 916, 1808, 916, { stroke: 'ink-3', w: 3 });
+  s.label(112, 932, '<b>Base</b>: métricas gobernadas sobre el modelo to-be', { cls: 'bs' });
+});
+</script>
+</body>
+</html>

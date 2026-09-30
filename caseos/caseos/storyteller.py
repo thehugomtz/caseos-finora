@@ -436,6 +436,20 @@ def _tool_line(name: str, inp: dict, deck: Path) -> str:
     return name
 
 
+def _spec(path: Path) -> dict:
+    """A slide spec written by the Storyteller. It is YAML written for people, so an unquoted value with «: » inside must
+    not stop the import (29-sep: the finished deck failed to import): the fields CaseOS needs are then read line by line."""
+    try:
+        return read_yaml(path, {}) or {}
+    except Exception:  # noqa: BLE001 - any YAML error falls back to the line reader
+        out = {}
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"^\s{0,4}(id|claim_id|headline|title|composition|family|relationship):\s*(.*)$", line)
+            if m and m.group(1) not in out:
+                out[m.group(1)] = m.group(2).strip().strip('"').strip("'")
+        return out
+
+
 def import_deck(store: CaseStore, deck_id: str, *, final: str = "", usage: dict | None = None, cost=None) -> dict:
     d = next((x for x in decks(store) if x["id"] == deck_id), None)
     if not d:
@@ -451,7 +465,7 @@ def import_deck(store: CaseStore, deck_id: str, *, final: str = "", usage: dict 
             if e.get("type") == "slide" and e.get("deck") == deck_id:
                 store.update(e["id"], {"status": "draft", "superseded_by_run": now_iso()}, actor="system", material=False)
         for i, sp in enumerate(specs, 1):
-            spec = read_yaml(sp, {}) or {}
+            spec = _spec(sp)
             s = spec.get("slide") or spec
             sid = s.get("id") or sp.stem
             cid = s.get("claim_id") or (spec.get("claim_id"))

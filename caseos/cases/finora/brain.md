@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-29T21:53:14-06:00 · motivo: Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258) · vía Claude: reintento tras arreglar el búfer del SDK que co…
+> Actualizado: 2026-09-29T23:43:11-06:00 · motivo: cambios en lote
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -22,7 +22,7 @@ CEO — contexto de salud general del modelo (Overview) antes de Growth y Revenu
 | 03 Research | ready | v1 · 2026-09-29T20:33 |
 | 04 Synthesis | ready | v1 · 2026-09-29T20:45 |
 | 05 Story | ready | v1 · 2026-09-29T20:47 |
-| 06 Slides | in_progress | — |
+| 06 Slides | review | — |
 
 ## Current Status
 32 investigaciones completadas (0 aceptadas), 0 en curso, 2 bloqueadas · 147 findings aceptados · 18 decisiones activas · 158 alertas abiertas.
@@ -197,6 +197,8 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-29 23:43 · Deck finora-v3-20260929-212258: 25 slides · completed
+- 2026-09-29 23:43 · Slides: in_progress → review (deck terminado; pendiente de revisión de Hugo)
 - 2026-09-29 21:53 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258) · vía Claude: reintento tras arreglar el búfer del SDK que cortó la corrida de las 21:23; retoma la carpeta
 - 2026-09-29 21:23 · Hugo envió el Story Package al Visual Storyteller (finora-v3-20260929-212258)
 - 2026-09-29 21:23 · Story Package v3 preparado para el Visual Storyteller (finora-v3-20260929-212258)
@@ -205,8 +207,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-29 20:47 · Hugo decidió: Story marcada Ready (v1)
 - 2026-09-29 20:45 · Synthesis marcada Ready (v1)
 - 2026-09-29 20:45 · Hugo decidió: Synthesis marcada Ready (v1)
-- 2026-09-29 20:45 · Hugo aceptó T-080 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
-- 2026-09-29 20:45 · Hugo aceptó F-178 — Hugo lo pidió en el chat («Pero tu dale accept a todo lo de la story», D-023); lo ejecutó Claude
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 31, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

@@ -23,7 +23,7 @@
     <h1 class="headline">La pérdida está en el monto por cliente de cosechas de menor ticket</h1>
   </header>
 
-  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; descomposición por cosecha con base dic-22 (con base ene-22 la composición explica 108%); churn persistente = no vuelve a pagar en tres meses · F-097, F-092, F-094, F-096, CFO-03</span><span class="page"></span></footer>
+  <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; cosechas con base dic-22 (con ene-22, la composición explica 108%); churn persistente = no vuelve a pagar en 3 meses · F-097, F-092, F-094, F-096, CFO-03</span><span class="page"></span></footer>
   <aside class="notes">No se concentra en una industria: el MRR pagado observado por cliente activo bajó en las 6 entre dic-22 y oct-24. Cayó más en Servicios profesionales (−46,6%), Restaurantes (−45,6%) y Retail (−43,1%) que en Producción (−18,8%), Tecnología (−15,5%) y Salud (−14,4%). Se asocia a cosechas: con base dic-22, la composición explica 84% del cambio (−COP 26,6 mil de −31,7 mil), y el menor ticket de entrada ocurre dentro de cada industria (96% del cambio 2022→2024). No se asocia a salidas persistentes: el churn observado baja de 3,52% a 2,04%, mientras que el de quienes no vuelven a pagar en un trimestre queda en 0,98% y 0,96%. Límites: la industria es un corte disponible, no un sustituto de canal ni de ruta; no hay tamaño de cliente, motivos de churn ni estado de suscripción (F-106); quienes se van pagaban más en promedio pero no en mediana (F-101, F-102); la cifra de composición depende de la base elegida (X-060).</aside>
 </main>
 <script>
@@ -50,7 +50,7 @@ P.draw('S07', (s, P) => {
   // Ranked bars (cols 9–12): F-094, variación dic-22 → oct-24.
   const ind = [['Servicios profesionales', 46.6], ['Restaurantes', 45.6], ['Retail', 43.1], ['Producción', 18.8], ['Tecnología', 15.5], ['Salud', 14.4]];
   const X = P.grid.col(9);
-  s.label(X, 322, 'Variación por industria, dic-22 → oct-24', { cls: 'label', w: 540 });
+  s.label(X, 322, 'MRR por cliente activo, variación dic-22 → oct-24', { cls: 'label', w: 540 });
   s.label(X, 354, 'Baja en las 6, con distinta intensidad', { cls: 'label-sm', w: 540 });
   const bx = 1500, bw = 250;
   ind.forEach(([n, v], i) => {

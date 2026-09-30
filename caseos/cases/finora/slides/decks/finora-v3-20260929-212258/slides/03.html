@@ -13,7 +13,7 @@
   .num { font-variant-numeric: tabular-nums; }
   .val { font-size: 30px; font-weight: 600; color: var(--ink); }
   .val.hot { color: var(--accent-text); }
-  .big { font-family: var(--font-display); font-size: 96px; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
+  .big { font-family: var(--font-display); font-size: 56px; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
 }
 </style>
 </head>
@@ -35,9 +35,9 @@ P.draw('S03', (s, P) => {
   const ax = A.band(yrs, { padding: 0.42 }), ay = A.linear([0, 60]);
   s.label(150, 318, 'Primeros pagadores por mes', { cls: 'label' });
   s.label(150, 348, '2022: mar–dic · 2024: ene–oct', { cls: 'label-sm' });
-  A.bars([['2022', 27], ['2023', 54], ['2024', 55]], { key: (d) => d[0], value: (d) => d[1], x: ax, y: ay, tone: 'ink-3', label: (d) => d[1], labelCls: 'val num' });
+  A.bars([['2022', 27], ['2023', 54], ['2024', 55]], { key: (d) => d[0], value: (d) => d[1], x: ax, y: ay, tone: 'ink-4', label: (d) => d[1], labelCls: 'val num' });
   A.axisX(ax, { cls: 'label-sm' });
-  s.label(150, 850, 'Escalón a inicios de 2023 (26 en dic-22 → 60 en ene-23), sin tendencia después', { cls: 'annotation', w: 500 });
+  s.label(150, 850, 'Escalón de 26 <span style="white-space:nowrap">(dic-22)</span> a 60 <span style="white-space:nowrap">(ene-23)</span>, sin tendencia después', { cls: 'annotation', w: 500 });
 
   // Panel B · cols 5–8: ticket estabilizado (F-160, mediana del segundo pago).
   const B = s.chart({ x: 790, y: 420, w: 500, h: 360 });
@@ -56,12 +56,12 @@ P.draw('S03', (s, P) => {
   // Panel C · cols 10–12: en las 6 industrias (F-114, F-164).
   const X = P.grid.col(10);
   s.label(X, 318, '6 de 6', { cls: 'big' });
-  s.label(X, 432, 'industrias bajan su ticket de entrada, 2022→2024', { cls: 'label', w: 400 });
-  s.label(X, 560, 'Cambio del ticket de entrada 2022→2024', { cls: 'label-sm', w: 400 });
-  s.rect(X, 598, 400 * 0.96, 30, { fill: 'ink', role: 'bar' });
-  s.rect(X + 400 * 0.96 + 3, 598, 400 * 0.04 - 3, 30, { fill: 'ink-4', role: 'bar' });
-  s.label(X, 642, '<b>96%</b> dentro de cada industria', { cls: 'label-sm' });
-  s.label(X + 400, 642, '<b>4%</b> mezcla', { anchor: 'tr', cls: 'label-sm' });
+  s.label(X, 392, 'industrias bajan su ticket de entrada (primer pago), 2022→2024', { cls: 'label', w: 400 });
+  s.label(X, 580, 'Cambio del monto usual temprano 2022→2024', { anchor: 'bl', cls: 'label-sm', w: 400 });
+  s.rect(X, 594, 400 * 0.96, 30, { fill: 'ink-3', role: 'bar' });
+  s.rect(X + 400 * 0.96 + 3, 594, 400 * 0.04 - 3, 30, { fill: 'ink-4', role: 'bar' });
+  s.label(X, 638, '<b>96%</b> dentro de cada industria', { cls: 'label-sm' });
+  s.label(X + 400, 638, '<b>4%</b> mezcla', { anchor: 'tr', cls: 'label-sm' });
 });
 </script>
 </body>

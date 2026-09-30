@@ -48,7 +48,7 @@ No se corrió el board de direcciones (instrucción del handoff). La dirección 
 | 09 | S09 | recommendation | measurement_map | process | densa | franja del nudo |
 | 10 | S10 | recommendation | driver_tree + semáforo | logic | densa | rama Eficiencia |
 | 11 | S11 | recommendation | hub_and_spoke (registro) | relationships | media | registro del catálogo |
-| 12 | S12 | limitation | formula_anatomy + slope | economics | ligera (respiro) | «no es CAC» |
+| 12 | S12 | limitation | formula_anatomy (término contra término; sin pendiente, tras la crítica independiente) | economics | ligera (respiro) | «no es CAC» |
 | 13 | S13 | evidence | filter_pipeline | process | media | Paso 0 |
 | 14 | S14 | recommendation | issue_tree + palancas | logic | densa | regla de orden |
 | 15 | S15 | recommendation | signature_small_multiples | comparison | media | firmas |
@@ -63,3 +63,5 @@ No se corrió el board de direcciones (instrucción del handoff). La dirección 
 | 24 | S24 | implication | small_multiples (mini puentes) | comparison | media | caso 2 |
 
 Chequeo de ritmo: 25 composiciones distintas (100%); ninguna familia tres veces seguida; 0 card grids; respiros en S00, S08, S12, S18 y S22 después de tramos densos; el pivote a propuesta (S05) y a Revenue (S18) cambian de familia.
+
+Ajustes al contrato tras la crítica independiente (2026-09-29): una sola marca lima por lámina (S08 zona en gris, S10 lima solo en la rama Eficiencia, S17 sin acento: las decisiones van en negrita); punteado solo para «propuesto / no existe hoy» (loop de S05, marcadores de S21 y peldaño de descuento de S22 pasan a sólido); el foco nunca en gris oscuro (S03 y S19 bajan su gris).

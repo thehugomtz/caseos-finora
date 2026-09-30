@@ -2342,3 +2342,17 @@ evidence_gaps: []
 - Limitación: Won o primer pago como hito de adquisición sigue por acordar con el CRO.
 - Limitación: «Quién entra» describe primeros pagadores observados, no la calidad de los leads.
 - (El Storyteller anota aquí lo que no se sostenga al diseñar.)
+
+### Notas del Storyteller al diseñar (corrida retomada, 2026-09-29)
+
+- **Dato que no cuadra entre tablas (S18 · C-015):** la mediana del segundo pago (M1) de 2022 es COP 52,5 mil en FIN-F-160 (altas con M1) y COP 46,2 mil en FIN-F-086/FIN-F-087 (otra base de cohorte); 2023 y 2024 también difieren (36,8 vs 35,0; 38,9 vs 37,8). La lámina usa FIN-F-160, como el brief. Hay que fijar una sola base antes de circular el deck.
+- **S21 · C-018 «MRR neto, revenue y caja se separan»:** el esquema dibuja lista contra neto (el descuento) y la caja en un carril aparte; el revenue reconocido no se dibuja porque la evidencia (F-153) solo dice que *puede* separarse según el tipo de contrato, no cómo. Se deja como frase literal bajo el esquema.
+- **S15 · C-012:** las tres firmas se muestran como mezcla de ajuste · tasa dentro de cada banda · carga y espera al primer contacto. La fila «tasa dentro de cada banda» sale literal de F-122 (es la comparación «mezcla contra tasa» del título); la velocidad de atención queda dentro de «espera al primer contacto».
+- **S17 · C-014:** título recortado sin cambiar el argumento; el título completo de Hugo va en las notas del orador (y en `slide-specs/S17.yaml › headline_original`).
+- **S06 · C-021:** «tu secuencia literal» (dirigido a Hugo) se cambió por «secuencia literal del brief», porque el deck es para CEO, CRO y CFO.
+- **S19 · C-024:** las partes sin firma asignada van en gris y sin cifra: no se calculan restos. El 7,1% de contracción que sube sin llegar (FIN-F-184) queda sin rotular en la barra y va en las notas.
+- **S2.1 «Las relaciones que comentó Hugo»:** sigue `missing`; no se diseñó lámina (sin contenido ni cifras).
+- **Cifras de 2024 con ventana ene–jul:** el churn observado 2024 (2,04%) de S07 es la ventana ene–jul; otra tabla da 1,9% (X-101). En S10 el dato pasó a las notas del orador.
+- **S03 · C-003, para decidir:** el título dice «menor ticket estabilizado, en las 6 industrias», pero el «6 de 6» (FIN-F-114) se mide con el ticket de entrada (primer pago, M0), que en 2022 viene inflado por pagos iniciales grandes (la misma advertencia de S18). El panel central sí es ticket estabilizado (M1, FIN-F-160) y la barra 96/4 es monto usual temprano (FIN-F-164). La lámina ahora rotula cada medida; si quieres que el «6 de 6» también sea estabilizado, falta ese dato por industria.
+- **S16 · C-013:** en la capa de suscripción se usa `discount_grant` (nombre de R-034, el mismo objeto de S20 y S22) en vez de `discount` (R-033), y las columnas se nombran como el título: Demanda · Funnel comercial · Suscripción y facturación.
+- **Pies de página:** se quitaron los códigos de decisión y de tensión (Q-, D-, X-) de las frases del pie (S09, S14); se conservan los de linaje (C-, R-, F-, FIN-F-).

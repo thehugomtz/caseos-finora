@@ -235,3 +235,8 @@ Package. Encontrado y corregido:
   Ahora: «Ignorar todas» en el COS (una sola decisión de Hugo, needs_review vuelve a su estado), «Aceptar con su
   evidencia» por claim y para toda la historia (nunca toca lo rechazado), un claim rechazado sale del paquete al
   momento, y el cajón se actualiza al resolver.
+- **Deck de Finora (29-sep, 21:23 → 23:41):** la primera corrida del Visual Storyteller murió a los 28 min porque un
+  mensaje (render de una lámina) pasó el búfer de 1 MB del SDK; con 64 MB, la corrida retomó la carpeta (storyline,
+  dirección visual, 25 specs, 9 láminas) y terminó las 25 con su crítica y el PDF (~US$28.7 equivalentes). Luego la
+  importación a CaseOS falló por YAML suelto en un spec («: » sin comillas): el lector de specs ahora es tolerante y el
+  deck se importó sin volver a correrlo.
