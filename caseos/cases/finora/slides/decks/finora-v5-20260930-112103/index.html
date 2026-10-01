@@ -508,16 +508,16 @@
 <main class="slide" data-slide="S10" data-composition="issue_tree (ramas ordenadas + paso 0)" data-family="logic" data-word-budget="230" data-page="12">
   <header class="header">
     <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
-    <h1 class="headline">Proponemos un árbol MECE: cada pedazo de la brecha cae en una sola hoja</h1>
+    <h1 class="headline">Existen 5 hipotésis que podrían explicar el incremento de volumen en New pero no más ventas</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta (C-023, R-032); hojas = causas candidatas, no hechos de Finora; reordena las ramas de D-001 (pendiente, X-150) · altas: F-125 · 2,8% y 3,1%: F-230 · F-122, F-127–F-129, F-212, F-228–F-232</span><span class="page"></span></footer>
+  <footer class="footer"><span class="source">Propuesta (C-023, R-032); hojas = causas candidatas, no hechos de Finora; reordena las ramas de D-001 (pendiente, X-150) · F-122, F-127–F-129, F-212, F-228–F-232</span><span class="page"></span></footer>
   <aside class="notes">Proponemos ordenar las causas de «más leads, pero no más ventas» por la identidad ventas/leads y no por áreas, para que cada pedazo de la brecha caiga en una sola hoja. Antes del árbol se fija qué es «venta» (Won o primer pago) y qué ventana se compara, por cohorte de entrada, porque la premisa cambia según eso: contra 2023, las altas de 2024 suben 7% de marzo a octubre (433 → 465), pero caen 19% de julio a octubre (251 → 203). Después, en este orden. Primero los artefactos, que suben los leads sin ser demanda comprable: no-prospectos y duplicados (spam, clientes o ex-clientes, leads repetidos); un cambio de definición (cambió qué se cuenta como lead, o las cohortes recientes aún no maduran), o la misma demanda por otra puerta (quien antes compraba solo por Self Service ahora entra como lead: suben los leads, no las compras). Luego la mezcla (ToFu): entran más de los que siempre convierten poco, medido con cómo era el lead al crearse y no con lo que Ventas opinó después. Luego la caída antes del SQL: nadie los contacta a tiempo (capacidad y tiempo a primer toque), o quedan estancados en Working (contactados) o Engaged (ya respondieron) semanas sin llegar a SQL. Luego la caída después del SQL (BoFu): incentivos del SDR (si al SDR se le paga por reunión o por SQL, pasa SQL menos maduros que el AE no acepta) y la decisión en Proposal (pierden por precio, competidor o funcionalidad). Al final el cobro: Won que no llega a pagar; en los pagos no existe el Won, solo se ve quién paga el primer mes y no el segundo: 2,8% de las altas en 2023 y 3,1% en 2024. Demanda, calidad, velocidad de atención y conversión post-SQL quedan como explicaciones a contrastar, no como causas: con los datos del caso no se valida ni se descarta ninguna hoja. Límites: es propuesta, como pide el guion; del cobro solo se ve el arranque, y el 2,8% y el 3,1% son de las altas de marzo a octubre con segundo mes observable; un segundo mes en cero también puede ser un pago adelantado (F-230); el árbol reordena las ramas del CRO de D-001 y la calidad pasa a leerse como mezcla al entrar (X-150, pendiente de tu decisión); la premisa «no más ventas» depende de la ventana (F-125, F-229); metas, comisiones, precio o competencia no tienen evidencia en el caso; una caída después del SQL no es por sí sola un problema del AE; cómo se reparte el término cruzado entre mezcla y tasa se fija antes de ver resultados. La comprobación en pagos y la separación de calidad frente a capacidad están en el anexo (C-011, C-012).</aside>
 </main>
 <main class="slide" data-slide="S11" data-composition="match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + ribbon (volumen y tiempo por etiqueta)" data-family="comparison" data-word-budget="210" data-page="13">
   <header class="header">
     <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
-    <h1 class="headline">Cada hoja del árbol tiene firma y dato propios; hoy no están en el caso</h1>
+    <h1 class="headline">Todos los datos apuntan a lo mismo: proceso, composición y distribución</h1>
   </header>
 
   <footer class="footer"><span class="source">Propuesta (C-029, R-032, R-014); el mismo orden del árbol; parámetros (deduplicación, SLA, umbral de estancamiento) por acordar con Finora · F-120–F-129, F-159, F-191, F-207, F-225, F-228–F-232</span><span class="page"></span></footer>
@@ -1159,19 +1159,16 @@ P.draw('S10', (s, P) => {
     ['d', 1, 'Decisión en Proposal: oferta o precio', 'pierden por precio, competidor o funcionalidad'],
     ['c', 0, 'Won que no llega a pagar', 'se cerró la venta pero nunca paga'],
   ];
-  const half = (x, y) => { s.circle(x, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 }); s.path(`M${x},${y - R} A${R},${R} 0 0 0 ${x},${y + R} Z`, { fill: 'ink', stroke: null }); };
   leaves.forEach(([g, i, t, gl]) => {
     const y = G[g][i];
-    if (g === 'c') half(XL, y); else s.circle(XL, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
+    s.circle(XL, y, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
     s.label(XL + 22, y - 13, `${t}<span>${gl}</span>`, { cls: 'lf', w: 668 });
   });
 
-  // Root and Paso 0 (fixed before the tree, and why it matters: the premise flips with the window, F-125).
+  // Root and Paso 0 (fixed before the tree).
   const YR = mid([G.a[0], G.c[0]]);
   s.label(112, YR, 'Brecha<span>más leads, no más ventas</span>', { anchor: 'ml', cls: 'rt', w: 190, id: 's10-root' });
-  s.label(396, YR, '<b>Paso 0</b>Fijar qué es venta (Won o primer pago) y la ventana, por cohorte de entrada'
-    + '<span class="why">Importa porque la premisa cambia según qué se cuente y en qué ventana. Altas 2024 contra 2023:</span>'
-    + '<span class="wr"><i>mar–oct</i>433 → 465<em>+7%</em></span><span class="wr"><i>jul–oct</i>251 → 203<em>−19%</em></span>',
+  s.label(396, YR, '<b>Paso 0</b>Fijar qué es venta (Won o primer pago) y la ventana, por cohorte de entrada',
     { anchor: 'ml', cls: 'p0', w: 274, id: 's10-p0' });
   const p0 = s.box('#s10-p0');
   s.rect(p0.l - 16, p0.t - 14, p0.w + 32, p0.h + 28, { fill: 'none', stroke: 'ink', w: 2 });
@@ -1197,11 +1194,10 @@ P.draw('S10', (s, P) => {
     });
   });
 
-  // Status key: nothing can be validated or ruled out with the case data; of billing only the start is seen.
+  // Status key: nothing can be validated or ruled out with the case data.
   const ky = 940;
   s.circle(120, ky, R, { fill: 'bg', stroke: 'ink', w: 2.5 });
   s.label(138, ky, 'hoy no se valida ni se descarta ninguna hoja', { anchor: 'ml', cls: 'nt' });
-  half(XL, ky); s.label(XL + 22, ky - 14, 'en los pagos no existe el Won; solo se ve quién paga el 1.er&nbsp;mes y no el 2.º: 2,8% de las altas en 2023 y 3,1% en&nbsp;2024', { cls: 'nt', w: 668 });
 });
 </script>
 <script data-for="S11">
