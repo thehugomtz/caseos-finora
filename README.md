@@ -8,11 +8,11 @@ hicieron los agentes, qué decidí yo y cuánto costó cada corrida.
 
 > Reprodúcelos a **1.2x**: en Loom, el botón de velocidad está abajo a la derecha del reproductor.
 
-| Video | Qué cuenta | Duración (a 1.2x) |
+| Video | Qué cuenta | Duración |
 |---|---|---|
-| [**Short version** · Análisis del business case de Finora](https://www.loom.com/share/9b7a35b392b1432d904552439e77efd7) | El caso, la respuesta y la propuesta, en corto | 7:34 (≈6:20) |
-| [**Long version** · Análisis del business case de Finora](https://www.loom.com/share/a4edcbfda2a74ca6b2679fba1930645e) | El caso completo, lámina por lámina | 11:29 (≈9:35) |
-| [**Cómo usé IA con agentes**](https://www.loom.com/share/428f418cf8e2455897d56fb0a5bafa2c) | El proceso: las herramientas, los agentes, mis decisiones y cómo lo verifiqué | 6:15 (≈5:15) |
+| [**Short version** · Análisis del business case de Finora](https://www.loom.com/share/9b7a35b392b1432d904552439e77efd7) | El caso, la respuesta y la propuesta, en corto | 6:13 · a 1.2x, **5:10** |
+| [**Long version** · Análisis del business case de Finora](https://www.loom.com/share/a4edcbfda2a74ca6b2679fba1930645e) | El caso completo, lámina por lámina | 10:25 · a 1.2x, **8:40** |
+| [**Cómo usé IA con agentes**](https://www.loom.com/share/428f418cf8e2455897d56fb0a5bafa2c) | El proceso: las herramientas, los agentes, mis decisiones y cómo lo verifiqué | 6:08 · a 1.2x, **5:07** |
 
 ## 2. Qué hay aquí
 
