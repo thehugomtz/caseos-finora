@@ -1,0 +1,127 @@
+[   1.2s] sesión · suscripción de Claude (sesión de Claude Code)
+[   2.9s]   analista: I'll start by pre-registering the framing and hypothesis tree before looking at any results.
+[  17.3s] → upsert_hypotheses
+[  17.3s]   ✗ upsert_hypotheses: Árbol rechazado:
+- H-ENTRADA: el ID debe tener la forma H1, H1.1, H2…
+- H-ENTRADA-MIX: el ID debe tener la forma H1, H1.1, H2…
+- H-ENTRADA-PRECIO: el ID debe te
+[  32.2s] → upsert_hypotheses
+[  32.2s] encuadre · ¿Cómo se reparte la caída del MRR por cliente activo entre ene-22 y oct-24 entre composición de entrada (quién entra), efecto dentro (cuánto pagan los que se quedan) y selección de salida (quién se va)?
+[  32.2s] estado → hipotesis
+[  32.2s] hipótesis · H1 Pendiente · H1.1 Pendiente · H1.2 Pendiente · H2 Pendiente · H3 Pendiente
+[  34.6s]   analista: Árbol registrado. Ahora recupero la evidencia canónica de Fase 1 antes de gastar presupuesto de análisis.
+[  35.6s] → search_evidence
+[  35.6s]   evidencia EC-MON-04 · Los clientes existentes no pagan menos y las cosechas 2023–24, de menor ticket, ya son la mayoría de los clien
+[  35.6s]   evidencia EC-RES-02 · El MRR por cliente activo de oct-24 es más de 30% menor que el de ene-22.
+[  35.6s]   evidencia EC-ADQ-01 · La mediana del ticket de entrada es menor en 2023 y en 2024 que en 2022.
+[  35.6s]   evidencia EC-ADQ-02 · Todas las métricas de ticket de entrada (promedio, mediana, winsorizado, run-rate temprano y M1) son menores e
+[  35.6s]   evidencia EC-RES-01 · Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24.
+[  35.6s]   evidencia EC-RES-07 · Retail tiene mayor participación en los clientes activos en oct-24 que en dic-22.
+[  36.6s] → search_evidence
+[  36.6s]   evidencia EC-MON-04 · Los clientes existentes no pagan menos y las cosechas 2023–24, de menor ticket, ya son la mayoría de los clien
+[  36.6s]   evidencia EC-MON-01 · El MRR por cliente de la base previa en oct-24 está dentro de ±10% del de ene-22.
+[  36.6s]   evidencia EC-MON-02 · En oct-24, las cosechas 2023 y 2024 tienen menor MRR por cliente que la cosecha 2022 y que la base previa.
+[  36.6s]   evidencia EC-MON-03 · El MRR por cliente original de las cohortes 2023 está por debajo del de las cohortes 2022 en M1, M6 y M12.
+[  36.6s]   evidencia EC-MON-05 · El MRR por cliente activo bajó en las seis industrias entre dic-22 y oct-24.
+[  36.6s]   evidencia EC-RES-01 · Los clientes activos crecieron más rápido que el MRR pagado entre ene-22 y oct-24.
+[  44.3s]   analista: Evidencia canónica recuperada. Ahora los análisis del catálogo, en paralelo.
+[  45.1s] → run_analysis
+[  45.1s] estado → evidencia
+[  45.2s]   evidencia E-001 · vintage_arpa · Base ene-22
+[  45.2s]   evidencia E-002 · vintage_arpa · Base dic-22
+[  45.9s] → run_analysis
+[  46.2s]   evidencia E-003 · churn_selection · Churn observado (monto usual)
+[  46.3s] → run_analysis
+[  46.4s]   evidencia E-004 · ticket_distribution · Ventana limpia
+[  47.2s] → query_metric
+[  47.2s]   evidencia E-005 · MRR por cliente activo · grano month · 34 filas
+[  52.1s] → run_analysis
+[  52.3s]   evidencia E-006 · mix_within_decomposition · Ticket de entrada observado (M0) · principal
+[  52.3s]   evidencia E-007 · mix_within_decomposition · M0 winsorizado en P99
+[  52.3s]   evidencia E-008 · mix_within_decomposition · Run-rate temprano (mediana de M0–M2 positivos)
+[  98.7s]   analista: Evidencia completa. Ahora evalúo cada hipótesis contra su firma pre-registrada y propongo afirmaciones.
+[ 103.0s] → propose_claim
+[ 103.0s] estado → validacion
+[ 103.0s]   ✓ C-001 [Hecho observado] El MRR por cliente activo pasó de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24, un cambio de −38%, con descensos en casi todos los meses intermedio
+[ 103.0s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 Pendiente · H2 Pendiente · H3 Pendiente
+[ 108.1s] → propose_claim
+[ 108.1s]   ✗ afirmación rechazada: precauciones desconocidas ['La cosecha de la base previa tiene alta real desconocida (CV-VENTANA).']; usa IDs de known_quality_issues.yaml.
+[ 108.1s]   ✗ propose_claim: C-002 rechazada:
+- precauciones desconocidas ['La cosecha de la base previa tiene alta real desconocida (CV-VENTANA).']; usa IDs de known_quality_issues.yaml.
+[ 112.4s] → propose_claim
+[ 112.4s]   ✓ C-003 [Hecho observado] El ticket de entrada mediano de las altas bajó de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el promedio pasó de COP 128,7 
+[ 112.4s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 Pendiente · H2 Pendiente · H3 Pendiente
+[ 116.7s] → propose_claim
+[ 116.7s]   ✗ afirmación rechazada: cifras escritas a mano en la plantilla: ['75', '90', '25']. Toda cifra debe ser una variable ligada.
+[ 116.7s]   ✗ propose_claim: C-004 rechazada:
+- cifras escritas a mano en la plantilla: ['75', '90', '25']. Toda cifra debe ser una variable ligada.
+[ 121.4s] → propose_claim
+[ 121.4s]   ✓ C-005 [Hecho observado] Las cosechas 2023 y 2024 concentran 65% de los clientes activos de oct-24 pero solo 50% del MRR, con un MRR por cliente de COP 46,3 mil y COP 43,0 mil
+[ 121.4s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 Pendiente · H2 Pendiente · H3 Pendiente
+[ 131.5s] → propose_claim
+[ 131.5s]   ✓ C-006 [Evidencia fuerte] Entre ene-22 y oct-24, la composición de cosechas explica 108% del cambio del MRR por cliente activo y el efecto dentro de cada cosecha explica −8%; t
+[ 131.5s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 Pendiente · H2 No soportada · H3 Pendiente
+[ 135.6s] → propose_claim
+[ 135.6s]   ✓ C-007 [Hecho observado] El cuartil superior del ticket de entrada de 2024 (COP 60,9 mil) es menor que la mediana de 2022 (COP 63,0 mil); el decil superior pasó de COP 189,0 m
+[ 135.6s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 Pendiente · H2 No soportada · H3 Pendiente
+[ 141.5s] → propose_claim
+[ 141.5s]   ✗ afirmación rechazada: cifras escritas a mano en la plantilla: ['90']. Toda cifra debe ser una variable ligada.; La evidencia EC-ADQ-04 no existe en esta investigación.
+[ 141.5s]   ✗ propose_claim: C-008 rechazada:
+- cifras escritas a mano en la plantilla: ['90']. Toda cifra debe ser una variable ligada.
+- La evidencia EC-ADQ-04 no existe en esta investiga
+[ 147.0s] → propose_claim
+[ 147.0s]   ✗ afirmación rechazada: La evidencia EC-ADQ-05 no existe en esta investigación.
+[ 147.0s]   ✗ propose_claim: C-009 rechazada:
+- La evidencia EC-ADQ-05 no existe en esta investigación.
+[ 150.7s] → propose_claim
+[ 150.7s]   ✓ C-010 [No evaluable] No es posible evaluar si el menor ticket de entrada corresponde a cambios de precio de lista, de empaquetamiento de planes o de descuentos recurrentes
+[ 150.7s] hipótesis · H1 Soportada · H1.1 Pendiente · H1.2 No evaluable · H2 No soportada · H3 Pendiente
+[ 158.8s] → propose_claim
+[ 158.8s]   ✓ C-011 [Evidencia fuerte] El efecto dentro de cada industria explica 97% del cambio del ticket de entrada entre 2022 y 2024 en la variante M0, 96% con M0 winsorizado y 96% con 
+[ 158.8s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 No soportada · H3 Pendiente
+[ 163.8s] → propose_claim
+[ 163.8s]   ✓ C-012 [Hecho observado] El ticket de entrada cayó en las seis industrias entre 2022 y 2024, incluidas Restaurantes (de COP 173,7 mil a COP 59,9 mil) y Tecnología (de COP 199,
+[ 163.8s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 No soportada · H3 Pendiente
+[ 168.7s] → propose_claim
+[ 168.7s]   ✓ C-013 [Evidencia fuerte] El MRR por cliente de la base previa (activos en ene-22) pasó de COP 92,8 mil en ene-22 a COP 97,4 mil en oct-24, un cambio de +5%, y su efecto dentro
+[ 168.7s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 No soportada · H3 Pendiente
+[ 174.8s] → propose_claim
+[ 174.8s]   ✓ C-014 [Hecho observado] Entre dic-22 y oct-24, el MRR por cliente de la cosecha 2022 pasó de COP 81,0 mil a COP 65,4 mil y el de las altas de feb-22 de COP 85,8 mil a COP 69,
+[ 174.8s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Pendiente
+[ 178.0s]   analista: Ahora H3 (selección de salida), donde promedio y mediana cuentan historias distintas — propongo ambas.
+[ 184.0s] → propose_claim
+[ 184.0s]   ✓ C-015 [Hecho observado] El monto usual de quienes hacen churn es 1,5× veces el de los clientes activos del mes previo en el total del periodo (intervalo bootstrap de 1,3× a 1
+[ 184.0s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Soportada
+[ 189.3s] → propose_claim
+[ 189.3s]   ✓ C-016 [Hecho observado] La razón de medianas entre el monto usual de quienes hacen churn y el de los activos del mes previo es 1,0× en el total del periodo, con intervalo boo
+[ 189.3s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Direccional
+[ 194.6s] → propose_claim
+[ 194.6s]   ✓ C-017 [Hecho observado] La brecha de salida se estrecha con el tiempo: el monto usual de quienes hacen churn pasó de COP 133,1 mil en 2022 a COP 77,0 mil en 2024 y el de los 
+[ 194.6s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Direccional
+[ 200.2s]   analista: Todas las hipótesis tienen evidencia. Añado un límite metodológico y pido las visualizaciones.
+[ 204.9s] → propose_claim
+[ 204.9s]   ✓ C-018 [No evaluable] No es posible distinguir si la caída del MRR por cliente refleja menor valor contratado o un cambio en el comportamiento de cobro, porque no existe un
+[ 204.9s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Direccional
+[ 205.8s] → propose_visual
+[ 205.8s]   visual V-01 (linea) para C-001
+[ 206.6s] → propose_visual
+[ 206.6s]   visual V-02 (cascada) para C-006
+[ 207.4s] → propose_visual
+[ 207.4s]   visual V-03 (cascada) para C-011
+[ 208.2s] → propose_visual
+[ 208.2s]   visual V-04 (puntos) para C-015
+[ 208.9s] → propose_visual
+[ 208.9s]   visual V-05 (puntos) para C-005
+[ 222.6s]   analista: Investigación completa: 5 llamadas de análisis de 15 disponibles, 8 evidencias, todas las hipótesis cerradas con al menos una afirmación aceptada.
+
+**Lectura co
+[ 233.9s] hipótesis · H1 Soportada · H1.1 No soportada · H1.2 No evaluable · H2 Direccional · H3 Direccional
+[ 233.9s] estado → composicion
+[ 284.8s] composición intento 1: ok
+[ 284.8s] estado → publicada
+[ 284.8s] fin
+
+Investigación INV-20260927-135911-e6e0 · publicada · guardada en investigations/runs/INV-20260927-135911-e6e0.json
+
+Respuesta ejecutiva: La caída del MRR por cliente activo se asocia sobre todo con quién entra, no con un deterioro de la base instalada: entre ene-22 y oct-24 la composición de cosechas explica 108% del cambio y el efecto dentro de cada cosecha explica −8% (con base dic-22, 84% y 16%). Esto coincide con altas que entran más bajo: el ticket de entrada mediano bajó de COP 63,0 mil en 2022 a COP 36,8 mil en 2023 y COP 42,0 mil en 2024, y el promedio pasó de COP 128,7 mil a COP 50,8 mil. En paralelo, la base previa activa en ene-22 no se deterioró: su MRR por cliente registró un cambio de +5% en el periodo.
+Uso: suscripción de Claude (sesión de Claude Code) · {'investigador': {'turnos': 34, 'ms': 232449, 'costo_equivalente_usd': 1.143062, 'tokens_entrada': 22, 'tokens_salida': 21679, 'cache_lectura': 261994, 'cache_escritura': 46998}, 'compositor_1': {'turnos': 2, 'ms': 49923, 'costo_equivalente_usd': 0.19461499999999998, 'tokens_entrada': 2, 'tokens_salida': 4697, 'cache_lectura': 0, 'cache_escritura': 7718}}

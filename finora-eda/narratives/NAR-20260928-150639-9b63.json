@@ -1,0 +1,1034 @@
+{
+ "id": "NAR-20260928-150639-9b63",
+ "titulo": "Caso CFO · qué mide hoy el MRR",
+ "audiencia": "CFO",
+ "objetivo": "Que el CFO entienda qué puede y qué no puede responder hoy el modelo de MRR, y qué decidir antes de lanzar descuentos temporales",
+ "contexto": "El CFO pregunta: \"Si un cliente pagaba 100 y ahora paga 80, ¿contrajo 20 o recibió un descuento? ¿Qué pasa si su suscripción creció de 100 a 130, pero tiene un descuento de 30 y sigue pagando 100? ¿Y cuando desaparezca el descuento, eso cuenta como expansión? Quiero saber qué está pasando con el negocio subyacente y cuánto revenue estamos dejando de capturar por decisiones comerciales.\" Finora cobra suscripciones mensuales cuyo valor puede cambiar con el uso. Hoy existe un histórico con cliente + mes + monto pagado, y los cambios entre meses se usan para clasificar crecimiento, contracción, churn o reactivación. Ahora Finora quiere introducir descuentos temporales. Preguntas: qué puede y qué no puede responder el modelo actual; cómo separar el valor de la suscripción del precio pagado; qué campos, tablas o definiciones agregar; cómo clasificar el inicio y el fin de un descuento.",
+ "piezas": [
+  {
+   "tipo": "respuesta",
+   "rol": "Situación",
+   "titulo": "¿Qué está pasando con el negocio subyacente y cuánto revenue dejamos de capturar por decisiones comerciales?",
+   "texto": "Con estos datos no se puede estimar. Con los datos disponibles vemos cambios en el MRR pagado, pero no podemos distinguir contracción, descuento y cambio de precio: no existen precio de lista, MRR contratado, plan ni descuentos. Por eso no podemos estimar responsablemente cuánto revenue se deja de capturar por decisiones comerciales.",
+   "estado": "No evaluable",
+   "nota": "Abre la historia: con estos datos no se puede separar descuento de contracción.",
+   "afirmaciones": [
+    {
+     "id": "C-RET-02",
+     "texto": "Más de 40% de los churns observados vuelve a pagar al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "churn_back_1m": "44%",
+      "churn_events": "751"
+     }
+    },
+    {
+     "id": "C-DAT-03",
+     "texto": "Más de 25% del MRR de expansión se revierte al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "exp_mrr_revert": "29%"
+     }
+    },
+    {
+     "id": "C-DAT-04",
+     "texto": "Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y el último semestre.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "small_exp_first": "9%",
+      "small_exp_last": "75%"
+     }
+    },
+    {
+     "id": "C-DAT-05",
+     "texto": "La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "offgrid_2022s2": "19%",
+      "offgrid_2024s2": "42%"
+     }
+    }
+   ],
+   "visual": {
+    "tipo": "workspace",
+    "chart": "smallAdjust",
+    "titulo": "Los ajustes pequeños pasaron de 9% a 75% de las expansiones."
+   },
+   "fuente": {
+    "kind": "respuesta",
+    "ref": "Q7"
+   },
+   "id": "P-01",
+   "creada_ms": 1790629599250,
+   "visuales": [
+    {
+     "id": "C-RET-02",
+     "claim_id": "C-RET-02",
+     "claim": "Más de 40% de los churns observados vuelve a pagar al mes siguiente.",
+     "tipo": "workspace",
+     "chart": "examples",
+     "tarjeta": "1.3",
+     "titulo": "Más de 40% de los churns observados vuelve a pagar al mes siguiente."
+    },
+    {
+     "id": "C-DAT-03",
+     "claim_id": "C-DAT-03",
+     "claim": "Más de 25% del MRR de expansión se revierte al mes siguiente.",
+     "tipo": "spec",
+     "spec": {
+      "tipo": "barras",
+      "apiladas": true,
+      "x": [
+       "MRR de expansión"
+      ],
+      "formato": "pct",
+      "series": [
+       {
+        "nombre": "Se revierte al mes siguiente",
+        "valores": [
+         0.2925602061079387
+        ]
+       },
+       {
+        "nombre": "Se mantiene",
+        "valores": [
+         0.7074397938920614
+        ]
+       }
+      ]
+     },
+     "titulo": "Más de 25% del MRR de expansión se revierte al mes siguiente."
+    },
+    {
+     "id": "C-DAT-04",
+     "claim_id": "C-DAT-04",
+     "claim": "Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y el último semestre.",
+     "tipo": "workspace",
+     "chart": "smallAdjust",
+     "tarjeta": "9.4",
+     "titulo": "Los ajustes menores a 10% pasaron de menos de 15% a más de 60% de los eventos de expansión entre el primer y el último semestre."
+    },
+    {
+     "id": "C-DAT-05",
+     "claim_id": "C-DAT-05",
+     "claim": "La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2.",
+     "tipo": "workspace",
+     "chart": "smallAdjust",
+     "tarjeta": "9.4",
+     "titulo": "La proporción de meses-cliente activos con montos fuera de la grilla de COP 2.100 es mayor en 2024 S2 que en 2022 S2."
+    }
+   ]
+  },
+  {
+   "tipo": "tarjeta",
+   "rol": "Hallazgo",
+   "titulo": "El 44% de los churns observados vuelve al mes siguiente",
+   "texto": "Churns observados según el tiempo hasta el siguiente pago, por año.",
+   "estado": "Hecho observado",
+   "nota": "Muestra que buena parte del churn vuelve: es cobro, no baja.",
+   "afirmaciones": [
+    {
+     "id": "C-RET-02",
+     "texto": "Más de 40% de los churns observados vuelve a pagar al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "churn_back_1m": "44%",
+      "churn_events": "751"
+     }
+    }
+   ],
+   "visual": {
+    "tipo": "workspace",
+    "chart": "returnBuckets",
+    "tarjeta": "9.3",
+    "titulo": "El 44% de los churns observados vuelve al mes siguiente"
+   },
+   "fuente": {
+    "kind": "tarjeta",
+    "ref": "9.3"
+   },
+   "id": "P-02",
+   "creada_ms": 1790629615648
+  },
+  {
+   "tipo": "seccion",
+   "rol": "Hallazgo",
+   "titulo": "¿Qué mueve el MRR pagado de un mes a otro?",
+   "texto": "Mucho movimiento bruto para poco cambio neto: se movieron COP 404 millones para producir COP 62 millones de crecimiento (6,5×). Una parte es consistente con timing de cobro: el 44% de los churns vuelve al mes siguiente y el 29% del MRR de expansión se revierte. Con estos datos no se puede separar contracción de descuento.",
+   "estado": "Hecho observado",
+   "nota": "El puente mueve mucho bruto para poco neto.",
+   "afirmaciones": [
+    {
+     "id": "C-RES-04",
+     "texto": "Los movimientos brutos de MRR superan 5 veces el cambio neto del periodo.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "gross_movement": "COP 404 millones",
+      "net_movement": "COP 62 millones",
+      "gross_net_ratio": "6,5×"
+     }
+    },
+    {
+     "id": "C-RET-02",
+     "texto": "Más de 40% de los churns observados vuelve a pagar al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "churn_back_1m": "44%",
+      "churn_events": "751"
+     }
+    },
+    {
+     "id": "C-DAT-03",
+     "texto": "Más de 25% del MRR de expansión se revierte al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "exp_mrr_revert": "29%"
+     }
+    }
+   ],
+   "visual": {
+    "tipo": "workspace",
+    "chart": "bridgeMonthly",
+    "tarjeta": "9.1",
+    "titulo": "Los movimientos brutos son 6,5× el cambio neto: se movieron COP 404 millones para producir COP 62 millones de crecimiento"
+   },
+   "fuente": {
+    "kind": "seccion",
+    "ref": "movements"
+   },
+   "id": "P-03",
+   "creada_ms": 1790629617363
+  },
+  {
+   "tipo": "hallazgo",
+   "rol": "Hallazgo",
+   "titulo": "Las altas entran con ticket menor y dominan la base activa",
+   "texto": "El descenso sostenido del MRR por cliente activo coincide con altas que entran a un ticket menor: el promedio de entrada pasó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024. Esas cosechas recientes ya representan 65% de los activos en oct-24. Si el ticket de entrada se mantiene en el nivel de 2024, convendría revisar el objetivo de MRR por cliente al planear el mix de adquisición.",
+   "estado": "Soportada",
+   "nota": "Explica que la caída del MRR por cliente es composición, no erosión de la base.",
+   "afirmaciones": [
+    {
+     "id": "C-013",
+     "texto": "El MRR por cliente activo desciende de forma sostenida entre ene-22 y oct-24, desde COP 92,8 mil hasta COP 57,8 mil, con el nivel de dic-23 (COP 62,8 mil) por debajo del de dic-22 (COP 89,5 mil).",
+     "estado": "Hecho observado",
+     "cifras": {}
+    },
+    {
+     "id": "C-001",
+     "texto": "Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil, y la descomposición por cosecha asigna a la composición de entrada 108% del cambio y al efecto dentro de las cosechas −8%.",
+     "estado": "Evidencia fuerte",
+     "cifras": {}
+    },
+    {
+     "id": "C-002",
+     "texto": "El ticket de entrada promedio de las altas bajó de COP 128,7 mil en 2022 a COP 50,8 mil en 2024, y la mediana pasó de COP 63,0 mil a COP 42,0 mil.",
+     "estado": "Hecho observado",
+     "cifras": {}
+    },
+    {
+     "id": "C-003",
+     "texto": "En oct-24 las cosechas 2023 y 2024 concentran 65% de los clientes activos, con un MRR por cliente de COP 46,3 mil y COP 43,0 mil, por debajo del de la base previa (COP 97,4 mil).",
+     "estado": "Hecho observado",
+     "cifras": {}
+    }
+   ],
+   "visual": {
+    "tipo": "spec",
+    "spec": {
+     "tipo": "linea",
+     "x": [
+      "ene-22",
+      "feb-22",
+      "mar-22",
+      "abr-22",
+      "may-22",
+      "jun-22",
+      "jul-22",
+      "ago-22",
+      "sep-22",
+      "oct-22",
+      "nov-22",
+      "dic-22",
+      "ene-23",
+      "feb-23",
+      "mar-23",
+      "abr-23",
+      "may-23",
+      "jun-23",
+      "jul-23",
+      "ago-23",
+      "sep-23",
+      "oct-23",
+      "nov-23",
+      "dic-23",
+      "ene-24",
+      "feb-24",
+      "mar-24",
+      "abr-24",
+      "may-24",
+      "jun-24",
+      "jul-24",
+      "ago-24",
+      "sep-24",
+      "oct-24"
+     ],
+     "series": [
+      {
+       "nombre": "MRR por cliente activo",
+       "valores": [
+        92839.01419098144,
+        95882.95385120349,
+        84679.31042826553,
+        97785.41464929859,
+        92667.65763157894,
+        76048.455,
+        84263.42994880547,
+        90461.4048275862,
+        80228.56559618442,
+        75334.00931192661,
+        75148.32421524664,
+        89543.71829268293,
+        76893.68079126877,
+        72763.91284403669,
+        71579.38640151515,
+        73093.43923357663,
+        72034.96,
+        68980.66288097887,
+        67232.73197080292,
+        66718.99901077374,
+        64238.77928571428,
+        63420.15254192409,
+        63902.53950124688,
+        62786.46672038679,
+        59630.55491036633,
+        58539.54116099072,
+        59120.31061363637,
+        60215.23539727988,
+        58786.32895676047,
+        58885.613980392154,
+        57109.778927203064,
+        56921.83353932584,
+        56330.51234042553,
+        57811.35091179976
+       ]
+      }
+     ],
+     "formato": "cop"
+    },
+    "titulo": "El MRR por cliente activo desciende de forma sostenida entre ene-22 y oct-24, desde COP 92,8 mil hasta COP 57,8 mil, con el nivel de dic-23 (COP 62,8 mil) por debajo del de dic-22 (COP 89,5 mil)."
+   },
+   "fuente": {
+    "kind": "investigacion",
+    "ref": "INV-20260927-141235-68ab",
+    "hallazgo": "H1"
+   },
+   "id": "P-04",
+   "creada_ms": 1790629619712,
+   "visuales": [
+    {
+     "id": "V-01",
+     "claim_id": "C-013",
+     "claim": "El MRR por cliente activo desciende de forma sostenida entre ene-22 y oct-24, desde COP 92,8 mil hasta COP 57,8 mil, con el nivel de dic-23 (COP 62,8 mil) por debajo del de dic-22 (COP 89,5 mil).",
+     "tipo": "spec",
+     "spec": {
+      "tipo": "linea",
+      "x": [
+       "ene-22",
+       "feb-22",
+       "mar-22",
+       "abr-22",
+       "may-22",
+       "jun-22",
+       "jul-22",
+       "ago-22",
+       "sep-22",
+       "oct-22",
+       "nov-22",
+       "dic-22",
+       "ene-23",
+       "feb-23",
+       "mar-23",
+       "abr-23",
+       "may-23",
+       "jun-23",
+       "jul-23",
+       "ago-23",
+       "sep-23",
+       "oct-23",
+       "nov-23",
+       "dic-23",
+       "ene-24",
+       "feb-24",
+       "mar-24",
+       "abr-24",
+       "may-24",
+       "jun-24",
+       "jul-24",
+       "ago-24",
+       "sep-24",
+       "oct-24"
+      ],
+      "series": [
+       {
+        "nombre": "MRR por cliente activo",
+        "valores": [
+         92839.01419098144,
+         95882.95385120349,
+         84679.31042826553,
+         97785.41464929859,
+         92667.65763157894,
+         76048.455,
+         84263.42994880547,
+         90461.4048275862,
+         80228.56559618442,
+         75334.00931192661,
+         75148.32421524664,
+         89543.71829268293,
+         76893.68079126877,
+         72763.91284403669,
+         71579.38640151515,
+         73093.43923357663,
+         72034.96,
+         68980.66288097887,
+         67232.73197080292,
+         66718.99901077374,
+         64238.77928571428,
+         63420.15254192409,
+         63902.53950124688,
+         62786.46672038679,
+         59630.55491036633,
+         58539.54116099072,
+         59120.31061363637,
+         60215.23539727988,
+         58786.32895676047,
+         58885.613980392154,
+         57109.778927203064,
+         56921.83353932584,
+         56330.51234042553,
+         57811.35091179976
+        ]
+       }
+      ],
+      "formato": "cop"
+     },
+     "titulo": "El MRR por cliente activo desciende de forma sostenida entre ene-22 y oct-24, desde COP 92,8 mil hasta COP 57,8 mil, con el nivel de dic-23 (COP 62,8 mil) por debajo del de dic-22 (COP 89,5 mil)."
+    },
+    {
+     "id": "V-02",
+     "claim_id": "C-001",
+     "claim": "Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil, y la descomposición por cosecha asigna a la composición de entrada 108% del cambio y al efecto dentro de las cosechas −8%.",
+     "tipo": "spec",
+     "spec": {
+      "tipo": "cascada",
+      "formato": "cop",
+      "pasos": [
+       {
+        "etiqueta": "ene-22",
+        "valor": 92839.01419098144,
+        "tipo": "total"
+       },
+       {
+        "etiqueta": "Composición",
+        "corta": "Comp.",
+        "valor": -37705.98731473553,
+        "tipo": "delta"
+       },
+       {
+        "etiqueta": "Dentro de\ncada cosecha",
+        "corta": "Dentro",
+        "valor": 2678.324035553832,
+        "tipo": "delta"
+       },
+       {
+        "etiqueta": "oct-24",
+        "valor": 57811.35091179977,
+        "tipo": "total"
+       }
+      ]
+     },
+     "titulo": "Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil, y la descomposición por cosecha asigna a la composición de entrada 108% del cambio y al efecto dentro de las cosechas −8%."
+    },
+    {
+     "id": "V-03",
+     "claim_id": "C-003",
+     "claim": "En oct-24 las cosechas 2023 y 2024 concentran 65% de los clientes activos, con un MRR por cliente de COP 46,3 mil y COP 43,0 mil, por debajo del de la base previa (COP 97,4 mil).",
+     "tipo": "spec",
+     "spec": {
+      "tipo": "puntos",
+      "filas": [
+       "Base previa (activos en ene-22)",
+       "Altas de feb-22 (marcadas)",
+       "Cosecha 2022 (mar–dic)",
+       "Cosecha 2023",
+       "Cosecha 2024"
+      ],
+      "formato": "cop",
+      "series": [
+       {
+        "nombre": "ene-22",
+        "valores": [
+         92839.01419098144,
+         null,
+         null,
+         null,
+         null
+        ]
+       },
+       {
+        "nombre": "oct-24",
+        "valores": [
+         97387.82768456376,
+         69859.96888888889,
+         65436.706829268296,
+         46297.025157894735,
+         42983.56385496183
+        ]
+       }
+      ]
+     },
+     "titulo": "En oct-24 las cosechas 2023 y 2024 concentran 65% de los clientes activos, con un MRR por cliente de COP 46,3 mil y COP 43,0 mil, por debajo del de la base previa (COP 97,4 mil)."
+    }
+   ]
+  },
+  {
+   "tipo": "afirmacion",
+   "rol": "Hallazgo",
+   "titulo": "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente.",
+   "texto": "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente.",
+   "estado": "Hecho observado",
+   "nota": "",
+   "afirmaciones": [
+    {
+     "id": "C-DAT-06",
+     "texto": "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "rt_gross": "COP 282,8 millones",
+      "rt_share": "25,3%"
+     }
+    }
+   ],
+   "visual": {
+    "id": "C-DAT-06",
+    "claim_id": "C-DAT-06",
+    "claim": "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente.",
+    "tipo": "spec",
+    "spec": {
+     "tipo": "barras",
+     "apiladas": true,
+     "x": [
+      "Movimiento bruto sin altas, mar-22 a sep-24"
+     ],
+     "formato": "pct",
+     "series": [
+      {
+       "nombre": "Vuelve exacto al nivel previo al mes siguiente",
+       "valores": [
+        0.2529696008219224
+       ]
+      },
+      {
+       "nombre": "Resto del movimiento",
+       "valores": [
+        0.7470303991780776
+       ]
+      }
+     ]
+    },
+    "titulo": "Más de 20% del movimiento bruto del monto pagado entre mar-22 y sep-24, sin contar altas, se revierte exactamente al nivel previo al mes siguiente."
+   },
+   "fuente": {
+    "kind": "afirmacion",
+    "ref": "C-DAT-06"
+   },
+   "id": "P-05",
+   "creada_ms": 1790629633395
+  },
+  {
+   "tipo": "afirmacion",
+   "rol": "Hallazgo",
+   "titulo": "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos.",
+   "texto": "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos.",
+   "estado": "Hecho observado",
+   "nota": "",
+   "afirmaciones": [
+    {
+     "id": "C-RET-03",
+     "texto": "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "churn_obs_2022": "3,52%",
+      "churn_obs_2023": "2,24%",
+      "churn_obs_2024": "2,04%",
+      "churn_dur3_2022": "0,98%",
+      "churn_dur3_2023": "1,09%",
+      "churn_dur3_2024": "0,96%"
+     }
+    }
+   ],
+   "visual": {
+    "id": "C-RET-03",
+    "claim_id": "C-RET-03",
+    "claim": "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos.",
+    "tipo": "spec",
+    "spec": {
+     "tipo": "barras",
+     "x": [
+      "2022",
+      "2023",
+      "2024"
+     ],
+     "formato": "pct",
+     "series": [
+      {
+       "nombre": "Churn observado",
+       "valores": [
+        0.035218783351120594,
+        0.02244320773652039,
+        0.020378151260504202
+       ]
+      },
+      {
+       "nombre": "Churn que no vuelve a pagar en 3 meses",
+       "valores": [
+        0.009782995375311278,
+        0.010947906212936776,
+        0.009558823529411765
+       ]
+      }
+     ]
+    },
+    "titulo": "El churn observado bajó más de un punto entre 2022 y 2024, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos."
+   },
+   "fuente": {
+    "kind": "afirmacion",
+    "ref": "C-RET-03"
+   },
+   "id": "P-06",
+   "creada_ms": 1790629634619
+  },
+  {
+   "tipo": "afirmacion",
+   "rol": "Hallazgo",
+   "titulo": "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje.",
+   "texto": "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje.",
+   "estado": "Hecho observado",
+   "nota": "",
+   "afirmaciones": [
+    {
+     "id": "C-DAT-07",
+     "texto": "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje.",
+     "estado": "Hecho observado",
+     "cifras": {
+      "retro_events": "260",
+      "retro_customers": "249",
+      "retro_exp_share_2023": "8,5%",
+      "retro_exp_share_2024": "8,3%",
+      "retro_net_2023": "COP 477,25 mil",
+      "retro_net_2024": "COP 490,54 mil"
+     }
+    }
+   ],
+   "visual": {
+    "id": "C-DAT-07",
+    "claim_id": "C-DAT-07",
+    "claim": "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje.",
+    "tipo": "spec",
+    "spec": {
+     "tipo": "barras",
+     "apiladas": true,
+     "x": [
+      "2023",
+      "2024"
+     ],
+     "formato": "pct",
+     "series": [
+      {
+       "nombre": "Tramo de subida con cobro retroactivo exacto",
+       "valores": [
+        0.08537936689506388,
+        0.08286568820750435
+       ]
+      },
+      {
+       "nombre": "Resto de la expansión",
+       "valores": [
+        0.9146206331049361,
+        0.9171343117924956
+       ]
+      }
+     ]
+    },
+    "titulo": "Más de 200 clientes muestran un ajuste sincronizado con cobro retroactivo exacto: el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje."
+   },
+   "fuente": {
+    "kind": "afirmacion",
+    "ref": "C-DAT-07"
+   },
+   "id": "P-07",
+   "creada_ms": 1790629635603
+  },
+  {
+   "tipo": "nota",
+   "rol": "Decisión",
+   "titulo": "Registrar cada descuento temporal con su vencimiento antes de lanzarlo",
+   "texto": "",
+   "estado": "",
+   "nota": "Sin ese registro, el inicio del descuento se lee como contracción y su fin como expansión.",
+   "afirmaciones": [],
+   "visual": null,
+   "fuente": {},
+   "id": "P-08",
+   "creada_ms": 1790629637315
+  }
+ ],
+ "esqueleto": {
+  "resumen": "El modelo actual lee el monto pagado por cliente y mes, no el valor contratado, y mezcla cambios comerciales con cambios de cobro. Los movimientos brutos, las reversiones y los retornos observados son consistentes con ritmo de recaudo más que con cambios del negocio subyacente, y la caída del MRR por cliente coincide con composición de cosechas recientes. Antes de lanzar descuentos temporales conviene decidir cómo se registra el descuento y su vencimiento, y qué campos y reglas separan valor contratado de monto pagado.",
+  "secciones": [
+   {
+    "rol": "Situación",
+    "mensaje": "Hoy el modelo observa el monto pagado por cliente y mes, no el valor contratado del plan.",
+    "preguntas": [
+     "¿Qué registra hoy el histórico y qué queda fuera de él?",
+     "¿Cuáles de las preguntas del CFO puede responder el modelo actual y cuáles no?",
+     "¿Qué se está llamando contracción cuando lo que baja es el monto cobrado?"
+    ],
+    "piezas": [
+     "P-01"
+    ],
+    "afirmaciones": [
+     "C-RES-01",
+     "C-RES-02",
+     "C-RES-08"
+    ],
+    "huecos": [
+     "¿Existe en algún sistema el precio de lista o el valor contratado del plan?",
+     "¿Dónde quedan registrados hoy los acuerdos comerciales y sus vigencias?"
+    ]
+   },
+   {
+    "rol": "Hallazgo",
+    "mensaje": "El MRR pagado mueve mucho bruto para poco cambio neto, y parte del movimiento vuelve al nivel previo al mes siguiente.",
+    "preguntas": [
+     "¿Qué proporción del movimiento bruto se revierte al mes siguiente?",
+     "¿Qué categorías del puente concentran esa reversión?",
+     "¿Qué queda del cambio neto cuando se excluye lo que se revierte?"
+    ],
+    "piezas": [
+     "P-03",
+     "P-05"
+    ],
+    "afirmaciones": [
+     "C-RES-04",
+     "C-DAT-06",
+     "C-DAT-03",
+     "C-RES-05"
+    ],
+    "huecos": [
+     "¿Qué parte del movimiento corresponde a recaudo y qué parte a cambios de suscripción?",
+     "¿Existe fecha de emisión de factura separada de la fecha de pago?"
+    ]
+   },
+   {
+    "rol": "Hallazgo",
+    "mensaje": "Buena parte del churn observado vuelve a pagar poco después, lo que apunta a ritmo de cobro más que a bajas reales.",
+    "preguntas": [
+     "¿Qué proporción del churn observado corresponde a clientes que siguen activos?",
+     "¿Cómo se distingue hoy baja definitiva de pago atrasado?",
+     "¿Qué firmas de cobro retroactivo aparecen en el histórico?"
+    ],
+    "piezas": [
+     "P-02",
+     "P-06",
+     "P-07"
+    ],
+    "afirmaciones": [
+     "C-RET-02",
+     "C-RET-03",
+     "C-DAT-08",
+     "C-DAT-09",
+     "C-DAT-07"
+    ],
+    "huecos": [
+     "¿Hay fecha de cancelación o de suspensión declarada en algún sistema?",
+     "¿Qué política de reintentos de cobro aplica el área de facturación?"
+    ]
+   },
+   {
+    "rol": "Hallazgo",
+    "mensaje": "El descenso del MRR por cliente activo coincide con cosechas recientes de ticket de entrada menor, no con erosión de los clientes existentes.",
+    "preguntas": [
+     "¿Los clientes existentes pagan hoy menos que antes?",
+     "¿Qué peso tienen las cosechas recientes en la base activa?",
+     "¿El descenso del ticket de entrada se observa dentro de cada industria?"
+    ],
+    "piezas": [
+     "P-04"
+    ],
+    "afirmaciones": [
+     "C-MON-01",
+     "C-MON-02",
+     "C-MON-04",
+     "C-ADQ-01",
+     "C-ADQ-02",
+     "C-ADQ-05",
+     "C-MON-05",
+     "C-ADQ-07"
+    ],
+    "huecos": [
+     "¿Cambió el catálogo de planes o el precio de lista de entrada en el periodo?",
+     "¿Hubo acuerdos comerciales de entrada que no quedaron registrados?"
+    ]
+   },
+   {
+    "rol": "Implicación",
+    "mensaje": "Con el modelo actual, el inicio del descuento se leería como contracción y su vencimiento como expansión, y el revenue no capturado por decisiones comerciales no se puede estimar.",
+    "preguntas": [
+     "¿Qué decisiones quedarían mal informadas si el descuento se lee como cambio del negocio subyacente?",
+     "¿Qué riesgo hay de leer como expansión lo que es fin de vigencia del descuento?",
+     "¿Qué métricas de retención y expansión pierden interpretación al introducir descuentos?"
+    ],
+    "piezas": [],
+    "afirmaciones": [
+     "C-DAT-04",
+     "C-DAT-05"
+    ],
+    "huecos": [
+     "¿Qué descuentos o condiciones especiales ya se aplican sin quedar registrados?",
+     "¿Qué margen está dispuesta la compañía a ceder y por cuánto tiempo?"
+    ]
+   },
+   {
+    "rol": "Decisión",
+    "mensaje": "Antes de lanzar descuentos temporales hay que decidir registrar el descuento con su vigencia y su vencimiento, y fijar la definición de MRR contratado.",
+    "preguntas": [
+     "¿Quién es dueño del registro del descuento y en qué sistema vive?",
+     "¿Qué se considera inicio y qué se considera fin del descuento para efectos de reporte?",
+     "¿Se reportará el puente sobre valor contratado, sobre monto pagado, o sobre ambas vistas?"
+    ],
+    "piezas": [
+     "P-08"
+    ],
+    "afirmaciones": [],
+    "huecos": [
+     "¿Qué reglas de aprobación y de vigencia máxima tendrán los descuentos?",
+     "¿Qué vista prefiere el CFO para seguir el negocio subyacente mes a mes?"
+    ]
+   },
+   {
+    "rol": "Acción",
+    "mensaje": "El paso siguiente es definir los campos, las tablas y las reglas de clasificación que separan valor contratado, descuento y monto pagado.",
+    "preguntas": [
+     "¿Qué campos mínimos se agregan al histórico de cobros?",
+     "¿Cómo se clasifica el inicio y el vencimiento del descuento en el puente de MRR?",
+     "¿Cómo se separan en el reporte los eventos de cobro de los cambios de suscripción?"
+    ],
+    "piezas": [],
+    "afirmaciones": [],
+    "huecos": [
+     "¿Qué sistema será la fuente del plan y del precio de lista?",
+     "¿Qué esfuerzo pide reconstruir el histórico de planes hacia atrás?",
+     "¿Quién valida las reglas de clasificación antes de publicarlas?"
+    ]
+   }
+  ],
+  "generado_ms": 1790629719708,
+  "uso": {
+   "ms": 62598,
+   "costo_equivalente_usd": 0.2141
+  }
+ },
+ "presentacion": {
+  "laminas": [
+   {
+    "rol": "Situación",
+    "titulo": "El histórico observa monto pagado y no permite separar descuento de contracción",
+    "mensaje": "Con los datos disponibles vemos cambios en el MRR pagado, pero no podemos distinguir contracción, descuento y cambio de precio. Por eso no podemos estimar responsablemente cuánto revenue se deja de capturar por decisiones comerciales.",
+    "puntos": [
+     "No existen precio de lista, MRR contratado, plan ni descuentos en el histórico",
+     "La pregunta de revenue no capturado por decisiones comerciales queda hoy como no evaluable",
+     "Meses-cliente activos con monto fuera de la grilla de COP 2.100: 19% en 2022 S2 y 42% en 2024 S2",
+     "Expansiones menores a 10%: 9% de los eventos en 2022 S1 y 75% en 2024 S2"
+    ],
+    "piezas": [
+     "P-01"
+    ],
+    "visual": "P-01/C-DAT-05",
+    "notas": "Arrancamos con el límite del modelo: el histórico registra cliente, mes y monto pagado, y de ahí se derivan las categorías del puente. Marcamos esta pregunta como no evaluable y decimos qué falta para poder responderla. Los indicadores de grilla y de ajustes menores se presentan como señal de que el monto pagado se mueve por razones que el dato no identifica."
+   },
+   {
+    "rol": "Hallazgo",
+    "titulo": "El puente mueve COP 404 millones brutos para un cambio neto de COP 62 millones",
+    "mensaje": "El movimiento bruto del periodo supera 5 veces el cambio neto. Una parte del movimiento vuelve exactamente al nivel previo al mes siguiente.",
+    "puntos": [
+     "Movimiento bruto de MRR del periodo: COP 404 millones; cambio neto: COP 62 millones (6,5×)",
+     "25,3% del movimiento bruto sin altas entre mar-22 y sep-24 vuelve exacto al nivel previo al mes siguiente",
+     "Ese movimiento bruto sin altas suma COP 282,8 millones",
+     "29% del MRR de expansión se revierte al mes siguiente"
+    ],
+    "piezas": [
+     "P-03",
+     "P-05"
+    ],
+    "visual": "P-03",
+    "notas": "Esta lámina muestra que el puente clasifica movimientos que se deshacen solos al mes siguiente. Precaución de lectura: el monto bruto sin altas es el total movido, no la parte revertida; el porcentaje es la parte que regresa al nivel previo. Con estos datos no se puede separar contracción de descuento dentro de ese movimiento."
+   },
+   {
+    "rol": "Hallazgo",
+    "titulo": "44% de los churns observados vuelve a pagar al mes siguiente",
+    "mensaje": "Una parte del churn observado corresponde a clientes que reaparecen en el mes siguiente, lo que coincide con ritmo de cobro más que con bajas.",
+    "puntos": [
+     "Churns observados que vuelven a pagar al mes siguiente: 44%",
+     "Eventos de churn observado entre mar-22 y oct-24: 751",
+     "La distribución del tiempo hasta el siguiente pago se observa por año"
+    ],
+    "piezas": [
+     "P-02"
+    ],
+    "visual": "P-02",
+    "notas": "El churn observado se define por ausencia de pago en el mes, no por una baja declarada. Al mirar el tiempo hasta el siguiente pago aparece un grupo que reaparece de inmediato. Precaución: sin fecha de cancelación declarada no podemos confirmar cuáles son bajas reales."
+   },
+   {
+    "rol": "Hallazgo",
+    "titulo": "El churn observado baja, pero el churn que no vuelve a pagar se mantiene",
+    "mensaje": "Entre 2022 y 2024 el churn observado bajó más de un punto, mientras el churn que no vuelve a pagar en tres meses cambió menos de 0,3 puntos.",
+    "puntos": [
+     "Churn observado mensual de logos: 3,52% en 2022 (mar–dic), 2,24% en 2023 y 2,04% en 2024 (ene–jul)",
+     "Churn mensual que no vuelve a pagar poco después: 0,98% en 2022, 1,09% en 2023 y 0,96% en 2024 (ene–jul)",
+     "La mejora se concentra en la medida observada, no en la que excluye retornos"
+    ],
+    "piezas": [
+     "P-06"
+    ],
+    "visual": "P-06",
+    "notas": "Comparamos la medida observada con la que excluye a quienes vuelven a pagar poco después. La segunda se mantiene en un nivel parecido a lo largo del periodo. Esto indica que la lectura del churn depende de la definición y del ritmo de cobro."
+   },
+   {
+    "rol": "Hallazgo",
+    "titulo": "260 eventos de ajuste sincronizado muestran firma de cobro retroactivo exacto",
+    "mensaje": "Se identifican ajustes en los que el monto sube k veces un porcentaje y al mes siguiente queda en ese porcentaje, en 249 clientes.",
+    "puntos": [
+     "Eventos de ajuste sincronizado con cobro retroactivo exacto: 260, en 249 clientes",
+     "El tramo de subida de esos ajustes representa 8,5% de la expansión de 2023 y 8,3% de la de 2024",
+     "Aumento mensual neto que persiste por esos ajustes: COP 477,25 mil en 2023 y COP 490,54 mil en 2024"
+    ],
+    "piezas": [
+     "P-07"
+    ],
+    "visual": "P-07",
+    "notas": "Esta firma es un patrón identificable dentro de la expansión: un pico de cobro y luego el nivel nuevo estable. Distinguimos el tramo de subida, que es transitorio, del aumento que permanece. Precaución: el patrón se detecta por la forma de la serie, no por un campo de facturación."
+   },
+   {
+    "rol": "Hallazgo",
+    "titulo": "La caída del MRR por cliente coincide con altas de ticket de entrada menor",
+    "mensaje": "El MRR por cliente activo desciende de forma sostenida y la descomposición por cosecha asigna el cambio a la composición de entrada, no al comportamiento dentro de las cosechas.",
+    "puntos": [
+     "MRR por cliente activo: de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24",
+     "La descomposición asigna a la composición de entrada 108% del cambio y al efecto dentro de las cosechas −8%",
+     "Ticket de entrada promedio de las altas: COP 128,7 mil en 2022 y COP 50,8 mil en 2024; mediana de COP 63,0 mil a COP 42,0 mil",
+     "En oct-24 las cosechas 2023 y 2024 concentran 65% de los activos, con COP 46,3 mil y COP 43,0 mil frente a COP 97,4 mil de la base previa"
+    ],
+    "piezas": [
+     "P-04"
+    ],
+    "visual": "P-04/V-02",
+    "notas": "Aquí el hallazgo es de composición: quienes entran lo hacen a un nivel de ticket menor y ya pesan en la base activa. La descomposición por cosecha es evidencia fuerte, no una medición directa, y su lectura depende de la definición de cosecha. Si el ticket de entrada se mantiene en el nivel de 2024, convendría revisar el objetivo de MRR por cliente al planear el mix de adquisición."
+   },
+   {
+    "rol": "Implicación",
+    "titulo": "Con el modelo actual, un descuento se leería como contracción y su fin como expansión",
+    "mensaje": "Si se lanzan descuentos temporales sin registro, el inicio del descuento entraría al puente como contracción y su vencimiento como expansión. La pregunta de revenue no capturado seguiría siendo no evaluable.",
+    "puntos": [
+     "Con estos datos no se puede separar contracción de descuento ni de cambio de precio",
+     "El puente ya clasifica movimientos que se revierten al nivel previo al mes siguiente",
+     "Si el descuento no queda registrado, convendría no leer esas categorías como negocio subyacente"
+    ],
+    "piezas": [
+     "P-01",
+     "P-03",
+     "P-05"
+    ],
+    "visual": "",
+    "notas": "Esta lámina traduce el límite del dato a riesgo de decisión. Si el descuento no tiene vigencia registrada, las métricas de expansión y de retención pierden interpretación al introducirlo. Proponemos tratar el puente actual como vista de cobro mientras no exista el valor contratado."
+   },
+   {
+    "rol": "Decisión",
+    "titulo": "Registrar cada descuento temporal con su vencimiento antes de lanzarlo",
+    "mensaje": "La decisión es registrar cada descuento temporal con su vigencia y su vencimiento antes del lanzamiento, junto con la definición de MRR contratado.",
+    "puntos": [
+     "Registrar el descuento con fecha de inicio y de vencimiento",
+     "Definir MRR contratado separado del monto pagado",
+     "Fijar quién es dueño del registro y en qué sistema vive"
+    ],
+    "piezas": [
+     "P-08"
+    ],
+    "visual": "",
+    "notas": "Sin ese registro, el inicio del descuento se lee como contracción y su fin como expansión. La decisión es previa al lanzamiento, no posterior. Falta acordar el dueño del registro y la vista que el CFO seguirá mes a mes."
+   }
+  ],
+  "pendientes": [
+   {
+    "rol": "Situación",
+    "que_falta": "No hay piezas que documenten si el precio de lista o el valor contratado del plan existe en algún sistema fuera del histórico de cobros.",
+    "pregunta": "¿Existe hoy el precio de lista o el valor contratado del plan en algún sistema, y desde qué fecha?"
+   },
+   {
+    "rol": "Hallazgo",
+    "que_falta": "No hay piezas que separen eventos de recaudo de cambios de suscripción, ni que indiquen si existe fecha de emisión de factura distinta de la fecha de pago.",
+    "pregunta": "¿Qué parte del movimiento del monto pagado corresponde a recaudo y qué parte a cambios de suscripción?"
+   },
+   {
+    "rol": "Implicación",
+    "que_falta": "No hay piezas sobre descuentos o condiciones especiales ya aplicados sin registro, ni sobre el margen que la compañía está dispuesta a ceder.",
+    "pregunta": "¿Qué descuentos o condiciones especiales se aplican hoy sin quedar registrados, y con qué vigencia?"
+   },
+   {
+    "rol": "Acción",
+    "que_falta": "No hay piezas que definan los campos, las tablas ni las reglas de clasificación para separar valor contratado, descuento y monto pagado.",
+    "pregunta": "¿Qué campos mínimos se agregan al histórico y cómo se clasifican el inicio y el vencimiento del descuento en el puente?"
+   }
+  ],
+  "subtitulo": "Qué puede y qué no puede responder el modelo, y qué decidir antes de lanzar descuentos temporales",
+  "titulo": "El MRR actual mide monto pagado, no valor contratado",
+  "degradada": false,
+  "intentos": [
+   {
+    "intento": 1,
+    "errores": [
+     "lámina 4.punto 2: cifras que no están en las piezas citadas ['3']."
+    ]
+   },
+   {
+    "intento": 2,
+    "errores": []
+   }
+  ],
+  "generado_ms": 1790630317285,
+  "uso": {
+   "ms": 103666,
+   "costo_equivalente_usd": 0.4761
+  },
+  "graficas_ms": 1790637155933
+ },
+ "uso": {
+  "esqueleto_1": {
+   "ms": 62598,
+   "costo_equivalente_usd": 0.214112,
+   "tokens_salida": 5222
+  },
+  "presentacion_1": {
+   "ms": 64520,
+   "costo_equivalente_usd": 0.23822600000000002,
+   "tokens_salida": 5542
+  },
+  "presentacion_2": {
+   "ms": 39146,
+   "costo_equivalente_usd": 0.237856,
+   "tokens_salida": 4196
+  }
+ },
+ "creada_ms": 1790629599242,
+ "origen": [],
+ "actualizada_ms": 1790637155933
+}

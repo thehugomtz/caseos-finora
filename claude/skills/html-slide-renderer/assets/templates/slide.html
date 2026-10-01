@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ID}} · {{TITLE}}</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/core.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<script src="../assets/primitives.js"></script>
+<style>
+/* Slide-local CSS: unlayered (always beats core/theme). Keep everything nested inside the
+   [data-slide] wrapper so the bundle stays collision-free; use & for the slide root itself.
+   Never target html, body or :root here. Prefix ids with the slide id ({{id}}-…). */
+[data-slide="{{ID}}"] {
+
+}
+</style>
+</head>
+<body>
+<!-- data-composition: grammar id from the slide spec · data-family: grammar family
+     data-word-budget: from the spec's text_budget · mark the focal element with data-focal -->
+<main class="slide" data-slide="{{ID}}" data-composition="{{COMPOSITION}}" data-family="{{FAMILY}}" data-word-budget="{{BUDGET}}" data-page="{{PAGE}}">
+  <header class="header">
+    <div class="kicker">{{KICKER}}</div>
+    <h1 class="headline">{{HEADLINE}}</h1>
+  </header>
+
+  <!-- Composition. HTML for words (wraps, measurable), SVG for geometry (P.draw below).
+       Declarative anchors: <x-connect from="#{{id}}-a" to="#{{id}}-b" route="elbow" tone="accent"></x-connect>
+                            <x-bracket targets="#{{id}}-a,#{{id}}-b" side="right" label="…"></x-bracket>
+                            <x-callout target="#{{id}}-a" at="1400,300" w="360">…</x-callout> -->
+
+  <footer class="footer"><span class="source">{{SOURCE}}</span><span class="page"></span></footer>
+  <aside class="notes">{{NOTES}}</aside>
+</main>
+<script>
+P.draw('{{ID}}', (s, P) => {
+  // s.label / s.line / s.path / s.circle / s.ring / s.connect / s.bracket / s.callout / s.chart(...)
+});
+</script>
+</body>
+</html>
