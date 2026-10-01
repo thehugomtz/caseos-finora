@@ -41,16 +41,27 @@ def ensure_links() -> list[dict]:
     for name in config.STORYTELLER_SKILLS:
         src, dst = config.USER_SKILLS_DIR / name, sk / name
         if src.exists() and not dst.exists():
-            dst.symlink_to(src, target_is_directory=True)
+            _link(src, dst)
         out.append({"skill": name, "linked": dst.exists(), "target": str(src).replace(str(Path.home()), "~")})
     ag = config.ROOT / ".claude" / "agents"
     ag.mkdir(parents=True, exist_ok=True)
     for name in ("executive-visual-storyteller.md", "independent-slide-critic.md"):
         src, dst = config.USER_AGENTS_DIR / name, ag / name
         if src.exists() and not dst.exists():
-            dst.symlink_to(src)
+            _link(src, dst)
         out.append({"agent": name, "linked": dst.exists()})
     return out
+
+
+def _link(src: Path, dst: Path) -> None:
+    """A symlink; where the system does not allow one (Windows without developer mode), a copy."""
+    try:
+        dst.symlink_to(src, target_is_directory=src.is_dir())
+    except OSError:
+        if src.is_dir():
+            shutil.copytree(src, dst)
+        else:
+            shutil.copy2(src, dst)
 
 
 def decks(store: CaseStore) -> list[dict]:
