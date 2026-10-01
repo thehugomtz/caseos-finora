@@ -3,76 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S18 · Finora</title>
+<title>SDATA · Data</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S18"] {
-  .ct { font-size: 24px; font-weight: 600; line-height: 1.25; color: var(--ink); }
-  .ct i { font-style: normal; color: var(--ink-3); margin-right: 8px; }
-  .v { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .cl { font-size: 20px; line-height: 1.2; color: var(--ink-2); }
-  .md { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .md b { color: var(--ink); font-weight: 600; }
-  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
-  .nt b { color: var(--ink); font-weight: 600; }
-  .num { font-variant-numeric: tabular-nums; }
+[data-slide="SDATA"] {
+  background: #ff6364;
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S18" data-composition="small_multiples (mini puentes) + underlying_business" data-family="comparison" data-word-budget="190" data-page="17">
-  <header class="header">
-    <div class="kicker">Revenue · casos del CFO</div>
-    <h1 class="headline">Con el modelo propuesto, cada caso del CFO se lee en su capa</h1>
-  </header>
-
-  <footer class="footer"><span class="source">Casos = ejemplos del enunciado (100, 80, 130, 30), no datos de Finora; la lectura depende de la convención del CFO · 29%: T-074 · 44%: T-076 · −38% y +5%: T-080, T-030 · F-150, F-151, F-168, F-177</span><span class="page"></span></footer>
-  <aside class="notes">Con el modelo propuesto, cada caso del enunciado (ejemplos, no datos de Finora) cae en su capa; en los tres, 100, 80 y 130 son lo que el cliente paga, no el precio de lista. Caso 1: pagaba 100 y ahora paga 80. El modelo distingue una contracción real (lo contratado baja a 80) de un inicio de descuento (lo contratado sigue en 100 y la diferencia va a «Descuento»). Caso 2: la suscripción sube de 100 a 130 y entra un descuento de 30, así que sigue pagando 100: el puente muestra expansión de +30 e inicio de descuento de −30; el neto sigue en 100, pero el crecimiento se ve. Caso 3: termina ese descuento y el cliente pasa de pagar 100 a 130: la subida va a «Descuento (fin)», +30, y no es expansión, porque la expansión ya se contó en el caso 2. Hoy ese puente por capas no es construible (no hay lista, plan ni descuento en los datos), y el puente actual mezcla orígenes: 29% del MRR de expansión se revierte al mes siguiente y 44% de los 751 churns observados vuelve a pagar al mes siguiente. Sobre el negocio subyacente, lo que se observa es composición de la base, no un efecto separable de precio o descuento: el MRR pagado observado por cliente activo pasa de COP 92,8 mil en ene-22 a COP 57,8 mil en oct-24 (−38%), mientras el de la base previa cambia +5%; el revenue que dejamos de capturar por descuentos solo se medirá hacia adelante, con la capa de descuento. Límites: los casos prueban qué distingue el modelo, no describen lo que pasó en Finora; el puente por capas no es construible con los datos del caso (F-168); no se puede repartir la caída por cliente entre un precio de lista distinto y un descuento (F-177); el −38% no se presenta como deterioro; la convención la decide el CFO (F-151).</aside>
+<main class="slide" data-slide="SDATA" data-composition="section_divider" data-family="editorial" data-word-budget="3">
+  <aside class="notes">Separador de sección: Data.</aside>
 </main>
 <script>
-P.draw('S18', (s, P) => {
-  // Plan: three mini bridges on one shared scale (0–140), cols 1–4 · 5–8 · 9–12; the reading under each ·
-  // bottom band: today (not buildable, the current bridge mixes origins) · the underlying business.
-  // Accent only on the line that the observed amount hides (case 2).
-  const PX = [112, 688, 1264], SLOT = 128, BW = 64, BASE = 640, K = 1.75;
-  const y = (v) => BASE - v * K;
-  // Totals are what the client pays (captions «pagaba» / «paga»), never the list price.
-  const cases = [
-    { t: '<i>1</i>Pagaba 100 y ahora paga 80', steps: [{ v: 100, tot: true, cl: 'pagaba' }, { from: 100, to: 80, lab: '−20', cl: '¿qué capa?', tone: 'ink-4' }, { v: 80, tot: true, cl: 'paga' }],
-      md: '<b>Contracción</b> si lo contratado baja a 80; si sigue en 100, <b>«Descuento (inicio)»</b>. El&nbsp;100 es lo que pagaba, no el precio de lista' },
-    { t: '<i>2</i>Pasa de 100 a 130 con descuento de 30; sigue pagando 100', steps: [{ v: 100, tot: true, cl: 'pagaba' }, { from: 100, to: 130, lab: '+30', cl: 'Expansión', tone: 'ink-4' }, { from: 130, to: 100, lab: '−30', cl: '«Descuento (inicio)»', tone: 'accent', focal: true }, { v: 100, tot: true, cl: 'paga (neto)' }],
-      md: 'La suscripción sube a 130 (<b>Expansión +30</b>) y entra el descuento (<b>«Descuento (inicio)» −30</b>): el neto sigue en 100, pero el crecimiento se ve' },
-    { t: '<i>3</i>Termina el descuento: pasa de pagar 100 a 130', steps: [{ v: 100, tot: true, cl: 'pagaba' }, { from: 100, to: 130, lab: '+30', cl: '«Descuento (fin)»', tone: 'ink-4' }, { v: 130, tot: true, cl: 'paga' }],
-      md: '<b>«Descuento (fin)» +30</b>; no es Expansión: la expansión ya se contó en el caso 2' },
-  ];
-  cases.forEach((c, k) => {
-    const x0 = PX[k];
-    s.label(x0, 350, c.t, { anchor: 'bl', cls: 'ct', w: 470 });
-    s.line(x0, BASE, x0 + SLOT * 4 - 20, BASE, { stroke: 'rule', w: 1.5 });
-    c.steps.forEach((st, i) => {
-      const cx = x0 + i * SLOT + SLOT / 2 - 10, bx = cx - BW / 2;
-      if (st.tot) {
-        s.rect(bx, y(st.v), BW, st.v * K, { fill: 'ink' });
-        s.label(cx, y(st.v) - 8, String(st.v), { anchor: 'bc', cls: 'v' });
-      } else {
-        const top = y(Math.max(st.from, st.to)), h = Math.abs(st.to - st.from) * K;
-        s.rect(bx, top, BW, h, { fill: st.tone, id: st.focal ? 's18-hidden' : null, focal: st.focal });
-        s.label(cx, top - 8, st.lab, { anchor: 'bc', cls: 'v' });
-        if (i) s.line(bx - (SLOT - BW), y(st.from), bx, y(st.from), { stroke: 'ink-3', w: 1.5 });
-      }
-      if (st.tot && i) s.line(bx - (SLOT - BW), y(st.v), bx, y(st.v), { stroke: 'ink-3', w: 1.5 });
-      if (st.cl) s.label(cx, BASE + 12, st.cl, { anchor: 'tc', cls: 'cl', w: SLOT + 16, align: 'center' });
-    });
-    if (c.md) s.label(x0, 732, c.md, { cls: 'md', w: 520 });
-  });
-
-  // Today · the underlying business.
-  s.line(112, 842, 1808, 842, { stroke: 'rule', w: 1.5 });
-  s.label(112, 862, '', { cls: 'nt', w: 800 });
-  s.label(1000, 862, '<b>Negocio subyacente</b>: −38% por cliente activo con la base previa en +5% es composición, no un efecto separable de precio o descuento; lo no capturado se mide hacia adelante.', { cls: 'nt num', w: 808 });
+P.draw('SDATA', (s, P) => {
+  // Separador de sección (agregado por Hugo desde CaseOS): color sólido, solo el nombre.
+  s.label(112, 900, 'Data', { cls: 'statement', size: 144, anchor: 'bl', color: 'ink', id: 'sdata-name', focal: true });
 });
 </script>
 </body>

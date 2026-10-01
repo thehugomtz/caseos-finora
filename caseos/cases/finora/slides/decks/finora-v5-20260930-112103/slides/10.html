@@ -3,104 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S07 · Finora</title>
+<title>S09 · Finora</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/core.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <script src="../assets/primitives.js"></script>
 <style>
-[data-slide="S07"] {
-  .zt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .zt b { color: var(--ink); font-weight: 600; }
-  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .rn span { font-weight: 400; color: var(--ink-2); font-size: 20px; margin-left: 8px; }
-  .mc { font-size: 20px; color: var(--ink-2); font-style: italic; }
-  .res { font-size: 24px; font-weight: 600; color: var(--ink); }
-  .kn { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .rule-t { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .rule-t b { color: var(--ink); font-weight: 600; }
-  .cq { font-size: 22px; font-weight: 600; color: var(--ink); }
+[data-slide="S09"] {
+  .num { font-variant-numeric: tabular-nums; }
   .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .mt { font-size: 24px; line-height: 1.25; color: var(--ink-2); }
+  .mt b { color: var(--ink); font-weight: 600; }
+  .mt .chip { background: var(--accent); color: var(--ink); font-weight: 600; padding: 2px 10px; margin-left: -10px; }
+  .dc { font-size: 26px; line-height: 1.25; color: var(--ink); font-weight: 600; }
   .none { font-size: 22px; line-height: 1.3; color: var(--coral-text); }
   .none b { font-weight: 600; }
-  .key { font-size: 20px; color: var(--ink-2); }
+  .nt { font-size: 22px; line-height: 1.35; color: var(--ink-2); }
+  .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
 </head>
 <body>
-<main class="slide" data-slide="S07" data-composition="split_and_converge (dos zonas: dentro de cada funnel · entre funnels)" data-family="process" data-word-budget="125" data-page="10">
+<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="165" data-page="10">
   <header class="header">
-    <div class="kicker">Growth · cómo medir cada funnel · propuesta</div>
-    <h1 class="headline">Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes</h1>
+    <div class="kicker">Growth · métricas nuevas · propuesta</div>
+    <h1 class="headline">Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO</h1>
   </header>
 
-  <footer class="footer"><span class="source">Propuesta de diseño (R-036), sin cifras · F-141, F-155, F-158, F-212, F-223–F-226, F-244, F-248–F-252</span><span class="page"></span></footer>
-  <aside class="notes">Proponemos medir cada funnel (Executive, Self Service, Hybrid A, Hybrid B y el loop de Reactivate) en sus propias etapas y con las mismas familias: volumen de entradas, alcance por etapa en cohorte de entrada con ventana fija (solo en cohortes que ya la cumplieron), tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta, como el speed to lead en Executive o el uplift de la intervención en Hybrid A, medido con holdout. Entre funnels solo se comparan resultados comunes desde el nudo (Won, MRR inicial, retención temprana, CAC y payback), siempre cortados por funnel, y las tasas se comparan por puerta, no por ruta. Con tus definiciones, Hybrid A empieza solo y luego interviene una persona, Hybrid B empieza con persona y termina solo, y Reactivate es el loop de los leads estancados; la vuelta de clientes que se ve en los pagos es otra población y se mide aparte. La clasificación sale de reglas explícitas al cierre de una ventana fija: si nace de un estancado, quién inició, si hubo toque humano y quién cerró. Hoy no se puede calcular ninguna métrica propia de funnel: el modelo empieza en el primer pago. Límites: pendiente de aceptación F-244, F-248 a F-252 (R-035, R-036), tuya o bajo D-027; la ventana fija, el nudo común (Q-050) y el umbral de estancamiento (Q-064) se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no prueba efecto: hace falta holdout (F-251, H-050); con la regla resumida, «¿quién cerró?» puede dejar sin ruta entradas que iniciaron con persona y no cierran en la ventana (H-078); R-035 usa otras definiciones y esta lámina sigue las tuyas; es el tercer catálogo del caso (R-031, R-035, R-036) y falta consolidarlo (X-170). Las etapas de cada carril son las de la lámina anterior (C-021), sin cifras.</aside>
+  <footer class="footer"><span class="source">Propuesta (R-036); decisiones del CRO por definir con Finora · S&amp;M por alta en unidad reportada (u), sin escala a COP: T-036 · F-135–F-139, F-141, F-146, F-246, F-247, F-249, F-252</span><span class="page"></span></footer>
+  <aside class="notes">Proponemos medir por ruta lo que hoy no existe y atar cada métrica a una decisión del CRO: entradas, alcance por etapa en cohorte y tiempo por tramo, para saber si faltan leads (volumen) o si entran pero no avanzan (tasa) antes de pedir más SDR/AE o más gasto; tiempo a primer toque y carga por SDR/AE, para saber si un lead no avanza porque nadie lo atendió a tiempo (capacidad: se arregla con gente, SLA o priorización) o porque no iba a comprar (calidad: se arregla con a quién se le habla); estancamiento por etapa, para decidir qué tramo y qué dueño arreglar primero; valor y calidad por ruta (MRR inicial con run-rate y guardarraíles, no con el primer pago, y retención temprana), para decidir en qué puertas de entrada (outbound del SDR, «hablar con ventas», SQL directo o registro en el producto) conviene que intervenga un SDR/AE y cuáles dejar en Self Service; y eficiencia (CAC y payback por ruta), para repartir el presupuesto de S&amp;M entre rutas y canales según cuánto cuesta ganar un cliente y en cuánto se recupera. Hoy se calcula, con nombre honesto y solo en total, el MRR pagado observado y su puente, los clientes activos, el ARPA por cliente (lo que se pide como ARPU), el churn observado y las métricas de cohorte. La eficiencia hoy solo existe como S&amp;M por alta en unidad reportada, 0,105 u en 2022 y 0,036 u en 2024 (−66%), y eso no es CAC: sin la unidad del gasto no hay CAC en COP ni payback, sin ruta ni canal no hay CAC por ruta, y el LTV con margen y el UCM necesitan margen bruto o costo de servir. Límites: F-246, F-247, F-249 y F-252 están propuestos (R-035, R-036), pendientes de aceptación; ninguna métrica propia de ruta se calcula hoy y ninguna métrica común se puede cortar por ruta (F-146); churn y MRR observados necesitan regla de normalización y ventana de gracia (F-136); las decisiones del CRO son propuesta: Finora aún no las define; la «reactivación» del modelo actual es retorno de pago de clientes, no el Reactivate de leads (F-252). El detalle del semáforo y del catálogo está en el anexo (C-009, C-010, C-022).</aside>
 </main>
 <script>
-P.draw('S07', (s, P) => {
-  // Plan: left zone «dentro de cada funnel» cols 1–7 (surface) with four lanes + the Reactivate loop ·
-  // knot on the boundary (col 8) · right zone «entre funnels» cols 9–12 (accent-soft) · classification rule
-  // and «hoy no existe» in a bottom band. Line weight = with a person (Hugo's definitions of Hybrid A/B).
-  const L0 = 112, L1 = 1172, R0 = 1296, R1 = 1808, T = 322, B = 842;
-  s.rect(L0, T, L1 - L0, B - T, { fill: 'surface', stroke: null });
-  s.rect(R0, T, R1 - R0, B - T, { fill: 'accent-soft', stroke: null, id: 's07-common' });
-  s.label(L0 + 24, T + 20, '<b>Dentro de cada funnel</b>: entradas · alcance por etapa (cohorte, ventana fija) · tiempo por tramo · estancamiento · mecanismo', { cls: 'zt', w: L1 - L0 - 48 });
+P.draw('S09', (s, P) => {
+  // Plan: metric families cols 1–5 → link arrows cols 6–7 → the CRO decision each one enables cols 8–12.
+  // Efficiency (asked for explicitly) carries the accent and today's proxy in coral (what does not exist: CAC).
+  const MX = 112, MW = 620, AX0 = 760, AX1 = 1000, DX = 1032, DW = 776;
+  s.label(MX, 318, 'Métrica nueva · ninguna existe hoy', { anchor: 'bl', cls: 'cap' });
+  s.label(DX, 318, 'Decisión del CRO', { anchor: 'bl', cls: 'cap' });
 
-  // Lanes: stages before the knot (from C-021); P = moved by a person (thick), S = on its own (thin).
-  const KX = 1234, KY = 580, X0 = 560, DX = 72;
-  const lanes = [
-    ['Executive', 'con persona', 486, 'PPPPP'],
-    ['Hybrid B', 'persona → solo', 556, 'PPPPS'],
-    ['Hybrid A', 'solo → persona', 626, 'SSPPPP'],
-    ['Self Service', 'sin persona', 696, 'SSS'],
+  const rows = [
+    ['<b>Volumen y tasa</b>: entradas, alcance y tiempo por etapa', '¿Faltan leads o no avanzan? Saberlo antes de pedir más SDR/AE o gasto'],
+    ['<b>Capacidad</b>: tiempo a primer toque y carga por SDR/AE', '¿No avanzan por falta de atención o porque no iban a comprar? Se arreglan distinto'],
+    ['<b>Estancamiento</b> por etapa', 'Qué tramo y qué dueño arreglar primero'],
+    ['<b>Valor y calidad</b>: MRR inicial con run-rate y retención temprana', 'En qué puertas de entrada conviene que intervenga un SDR/AE y cuáles dejar en Self Service'],
+    ['<span class="chip">Eficiencia</span> <b>CAC y payback por ruta</b>', 'Repartir el presupuesto de S&amp;M entre rutas y canales, según cuánto cuesta ganar un cliente y en cuánto se recupera'],
   ];
-  lanes.forEach(([name, def, y, segs], i) => {
-    s.label(L0 + 24, y, `${name}<span>${def}</span>`, { anchor: 'ml', cls: 'rn' });
-    [...segs].forEach((k, j) => s.line(X0 + j * DX, y, X0 + (j + 1) * DX, y, k === 'P' ? { stroke: 'ink', w: 7, cap: 'butt' } : { stroke: 'ink-3', w: 2.5 }));
-    for (let j = 0; j <= segs.length; j++) s.dot(X0 + j * DX, y, { r: 6.5, fill: 'ink' });
-    const xe = X0 + segs.length * DX;
-    s.connect([xe + 8, y], [KX - 26, KY - 24 + i * 16], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, arrow: null });
+  const Y = [392, 482, 572, 662, 764];
+  rows.forEach(([m, d], i) => {
+    const hot = i === 4;
+    if (i) s.line(MX, Y[i] - 46, 1808, Y[i] - 46, { stroke: 'rule', w: 1 });
+    s.label(MX, Y[i], m, { anchor: 'ml', cls: 'mt', w: MW, id: `s09-m${i}` });
+    s.line(AX0, Y[i], AX1, Y[i], { stroke: hot ? 'accent' : 'ink-3', w: hot ? 5 : 2, arrow: 'end', headSize: hot ? 16 : 11, id: hot ? 's09-link' : null, focal: hot });
+    s.label(DX, Y[i], d, { anchor: 'ml', cls: 'dc', w: DW, id: `s09-d${i}` });
   });
-  // Mechanism metric examples (from the claim): Executive and Hybrid A.
-  s.label(X0 + 5 * DX + 16, 486 - 22, 'speed to lead', { anchor: 'bl', cls: 'mc' });
-  s.label(X0 + 2 * DX + 8, 626 - 18, 'uplift con holdout', { anchor: 'bl', cls: 'mc' });
+  // Efficiency today: the only proxy, and why it is not a CAC (T-036).
+  s.label(MX, Y[4] + 34, '<b>Hoy</b>: S&amp;M por alta 0,105 u → 0,036 u (−66%, 2022–2024); <b>no es CAC</b>', { cls: 'none num', w: 960 });
 
-  // Reactivate: the loop of stalled leads, back into its funnel (not a fourth route).
-  s.path(`M${X0 + 4 * DX},${708} C${X0 + 4 * DX},${790} ${X0 + DX},${790} ${X0 + DX},${712}`, { stroke: 'ink-2', w: 2.5, arrow: 'end', headSize: 11 });
-  s.label(X0 + 4 * DX + 30, 760, 'Reactivate<span style="display:block;margin:4px 0 0">loop de los estancados</span>', { anchor: 'ml', cls: 'rn', w: 300 });
-
-  // Key for line weight.
-  s.line(L0 + 24, 812, L0 + 64, 812, { stroke: 'ink', w: 7, cap: 'butt' }); s.label(L0 + 74, 812, 'con persona', { anchor: 'ml', cls: 'key' });
-  s.line(L0 + 214, 812, L0 + 254, 812, { stroke: 'ink-3', w: 2.5 }); s.label(L0 + 264, 812, 'sin persona', { anchor: 'ml', cls: 'key' });
-
-  // The knot: the only place where funnels meet.
-  s.circle(KX, KY, 24, { fill: 'accent', stroke: 'ink', w: 2, id: 's07-knot', focal: true });
-  s.label(KX, KY - 40, 'Nudo', { anchor: 'bc', cls: 'kn' });
-  s.label(KX, KY + 38, 'por acordar', { anchor: 'tc', cls: 'label-sm' });   // Q-050: Won, primer pago o suscripción activa
-  // Right zone: common results, compared across funnels (always cut by funnel). The knot's line opens
-  // into one spine that feeds every common result (no bullets: the results come out of the knot).
-  s.label(R0 + 24, T + 20, '<b>Entre funnels</b>, solo resultados comunes', { cls: 'zt', w: R1 - R0 - 48 });
-  const SX = R0 + 40, RY = [454, 504, 554, 604, 654];
-  s.line(KX + 26, KY, SX, KY, { stroke: 'ink', w: 3 });
-  s.line(SX, RY[0], SX, RY[4], { stroke: 'ink', w: 3 });
-  ['Won', 'MRR inicial', 'Retención temprana', 'CAC', 'Payback'].forEach((t, i) => {
-    s.line(SX, RY[i], SX + 22, RY[i], { stroke: 'ink', w: 3 });
-    s.label(SX + 34, RY[i], t, { anchor: 'ml', cls: 'res' });
-  });
-  s.label(R0 + 24, 714, '<b>Siempre cortados por funnel</b>; tasas por puerta, no por ruta', { cls: 'rule-t', w: R1 - R0 - 48 });
-
-  // Bottom band: classification at the close of a fixed window · what does not exist today.
-  s.label(L0, 872, 'Clasificación al cierre de la ventana', { cls: 'cap' });
-  const qs = ['¿Nace de un estancado?', '¿Quién inició?', '¿Hubo toque humano?', '¿Quién cerró?'];
-  let qx = L0;
-  qs.forEach((q, i) => {
-    const el = s.label(qx, 930, q, { anchor: 'ml', cls: 'cq', id: `s07-q${i}` });
-    const b = s.box(el);
-    if (i < qs.length - 1) s.line(b.r + 14, 930, b.r + 54, 930, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 9 });
-    qx = b.r + 68;
-  });
-  s.label(R0, 872, '<b>Hoy no existe ninguna métrica de funnel</b>: el modelo empieza en el primer pago', { cls: 'none', w: R1 - R0 });
+  // What exists today: only totals, with honest names.
+  s.line(112, 884, 1808, 884, { stroke: 'rule', w: 1.5 });
+  s.label(112, 904, '<b>Hoy existen solo en total</b>: MRR pagado y su puente, activos, ARPA, churn observado y cohortes', { cls: 'nt', w: 1696 });
 });
 </script>
 </body>

@@ -1,7 +1,7 @@
 # CASE BRAIN — Finora
 
 > Memoria ejecutiva viva del caso. La genera CaseOS desde el estado del caso ante cada cambio material; no guarda todo, solo lo relevante. Cada ID enlaza a su archivo.
-> Actualizado: 2026-09-30T18:55:39-06:00 · motivo: Hugo editó el texto de la lámina 17 del deck finora-v5-20260930-112103: «Hoy no es construible : no hay lista, plan ni desc» → «»
+> Actualizado: 2026-09-30T19:35:24-06:00 · motivo: Hugo reordenó el deck finora-v5-20260930-112103: 11→10, 12→11, 13→12, 14→13, 15→14, 16→15, 17→16, 18→17, 19→18, 20→19, 21→20, 22→21, 23→22,…
 
 ## Case
 Business Analytics: del dato a la decisión — Alegra · reto técnico
@@ -198,6 +198,7 @@ language:
 Registro observado: Conversacional y directo; piensa en funnels, láminas y bloques; mezcla español con términos de ventas en inglés. · nivel técnico: Analítico-negocio: maneja etapas del funnel, SDR/AE, ToFu/BoFu y métricas SaaS. · vocabulario de Hugo: Análisis Ad hoc, Mecanismo Propuesto, Implicaciones Multidisciplinarias, research, data, funnel, self-serve, estancamientos, churn, reactivación, negocio subyacente, revenue que dejamos de capturar, MRR, pricing
 
 ## Recent Material Changes
+- 2026-09-30 19:35 · Hugo reordenó el deck finora-v5-20260930-112103: 11→10, 12→11, 13→12, 14→13, 15→14, 16→15, 17→16, 18→17, 19→18, 20→19, 21→20, 22→21, 23→22, 24→23, 10→24
 - 2026-09-30 18:55 · Hugo editó el texto de la lámina 17 del deck finora-v5-20260930-112103: «Hoy no es construible : no hay lista, plan ni desc» → «»
 - 2026-09-30 18:47 · Hugo editó el texto de la lámina 13 del deck finora-v5-20260930-112103: «Cada hoja del árbol tiene firma y dato propios; ho» → «Todos los datos apuntan a lo mismo: proceso, compo»
 - 2026-09-30 18:46 · Hugo borró de la lámina 12 el porqué del Paso 0 (altas 2024 contra 2023, +7% / −19%) y la nota de cobro (2,8% y 3,1%); sin esa nota, la hoja «Won que no llega a pagar» lleva el mismo círculo que las demás y el pie ya no cita F-125 ni F-230 · vía Claude (el editor de texto no podía: el texto venía armado en partes)
@@ -206,7 +207,6 @@ Registro observado: Conversacional y directo; piensa en funnels, láminas y bloq
 - 2026-09-30 16:18 · Hugo pidió al Visual Storyteller cambios en las láminas 2, 6, 7, 11, 12, 13, 15, 16, 17, 19, 21 del deck finora-v5-20260930-112103 · vía Claude: Hugo pidió ajustar las láminas donde tuvo dudas, reencuadrar la de cada hoja del árbol con su idea de volumen y tiempo (o un ribbon) y sumar lo que Claude identificó
 - 2026-09-30 16:16 · Hugo reordenó el deck finora-v5-20260930-112103: 15→6, 6→7, 7→15, 34→19, 19→20, 20→21, 21→22, 22→23, 23→24, 24→25, 25→26, 26→27, 27→28, 28→29, 29→30, 30→31, 31→32, 32→33, 33→34 · vía Claude: Hugo respondió «Va» a mover las láminas 15, 7 y 34 para que sigan su guion
 - 2026-09-30 14:54 · Hugo trajo «La brecha clientes–monto se asocia a quién entra» (lámina 1 de finora-v3-20260929-212258) como lámina 2 del deck finora-v5-20260930-112103 · vía Claude: Hugo pidió recuperar la lámina inicial del deck v3 («la lámina inicial… que describía el problema inicial»)
-- 2026-09-30 14:45 · Hugo reordenó el deck finora-v5-20260930-112103: 19→18, 20→19, 21→20, 22→21, 23→22, 24→23, 25→24, 26→25, 27→26, 28→27, 29→28, 18→29
 
 
 <!-- ideas del framing por tipo: Intuición de Hugo 3, Propuesta 38, Observación 5, Desconocido 9, Supuesto 3, Hecho 3 -->

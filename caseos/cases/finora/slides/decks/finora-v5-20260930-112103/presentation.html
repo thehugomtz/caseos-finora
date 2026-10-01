@@ -361,24 +361,6 @@
   .nt b { color: var(--ink); font-weight: 600; }
 }
 </style>
-<style data-for="S07">
-[data-slide="S07"] {
-  .zt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .zt b { color: var(--ink); font-weight: 600; }
-  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .rn span { font-weight: 400; color: var(--ink-2); font-size: 20px; margin-left: 8px; }
-  .mc { font-size: 20px; color: var(--ink-2); font-style: italic; }
-  .res { font-size: 24px; font-weight: 600; color: var(--ink); }
-  .kn { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .rule-t { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
-  .rule-t b { color: var(--ink); font-weight: 600; }
-  .cq { font-size: 22px; font-weight: 600; color: var(--ink); }
-  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-  .none { font-size: 22px; line-height: 1.3; color: var(--coral-text); }
-  .none b { font-weight: 600; }
-  .key { font-size: 20px; color: var(--ink-2); }
-}
-</style>
 <style data-for="S09">
 [data-slide="S09"] {
   .num { font-variant-numeric: tabular-nums; }
@@ -546,6 +528,24 @@
 [data-slide="S21"] {
   .num { font-variant-numeric: tabular-nums; }
   .ref b { color: var(--ink); }
+}
+</style>
+<style data-for="S07">
+[data-slide="S07"] {
+  .zt { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .zt b { color: var(--ink); font-weight: 600; }
+  .rn { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .rn span { font-weight: 400; color: var(--ink-2); font-size: 20px; margin-left: 8px; }
+  .mc { font-size: 20px; color: var(--ink-2); font-style: italic; }
+  .res { font-size: 24px; font-weight: 600; color: var(--ink); }
+  .kn { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .rule-t { font-size: 22px; line-height: 1.3; color: var(--ink-2); }
+  .rule-t b { color: var(--ink); font-weight: 600; }
+  .cq { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cap { font-size: 20px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .none { font-size: 22px; line-height: 1.3; color: var(--coral-text); }
+  .none b { font-weight: 600; }
+  .key { font-size: 20px; color: var(--ink-2); }
 }
 </style>
 <style data-for="S22">
@@ -1318,16 +1318,7 @@
   <footer class="footer"><span class="source">Propuesta de diseño (R-031, R-036); hoy no se mide ninguna etapa antes del primer pago · F-209, F-210, F-211, F-212, F-188, F-223, F-224, F-225, F-191</span><span class="page"></span></footer>
   <aside class="notes">Proponemos una lista maestra, la del Executive (New → Working SDR → Engaged SDR → SQL SDR → Demo AE → Proposal AE → Won), y que cada ruta use solo las etapas que le aplican, con saltos permitidos y el canal como atributo de la entrada. El outbound del SDR recorre la lista completa; el inbound de «hablar con ventas» salta Working SDR; la entrada directa a SQL arranca en SQL. Self Service va New → Signup Self → Activated Self → Checkout Self → Won. Hybrid A arranca en producto y después suma etapas de SDR/AE; Hybrid B arranca con SDR/AE y cierra por Checkout Self. Dueños propuestos: SDR hasta SQL, AE desde Demo, y Growth o Producto en los tramos sin persona. La ruta se clasifica al cierre según quién movió cada tramo: solo cuenta como intervención la interacción de ida y vuelta con SDR/AE, y el formulario de «hablar con ventas» es la entrada, no un tramo. Reactivate es un loop sobre estancados que conserva fecha y puerta, no una ruta más. Nota rescatada de la lámina de rutas (C-005): la puerta queda fija al entrar y es la única base para comparar tasas, porque la ruta se define por lo que pasó y eso sesga, por construcción, la conversión de Hybrid (H-050). Límites: es propuesta, el caso no trae CRM ni etapas (F-223, F-191); Demo, Proposal y la entrada por referido o partner están por confirmar contra el CRM de Finora; no sabemos si Self Service existe como compra sin humano (Q-046); qué cuenta como intervención (Q-063) y el umbral de estancamiento (Q-064) se acuerdan con Finora; usa las definiciones de Hugo de Hybrid B y Reactivate (no las de R-035); una entrada que pide persona y nadie atiende termina como Self Service con bandera (H-072); la vuelta de pagadores que se ve en pagos es un loop de Revenue, no Reactivate (F-213).</aside>
 </main>
-<main class="slide" data-slide="S07" data-composition="split_and_converge (dos zonas: dentro de cada funnel · entre funnels)" data-family="process" data-word-budget="125" data-page="10">
-  <header class="header">
-    <div class="kicker">Growth · cómo medir cada funnel · propuesta</div>
-    <h1 class="headline">Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes</h1>
-  </header>
-
-  <footer class="footer"><span class="source">Propuesta de diseño (R-036), sin cifras · F-141, F-155, F-158, F-212, F-223–F-226, F-244, F-248–F-252</span><span class="page"></span></footer>
-  <aside class="notes">Proponemos medir cada funnel (Executive, Self Service, Hybrid A, Hybrid B y el loop de Reactivate) en sus propias etapas y con las mismas familias: volumen de entradas, alcance por etapa en cohorte de entrada con ventana fija (solo en cohortes que ya la cumplieron), tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta, como el speed to lead en Executive o el uplift de la intervención en Hybrid A, medido con holdout. Entre funnels solo se comparan resultados comunes desde el nudo (Won, MRR inicial, retención temprana, CAC y payback), siempre cortados por funnel, y las tasas se comparan por puerta, no por ruta. Con tus definiciones, Hybrid A empieza solo y luego interviene una persona, Hybrid B empieza con persona y termina solo, y Reactivate es el loop de los leads estancados; la vuelta de clientes que se ve en los pagos es otra población y se mide aparte. La clasificación sale de reglas explícitas al cierre de una ventana fija: si nace de un estancado, quién inició, si hubo toque humano y quién cerró. Hoy no se puede calcular ninguna métrica propia de funnel: el modelo empieza en el primer pago. Límites: pendiente de aceptación F-244, F-248 a F-252 (R-035, R-036), tuya o bajo D-027; la ventana fija, el nudo común (Q-050) y el umbral de estancamiento (Q-064) se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no prueba efecto: hace falta holdout (F-251, H-050); con la regla resumida, «¿quién cerró?» puede dejar sin ruta entradas que iniciaron con persona y no cierran en la ventana (H-078); R-035 usa otras definiciones y esta lámina sigue las tuyas; es el tercer catálogo del caso (R-031, R-035, R-036) y falta consolidarlo (X-170). Las etapas de cada carril son las de la lámina anterior (C-021), sin cifras.</aside>
-</main>
-<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="165" data-page="11">
+<main class="slide" data-slide="S09" data-composition="enable_links (métrica → decisión del CRO)" data-family="logic" data-word-budget="165" data-page="10">
   <header class="header">
     <div class="kicker">Growth · métricas nuevas · propuesta</div>
     <h1 class="headline">Proponemos métricas por ruta y de eficiencia, cada una atada a una decisión del CRO</h1>
@@ -1336,7 +1327,7 @@
   <footer class="footer"><span class="source">Propuesta (R-036); decisiones del CRO por definir con Finora · S&amp;M por alta en unidad reportada (u), sin escala a COP: T-036 · F-135–F-139, F-141, F-146, F-246, F-247, F-249, F-252</span><span class="page"></span></footer>
   <aside class="notes">Proponemos medir por ruta lo que hoy no existe y atar cada métrica a una decisión del CRO: entradas, alcance por etapa en cohorte y tiempo por tramo, para saber si faltan leads (volumen) o si entran pero no avanzan (tasa) antes de pedir más SDR/AE o más gasto; tiempo a primer toque y carga por SDR/AE, para saber si un lead no avanza porque nadie lo atendió a tiempo (capacidad: se arregla con gente, SLA o priorización) o porque no iba a comprar (calidad: se arregla con a quién se le habla); estancamiento por etapa, para decidir qué tramo y qué dueño arreglar primero; valor y calidad por ruta (MRR inicial con run-rate y guardarraíles, no con el primer pago, y retención temprana), para decidir en qué puertas de entrada (outbound del SDR, «hablar con ventas», SQL directo o registro en el producto) conviene que intervenga un SDR/AE y cuáles dejar en Self Service; y eficiencia (CAC y payback por ruta), para repartir el presupuesto de S&amp;M entre rutas y canales según cuánto cuesta ganar un cliente y en cuánto se recupera. Hoy se calcula, con nombre honesto y solo en total, el MRR pagado observado y su puente, los clientes activos, el ARPA por cliente (lo que se pide como ARPU), el churn observado y las métricas de cohorte. La eficiencia hoy solo existe como S&amp;M por alta en unidad reportada, 0,105 u en 2022 y 0,036 u en 2024 (−66%), y eso no es CAC: sin la unidad del gasto no hay CAC en COP ni payback, sin ruta ni canal no hay CAC por ruta, y el LTV con margen y el UCM necesitan margen bruto o costo de servir. Límites: F-246, F-247, F-249 y F-252 están propuestos (R-035, R-036), pendientes de aceptación; ninguna métrica propia de ruta se calcula hoy y ninguna métrica común se puede cortar por ruta (F-146); churn y MRR observados necesitan regla de normalización y ventana de gracia (F-136); las decisiones del CRO son propuesta: Finora aún no las define; la «reactivación» del modelo actual es retorno de pago de clientes, no el Reactivate de leads (F-252). El detalle del semáforo y del catálogo está en el anexo (C-009, C-010, C-022).</aside>
 </main>
-<main class="slide" data-slide="S10" data-composition="issue_tree (ramas ordenadas + paso 0)" data-family="logic" data-word-budget="230" data-page="12">
+<main class="slide" data-slide="S10" data-composition="issue_tree (ramas ordenadas + paso 0)" data-family="logic" data-word-budget="230" data-page="11">
   <header class="header">
     <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
     <h1 class="headline">Existen 5 hipotésis que podrían explicar el incremento de volumen en New pero no más ventas</h1>
@@ -1345,7 +1336,7 @@
   <footer class="footer"><span class="source">Propuesta (C-023, R-032); hojas = causas candidatas, no hechos de Finora; reordena las ramas de D-001 (pendiente, X-150) · F-122, F-127–F-129, F-212, F-228–F-232</span><span class="page"></span></footer>
   <aside class="notes">Proponemos ordenar las causas de «más leads, pero no más ventas» por la identidad ventas/leads y no por áreas, para que cada pedazo de la brecha caiga en una sola hoja. Antes del árbol se fija qué es «venta» (Won o primer pago) y qué ventana se compara, por cohorte de entrada, porque la premisa cambia según eso: contra 2023, las altas de 2024 suben 7% de marzo a octubre (433 → 465), pero caen 19% de julio a octubre (251 → 203). Después, en este orden. Primero los artefactos, que suben los leads sin ser demanda comprable: no-prospectos y duplicados (spam, clientes o ex-clientes, leads repetidos); un cambio de definición (cambió qué se cuenta como lead, o las cohortes recientes aún no maduran), o la misma demanda por otra puerta (quien antes compraba solo por Self Service ahora entra como lead: suben los leads, no las compras). Luego la mezcla (ToFu): entran más de los que siempre convierten poco, medido con cómo era el lead al crearse y no con lo que Ventas opinó después. Luego la caída antes del SQL: nadie los contacta a tiempo (capacidad y tiempo a primer toque), o quedan estancados en Working (contactados) o Engaged (ya respondieron) semanas sin llegar a SQL. Luego la caída después del SQL (BoFu): incentivos del SDR (si al SDR se le paga por reunión o por SQL, pasa SQL menos maduros que el AE no acepta) y la decisión en Proposal (pierden por precio, competidor o funcionalidad). Al final el cobro: Won que no llega a pagar; en los pagos no existe el Won, solo se ve quién paga el primer mes y no el segundo: 2,8% de las altas en 2023 y 3,1% en 2024. Demanda, calidad, velocidad de atención y conversión post-SQL quedan como explicaciones a contrastar, no como causas: con los datos del caso no se valida ni se descarta ninguna hoja. Límites: es propuesta, como pide el guion; del cobro solo se ve el arranque, y el 2,8% y el 3,1% son de las altas de marzo a octubre con segundo mes observable; un segundo mes en cero también puede ser un pago adelantado (F-230); el árbol reordena las ramas del CRO de D-001 y la calidad pasa a leerse como mezcla al entrar (X-150, pendiente de tu decisión); la premisa «no más ventas» depende de la ventana (F-125, F-229); metas, comisiones, precio o competencia no tienen evidencia en el caso; una caída después del SQL no es por sí sola un problema del AE; cómo se reparte el término cruzado entre mezcla y tasa se fija antes de ver resultados. La comprobación en pagos y la separación de calidad frente a capacidad están en el anexo (C-011, C-012).</aside>
 </main>
-<main class="slide" data-slide="S11" data-composition="match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + ribbon (volumen y tiempo por etiqueta)" data-family="comparison" data-word-budget="210" data-page="13">
+<main class="slide" data-slide="S11" data-composition="match_rows (rama ↔ dato mínimo ↔ ¿en el caso?) + ribbon (volumen y tiempo por etiqueta)" data-family="comparison" data-word-budget="210" data-page="12">
   <header class="header">
     <div class="kicker">Growth · hipótesis ToFu y BoFu · propuesta</div>
     <h1 class="headline">Todos los datos apuntan a lo mismo: proceso, composición y distribución</h1>
@@ -1354,10 +1345,10 @@
   <footer class="footer"><span class="source">Propuesta (C-029, R-032, R-014); el mismo orden del árbol; parámetros (deduplicación, SLA, umbral de estancamiento) por acordar con Finora · F-120–F-129, F-159, F-191, F-207, F-225, F-228–F-232</span><span class="page"></span></footer>
   <aside class="notes">En el mismo orden del árbol, cada hoja tiene una firma y un dato mínimo, y ninguno está hoy en el caso. Artefactos: leads con fecha, fuente y dominio, cruzados con clientes (customer_id) y con leads previos, para ver repetidos y no-prospectos y el volumen de cada etiqueta en el tiempo; el mismo cruce de identidad deja ver la misma demanda que llega por otra puerta. Mezcla (ToFu): cómo era cada lead al crearse (fuente, segmento, tamaño), no lo que Ventas opinó después, comparando mezcla contra tasa dentro de cada puerta: ¿entran más de los que siempre convierten poco? Antes del SQL: cuánto tarda el primer contacto humano, cuántos leads carga cada SDR (con un roster semanal que distinga ramp) y cuántos llevan semanas sin avanzar, con fechas por etapa. Después del SQL (BoFu): cuántos SQL acepta el AE según quién los generó (incentivos del SDR) y por qué se pierden, preguntado a los compradores (oferta o precio), porque las razones de pérdida del CRM no alcanzan. Cobro: cada Won ligado a su primer pago, para ver cuántos ganados nunca pagan. La idea que ordena todo: con cada etiqueta fechada (fuente, dominio, puerta, etapa), el volumen y el tiempo de cada una muestran dónde y cuándo cambió la brecha; las entradas únicas con fecha y su vínculo con el pago bastan para separar conteo, mezcla y tiempo. El primer paso es reetiquetar hacia atrás el histórico del CRM de los pagadores ya observados. El gasto de S&amp;M no sirve como proxy de capacidad ni de leads, y probar la palanca de capacidad pide un experimento. Límites: es propuesta, ninguna hoja tiene hoy su dato (F-230, F-126); que el caso no traiga canal ni etapas no prueba que Finora no los registre: parte puede estar en su CRM, aunque no siempre con historia (F-128, H-076); ventana de deduplicación, SLA y umbral de estancamiento se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no efecto (F-159); comparar entradas directas a SQL contra SQL del SDR no es un experimento; con los pagos solo se acotan los artefactos del lado de pagadores.</aside>
 </main>
-<main class="slide" data-slide="S13" data-composition="section_divider" data-family="editorial" data-word-budget="3" data-page="14">
+<main class="slide" data-slide="S13" data-composition="section_divider" data-family="editorial" data-word-budget="3" data-page="13">
   <aside class="notes">Revenue: de lo que vemos con el monto pagado a lo que no vemos; después, el mecanismo para introducir descuentos, el modelo de datos que separa el valor de la suscripción del precio pagado, y los casos del CFO resueltos con ese modelo.</aside>
 </main>
-<main class="slide" data-slide="S15" data-composition="stacked_decomposition (100% por línea del puente)" data-family="economics" data-word-budget="185" data-page="15">
+<main class="slide" data-slide="S15" data-composition="stacked_decomposition (100% por línea del puente)" data-family="economics" data-word-budget="185" data-page="14">
   <header class="header">
     <div class="kicker">Revenue · qué vemos y qué no</div>
     <h1 class="headline">Con cliente, mes y monto se ve qué cambió, no por qué</h1>
@@ -1366,7 +1357,7 @@
   <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora, mar-22–oct-24; cada barra = 100% del MRR de esa línea del puente de monto pagado · T-002, T-074, T-076, T-082, T-086, T-087 · F-136, F-186</span><span class="page"></span></footer>
   <aside class="notes">Con el monto pagado se puede operar hoy el MRR pagado observado y su puente, pero el puente mezcla orígenes. Cómo se calcula cada línea del puente: MRR inicial + altas + expansión − contracción − churn + reactivación = MRR final. Churn observado: el cliente pagaba el mes anterior y este mes paga cero (la tasa va sobre los activos); no es una cancelación confirmada, y es persistente si no vuelve a pagar en los tres meses siguientes (T-002). Reactivación: había dejado de pagar y vuelve a pagar. Expansión y contracción: pagó los dos meses y este mes paga más o menos; la diferencia suma o resta. En la expansión, 29% del MRR se revierte al mes siguiente, y 25,3% del movimiento bruto sin altas (que suma COP 282,8 millones entre mar-22 y sep-24) vuelve exacto al nivel previo. En el churn, 44% de los 751 churns observados vuelve a pagar al mes siguiente; en la reactivación, la parte cuyo monto cubre los meses del hueco más el corriente explica 42,6% del MRR, frente a 11,5% que regresa al monto usual, y el resto, 45,9%, no encaja en esas firmas. La contracción, en cambio, no muestra firma de cobro: 88,9% de su MRR sigue igual o más abajo al mes siguiente y 4,0% regresa al nivel previo. Sin estado de suscripción ni periodo de servicio no se sabe por qué cambió: antes de llamar churn o MRR a esos movimientos hace falta una regla de normalización y una ventana de gracia. Límites: sin estado de suscripción, periodo de servicio ni fecha de factura, el puente normalizado exacto no es medible, solo se acota (F-186); las firmas de cobro son lecturas de patrón, no confirmación de atraso o prepago (F-136); la prueba de la contracción solo mira el mes siguiente (X-100); el 44% dice que vuelve a pagar, no con qué monto (X-102, X-145); la vuelta de pagadores es un loop de Revenue, no el Reactivate del CRO (F-213).</aside>
 </main>
-<main class="slide" data-slide="S17" data-composition="staircase (dónde nace cada movimiento) + rule_strip" data-family="economics" data-word-budget="150" data-page="16">
+<main class="slide" data-slide="S17" data-composition="staircase (dónde nace cada movimiento) + rule_strip" data-family="economics" data-word-budget="150" data-page="15">
   <header class="header">
     <div class="kicker">Revenue · modelo de datos · propuesta</div>
     <h1 class="headline">La Propuesta de Modelo de datos separa el valor en una escalera con vigencias</h1>
@@ -1375,7 +1366,7 @@
   <footer class="footer"><span class="source">Propuesta de modelo de datos (R-034, R-011); esquema sin escala ni cifras; la regla de «Descuento» es convención del CFO (F-236, F-151) · F-130, F-132, F-133, F-150, F-152, F-168, F-234, F-240, F-241</span><span class="page"></span></footer>
   <aside class="notes">Proponemos una escalera de valor por suscripción y mes, cada peldaño con su fuente y su vigencia: tarifa de lista, precio pactado (plan, cantidad y add-ons), descuento con inicio, fin y motivo, MRR neto, facturado y cobrado. El MRR neto es el pactado menos el descuento vigente: lo que el cliente se comprometió a pagar ese mes. El MRR bruto y el neto se clasifican comparando cierres de mes sobre lo contratado y el descuento; lo facturado y lo cobrado son caja: explican el pago y nunca generan movimientos de MRR, solo un efecto de cobro, y el monto pagado de hoy queda como capa observada que se concilia contra lo cobrado. Regla de clasificación (integra C-020): si la suscripción no cambia, el inicio o el fin de un descuento va a una línea propia «Descuento» y no es contracción ni expansión; si cambian suscripción y descuento el mismo mes, primero se calcula el efecto de la suscripción con los términos de descuento del mes anterior y el resto va a «Descuento»; a quien sale con descuento se le registra churn, no fin de descuento. Las reglas que son decisiones de negocio (base lista o neto del puente, mes gratis, pausa, descuento único, tarifa en línea propia) se escriben antes de construir. Límites: hoy el modelo es cliente × mes × monto pagado y no separa suscripción, tarifa, descuento ni momento de cobro (F-130); se sabe qué evidencia confirmaría cada componente, no si Finora la tiene (F-133); la regla de «Descuento» es convención, no hecho: se aparta del default del mercado y el CFO la declara (F-236, F-151); los ejemplos de clasificación son ilustrativos. El árbol de decisión completo de la regla está en el anexo (C-020).</aside>
 </main>
-<main class="slide" data-slide="S18" data-composition="small_multiples (mini puentes) + underlying_business" data-family="comparison" data-word-budget="190" data-page="17">
+<main class="slide" data-slide="S18" data-composition="small_multiples (mini puentes) + underlying_business" data-family="comparison" data-word-budget="190" data-page="16">
   <header class="header">
     <div class="kicker">Revenue · casos del CFO</div>
     <h1 class="headline">Con el modelo propuesto, cada caso del CFO se lee en su capa</h1>
@@ -1387,7 +1378,7 @@
 <main class="slide" data-slide="SDATA" data-composition="section_divider" data-family="editorial" data-word-budget="3">
   <aside class="notes">Separador de sección: Data.</aside>
 </main>
-<main class="slide" data-slide="S32" data-composition="from_to_architecture" data-family="operating_model" data-word-budget="215" data-page="19">
+<main class="slide" data-slide="S32" data-composition="from_to_architecture" data-family="operating_model" data-word-budget="215" data-page="18">
   <header class="header">
     <div class="kicker">Data · modelo de datos · propuesta</div>
     <h1 class="headline">Proponemos pasar de pagos por cliente-mes a una cuenta común con demanda, funnel y suscripción</h1>
@@ -1396,7 +1387,7 @@
   <footer class="footer"><span class="source">Propuesta (R-033, C-013): diseño, no algo construido; mide hacia adelante (F-242) · 44%: T-096, 751 churns observados, mar-22–oct-24 · F-136, F-144, F-145, F-146, F-191, F-238–F-241</span><span class="page"></span></footer>
   <aside class="notes">Qué limita hoy: tres fuentes, todas de después del pago, sin canal, etapa, plan ni descuento. Pagos (cliente × mes: customer_id, month, amount_cop) responde cuánto pagó cada cliente cada mes, el puente de monto pagado y las cohortes por primer pago; no responde nada de quien no pagó, ni plan, precio o descuento, ni si un cero es cancelación, mora o desfase (44% de los 751 churns observados vuelve a pagar al mes siguiente), ni si un pico es prepago o expansión. Industria (cliente, ID en otro formato) responde el corte por industria. Gasto S&amp;M (mes × rubro, sin unidad) responde el gasto por rubro; no canal ni campaña. Ninguna responde canal, puerta, etapa, intervención, tiempo de cierre ni estancamiento. To-be: una espina y tres capas. Espina: account (una fila por cuenta) y account_xref (sistema + ID de origen + inicio de vigencia), que une CRM, producto, facturación y los IDs de hoy. Demanda: channel, campaign, touch (con UTMs), campaign_member y campaign_spend (con moneda). Comercial: person, lead, opportunity, stage_history (de, a, cuándo y quién), activity y assignment. Producto y facturación: product_event, subscription, subscription_item_version (contratado), discount (descontado), invoice (facturado) y payment (cobrado). Dos tablas de análisis salen de ahí. funnel_entry tiene una fila por cada vez que una cuenta entra al funnel, con su puerta, su ruta y la fecha de cada hito (registro, primer toque, SQL, Won, primer pago): de ahí salen las métricas del funnel. account_month tiene una fila por cuenta y mes, con el estado de la suscripción, el MRR de lista, el descuento, el neto, lo facturado y lo cobrado: de ahí sale el puente de MRR, que se concilia cada mes con el monto pagado de hoy. Qué habilita: medir el funnel de la entrada al pago por puerta, CAC y payback por canal, y un puente de MRR que no mezcla descuento ni cobro. Seis reglas son decisiones de negocio por escribir antes de construir (F-241): orden de puerta, cuándo una entrada es nueva, estados New/Working/Engaged, ventana W, umbral de estancamiento y base del puente. R-033 trata Reactivate como puerta y C-005 como loop: alinear antes de construir. La prueba más rápida es que Finora etiquete hacia atrás, desde el CRM, a los pagadores 2022–2024 (F-191).</aside>
 </main>
-<main class="slide" data-slide="S16" data-composition="object_anatomy (orígenes → objeto propio → aplicación) + implications_strip" data-family="operating_model" data-word-budget="130" data-page="20">
+<main class="slide" data-slide="S16" data-composition="object_anatomy (orígenes → objeto propio → aplicación) + implications_strip" data-family="operating_model" data-word-budget="130" data-page="19">
   <header class="header">
     <div class="kicker">Revenue · cómo introducir descuentos · propuesta</div>
     <h1 class="headline">El descuento se registra como objeto propio, con origen, source y fecha de fin</h1>
@@ -1405,7 +1396,7 @@
   <footer class="footer"><span class="source">Propuesta (R-034, R-021); el histórico no trae tarifas ni descuentos; 44% de 751 churns observados: T-076 · F-150–F-154, F-174, F-233–F-237</span><span class="page"></span></footer>
   <aside class="notes">Mecanismo Propuesto: cada descuento se registra como objeto propio, con tipo, valor, duración, fecha de inicio y de fin, motivo, aprobador y origen exclusivo (promoción digital o física, negociación, retención o partner), separado de la cantidad contratada y del precio de lista, y se lee desde la factura; el modelo separa la oferta, el código que la distribuye y el descuento aplicado con su vigencia. El source se captura en la adquisición de todos los clientes, no solo en el descuento, y el canal asignado al código se guarda aparte; negociación, retención y partner llevan registro propio, para que un precio especial no esconda un descuento ni un downgrade de retención se confunda con uno. Cómo pega el descuento en el MRR no es un estándar de mercado: es una convención que el CFO decide y declara, y las herramientas revisadas no separan por sí solas descuento de cambio de suscripción. Implicaciones Multidisciplinarias: con descuentos, MRR neto, revenue reconocido y caja pueden separarse según el tipo de contrato; el descuento cambia la composición de las cohortes, que hay que marcar y medir contra un grupo comparable; y el puente actual ya mezcla interrupciones con bajas (44% de los 751 churns observados vuelve a pagar al mes siguiente), lo mismo que un descuento que vence volvería a mezclar si no tiene fecha de fin. Límites: es propuesta; no se afirma que hubo descuentos; la convención la declara el CFO y se aparta del default del mercado (F-236); qué vista aplica depende de si los contratos son mensuales cancelables o a plazo fijo (F-153); la relación entre descuento y clientes de menor valor es evidencia externa (F-154); si el source no se captura para todos, el código quedaría como única atribución (H-073); el revenue que dejamos de capturar se mide hacia adelante. La regla de clasificación y la convención en detalle están en el anexo (C-018, C-020).</aside>
 </main>
-<main class="slide" data-slide="S12" data-composition="layered_stack (capa técnica → dos vías de uso)" data-family="operating_model" data-word-budget="125" data-page="21">
+<main class="slide" data-slide="S12" data-composition="layered_stack (capa técnica → dos vías de uso)" data-family="operating_model" data-word-budget="125" data-page="20">
   <header class="header">
     <div class="kicker">Seguimiento · cómo operarlo · propuesta</div>
     <h1 class="headline">Proponemos una vía formal por foro y otra de agentes para el día a día</h1>
@@ -1414,13 +1405,13 @@
   <footer class="footer"><span class="source">Propuesta (R-019, R-033); qué decide el CRO en cada foro está por definir con Finora; no se afirma que Finora tenga un problema de CRM · F-144, F-145, F-147–F-149, F-238, F-240, F-242</span><span class="page"></span></footer>
   <aside class="notes">Primero la capa técnica: una cuenta común que une CRM, producto y facturación; el historial de etapas del CRM, que suele venir de forma nativa; la puerta y el canal por cuenta desde la primera visita; el gasto por canal, y la facturación con estado de suscripción. Si Finora ya lo registra, se conecta; si no, se instrumenta, porque lo que no se capture desde ya no se reconstruye después. Encima, una vía formal por foro que lee el bowtie por motion: el semanal decide oportunidades, estancamientos y handoffs; el mensual, la mezcla de motion y canal; el trimestral, la inversión y la capacidad. Y otra vía para el día a día: Análisis Ad hoc por hipótesis y agentes de IA que trabajan solo sobre métricas gobernadas y entran con un piloto controlado. El lado Revenue ya se puede operar mes a mes, pero con pagos observados el CRO confundiría el momento del cobro con churn y expansión: la facturación es la primera pieza técnica. Límites: qué decide el CRO en cada foro aún no está definido por Finora; no sabemos qué parte de la capa técnica ya existe (H-076); la atribución reparte crédito, no prueba causa: para decidir presupuesto hacen falta experimentos (F-144, F-149); los agentes van encima de métricas gobernadas, no en la base, con piloto controlado (F-149); el to-be mide hacia adelante salvo que Finora tenga historial (F-242). La línea de cuenta común e historial de etapas viene de C-013 (anexo).</aside>
 </main>
-<main class="slide" data-slide="S19" data-composition="cover" data-family="editorial" data-word-budget="12" data-page="22">
+<main class="slide" data-slide="S19" data-composition="cover" data-family="editorial" data-word-budget="12" data-page="21">
   <aside class="notes">Cierre: la misma portada del inicio (guía de Hugo). Lo que sigue son los anexos: el detalle que salió de la presentación de 5 minutos.</aside>
 </main>
-<main class="slide" data-slide="S20" data-composition="section_divider" data-family="editorial" data-word-budget="3" data-page="23">
+<main class="slide" data-slide="S20" data-composition="section_divider" data-family="editorial" data-word-budget="3" data-page="22">
   <aside class="notes">Anexos: todo lo que el Story Package deja como apéndice. Overview en detalle (C-002, C-003, C-004); rutas, puertas y la medición anterior del funnel (C-005, C-006); la señal de Salud (C-008); métricas comunes, S&amp;M por alta y catálogo (C-009, C-010, C-022); premisa de ventas en pagos y calidad frente a capacidad (C-011, C-012); modelo de datos del funnel (C-013); convención del CFO y regla del descuento (C-018, C-020).</aside>
 </main>
-<main class="slide" data-slide="S21" data-composition="marimekko" data-family="economics" data-word-budget="100" data-page="24">
+<main class="slide" data-slide="S21" data-composition="marimekko" data-family="economics" data-word-budget="100" data-page="23">
   <header class="header">
     <div class="kicker">Anexo · Overview</div>
     <h1 class="headline">La caída por cliente se asocia a quién entra; la base previa sostiene su monto</h1>
@@ -1428,6 +1419,15 @@
 
   <footer class="footer"><span class="source">Fuente: pagos cliente × mes de Finora; MRR pagado observado por cliente activo en oct-24, por cosecha de primer pago · F-075, F-076, F-097, F-072</span><span class="page"></span></footer>
   <aside class="notes">La base previa (activos en ene-22) pasa de COP 92,8 mil a COP 97,4 mil por cliente (+5%). En oct-24 las cosechas 2023 y 2024 ya son 65% de los clientes activos y 50% del MRR, con COP 46,3 mil y COP 43,0 mil por cliente: pesan más y pagan menos, y eso baja el promedio a COP 57,8 mil. Con base ene-22 la composición explica 108% del cambio y el efecto dentro de las cosechas −8%; con base dic-22, 84%. La cifra depende de la ventana; la dirección no. Propuesta: reportar el monto por cliente siempre partido en base previa y cosechas, con una base de comparación fija que decidas tú (X-060). Composición no es causa: no separa tipo de cliente, plan, tarifa ni descuento (F-062). La salida de pocas cuentas grandes también baja el promedio (F-101, F-102). «Quién entra» describe primeros pagadores observados, no la calidad de los leads.</aside>
+</main>
+<main class="slide" data-slide="S07" data-composition="split_and_converge (dos zonas: dentro de cada funnel · entre funnels)" data-family="process" data-word-budget="125" data-page="24">
+  <header class="header">
+    <div class="kicker">Growth · cómo medir cada funnel · propuesta</div>
+    <h1 class="headline">Proponemos medir cada funnel en sus etapas y compararlos solo en resultados comunes</h1>
+  </header>
+
+  <footer class="footer"><span class="source">Propuesta de diseño (R-036), sin cifras · F-141, F-155, F-158, F-212, F-223–F-226, F-244, F-248–F-252</span><span class="page"></span></footer>
+  <aside class="notes">Proponemos medir cada funnel (Executive, Self Service, Hybrid A, Hybrid B y el loop de Reactivate) en sus propias etapas y con las mismas familias: volumen de entradas, alcance por etapa en cohorte de entrada con ventana fija (solo en cohortes que ya la cumplieron), tiempo por tramo, estancamiento y la métrica del mecanismo de cada ruta, como el speed to lead en Executive o el uplift de la intervención en Hybrid A, medido con holdout. Entre funnels solo se comparan resultados comunes desde el nudo (Won, MRR inicial, retención temprana, CAC y payback), siempre cortados por funnel, y las tasas se comparan por puerta, no por ruta. Con tus definiciones, Hybrid A empieza solo y luego interviene una persona, Hybrid B empieza con persona y termina solo, y Reactivate es el loop de los leads estancados; la vuelta de clientes que se ve en los pagos es otra población y se mide aparte. La clasificación sale de reglas explícitas al cierre de una ventana fija: si nace de un estancado, quién inició, si hubo toque humano y quién cerró. Hoy no se puede calcular ninguna métrica propia de funnel: el modelo empieza en el primer pago. Límites: pendiente de aceptación F-244, F-248 a F-252 (R-035, R-036), tuya o bajo D-027; la ventana fija, el nudo común (Q-050) y el umbral de estancamiento (Q-064) se acuerdan con Finora; comparar tocados contra no tocados asigna crédito, no prueba efecto: hace falta holdout (F-251, H-050); con la regla resumida, «¿quién cerró?» puede dejar sin ruta entradas que iniciaron con persona y no cierran en la ventana (H-078); R-035 usa otras definiciones y esta lámina sigue las tuyas; es el tercer catálogo del caso (R-031, R-035, R-036) y falta consolidarlo (X-170). Las etapas de cada carril son las de la lámina anterior (C-021), sin cifras.</aside>
 </main>
 <main class="slide" data-slide="S22" data-composition="diverging_small_multiples + within_industry_bar" data-family="evidence" data-word-budget="100" data-page="25">
   <header class="header">
@@ -1872,72 +1872,6 @@ P.draw('S06', (s, P) => {
 
   // Key note rescued from the routes slide (C-005).
   s.label(112, 890, '<b>Las tasas se comparan por puerta, fija al entrar</b>: la ruta se define por lo que pasó y eso sesga la conversión de Hybrid.', { cls: 'nt', w: 440 });
-});
-</script>
-<script data-for="S07">
-P.draw('S07', (s, P) => {
-  // Plan: left zone «dentro de cada funnel» cols 1–7 (surface) with four lanes + the Reactivate loop ·
-  // knot on the boundary (col 8) · right zone «entre funnels» cols 9–12 (accent-soft) · classification rule
-  // and «hoy no existe» in a bottom band. Line weight = with a person (Hugo's definitions of Hybrid A/B).
-  const L0 = 112, L1 = 1172, R0 = 1296, R1 = 1808, T = 322, B = 842;
-  s.rect(L0, T, L1 - L0, B - T, { fill: 'surface', stroke: null });
-  s.rect(R0, T, R1 - R0, B - T, { fill: 'accent-soft', stroke: null, id: 's07-common' });
-  s.label(L0 + 24, T + 20, '<b>Dentro de cada funnel</b>: entradas · alcance por etapa (cohorte, ventana fija) · tiempo por tramo · estancamiento · mecanismo', { cls: 'zt', w: L1 - L0 - 48 });
-
-  // Lanes: stages before the knot (from C-021); P = moved by a person (thick), S = on its own (thin).
-  const KX = 1234, KY = 580, X0 = 560, DX = 72;
-  const lanes = [
-    ['Executive', 'con persona', 486, 'PPPPP'],
-    ['Hybrid B', 'persona → solo', 556, 'PPPPS'],
-    ['Hybrid A', 'solo → persona', 626, 'SSPPPP'],
-    ['Self Service', 'sin persona', 696, 'SSS'],
-  ];
-  lanes.forEach(([name, def, y, segs], i) => {
-    s.label(L0 + 24, y, `${name}<span>${def}</span>`, { anchor: 'ml', cls: 'rn' });
-    [...segs].forEach((k, j) => s.line(X0 + j * DX, y, X0 + (j + 1) * DX, y, k === 'P' ? { stroke: 'ink', w: 7, cap: 'butt' } : { stroke: 'ink-3', w: 2.5 }));
-    for (let j = 0; j <= segs.length; j++) s.dot(X0 + j * DX, y, { r: 6.5, fill: 'ink' });
-    const xe = X0 + segs.length * DX;
-    s.connect([xe + 8, y], [KX - 26, KY - 24 + i * 16], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, arrow: null });
-  });
-  // Mechanism metric examples (from the claim): Executive and Hybrid A.
-  s.label(X0 + 5 * DX + 16, 486 - 22, 'speed to lead', { anchor: 'bl', cls: 'mc' });
-  s.label(X0 + 2 * DX + 8, 626 - 18, 'uplift con holdout', { anchor: 'bl', cls: 'mc' });
-
-  // Reactivate: the loop of stalled leads, back into its funnel (not a fourth route).
-  s.path(`M${X0 + 4 * DX},${708} C${X0 + 4 * DX},${790} ${X0 + DX},${790} ${X0 + DX},${712}`, { stroke: 'ink-2', w: 2.5, arrow: 'end', headSize: 11 });
-  s.label(X0 + 4 * DX + 30, 760, 'Reactivate<span style="display:block;margin:4px 0 0">loop de los estancados</span>', { anchor: 'ml', cls: 'rn', w: 300 });
-
-  // Key for line weight.
-  s.line(L0 + 24, 812, L0 + 64, 812, { stroke: 'ink', w: 7, cap: 'butt' }); s.label(L0 + 74, 812, 'con persona', { anchor: 'ml', cls: 'key' });
-  s.line(L0 + 214, 812, L0 + 254, 812, { stroke: 'ink-3', w: 2.5 }); s.label(L0 + 264, 812, 'sin persona', { anchor: 'ml', cls: 'key' });
-
-  // The knot: the only place where funnels meet.
-  s.circle(KX, KY, 24, { fill: 'accent', stroke: 'ink', w: 2, id: 's07-knot', focal: true });
-  s.label(KX, KY - 40, 'Nudo', { anchor: 'bc', cls: 'kn' });
-  s.label(KX, KY + 38, 'por acordar', { anchor: 'tc', cls: 'label-sm' });   // Q-050: Won, primer pago o suscripción activa
-  // Right zone: common results, compared across funnels (always cut by funnel). The knot's line opens
-  // into one spine that feeds every common result (no bullets: the results come out of the knot).
-  s.label(R0 + 24, T + 20, '<b>Entre funnels</b>, solo resultados comunes', { cls: 'zt', w: R1 - R0 - 48 });
-  const SX = R0 + 40, RY = [454, 504, 554, 604, 654];
-  s.line(KX + 26, KY, SX, KY, { stroke: 'ink', w: 3 });
-  s.line(SX, RY[0], SX, RY[4], { stroke: 'ink', w: 3 });
-  ['Won', 'MRR inicial', 'Retención temprana', 'CAC', 'Payback'].forEach((t, i) => {
-    s.line(SX, RY[i], SX + 22, RY[i], { stroke: 'ink', w: 3 });
-    s.label(SX + 34, RY[i], t, { anchor: 'ml', cls: 'res' });
-  });
-  s.label(R0 + 24, 714, '<b>Siempre cortados por funnel</b>; tasas por puerta, no por ruta', { cls: 'rule-t', w: R1 - R0 - 48 });
-
-  // Bottom band: classification at the close of a fixed window · what does not exist today.
-  s.label(L0, 872, 'Clasificación al cierre de la ventana', { cls: 'cap' });
-  const qs = ['¿Nace de un estancado?', '¿Quién inició?', '¿Hubo toque humano?', '¿Quién cerró?'];
-  let qx = L0;
-  qs.forEach((q, i) => {
-    const el = s.label(qx, 930, q, { anchor: 'ml', cls: 'cq', id: `s07-q${i}` });
-    const b = s.box(el);
-    if (i < qs.length - 1) s.line(b.r + 14, 930, b.r + 54, 930, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 9 });
-    qx = b.r + 68;
-  });
-  s.label(R0, 872, '<b>Hoy no existe ninguna métrica de funnel</b>: el modelo empieza en el primer pago', { cls: 'none', w: R1 - R0 });
 });
 </script>
 <script data-for="S09">
@@ -2416,6 +2350,72 @@ P.draw('S21', (s, P) => {
   s.bracket(['#s21-c23', '#s21-c24'], { side: 'bottom', style: 'square', offset: 84, depth: 14, tone: 'ink-3', label: '<b>Cosechas 2023–24</b>: 65% de los clientes activos y 50% del MRR', labelW: 820 });
 
   s.label(1264, 660, 'La composición explica <b>108%</b> del cambio con base ene-22 y <b>84%</b> con base dic-22: la cifra depende de la ventana; la dirección, no.', { cls: 'annotation', w: 520 });
+});
+</script>
+<script data-for="S07">
+P.draw('S07', (s, P) => {
+  // Plan: left zone «dentro de cada funnel» cols 1–7 (surface) with four lanes + the Reactivate loop ·
+  // knot on the boundary (col 8) · right zone «entre funnels» cols 9–12 (accent-soft) · classification rule
+  // and «hoy no existe» in a bottom band. Line weight = with a person (Hugo's definitions of Hybrid A/B).
+  const L0 = 112, L1 = 1172, R0 = 1296, R1 = 1808, T = 322, B = 842;
+  s.rect(L0, T, L1 - L0, B - T, { fill: 'surface', stroke: null });
+  s.rect(R0, T, R1 - R0, B - T, { fill: 'accent-soft', stroke: null, id: 's07-common' });
+  s.label(L0 + 24, T + 20, '<b>Dentro de cada funnel</b>: entradas · alcance por etapa (cohorte, ventana fija) · tiempo por tramo · estancamiento · mecanismo', { cls: 'zt', w: L1 - L0 - 48 });
+
+  // Lanes: stages before the knot (from C-021); P = moved by a person (thick), S = on its own (thin).
+  const KX = 1234, KY = 580, X0 = 560, DX = 72;
+  const lanes = [
+    ['Executive', 'con persona', 486, 'PPPPP'],
+    ['Hybrid B', 'persona → solo', 556, 'PPPPS'],
+    ['Hybrid A', 'solo → persona', 626, 'SSPPPP'],
+    ['Self Service', 'sin persona', 696, 'SSS'],
+  ];
+  lanes.forEach(([name, def, y, segs], i) => {
+    s.label(L0 + 24, y, `${name}<span>${def}</span>`, { anchor: 'ml', cls: 'rn' });
+    [...segs].forEach((k, j) => s.line(X0 + j * DX, y, X0 + (j + 1) * DX, y, k === 'P' ? { stroke: 'ink', w: 7, cap: 'butt' } : { stroke: 'ink-3', w: 2.5 }));
+    for (let j = 0; j <= segs.length; j++) s.dot(X0 + j * DX, y, { r: 6.5, fill: 'ink' });
+    const xe = X0 + segs.length * DX;
+    s.connect([xe + 8, y], [KX - 26, KY - 24 + i * 16], { route: 'curve', fromSide: 'right', toSide: 'left', tone: 'ink-3', w: 2, gap: 0, arrow: null });
+  });
+  // Mechanism metric examples (from the claim): Executive and Hybrid A.
+  s.label(X0 + 5 * DX + 16, 486 - 22, 'speed to lead', { anchor: 'bl', cls: 'mc' });
+  s.label(X0 + 2 * DX + 8, 626 - 18, 'uplift con holdout', { anchor: 'bl', cls: 'mc' });
+
+  // Reactivate: the loop of stalled leads, back into its funnel (not a fourth route).
+  s.path(`M${X0 + 4 * DX},${708} C${X0 + 4 * DX},${790} ${X0 + DX},${790} ${X0 + DX},${712}`, { stroke: 'ink-2', w: 2.5, arrow: 'end', headSize: 11 });
+  s.label(X0 + 4 * DX + 30, 760, 'Reactivate<span style="display:block;margin:4px 0 0">loop de los estancados</span>', { anchor: 'ml', cls: 'rn', w: 300 });
+
+  // Key for line weight.
+  s.line(L0 + 24, 812, L0 + 64, 812, { stroke: 'ink', w: 7, cap: 'butt' }); s.label(L0 + 74, 812, 'con persona', { anchor: 'ml', cls: 'key' });
+  s.line(L0 + 214, 812, L0 + 254, 812, { stroke: 'ink-3', w: 2.5 }); s.label(L0 + 264, 812, 'sin persona', { anchor: 'ml', cls: 'key' });
+
+  // The knot: the only place where funnels meet.
+  s.circle(KX, KY, 24, { fill: 'accent', stroke: 'ink', w: 2, id: 's07-knot', focal: true });
+  s.label(KX, KY - 40, 'Nudo', { anchor: 'bc', cls: 'kn' });
+  s.label(KX, KY + 38, 'por acordar', { anchor: 'tc', cls: 'label-sm' });   // Q-050: Won, primer pago o suscripción activa
+  // Right zone: common results, compared across funnels (always cut by funnel). The knot's line opens
+  // into one spine that feeds every common result (no bullets: the results come out of the knot).
+  s.label(R0 + 24, T + 20, '<b>Entre funnels</b>, solo resultados comunes', { cls: 'zt', w: R1 - R0 - 48 });
+  const SX = R0 + 40, RY = [454, 504, 554, 604, 654];
+  s.line(KX + 26, KY, SX, KY, { stroke: 'ink', w: 3 });
+  s.line(SX, RY[0], SX, RY[4], { stroke: 'ink', w: 3 });
+  ['Won', 'MRR inicial', 'Retención temprana', 'CAC', 'Payback'].forEach((t, i) => {
+    s.line(SX, RY[i], SX + 22, RY[i], { stroke: 'ink', w: 3 });
+    s.label(SX + 34, RY[i], t, { anchor: 'ml', cls: 'res' });
+  });
+  s.label(R0 + 24, 714, '<b>Siempre cortados por funnel</b>; tasas por puerta, no por ruta', { cls: 'rule-t', w: R1 - R0 - 48 });
+
+  // Bottom band: classification at the close of a fixed window · what does not exist today.
+  s.label(L0, 872, 'Clasificación al cierre de la ventana', { cls: 'cap' });
+  const qs = ['¿Nace de un estancado?', '¿Quién inició?', '¿Hubo toque humano?', '¿Quién cerró?'];
+  let qx = L0;
+  qs.forEach((q, i) => {
+    const el = s.label(qx, 930, q, { anchor: 'ml', cls: 'cq', id: `s07-q${i}` });
+    const b = s.box(el);
+    if (i < qs.length - 1) s.line(b.r + 14, 930, b.r + 54, 930, { stroke: 'ink-3', w: 2, arrow: 'end', headSize: 9 });
+    qx = b.r + 68;
+  });
+  s.label(R0, 872, '<b>Hoy no existe ninguna métrica de funnel</b>: el modelo empieza en el primer pago', { cls: 'none', w: R1 - R0 });
 });
 </script>
 <script data-for="S22">
