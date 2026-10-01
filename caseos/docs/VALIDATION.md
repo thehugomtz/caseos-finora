@@ -266,8 +266,8 @@ Package. Encontrado y corregido:
   Ahora reordenar, traer una lámina o agregar un separador reescribe `data-page` = posición y re-renderiza esas
   miniaturas en una sola pasada (un render a la vez: comparten qa.json). Aplicado al v5 (34 láminas renumeradas,
   registrado como Claude) y verificado en la presentación: las 36 muestran su posición; portadas y separadores, ninguno.
-- **Cambios puntuales del Storyteller (30-sep, tarde):** Hugo pidió ajustar las láminas donde tuvo dudas al escribir su
-  guion y que los ajustes los haga el agente, no Claude. `submit_revision` (POST `…/slides/{deck}/revise`, con
+- **Cambios puntuales del Storyteller (30-sep, tarde):** Hugo pidió aclarar los textos de varias láminas y que los
+  ajustes los haga el agente, no Claude. `submit_revision` (POST `…/slides/{deck}/revise`, con
   `[{file, request}]`) lanza al Visual Storyteller sobre un deck terminado con un pedido por lámina. No es una corrida
   nueva: el storyline, el tema y las demás láminas no se tocan. Guarda la versión previa de cada lámina en
   `slides/.history/NN.REV-….html` y el pedido en `revisions/REV-….yaml`. Al terminar, `finish_revision` compara cada
@@ -275,4 +275,4 @@ Package. Encontrado y corregido:
   viejos y devuelve el deck como terminado. Una revisión cortada por un reinicio deja el deck terminado, con aviso, y no
   «interrumpido». La vista de Slides dice qué láminas se están cambiando.
   Antes, el reordenamiento que Hugo aprobó («Va»): la 15 pasa a Overview detrás de la 5, la 7 a Revenue detrás de su
-  separador y la 34 sale del anexo a Data, para que las láminas sigan su guion. Queda registrado «vía Claude».
+  separador y la 34 sale del anexo a Data, en el orden en que Hugo presenta. Queda registrado «vía Claude».

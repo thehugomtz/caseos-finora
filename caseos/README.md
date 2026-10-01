@@ -18,22 +18,26 @@ Selector de caso › **Nuevo caso**: solo el nombre (y, si quieres, el modelo de
 
 ## Arrancar
 
+En el repo compartido, desde la raíz: **`./start.sh`** instala todo, pregunta con qué modelo correr los agentes y abre
+CaseOS con el caso Finora tal como quedó. A mano:
+
 ```bash
-cd "Claude Prueba/caseos"
-uv venv --system-site-packages --python 3.13 .venv
+cd caseos
+uv venv --python 3.13 .venv                   # o: python3 -m venv .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-.venv/bin/python -m caseos import-finora     # solo la primera vez (o --force para reimportar desde cero)
 .venv/bin/python -m caseos serve             # http://127.0.0.1:8780
 ```
 
-También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
+El caso Finora ya viene en `cases/finora` (no hace falta importarlo). `import-finora --force` lo reconstruye desde cero
+y **borra** lo trabajado, no lo corras sobre el caso real. También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
 
 - **Sin llaves.** Los agentes corren con el **Claude Agent SDK sobre tu suscripción de Claude** (la sesión local de
   Claude Code). No hay API key en el repo; `ANTHROPIC_API_KEY` solo si quieres facturación por API a propósito.
   Ver `.env.example`.
-- **Modelo:** `claude-opus-5-5` con esfuerzo **max** para todos los agentes (pedido de Hugo). Se puede bajar por agente
-  con `CASEOS_EFFORT_<ROL>` (p. ej. `CASEOS_EFFORT_BRIEFER=high`) sin cambiar de modelo. Cada corrida guarda su costo
-  equivalente en `audit/runs/`.
+- **Modelo:** el caso Finora se trabajó con `claude-opus-5-5` en esfuerzo **max** para todos los agentes (pedido de
+  Hugo). Para otro modelo: `CASEOS_MODEL` (p. ej. `claude-sonnet-5`) y `CASEOS_EFFORT` (`max`, `high`…); por agente,
+  `CASEOS_MODEL_<AGENTE>` y `CASEOS_EFFORT_<ROL>`. Cada corrida guarda modelo, esfuerzo y costo equivalente en
+  `audit/runs/`.
 - **Corridas largas** (research L3, Visual Storyteller): arranca el servidor en tu propia terminal para que un reinicio
   del panel no las interrumpa. Si algo se interrumpe, la solicitud queda guardada y se reintenta con un clic.
 - Solo escucha en `127.0.0.1`.
@@ -88,7 +92,10 @@ También: `./scripts/caseos.sh serve`, `./scripts/caseos.sh test`.
    y su pregunta pasa a research. Lo apruebas tú.
 9. **Slides** — el paquete aprobado pasa al **Executive Visual Storyteller existente** (no se reconstruyó: se enlaza) y
    regresa un deck HTML. Puedes darle una **guía de formato** en palabras simples: tipografía de títulos y de texto
-   (cualquier Google Font), colores y notas; se aplica como tema del renderer con el contraste revisado.
+   (cualquier Google Font), colores y notas; se aplica como tema del renderer con el contraste revisado. Sobre un deck
+   terminado: reordenar arrastrando, editar texto sobre la lámina, agregar separadores, traer una lámina de un deck
+   anterior, regenerar el PDF y **pedirle cambios puntuales al Storyteller** en láminas concretas (no rehace el deck). Al
+   presentar, el cursor es un puntero láser (tecla L).
 10. **Agents** / **Artifacts** — topología de agentes con lo que hace cada uno; archivos del caso, `brain.md`, decisiones,
    snapshots.
 
@@ -106,7 +113,7 @@ pasos.
 | `agents/*.md` | contrato de cada agente (rol, comportamiento, inputs/outputs, guardrails, handoff, fallas) |
 | `skills/` | `manifest.yaml` (fuente de verdad del loader), skills propias y de terceros con licencia y procedencia |
 | `cases/<id>/` | un caso = carpetas de archivos legibles (YAML/Markdown): ver `cases/README.md` |
-| `tests/` | 32 pruebas (núcleo, framer, research, handoffs, API) + 1 eval en vivo opcional |
+| `tests/` | 87 pruebas (núcleo, framer, research, handoffs, API, editor de slides) + 1 eval en vivo opcional |
 
 Documentos: [ARCHITECTURE](ARCHITECTURE.md) · [AGENTS](AGENTS.md) · [SKILLS](SKILLS.md) · [GUARDRAILS](GUARDRAILS.md) ·
 [REUSE](REUSE.md) (qué se reutilizó, refactorizó, creó o dejó de usarse) · [VALIDATION](docs/VALIDATION.md).
@@ -123,8 +130,7 @@ CASEOS_LIVE=1 .venv/bin/python -m pytest -q tests/test_live.py   # opcional: un 
 - Analytics necesita un workspace analítico enlazado al caso. Hoy existe el adaptador del Business Exploration Workspace
   (Finora). Un caso nuevo sin workspace tiene Business Research, Measurement y Data Engineering; Analytics aparece como no
   disponible hasta que se escriba su adaptador (interfaz en ARCHITECTURE › Workspaces).
-- El texto literal del enunciado de Alegra no está en el repo: el brief de Finora se reconstruyó desde el brief v0.3 y las
-  notas del proyecto, y lo declara como vacío.
+- El brief de Finora se armó desde el brief de trabajo de Hugo (v0.3, en `cases/finora/brief/sources`) y sus notas del
+  proyecto.
 - Con Opus 5.5 en esfuerzo max, un turno del Briefer o del Framer tarda varios minutos (medido: 6.8 min un turno del
   Briefer); research, COS y Storyteller, más. Con `high` los turnos eran de 1–2 min.
-- `cases/finora` contiene material del reto: decide si es público o privado antes de subir el repo a GitHub.

@@ -20,9 +20,13 @@ RUNTIME_DIR = ROOT / ".runtime"          # scratch cwd for agent subprocesses (g
 # Existing Business Exploration Workspace (optional adapter). Relative to the repo by default.
 FINORA_EDA_PATH = Path(os.environ.get("CASEOS_FINORA_EDA_PATH", ROOT.parent / "finora-eda"))
 
-# Existing Executive Visual Storyteller (Hugo's skills). Linked, never forked.
-USER_SKILLS_DIR = Path(os.environ.get("CASEOS_USER_SKILLS_DIR", Path.home() / ".claude" / "skills"))
-USER_AGENTS_DIR = Path(os.environ.get("CASEOS_USER_AGENTS_DIR", Path.home() / ".claude" / "agents"))
+# Existing Executive Visual Storyteller (Hugo's skills). Linked, never forked: from ~/.claude on Hugo's machine, or from
+# the copy that ships next to CaseOS in the shared repo (../claude), so it runs on any computer as it is.
+_BUNDLED = ROOT.parent / "claude"
+USER_SKILLS_DIR = Path(os.environ.get("CASEOS_USER_SKILLS_DIR") or (
+    _BUNDLED / "skills" if (_BUNDLED / "skills").is_dir() else Path.home() / ".claude" / "skills"))
+USER_AGENTS_DIR = Path(os.environ.get("CASEOS_USER_AGENTS_DIR") or (
+    _BUNDLED / "agents" if (_BUNDLED / "agents").is_dir() else Path.home() / ".claude" / "agents"))
 STORYTELLER_SKILLS = ["executive-visual-storyteller", "executive-storyline", "consulting-visual-director",
                       "html-slide-renderer", "slide-critic"]
 
