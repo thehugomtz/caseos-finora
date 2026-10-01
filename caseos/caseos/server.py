@@ -807,7 +807,8 @@ def deck_files(cid: str, slug: str, path: str):
     p = storyteller.deck_file(S(cid), slug, path or "index.html")
     if not p.exists() or not p.is_file():
         raise HTTPException(404, "Archivo no encontrado")
-    return FileResponse(p, media_type=mimetypes.guess_type(str(p))[0] or "application/octet-stream")
+    return FileResponse(p, media_type=mimetypes.guess_type(str(p))[0] or "application/octet-stream",
+                        headers={"Cache-Control": "no-cache"})          # a deck changes on every edit: always revalidate
 
 
 @app.get("/case-files/{cid}/sources/{name}", include_in_schema=False)

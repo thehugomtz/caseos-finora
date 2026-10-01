@@ -86,7 +86,7 @@
     const cv = Object.assign(document.createElement('canvas'), { className: 'deck-laser' });
     const ctx = cv.getContext('2d');
     const TRAIL = 850, HELD = 2600;                          // ms a point stays visible: moving · holding the button
-    const col = getComputedStyle(H).getPropertyValue('--laser').trim() || '255, 38, 38';
+    const color = () => getComputedStyle(H).getPropertyValue('--laser').trim() || '255, 38, 38';   // a theme token, read when drawing
     let pts = [], at = null, held = false, raf = 0, dpr = 1;
     const size = () => { dpr = devicePixelRatio || 1; cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
       cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px'; };
@@ -94,7 +94,7 @@
     const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
     function draw() {
       raf = 0;
-      const now = performance.now();
+      const now = performance.now(), col = color();
       pts = pts.filter((q) => now - q.t < q.life);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, innerWidth, innerHeight);
