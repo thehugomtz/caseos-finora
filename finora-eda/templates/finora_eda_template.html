@@ -1,0 +1,1783 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finora · Workspace de exploración</title>
+<meta name="description" content="Fase 1 · análisis exploratorio de Finora: crecimiento, adquisición, monetización, retención e inversión comercial, recalculados desde los archivos crudos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f5fa;
+  --surface: #f8fafd;
+  --ink: #0c1322;
+  --ink-2: #444e62;
+  --muted: #7d8699;
+  --faint: #a9b0be;
+  --grid: rgba(12, 19, 34, 0.075);
+  --axis: rgba(12, 19, 34, 0.24);
+  --glass: rgba(255, 255, 255, 0.58);
+  --glass-strong: rgba(255, 255, 255, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --hair: rgba(12, 19, 34, 0.08);
+  --shadow: 0 1px 0 rgba(255,255,255,0.95) inset, 0 18px 40px -22px rgba(30, 46, 90, 0.28), 0 2px 8px -2px rgba(30, 46, 90, 0.06);
+  --shadow-soft: 0 1px 0 rgba(255,255,255,0.9) inset, 0 8px 24px -16px rgba(30, 46, 90, 0.22);
+  --accent: #2f6df2;
+  --accent-2: #7a5cff;
+  --accent-3: #15bfae;
+  --grad: linear-gradient(100deg, #2f6df2 0%, #7a5cff 52%, #15bfae 100%);
+  /* paleta de datos (validada: dataviz six-checks, superficie clara) */
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --de: #b3bac8;
+  --r150: #b7d3f6; --r250: #86b6ef; --r300: #6da7ec; --r400: #3987e5; --r500: #256abf; --r550: #1c5cab; --r650: #104281; --r700: #0d366b;
+  /* estados (significado reservado; siempre ícono + texto) */
+  --good: #0ca30c; --good-ink: #0a6a14; --strong: #0b6b4f; --dir: #2f6df2; --hyp: #7a5cff; --noeval: #7d8699;
+  --warning: #fab219; --warning-ink: #8a5700; --critical: #d03b3b; --critical-ink: #a32626;
+  --radius: 22px;
+  --radius-sm: 14px;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --side: 272px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(1100px 620px at 8% -8%, rgba(110, 150, 255, 0.30), transparent 62%),
+    radial-gradient(900px 540px at 96% 4%, rgba(150, 118, 255, 0.22), transparent 60%),
+    radial-gradient(1000px 760px at 70% 108%, rgba(40, 206, 186, 0.17), transparent 62%),
+    radial-gradient(700px 520px at 18% 78%, rgba(120, 190, 255, 0.14), transparent 60%),
+    var(--bg);
+}
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(rgba(12, 19, 34, 0.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(1200px 800px at 40% 20%, #000 20%, transparent 78%);
+          mask-image: radial-gradient(1200px 800px at 40% 20%, #000 20%, transparent 78%);
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: rgba(47, 109, 242, 0.18); }
+button { font-family: inherit; }
+
+/* ---------- vidrio ---------- */
+.glass, .card {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
+          backdrop-filter: blur(20px) saturate(165%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+/* ---------- progreso + barra lateral ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--grad); z-index: 60; box-shadow: 0 0 12px rgba(122, 92, 255, 0.45); }
+.side {
+  position: fixed; top: 16px; left: 16px; bottom: 16px; width: var(--side);
+  padding: 20px 14px 16px; display: flex; flex-direction: column; z-index: 40;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 14px; }
+.orb { width: 34px; height: 34px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 32% 28%, #ffffff 0 12%, rgba(255,255,255,0) 30%), conic-gradient(from 210deg, #2f6df2, #7a5cff, #15bfae, #2f6df2);
+  box-shadow: 0 6px 18px -6px rgba(90, 90, 255, 0.55), inset 0 0 0 1px rgba(255,255,255,0.6); }
+.brand-name { font-weight: 650; letter-spacing: -0.01em; font-size: 15px; line-height: 1.15; white-space: nowrap; }
+.brand-sub { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.askbtn { all: unset; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 0 4px 12px; padding: 9px 12px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); font-size: 13px; color: var(--ink-2); }
+.askbtn:hover { color: var(--ink); border-color: rgba(47, 109, 242, 0.35); }
+.askbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.askbtn .spark-ic { width: 18px; height: 18px; border-radius: 6px; background: var(--grad); flex: none; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; }
+.askbtn kbd { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--hair); border-radius: 6px; padding: 1px 5px; background: #fff; }
+.nav { list-style: none; margin: 0; padding: 0 0 6px; overflow-y: auto; flex: 1; border-top: 1px solid var(--hair); }
+.nav .grp { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); padding: 12px 10px 4px; }
+.nav a {
+  display: flex; align-items: baseline; gap: 10px; padding: 6px 10px; border-radius: 11px;
+  color: var(--ink-2); font-size: 13.2px; position: relative; transition: background .2s, color .2s;
+}
+.nav a:hover { background: rgba(255, 255, 255, 0.7); text-decoration: none; color: var(--ink); }
+.nav a .n { font-family: var(--mono); font-size: 10.5px; color: var(--faint); width: 18px; flex: none; }
+.nav a.active { color: var(--ink); background: rgba(255, 255, 255, 0.86); box-shadow: var(--shadow-soft); }
+.nav a.active::before { content: ""; position: absolute; left: -2px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: var(--grad); }
+.nav a.active .n { color: var(--accent); }
+.side-foot { border-top: 1px solid var(--hair); padding: 12px 10px 0; font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+.side-foot b { color: var(--ink-2); font-weight: 550; }
+.side-foot .mono { font-family: var(--mono); font-size: 10.5px; }
+
+/* ---------- layout ---------- */
+main { margin-left: calc(var(--side) + 32px); padding: 40px 44px 120px 20px; max-width: 1320px; }
+.section { padding-top: 84px; }
+.section:first-of-type { padding-top: 8px; }
+
+/* ---------- portada ---------- */
+.hero { padding: 38px 40px 32px; position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; right: -120px; top: -140px; width: 420px; height: 420px; border-radius: 50%;
+  background: conic-gradient(from 180deg, rgba(47,109,242,0.20), rgba(122,92,255,0.18), rgba(21,191,174,0.16), rgba(47,109,242,0.20)); filter: blur(40px); pointer-events: none; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.hero h1 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 650; margin: 14px 0 14px; max-width: 900px; }
+.hero h1 .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p.lede { font-size: 16.5px; color: var(--ink-2); max-width: 820px; margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.chip { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72); border: 1px solid var(--glass-border); box-shadow: var(--shadow-soft); }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
+.steps { display: flex; gap: 0; margin-top: 24px; border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); width: fit-content; max-width: 100%; }
+.steps div { padding: 10px 18px; font-size: 13px; color: var(--muted); background: rgba(255, 255, 255, 0.45); display: flex; gap: 10px; align-items: baseline; }
+.steps div + div { border-left: 1px solid var(--hair); }
+.steps div b { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.06em; }
+.steps div.on { color: var(--ink); background: rgba(255, 255, 255, 0.92); font-weight: 550; }
+.steps div.on b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.askline { all: unset; cursor: text; margin-top: 22px; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; max-width: 720px; box-sizing: border-box; width: 100%;
+  background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(47, 109, 242, 0.25); box-shadow: 0 10px 30px -18px rgba(47, 109, 242, 0.55); font-size: 15px; color: var(--muted); }
+.askline:hover, .askline:focus-visible { border-color: rgba(47, 109, 242, 0.55); color: var(--ink-2); }
+.askline .spark-ic { width: 22px; height: 22px; border-radius: 7px; background: var(--grad); flex: none; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; }
+.askline kbd { margin-left: auto; font-family: var(--mono); font-size: 11px; border: 1px solid var(--hair); border-radius: 6px; padding: 2px 6px; background: #fff; }
+.keys { margin-top: 18px; display: grid; gap: 8px; }
+.keyrow { display: flex; flex-wrap: wrap; gap: 8px 12px; font-size: 12px; color: var(--muted); align-items: center; }
+.keyrow > b { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; color: var(--faint); min-width: 118px; }
+
+/* ---------- encabezados de sección ---------- */
+.kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; }
+.kicker .num { font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 13px; }
+.kicker::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, var(--hair), transparent); }
+.kicker .dom { font-size: 10px; letter-spacing: 0.12em; color: var(--ink-2); background: rgba(255,255,255,0.7); border: 1px solid var(--hair); border-radius: 999px; padding: 2px 8px; }
+.question { font-size: clamp(24px, 2.6vw, 33px); line-height: 1.16; letter-spacing: -0.022em; font-weight: 600; margin: 14px 0 10px; max-width: 980px; }
+.sec-lede { color: var(--ink-2); max-width: 900px; margin: 0 0 22px; font-size: 15.5px; }
+.findings { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; margin: 8px 0 26px; }
+.findings .panel { padding: 20px 22px; }
+.panel h4 { margin: 0 0 10px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.panel ul { margin: 0; padding: 0; list-style: none; }
+.panel li { position: relative; padding-left: 22px; margin: 7px 0; font-size: 14.2px; color: var(--ink); }
+.panel li::before { position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 11px; width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center; line-height: 1; }
+.panel.facts li::before { content: "✓"; color: var(--good-ink); background: rgba(12, 163, 12, 0.10); }
+.panel.open li::before { content: "?"; color: var(--accent); background: rgba(47, 109, 242, 0.10); }
+.panel.warn li::before { content: "!"; color: var(--warning-ink); background: rgba(250, 178, 25, 0.20); }
+.panel.hyp li::before { content: "~"; color: var(--hyp); background: rgba(122, 92, 255, 0.12); }
+.panel li b, .num-hi { font-weight: 600; }
+.inv { all: unset; cursor: pointer; color: var(--accent); font-size: 12.5px; font-weight: 550; margin-left: 6px; white-space: nowrap; }
+.inv:hover { text-decoration: underline; }
+.inv:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- resumen MECE ---------- */
+.mece { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.dom-card { padding: 20px 20px 16px; display: flex; flex-direction: column; min-width: 0; }
+.dom-card.wide { grid-column: 1 / -1; padding: 24px 26px 20px; }
+.dom-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.dom-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+.dom-k .n { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+.dom-q { margin: 10px 0 4px; font-size: 12.5px; color: var(--muted); }
+.dom-h { margin: 0 0 12px; font-size: 16px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.dom-card.wide .dom-h { font-size: 21px; max-width: 900px; }
+.dom-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.mk { padding: 10px 12px 8px; border-radius: 14px; background: rgba(255, 255, 255, 0.66); border: 1px solid var(--hair); min-width: 0; }
+.mk .l { font-size: 11.5px; color: var(--ink-2); }
+.mk .v { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; margin-top: 2px; }
+.dom-card.wide .mk .v { font-size: 26px; }
+.mk .d { font-size: 11px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.mk .delta { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); background: rgba(12, 19, 34, 0.055); padding: 1px 6px; border-radius: 999px; }
+.mk .spark { height: 32px; margin-top: 6px; }
+.dom-facts { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+.dom-facts li { font-size: 13px; color: var(--ink); padding-left: 14px; position: relative; }
+.dom-facts li::before { content: ""; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--faint); }
+.dom-links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; padding-top: 8px; border-top: 1px solid var(--hair); }
+.dom-links a { color: var(--ink-2); }
+.dom-links a:hover { color: var(--accent); }
+.reading { margin-top: 16px; padding: 18px 22px; }
+.reading h4 { margin: 0 0 10px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.reading .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; }
+.reading .row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; font-size: 13px; color: var(--ink-2); }
+
+/* ---------- grilla + tarjetas ---------- */
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; } .span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+.card { padding: 20px 22px 16px; min-width: 0; position: relative; }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.card-id { font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.08em; }
+.tags { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.card h3 { font-size: 16.5px; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; margin: 8px 0 4px; }
+.card .sub { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+.card .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-top: 8px; }
+.card .foot .btns { display: flex; flex-wrap: wrap; gap: 6px; flex: none; }
+.card .note { font-size: 12px; color: var(--muted); margin: 0; max-width: 88ch; }
+.card .note b { color: var(--ink-2); font-weight: 550; }
+.tbtn { font: 500 11px var(--mono); letter-spacing: 0.04em; color: var(--ink-2); background: rgba(255, 255, 255, 0.75); border: 1px solid var(--hair); border-radius: 999px; padding: 5px 11px; cursor: pointer; white-space: nowrap; }
+.tbtn:hover { color: var(--ink); border-color: var(--axis); }
+.tbtn[aria-pressed="true"] { color: #fff; background: var(--ink); border-color: var(--ink); }
+.tbtn.how { color: #1f55c9; border-color: rgba(47, 109, 242, 0.25); background: rgba(47, 109, 242, 0.06); }
+.table-view { margin-top: 12px; max-height: 360px; overflow: auto; border-radius: 12px; border: 1px solid var(--hair); background: rgba(255, 255, 255, 0.6); }
+.table-view[hidden] { display: none; }
+
+/* estados epistémicos (eje 1) y marcadores (eje 2) */
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 550; padding: 3px 9px 3px 5px; border-radius: 999px; white-space: nowrap; }
+.tag i { font-style: normal; width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-family: var(--mono); font-weight: 700; }
+.tag.hecho { color: var(--good-ink); background: rgba(12, 163, 12, 0.09); } .tag.hecho i { background: var(--good); color: #fff; }
+.tag.fuerte { color: var(--strong); background: rgba(11, 107, 79, 0.10); } .tag.fuerte i { background: var(--strong); color: #fff; }
+.tag.direc { color: #1f55c9; background: rgba(47, 109, 242, 0.09); } .tag.direc i { background: var(--dir); color: #fff; }
+.tag.hipo { color: #5a3fd6; background: rgba(122, 92, 255, 0.10); } .tag.hipo i { background: var(--hyp); color: #fff; }
+.tag.noeval { color: var(--ink-2); background: rgba(12, 19, 34, 0.06); } .tag.noeval i { background: var(--noeval); color: #fff; }
+.tag.explo { color: #1f55c9; background: transparent; box-shadow: inset 0 0 0 1px rgba(47, 109, 242, 0.35); } .tag.explo i { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tag.prec { color: var(--warning-ink); background: rgba(250, 178, 25, 0.16); } .tag.prec i { background: var(--warning); color: #3a2600; }
+.tag.met { color: var(--ink-2); background: rgba(12, 19, 34, 0.05); box-shadow: inset 0 0 0 1px var(--hair); } .tag.met i { background: var(--ink-2); color: #fff; }
+
+/* leyendas */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 2px; font-size: 12.5px; color: var(--ink-2); min-height: 4px; }
+.legend button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; padding: 2px 0; border-radius: 6px; }
+.legend button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legend button.off { opacity: 0.38; }
+.legend .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.legend .sw.line { height: 2.5px; width: 16px; border-radius: 2px; }
+.legend .sw.dot { width: 9px; height: 9px; border-radius: 50%; }
+.legend .sw.wash { opacity: 0.28; }
+
+/* gráficas */
+.chart { width: 100%; position: relative; }
+.fv-svg { display: block; overflow: visible; font-family: var(--mono); }
+.fv-svg:focus { outline: none; }
+.fv-svg:focus-visible { outline: 2px solid rgba(47, 109, 242, 0.5); outline-offset: 4px; border-radius: 8px; }
+.fv-grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
+.fv-base { stroke: var(--axis); stroke-width: 1; shape-rendering: crispEdges; }
+.fv-tick { fill: var(--muted); font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.fv-tick.strong { fill: var(--ink-2); font-weight: 600; }
+.fv-unit { fill: var(--muted); font-family: var(--font); font-size: 10.5px; font-style: italic; }
+.fv-lab { fill: var(--ink-2); font-family: var(--font); font-size: 12px; }
+.fv-lab.b { fill: var(--ink); font-weight: 600; }
+.fv-lab.m { fill: var(--muted); font-size: 11px; }
+.fv-axis-title { fill: var(--muted); font-family: var(--font); font-size: 11.5px; }
+.fv-cross { stroke: var(--ink-2); stroke-width: 1; opacity: 0.45; shape-rendering: crispEdges; }
+.fv-shade { fill: rgba(122, 92, 255, 0.07); }
+.fv-shade-lab { fill: #6a55d6; font-size: 10px; letter-spacing: 0.04em; paint-order: stroke; stroke: rgba(255, 255, 255, 0.85); stroke-width: 3px; stroke-linejoin: round; }
+.fv-win { fill: rgba(12, 19, 34, 0.045); }
+.fv-win-lab { fill: var(--muted); font-size: 9.5px; letter-spacing: 0.03em; paint-order: stroke; stroke: rgba(255, 255, 255, 0.85); stroke-width: 3px; stroke-linejoin: round; }
+.fv-flag { stroke: var(--muted); stroke-width: 1; opacity: 0.55; shape-rendering: crispEdges; }
+.fv-flag-lab { fill: var(--ink-2); font-size: 10px; paint-order: stroke; stroke: rgba(255, 255, 255, 0.9); stroke-width: 3px; stroke-linejoin: round; }
+.fv-hband { fill: rgba(12, 19, 34, 0.045); }
+.fv-ref { stroke: var(--ink-2); stroke-width: 1; opacity: 0.5; shape-rendering: crispEdges; }
+.fv-trend { stroke: var(--ink); stroke-width: 1.5; opacity: 0.55; fill: none; }
+.fv-leader { stroke: var(--faint); stroke-width: 1; fill: none; }
+.fv-cell-t { font-size: 10.5px; font-variant-numeric: tabular-nums; pointer-events: none; }
+.fv-break { stroke: var(--ink-2); stroke-width: 1.2; fill: none; }
+
+.fv-tip { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; opacity: 0; transition: opacity .12s ease;
+  background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  border: 1px solid rgba(12, 19, 34, 0.08); border-radius: 12px; padding: 10px 12px; min-width: 150px; max-width: 340px;
+  box-shadow: 0 16px 40px -18px rgba(20, 30, 60, 0.35), 0 2px 6px rgba(20, 30, 60, 0.06); }
+.fv-tip.on { opacity: 1; }
+.fv-tip-title { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.fv-tip-row { display: grid; grid-template-columns: 16px auto 1fr; align-items: center; gap: 8px; font-size: 12.5px; margin: 3px 0; }
+.fv-tip-row .v { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fv-tip-row .l { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fv-key { display: block; width: 14px; height: 2.5px; border-radius: 2px; }
+.fv-key.rect { height: 10px; width: 10px; border-radius: 3px; }
+.fv-key.dot { height: 9px; width: 9px; border-radius: 50%; }
+.fv-key.none { background: transparent !important; }
+.fv-tip-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--hair); font-size: 11.5px; color: var(--muted); white-space: normal; }
+
+/* múltiplos */
+.mult { display: grid; gap: 14px 22px; }
+.mult .cell { min-width: 0; }
+.mult .cell-t { font-size: 12.5px; font-weight: 600; color: var(--ink); display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.mult .cell-t span { font-weight: 400; color: var(--muted); font-size: 11.5px; font-family: var(--mono); }
+.mult .cell-n { font-size: 11.5px; color: var(--muted); margin: 1px 0 2px; min-height: 16px; }
+
+/* tablas */
+table.tbl { width: 100%; border-collapse: collapse; font-size: 12.8px; }
+.tbl th { position: sticky; top: 0; background: rgba(248, 250, 253, 0.97); font: 500 10.5px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--hair); white-space: nowrap; z-index: 1; }
+.tbl td { padding: 7px 10px; border-bottom: 1px solid rgba(12, 19, 34, 0.05); color: var(--ink); vertical-align: top; }
+.tbl td.n, .tbl th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tr:hover td { background: rgba(47, 109, 242, 0.035); }
+.tbl td.dim { color: var(--muted); }
+.tbl tr.sep td { border-top: 1px solid var(--axis); }
+.tablewrap { overflow: auto; border-radius: 12px; border: 1px solid var(--hair); background: rgba(255, 255, 255, 0.55); }
+
+/* controles */
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; padding: 14px 18px; margin-bottom: 18px; }
+.ctl { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 100%; flex-wrap: wrap; }
+.ctl > span { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; padding: 3px; border-radius: 12px; background: rgba(12, 19, 34, 0.05); border: 1px solid var(--hair); gap: 2px; }
+.seg button { all: unset; cursor: pointer; font-size: 12.5px; color: var(--ink-2); padding: 5px 11px; border-radius: 9px; transition: background .15s, color .15s; white-space: nowrap; }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(12, 19, 34, 0.14); font-weight: 550; }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* cifras */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 8px 0 4px; }
+.stat { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.62); border: 1px solid var(--hair); }
+.stat .k { font: 500 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.stat .v { font-size: 19px; font-weight: 650; letter-spacing: -0.01em; margin-top: 2px; }
+.stat .s { font-size: 11.5px; color: var(--muted); }
+
+/* avisos */
+.callout { padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start; border-radius: var(--radius-sm); margin-bottom: 18px; }
+.callout.warn { background: linear-gradient(100deg, rgba(250, 178, 25, 0.16), rgba(255, 255, 255, 0.62)); border: 1px solid rgba(250, 178, 25, 0.38); }
+.callout.info { background: linear-gradient(100deg, rgba(47, 109, 242, 0.10), rgba(255, 255, 255, 0.62)); border: 1px solid rgba(47, 109, 242, 0.20); }
+.callout .ic { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-weight: 700; flex: none; font-family: var(--mono); }
+.callout.warn .ic { background: var(--warning); color: #3a2600; }
+.callout.info .ic { background: var(--accent); color: #fff; }
+.callout p { margin: 0; font-size: 14px; }
+.callout ul { margin: 6px 0 0; padding-left: 18px; font-size: 13.2px; color: var(--ink-2); }
+
+/* fuentes y modelo */
+.src h3 { display: flex; align-items: center; gap: 10px; }
+.src .file { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
+.src dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 10px 0 12px; font-size: 13px; }
+.src dt { color: var(--muted); font-size: 12px; }
+.src dd { margin: 0; font-variant-numeric: tabular-nums; }
+.src ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.src li { font-size: 12.8px; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; color: var(--ink-2); }
+.flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.flow .step { flex: 1 1 150px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.66); border: 1px solid var(--hair); position: relative; }
+.flow .step b { display: block; font-size: 13px; }
+.flow .step span { font-size: 12px; color: var(--muted); display: block; margin-top: 3px; }
+.flow .step em { font-style: normal; font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; }
+.layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+.layers div { padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.55); border: 1px solid var(--hair); }
+.layers b { font-size: 13px; } .layers p { margin: 4px 0 0; font-size: 12.3px; color: var(--ink-2); }
+.defs td:first-child { min-width: 190px; }
+.defs td:first-child code { font-size: 10.5px; color: var(--muted); }
+.defs td:nth-child(3) { min-width: 200px; }
+.defs td:nth-child(3) code { white-space: normal; word-break: break-word; }
+[hidden] { display: none !important; }
+
+/* sabemos / sospechamos / no podemos saber */
+.ksc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.ksc .panel { padding: 22px 22px; }
+.ksc h3 { margin: 0 0 4px; font-size: 18px; letter-spacing: -0.01em; }
+.ksc .panel > p { margin: 0 0 12px; font-size: 12.5px; color: var(--muted); }
+.ksc li { font-size: 13.6px; }
+.panel.cannot li::before { content: "∅"; color: var(--ink-2); background: rgba(12, 19, 34, 0.08); }
+.qlist { counter-reset: q; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; }
+.qlist li { counter-increment: q; position: relative; padding: 12px 14px 12px 46px; border-radius: 14px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--hair); font-size: 13.6px; }
+.qlist li::before { content: counter(q, decimal-leading-zero); position: absolute; left: 14px; top: 12px; font-family: var(--mono); font-size: 11px; font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+footer.repro { margin-top: 70px; padding: 22px 26px; font-size: 12.5px; color: var(--ink-2); }
+footer.repro code, .mono { font-family: var(--mono); font-size: 11.5px; }
+code { font-family: var(--mono); font-size: 0.88em; background: rgba(12, 19, 34, 0.055); padding: 1px 5px; border-radius: 5px; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- paleta de preguntas ---------- */
+.scrim { position: fixed; inset: 0; z-index: 90; background: rgba(20, 28, 48, 0.18); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .15s; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.palette { position: fixed; z-index: 95; left: 50%; top: 10vh; transform: translate(-50%, -8px); width: min(720px, calc(100vw - 32px)); max-height: 78vh; display: flex; flex-direction: column;
+  background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(255,255,255,0.9); border-radius: 20px; box-shadow: 0 40px 80px -30px rgba(20, 30, 70, 0.45), 0 4px 16px rgba(20,30,70,0.08);
+  opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; }
+.palette.on { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.pal-in { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--hair); }
+.pal-in .spark-ic { width: 24px; height: 24px; border-radius: 8px; background: var(--grad); flex: none; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; }
+.pal-in input { all: unset; flex: 1; font-size: 16px; color: var(--ink); }
+.pal-in input::placeholder { color: var(--faint); }
+.pal-x { all: unset; cursor: pointer; font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--hair); border-radius: 6px; padding: 2px 7px; }
+.pal-body { overflow-y: auto; padding: 10px 10px 14px; }
+.pal-grp { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); padding: 10px 10px 4px; }
+.pal-item { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: baseline; width: 100%; padding: 9px 10px; border-radius: 10px; font-size: 14px; color: var(--ink); }
+.pal-item:hover, .pal-item.sel { background: rgba(47, 109, 242, 0.07); }
+.pal-item .t { flex: 1; }
+.pal-item .b { font-family: var(--mono); font-size: 10px; color: var(--muted); white-space: nowrap; }
+.pal-detail { padding: 8px 12px 6px; }
+.pal-detail h5 { margin: 4px 0 8px; font-size: 18px; letter-spacing: -0.01em; }
+.pal-detail p { margin: 0 0 10px; font-size: 13.5px; color: var(--ink-2); }
+.pal-detail .links { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
+.pal-detail .links a { font-size: 13px; padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,0.9); border: 1px solid var(--hair); color: var(--ink); }
+.pal-detail .links a:hover { border-color: rgba(47,109,242,0.4); text-decoration: none; }
+.pal-back { all: unset; cursor: pointer; font-size: 12.5px; color: var(--accent); }
+
+/* ---------- panel ¿Cómo lo sabemos? ---------- */
+.drawer { position: fixed; z-index: 95; top: 12px; right: 12px; bottom: 12px; width: min(460px, calc(100vw - 24px)); display: flex; flex-direction: column;
+  background: rgba(255, 255, 255, 0.96); border: 1px solid rgba(255,255,255,0.9); border-radius: 20px; box-shadow: 0 30px 80px -30px rgba(20, 30, 70, 0.45);
+  transform: translateX(calc(100% + 24px)); transition: transform .2s ease; }
+.drawer.on { transform: translateX(0); }
+.dr-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--hair); display: flex; gap: 12px; align-items: flex-start; }
+.dr-head .t { flex: 1; }
+.dr-head .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.dr-head h5 { margin: 4px 0 0; font-size: 15.5px; line-height: 1.3; }
+.dr-body { overflow-y: auto; padding: 6px 20px 20px; }
+.dr-sec { padding: 12px 0; border-bottom: 1px solid var(--hair); }
+.dr-sec:last-child { border-bottom: 0; }
+.dr-sec h6 { margin: 0 0 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.dr-sec p { margin: 0; font-size: 13.2px; color: var(--ink-2); }
+.dr-item { margin: 8px 0; font-size: 13px; }
+.dr-item b { color: var(--ink); }
+.dr-item .f { display: block; margin-top: 3px; }
+.dr-item .m { color: var(--muted); font-size: 12px; }
+.dr-claim { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; margin: 8px 0; font-size: 13px; color: var(--ink); }
+.dr-claim .id { font-family: var(--mono); font-size: 10.5px; color: var(--muted); display: block; margin-bottom: 2px; }
+
+/* ---------- respuesta primero ---------- */
+.lede.small { font-size: 13.5px; color: var(--muted); margin-top: 14px; }
+.essential { display: grid; gap: 0; margin: 4px 0 6px; max-width: 900px; border-radius: 18px; overflow: hidden; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.72); box-shadow: var(--shadow-soft); }
+.ess-row { display: grid; grid-template-columns: 190px 1fr; gap: 16px; padding: 14px 18px; align-items: baseline; }
+.ess-row + .ess-row { border-top: 1px solid var(--hair); }
+.ess-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.ess-k b { font-family: var(--font); font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--ink); font-weight: 650; }
+.ess-t { font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.ess-t .meta { margin-left: 8px; }
+.ess-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.ess-links button { all: unset; cursor: pointer; font-size: 13.5px; padding: 6px 11px; border-radius: 10px; background: #fff; border: 1px solid var(--hair); color: var(--ink); }
+.ess-links button:hover, .ess-links button:focus-visible { border-color: rgba(47,109,242,0.45); }
+details.keys-d { margin-top: 18px; }
+details.keys-d > summary { cursor: pointer; font-size: 12.5px; color: var(--muted); list-style: none; }
+details.keys-d > summary::before { content: "▸ "; }
+details.keys-d[open] > summary::before { content: "▾ "; }
+.answer { margin: 6px 0 16px; padding: 18px 22px; border-radius: 18px; max-width: 980px;
+  background: linear-gradient(110deg, rgba(47,109,242,0.08), rgba(255,255,255,0.75) 60%); border: 1px solid rgba(47,109,242,0.18); box-shadow: var(--shadow-soft); }
+.answer-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.answer-t { font-size: 17px; line-height: 1.5; margin: 6px 0 10px; color: var(--ink); letter-spacing: -0.005em; }
+.answer-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.answer-meta a, .answer-meta button { all: unset; cursor: pointer; color: var(--accent); font-size: 12.5px; }
+.answer-meta a:hover, .answer-meta button:hover { text-decoration: underline; }
+.answer + .sec-lede { font-size: 14px; color: var(--muted); }
+.findings.after { margin: 22px 0 0; }
+.grid.method-after { margin-top: 18px; }
+.lectura { margin: 8px 0 2px; padding: 8px 12px; border-radius: 10px; background: rgba(47,109,242,0.06); font-size: 13.5px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+.lectura::before { content: "Lectura"; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); flex: none; }
+.tag.meta { font-size: 10px; font-weight: 500; padding: 1px 7px 1px 3px; gap: 4px; opacity: 0.9; }
+.tag.meta i { width: 12px; height: 12px; font-size: 8px; }
+
+/* ---------- vista de respuesta ---------- */
+.ans-q { font-size: clamp(24px, 2.8vw, 32px); line-height: 1.15; letter-spacing: -0.022em; font-weight: 650; margin: 8px 0 14px; max-width: 900px; }
+.ans-banner { font-size: 13px; color: var(--ink-2); padding: 10px 14px; border-radius: 12px; background: rgba(250,178,25,0.12); border: 1px solid rgba(250,178,25,0.3); margin: 0 0 14px; }
+.ans-main { padding: 22px 24px; border-radius: var(--radius); background: linear-gradient(120deg, rgba(47,109,242,0.10), rgba(122,92,255,0.07) 45%, rgba(255,255,255,0.78)); border: 1px solid rgba(47,109,242,0.2); box-shadow: var(--shadow); }
+.ans-titular { font-size: 22px; line-height: 1.25; font-weight: 650; letter-spacing: -0.015em; margin: 6px 0 8px; }
+.ans-text { font-size: 16px; line-height: 1.55; margin: 0 0 10px; color: var(--ink); }
+.ans-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.ans-visual { margin-top: 16px; padding: 18px 20px 14px; }
+.ans-visual .viz-h { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+.card.ans-visual.flat { padding: 0; margin-top: 14px; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.viz-src { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.viz-src a { color: var(--accent); text-decoration: none; }
+.viz-src a:hover { text-decoration: underline; }
+.know { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.know.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.know.one { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
+.know .kb { padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,0.7); border: 1px solid var(--hair); }
+.know h4 { margin: 0 0 8px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.know ul { margin: 0; padding-left: 18px; font-size: 13.8px; }
+.know li { margin: 5px 0; }
+.know li code { font-size: 11px; }
+.claims-list { display: grid; gap: 6px; margin-top: 8px; }
+.claims-list .cl { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: baseline; font-size: 13.8px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.6); border: 1px solid var(--hair); }
+.ans-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 6px; }
+
+/* ---------- investigación: drivers y revelación progresiva ---------- */
+.drivers { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; margin-top: 16px; }
+.driver { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.75); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); }
+.driver .dq { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.driver .dt { font-size: 14.5px; font-weight: 600; line-height: 1.35; margin-top: 6px; }
+.inv-more { all: unset; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 26px auto 0; padding: 11px 18px; border-radius: 12px;
+  background: rgba(255,255,255,0.9); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); font-size: 14px; font-weight: 550; color: var(--ink); width: fit-content; }
+.inv-more:hover, .inv-more:focus-visible { border-color: rgba(47,109,242,0.45); }
+.inv-details[hidden] { display: none; }
+.claim-row .tag { font-size: 10px; font-weight: 500; padding: 1px 7px 1px 3px; }
+.claim-row .tag i { width: 12px; height: 12px; font-size: 8px; }
+.datagap { display: grid; gap: 6px; }
+.datagap .dg { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.65); border: 1px solid var(--hair); font-size: 13.5px; }
+.datagap .dg .ic { font-family: var(--mono); font-weight: 700; }
+.datagap .dg.ok .ic { color: var(--good-ink); } .datagap .dg.no .ic { color: var(--critical-ink); }
+.datagap .dg .cf { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.analyzing .spinner { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); border-right-color: transparent; animation: spin 0.9s linear infinite; margin-right: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- buscador ---------- */
+.pal-item.ask { background: rgba(47,109,242,0.06); }
+.pal-item.ask .t b { font-weight: 600; }
+.pal-grp.sub { padding-top: 14px; }
+.pal-hint { font-size: 13px; color: var(--muted); padding: 10px 12px 2px; }
+.pal-item.sec { padding: 6px 10px; font-size: 13px; color: var(--ink-2); }
+.pal-item .dom { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--hair); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+
+/* ---------- preparar narrativa ---------- */
+.askbtn.nar-entry { margin-top: -4px; }
+.nar-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
+.nar-chip { all: unset; cursor: pointer; font-size: 13px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--hair); color: var(--ink-2); }
+.nar-chip.on { border-color: rgba(47,109,242,0.55); color: var(--ink); background: rgba(47,109,242,0.07); font-weight: 600; }
+.nar-chip:focus-visible, .nar-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nar-head { display: grid; gap: 12px; }
+.nar-grid { display: grid; grid-template-columns: 2fr 1fr 3fr; gap: 12px; }
+.nar-field { display: grid; gap: 4px; }
+.nar-field > span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.nar-in { box-sizing: border-box; width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: #fff; border: 1px solid var(--hair); border-radius: 10px; padding: 8px 10px; }
+.nar-in:focus { outline: 2px solid rgba(47,109,242,0.3); border-color: rgba(47,109,242,0.55); }
+textarea.nar-in { resize: vertical; line-height: 1.45; }
+.nar-form { display: grid; gap: 2px; }
+.nar-form > .inv-btn.primary { justify-self: start; margin-top: 12px; }
+.nar-roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.nar-pill { all: unset; cursor: pointer; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--hair); color: var(--ink-2); background: #fff; white-space: nowrap; }
+.nar-pill.on { background: rgba(47,109,242,0.1); border-color: rgba(47,109,242,0.4); color: var(--accent); font-weight: 600; }
+span.nar-pill { cursor: default; justify-self: start; }
+.nar-list { display: grid; gap: 10px; margin-top: 6px; }
+.nar-piece { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.8); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); display: grid; gap: 8px; }
+.nar-ptop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.nar-ptop .sp { flex: 1; }
+.nar-role { font: inherit; font-size: 12px; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(47,109,242,0.35); background: rgba(47,109,242,0.07); color: var(--ink); }
+.nar-ptitle { font-weight: 600; font-size: 15px; line-height: 1.35; }
+.nar-ptext { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.nar-pmeta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); align-items: center; }
+.nar-note { font-size: 13px; }
+.nar-deep { display: flex; gap: 8px; }
+.nar-deep .nar-in { flex: 1; }
+.inv-btn.nar-mini { padding: 3px 9px; font-size: 12px; border-radius: 8px; white-space: normal; text-align: left; }
+.deck-pend .inv-block { display: grid; gap: 8px; justify-items: start; }
+.inv-btn.danger { color: var(--critical-ink); }
+.nar-sk { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.nar-sec { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.75); border: 1px solid var(--hair); display: grid; gap: 8px; align-content: start; }
+.nar-q { margin: 0; padding-left: 18px; font-size: 13.2px; }
+.nar-suggest, .nar-gap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; padding: 8px 10px; border-radius: 10px; background: rgba(47,109,242,0.04); }
+.nar-suggest > :nth-child(2), .nar-gap > :nth-child(2) { order: 3; flex: 1 1 100%; line-height: 1.45; }
+.nar-suggest > :nth-child(3), .nar-gap > :nth-child(3) { order: 2; margin-left: auto; }
+.nar-gap { background: rgba(250,178,25,0.09); }
+.nar-gap .mono { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.nar-facts { display: grid; gap: 6px; margin-top: 8px; }
+.nar-check { display: block; font-size: 13.5px; padding: 4px 0; }
+.nar-final { margin-top: 22px; }
+.nar-busy { margin-top: 8px; }
+.inv.nar-driver { display: inline-block; margin: 8px 0 0; font-size: 12px; }
+/* láminas */
+.deck-tools { margin: 0 0 10px; }
+.deck-title { font-size: clamp(26px, 3vw, 36px); line-height: 1.12; letter-spacing: -0.02em; margin: 6px 0 4px; }
+.deck-sub { color: var(--muted); font-size: 16px; margin: 0 0 18px; }
+.slide { margin: 18px 0; padding: 28px 32px; border-radius: 22px; background: #fff; border: 1px solid var(--hair); box-shadow: var(--shadow); min-height: 420px; display: grid; gap: 12px; align-content: start; }
+.slide-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.slide-t { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -0.015em; margin: 4px 0 0; }
+.slide-m { font-size: 16.5px; line-height: 1.5; margin: 0; color: var(--ink-2); }
+.slide-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; align-items: start; }
+.slide-grid.solo { grid-template-columns: 1fr; }
+.slide-pts { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+.slide-pts li + li { margin-top: 6px; }
+.slide-viz .ans-visual { margin-top: 0; }
+.slide-ev { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-top: 1px solid var(--hair); padding-top: 10px; }
+.slide-notes { font-size: 13.5px; color: var(--ink-2); }
+.slide-notes summary { cursor: pointer; color: var(--muted); font-size: 12.5px; }
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 12px); z-index: 120; background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 13.5px; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; max-width: calc(100vw - 32px); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- documento de investigación ---------- */
+.invdoc { position: fixed; inset: 0; z-index: 70; overflow-y: auto; background: var(--bg); }
+.invdoc::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(1000px 600px at 10% -10%, rgba(110, 150, 255, 0.26), transparent 62%), radial-gradient(900px 540px at 95% 0%, rgba(150, 118, 255, 0.18), transparent 60%), var(--bg); }
+.inv-top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 24px;
+  background: rgba(248, 250, 253, 0.86); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-bottom: 1px solid var(--hair); }
+.inv-top .sp { flex: 1; }
+.inv-top .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.inv-btn { all: unset; cursor: pointer; font-size: 13px; padding: 7px 12px; border-radius: 10px; background: rgba(255,255,255,0.9); border: 1px solid var(--hair); color: var(--ink); white-space: nowrap; }
+.inv-btn:hover { border-color: rgba(47,109,242,0.4); }
+.inv-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.inv-btn.primary { color: #fff; background: var(--grad); border-color: transparent; font-weight: 550; }
+.inv-btn[disabled] { opacity: 0.5; cursor: default; }
+.inv-wrap { max-width: 1120px; margin: 0 auto; padding: 26px 28px 120px; }
+.inv-q { font-size: clamp(26px, 3vw, 36px); line-height: 1.12; letter-spacing: -0.025em; font-weight: 650; margin: 10px 0 8px; }
+.inv-frame { font-size: 13.5px; color: var(--ink-2); margin: 0 0 18px; max-width: 900px; }
+.inv-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.inv-meta b { color: var(--ink-2); font-weight: 550; }
+.inv-answer { padding: 22px 24px; border-radius: var(--radius); background: linear-gradient(120deg, rgba(47,109,242,0.10), rgba(122,92,255,0.08) 45%, rgba(255,255,255,0.7)); border: 1px solid rgba(47,109,242,0.22); box-shadow: var(--shadow); }
+.inv-answer .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.inv-answer p { font-size: 18px; line-height: 1.45; margin: 10px 0 12px; letter-spacing: -0.005em; }
+.inv-h2 { font-size: 20px; letter-spacing: -0.015em; margin: 38px 0 12px; display: flex; align-items: baseline; gap: 10px; }
+.inv-h2 .n { font-family: var(--mono); font-size: 12px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 600; }
+.hyp-list { display: grid; gap: 8px; }
+.hyp { padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,0.66); border: 1px solid var(--hair); display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: start; }
+.hyp.child { margin-left: 28px; }
+.hyp .id { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 3px; }
+.hyp .q { font-size: 14px; font-weight: 550; }
+.hyp .sig { grid-column: 2 / 4; font-size: 12px; color: var(--ink-2); }
+.hyp .sig span { color: var(--muted); }
+.hyp .why { grid-column: 2 / 4; font-size: 11.5px; color: var(--muted); }
+.finding { padding: 20px 22px 16px; margin-top: 14px; }
+.finding .fq { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.claim-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; margin: 10px 0 4px; }
+.claim-row .txt { font-size: 16px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; }
+.claim-row .txt.sub { font-size: 14px; font-weight: 500; }
+.claim-row button.lk { all: unset; cursor: pointer; }
+.claim-row button.lk:hover .txt, .claim-row button.lk:focus-visible .txt { text-decoration: underline; text-decoration-color: rgba(47,109,242,0.5); text-underline-offset: 3px; }
+.ev-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+.ev-chip { all: unset; cursor: pointer; font-family: var(--mono); font-size: 10.5px; padding: 3px 8px; border-radius: 999px; background: rgba(12,19,34,0.05); border: 1px solid var(--hair); color: var(--ink-2); }
+.ev-chip:hover, .ev-chip:focus-visible { border-color: rgba(47,109,242,0.45); color: var(--ink); }
+.ev-chip.contra { background: rgba(208,59,59,0.06); border-color: rgba(208,59,59,0.25); }
+.finding .prose { display: grid; gap: 8px; margin-top: 10px; font-size: 14px; color: var(--ink-2); }
+.finding .prose b { color: var(--ink); font-weight: 600; }
+.viz { margin: 12px 0 6px; }
+.viz-t { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+.inv-blocks { display: grid; gap: 8px; }
+.inv-block { padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,0.66); border: 1px solid var(--hair); font-size: 14px; }
+.inv-next { display: flex; flex-wrap: wrap; gap: 8px; }
+.inv-next button { all: unset; cursor: pointer; font-size: 13.5px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.85); border: 1px solid var(--hair); }
+.inv-next button:hover { border-color: rgba(47,109,242,0.4); }
+.inv-log td.ok { color: var(--good-ink); } .inv-log td.err { color: var(--critical-ink); }
+.inv-foot { margin-top: 40px; font-size: 12px; color: var(--muted); }
+.live-steps { display: flex; flex-wrap: wrap; gap: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border); width: fit-content; max-width: 100%; margin: 6px 0 14px; }
+.live-steps div { padding: 8px 14px; font-size: 12.5px; color: var(--muted); background: rgba(255,255,255,0.45); }
+.live-steps div + div { border-left: 1px solid var(--hair); }
+.live-steps div.done { color: var(--ink-2); }
+.live-steps div.on { color: var(--ink); background: rgba(255,255,255,0.92); font-weight: 600; }
+.live-feed { font-family: var(--mono); font-size: 11.5px; line-height: 1.6; color: var(--ink-2); max-height: 280px; overflow-y: auto; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.7); border: 1px solid var(--hair); }
+.live-feed .e { color: var(--critical-ink); } .live-feed .c { color: var(--good-ink); } .live-feed .n { color: var(--muted); }
+.pal-detail .acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px; }
+.dr-tabs { display: flex; gap: 4px; margin: 4px 0 8px; flex-wrap: wrap; }
+.dr-tabs button { all: unset; cursor: pointer; font-size: 12px; padding: 5px 10px; border-radius: 9px; color: var(--ink-2); background: rgba(12,19,34,0.05); }
+.dr-tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.dr-pre { font-family: var(--mono); font-size: 11px; white-space: pre-wrap; word-break: break-word; background: rgba(12,19,34,0.04); border-radius: 10px; padding: 10px 12px; margin: 6px 0 0; }
+
+/* ---------- investigación en curso ---------- */
+.live-pill { all: unset; cursor: pointer; position: fixed; right: 22px; bottom: 22px; z-index: 85; display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--ink-2); padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(47,109,242,0.35); box-shadow: 0 10px 30px rgba(12,19,34,0.14); }
+.live-pill b { color: var(--accent); font-weight: 600; }
+.live-pill:hover { border-color: var(--accent); }
+.live-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.live-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: livepulse 1.4s ease-in-out infinite; }
+@keyframes livepulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .live-pill .dot { animation: none; } }
+
+/* ---------- preguntas del caso (W0–W7) ---------- */
+.askbtn.case-entry { margin-top: -4px; }
+.askbtn.case-entry .spark-ic { font-family: var(--mono); font-size: 10px; }
+.cq-lede { max-width: 880px; margin: 0 0 12px; font-size: 14px; }
+.cq-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 10px; }
+.cq-list { display: grid; gap: 14px; margin-top: 6px; }
+.cq-card { padding: 18px 20px 14px; border-radius: var(--radius); background: rgba(255,255,255,0.8); border: 1px solid var(--hair); box-shadow: var(--shadow-soft); scroll-margin-top: 90px; }
+.cq-card.blocked { background: linear-gradient(180deg, rgba(12,19,34,0.04), rgba(255,255,255,0.8)); }
+.cq-card.focus { border-color: rgba(47,109,242,0.55); box-shadow: 0 0 0 3px rgba(47,109,242,0.12), var(--shadow-soft); }
+.cq-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.cq-top .sp { flex: 1; }
+.cq-id { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; color: #fff; background: var(--grad); }
+.cq-pri { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); padding: 2px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--hair); }
+.cq-front { font-size: 11.5px; color: var(--muted); }
+.cq-q { font-size: 19px; line-height: 1.3; letter-spacing: -0.012em; margin: 10px 0 12px; font-weight: 650; }
+.cq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; }
+.cq-cell p { margin: 0 0 6px; font-size: 13.5px; color: var(--ink-2); }
+.cq-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 5px; font-weight: 500; }
+.cq-h b { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.cq-cap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 4px; }
+.cq-cap b { font-weight: 600; }
+.cq-meter { display: inline-flex; gap: 3px; }
+.cq-meter i { width: 14px; height: 6px; border-radius: 3px; background: rgba(12,19,34,0.1); }
+.cq-meter i.on { background: var(--accent); }
+.cq-meter.c0 i { background: rgba(208,59,59,0.2); }
+.cq-miss { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink-2); }
+.cq-miss li { margin: 4px 0; }
+.cq-miss code, .cq-mrow code { font-size: 10.5px; }
+.cq-more { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+.cq-more summary { cursor: pointer; color: var(--muted); font-size: 12.5px; }
+.cq-more p { margin: 6px 0; }
+.cq-more b { color: var(--ink); font-weight: 600; }
+.cq-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.cq-note { font-size: 12px; }
+.cq-scale { margin-top: 22px; font-size: 13px; color: var(--ink-2); }
+.cq-scale summary { cursor: pointer; color: var(--muted); }
+.cq-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+.cq-hline { font-size: 13px; color: var(--ink-2); margin: -2px 0 14px; }
+.cq-facts .cl { grid-template-columns: 1fr; }
+.cq-ideas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.cq-idea { padding: 14px 16px 10px; border-radius: 16px; background: rgba(255,255,255,0.72); border: 1px solid var(--hair); min-width: 0; }
+.cq-idea .claim-row { margin: 0 0 6px; }
+.cq-idea .claim-row .txt { font-size: 14px; font-weight: 550; line-height: 1.4; }
+.cq-idea .viz { margin: 6px 0 0; }
+.inv-block.brief { background: rgba(12,19,34,0.035); }
+.cq-src { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 8px; padding: 1px 6px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--hair); }
+.cq-state { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 8px; vertical-align: middle; }
+.cq-open { margin: 0; padding-left: 20px; font-size: 14px; }
+.cq-open li { margin: 6px 0; }
+.cq-next { padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,0.82); border: 1px solid rgba(47,109,242,0.25); display: grid; gap: 8px; justify-items: start; }
+.cq-next-q { font-size: 16px; font-weight: 600; }
+.cq-next p { margin: 0; font-size: 13px; }
+.cq-matrix { display: grid; gap: 10px; }
+.cq-mrow { padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.72); border: 1px solid var(--hair); font-size: 13.5px; }
+.cq-mrow .mh { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; font-weight: 600; }
+.cq-mrow .mh b { font-family: var(--mono); font-size: 12px; }
+.cq-mrow dl { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 5px 14px; margin: 0; }
+.cq-mrow dt { color: var(--muted); font-size: 12px; }
+.cq-mrow dd { margin: 0; color: var(--ink-2); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  :root { --side: 0px; }
+  .side { position: sticky; top: 0; left: 0; right: 0; bottom: auto; width: auto; height: auto; border-radius: 0 0 18px 18px; padding: 10px 12px; flex-direction: row; align-items: center; gap: 10px; margin: 0; }
+  .brand { padding: 0 6px 0 2px; }
+  .brand-sub, .side-foot, .nav .grp, .askbtn kbd, .askbtn .lbl { display: none; }
+  .askbtn { margin: 0; padding: 8px; }
+  .side > nav { min-width: 0; flex: 1 1 auto; }
+  .nav { display: flex; margin: 0; overflow-x: auto; gap: 2px; scrollbar-width: none; min-width: 0; border-top: 0; padding: 0; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; padding: 6px 10px; font-size: 12.5px; }
+  .nav a.active::before { left: 10px; right: 10px; top: auto; bottom: 1px; width: auto; height: 2px; }
+  main { margin-left: 0; padding: 26px 28px 100px; }
+  html { scroll-padding-top: 70px; }
+  .mece { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .findings { grid-template-columns: 1fr; }
+  .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; }
+  .ksc { grid-template-columns: 1fr; }
+  .qlist { grid-template-columns: 1fr; }
+  .layers { grid-template-columns: 1fr; }
+  .reading .rows { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  main { padding: 18px 16px 80px; }
+  .hero { padding: 26px 20px; }
+  .card { padding: 16px 14px 12px; }
+  .mece { grid-template-columns: 1fr; }
+  .brand-name { display: none; }
+  .steps { flex-direction: column; width: 100%; }
+  .steps div + div { border-left: 0; border-top: 1px solid var(--hair); }
+  .controls { padding: 12px; }
+  .askline kbd { display: none; }
+  .card .foot { flex-direction: column; align-items: stretch; }
+  .pal-item { flex-direction: column; gap: 2px; }
+  .pal-in input { font-size: 15px; }
+  .dr-claim { grid-template-columns: 1fr; gap: 4px; }
+  .dr-claim .tag { justify-self: start; }
+  .inv-top { padding: 10px 14px; }
+  .inv-wrap { padding: 18px 16px 90px; }
+  .hyp { grid-template-columns: auto 1fr; }
+  .hyp > .tag { grid-column: 2; justify-self: start; }
+  .hyp .sig, .hyp .why { grid-column: 1 / 3; }
+  .hyp.child { margin-left: 12px; }
+  .claim-row { grid-template-columns: 1fr; gap: 4px; }
+  .claim-row .tag { justify-self: start; }
+  .inv-answer p { font-size: 16px; }
+  .ess-row { grid-template-columns: 1fr; gap: 4px; }
+  .know, .know.two { grid-template-columns: 1fr; }
+  .drivers { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .driver { padding: 12px; }
+  .answer { padding: 14px 16px; }
+  .answer-t { font-size: 15.5px; }
+  .ans-titular { font-size: 19px; }
+  .nar-grid { grid-template-columns: 1fr; }
+  .nar-deep { flex-direction: column; }
+  .slide { padding: 18px; min-height: 0; border-radius: 18px; }
+  .slide-grid { grid-template-columns: 1fr; }
+  .cq-grid, .cq-ideas { grid-template-columns: 1fr; }
+  .cq-card { padding: 14px; }
+  .cq-q { font-size: 17px; }
+  .cq-mrow dl { grid-template-columns: 1fr; gap: 2px; }
+  .cq-mrow dt { margin-top: 6px; }
+  .live-pill { left: 16px; right: 16px; bottom: 16px; justify-content: center; }
+}
+@media print {
+  .side, .progress, .tbtn, .askline, .palette, .drawer, .scrim { display: none !important; }
+  main { margin: 0; padding: 0; max-width: none; }
+  body::before, body::after { display: none; }
+  .card, .glass { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; background: #fff; border: 1px solid #ddd; break-inside: avoid; }
+  body.print-deck main, body.print-deck .inv-top, body.print-deck .deck-tools, body.print-deck .deck-pend button, body.print-deck .inv-foot, body.print-deck .slide-notes, body.print-deck .toast { display: none !important; }
+  body.print-deck .invdoc { position: static; overflow: visible; background: #fff; }
+  body.print-deck .inv-wrap { max-width: none; padding: 0; }
+  body.print-deck .slide { break-after: page; break-inside: avoid; box-shadow: none; min-height: 0; margin: 0 0 12px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<aside class="side glass" aria-label="Secciones">
+  <div class="brand">
+    <div class="orb" aria-hidden="true"></div>
+    <div>
+      <div class="brand-name">Finora · EDA</div>
+      <div class="brand-sub">Workspace de exploración</div>
+    </div>
+  </div>
+  <button class="askbtn" type="button" data-open-palette aria-label="¿Qué quieres entender del negocio?"><span class="spark-ic" aria-hidden="true">?</span><span class="lbl">¿Qué quieres entender?</span><kbd>⌘K</kbd></button>
+  <nav>
+    <ul class="nav" id="nav">
+      <li><a href="#snapshot"><span class="n">00</span>Resumen ejecutivo</a></li>
+      <li class="grp">Resultado</li>
+      <li><a href="#growth"><span class="n">02</span>Resultado del negocio</a></li>
+      <li><a href="#movements"><span class="n">09</span>Movimientos de MRR</a></li>
+      <li class="grp">Adquisición</li>
+      <li><a href="#monetization"><span class="n">03</span>Ticket de entrada y monetización</a></li>
+      <li><a href="#decomposition"><span class="n">07</span>Mix vs. efecto dentro</a></li>
+      <li class="grp">Retención y base</li>
+      <li><a href="#cohorts"><span class="n">08</span>Cohortes</a></li>
+      <li class="grp">Inversión comercial</li>
+      <li><a href="#sm"><span class="n">04</span>Inversión comercial (S&amp;M)</a></li>
+      <li><a href="#relationships"><span class="n">05</span>Gasto y adquisición</a></li>
+      <li class="grp">Cortes y datos</li>
+      <li><a href="#industries"><span class="n">06</span>Corte por industria</a></li>
+      <li><a href="#data"><span class="n">01</span>Calidad de datos y modelo</a></li>
+      <li class="grp">Síntesis</li>
+      <li><a href="#knowledge"><span class="n">10</span>Sabemos · sospechamos · no sabemos</a></li>
+    </ul>
+  </nav>
+  <div class="side-foot">
+    <div><b>Ventana</b> {{window_start}} → {{window_end}}</div>
+    <div><b>Grano</b> cliente × mes</div>
+    <div><b>Flujos limpios</b> desde mar-22</div>
+    <div class="mono" style="margin-top:8px">generado {{generated}}</div>
+  </div>
+</aside>
+
+<main id="top">
+
+<!-- ======================================================= PORTADA -->
+<section class="section" id="intro" aria-label="Introducción">
+  <div class="hero glass">
+    <div class="eyebrow">Finora · Fase 1 · Análisis exploratorio</div>
+    <h1>Workspace de <span class="g">exploración del negocio</span></h1>
+    <div class="essential" id="essential" aria-label="Lo esencial en 30 segundos"></div>
+    <p class="lede small">Cada cifra se recalcula desde los tres archivos crudos. Esta fase describe y pregunta; todavía no diagnostica los problemas de Finora.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span>{{window_start}} → {{window_end}} · {{n_months}} meses</span>
+      <span class="chip"><span class="dot"></span>{{n_customers}} clientes · {{n_industries}} industrias</span>
+      <span class="chip"><span class="dot"></span>MRR pagado = monto × 10.000 (COP)</span>
+      <span class="chip"><span class="dot"></span>S&amp;M en unidades reportadas (u), sin escala documentada</span>
+    </div>
+    <button class="askline" type="button" data-open-palette><span class="spark-ic" aria-hidden="true">?</span>¿Qué quieres entender del negocio?<kbd>⌘K</kbd></button>
+    <div class="steps" aria-label="Fases del análisis">
+      <div class="on"><b>01</b>Entender — este workspace</div>
+      <div><b>02</b>Explicar</div>
+      <div><b>03</b>Decidir</div>
+    </div>
+    <details class="keys-d"><summary>Cómo leer los estados de cada afirmación</summary>
+    <div class="keys">
+      <div class="keyrow"><b>Estado de cada afirmación</b>
+        <span class="tag hecho"><i>✓</i>Hecho observado</span>
+        <span class="tag fuerte"><i>◆</i>Evidencia fuerte</span>
+        <span class="tag direc"><i>↗</i>Direccional</span>
+        <span class="tag hipo"><i>~</i>Hipótesis</span>
+        <span class="tag noeval"><i>∅</i>No evaluable</span>
+      </div>
+      <div class="keyrow"><b>Marcadores</b>
+        <span class="tag explo"><i>?</i>Explorando</span><span>el título es una pregunta abierta</span>
+        <span class="tag prec"><i>!</i>Precaución</span><span>hay una advertencia sobre el dato</span>
+        <span class="tag met"><i>i</i>Método</span><span>explica cómo se calcula</span>
+      </div>
+    </div>
+    </details>
+  </div>
+</section>
+
+<!-- ======================================================= 00 RESUMEN -->
+<section class="section" id="snapshot">
+  <div class="kicker"><span class="num">00</span>Resumen ejecutivo</div>
+  <h2 class="question">¿Cómo está el negocio, dominio por dominio?</h2>
+  <p class="sec-lede">El resultado y sus cuatro motores. Los dominios no se traslapan y juntos cubren el negocio: el puente de MRR separa cada movimiento en exactamente uno de ellos, sin residuo. Solo hechos; cada cifra se puede rastrear hasta su cálculo.</p>
+
+  <div class="mece">
+    <article class="dom-card glass wide" id="dom-res">
+      <div class="dom-top"><span class="dom-k"><span class="n">0</span>Resultado</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <p class="dom-q">¿Cuánto crece el negocio y con qué ingreso por cliente?</p>
+      <h3 class="dom-h">Los clientes activos crecieron {{active_multiple}} y el MRR pagado {{mrr_multiple}}: el MRR por cliente cayó {{arpa_change_abs}}</h3>
+      <div class="dom-kpis">
+        <div class="mk"><div class="l">Clientes activos · {{window_end}}</div><div class="v">{{active_end}}</div><div class="d"><span class="delta">{{active_multiple}}</span>desde {{active_start}} en {{window_start}}</div><div class="spark" data-spark="active"></div></div>
+        <div class="mk"><div class="l">MRR pagado · {{window_end}}</div><div class="v">{{mrr_end}}</div><div class="d"><span class="delta">{{mrr_multiple}}</span>desde {{mrr_start}}</div><div class="spark" data-spark="mrr"></div></div>
+        <div class="mk"><div class="l">MRR por cliente activo · {{window_end}}</div><div class="v">{{arpa_end}}</div><div class="d"><span class="delta">{{arpa_change}}</span>desde {{arpa_start}}</div><div class="spark" data-spark="arpa"></div></div>
+      </div>
+      <ul class="dom-facts">
+        <li>Altas netas positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses; negativas solo en {{net_adds_negative_list}}.</li>
+        <li>Los movimientos brutos de MRR ({{gross_movement}}) son {{gross_net_ratio}} el cambio neto ({{net_movement}}).</li>
+      </ul>
+      <div class="dom-links"><a href="#growth">Ver 02 · Resultado del negocio →</a><a href="#movements">Ver 09 · Movimientos de MRR →</a><button class="inv" type="button" data-qid="Q1">Investigar →</button></div>
+    </article>
+
+    <article class="dom-card glass" id="dom-adq">
+      <div class="dom-top"><span class="dom-k"><span class="n">1</span>Adquisición</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <p class="dom-q">¿Cuántos clientes entran y con qué valor?</p>
+      <h3 class="dom-h">Las altas se duplicaron desde 2023, con un ticket de entrada menor en las seis industrias</h3>
+      <div class="dom-kpis">
+        <div class="mk"><div class="l">Altas por mes · 2024</div><div class="v">{{new_avg_2024}}</div><div class="d"><span class="delta">{{new_growth_multiple}}</span>vs {{new_avg_2022}} en 2022</div><div class="spark" data-spark="new"></div></div>
+        <div class="mk"><div class="l">Ticket de entrada (mediana) · 2024</div><div class="v">{{m0_median_2024}}</div><div class="d"><span class="delta">{{m0_median_chg_22_24}}</span>vs {{m0_median_2022}}</div><div class="spark" data-spark="ticket"></div></div>
+      </div>
+      <ul class="dom-facts">
+        <li>El escalón del ticket ocurre en {{step_month}}.</li>
+        <li>{{dec_within_share}} de la caída del ticket promedio ocurre dentro de las industrias; el mix explica {{dec_mix_share}}. <span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></li>
+      </ul>
+      <div class="dom-links"><a href="#monetization">Ver 03 →</a><a href="#decomposition">Ver 07 →</a><button class="inv" type="button" data-qid="Q3">Investigar →</button></div>
+    </article>
+
+    <article class="dom-card glass" id="dom-ret">
+      <div class="dom-top"><span class="dom-k"><span class="n">2</span>Retención</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <p class="dom-q">¿Cuántos se quedan y cuántos vuelven?</p>
+      <h3 class="dom-h">Las cohortes recientes no se van antes, y el churn mensual observado bajó de {{churn_rate_2022}} a {{churn_rate_2024}}</h3>
+      <div class="dom-kpis">
+        <div class="mk"><div class="l">Churn mensual observado · 2024</div><div class="v">{{churn_rate_2024}}</div><div class="d">vs {{churn_rate_2022}} en 2022 · {{churn_rate_2023}} en 2023</div><div class="spark" data-spark="churn"></div></div>
+      </div>
+      <ul class="dom-facts">
+        <li>Retención de logos al M1: {{m1_logo_recent_min}}–{{m1_logo_recent_max}} en 2023–24, frente a {{m1_logo_2022_min}}–{{m1_logo_2022_max}} en 2022.</li>
+        <li>El {{base_logo_end}} de la base previa sigue pagando en {{window_end}}.</li>
+        <li>Precaución: el churn observado incluye pausas y atrasos.</li>
+      </ul>
+      <div class="dom-links"><a href="#cohorts">Ver 08 →</a><a href="#card-9-3">Ver 9.3 →</a><button class="inv" type="button" data-qid="Q5">Investigar →</button></div>
+    </article>
+
+    <article class="dom-card glass" id="dom-mon">
+      <div class="dom-top"><span class="dom-k"><span class="n">3</span>Monetización de la base</span><span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></div>
+      <p class="dom-q">¿Los clientes existentes pagan más o menos con el tiempo?</p>
+      <h3 class="dom-h">Los clientes existentes no pagan menos; el promedio baja por composición</h3>
+      <div class="dom-kpis">
+        <div class="mk"><div class="l">MRR por cliente de la base previa · {{window_end}}</div><div class="v">{{base_arpa_end}}</div><div class="d"><span class="delta">{{base_arpa_change}}</span>vs {{base_arpa_start}} en {{window_start}}</div><div class="spark" data-spark="base"></div></div>
+      </div>
+      <ul class="dom-facts">
+        <li>Cosechas 2023 y 2024: {{v2023_arpa_end}} y {{v2024_arpa_end}} por cliente, frente a {{v2022_arpa_end}} de la cosecha 2022.</li>
+        <li>Las cosechas 2023–24 son {{recent_vintage_customer_share}} de los clientes activos y {{recent_vintage_mrr_share}} del MRR.</li>
+      </ul>
+      <div class="dom-links"><a href="#card-3-3">Ver 3.3 →</a><a href="#cohorts">Ver 08 →</a><button class="inv" type="button" data-qid="Q2">Investigar →</button></div>
+    </article>
+
+    <article class="dom-card glass" id="dom-inv">
+      <div class="dom-top"><span class="dom-k"><span class="n">4</span>Inversión comercial</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <p class="dom-q">¿Cuánto invertimos y cómo se mueve con la adquisición?</p>
+      <h3 class="dom-h">El gasto en S&amp;M cayó {{sm_drop_abs}} a mitad de 2023 mientras las altas subían</h3>
+      <div class="dom-kpis">
+        <div class="mk"><div class="l">S&amp;M por mes · 2024</div><div class="v">{{sm_avg_2024}}</div><div class="d"><span class="delta">{{sm_chg_22_24}}</span>vs {{sm_avg_2022}} en 2022</div><div class="spark" data-spark="sm"></div></div>
+      </div>
+      <ul class="dom-facts">
+        <li>Gasto por cliente nuevo: {{total_sm_per_new_customer_chg}}; por COP 1 millón de MRR nuevo, solo {{total_sm_per_new_mrr_mm_chg}} (2022 → 2024).</li>
+        <li>Gasto y altas no se asocian positivamente en ningún rezago. <span class="tag direc"><i>↗</i>Direccional</span></li>
+      </ul>
+      <div class="dom-links"><a href="#sm">Ver 04 →</a><a href="#relationships">Ver 05 →</a><button class="inv" type="button" data-qid="Q4">Investigar →</button></div>
+    </article>
+  </div>
+
+  <div class="reading glass">
+    <h4>Cómo leer estos datos · aplica a todos los dominios</h4>
+    <div class="rows">
+      <div class="row"><span class="tag hipo"><i>~</i>Hipótesis</span><span><code>amount</code> se comporta como monto cobrado, no como MRR contractual: {{multi_sig_rows}} meses-cliente pagan de 2 a 12 veces el monto usual y {{churn_back_1m}} de los churns vuelve al mes siguiente. <a href="#card-1-3">Ver 1.3 →</a></span></div>
+      <div class="row"><span class="tag hecho"><i>✓</i>Hecho observado</span><span>Los flujos se miden desde mar-22: {{window_start}} está censurado y feb-22 trae arrastre ({{feb_sig_share}} de sus altas entra con pago doble). <a href="#card-1-2">Ver 1.2 →</a></span></div>
+      <div class="row"><span class="tag prec"><i>!</i>Precaución</span><span>El gasto de S&amp;M está en unidades reportadas sin escala: las eficiencias se comparan en el tiempo, no son un CAC en pesos. <a href="#sm">Ver 04 →</a></span></div>
+      <div class="row"><span class="tag noeval"><i>∅</i>No evaluable</span><span>No hay funnel, atribución, precios ni descuentos: lo que dependa de ellos queda fuera de alcance. <a href="#knowledge">Ver 10 →</a></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 01 DATOS -->
+<section class="section" id="data">
+  <div class="kicker"><span class="num">01</span>Calidad de datos y modelo<span class="dom">Cortes y datos</span></div>
+  <h2 class="question">¿Qué contienen realmente las fuentes y qué tuvimos que hacerles?</h2>
+  <div class="answer" data-answer="data"></div>
+  <p class="sec-lede">Tres archivos, un grano cada uno. El modelo une clientes con industrias, reconstruye una tabla cliente-mes y deriva los movimientos. El gasto de S&amp;M se queda a nivel mes y solo se compara con los resultados; nunca se les atribuye.</p>
+
+  <div class="grid">
+    <article class="card src span-4" id="card-src-1">
+      <div class="card-top"><span class="card-id">FUENTE 1</span><span class="tag prec"><i>!</i>Precaución</span></div>
+      <h3><span class="file">Transactions.csv</span></h3>
+      <p class="sub">Foto cliente × mes, no transacciones individuales.</p>
+      <dl>
+        <dt>Filas</dt><dd>{{n_rows_tx}} = {{n_customers}} × {{n_months}} (panel completo)</dd>
+        <dt>Llaves</dt><dd><code>ID</code> + <code>month</code> · 0 duplicados</dd>
+        <dt>Ventana</dt><dd>{{window_start}} → {{window_end}}, fechas de fin de mes</dd>
+        <dt>Valores</dt><dd>0 faltantes · 0 negativos · {{zero_share}} en cero</dd>
+      </dl>
+      <ul>
+        <li><span class="tag met"><i>i</i>Método</span><span>Encabezado con BOM UTF-8; fechas como texto <code>M/D/AAAA</code>.</span></li>
+        <li><span class="tag met"><i>i</i>Método</span><span>Los meses inactivos vienen como ceros explícitos ({{zero_rows}} filas).</span></li>
+        <li><span class="tag prec"><i>!</i>Precaución</span><span>El monto se comporta como cobro mensual: pagos acumulados, dobles y periódicos (tarjeta 1.3).</span></li>
+        <li><span class="tag prec"><i>!</i>Precaución</span><span>Inicio censurado: {{active_start}} clientes ya pagaban en {{window_start}}.</span></li>
+      </ul>
+    </article>
+    <article class="card src span-4" id="card-src-2">
+      <div class="card-top"><span class="card-id">FUENTE 2</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3><span class="file">Industry.csv</span></h3>
+      <p class="sub">Una fila por cliente, una industria cada una.</p>
+      <dl>
+        <dt>Filas</dt><dd>{{ind_rows_read}} leídas → {{ind_valid}} válidas</dd>
+        <dt>Llave</dt><dd><code>"Cliente N"</code> → <code>N</code> · 0 duplicados</dd>
+        <dt>Cruce</dt><dd>{{id_match_rate}} en ambos sentidos con Transactions</dd>
+        <dt>Valores</dt><dd>{{n_industries}} industrias · sin variantes de escritura</dd>
+      </dl>
+      <ul>
+        <li><span class="tag met"><i>i</i>Método</span><span>Se eliminó {{ind_blank_rows}} fila final completamente vacía.</span></li>
+        <li><span class="tag met"><i>i</i>Método</span><span>Encabezados en dos idiomas (<code>ID</code>, <code>Industria</code>); las industrias se conservan tal como vienen.</span></li>
+        <li><span class="tag noeval"><i>∅</i>No evaluable</span><span>Es la única segmentación: no hay tamaño, geografía ni plan.</span></li>
+      </ul>
+    </article>
+    <article class="card src span-4" id="card-src-3">
+      <div class="card-top"><span class="card-id">FUENTE 3</span><span class="tag prec"><i>!</i>Precaución</span></div>
+      <h3><span class="file">S&amp;M_spend.csv</span></h3>
+      <p class="sub">Mes × 7 rubros de gasto.</p>
+      <dl>
+        <dt>Filas</dt><dd>34 meses, alineados 1:1 con Transactions</dd>
+        <dt>Formato</dt><dd>texto <code>"$1.040"</code>, negativos <code>"-$0.016"</code></dd>
+        <dt>Unidad</dt><dd>no documentada: no se convierte a COP</dd>
+        <dt>Valores</dt><dd>0 faltantes · 0 meses duplicados</dd>
+      </dl>
+      <ul>
+        <li><span class="tag prec"><i>!</i>Precaución</span><span><code>Team</code> = exactamente 12,0% del total hasta {{team_fixed_until}}.</span></li>
+        <li><span class="tag prec"><i>!</i>Precaución</span><span><code>Freelance</code> = 0 desde {{freelance_zero_from}} (excepto {{freelance_exceptions}}).</span></li>
+        <li><span class="tag prec"><i>!</i>Precaución</span><span><code>PayrollExpenses</code> negativo en {{payroll_neg_n}} meses.</span></li>
+      </ul>
+    </article>
+
+    <article class="card span-12" id="card-1-0" data-card="1.0">
+      <div class="card-top"><span class="card-id">1.0 · MATRIZ DE AUDITORÍA</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Cada revisión, en cada archivo</h3>
+      <p class="sub">Calculado sobre el texto crudo, antes de cualquier transformación.</p>
+      <div class="tablewrap" id="auditTable"></div>
+    </article>
+
+    <article class="card span-12" id="card-1-1" data-card="1.1">
+      <div class="card-top"><span class="card-id">1.1 · MODELO</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3>Del texto crudo a un modelo analítico</h3>
+      <p class="sub">El mismo pipeline (<code>finora_eda.py</code>) produce cada tabla, gráfica y cifra de este workspace.</p>
+      <div class="flow">
+        <div class="step"><em>01 · LEER</em><b>Texto crudo → tipos</b><span>BOM, <code>M/D/AAAA</code>, <code>"$x.xxx"</code>, filas vacías</span></div>
+        <div class="step"><em>02 · LLAVE</em><b>"Cliente N" → N</b><span>{{ind_valid}} / {{ind_valid}} IDs cruzados</span></div>
+        <div class="step"><em>03 · PANEL</em><b>Cliente × mes</b><span>{{n_rows_tx}} filas · aritmética exacta en micro-unidades</span></div>
+        <div class="step"><em>04 · BANDERAS</em><b>Movimientos</b><span>alta · churn · reactivación · expansión · contracción</span></div>
+        <div class="step"><em>05 · MÉTRICAS</em><b>Mensuales + S&amp;M</b><span>puentes validados a COP 0,00</span></div>
+        <div class="step"><em>06 · VISTAS</em><b>Cohortes · industrias · rezagos</b><span>descomposición con bootstrap</span></div>
+      </div>
+      <div class="layers">
+        <div><b>Observado</b><p><code>observed_amount</code> exactamente como llegó. Nunca se sobrescribe.</p></div>
+        <div><b>Derivado</b><p><code>paid_mrr_cop = amount × 10.000</code>, banderas de movimiento, tasas, cohortes. Definiciones en 1.8.</p></div>
+        <div><b>Interpretado</b><p>Solo en texto y siempre marcado como hipótesis; nunca se codifica como campo.</p></div>
+      </div>
+    </article>
+
+    <article class="card span-6" id="card-1-2" data-card="1.2">
+      <div class="card-top"><span class="card-id">1.2 · CENSURA INICIAL</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El {{feb_sig_share}} de las altas de feb-22 entra pagando el doble de su segundo pago, frente a {{later_sig_share}} en cohortes posteriores</h3>
+      <p class="sub">Porcentaje de cada cohorte mensual cuyo primer monto es exactamente 2 veces el segundo.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="entrySignature"></div>
+      <div class="foot"><p class="note">Feb-22 también muestra {{feb_new}} altas, {{feb_vs_typical_new}} el promedio mensual de 2022. Es consistente con clientes previos que regresan tras un hueco en {{window_start}} (hipótesis). <b>Tratamiento:</b> {{window_start}} queda censurado (sin movimientos); las altas de feb-22 se marcan y se excluyen de tasas, correlaciones y tendencias de cohortes. Ventana limpia de flujos: mar-22 → {{window_end}}.</p><div class="btns"><button class="tbtn how" type="button" data-how="1.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6" id="card-1-3" data-card="1.3">
+      <div class="card-top"><span class="card-id">1.3 · ¿QUÉ ES "AMOUNT"?</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>{{multi_sig_rows}} meses-cliente equivalen a 2–12 veces el monto usual del cliente</h3>
+      <p class="sub">Cuatro clientes elegidos a mano (COP por mes). Las marcas grises señalan meses en cero.</p>
+      <div class="chart" data-chart="examples"></div>
+      <div class="foot"><p class="note"><b>Prevalencia:</b> {{multi_sig_rows}} meses-cliente ({{multi_sig_customers}} clientes) con pagos múltiples; {{churn_back_1m}} de los churns observados vuelve al mes siguiente. <b>Lectura (hipótesis):</b> consistente con cobros mensuales, no con un MRR contractual. Los ejemplos son ilustrativos, no una muestra.</p><div class="btns"><button class="tbtn how" type="button" data-how="1.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6" id="card-1-4" data-card="1.4">
+      <div class="card-top"><span class="card-id">1.4 · VALORES EXTREMOS</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Los montos mensuales van de {{amount_min_cop}} a {{amount_max_cop}}; {{rows_above_fence}} meses-cliente superan el límite Q3 + 3·RIC</h3>
+      <p class="sub">Montos positivos por mes-cliente, en bandas logarítmicas. Mediana {{amount_p50_cop}} · P99 {{amount_p99_cop}} · límite {{iqr_fence_cop}}.</p>
+      <div class="chart" data-chart="amountHist"></div>
+      <div class="foot"><p class="note">Se conservan los valores extremos ({{customers_above_fence}} clientes): son montos reales observados. Su influencia se prueba donde importa (variantes winsorizadas y medianas en 03 y 07).</p><div class="btns"><button class="tbtn how" type="button" data-how="1.4">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-6" id="card-1-5" data-card="1.5">
+      <div class="card-top"><span class="card-id">1.5 · ESTRUCTURA DE S&amp;M</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>Hasta {{team_fixed_until}}, Team es exactamente 12,0% del S&amp;M total cada mes</h3>
+      <p class="sub">Participación de cada rubro en el S&amp;M total.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smShares"></div>
+      <div class="foot"><p class="note">En {{whole_pct_months}} de 34 meses cada rubro es un porcentaje entero del total. <b>Lectura (hipótesis):</b> el archivo parece construido de arriba hacia abajo; antes de {{team_break}} los rubros no son mediciones independientes, y después PayrollExpenses se comporta como partida de ajuste.</p><div class="btns"><button class="tbtn how" type="button" data-how="1.5">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+
+    <article class="card span-7" id="card-1-6" data-card="1.6">
+      <div class="card-top"><span class="card-id">1.6 · GRUPOS DE S&amp;M</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3>Agrupaciones analíticas: nada se asume "marketing"</h3>
+      <p class="sub">Los siete rubros se conservan por separado; los grupos son lentes analíticos, no verdad contable.</p>
+      <div class="tablewrap" id="smGroupTable"></div>
+    </article>
+    <article class="card span-5" id="card-1-7" data-card="1.7">
+      <div class="card-top"><span class="card-id">1.7 · S&amp;M TOTAL</span><span class="tag prec"><i>!</i>Precaución</span></div>
+      <h3>¿Conviene excluir algún rubro del S&amp;M total?</h3>
+      <p class="sub">Total = suma de los siete. Hay razones técnicas para probar una alternativa:</p>
+      <ul style="margin:6px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2)">
+        <li><b>PayrollExpenses</b>: negativo en {{payroll_neg_n}} meses ({{payroll_neg_list}}), se comporta como partida de ajuste desde {{team_break}} y puede traslaparse con <code>Team</code>. Hay una serie de sensibilidad <code>total_sm_ex_payroll</code>.</li>
+        <li style="margin-top:6px"><b>Team</b>: quiebre de definición en {{team_break}} (de porcentaje asignado a serie independiente). Se conserva, pero las tendencias a través del quiebre no son comparables.</li>
+        <li style="margin-top:6px"><b>Freelance</b>, <b>SoftwareTools</b> y <b>Travel</b> pueden incluir costos que no son de S&amp;M; nada en los datos permite separarlos.</li>
+      </ul>
+    </article>
+
+    <article class="card span-12" id="card-1-8" data-card="1.8">
+      <div class="card-top"><span class="card-id">1.8 · DEFINICIONES</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3>Métricas y banderas: describen movimientos observados, no comportamiento económico</h3>
+      <p class="sub">Fuente única: <code>brain/semantic/metrics.yaml</code>. Las comparaciones exactas usan micro-unidades enteras (los montos traen hasta seis decimales).</p>
+      <div class="tablewrap" id="defsTable"></div>
+    </article>
+  </div>
+</section>
+
+<!-- ======================================================= 02 RESULTADO -->
+<section class="section" id="growth">
+  <div class="kicker"><span class="num">02</span>Resultado del negocio<span class="dom">Resultado</span></div>
+  <h2 class="question">¿El crecimiento de clientes se traduce en un crecimiento proporcional del ingreso?</h2>
+  <div class="answer" data-answer="growth"></div>
+  <p class="sec-lede">La película completa: el stock de clientes activos, los flujos que lo cambian y el MRR pagado en los mismos 34 meses.</p>
+  
+  <div class="grid">
+    <article class="card span-12" id="card-2-1" data-card="2.1">
+      <div class="card-top"><span class="card-id">2.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Los clientes activos crecieron {{active_multiple}} y el MRR pagado {{mrr_multiple}}: el MRR por cliente cayó {{arpa_change_abs}}</h3>
+      <p class="sub">Índice, {{window_start}} = 100.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="growthIndex"></div>
+      <div class="foot"><p class="note">Los stocks no dependen de la censura inicial, así que {{window_start}} es una base válida.</p><div class="btns"><button class="tbtn how" type="button" data-how="2.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-7" id="card-2-2" data-card="2.2">
+      <div class="card-top"><span class="card-id">2.2</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Las altas netas fueron positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses; las altas se duplicaron desde 2023</h3>
+      <p class="sub">Clientes por mes: entradas sobre la línea, churn observado debajo; altas netas como línea.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="customerFlows"></div>
+      <div class="foot"><p class="note">Feb-22 (atenuado) incluye arrastre de la censura inicial. El churn es observado: {{churn_back_1m}} de estos clientes vuelve a pagar al mes siguiente.</p><div class="btns"><button class="tbtn how" type="button" data-how="2.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-5" id="card-2-3" data-card="2.3">
+      <div class="card-top"><span class="card-id">2.3</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3>El MRR pagado sube, pero ¿por qué cae en algunos meses?</h3>
+      <p class="sub">MRR pagado total con promedio móvil de 3 meses.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mrrLevel"></div>
+      <div class="foot"><p class="note">Los movimientos mes a mes mezclan cambios reales con timing de pago (ver 09). <button class="inv" type="button" data-qid="Q6">Investigar →</button></p><div class="btns"><button class="tbtn how" type="button" data-how="2.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Los clientes crecieron <b>{{active_multiple}}</b> y el MRR pagado <b>{{mrr_multiple}}</b>: el MRR por cliente activo cayó <b>{{arpa_change_abs}}</b>.</li>
+      <li>Las altas netas fueron positivas en {{net_adds_positive_months}} de {{months_with_flows}} meses (negativas solo en {{net_adds_negative_list}}).</li>
+      <li>El MRR pagado cayó frente al mes anterior en {{mrr_mom_negative_months}} de 33 meses aunque los clientes seguían creciendo (por ejemplo, {{mrr_jun22_change}} en jun-22).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿El menor ingreso por cliente depende de quién entra o de que los existentes pagan menos? → 03 <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
+      <li>¿Las caídas del MRR son pérdidas reales o timing de pago? → 09 <button class="inv" type="button" data-qid="Q6">Investigar →</button></li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 03 TICKET -->
+<section class="section" id="monetization">
+  <div class="kicker"><span class="num">03</span>Ticket de entrada y monetización<span class="dom">Adquisición</span></div>
+  <h2 class="question">¿Los clientes nuevos entran con otro valor, y es eso lo que mueve el ingreso por cliente?</h2>
+  <div class="answer" data-answer="monetization"></div>
+  <p class="sec-lede">Ticket de entrada = primer monto pagado de un cliente nuevo (M0). Se muestra el promedio pedido junto a vistas más robustas, porque las altas de 2022 incluyen primeros pagos grandes.</p>
+  
+  <div class="grid">
+    <article class="card span-12" id="card-3-1" data-card="3.1">
+      <div class="card-top"><span class="card-id">3.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Desde {{step_month}}, el cliente nuevo típico entra con menor ticket: mediana {{m0_median_2022}} en 2022 frente a {{m0_median_2024}} en 2024</h3>
+      <p class="sub">Ticket de entrada (M0): promedio (MRR nuevo ÷ altas), mediana y rango P25–P75.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="ticketMonthly"></div>
+      <div class="foot"><p class="note">No se calcula en {{window_start}} (censurado) ni en feb-22 (arrastre). Los picos del promedio en 2022 vienen de pocos primeros pagos grandes.</p><div class="btns"><button class="tbtn how" type="button" data-how="3.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-3-2" data-card="3.2">
+      <div class="card-top"><span class="card-id">3.2</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Los tickets de entrada se movieron a bandas de precio más bajas</h3>
+      <p class="sub">Porcentaje de altas por banda del ticket de entrada (COP), por año.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="priceBands"></div>
+      <div class="foot"><p class="note">2022 = mar–dic; 2024 = ene–oct.</p><div class="btns"><button class="tbtn how" type="button" data-how="3.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-3-3" data-card="3.3">
+      <div class="card-top"><span class="card-id">3.3</span><span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></div>
+      <h3>Los clientes anteriores no pagan menos: el promedio baja porque crecen las cosechas de menor ticket</h3>
+      <p class="sub">MRR por cliente activo según la cosecha (año de alta).</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="vintageArpa"></div>
+      <div class="foot"><p class="note">Base previa = clientes activos en {{window_start}} (su alta real es desconocida). Las altas de feb-22 (marcadas) no se grafican.</p><div class="btns"><button class="tbtn how" type="button" data-how="3.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-3-4" data-card="3.4">
+      <div class="card-top"><span class="card-id">3.4</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>El tamaño de la caída depende de la métrica ({{m1_mean_chg_22_24}} a {{m0_mean_chg_22_24}}); la dirección no</h3>
+      <p class="sub">Métricas del ticket de entrada por año de alta (ventana limpia).</p>
+      <div class="tablewrap" id="ticketTable"></div>
+      <div class="foot"><p class="note">Winsorizado = M0 con tope en el P99 conjunto ({{winsor_cap}}). Run-rate temprano = mediana de los montos positivos de los tres primeros meses. M1 incluye ceros de clientes inactivos en su segundo mes.</p><div class="btns"><button class="tbtn how" type="button" data-how="3.4">¿Cómo lo sabemos?</button></div></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Mediana del ticket de entrada: <b>{{m0_median_2022}}</b> (2022) → {{m0_median_2023}} (2023) → {{m0_median_2024}} (2024). El escalón ocurre en <b>{{step_month}}</b>.</li>
+      <li>Los clientes que ya pagaban en {{window_start}} no pagan menos: su MRR por cliente pasó de {{base_arpa_start}} a {{base_arpa_end}}.</li>
+      <li>Las cosechas 2023–24 pagan menos ({{v2023_arpa_end}} y {{v2024_arpa_end}} en oct-24, frente a {{v2022_arpa_end}} de la cosecha 2022) y son {{recent_vintage_customer_share}} de los clientes activos pero {{recent_vintage_mrr_share}} del MRR.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Precauciones</h4><ul>
+      <li>El {{spike_share_2022}} de las altas de 2022 pagó en M0 más de 1,5 veces su segundo mes ({{spike_share_2023}} en 2023): el promedio de 2022 está inflado.</li>
+      <li>El tamaño de la caída depende de la métrica ({{m1_mean_chg_22_24}} a {{m0_mean_chg_22_24}}); la dirección no.</li>
+      <li>Qué cambió en {{step_month}} (lista de precios, empaquetamiento, descuentos, segmento, canal) no es observable.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 04 S&M -->
+<section class="section" id="sm">
+  <div class="kicker"><span class="num">04</span>Inversión comercial (S&amp;M)<span class="dom">Inversión comercial</span></div>
+  <h2 class="question">¿Cómo evolucionó el gasto en S&amp;M y cómo se alinea con la adquisición y el ingreso?</h2>
+  <div class="answer" data-answer="sm"></div>
+  <p class="sec-lede">El gasto se muestra en las unidades del archivo (u). Las eficiencias son comparables en el tiempo, pero no son un CAC en pesos.</p>
+  
+  <div class="grid">
+    <article class="card span-12" id="card-4-1" data-card="4.1">
+      <div class="card-top"><span class="card-id">4.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El S&amp;M cayó {{sm_drop_abs}} entre {{sm_peak_month}} y {{sm_trough_month}} y solo se recuperó en parte</h3>
+      <p class="sub">S&amp;M total por grupo analítico, en unidades reportadas por mes.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smStack"></div>
+      <div class="foot"><p class="note">Generación de demanda = PaidMedia + PublicidadNoWeb · Capacidad comercial = Team + PayrollExpenses + Travel · Habilitación = SoftwareTools + Freelance.</p><div class="btns"><button class="tbtn how" type="button" data-how="4.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-4-2" data-card="4.2">
+      <div class="card-top"><span class="card-id">4.2</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>Los rubros cuentan historias distintas: Freelance desaparece, Team se aplana y Payroll se vuelve negativo</h3>
+      <p class="sub">Cada rubro en su propia escala (u). Color = grupo analítico.</p>
+      <div class="chart" data-chart="smComponents"></div>
+      <div class="foot"><p class="note">Escalas independientes: compara formas, no alturas.</p><div class="btns"><button class="tbtn how" type="button" data-how="4.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-4-3" data-card="4.3">
+      <div class="card-top"><span class="card-id">4.3</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3>¿Se mueven juntos el gasto y los resultados cuando se alinean mes a mes?</h3>
+      <p class="sub">Izquierda: gasto (u). Derecha: resultados. Eje de tiempo común; cada panel en su escala. Sombreado violeta: {{cut_start}} → {{cut_end}}, los meses posteriores al recorte de S&amp;M; gris: fuera de la ventana limpia de flujos.</p>
+      <div class="chart" data-chart="alignedPanels"></div>
+      <div class="foot"><p class="note">Alineación visual, sin atribución. Los flujos empiezan en mar-22 (ventana limpia). <button class="inv" type="button" data-qid="Q4">Investigar →</button></p><div class="btns"><button class="tbtn how" type="button" data-how="4.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-4-4" data-card="4.4">
+      <div class="card-top"><span class="card-id">4.4</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>En índice 2022 = 100, las altas subieron mientras el gasto bajaba</h3>
+      <p class="sub">Promedio móvil de 3 meses; índice con base en el promedio de mar–dic 2022 = 100.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="indexOverlay"></div>
+      <div class="foot"><p class="note">Un eje, una unidad (índice). Generación de demanda y Paid Media siguen de cerca al S&amp;M total, en parte por construcción (asignación).</p><div class="btns"><button class="tbtn how" type="button" data-how="4.4">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-4-5" data-card="4.5">
+      <div class="card-top"><span class="card-id">4.5</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Eficiencia por año: más barato por cliente, no por unidad de MRR nuevo</h3>
+      <p class="sub">Razones agregadas (suma del gasto ÷ suma del resultado) sobre los meses limpios.</p>
+      <div class="tablewrap" id="effTable"></div>
+      <div class="foot"><p class="note">u = unidad reportada del gasto. "Por COP 1 millón" = gasto por cada COP 1.000.000 de MRR nuevo.</p><div class="btns"><button class="tbtn how" type="button" data-how="4.5">¿Cómo lo sabemos?</button></div></div>
+    </article>
+    <article class="card span-12" id="card-4-6" data-card="4.6">
+      <div class="card-top"><span class="card-id">4.6</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El gasto por cliente nuevo cayó {{total_sm_per_new_customer_chg_abs}}; el gasto por COP 1 millón de MRR nuevo, solo {{total_sm_per_new_mrr_mm_chg_abs}}</h3>
+      <p class="sub">Razones mensuales (barras) y razón de los últimos 3 meses (línea), en unidades reportadas.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="efficiency"></div>
+      <div class="foot"><p class="note">No se calcula en {{window_start}} (altas no identificables) ni en feb-22 (arrastre). Ningún mes limpio tiene denominador cero. Los inversos (altas o MRR nuevo por unidad) están en la vista de datos.</p><div class="btns"><button class="tbtn how" type="button" data-how="4.6">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>El S&amp;M total cayó <b>{{sm_drop_abs}}</b> de {{sm_peak_month}} ({{sm_peak}}) a {{sm_trough_month}} ({{sm_trough}}), con Paid Media en {{pm_drop}}, y solo se recuperó en parte: el promedio de 2024 está {{sm_chg_22_24}} frente a 2022.</li>
+      <li>Las altas por mes fueron más altas después del recorte ({{new_avg_2023}}–{{new_avg_2024}}) que antes ({{new_avg_2022}} en 2022).</li>
+      <li>El gasto por cliente nuevo cayó <b>{{total_sm_per_new_customer_chg_abs}}</b> (2022 → 2024), pero el gasto por COP 1 millón de MRR nuevo solo <b>{{total_sm_per_new_mrr_mm_chg_abs}}</b>: cada cliente nuevo trae menos MRR.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿De dónde salió el aumento de altas de 2023 si el gasto bajó? ¿Canales fuera de este archivo? ¿Un precio de entrada menor? <button class="inv" type="button" data-qid="Q4">Investigar →</button></li>
+      <li>¿Team y PayrollExpenses son un mismo costo de personas partido en dos, o dos costos distintos?</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 05 RELACIONES -->
+<section class="section" id="relationships">
+  <div class="kicker"><span class="num">05</span>Gasto y adquisición<span class="dom">Inversión comercial</span></div>
+  <h2 class="question">¿Las altas o el MRR nuevo se mueven con el gasto, en el mismo mes o con rezago?</h2>
+  <div class="answer" data-answer="relationships"></div>
+  <p class="sec-lede">Correlación entre el gasto del mes t−k y el resultado del mes t, para k = 0…3. Se muestran niveles y cambios mes a mes, porque las tendencias compartidas pueden crear correlaciones que no dicen nada del movimiento mes a mes.</p>
+  
+  <div class="controls glass" id="corrControls">
+    <div class="ctl"><span>Gasto</span><div class="seg" data-key="spend"><button>Paid Media</button><button>Generación de demanda</button><button aria-pressed="true">S&amp;M total</button></div></div>
+    <div class="ctl"><span>Resultado</span><div class="seg" data-key="outcome"><button aria-pressed="true">Altas</button><button>MRR nuevo</button></div></div>
+    <div class="ctl"><span>Rezago</span><div class="seg" data-key="lag"><button aria-pressed="true">0</button><button>1</button><button>2</button><button>3</button></div></div>
+    <div class="ctl"><span>Transformación</span><div class="seg" data-key="transform"><button aria-pressed="true">Niveles</button><button>Cambio mes a mes</button></div></div>
+  </div>
+  <div class="grid">
+    <article class="card span-6" id="card-5-1" data-card="5.1">
+      <div class="card-top"><span class="card-id">5.1 · DISPERSIÓN</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3 id="scatterTitle">Relación observada</h3>
+      <p class="sub" id="scatterSub">Cada punto es un mes.</p>
+      <div class="stats" id="corrStats"></div>
+      <div class="chart" data-chart="scatter"></div>
+      <div class="foot"><p class="note">La recta es un ajuste de mínimos cuadrados, solo para leer la dirección.</p><div class="btns"><button class="tbtn how" type="button" data-how="5.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-5-2" data-card="5.2">
+      <div class="card-top"><span class="card-id">5.2 · SERIES ALINEADAS</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3 id="lagTitle">Series alineadas</h3>
+      <p class="sub">Ambas series estandarizadas (puntaje z) para compartir un eje; el gasto se desplaza según el rezago elegido.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="lagSeries"></div>
+      <div class="foot"><p class="note">Puntaje z = (valor − promedio) ÷ desviación estándar sobre la ventana graficada.</p><div class="btns"><button class="tbtn how" type="button" data-how="5.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-5-3" data-card="5.3">
+      <div class="card-top"><span class="card-id">5.3 · MATRIZ</span><span class="tag direc"><i>↗</i>Direccional</span></div>
+      <h3>No hay asociación positiva entre gasto y adquisición en ningún rezago</h3>
+      <p class="sub">r de Pearson por rezago (gasto en t−k contra resultado en t). Pasa el cursor para ver ρ de Spearman, p y n; haz clic para inspeccionar la celda.</p>
+      <div class="grid" style="gap:22px">
+        <div class="span-6"><div class="mult"><div class="cell-t">Niveles</div></div><div class="chart" data-chart="corrLevels"></div></div>
+        <div class="span-6"><div class="mult"><div class="cell-t">Cambios mes a mes</div></div><div class="chart" data-chart="corrMom"></div></div>
+      </div>
+      <div class="foot"><p class="note">Azul = se mueven juntos; rojo = en direcciones opuestas; gris ≈ nada. En negrita, p &lt; 0,05. Con n ≈ 30, un |r| menor a ~0,35 no se distingue de cero al 5%.</p><div class="btns"><button class="tbtn how" type="button" data-how="5.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>En niveles, los meses con más gasto se asocian con <b>menos</b> altas (S&amp;M total, rezago 0: r = {{r_new_sm_l0}}; rango de {{r_new_levels_min}} a {{r_new_levels_max}} entre gastos y rezagos).</li>
+      <li>Esa relación refleja tendencias opuestas: en cambios mes a mes ninguna correlación alcanza |r| ≥ 0,3 (máximo {{r_mom_absmax}}; menor p = {{r_mom_minp}}).</li>
+      <li>El MRR nuevo no muestra relación con el gasto en ningún rezago (|r| ≤ {{r_mrr_levels_absmax}} en niveles).</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Precauciones</h4><ul>
+      <li>n = {{corr_n_min}}–{{corr_n_levels}} meses, series autocorrelacionadas y un archivo de gasto construido por asignación.</li>
+      <li>No existe atribución por canal: son asociaciones, nunca efectos.</li>
+      <li>El mes con arrastre (feb-22) se excluye; la sensibilidad que lo incluye está en la vista de datos.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 06 INDUSTRIAS -->
+<section class="section" id="industries">
+  <div class="kicker"><span class="num">06</span>Corte por industria<span class="dom">Cortes y datos</span></div>
+  <h2 class="question">¿El crecimiento se está desplazando hacia industrias con distinta monetización?</h2>
+  <div class="answer" data-answer="industries"></div>
+  <p class="sec-lede">La industria es la única segmentación disponible. El mix se muestra para el stock (clientes activos, MRR) y para el flujo (altas, MRR nuevo).</p>
+  
+  <div class="grid">
+    <article class="card span-6" id="card-6-1" data-card="6.1">
+      <div class="card-top"><span class="card-id">6.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Retail gana participación en la base de clientes: de {{retail_active_share_2022}} a {{retail_active_share_2024}}</h3>
+      <p class="sub">Participación de cada industria en los clientes activos, por mes.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixActive"></div>
+      <div class="foot"><p class="note">Dic-22 frente a oct-24. Industrias tal como vienen en Industry.csv.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-6-2" data-card="6.2">
+      <div class="card-top"><span class="card-id">6.2</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Restaurantes sigue siendo el mayor bloque de MRR, aunque baja de {{rest_mrr_share_2022}} a {{rest_mrr_share_2024}}</h3>
+      <p class="sub">Participación de cada industria en el MRR pagado, por mes.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixMrr"></div>
+      <div class="foot"><p class="note">La cuenta más grande (cliente {{top_account_id}}, {{top_account_industry}}) paga una mediana de {{top_account_median}} al mes, {{top_account_x_median}} la mediana de los meses-cliente.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-6-3" data-card="6.3">
+      <div class="card-top"><span class="card-id">6.3</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Retail pasó de {{retail_new_share_2022}} a {{retail_new_share_2023}} de las altas en 2023</h3>
+      <p class="sub">Participación de cada industria en las altas, por semestre.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixNewHalf"></div>
+      <div class="foot"><p class="note">2022 S1 = mar–jun; 2024 S2 = jul–oct.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-6-4" data-card="6.4">
+      <div class="card-top"><span class="card-id">6.4</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Restaurantes y Producción aportan más de la mitad del MRR nuevo cada año (mínimo {{restprod_new_mrr_min}})</h3>
+      <p class="sub">Participación de cada industria en el MRR nuevo, por semestre.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="mixNewMrrHalf"></div>
+      <div class="foot"><p class="note">Si la participación en el MRR nuevo supera la participación en altas, el ticket de entrada de esa industria es mayor.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.4">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-6-5" data-card="6.5">
+      <div class="card-top"><span class="card-id">6.5</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El ticket de entrada bajó en las seis industrias entre 2022 y 2024</h3>
+      <p class="sub">Ticket de entrada por industria y año, en COP. Promedio (izquierda) y mediana (derecha).</p>
+      <div class="legend"></div>
+      <div class="grid" style="gap:22px">
+        <div class="span-6"><div class="chart" data-chart="ticketIndMean"></div></div>
+        <div class="span-6"><div class="chart" data-chart="ticketIndMedian"></div></div>
+      </div>
+      <div class="foot"><p class="note">2022 = mar–dic; 2024 = ene–oct. Los promedios son sensibles a pocos primeros pagos grandes; las medianas no.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.5">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-6-6" data-card="6.6">
+      <div class="card-top"><span class="card-id">6.6</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El MRR por cliente activo bajó en las {{industries_arpa_fell}} industrias entre dic-22 y oct-24</h3>
+      <p class="sub">COP, misma escala en todos los paneles. Línea gris = promedio de la empresa.</p>
+      <div class="chart" data-chart="arpaIndustry"></div>
+      <div class="foot"><p class="note">Misma escala vertical en todos los paneles: las alturas se pueden comparar.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.6">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-6-7" data-card="6.7">
+      <div class="card-top"><span class="card-id">6.7</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Tablero por industria y año</h3>
+      <p class="sub">Stocks al último mes de cada periodo; flujos sumados sobre los meses limpios del año.</p>
+      <div class="tablewrap" id="industryTable"></div>
+      <div class="foot"><p class="note">Churn mensual de logos = churn observado ÷ activos del mes anterior, agregado en el año. Contracción y MRR de churn son negativos por convención.</p><div class="btns"><button class="tbtn how" type="button" data-how="6.7">¿Cómo lo sabemos?</button></div></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>El mix se movió poco hacia Retail, la industria de menor ticket ({{retail_ticket_2024}} en 2024): {{retail_new_share_2022}} de las altas en 2022, {{retail_new_share_2023}} en 2023 y {{retail_new_share_2024}} en 2024.</li>
+      <li>Restaurantes sigue siendo el mayor bloque de MRR, pero su participación bajó de {{rest_mrr_share_2022}} (dic-22) a {{rest_mrr_share_2024}} (oct-24).</li>
+      <li>El ticket de entrada promedio bajó en <b>las {{industries_ticket_fell_22_24}}</b> industrias entre 2022 y 2024.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿La caída dentro de cada industria viene de clientes más pequeños, planes más baratos o descuentos? No se puede separar aquí. <button class="inv" type="button" data-qid="Q3">Investigar →</button></li>
+      <li>¿Por qué Salud mantiene su ticket mediano en 2023 mientras las demás bajan?</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 07 DESCOMPOSICIÓN -->
+<section class="section" id="decomposition">
+  <div class="kicker"><span class="num">07</span>Mix vs. efecto dentro de la industria<span class="dom">Adquisición</span></div>
+  <h2 class="question">¿Cuánto del cambio en el ticket de los clientes nuevos viene del mix de industrias y cuánto ocurre dentro de cada industria?</h2>
+  <div class="answer" data-answer="decomposition"></div>
+  <p class="sec-lede">Si Finora solo hubiera captado más clientes de industrias que pagan menos, el ticket promedio bajaría sin cambios dentro de ninguna industria (mix). Si los clientes de una misma industria empezaran a entrar con menor valor, bajaría aunque el mix fuera constante (efecto dentro).</p>
+  
+  
+  <div class="grid">
+    <article class="card span-6" id="card-7-1" data-card="7.1">
+      <div class="card-top"><span class="card-id">7.1</span><span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></div>
+      <h3>El {{dec_within_share}} de la caída del ticket promedio ocurrió dentro de las industrias; el mix explica {{dec_mix_share}}</h3>
+      <p class="sub">Ticket de entrada promedio de los clientes nuevos, 2022 → 2024, COP.</p>
+      <div class="chart" data-chart="decompWaterfall"></div>
+      <div class="foot"><p class="note">Mix y efecto dentro suman exactamente el cambio (validado en código).</p><div class="btns"><button class="tbtn how" type="button" data-how="7.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-7-2" data-card="7.2">
+      <div class="card-top"><span class="card-id">7.2</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>El escalón dentro de las industrias aparece en 2023 S1 y persiste</h3>
+      <p class="sub">Brecha frente al ticket promedio de 2022, separada en mix y efecto dentro, por semestre (COP).</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="decompEvolution"></div>
+      <div class="foot"><p class="note">Los semestres de 2022 forman parte de la base, así que su brecha es casi cero por construcción. Ticket promedio: {{evo_2022h2}} en 2022 S2 y {{evo_2023h1}} en 2023 S1.</p><div class="btns"><button class="tbtn how" type="button" data-how="7.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-7-3" data-card="7.3">
+      <div class="card-top"><span class="card-id">7.3</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Contribución por industria, 2022 → 2024</h3>
+      <p class="sub">Contribución de mix = cambio de participación × ticket promedio de ambos periodos; efecto dentro = cambio de ticket × participación promedio.</p>
+      <div class="tablewrap" id="decompIndTable"></div>
+      <div class="foot"><p class="note">Suma de las contribuciones = cambio total.</p><div class="btns"><button class="tbtn how" type="button" data-how="7.3">¿Cómo lo sabemos?</button></div></div>
+    </article>
+    <article class="card span-12" id="card-7-4" data-card="7.4">
+      <div class="card-top"><span class="card-id">7.4</span><span class="tag fuerte"><i>◆</i>Evidencia fuerte</span></div>
+      <h3>Robustez: la división se sostiene entre métricas y pares de periodos</h3>
+      <p class="sub">Descomposición de Shapley para cada comparación y variante, con verificación de Laspeyres e intervalos bootstrap de 90%.</p>
+      <div class="tablewrap" id="decompRobustTable"></div>
+      <div class="foot"><p class="note">n/s = no significativo: el cambio total es demasiado pequeño para repartirlo.</p><div class="btns"><button class="tbtn how" type="button" data-how="7.4">¿Cómo lo sabemos?</button></div></div>
+    </article>
+  </div>
+  <div class="grid method-after">
+    <article class="card span-12" id="card-7-0" data-card="7.0">
+      <div class="card-top"><span class="card-id">7.0 · MÉTODO</span><span class="tag met"><i>i</i>Método</span></div>
+      <h3>Descomposición de Shapley (punto medio) de un promedio ponderado: exacta, sin residuo</h3>
+      <div class="grid" style="gap:18px;margin-top:6px">
+        <div class="span-7" style="font-size:13.6px;color:var(--ink-2)">
+          <p style="margin:0 0 8px">Ticket de entrada promedio <code>A = Σᵢ sᵢ · aᵢ</code>, donde <code>sᵢ</code> es la participación de la industria i en las altas y <code>aᵢ</code> su ticket promedio. Entre los periodos 0 y 1:</p>
+          <p style="margin:0 0 8px"><code>ΔA = Σᵢ (sᵢ¹ − sᵢ⁰) · (aᵢ⁰ + aᵢ¹)/2</code> <b>mix</b> &nbsp;+&nbsp; <code>Σᵢ (aᵢ¹ − aᵢ⁰) · (sᵢ⁰ + sᵢ¹)/2</code> <b>dentro</b></p>
+          <p style="margin:0">Usar el promedio de ambos periodos como ponderador elimina el término de interacción: los dos efectos suman exactamente el cambio. La versión de Laspeyres (con interacción) se reporta como verificación.</p>
+        </div>
+        <div class="span-5" style="font-size:13.2px;color:var(--ink-2)">
+          <ul style="margin:0;padding-left:18px">
+            <li><b>Periodos:</b> 2022 (mar–dic, n = {{dec_n0}}), 2023, 2024 (ene–oct, n = {{dec_n1}}).</li>
+            <li><b>Incertidumbre:</b> 2.000 remuestreos bootstrap de las altas dentro de cada periodo → intervalos de 90%.</li>
+            <li><b>Robustez:</b> M0 winsorizado en P99 ({{winsor_cap}}); run-rate temprano (mediana de M0–M2 positivos).</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>2022 → 2024: ticket de entrada promedio {{dec_a0}} → {{dec_a1}} ({{dec_delta_pct}}). <b>Dentro de las industrias {{dec_within}} ({{dec_within_share}})</b>; mix {{dec_mix}} ({{dec_mix_share}}). Intervalo de 90% para la parte "dentro": {{dec_within_ci}}.</li>
+      <li>Robusto a valores extremos y a picos del primer mes: la parte "dentro" va de {{dec_within_share_min}} a {{dec_within_share_max}} en las tres variantes.</li>
+      <li>Con el mix de industrias de 2022, el ticket de 2024 habría sido {{dec_cf}} en lugar de {{dec_a1}}.</li>
+      <li>2023 → 2024: cambio de {{dec34_delta}}; intervalo de 90% del efecto dentro: {{dec34_ci}}. Sin cambio medible después del escalón de 2023.</li>
+    </ul></div>
+    <div class="panel warn glass"><h4>Qué puede y qué no puede significar "dentro"</h4><ul>
+      <li>Dentro de la industria no es lo mismo que precio. Agrupa todo lo que mueve el ticket dentro de una industria: mezcla de planes, tamaño del cliente, descuentos, promociones, timing de cobro.</li>
+      <li>La industria es la única segmentación disponible; una más fina podría revelar efectos de mix escondidos dentro de las industrias.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 08 COHORTES -->
+<section class="section" id="cohorts">
+  <div class="kicker"><span class="num">08</span>Cohortes<span class="dom">Retención y base</span></div>
+  <h2 class="question">¿Las cohortes recientes retienen o monetizan distinto que las anteriores?</h2>
+  <div class="answer" data-answer="cohorts"></div>
+  <p class="sec-lede">Cohorte = mes del primer pago positivo. Los clientes activos en {{window_start}} están censurados y se muestran aparte; las altas de feb-22 se marcan. Mₖ solo se calcula con clientes que tienen al menos k meses de historia.</p>
+  
+  <div class="controls glass" id="cohortControls">
+    <div class="ctl"><span>Métrica</span><div class="seg" data-key="metric"><button aria-pressed="true">Retención de logos</button><button>Retención de ingreso vs M0</button><button>MRR por cliente original</button></div></div>
+    <div class="ctl"><span>Cohortes</span><div class="seg" data-key="gran"><button aria-pressed="true">Trimestrales</button><button>Mensuales</button></div></div>
+  </div>
+  <div class="callout warn" id="cohortRevWarn" hidden>
+    <div class="ic">!</div>
+    <div><p><b>Precaución:</b> la retención de ingreso contra M0 subestima a las cohortes de 2022, porque su primer mes incluye pagos grandes que no se repiten ({{spike_share_2022}} de las altas de 2022 pagó en M0 más de 1,5 veces su segundo mes).</p></div>
+  </div>
+  <div class="grid">
+    <article class="card span-12" id="card-8-1" data-card="8.1">
+      <div class="card-top"><span class="card-id">8.1</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3 id="cohortHeatTitle">Mapa de calor de cohortes</h3>
+      <p class="sub" id="cohortHeatSub">Filas = cohortes; columnas = meses desde el primer pago (M0 = primer mes).</p>
+      <div class="legend" id="cohortScale"></div>
+      <div class="chart" data-chart="cohortHeat"></div>
+      <div class="foot"><p class="note">Celdas vacías = todavía no observables. Trimestres parciales: 2022 T1 = solo mar; 2024 T4 = solo oct.</p><div class="btns"><button class="tbtn how" type="button" data-how="8.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-7" id="card-8-2" data-card="8.2">
+      <div class="card-top"><span class="card-id">8.2</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3 id="cohortCurveTitle">Curvas por año de alta</h3>
+      <p class="sub">Curvas agregadas por año del primer pago; se cortan cuando hay menos de 40 clientes observables.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="cohortCurves"></div>
+      <div class="foot"><p class="note">Agregado de cohortes mensuales con censura a la derecha: los últimos puntos dependen de las primeras cohortes de cada año.</p><div class="btns"><button class="tbtn how" type="button" data-how="8.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-5" id="card-8-3" data-card="8.3">
+      <div class="card-top"><span class="card-id">8.3</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>La base previa en tiempo calendario</h3>
+      <p class="sub">Clientes activos en {{window_start}} (n = {{base_size}}): porcentaje que sigue pagando y porcentaje de su MRR de {{window_start}} que conserva.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="baseCurves"></div>
+      <div class="foot"><p class="note">Las fechas reales de alta se desconocen: es permanencia desde que se abre la ventana, no antigüedad.</p><div class="btns"><button class="tbtn how" type="button" data-how="8.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-12" id="card-8-4" data-card="8.4">
+      <div class="card-top"><span class="card-id">8.4</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Las cohortes recientes no se van antes; entran, y se quedan, con menor ticket</h3>
+      <p class="sub">Cohortes trimestrales: tamaño, ticket de entrada, retención de logos e ingreso en M1 / M3 / M6 / M12 y porcentaje con expansión en los primeros seis meses.</p>
+      <div class="tablewrap" id="cohortTable"></div>
+      <div class="foot"><p class="note">Retención de ingreso = MRR de la cohorte en Mₖ ÷ MRR de esos mismos clientes en M0. "Con expansión" = al menos una expansión entre M1 y M6 (clientes con seis meses de historia).</p><div class="btns"><button class="tbtn how" type="button" data-how="8.4">¿Cómo lo sabemos?</button></div></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>Las cohortes recientes no se van antes: retención de logos al M1 de <b>{{m1_logo_recent_min}}–{{m1_logo_recent_max}}</b> en los trimestres completos de 2023–24, frente a {{m1_logo_2022_min}}–{{m1_logo_2022_max}} en 2022.</li>
+      <li>La retención de logos al M12 va de {{m12_logo_min}} a {{m12_logo_max}} en las cohortes trimestrales completamente observadas.</li>
+      <li>La retención de ingreso contra M0 es baja por construcción en las cohortes de 2022 (M1 ≤ {{rev_m1_2022_max}}) porque su M0 incluye primeros pagos grandes; en 2023–24, M1 es ≥ {{rev_m1_recent_min}}.</li>
+      <li>Base previa (n = {{base_size}}): el {{base_logo_end}} sigue pagando en oct-24 y conserva el {{base_rev_end}} de su MRR de {{window_start}}.</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>¿Los picos del primer mes en 2022 son cargos de instalación, prepagos o pagos atrasados?</li>
+      <li>¿Las cohortes de menor ticket expanden después o se quedan en su nivel de entrada? <button class="inv" type="button" data-qid="Q2">Investigar →</button></li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 09 MOVIMIENTOS -->
+<section class="section" id="movements">
+  <div class="kicker"><span class="num">09</span>Movimientos de MRR<span class="dom">Resultado</span></div>
+  <h2 class="question">¿Qué mueve el MRR pagado de un mes a otro?</h2>
+  <div class="answer" data-answer="movements"></div>
+  <div class="callout warn">
+    <div class="ic">!</div>
+    <div>
+      <p><b>Estas categorías describen movimientos del monto pagado observado.</b> Con los datos actuales no podemos distinguir si una expansión o contracción proviene de uso, plan, pricing, descuento, créditos u otra decisión comercial.</p>
+    </div>
+  </div>
+  
+  <div class="grid">
+    <article class="card span-12" id="card-9-1" data-card="9.1">
+      <div class="card-top"><span class="card-id">9.1</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Los movimientos brutos son {{gross_net_ratio}} el cambio neto: se movieron {{gross_movement}} para producir {{net_movement}} de crecimiento</h3>
+      <p class="sub">Puente mensual de MRR, COP: entradas sobre la línea, salidas debajo, cambio neto como línea.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="bridgeMonthly"></div>
+      <div class="foot"><p class="note">Identidad del puente verificada en cada mes: ΔMRR − (altas + expansión + reactivación + contracción + churn) = COP {{bridge_max_diff}} (máximo absoluto). Feb-22 atenuado (arrastre).</p><div class="btns"><button class="tbtn how" type="button" data-how="9.1">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-9-2" data-card="9.2">
+      <div class="card-top"><span class="card-id">9.2</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>{{lb_to}}: las reactivaciones fueron la mayor entrada ({{lb_reactivation_mrr_cop}})</h3>
+      <p class="sub">Puente de MRR {{lb_from}} → {{lb_to}}, COP. El eje no empieza en cero.</p>
+      <div class="chart" data-chart="bridgeLast"></div>
+      <div class="stats" id="lastCheck"></div>
+      <div class="foot"><p class="note">MRR anterior + altas + expansión + reactivación − contracción − churn = MRR actual.</p><div class="btns"><button class="tbtn how" type="button" data-how="9.2">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-9-3" data-card="9.3">
+      <div class="card-top"><span class="card-id">9.3</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag prec"><i>!</i>Precaución</span></span></div>
+      <h3>El {{churn_back_1m}} de los churns observados vuelve al mes siguiente</h3>
+      <p class="sub">Churns según el tiempo hasta el siguiente pago, por año del churn.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="returnBuckets"></div>
+      <div class="foot"><p class="note">"Sin volver a oct-24" está censurado a la derecha: los eventos recientes tuvieron poco tiempo para volver.</p><div class="btns"><button class="tbtn how" type="button" data-how="9.3">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-9-4" data-card="9.4">
+      <div class="card-top"><span class="card-id">9.4</span><span class="tag explo"><i>?</i>Explorando</span></div>
+      <h3>¿Por qué se vuelven comunes los ajustes pequeños y los montos fuera de la grilla?</h3>
+      <p class="sub">Porcentaje de expansiones y contracciones menores a 10%, y porcentaje de clientes activos que pagan un monto fuera de la grilla de COP 2.100, por semestre.</p>
+      <div class="legend"></div>
+      <div class="chart" data-chart="smallAdjust"></div>
+      <div class="foot"><p class="note">En 2022 S2, el {{grid_2022h2}} de los montos pagados eran múltiplos exactos de COP 2.100 (por ejemplo 42.000 o 63.000); en 2024 S2, el {{grid_2024h2}}. Es un patrón; su causa no está en los datos.</p><div class="btns"><button class="tbtn how" type="button" data-how="9.4">¿Cómo lo sabemos?</button><button class="tbtn" aria-pressed="false">Ver datos</button></div></div>
+      <div class="table-view" hidden></div>
+    </article>
+    <article class="card span-6" id="card-9-5" data-card="9.5">
+      <div class="card-top"><span class="card-id">9.5</span><span class="tag hecho"><i>✓</i>Hecho observado</span></div>
+      <h3>Los puentes anuales cuadran exactamente</h3>
+      <p class="sub">MRR de apertura + movimientos = MRR de cierre, COP.</p>
+      <div class="tablewrap" id="annualBridgeTable"></div>
+      <div class="foot"><p class="note">2022 empieza en feb (ene-22 es la apertura).</p><div class="btns"><button class="tbtn how" type="button" data-how="9.5">¿Cómo lo sabemos?</button></div></div>
+    </article>
+
+    <article class="card span-12" id="card-9-6" data-card="9.6">
+      <div class="card-top"><span class="card-id">9.6 · CASO CFO</span><span class="tags"><span class="tag hecho"><i>✓</i>Hecho observado</span><span class="tag hipo"><i>~</i>Hipótesis</span></span></div>
+      <h3>¿Contracción o descuento? El puente actual no puede distinguirlo</h3>
+      <p class="sub">Tres situaciones distintas producen el mismo movimiento en el monto pagado. Las cifras de la derecha están medidas en Finora; la lectura "parte de esto es descuento o precio" es hipótesis.</p>
+      <div class="grid" style="gap:18px;margin-top:4px">
+        <div class="span-7">
+          <div class="tablewrap">
+            <table class="tbl">
+              <thead><tr><th>Caso</th><th>Qué pasó</th><th>El puente actual registra</th><th>Qué cambió de verdad</th></tr></thead>
+              <tbody>
+                <tr><td><b>A</b></td><td>Suscripción 100 → 100; descuento 0 → 20; paga 80</td><td>Contracción de 20</td><td>Nada en el negocio subyacente; −20 por decisión comercial</td></tr>
+                <tr><td><b>B</b></td><td>Suscripción 100 → 130; descuento 0 → 30; paga 100</td><td>Sin movimiento</td><td>+30 de expansión real, compensado por −30 de descuento</td></tr>
+                <tr><td><b>C</b></td><td>Suscripción 130; vence el descuento de 30; paga 130</td><td>Expansión de 30</td><td>Nada en el negocio subyacente; +30 al realizarse el descuento</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="span-5">
+          <div class="stats" style="margin-top:0">
+            <div class="stat"><div class="k">Churn que vuelve</div><div class="v">{{churn_back_1m}}</div><div class="s">de los churns vuelve al mes siguiente ({{churn_mrr_back_1m}} del MRR)</div></div>
+            <div class="stat"><div class="k">Expansión que se revierte</div><div class="v">{{exp_mrr_revert}}</div><div class="s">del MRR de expansión, al mes siguiente</div></div>
+            <div class="stat"><div class="k">Ajustes menores a 10%</div><div class="v">{{small_exp_first}} → {{small_exp_last}}</div><div class="s">de las expansiones, {{small_half_first}} → {{small_half_last}}</div></div>
+            <div class="stat"><div class="k">Fuera de la grilla</div><div class="v">{{offgrid_2022s2}} → {{offgrid_2024s2}}</div><div class="s">de los meses-cliente activos, 2022 S2 → 2024 S2</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout info" style="margin:14px 0 0">
+        <div class="ic">i</div>
+        <div>
+          <p><b>Lo que necesitaríamos para separar las tres capas</b> (negocio subyacente, decisión comercial y cobro): seis campos por cliente y mes.</p>
+          <ul>
+            <li><code>list_mrr</code>: valor de lo contratado a precio de lista.</li>
+            <li><code>recurring_discount</code>: descuento permanente o negociado.</li>
+            <li><code>temporary_discount</code> y <code>temporary_discount_end</code>: promoción y su vencimiento.</li>
+            <li><code>credits</code>: concesiones no recurrentes del mes.</li>
+            <li><code>subscription_status</code>: activa, pausada o cancelada.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot"><p class="note">Con los datos actuales la brecha comercial es <b>no evaluable</b>. El modelo completo está en la propuesta de arquitectura v1.2, §10. <button class="inv" type="button" data-qid="Q7">Investigar →</button></p><div class="btns"><button class="tbtn how" type="button" data-how="9.6">¿Cómo lo sabemos?</button></div></div>
+    </article>
+  </div>
+  <div class="findings after">
+    <div class="panel facts glass"><h4>Qué más muestran los datos</h4><ul>
+      <li>En la ventana, los movimientos brutos suman <b>{{gross_movement}}</b> para producir <b>{{net_movement}}</b> de cambio neto ({{gross_net_ratio}}).</li>
+      <li>El {{churn_back_1m}} de los churns observados ({{churn_mrr_back_1m}} del MRR de churn) vuelve al mes siguiente; el {{churn_back_any}} vuelve en algún momento antes de oct-24.</li>
+      <li>El {{exp_mrr_revert}} del MRR de expansión se revierte al mes siguiente (picos de un mes); el {{con_mrr_post_spike}} del MRR de contracción es el regreso a lo normal después de uno de esos picos.</li>
+      <li>{{lb_to}}: {{lb_opening_mrr_cop}} + {{lb_new_mrr_cop}} de altas + {{lb_expansion_mrr_cop}} de expansión + {{lb_reactivation_mrr_cop}} de reactivación − {{lb_contraction_abs}} de contracción − {{lb_churn_abs}} de churn = {{lb_closing_mrr_cop}} (residuo COP {{lb_check}}).</li>
+    </ul></div>
+    <div class="panel open glass"><h4>Preguntas abiertas</h4><ul>
+      <li>Los ajustes pequeños (menos de 10%) pasaron de {{small_exp_first}} de las expansiones en {{small_half_first}} a {{small_exp_last}} en {{small_half_last}}. ¿Indexación? ¿Descuentos? ¿Uso?</li>
+      <li>¿Un mes sin pago debe contar como churn en la vista del CFO? Es una decisión de definición para la siguiente fase. <button class="inv" type="button" data-qid="Q7">Investigar →</button></li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ======================================================= 10 SÍNTESIS -->
+<section class="section" id="knowledge">
+  <div class="kicker"><span class="num">10</span>Lo que sabemos · sospechamos · no podemos saber<span class="dom">Síntesis</span></div>
+  <h2 class="question">¿Dónde termina la descripción y dónde empieza la hipótesis?</h2>
+  <p class="sec-lede">El límite que traza esta fase antes de explicar o decidir nada.</p>
+  <div class="ksc">
+    <div class="panel facts glass">
+      <h3>Lo que sabemos</h3><p>Demostrable directamente con los datos.</p>
+      <ul>
+        <li>El panel está completo: {{n_customers}} clientes × {{n_months}} meses, sin duplicados ni faltantes, y cada ID tiene industria.</li>
+        <li>Clientes activos {{active_multiple}}, MRR pagado {{mrr_multiple}}, MRR por cliente activo {{arpa_change}} ({{window_start}} → {{window_end}}).</li>
+        <li>Las altas por mes se duplicaron de 2022 a 2023–24; el MRR nuevo por mes no.</li>
+        <li>El ticket de entrada bajó desde {{step_month}} en todas las industrias; el {{dec_within_share}} de la caída del promedio ocurre dentro de ellas.</li>
+        <li>Los clientes activos en {{window_start}} conservan su MRR por cliente ({{base_arpa_start}} → {{base_arpa_end}}); las cosechas 2023–24 pagan menos que las de 2022.</li>
+        <li>El S&amp;M cayó {{sm_drop_abs}} a mitad de 2023 y en 2024 promedió {{sm_chg_22_24}} frente a 2022, mientras las altas crecían.</li>
+        <li>Gasto y altas se correlacionan negativamente en niveles y no se correlacionan en cambios mes a mes (n ≈ 30).</li>
+        <li>Las cohortes recientes retienen igual o mejor al inicio; el churn mensual observado pasó de {{churn_rate_2022}} a {{churn_rate_2024}}.</li>
+        <li>El {{churn_back_1m}} de los churns observados vuelve al mes siguiente; los movimientos brutos son {{gross_net_ratio}} el cambio neto.</li>
+        <li>Todos los puentes (cliente-mes, mes y año) cuadran a COP 0,00.</li>
+      </ul>
+    </div>
+    <div class="panel hyp glass">
+      <h3>Lo que sospechamos</h3><p>Patrones razonables que hay que validar con Finora.</p>
+      <ul>
+        <li><code>amount</code> es monto facturado o cobrado por mes, no MRR contratado: churn, reactivación, expansión y contracción incluyen timing de pago.</li>
+        <li>Parte de las altas de feb-22 (y quizá algunas posteriores) son clientes previos que regresan tras un hueco.</li>
+        <li>El escalón del ticket en {{step_month}} es consistente con un cambio de precios o empaquetamiento, descuentos o clientes más pequeños dentro de cada industria.</li>
+        <li>El aumento de altas mientras bajaba el gasto es consistente con canales fuera del archivo de S&amp;M (orgánico, referidos, alianzas), efectos con más de 3 meses de rezago o un precio de entrada menor.</li>
+        <li>El archivo de S&amp;M se construyó de arriba hacia abajo; Freelance pudo reclasificarse a Team en {{team_break}}; PayrollExpenses se comporta como partida de ajuste.</li>
+        <li>El aumento de ajustes pequeños y de montos fuera de la grilla desde 2023 es consistente con indexación, descuentos, prorrateos o componentes por uso.</li>
+        <li>Los picos del primer mes en 2022 pueden ser cargos de instalación o prepagos.</li>
+      </ul>
+    </div>
+    <div class="panel cannot glass">
+      <h3>Lo que no podemos saber</h3><p>No está en estos archivos; nunca se rellena con supuestos.</p>
+      <ul>
+        <li>Etapas del funnel (New → Working → Engaged → SQL → Demo → Proposal → Won) y la conversión entre ellas.</li>
+        <li>Fechas de entrada y salida de cada etapa; speed to lead; tiempo de respuesta; velocidad de cierre.</li>
+        <li>Fuente del lead y atribución por canal.</li>
+        <li>SDR o AE dueño de cada oportunidad o cliente.</li>
+        <li>Venta self-serve frente a venta asistida.</li>
+        <li>Precios, planes, precio de lista vs pagado; valor del contrato o suscripción; frecuencia de facturación.</li>
+        <li>Descuentos, promociones, créditos y sus fechas.</li>
+        <li>Motivos de churn, downgrade, pausa o reactivación.</li>
+        <li>Si <code>amount</code> es facturado, cobrado o contratado; impuestos; la unidad y escala del S&amp;M.</li>
+        <li>Tamaño o geografía del cliente o cualquier segmentación además de la industria; la historia antes de {{window_start}} y después de {{window_end}}.</li>
+      </ul>
+    </div>
+  </div>
+
+  <article class="card" style="margin-top:22px" id="card-10-1" data-card="10.1">
+    <div class="card-top"><span class="card-id">10.1 · PREGUNTAS PARA FINORA</span><span class="tag explo"><i>?</i>Explorando</span></div>
+    <h3>Preguntas que surgieron de los datos</h3>
+    <p class="sub">Sus respuestas moverían puntos de "sospechamos" a "sabemos".</p>
+    <ol class="qlist" id="finoraQuestions"></ol>
+  </article>
+
+  <article class="card" style="margin-top:18px" id="card-10-2" data-card="10.2">
+    <div class="card-top"><span class="card-id">10.2 · AFIRMACIONES VERIFICADAS</span><span class="tag hecho"><i>✓</i>Verificado en código</span></div>
+    <h3>Cada título con conclusión está respaldado por una verificación en el pipeline</h3>
+    <p class="sub">Si los datos cambian y una afirmación deja de ser cierta, <code>finora_eda.py</code> se detiene en lugar de publicarla. IDs estables por dominio: RES, ADQ, RET, MON, INV y DAT.</p>
+    <div class="tablewrap" id="claimsTable"></div>
+  </article>
+
+  <footer class="repro glass">
+    <b>Reproducibilidad.</b> <code>python3 finora_eda.py</code> lee <code>data/raw/</code> y <code>brain/</code>, y reconstruye este archivo, <code>finora_analytical_dataset.csv</code>, <code>finora_monthly_metrics.csv</code>, <code>finora_eda_notes.md</code>, <code>supporting/*.csv</code> y <code>brain/evidence/canonical_findings.yaml</code>. Generado {{generated}}. Huellas de las fuentes (SHA-256, primeros 12): <span id="hashes" class="mono"></span>
+  </footer>
+</section>
+</main>
+
+<!-- ======================================================= DOCUMENTO DE INVESTIGACIÓN -->
+<section class="invdoc" id="invdoc" hidden aria-label="Investigación">
+  <div class="inv-top">
+    <button class="inv-btn" type="button" id="invBack">← Volver al workspace</button>
+    <span class="k" id="invKicker">Investigación</span>
+    <span class="sp"></span>
+    <span id="invStatus"></span>
+    <button class="inv-btn primary" type="button" id="invLive" hidden>Investigar en vivo</button>
+  </div>
+  <div class="inv-wrap" id="invBody"></div>
+</section>
+
+<!-- ======================================================= PALETA Y PANEL -->
+<div class="scrim" id="scrim"></div>
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="¿Qué quieres entender del negocio?">
+  <div class="pal-in"><span class="spark-ic" aria-hidden="true">?</span><input id="palInput" type="text" placeholder="¿Qué quieres entender del negocio?" autocomplete="off" aria-label="Pregunta"><button class="pal-x" type="button" data-close>Esc</button></div>
+  <div class="pal-body" id="palBody"></div>
+</div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="¿Cómo lo sabemos?">
+  <div class="dr-head"><div class="t"><div class="k">¿Cómo lo sabemos? · <span id="drId"></span></div><h5 id="drTitle"></h5></div><button class="pal-x" type="button" data-close>Esc</button></div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<script>
+const DATA = /*__DATA__*/null;
+</script>
+<script>
+/*__APP_JS__*/
+</script>
+</body>
+</html>

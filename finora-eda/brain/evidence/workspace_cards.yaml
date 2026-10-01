@@ -1,0 +1,333 @@
+# Linaje de cada tarjeta del workspace (Fase 1): qué muestra, con qué métricas, cómo se calcula, de dónde viene,
+# qué afirmaciones verificadas respalda y qué precauciones aplican. Alimenta el panel "¿Cómo lo sabemos?".
+# Las cifras no se escriben aquí: vienen de las afirmaciones (claims) y de los datos del pipeline.
+version: 1
+cards:
+  "1.2":
+    muestra: Proporción de cada cohorte mensual cuyo primer pago es exactamente el doble del segundo.
+    metricas: [new_customers]
+    metodo: Para cada cohorte se compara el primer monto de cada cliente con el segundo (tolerancia de 0,1%). Feb-22 se compara contra la tasa conjunta de las cohortes posteriores.
+    codigo: finora_eda.py · main() → supporting/entry_catchup_signature_by_cohort.csv
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-DAT-02]
+    caveats: [CV-VENTANA]
+  "1.3":
+    muestra: Serie mensual de cuatro clientes elegidos a mano para ilustrar patrones de pago. No es una muestra representativa.
+    metricas: [total_paid_mrr_cop]
+    metodo: Montos observados × 10.000. La línea "usual" es el monto más frecuente del cliente. La prevalencia se mide con la firma de pagos múltiples (2 a 12 veces el monto usual, tolerancia de 0,5%, monto usual repetido al menos 3 meses).
+    codigo: finora_eda.py · build_customer_month() → multi_month_payment_signature
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-RET-02, C-DAT-03]
+    caveats: [CV-AMOUNT-COBRO]
+  "1.4":
+    muestra: Distribución de los montos mensuales positivos, en bandas logarítmicas de COP.
+    metricas: [total_paid_mrr_cop]
+    metodo: Histograma de meses-cliente con monto mayor que cero. Límite de valores extremos = Q3 + 3·RIC sobre los montos positivos.
+    codigo: finora_eda.py · audit_transactions() y extra_views() → amount_hist
+    fuente: Transactions.csv (amount)
+    claims: []
+    caveats: [CV-OUTLIERS]
+  "1.5":
+    muestra: Participación de Team, PayrollExpenses y Freelance en el S&M total de cada mes.
+    metricas: [total_sm_spend]
+    metodo: Cada rubro dividido entre el total del mes. Se verifica en cuántos meses cada rubro es un porcentaje entero del total.
+    codigo: finora_eda.py · audit_sm()
+    fuente: S&M_spend.csv (Month y los siete rubros)
+    claims: [C-DAT-01]
+    caveats: [CV-SM-ASIGNACION, CV-PAYROLL-NEG, CV-FREELANCE-CERO]
+  "2.1":
+    muestra: Clientes activos, MRR pagado y MRR por cliente activo, en índice ene-22 = 100.
+    metricas: [active_customers, total_paid_mrr_cop, mrr_per_active_customer_cop]
+    metodo: Cada serie se divide entre su valor de ene-22 y se multiplica por 100. Son stocks, así que la censura inicial no los afecta.
+    codigo: finora_eda.py · build_monthly()
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-RES-01, C-RES-02]
+    caveats: [CV-AMOUNT-COBRO]
+  "2.2":
+    muestra: Altas, reactivaciones y churn observado por mes, y altas netas.
+    metricas: [new_customers, reactivated_customers, churned_customers, net_customer_adds]
+    metodo: Conteo de banderas por mes. Altas netas = altas + reactivaciones − churn, validado contra el cambio de clientes activos en cada mes.
+    codigo: finora_eda.py · build_customer_month() y build_monthly()
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-RES-03]
+    caveats: [CV-VENTANA, CV-CHURN-PAUSAS]
+  "2.3":
+    muestra: MRR pagado mensual y su promedio móvil de 3 meses.
+    metricas: [total_paid_mrr_cop]
+    metodo: Suma mensual del monto pagado × 10.000; promedio móvil simple de 3 meses.
+    codigo: finora_eda.py · build_monthly()
+    fuente: Transactions.csv (amount)
+    claims: []
+    caveats: [CV-AMOUNT-COBRO]
+  "3.1":
+    muestra: Promedio, mediana y rango P25–P75 del ticket de entrada, por mes.
+    metricas: [entry_ticket, new_mrr_cop, new_customers]
+    metodo: Primer monto positivo de cada alta. Promedio = MRR nuevo ÷ altas; mediana y percentiles sobre los mismos montos. El escalón es el primer mes desde el cual toda mediana mensual queda bajo la mediana de 2022.
+    codigo: finora_eda.py · build_monthly() y build_facts() → step_month
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-ADQ-01, C-ADQ-03]
+    caveats: [CV-M0-PICOS-2022, CV-VENTANA]
+  "3.2":
+    muestra: Distribución del ticket de entrada por bandas de precio, por año.
+    metricas: [entry_ticket]
+    metodo: El primer monto de cada alta se clasifica en bandas de COP; se reporta el porcentaje de altas del año en cada banda.
+    codigo: finora_eda.py · extra_views() → price_bands
+    fuente: Transactions.csv (ID, month, amount)
+    claims: []
+    caveats: [CV-VENTANA]
+  "3.3":
+    muestra: MRR por cliente activo de cada cosecha (año de alta) en el tiempo, frente al promedio de la empresa.
+    metricas: [vintage_arpa, mrr_per_active_customer_cop]
+    metodo: MRR pagado de los clientes de cada cosecha dividido entre los que siguen activos. Se muestra cuando la cosecha tiene al menos 30 activos.
+    codigo: finora_eda.py · extra_views() → vintage_arpa
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-MON-01, C-MON-02, C-MON-04]
+    caveats: [CV-VENTANA]
+  "3.4":
+    muestra: Métricas del ticket de entrada por año de alta.
+    metricas: [entry_ticket]
+    metodo: Promedio, mediana, percentiles, promedio winsorizado en el P99 conjunto, run-rate temprano (mediana de los montos positivos de M0–M2) y M1 (incluye ceros).
+    codigo: finora_eda.py · extra_views() → ticket_by_year
+    fuente: Transactions.csv (ID, month, amount)
+    claims: [C-ADQ-02]
+    caveats: [CV-M0-PICOS-2022, CV-OUTLIERS]
+  "4.1":
+    muestra: S&M total por grupo analítico, por mes.
+    metricas: [total_sm_spend, demand_gen_spend, sales_capacity_spend, enablement_spend]
+    metodo: Suma de rubros por grupo. El total incluye los siete rubros; hay una serie de sensibilidad sin PayrollExpenses.
+    codigo: finora_eda.py · build_monthly()
+    fuente: S&M_spend.csv
+    claims: [C-INV-01]
+    caveats: [CV-SM-UNIDAD, CV-SM-ASIGNACION]
+  "4.2":
+    muestra: Los siete rubros de S&M por separado, cada uno en su propia escala.
+    metricas: [paid_media, total_sm_spend]
+    metodo: Valores tal como vienen en el archivo, convertidos de texto a número.
+    codigo: finora_eda.py · audit_sm() → parse_money()
+    fuente: S&M_spend.csv
+    claims: [C-DAT-01]
+    caveats: [CV-SM-UNIDAD, CV-PAYROLL-NEG, CV-FREELANCE-CERO]
+  "4.3":
+    muestra: Gasto y resultados en paneles alineados por mes.
+    metricas: [paid_media, demand_gen_spend, total_sm_spend, sales_capacity_spend, new_customers, new_mrr_cop, net_customer_adds, total_paid_mrr_cop]
+    metodo: Series originales en paneles separados con el mismo eje temporal. Alineación visual, sin atribución.
+    codigo: finora_eda.py · build_monthly()
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: []
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+  "4.4":
+    muestra: S&M total, altas y MRR nuevo en índice 2022 = 100, con promedio móvil de 3 meses.
+    metricas: [total_sm_spend, new_customers, new_mrr_cop]
+    metodo: Promedio móvil de 3 meses dividido entre el promedio de mar–dic 2022, por 100.
+    codigo: finora_eda.py · extra_views() → index_series
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: [C-INV-01]
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+  "4.5":
+    muestra: Eficiencia anual agregada.
+    metricas: [sm_per_new_customer, sm_per_new_mrr_mm]
+    metodo: Suma del gasto dividida entre la suma de altas (o del MRR nuevo en millones de COP) de los meses limpios del año. Incluye los inversos.
+    codigo: finora_eda.py · extra_views() → efficiency_by_year
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: [C-INV-02]
+    caveats: [CV-SM-UNIDAD]
+  "4.6":
+    muestra: Eficiencia mensual y de los últimos 3 meses.
+    metricas: [sm_per_new_customer, sm_per_new_mrr_mm]
+    metodo: Gasto del mes dividido entre altas o MRR nuevo del mes. La versión de 3 meses usa sumas de tres meses limpios.
+    codigo: finora_eda.py · build_monthly()
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: [C-INV-02]
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+  "5.1":
+    muestra: Dispersión entre el gasto de t−k y el resultado de t, para el gasto, resultado, rezago y transformación elegidos.
+    metricas: [paid_media, demand_gen_spend, total_sm_spend, new_customers, new_mrr_cop]
+    metodo: Pearson y Spearman con n y p, en niveles y en cambios mes a mes, sobre la ventana limpia de resultados. La recta es un ajuste de mínimos cuadrados solo para leer la dirección.
+    codigo: finora_eda.py · lag_correlations()
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: [C-INV-03]
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+  "5.2":
+    muestra: Las dos series estandarizadas (puntaje z) con el rezago elegido.
+    metricas: [paid_media, demand_gen_spend, total_sm_spend, new_customers, new_mrr_cop]
+    metodo: Puntaje z = (valor − promedio) ÷ desviación estándar sobre la ventana graficada.
+    codigo: finora_eda.py · lag_correlations() (series en el payload)
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: []
+    caveats: [CV-SM-UNIDAD]
+  "5.3":
+    muestra: Matriz de correlaciones de Pearson por rezago, en niveles y en cambios mes a mes.
+    metricas: [paid_media, demand_gen_spend, total_sm_spend, new_customers, new_mrr_cop]
+    metodo: 48 pruebas (3 gastos × 2 resultados × 4 rezagos × 2 transformaciones). La sensibilidad con feb-22 está en la vista de datos.
+    codigo: finora_eda.py · lag_correlations() → supporting/lag_correlations.csv
+    fuente: S&M_spend.csv y Transactions.csv
+    claims: [C-INV-03, C-INV-04]
+    caveats: [CV-SM-UNIDAD, CV-VENTANA]
+  "6.1":
+    muestra: Participación de cada industria en los clientes activos, por mes.
+    metricas: [active_customers]
+    metodo: Clientes activos de la industria dividido entre el total de activos del mes.
+    codigo: finora_eda.py · industry_tables()
+    fuente: Transactions.csv + Industry.csv (ID limpio de "Cliente N")
+    claims: [C-RES-07]
+    caveats: []
+  "6.2":
+    muestra: Participación de cada industria en el MRR pagado, por mes.
+    metricas: [total_paid_mrr_cop]
+    metodo: MRR pagado de la industria dividido entre el MRR total del mes.
+    codigo: finora_eda.py · industry_tables()
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-RES-06]
+    caveats: [CV-OUTLIERS]
+  "6.3":
+    muestra: Participación de cada industria en las altas, por semestre.
+    metricas: [new_customers]
+    metodo: Altas de la industria dividido entre las altas del semestre (ventana limpia).
+    codigo: finora_eda.py · industry_tables() → half
+    fuente: Transactions.csv + Industry.csv
+    claims: []
+    caveats: [CV-VENTANA]
+  "6.4":
+    muestra: Participación de cada industria en el MRR nuevo, por semestre.
+    metricas: [new_mrr_cop]
+    metodo: MRR nuevo de la industria dividido entre el MRR nuevo del semestre.
+    codigo: finora_eda.py · industry_tables() → half
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-06]
+    caveats: [CV-VENTANA, CV-M0-PICOS-2022]
+  "6.5":
+    muestra: Ticket de entrada por industria y año, en promedio y mediana.
+    metricas: [entry_ticket]
+    metodo: Promedio = MRR nuevo ÷ altas de la industria en el año; mediana sobre los primeros montos.
+    codigo: finora_eda.py · industry_tables() y decomposition() → medians
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-05]
+    caveats: [CV-M0-PICOS-2022]
+  "6.6":
+    muestra: MRR por cliente activo de cada industria, con el promedio de la empresa como referencia.
+    metricas: [mrr_per_active_customer_cop]
+    metodo: MRR pagado de la industria dividido entre sus clientes activos; misma escala en todos los paneles.
+    codigo: finora_eda.py · industry_tables()
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-MON-05]
+    caveats: [CV-AMOUNT-COBRO]
+  "6.7":
+    muestra: Tablero por industria y año.
+    metricas: [active_customers, total_paid_mrr_cop, mrr_per_active_customer_cop, new_customers, entry_ticket, logo_churn_rate]
+    metodo: Stocks al último mes de cada periodo; flujos sumados sobre los meses limpios del año.
+    codigo: finora_eda.py · industry_tables() → supporting/industry_scorecard_by_year.csv
+    fuente: Transactions.csv + Industry.csv
+    claims: []
+    caveats: [CV-VENTANA]
+  "7.1":
+    muestra: Cascada del ticket de entrada promedio 2022 → mix → dentro de industria → 2024.
+    metricas: [entry_ticket]
+    metodo: "Descomposición de Shapley (punto medio): mix = Σ Δsᵢ · (aᵢ⁰ + aᵢ¹)/2; dentro = Σ Δaᵢ · (sᵢ⁰ + sᵢ¹)/2. Intervalos con 2.000 remuestreos bootstrap."
+    codigo: finora_eda.py · decomposition(), shapley(), bootstrap_decomp()
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-04]
+    caveats: [CV-M0-PICOS-2022]
+  "7.2":
+    muestra: Brecha del ticket promedio frente a 2022 por semestre, separada en mix y efecto dentro.
+    metricas: [entry_ticket]
+    metodo: La misma descomposición de Shapley, comparando cada semestre contra la base 2022 (mar–dic).
+    codigo: finora_eda.py · decomposition() → evolution
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-03]
+    caveats: [CV-M0-PICOS-2022]
+  "7.3":
+    muestra: Contribución de cada industria al mix y al efecto dentro, 2022 → 2024.
+    metricas: [entry_ticket]
+    metodo: Contribución de mix = cambio de participación × ticket promedio de ambos periodos; dentro = cambio de ticket × participación promedio.
+    codigo: finora_eda.py · shapley() → supporting/mix_within_by_industry.csv
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-04]
+    caveats: []
+  "7.4":
+    muestra: Robustez de la descomposición por comparación y variante.
+    metricas: [entry_ticket]
+    metodo: Tres comparaciones × tres variantes (M0, winsorizado, run-rate temprano), con Laspeyres como verificación e intervalos bootstrap.
+    codigo: finora_eda.py · decomposition() → supporting/mix_within_decomposition.csv
+    fuente: Transactions.csv + Industry.csv
+    claims: [C-ADQ-04]
+    caveats: []
+  "8.1":
+    muestra: Mapa de calor de cohortes por meses desde el primer pago.
+    metricas: [cohort_logo_retention, cohort_revenue_retention]
+    metodo: Mₖ se calcula solo con clientes que tienen al menos k meses de historia. Las cohortes trimestrales agregan cohortes mensuales.
+    codigo: finora_eda.py · cohorts()
+    fuente: Transactions.csv (ID, month, amount)
+    claims: []
+    caveats: [CV-CHURN-PAUSAS, CV-M0-PICOS-2022]
+  "8.2":
+    muestra: Curvas de cohortes agrupadas por año de alta.
+    metricas: [cohort_logo_retention, cohort_revenue_retention]
+    metodo: Se agregan las cohortes mensuales de cada año; la curva se corta cuando hay menos de 40 clientes observables.
+    codigo: finora_eda.py · cohorts() → yearly
+    fuente: Transactions.csv
+    claims: [C-MON-03]
+    caveats: [CV-CHURN-PAUSAS]
+  "8.3":
+    muestra: La base previa (activos en ene-22) en tiempo calendario.
+    metricas: [cohort_logo_retention, cohort_revenue_retention]
+    metodo: Porcentaje de la base que sigue pagando y porcentaje de su MRR de ene-22 que conserva, mes a mes.
+    codigo: finora_eda.py · cohorts() → flagged
+    fuente: Transactions.csv
+    claims: [C-MON-01]
+    caveats: [CV-VENTANA]
+  "8.4":
+    muestra: Resumen por cohorte trimestral.
+    metricas: [cohort_logo_retention, cohort_revenue_retention, entry_ticket]
+    metodo: Tamaño, ticket de entrada, retención de logos e ingreso en M1/M3/M6/M12 y porcentaje con expansión en los primeros seis meses.
+    codigo: finora_eda.py · cohorts() → supporting/cohort_summary_quarterly.csv
+    fuente: Transactions.csv
+    claims: [C-RET-01, C-MON-03]
+    caveats: [CV-M0-PICOS-2022]
+  "9.1":
+    muestra: Puente mensual de MRR con sus cinco movimientos y el cambio neto.
+    metricas: [new_mrr_cop, expansion_mrr_cop, reactivation_mrr_cop, contraction_mrr_cop, churned_mrr_cop, net_mrr_change_cop]
+    metodo: Movimientos por cliente-mes sumados por mes. La identidad del puente se verifica en cada mes y por cliente.
+    codigo: finora_eda.py · build_customer_month() y build_monthly()
+    fuente: Transactions.csv
+    claims: [C-RES-04]
+    caveats: [CV-AMOUNT-COBRO]
+  "9.2":
+    muestra: Puente del último mes observado.
+    metricas: [new_mrr_cop, expansion_mrr_cop, reactivation_mrr_cop, contraction_mrr_cop, churned_mrr_cop]
+    metodo: MRR del mes anterior + movimientos del mes = MRR del mes; el residuo se muestra.
+    codigo: finora_eda.py · extra_views() → last_bridge
+    fuente: Transactions.csv
+    claims: [C-RES-05]
+    caveats: [CV-AMOUNT-COBRO]
+  "9.3":
+    muestra: Churns observados según el tiempo hasta el siguiente pago, por año.
+    metricas: [churned_customers, reactivated_customers]
+    metodo: Para cada churn se busca el siguiente mes con pago. "Sin volver a oct-24" está censurado a la derecha.
+    codigo: finora_eda.py · movement_diagnostics() → supporting/churn_events.csv
+    fuente: Transactions.csv
+    claims: [C-RET-02]
+    caveats: [CV-CHURN-PAUSAS]
+  "9.4":
+    muestra: Ajustes pequeños (menos de 10%) en expansiones y contracciones, y clientes con montos fuera de la grilla de COP 2.100, por semestre.
+    metricas: [expansion_mrr_cop, contraction_mrr_cop]
+    metodo: Razón entre el monto del mes y el del mes anterior en cada movimiento; la grilla se verifica en micro-unidades exactas.
+    codigo: finora_eda.py · movement_diagnostics() → small_adjustments, grid_share
+    fuente: Transactions.csv
+    claims: [C-DAT-04, C-DAT-05]
+    caveats: [CV-AMOUNT-COBRO]
+  "9.5":
+    muestra: Puentes anuales de MRR.
+    metricas: [new_mrr_cop, expansion_mrr_cop, reactivation_mrr_cop, contraction_mrr_cop, churned_mrr_cop]
+    metodo: MRR de apertura + movimientos del año = MRR de cierre; residuo verificado.
+    codigo: finora_eda.py · extra_views() → annual_bridge
+    fuente: Transactions.csv
+    claims: []
+    caveats: []
+  "9.6":
+    muestra: Por qué el puente actual no puede separar cambios del cliente, decisiones comerciales y cobro (caso CFO).
+    metricas: [churned_mrr_cop, expansion_mrr_cop, contraction_mrr_cop]
+    metodo: Cifras medidas con los datos actuales. La lectura "parte de esto es descuento o precio" es hipótesis. El modelo completo está en la arquitectura v1.2 §10.
+    codigo: finora_eda.py · movement_diagnostics()
+    fuente: Transactions.csv
+    claims: [C-RET-02, C-DAT-03, C-DAT-04, C-DAT-05]
+    caveats: [CV-AMOUNT-COBRO, CV-SIN-FUNNEL]

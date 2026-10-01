@@ -1,0 +1,67 @@
+# Casos de negocio, preguntas doradas y preguntas abiertas para Finora.
+version: 1
+casos:
+  - id: CRO
+    pregunta: Hay más volumen en la parte alta del funnel, pero los clientes nuevos no parecen crecer al mismo ritmo.
+  - id: CFO
+    pregunta: ¿Qué está pasando con el negocio subyacente y cuánto revenue estamos dejando de capturar por decisiones comerciales?
+
+# Preguntas doradas (arquitectura v1.2 §12). En la Fase 1 abren la paleta con las secciones que ya las responden en parte.
+preguntas_doradas:
+  - id: Q1
+    destacada: true
+    dominio: Resultado
+    pregunta: ¿Por qué los clientes crecen más rápido que el MRR?
+    secciones: [growth, monetization, decomposition]
+    tipo: investigacion
+  - id: Q2
+    destacada: true
+    dominio: Resultado
+    pregunta: ¿Por qué disminuyó el MRR por cliente?
+    secciones: [monetization, decomposition, cohorts]
+    tipo: investigacion
+  - id: Q3
+    destacada: true
+    dominio: Adquisición
+    pregunta: ¿Retail explica la caída del ticket?
+    secciones: [decomposition, industries]
+    tipo: investigacion
+  - id: Q4
+    destacada: true
+    dominio: Inversión comercial
+    pregunta: ¿El crecimiento de nuevos clientes tiene relación con Paid Media?
+    secciones: [relationships, sm]
+    tipo: investigacion
+  - id: Q5
+    destacada: true
+    dominio: Retención
+    pregunta: ¿Qué está pasando con el churn?
+    secciones: [cohorts, movements]
+    tipo: investigacion
+  - id: Q6
+    dominio: Resultado
+    pregunta: ¿Qué movió el MRR el último mes?
+    secciones: [movements]
+    tipo: investigacion
+  - id: Q7
+    destacada: true
+    dominio: Monetización de la base
+    pregunta: ¿Qué está pasando con el negocio subyacente y cuánto revenue dejamos de capturar por decisiones comerciales?
+    secciones: [movements, knowledge]
+    tipo: no_evaluable_con_diagnostico
+  - id: Q8
+    dominio: Inversión comercial
+    pregunta: Si Paid Media aumenta 50%, ¿cuántas altas tendríamos?
+    secciones: [relationships]
+    tipo: escenario_no_disponible
+
+preguntas_para_finora:
+  - "¿Qué es exactamente `amount`: monto facturado, cobrado o MRR contratado? ¿Los planes bimestrales, anuales o prepagados se cobran por adelantado?"
+  - "¿Qué cambió en ene-23: lista de precios, empaquetamiento, un plan de entrada nuevo, descuentos, un canal o segmento nuevo?"
+  - ¿Cuál es la unidad de S&M_spend y cómo se definen Team, PayrollExpenses y Freelance? ¿Por qué Team es 12% del total hasta may-23?
+  - ¿Hubo actividades de adquisición fuera de este archivo (alianzas, referidos, orgánico, eventos) en el segundo semestre de 2023?
+  - ¿Los PayrollExpenses negativos son reversos de provisiones anteriores?
+  - ¿Un mes en cero seguido de un pago doble es un cobro atrasado, una pausa o un ciclo de facturación? ¿Debe contar como churn?
+  - ¿Los clientes que entran en feb-22 tienen fecha de inicio de contrato anterior a 2022?
+  - ¿Qué descuentos temporales se planean (caso CFO) y cómo aparecerían en `amount`?
+  - ¿Existe algún atributo del cliente además de la industria (tamaño, plan, ciudad, canal) que se pueda cruzar por ID?

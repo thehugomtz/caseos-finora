@@ -1,0 +1,46 @@
+# Reglas de lenguaje causal en español. Las usa el validador de claims (arquitectura v1.2 §5.4).
+version: 1
+prohibido:
+  # Verbos y giros que afirman causalidad sin identificación causal.
+  - causó
+  - causa
+  - provocó
+  - provoca
+  - generó
+  - genera
+  - impulsó
+  - impulsa
+  - produjo
+  - gracias a
+  - debido a
+  - por culpa de
+  - hizo que
+  - aumentará
+  - reducirá
+# Conjugaciones de los mismos verbos (se evalúan sobre texto en minúsculas y sin acentos).
+patrones:
+  - '\bcaus(o|a|an|aron|ara|aran|aria|arian|ado|ada|ados|adas|ando|e|en)\b'
+  - '\bprovoc(o|a|an|aron|ara|aran|aria|ado|ada|ados|adas|ando)\b'
+  - '\bprovoqu(e|en)\b'
+  - '\bgener(o|a|an|aron|ara|aran|aria|ado|ada|ados|adas|ando|e|en)\b'
+  - '\bimpuls(o|a|an|aron|ara|aran|aria|ado|ada|ados|adas|ando|e|en)\b'
+  - '\bprodu(jo|jeron|ce|cen|cira|ciran|cido|cida|ciendo)\b'
+  - '\bgracias a\b'
+  - '\bdebido a\b'
+  - '\bpor culpa de\b'
+  - '\b(hizo|hicieron|hace|hacen|haria) que\b'
+  - '\b(aumentar|reducir|disminuir|subir|bajar|crecer|caer|mejorar|empeorar)(a|an|ia|ian)\b'
+permitido:
+  - se asocia con
+  - se mueve junto con
+  - coincide con
+  - es consistente con
+  - se observa
+explica:
+  regla: "\"Explica\" solo se permite en claims de tipo descomposición y con sentido contable."
+  ejemplo_valido: El cambio de mix explica 3% de la caída del ticket promedio.
+  ejemplo_invalido: El gasto en Paid Media explica el crecimiento de altas.
+escenarios:
+  regla: Un claim de tipo escenario solo acepta fraseo condicional.
+  ejemplo_valido: Manteniendo todo lo demás constante, eliminar estos descuentos sumaría COP X al MRR neto.
+  ejemplo_invalido: Eliminar estos descuentos aumentará el MRR en COP X.

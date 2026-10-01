@@ -1,0 +1,505 @@
+"""Evaluaciones de la slice (arquitectura v1.2 §12, definición de terminado). No llaman al modelo.
+
+    .venv/bin/python -m evals.run_evals
+
+1. Capa SQL con paridad exacta contra la Fase 1.
+2. Reglas de la capa semántica (ventana limpia, no comparables).
+3. Validador: cifras a mano, cifras con letras, calificativos, lenguaje causal, techos de estado, No evaluable.
+4. Guardas de SQL (solo lectura, solo mart).
+5. Investigación dorada Q2: cobertura MECE, estados esperados, cero afirmaciones prohibidas y 100% de cifras
+   recalculadas desde la evidencia guardada.
+"""
+from __future__ import annotations
+
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+import yaml
+
+from agent import semantic
+from agent.config import BRAIN, GOLDEN, RUNS
+from agent.evidence import Evidence, Registry
+from agent.tools import check_sql
+from agent.validator import (PLAYBOOKS, causal_hits, number_words, qualifiers, stray_digits, validate_claim,
+                             validate_composition, validate_hypotheses)
+from agent.warehouse import build, connect_ro
+
+RESULTS: list[tuple[str, bool, str]] = []
+
+
+def check(name: str, cond: bool, detail: str = ""):
+    RESULTS.append((name, bool(cond), detail))
+
+
+def ev(reg: Registry, **kw) -> Evidence:
+    base = dict(kind="metric", tool="query_metric", params={}, method="m", result={"valores": {}, "formatos": {}})
+    base.update(kw)
+    return reg.add(**base)
+
+
+def sql_layer():
+    with tempfile.TemporaryDirectory() as d:
+        summary = build(Path(d) / "t.duckdb", verbose=False)
+    check("SQL · paridad exacta contra la Fase 1", summary["pruebas_de_paridad"] >= 19, str(summary))
+
+
+def semantic_rules():
+    con = connect_ro()
+    r = semantic.compile_and_run(con, "mrr_per_active_customer_cop")
+    check("Semántica · MRR por cliente ene-22 = 92.839", round(r["valores"]["valor[2022-01]"]) == 92839)
+    r = semantic.compile_and_run(con, "new_customers", compare="yoy", period={"from": "2023-01", "to": "2023-03"})
+    check("Semántica · YoY de altas feb-23 vs feb-22 marcado como no comparable", "2023-02" in r["no_comparable"])
+    r = semantic.compile_and_run(con, "new_customers", grain="year")
+    check("Semántica · los flujos se recortan a la ventana limpia", "CV-VENTANA" in r["caveats"] and r["filas"][0]["meses"] == 10)
+    try:
+        semantic.compile_and_run(con, "total_sm_spend")
+        check("Semántica · métrica fuera de alcance da error tipado", False)
+    except semantic.MetricError:
+        check("Semántica · métrica fuera de alcance da error tipado", True)
+
+
+def validator_rules():
+    reg = Registry()
+    e1 = ev(reg, result={"valores": {"x": 0.97, "y": 0.03}, "formatos": {"x": "pct0", "y": "pct0"}}, ceiling="Hecho observado",
+            tool="run_analysis", method="Shapley", variant="M0", kind="analysis", n=800)
+    e2 = ev(reg, result={"valores": {"x": 0.96}, "formatos": {"x": "pct0"}}, ceiling="Hecho observado",
+            tool="run_analysis", method="Shapley", variant="winsor", kind="analysis", n=800)
+    e3 = ev(reg, result={"valores": {"r": -0.57}, "formatos": {"r": "num2"}}, ceiling="Hecho observado")
+    e4 = ev(reg, result={"valores": {"variacion[2023-02]": -0.72}, "formatos": {}}, no_comparable=("2023-02",))
+    hyp = {"H1", "H1.1"}
+    base = {"tipo": "descriptivo", "estado_propuesto": "Hecho observado", "hipotesis": [{"id": "H1", "postura": "a_favor"}]}
+
+    def v(**kw):
+        return validate_claim({**base, **kw}, reg, hyp)
+
+    check("Validador · rechaza cifras escritas a mano", not v(plantilla="Cayó 38% en el periodo.")["aceptada"])
+    check("Validador · rechaza cifras escritas con letras", not v(plantilla="Bajó en las seis industrias ({x}).",
+                                                                      variables={"x": f"{e1.id}.x"})["aceptada"])
+    check("Validador · rechaza calificativos sin cifra", not v(plantilla="Bajó en casi todos los meses ({x}).",
+                                                                   variables={"x": f"{e1.id}.x"})["aceptada"])
+    for verb in ("causaron", "provocó", "generaron", "impulsaron", "debido a", "hizo que", "aumentará"):
+        r = v(plantilla=f"El mix {verb} la caída de {{x}}.", variables={"x": f"{e1.id}.x"})
+        check(f"Validador · rechaza lenguaje causal ('{verb}')", not r["aceptada"])
+    r = v(plantilla="El mix explica {y} de la caída.", variables={"y": f"{e1.id}.y"})
+    check("Validador · 'explica' fuera de descomposición se rechaza", not r["aceptada"])
+    r = v(plantilla="El mix explica {y} de la caída.", variables={"y": f"{e1.id}.y"}, tipo="descomposicion")
+    check("Validador · 'explica' en descomposición se acepta", r["aceptada"], str(r["motivos"]))
+    r = v(plantilla="Gasto y altas se asocian con r = {r}.", variables={"r": f"{e3.id}.r"}, tipo="asociativo")
+    check("Validador · asociación degradada a Direccional", r["estado"] == "Direccional", str(r))
+    r = v(plantilla="Dentro explica {x}.", variables={"x": f"{e1.id}.x"}, tipo="descomposicion", estado_propuesto="Evidencia fuerte",
+          apoyo=[e1.id, e2.id])
+    check("Validador · Evidencia fuerte con dos variantes se acepta", r["estado"] == "Evidencia fuerte", str(r))
+    r = v(plantilla="Dentro explica {x}.", variables={"x": f"{e1.id}.x"}, tipo="descomposicion", estado_propuesto="Evidencia fuerte")
+    check("Validador · Evidencia fuerte con una sola evidencia se degrada", r["estado"] == "Hecho observado", str(r))
+    r = v(plantilla="El YoY fue {v}.", variables={"v": f"{e4.id}.variacion[2023-02]"})
+    check("Validador · rechaza ligar una comparación no comparable", not r["aceptada"])
+    e5 = ev(reg, kind="sql", tool="run_sql", result={"valores": {"pct_recuperado[2024]": 4.0, "share[2024]": 1.08},
+                                                     "formatos": {"pct_recuperado[2024]": "num2", "share[2024]": "pct0"}})
+    r = v(plantilla="Vuelve al nivel previo {p} de la contracción.", variables={"p": f"{e5.id}.pct_recuperado[2024]|pct0"})
+    check("Validador · rechaza una participación mayor a 100% fuera de una descomposición", not r["aceptada"], str(r.get("texto")))
+    r = v(plantilla="Vuelve al nivel previo {p}% de la contracción.", variables={"p": f"{e5.id}.pct_recuperado[2024]|num1"})
+    check("Validador · puntos porcentuales con num1 y % se aceptan", r["aceptada"], str(r["motivos"]))
+    r = v(plantilla="La composición explica {s} del cambio.", variables={"s": f"{e5.id}.share[2024]"}, tipo="descomposicion")
+    check("Validador · una descomposición puede asignar más de 100% del cambio", r["aceptada"], str(r["motivos"]))
+    r = v(plantilla="No hay precios para separarlo.", estado_propuesto="No evaluable")
+    check("Validador · No evaluable exige datos faltantes", not r["aceptada"])
+    r = v(plantilla="No hay precios para separarlo.", estado_propuesto="No evaluable", datos_faltantes=["precios"])
+    check("Validador · No evaluable con datos faltantes se acepta", r["aceptada"], str(r["motivos"]))
+    errs = validate_hypotheses([{"id": "H1", "pregunta": "¿Entran más baratos?", "nodo": "entrada",
+                                 "firma": {"si_es_cierta": "a", "si_es_falsa": ""}}])
+    check("Validador · árbol sin firma y sin cobertura MECE se rechaza",
+          any("firma" in e for e in errs) and any("identidad completa" in e for e in errs))
+    claims = {"C-1": {"aceptada": True, "texto": "El mix explica 3% de la caída.", "tipo": "descomposicion"}}
+    errs = validate_composition({"respuesta_ejecutiva": {"texto": "El mix explica 4% de la caída.", "claim_ids": ["C-1"]},
+                                 "hallazgos": [], "limites": [], "implicaciones": [], "proximas_preguntas": []}, claims)
+    check("Validador · la narrativa no puede traer cifras que no están en las afirmaciones", any("4" in e for e in errs))
+
+
+def sql_guards():
+    check("SQL · acepta SELECT sobre el mart", check_sql("SELECT vintage, COUNT(*) FROM mart.churn_events GROUP BY 1") is None)
+    check("SQL · rechaza escritura", check_sql("DROP TABLE mart.customer_month") is not None)
+    check("SQL · rechaza leer archivos", check_sql("SELECT * FROM read_csv('/etc/hosts')") is not None)
+    check("SQL · rechaza tablas fuera del mart", check_sql("SELECT * FROM information_schema.tables") is not None)
+
+
+def golden_q2():
+    p = GOLDEN / "Q2.json"
+    if not p.exists():
+        check("Dorada Q2 · existe", False, "falta investigations/golden/Q2.json")
+        return
+    d = json.loads(p.read_text(encoding="utf-8"))
+    check("Dorada Q2 · publicada", d["status"] == "publicada", d.get("error") or "")
+    hyps = d["hipotesis"]
+    nodes = {h["nodo"] for h in hyps}
+    pb = PLAYBOOKS["arpa_decline"]
+    required = [n["id"] for n in pb["nodos"]] + [c["id"] for n in pb["nodos"] for c in n.get("hijos", [])]
+    check("Dorada Q2 · el árbol cubre la identidad (entrada, mix, precio, dentro, salida)", all(r in nodes for r in required))
+    check("Dorada Q2 · toda hipótesis en estado terminal", all(h["estado"] not in ("Pendiente",) for h in hyps),
+          str([(h["id"], h["estado"]) for h in hyps]))
+    by_node = {h["nodo"]: h["estado"] for h in hyps}
+    check("Dorada Q2 · entrada soportada", by_node.get("entrada") == "Soportada", by_node.get("entrada", ""))
+    check("Dorada Q2 · mix de industrias no soportado", by_node.get("entrada.mix_industria") == "No soportada")
+    check("Dorada Q2 · precios y descuentos no evaluables", by_node.get("entrada.precio") == "No evaluable")
+    first_ev = min((e["t"] for e in d["log"] if e["tool"] in ("query_metric", "run_sql", "run_analysis") and e["ok"]), default=None)
+    check("Dorada Q2 · hipótesis registradas antes de la primera evidencia",
+          d["hipotesis_registradas_ms"] is not None and first_ev is not None and d["hipotesis_registradas_ms"] <= first_ev)
+    # 100% de cifras ligadas: se reconstruye el registro y se vuelve a validar cada afirmación aceptada
+    reg = Registry()
+    for e in d["evidencia"]:
+        e = dict(e)
+        for k in ("metric_ids", "caveat_ids", "no_comparable"):
+            e[k] = tuple(e[k])
+        reg.items[e["id"]] = Evidence(**e)
+    hyp_ids = {h["id"] for h in hyps}
+    accepted = [c for c in d["claims"].values() if c["aceptada"]]
+    mismatch = []
+    for c in accepted:
+        r = validate_claim(c, reg, hyp_ids)
+        if not r["aceptada"] or r["texto"] != c["texto"]:
+            mismatch.append(c["id"])
+    check("Dorada Q2 · 100% de cifras recalculadas desde la evidencia", not mismatch, str(mismatch))
+    texts = [c["texto"] for c in accepted]
+    n = d["narrativa"]
+    texts += [n["respuesta_ejecutiva"]["texto"], n["respuesta_ejecutiva"].get("titular") or ""]
+    texts += [h.get(k) or "" for h in n["hallazgos"] for k in ("titular", "interpretacion", "implicacion", "por_que")]
+    texts += [b["texto"] for b in n["limites"] + n["implicaciones"]]
+    bad = [t[:80] for t in texts if causal_hits(t, allow_explica=True)]
+    check("Dorada Q2 · cero lenguaje causal", not bad, str(bad))
+    bad = [c["id"] for c in accepted if stray_digits(c["plantilla"]) or number_words(c["plantilla"]) or qualifiers(c["plantilla"])]
+    check("Dorada Q2 · ninguna plantilla con cifras a mano o calificativos", not bad, str(bad))
+    errs = validate_composition(n, d["claims"]) if not n.get("degradada") else ["composición degradada"]
+    check("Dorada Q2 · la narrativa pasa el validador", not errs, str(errs))
+    orphan_v = [v["id"] for v in d["visuals"].values() if not d["claims"].get(v["claim_id"], {}).get("aceptada")]
+    check("Dorada Q2 · toda gráfica tiene una afirmación aceptada", not orphan_v, str(orphan_v))
+    orphan_c = [c["id"] for c in accepted if c["estado"] != "No evaluable" and not c["apoyo"]]
+    check("Dorada Q2 · toda afirmación tiene evidencia", not orphan_c, str(orphan_c))
+    # respuesta primero: titulares para leer en segundos, y toda conclusión con su visual
+    sin_titular = ([] if n["respuesta_ejecutiva"].get("titular") else ["respuesta"]) + [h["hipotesis_id"] for h in n["hallazgos"] if not h.get("titular")]
+    check("Dorada Q2 · respuesta y hallazgos con titular", not sin_titular, str(sin_titular))
+    sin_visual = [h["hipotesis_id"] for h in n["hallazgos"] if not any(v in d["visuals"] for v in h.get("visual_ids") or [])]
+    check("Dorada Q2 · todo hallazgo tiene su gráfica", not sin_visual, str(sin_visual))
+    cards = yaml.safe_load((BRAIN / "evidence" / "workspace_cards.yaml").read_text(encoding="utf-8"))["cards"]
+    forms = {"linea", "barras", "cascada", "puntos", "kpi", "tabla", "datos", "tarjeta"}
+    bad_v = [v["id"] for v in d["visuals"].values() if v["spec"]["tipo"] not in forms or (v["spec"]["tipo"] == "tarjeta" and
+             v["spec"].get("claim_fase1") not in (cards.get(v["spec"]["tarjeta"], {}).get("claims") or []))]
+    check("Dorada Q2 · toda gráfica tiene una forma válida y su tarjeta existe", not bad_v, str(bad_v))
+
+
+def narrative_rules():
+    from agent import narrative as nar
+    from agent.orchestrator import thread_context
+    nar.NARRATIVES = Path(tempfile.mkdtemp())
+    d = nar.create("Caso CFO", "CFO", "Separar comportamiento de decisiones")
+    ok_piece = {"tipo": "afirmacion", "rol": "Hallazgo", "titulo": "Idas y vueltas", "texto": "Más de 20% se revierte.",
+                "estado": "Hecho observado", "afirmaciones": [{"id": "C-DAT-06", "texto": "Más de 20%…", "estado": "Hecho observado",
+                                                            "cifras": {"rt_share": "25,3%"}}],
+                "visual": {"tipo": "workspace", "chart": "bridgeMonthly", "titulo": "Puente"}, "fuente": {"kind": "afirmacion", "ref": "C-DAT-06"}}
+    d = nar.add_piece(d["id"], ok_piece)
+    d = nar.add_piece(d["id"], {"tipo": "nota", "rol": "Decisión", "titulo": "Registrar descuentos antes de lanzarlos", "nota": "gobierno"})
+    try:
+        nar.add_piece(d["id"], {**ok_piece, "rol": "Conclusión"})
+        bad_role = False
+    except nar.NarrativeError:
+        bad_role = True
+    check("Narrativa · rechaza papeles fuera de Situación → Acción", bad_role)
+    d = nar.update(d["id"], {"orden": ["P-02", "P-01"], "piezas": [{"id": "P-01", "nota": "explica el ruido"}]})
+    check("Narrativa · reordena y edita notas", [x["id"] for x in d["piezas"]] == ["P-02", "P-01"] and d["piezas"][1]["nota"] == "explica el ruido")
+    d2 = nar.create("Caso CRO", "CRO")
+    nar.add_piece(d2["id"], ok_piece)
+    m = nar.merge([d["id"], d2["id"]], "Historia")
+    check("Narrativa · unir no duplica la misma fuente y ordena por papel",
+          [x["rol"] for x in m["piezas"]] == ["Hallazgo", "Decisión"] and len(m["piezas"]) == 2, str([x["rol"] for x in m["piezas"]]))
+    pieces = {x["id"]: x for x in m["piezas"]}
+    good = {"titulo": "Qué mide hoy el MRR", "subtitulo": "", "pendientes": [], "laminas": [
+        {"rol": "Hallazgo", "titulo": "Una cuarta parte se deshace: 25,3% vuelve al mes siguiente", "mensaje": "El monto mezcla cobro con negocio.",
+         "puntos": [], "piezas": ["P-01"], "visual": "P-01", "notas": ""},
+        {"rol": "Decisión", "titulo": "Registrar los descuentos antes de lanzarlos", "mensaje": "Registrar cada descuento temporal con su vencimiento.",
+         "puntos": [], "piezas": ["P-02"], "visual": "", "notas": ""}]}
+    check("Narrativa · una presentación respaldada pasa el validador", not nar.validate_story(good, pieces), str(nar.validate_story(good, pieces)))
+    bad = {**good, "laminas": [{"rol": "Implicación", "titulo": "El 40% del churn es cobro", "mensaje": "Esto provocó errores.", "puntos": [],
+                                "piezas": ["P-01"], "visual": "P-02", "notas": ""}]}
+    errs = nar.validate_story(bad, pieces)
+    check("Narrativa · rechaza cifras que no están en las piezas citadas", any("cifras" in e for e in errs))
+    check("Narrativa · rechaza lenguaje causal en las láminas", any("causal" in e for e in errs))
+    check("Narrativa · la gráfica debe venir de una pieza citada con gráfica", any("gráfica" in e for e in errs))
+    check("Narrativa · implicaciones sin decisión del usuario van en condicional", any("condicional" in e for e in errs))
+    nota_only = {**good, "laminas": [{**good["laminas"][1], "titulo": "Registrar el 25,3% del cobro"}]}
+    check("Narrativa · las notas del usuario no cuentan como evidencia de cifras", any("cifras" in e for e in nar.validate_story(nota_only, pieces)))
+    durable = {"id": "P-09", "tipo": "afirmacion", "rol": "Hallazgo", "titulo": "Churn observado vs durable", "texto": "", "nota": "",
+               "afirmaciones": [{"id": "C-RET-03", "texto": "El churn durable es menor.", "estado": "Hecho observado",
+                                 "cifras": {"churn_dur3_2022": "0,98%"}}], "fuente": {"kind": "afirmacion", "ref": "C-RET-03"}}
+    lab_ok = {**good, "laminas": [{"rol": "Hallazgo", "titulo": "Solo 0,98% se va y no vuelve a pagar en 3 meses",
+                                   "mensaje": "El churn durable es menor.", "puntos": [], "piezas": ["P-09"], "visual": "", "notas": ""}]}
+    lab_bad = {**good, "laminas": [{**lab_ok["laminas"][0], "titulo": "Solo 0,98% se va y no vuelve a pagar en 6 meses"}]}
+    check("Narrativa · la etiqueta de qué mide la cifra cuenta como evidencia (3 meses), otro horizonte no",
+          not nar.validate_story(lab_ok, {"P-09": durable}) and any("cifras" in e for e in nar.validate_story(lab_bad, {"P-09": durable})),
+          str(nar.validate_story(lab_ok, {"P-09": durable})))
+    plan_ok = {"resumen": "El monto pagado mezcla fenómenos.", "secciones": [{"rol": "Hallazgo", "mensaje": "El monto no es MRR",
+               "preguntas": ["¿Qué parte se deshace?"], "piezas": ["P-01"], "afirmaciones": ["C-DAT-06"], "huecos": ["¿Qué es amount?"]}]}
+    check("Narrativa · un esqueleto sin cifras y con IDs válidos pasa", not nar.validate_plan(plan_ok, set(pieces)), str(nar.validate_plan(plan_ok, set(pieces))))
+    plan_bad = {"resumen": "", "secciones": [{"rol": "Hallazgo", "mensaje": "El 25% se deshace", "preguntas": [], "piezas": ["P-09"],
+                                              "afirmaciones": ["C-XXX-99"], "huecos": []}]}
+    errs = nar.validate_plan(plan_bad, set(pieces))
+    check("Narrativa · el esqueleto no lleva cifras ni IDs inventados", len(errs) >= 3, str(errs))
+    fb = nar.fallback_deck(m)
+    check("Narrativa · respaldo: una lámina por pieza (incluidas las decisiones del usuario) y pendientes solo donde no hay piezas",
+          len(fb["laminas"]) == 2 and {q["rol"] for q in fb["pendientes"]} == {"Situación", "Implicación", "Acción"}, str(fb["pendientes"]))
+    ctx = thread_context({"titulo": "x", "texto": "y", "claim_ids": ["C-DAT-06", "C-FAKE-01"]})
+    check("Narrativa · el contexto del hilo es contexto, no evidencia, y solo pasa IDs canónicos",
+          "no evidencia" in ctx and "C-DAT-06" in ctx and "C-FAKE-01" not in ctx)
+
+
+def case_sample():
+    """Respuesta de siete partes de muestra sobre las afirmaciones reales de la dorada Q2 (como si fuera W3)."""
+    d = json.loads((GOLDEN / "Q2.json").read_text(encoding="utf-8"))
+    doc = {"respuesta": {"titular": "El cambio se concentra en la entrada de cosechas de menor ticket",
+                         "texto": "Entre ene-22 y oct-24 el MRR por cliente activo pasó de COP 92,8 mil a COP 57,8 mil; la base "
+                                  "previa no paga menos. Las cosechas 2023 y 2024 ya concentran 65% de los clientes activos.",
+                         "claim_ids": ["C-001", "C-003", "C-006"]},
+           "hechos_observados": ["C-001", "C-002", "C-003", "C-006"],
+           "interpretacion_permitida": [{"texto": "El cambio del monto observado coincide con la entrada de clientes que pagan "
+                                                  "menos, no con una caída de la base previa.", "claim_ids": ["C-001", "C-006"]}],
+           "no_podemos_concluir": [{"texto": "Si el menor ticket de entrada se asocia con precios, planes o descuentos: el panel "
+                                             "no los registra.", "claim_ids": ["C-005"]}],
+           "hipotesis": [{"hipotesis_id": "H1", "hipotesis_caso": "HO3", "lectura": "La entrada concentra el cambio del monto observado.",
+                          "claim_ids": ["C-001", "C-002"]},
+                         {"hipotesis_id": "H2", "hipotesis_caso": "rival", "lectura": "La base previa no paga menos que en ene-22.",
+                          "claim_ids": ["C-006"]}],
+           "preguntas_abiertas": ["¿Qué parte del movimiento corresponde a retornos y cuál a ausencias?",
+                                  "¿Las cosechas recientes recuperan monto con la madurez?"],
+           "siguiente_pregunta": {"id": "W4", "pregunta": "", "por_que": "Conviene ver si alguna industria concentra el cambio antes de mirar cohortes."}}
+    return d, doc
+
+
+def case_rules():
+    from agent import caso
+    from agent.state import Investigation
+    canon = {h["id"] for h in yaml.safe_load((BRAIN / "evidence" / "canonical_findings.yaml").read_text(encoding="utf-8"))["hallazgos"]}
+    check("Caso · el catálogo W0–W7 del brief pasa su validación (IDs, capacidades, hechos y datos faltantes)",
+          not caso.check_questions(canon), str(caso.check_questions(canon)))
+    lv = {q: caso.QUESTIONS[q]["capacidad_nivel"] for q in caso.ORDER}
+    check("Caso · W6 y W7 son brechas críticas bloqueadas; W0–W5 se pueden investigar",
+          [q for q in caso.ORDER if not caso.can_investigate(q)] == ["W6", "W7"] and lv["W2"] == "parcial", str(lv))
+    b = caso.blocked_answer(caso.QUESTIONS["W6"])
+    rows_ok = all(r["evidencia_minima"] and r["fuente"] and r["bloqueada"] for r in b["matriz"])
+    txt = " ".join([b["respuesta"]["titular"], b["respuesta"]["texto"]] + b["hechos_de_datos"] + [i["texto"] for i in b["interpretacion_permitida"]])
+    check("Caso · una bloqueada responde qué falta y dónde, sin cifras ni afirmaciones de pagos",
+          rows_ok and len(b["matriz"]) >= 4 and not b["respuesta"]["claim_ids"] and not stray_digits(caso._strip_ids(txt))
+          and all(h["efecto"] == "sigue abierta" for h in b["hipotesis"]), txt[:200])
+    ctx = caso.case_prompt("W2")
+    check("Caso · el contexto de la pregunta es contexto, no evidencia, y nombra la hipótesis y sus sustitutos inválidos",
+          "no evidencia" in ctx and "HO1" in ctx and "conversión" in ctx and "C-ADQ-07" in ctx)
+
+    d, doc = case_sample()
+    q = caso.QUESTIONS["W3"]
+    errs = caso.validate_case_answer(doc, d["claims"], d["hipotesis"], q)
+    check("Caso · una respuesta de siete partes respaldada pasa el validador", not errs, str(errs))
+
+    def bad(mut):
+        x = json.loads(json.dumps(doc))
+        mut(x)
+        return caso.validate_case_answer(x, d["claims"], d["hipotesis"], q)
+    e = bad(lambda x: x["interpretacion_permitida"][0].update(texto="La caída coincide con descuentos de entrada."))
+    check("Caso · rechaza un sustituto inválido de la pregunta en la interpretación (W3: descuentos)", any("sustituto" in m for m in e), str(e))
+    e = bad(lambda x: x["respuesta"].update(texto=x["respuesta"]["texto"] + " El 40% viene de retail."))
+    check("Caso · rechaza cifras que no están en las afirmaciones citadas", any("cifras" in m for m in e), str(e))
+    e = bad(lambda x: x["hechos_observados"].append("C-005"))
+    check("Caso · en hechos observados solo caben Hecho observado o Evidencia fuerte", any("C-005" in m for m in e), str(e))
+    e = bad(lambda x: x["hipotesis"].append({"hipotesis_id": "H9", "hipotesis_caso": "HO9", "lectura": "x", "claim_ids": []}))
+    check("Caso · la lectura de hipótesis solo usa hipótesis del árbol y del caso", any("H9" in m for m in e), str(e))
+    e = bad(lambda x: x["hipotesis"][1].update(claim_ids=["C-002"]))
+    check("Caso · una lectura de hipótesis solo cita afirmaciones ligadas a esa hipótesis", any("ligadas" in m for m in e), str(e))
+    e = bad(lambda x: x["siguiente_pregunta"].update(id="W3"))
+    e2 = bad(lambda x: x["siguiente_pregunta"].update(id="W9"))
+    check("Caso · la siguiente pregunta es otra de la cola (o una pregunta propia)", bool(e) and bool(e2), str(e + e2))
+    e = bad(lambda x: x.update(preguntas_abiertas=["¿Qué pasa con las 3 cohortes?"]))
+    check("Caso · las preguntas abiertas no llevan cifras", any("pregunta abierta" in m for m in e), str(e))
+    e = bad(lambda x: x["respuesta"].update(texto=x["respuesta"]["texto"] + " Ver C-001."))
+    check("Caso · los textos no citan IDs de afirmaciones", any("IDs" in m for m in e), str(e))
+    e = bad(lambda x: x.update(interpretacion_permitida=[], no_podemos_concluir=[]))
+    check("Caso · la interpretación permitida y lo que no podemos concluir son obligatorios",
+          any("interpretacion_permitida" in m for m in e) and any("no_podemos_concluir" in m for m in e), str(e))
+
+    inv = Investigation.from_dict(d)
+    inv.caso_id = "W3"
+    fin = caso.finalize(doc, inv, q, [], False)
+    eff = {h["hipotesis_id"]: h["efecto"] for h in fin["hipotesis"]}
+    check("Caso · el efecto sobre cada hipótesis lo deriva el código de su estado",
+          eff == {"H1": "fortalecida", "H1.1": "debilitada", "H1.2": "no evaluable", "H2": "señal direccional", "H3": "señal direccional"}, str(eff))
+    check("Caso · la respuesta final trae los límites del brief y la siguiente pregunta completa",
+          fin["limites_del_brief"] == q["no_concluir"] and fin["siguiente_pregunta"]["pregunta"] == caso.QUESTIONS["W4"]["pregunta"])
+    fb = caso.fallback(inv, q, [{"intento": 1, "errores": ["x"]}])
+    txt = " ".join([fb["respuesta"]["texto"]] + [i["texto"] for i in fb["interpretacion_permitida"]])
+    check("Caso · respaldo sin texto libre: siete partes, sin sustitutos inválidos y marcado como degradado",
+          fb["degradada"] and fb["hechos_observados"] and fb["preguntas_abiertas"] and fb["siguiente_pregunta"]["id"] == "W4"
+          and not caso.veto_hits(txt, caso._vetoes(q)), str(fb["interpretacion_permitida"]))
+
+
+def case_flow():
+    """Flujo completo sin modelo: investigación simulada (estado de la dorada) → compositor del caso simulado →
+    respuesta publicada y guardada como vigente. Prueba la plomería y el reintento, no al modelo."""
+    import anyio
+    import claude_agent_sdk
+
+    from agent import caso, orchestrator, state
+    from agent.state import Investigation
+    d, doc = case_sample()
+    outputs, calls = [], {"n": 0}
+
+    async def fake_investigate(inv):
+        src = Investigation.from_dict(d)
+        for k in ("registry", "encuadre", "hipotesis", "hipotesis_registradas_ms", "claims", "visuals", "log", "paquete"):
+            setattr(inv, k, getattr(src, k))
+
+    def fake_query(prompt, options):
+        async def gen():
+            calls["n"] += 1
+            yield claude_agent_sdk.ResultMessage(subtype="success", duration_ms=1, duration_api_ms=1, is_error=False, num_turns=1,
+                                                 session_id="eval", total_cost_usd=0.0, usage={}, structured_output=outputs.pop(0))
+        return gen()
+
+    saved = (orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR)
+    bad = json.loads(json.dumps(doc))
+    bad["interpretacion_permitida"][0]["texto"] = "La caída coincide con descuentos de entrada."
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            orchestrator.investigate, claude_agent_sdk.query = fake_investigate, fake_query
+            state.RUNS, caso.CASE_DIR = Path(tmp) / "runs", Path(tmp) / "caso"
+            outputs[:] = [bad, doc]
+            inv = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            anyio.run(orchestrator.run, inv)
+            rc = inv.respuesta_caso or {}
+            saved_ok = (caso.CASE_DIR / "W3.json").exists()
+            st = {r["id"]: r["estado"] for r in caso.statuses({})}
+            check("Caso · flujo sin modelo: la respuesta se publica, se guarda como vigente y la cola la marca respondida",
+                  inv.status == "publicada" and saved_ok and st["W3"] == "respondida" and inv.narrativa is None, inv.error or str(st))
+            check("Caso · flujo sin modelo: el reintento corrige lo que el validador rechazó (un sustituto inválido)",
+                  calls["n"] == 2 and not rc.get("degradada") and len(rc.get("intentos", [])) == 2
+                  and any("sustituto" in e for e in rc["intentos"][0]["errores"]), str(rc.get("intentos")))
+            outputs[:] = [bad, bad, bad]
+            inv2 = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            anyio.run(orchestrator.run, inv2)
+            check("Caso · flujo sin modelo: tres rechazos dejan la respuesta sin texto libre, marcada y completa",
+                  inv2.status == "publicada" and inv2.respuesta_caso["degradada"] and inv2.respuesta_caso["hechos_observados"]
+                  and inv2.respuesta_caso["siguiente_pregunta"]["id"], str(inv2.respuesta_caso and inv2.respuesta_caso.get("intentos")))
+            # una re-investigación interrumpida (servidor detenido) no borra la respuesta vigente y la cola lo dice
+            caso.RUNS = state.RUNS
+            inv3 = Investigation(pregunta=caso.QUESTIONS["W3"]["pregunta"], pregunta_id="W3", caso_id="W3", playbook_id="libre")
+            inv3.error, inv3.status = orchestrator.friendly_error(Exception("Command failed with exit code 143")), "error"
+            inv3.save()
+            row = {r["id"]: r for r in caso.statuses({})}["W3"]
+            check("Caso · una corrida interrumpida por el servidor se reporta como interrupción y no borra la respuesta vigente",
+                  row["estado"] == "respondida" and row.get("ultimo_error", "").startswith("Interrumpida"), str(row))
+        finally:
+            orchestrator.investigate, claude_agent_sdk.query, state.RUNS, caso.CASE_DIR = saved
+            caso.RUNS = RUNS
+
+
+def visual_rules():
+    """Una gráfica por idea: hallazgos con gráfica propia, formas derivadas de las cifras y una gráfica por lámina."""
+    from agent import narrative as nar
+    from agent import visuals
+    from agent.state import Investigation
+    canon = yaml.safe_load((BRAIN / "evidence" / "canonical_findings.yaml").read_text(encoding="utf-8"))["hallazgos"]
+    g = {h["id"]: h["grafica"] for h in canon if h.get("grafica")}
+    ok = all(v["tipo"] in ("barras", "linea", "puntos", "kpi") and all(len(sr["valores"]) == len(v["x"]) for sr in v["series"]) for v in g.values())
+    check("Gráficas · los hallazgos verificados sin tarjeta tienen su gráfica propia y bien formada",
+          ok and {"C-DAT-06", "C-RET-03", "C-DAT-07", "C-ADQ-02", "C-ADQ-07", "C-RES-08"} <= set(g), str(sorted(g)))
+    reg = Registry()
+    ec = reg.add(kind="canonical", tool="search_evidence", params={"claim_id": "C-RET-03"}, method="canónica",
+                 result={"valores": {"churn_obs_2022": "3,52%"}, "formatos": {}, "columnas": [], "filas": []}, fixed_id="EC-RET-03")
+    spec = visuals.build(ec, "detalle")
+    check("Gráficas · evidencia canónica pedida como tabla usa la gráfica de su hallazgo",
+          spec["tipo"] == "barras" and spec.get("claim_fase1") == "C-RET-03" and len(spec["series"]) == 2, str(spec)[:200])
+
+    d = json.loads((GOLDEN / "Q2.json").read_text(encoding="utf-8"))
+    inv = Investigation.from_dict(d)
+    sq = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional", marker="Cálculo ad hoc",
+                          result={"columnas": [{"id": "tipo", "nombre": "tipo"}, {"id": "grupos", "nombre": "grupos"}, {"id": "eventos", "nombre": "eventos"}],
+                                  "filas": [{"tipo": "bajas", "grupos": 19, "eventos": 124}, {"tipo": "subidas", "grupos": 20, "eventos": 72}],
+                                  "valores": {"grupos[bajas]": 19.0, "eventos[bajas]": 124.0, "grupos[subidas]": 20.0, "eventos[subidas]": 72.0},
+                                  "formatos": {}})
+    sh = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional",
+                          result={"columnas": [], "filas": [], "valores": {"pct_persiste[1]": 90.6, "pct_cesa[1]": 7.9, "pct_revierte[1]": 1.5},
+                                  "formatos": {}})
+    piv = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b} {c} {d}", "variables": {
+        "a": f"{sq.id}.grupos[bajas]|int", "b": f"{sq.id}.eventos[bajas]|int", "c": f"{sq.id}.grupos[subidas]|int", "d": f"{sq.id}.eventos[subidas]|int"}}, inv.registry)
+    comp = visuals.claim_visual({"estado": "Direccional", "plantilla": "{p}% sigue, {c}% cesa y {r}% vuelve", "variables": {
+        "p": f"{sh.id}.pct_persiste[1]|num1", "c": f"{sh.id}.pct_cesa[1]|num1", "r": f"{sh.id}.pct_revierte[1]|num1"}}, inv.registry)
+    check("Gráficas · cifras con cortes → barras por corte; partes de un todo → barra al 100%",
+          piv and piv["x"] == ["bajas", "subidas"] and len(piv["series"]) == 2 and comp and comp.get("apiladas")
+          and abs(sum(sr["valores"][0] for sr in comp["series"]) - 1) < 1e-9, f"{piv} {comp}")
+    mixed = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b}", "variables": {
+        "a": f"{sq.id}.grupos[bajas]|int", "b": f"{sh.id}.pct_cesa[1]|num1"}}, inv.registry)
+    check("Gráficas · cifras que no miden lo mismo no se grafican juntas", mixed is None, str(mixed))
+
+    pieces = {"P-01": {"id": "P-01", "tipo": "respuesta_caso", "rol": "Hallazgo", "texto": "", "afirmaciones": [], "visual": {"tipo": "spec", "spec": {"tipo": "linea"}, "titulo": "Activos de 377 a 1.678"},
+                       "visuales": [{"id": "V-01", "claim": "Los activos pasaron de 377 a 1.678.", "tipo": "spec", "spec": {"tipo": "linea", "k": 1}},
+                                    {"id": "V-02", "claim": "25,3% del movimiento vuelve al nivel previo.", "tipo": "spec", "spec": {"tipo": "barras", "k": 2}},
+                                    {"id": "V-03", "claim": "De 751 churns, 44% vuelve al mes siguiente.", "tipo": "spec", "spec": {"tipo": "barras", "k": 3}}]}}
+    deck = {"laminas": [{"titulo": "Parte del movimiento vuelve", "mensaje": "25,3% vuelve al nivel previo.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "El churn no es salida", "mensaje": "44% vuelve al mes siguiente.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "Otra vez el movimiento", "mensaje": "El 25,3% se repite.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"},
+                        {"titulo": "Algo sin cifras de esas", "mensaje": "El 12% de otra cosa.", "puntos": [], "piezas": ["P-01"], "visual": "P-01"}]}
+    got = [s["visual"] for s in nar.assign_visuals(deck, pieces)["laminas"]]
+    check("Gráficas · cada lámina recibe la gráfica de su idea, sin repetir y sin forzar una que no habla de lo mismo",
+          got == ["P-01/V-02", "P-01/V-03", "", ""], str(got))
+    errs = nar.validate_story({"titulo": "", "subtitulo": "", "pendientes": [], "laminas": [
+        {"rol": "Hallazgo", "titulo": "x", "mensaje": "y", "puntos": [], "piezas": ["P-01"], "visual": "P-01/V-09", "notas": ""}]}, pieces)
+    check("Gráficas · la lámina solo puede usar una gráfica de una pieza que cita", any("gráfica" in m for m in errs), str(errs))
+    seg = inv.registry.add(kind="sql", tool="run_sql", params={}, method="SQL ad hoc", ceiling="Direccional",
+                           result={"columnas": [{"id": "industry", "nombre": "industry", "formato": "texto"}, {"id": "ticket_cop", "nombre": "t", "formato": "num2"},
+                                                {"id": "churn_pct", "nombre": "c", "formato": "num2"}, {"id": "clientes", "nombre": "n", "formato": "int"}],
+                                   "filas": [{"industry": "Retail", "ticket_cop": 26250.0, "churn_pct": 2.14, "clientes": 360},
+                                             {"industry": "Salud", "ticket_cop": 52500.0, "churn_pct": 2.02, "clientes": 124},
+                                             {"industry": "Producción", "ticket_cop": 39900.0, "churn_pct": 1.74, "clientes": 389}],
+                                   "valores": {"ticket_cop[Retail]": 26250.0, "churn_pct[Retail]": 2.14, "ticket_cop[Salud]": 52500.0,
+                                               "churn_pct[Salud]": 2.02, "ticket_cop[Producción]": 39900.0, "churn_pct[Producción]": 1.74},
+                                   "formatos": {"ticket_cop[Retail]": "cop", "churn_pct[Retail]": "num2", "ticket_cop[Salud]": "cop",
+                                                "churn_pct[Salud]": "num2", "ticket_cop[Producción]": "cop", "churn_pct[Producción]": "num2"}})
+    sp = visuals.build(seg, "dispersion", {"x": "ticket_cop", "y": "churn_pct", "tamano": "clientes", "etiqueta": "industry"})
+    check("Gráficas · la dispersión pone una burbuja por fila, con el churn en puntos pasado a % y el ticket en COP",
+          sp["tipo"] == "dispersion" and len(sp["puntos"]) == 3 and sp["ejes"]["y"]["formato"] == "pct2" and sp["ejes"]["x"]["formato"] == "cop"
+          and abs(sp["puntos"][0]["y"] - 0.0214) < 1e-9 and sp["puntos"][0]["tam"] == 360, str(sp)[:300])
+    bad = []
+    for ejes in ({"x": "no_existe", "y": "churn_pct"}, {"x": "industry", "y": "churn_pct"}):
+        try:
+            visuals.build(seg, "dispersion", ejes)
+            bad.append(ejes)
+        except visuals.VisualError:
+            pass
+    check("Gráficas · la dispersión rechaza columnas que no existen o no son numéricas", not bad, str(bad))
+    auto = visuals.claim_visual({"estado": "Direccional", "plantilla": "{a} {b} {c} {d} {e} {f}", "variables": {
+        "a": f"{seg.id}.ticket_cop[Retail]|cop", "b": f"{seg.id}.churn_pct[Retail]", "c": f"{seg.id}.ticket_cop[Salud]|cop",
+        "d": f"{seg.id}.churn_pct[Salud]", "e": f"{seg.id}.ticket_cop[Producción]|cop", "f": f"{seg.id}.churn_pct[Producción]"}}, inv.registry)
+    check("Gráficas · una idea con dos medidas por segmento se dibuja como dispersión", auto and auto["tipo"] == "dispersion", str(auto)[:200])
+    from agent.orchestrator import _auto_visuals
+    inv.visuals = {"V-01": {"id": "V-01", "claim_id": "C-001", "evidence_id": seg.id, "intencion": "detalle", "titulo": "x",
+                            "spec": {"tipo": "tabla"}, "principal": True},
+                   "V-02": {"id": "V-02", "claim_id": "C-002", "evidence_id": seg.id, "intencion": "dispersion", "titulo": "y",
+                            "spec": {"tipo": "barras"}, "ejes": {"x": "ticket_cop", "y": "churn_pct"}}}
+    _auto_visuals(inv)
+    check("Gráficas · la gráfica que pidió el usuario no se reduce y la dispersión con ejes se reconstruye",
+          inv.visuals["V-01"]["spec"]["tipo"] == "tabla" and inv.visuals["V-02"]["spec"]["tipo"] == "dispersion", str({k: v["spec"]["tipo"] for k, v in inv.visuals.items()}))
+    kept = nar._check_piece({"tipo": "respuesta_caso", "rol": "Hallazgo", "titulo": "t", "texto": "x",
+                             "visuales": [{"id": "V-01", "claim": "c", "tipo": "spec", "spec": {"tipo": "barras"}}, {"id": "../x"}, "no"]})
+    check("Gráficas · la pieza guarda sus gráficas por idea y descarta las mal formadas", [v["id"] for v in kept["visuales"]] == ["V-01"], str(kept["visuales"]))
+
+
+def main() -> int:
+    for fn in (sql_layer, semantic_rules, validator_rules, sql_guards, golden_q2, narrative_rules, case_rules, case_flow, visual_rules):
+        try:
+            fn()
+        except Exception as e:  # noqa: BLE001
+            check(f"{fn.__name__} · sin excepciones", False, f"{type(e).__name__}: {e}")
+    ok = sum(1 for _, c, _ in RESULTS if c)
+    for name, c, detail in RESULTS:
+        print(("✓ " if c else "✗ ") + name + ("" if c or not detail else f"  → {detail[:300]}"))
+    print(f"\n{ok}/{len(RESULTS)} evaluaciones aprobadas")
+    return 0 if ok == len(RESULTS) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
