@@ -66,8 +66,10 @@ cd caseos; ..\.venv\Scripts\python -m caseos serve
 
 ## 4. Guíalo
 
-- **Recorrido.** Sigue «Qué ver en 5 minutos» del [README](README.md). En la barra lateral de CaseOS, **Demo mode**
-  recorre el flujo en 14 pasos.
+- **Contexto antes de instalar.** En el [README](README.md) están los tres videos del candidato: short version, long
+  version y cómo usó IA. Sugiere verlos a 1.2x.
+- **Recorrido.** Sigue la sección «Cómo usar la herramienta» del [README](README.md). En la barra lateral de CaseOS,
+  **Demo mode** recorre el flujo en 14 pasos.
 - **Prueba de que corrió.** `.venv/bin/python scripts/evidencia.py` resume corridas, modelos, costos, bitácora y
   entidades. Para abrir algo concreto, ve [docs/EVIDENCIA.md](docs/EVIDENCIA.md).
 - **Experimentar sin tocar el original.** `./start.sh --copia` crea «Finora (prueba)».

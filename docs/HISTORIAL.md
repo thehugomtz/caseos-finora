@@ -66,3 +66,4 @@ Los commits de las dos herramientas, del primero al último. Fecha y hora de Mé
 | 2026-09-30 19:13 | Portable: the Storyteller skills ship next to CaseOS in the shared repo; README up to date |
 | 2026-09-30 19:15 | Storyteller skills are copied where symlinks are not allowed |
 | 2026-09-30 19:43 | Finora: ajustes de Hugo al deck v5 (orden y textos) |
+| 2026-10-01 01:17 | README: los cambios puntuales al Storyteller se piden por API |

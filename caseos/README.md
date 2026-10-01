@@ -94,8 +94,8 @@ y **borra** lo trabajado, no lo corras sobre el caso real. También: `./scripts/
    regresa un deck HTML. Puedes darle una **guía de formato** en palabras simples: tipografía de títulos y de texto
    (cualquier Google Font), colores y notas; se aplica como tema del renderer con el contraste revisado. Sobre un deck
    terminado: reordenar arrastrando, editar texto sobre la lámina, agregar separadores, traer una lámina de un deck
-   anterior, regenerar el PDF y **pedirle cambios puntuales al Storyteller** en láminas concretas (no rehace el deck). Al
-   presentar, el cursor es un puntero láser (tecla L).
+   anterior y regenerar el PDF. Por API (`POST /api/cases/<caso>/slides/<deck>/revise`) se le piden cambios puntuales al
+   Storyteller en láminas concretas, sin rehacer el deck. Al presentar, el cursor es un puntero láser (tecla L).
 10. **Agents** / **Artifacts** — topología de agentes con lo que hace cada uno; archivos del caso, `brain.md`, decisiones,
    snapshots.
 
