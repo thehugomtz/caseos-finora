@@ -14,7 +14,28 @@ hicieron los agentes, qué decidí yo y cuánto costó cada corrida.
 | [**Long version** · Análisis del business case de Finora](https://www.loom.com/share/a4edcbfda2a74ca6b2679fba1930645e) | El caso completo, lámina por lámina | 10:25 · a 1.2x, **8:40** |
 | [**Cómo usé IA con agentes**](https://www.loom.com/share/428f418cf8e2455897d56fb0a5bafa2c) | El proceso: las herramientas, los agentes, mis decisiones y cómo lo verifiqué | 6:08 · a 1.2x, **5:07** |
 
-## 2. Qué hay aquí
+## 2. Pásale este prompt a tu IA
+
+Copia esto en Claude Code, Codex, Cursor o el asistente de código que uses. Con el botón de copiar del bloque basta:
+
+```text
+Quiero probar las herramientas que construyó un candidato: https://github.com/thehugomtz/caseos-finora
+
+1. Clona el repo (o usa esta carpeta si ya la tengo) y lee primero CLAUDE.md o AGENTS.md.
+2. Antes de instalar, pregúntame si solo quiero ver el caso o también correr agentes. Si voy a correrlos,
+   pregúntame con qué modelo: el candidato usó Claude Opus 5.5 (claude-opus-5-5) con esfuerzo max.
+3. Instálalo y arráncalo con ./start.sh (en Windows, sigue CLAUDE.md) y ábreme CaseOS en el navegador.
+4. Dame un recorrido de 5 minutos: el caso Finora en CaseOS, el deck final y el Business Exploration
+   Workspace (http://127.0.0.1:8780/ws/finora/).
+5. Muéstrame la evidencia de que todo corrió de verdad con: python3 scripts/evidencia.py
+6. No modifiques el caso original. Si quiero lanzar agentes, crea la copia con ./start.sh --copia y avísame
+   antes de cada acción que gaste tokens.
+```
+
+Los agentes de CaseOS corren con Claude. Si tu asistente no es Claude, igual instala y abre todo, pero para lanzar
+agentes necesitas una sesión de Claude Code o una `ANTHROPIC_API_KEY`.
+
+## 3. Qué hay aquí
 
 | | Qué es | Dónde |
 |---|---|---|
@@ -23,15 +44,12 @@ hicieron los agentes, qué decidí yo y cuánto costó cada corrida.
 | **Executive Visual Storyteller** | Mis skills para hacer decks ejecutivos en HTML. CaseOS las usa para armar el deck. | [`claude/`](claude/) |
 | **El caso Finora** | El caso completo, con bitácora, corridas, decisiones, evidencia y deck. | [`caseos/cases/finora/`](caseos/cases/finora/) |
 
-## 3. Pruébalo: elige cómo
+## 4. Otras formas de probarlo
 
-### A · Con tu asistente de IA (lo más fácil)
+### A · Con tu asistente de IA
 
-Abre tu asistente de código y pégale esto:
-
-> Clona https://github.com/thehugomtz/caseos-finora y ayúdame a probar la herramienta del candidato.
-
-Si ya tienes la carpeta, porque la clonaste o la bajaste de Drive y la descomprimiste, ábrela en tu asistente y dile:
+Usa el prompt de la sección 2. Si ya tienes la carpeta, porque la clonaste o la bajaste de Drive y la descomprimiste,
+ábrela en tu asistente y basta con decirle:
 
 > El candidato pasó este repo. ¿Cómo pruebo su herramienta?
 
@@ -79,7 +97,7 @@ Abre directo en el navegador:
   PDF.
 - [`finora_eda.html`](finora-eda/finora_eda.html): el workspace de EDA, con sus respuestas verificadas.
 
-## 4. Cómo usar la herramienta
+## 5. Cómo usar la herramienta
 
 ### CaseOS: recorrido de 5 minutos (http://127.0.0.1:8780)
 
@@ -147,7 +165,7 @@ En esfuerzo `high` todo baja a 1–2 minutos por turno.
 
 Para correrlo solo, ver [finora-eda/README.md](finora-eda/README.md).
 
-## 5. Esto corrió de verdad
+## 6. Esto corrió de verdad
 
 Nada del caso se escribió a mano para la demo. Todo quedó registrado en archivos:
 
@@ -164,7 +182,7 @@ Los costos los reporta el SDK. Con suscripción no se cobra por corrida.
 `python3 scripts/evidencia.py` lo resume. El detalle está en [docs/EVIDENCIA.md](docs/EVIDENCIA.md), cómo trabajé en
 [docs/COMO-TRABAJE-CON-IA.md](docs/COMO-TRABAJE-CON-IA.md) y la línea de tiempo en [docs/HISTORIAL.md](docs/HISTORIAL.md).
 
-## 6. Modelos
+## 7. Modelos
 
 | | Modelo con el que se hizo | Cómo cambiarlo |
 |---|---|---|
@@ -172,7 +190,7 @@ Los costos los reporta el SDK. Con suscripción no se cobra por corrida.
 | Agente del workspace de EDA | `claude-opus-5` | `FINORA_MODEL`; `start.sh` le pone el mismo que a CaseOS |
 | Construcción de las herramientas y coordinación | Claude Code con Opus 5.5 | — |
 
-## 7. Estructura
+## 8. Estructura
 
 ```text
 caseos/        la app (FastAPI + web sin build), sus agentes, skills, pruebas y el caso real en cases/finora
@@ -192,7 +210,7 @@ Documentos de cada herramienta:
 - **Workspace de EDA:** [README](finora-eda/README.md), [arquitectura](finora-eda/docs/propuesta_arquitectura_v1.md) y
   [slice](finora-eda/docs/slice_q2.md).
 
-## 8. Notas
+## 9. Notas
 
 - **No hay llaves en el repo.** Los agentes usan tu sesión de Claude o tu `ANTHROPIC_API_KEY`.
 - **Datos.** Los datos y el enunciado son material del reto de Alegra y se comparten solo para evaluar esta entrega.
